@@ -1,0 +1,6 @@
+{
+  "errors": {
+    "user_not_authz": "Hold on. Your user is not authorized!.",
+    "user_not_set": "Hold on. Can not get any valid user."
+  }
+}
