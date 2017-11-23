@@ -127,11 +127,4 @@ module.exports = {
     plugins: PRODUCTION
         ? plugins.concat(productionPlugins)
         : plugins.concat(devPlugins),
-    resolve: {
-        alias: {
-            '~core': path.join('openstack-uicore-foundation', './src'),
-            '~core-components': path.join('openstack-uicore-foundation', './src/components'),
-            '~core-utils': path.join('openstack-uicore-foundation', './src/utils')
-        }
-    }
 };
