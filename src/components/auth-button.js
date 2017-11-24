@@ -3,15 +3,14 @@ import { withRouter } from 'react-router-dom'
 
 const AuthButton = withRouter(({ history,isLoggedUser, doLogin, doLogout }) => (
     isLoggedUser ? (
-        <p>
-            Welcome! <button onClick={() => {
-            doLogout();
-        }}>Sign out</button>
-        </p>
+        <div className="logout">
+            <button className="btn btn-default" onClick={() => { doLogout(); }}>Sign out</button>
+        </div>
     ) : (
-        <p>You are not logged in<button onClick={() => {
-            doLogin();
-        }}>Log in</button></p>
+        <div className="login">
+            You are not logged in. Please log in to continue:<br/><br/>
+            <button className="btn btn-primary btn-lg" onClick={() => { doLogin(); }}>Log in</button>
+        </div>
     )
 ))
 

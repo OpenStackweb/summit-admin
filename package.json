@@ -50,6 +50,8 @@
     "i18n-react": "^0.6.3",
     "lodash": "^4.17.4",
     "react": "^16.1.1",
+    "react-bootstrap": "^0.31.5",
+    "react-burger-menu": "^2.1.11",
     "react-dom": "^16.1.1",
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^5.0.0-alpha.8",

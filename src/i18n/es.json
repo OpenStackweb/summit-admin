@@ -1,0 +1,6 @@
+{
+  "errors": {
+    "user_not_authz": "Un momento. Tu usuario no esta autorizado!.",
+    "user_not_set": "Un momento. No podemos encontrar un usuario valido."
+  }
+}

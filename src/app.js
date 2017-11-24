@@ -36,7 +36,14 @@ class App extends React.PureComponent {
             <BrowserRouter>
                 <div>
                     <AjaxLoader show={ this.props.loading } size={ 120 }/>
-                    <AuthButton isLoggedUser={isLoggedUser} doLogin={doLogin} doLogout={doLogout}/>
+
+                    <div className="row header">
+                        <div className="col-md-12 text-center">
+                            <h1>Openstack Summit Admin</h1>
+                            <AuthButton isLoggedUser={isLoggedUser} doLogin={doLogin} doLogout={doLogout}/>
+                        </div>
+                    </div>
+
                     <Switch>
                         <AuthorizedRoute isLoggedUser={isLoggedUser} getUserInfo={getUserInfo} path="/app" component={PrimaryLayout} />
                         <AuthorizationCallbackRoute onUserAuth={onUserAuth} path='/auth/callback'/>
