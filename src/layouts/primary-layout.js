@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, Switch, Route, Redirect } from 'react-router-dom';
-import { slide as Menu } from 'react-burger-menu';
+import NavMenu from '../components/nav-menu'
 import ScheduleBuilderPage from '../pages/schedule-builder-page';
 import SummitDirectoryPage from '../pages/summit-directory-page';
 
@@ -15,17 +15,7 @@ class PrimaryLayout extends React.Component {
         let { getUserInfo, match } = this.props;
         return(
             <div className="primary-layout">
-                <Menu noOverlay pageWrapId={ "page-wrap" } >
-                    <a id="directory" className="menu-item" href="/app">
-                        <i className="fa fa-fw fa-list-ul" /> Directory
-                    </a>
-                    <a id="dashboard" className="menu-item" href="/app">
-                        <i className="fa fa-dashboard" /> Dashboard
-                    </a>
-                    <a id="schedule" className="menu-item" href="/app/schedule">
-                        <i className="fa fa-calendar" /> Schedule
-                    </a>
-                </Menu>
+                <NavMenu />
                 <main id="page-wrap">
                     <Switch>
                         <Route exact path="/app" component={SummitDirectoryPage}/>
