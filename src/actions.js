@@ -9,6 +9,17 @@ export const REQUEST_USER_INFO = "REQUEST_USER_INFO";
 export const RECEIVE_USER_INFO = "RECEIVE_USER_INFO";
 const GROUP_ADMINS_CODE = 'administrators';
 
+export const authErrorHandler = (err, res) => (dispatch) => {
+    let code = err.status;
+    if(code == 401 || code == 403){
+        swal("ERROR", T.translate("errors.user_not_set"), "error");
+        dispatch({
+            type: LOGOUT_USER,
+            payload: {}
+        });
+    }
+}
+
 export const doLogin = () => {
 
     let oauth2ClientId = process.env['OAUTH2_CLIENT_ID'];
@@ -50,7 +61,8 @@ export const getUserInfo = () => (dispatch, getState) => {
     getRequest(
         createAction(REQUEST_USER_INFO),
         createAction(RECEIVE_USER_INFO),
-        `${apiBaseUrl}/api/v1/members/me?expand=groups&access_token=${accessToken}`
+        `${apiBaseUrl}/api/v1/members/me?expand=groups&access_token=${accessToken}`,
+        authErrorHandler
     )({})(dispatch, getState).then(() => {
             let { member } = getState().loggedUserState;
             if( member == null || member == undefined){
