@@ -1,18 +1,19 @@
-import { REQUEST_USER_INFO, RECEIVE_USER_INFO} from '../actions';
-import { STOP_LOADING } from "openstack-uicore-foundation";
+import { LOADING, STOP_LOADING, RECEIVE_SUMMITS } from '../actions';
+
 const initialState = {
-   loading: false
+    loading: false,
+    items: []
 }
 
 const baseReducer = (state = initialState, action) => {
-    if (action.type === REQUEST_USER_INFO) {
-        return {...state, loading:true };
-    }
-    if(action.type === RECEIVE_USER_INFO){
-        return {...state, loading: false };
+    if(action.type === LOADING){
+        return {...state, loading: true };
     }
     if(action.type === STOP_LOADING){
         return {...state, loading: false };
+    }
+    if(action.type === RECEIVE_SUMMITS){
+        return {...state, items: action.payload.response, loading: false };
     }
     return state
 }

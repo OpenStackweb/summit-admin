@@ -3,11 +3,14 @@ import 'sweetalert2/dist/sweetalert2.css';
 import swal from 'sweetalert2';
 import T from 'i18n-react';
 
-export const SET_LOGGED_USER = 'SET_LOGGED_USER';
-export const LOGOUT_USER = 'LOGOUT_USER';
-export const REQUEST_USER_INFO = "REQUEST_USER_INFO";
-export const RECEIVE_USER_INFO = "RECEIVE_USER_INFO";
-const GROUP_ADMINS_CODE = 'administrators';
+export const SET_LOGGED_USER    = 'SET_LOGGED_USER';
+export const LOGOUT_USER        = 'LOGOUT_USER';
+export const LOADING            = "LOADING";
+export const STOP_LOADING       = "STOP_LOADING";
+export const RECEIVE_SUMMITS    = "RECEIVE_SUMMITS";
+const GROUP_ADMINS_CODE         = 'administrators';
+
+let apiBaseUrl                  = process.env['API_BASE_URL'];
 
 export const authErrorHandler = (err, res) => (dispatch) => {
     let code = err.status;
@@ -56,11 +59,10 @@ export const getUserInfo = () => (dispatch, getState) => {
     console.log('calling getUserInfo ...');
     let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
-    let apiBaseUrl          = process.env['API_BASE_URL'];
 
     getRequest(
-        createAction(REQUEST_USER_INFO),
-        createAction(RECEIVE_USER_INFO),
+        createAction(LOADING),
+        createAction(STOP_LOADING),
         `${apiBaseUrl}/api/v1/members/me?expand=groups&access_token=${accessToken}`,
         authErrorHandler
     )({})(dispatch, getState).then(() => {
@@ -88,5 +90,9 @@ export const getUserInfo = () => (dispatch, getState) => {
     );
 }
 
-
+export const loadSummits = getRequest(
+    createAction(LOADING),
+    createAction(RECEIVE_SUMMITS),
+    `${apiBaseUrl}/api/v1/summits/all`
+);
 
