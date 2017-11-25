@@ -1,9 +1,28 @@
 import React from 'react'
+import ScheduleAdminDashBoard from '../components/schedule-builder/schedule-admin-dashboard';
+import { connect } from 'react-redux';
+import '../styles/schedule-builder-page.less';
 
-const ScheduleBuilderPage = () => (
-   <div>
-       <h1>Schedule builder</h1>
-   </div>
-)
+class ScheduleBuilderPage extends React.Component {
+    render(){
+        let {currentSummit} = this.props;
+        return(
+            <div>
+                <ScheduleAdminDashBoard summit={currentSummit} pixelsPerMinute={16}/>
+            </div>
+        )
+    }
+}
 
-export default ScheduleBuilderPage;
+
+
+const mapStateToProps = ({ currentSummitState }) => ({
+    currentSummit : currentSummitState.currentSummit,
+})
+
+export default connect (
+    mapStateToProps,
+    {
+
+    }
+)(ScheduleBuilderPage);

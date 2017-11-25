@@ -3,6 +3,7 @@ import loggedUserReducer from './reducers/auth-reducer'
 import baseReducer from './reducers/base-reducer'
 import currentSummitReducer from './reducers/current-summit-reducer';
 import directoryReducer from './reducers/directory-reducer';
+import scheduleBuilderReducer from './reducers/schedule-builder-reducer';
 
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
@@ -18,6 +19,7 @@ const reducers = persistCombineReducers(config, {
     baseState: baseReducer,
     directoryState: directoryReducer,
     currentSummitState: currentSummitReducer,
+    currentScheduleBuilderState: scheduleBuilderReducer,
 })
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

@@ -10,6 +10,10 @@ export const REQUEST_USER_INFO  = 'REQUEST_USER_INFO';
 export const RECEIVE_USER_INFO  = 'RECEIVE_USER_INFO';
 export const RECEIVE_SUMMITS    = 'RECEIVE_SUMMITS';
 export const SET_CURRENT_SUMMIT = 'SET_CURRENT_SUMMIT';
+export const REQUEST_UNSCHEDULE_EVENTS_PAGE = "REQUEST_UNSCHEDULE_EVENTS_PAGE";
+export const RECEIVE_UNSCHEDULE_EVENTS_PAGE = "RECEIVE_UNSCHEDULE_EVENTS_PAGE";
+export const REQUEST_PUBLISH_EVENT          = 'REQUEST_PUBLISH_EVENT';
+
 const GROUP_ADMINS_CODE         = 'administrators';
 let apiBaseUrl                  = process.env['API_BASE_URL'];
 
@@ -113,4 +117,28 @@ export const loadSummits = () => (dispatch, getState) => {
     )({})(dispatch, getState);
 }
 
+export const getUnScheduleEventsPage = (summitId, source = 'presentations', page = 1, page_size = 10, order = 'SummitEvent.Title', track_id = null, status = null ) =>
+    (dispatch, getState) => {
+        let { loggedUserState } = getState();
+        let { accessToken }     = loggedUserState;
 
+        return getRequest(
+            createAction(REQUEST_UNSCHEDULE_EVENTS_PAGE),
+            createAction(RECEIVE_UNSCHEDULE_EVENTS_PAGE),
+            `${apiBaseUrl}/api/v1/summits/${summitId}/events?access_token=${accessToken}`,
+            authErrorHandler
+        )({
+        })(dispatch);
+    };
+
+export const publishEvent = (event, day, startTime, minutes) =>
+    (dispatch, getState) => {
+        dispatch(createAction(REQUEST_PUBLISH_EVENT)(
+            {
+                event,
+                day,
+                startTime,
+                minutes,
+            }
+        ));
+    };
