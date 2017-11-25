@@ -1,4 +1,4 @@
-import { LOADING, STOP_LOADING, RECEIVE_SUMMITS } from '../actions';
+import { LOADING, STOP_LOADING, REQUEST_USER_INFO, RECEIVE_USER_INFO, RECEIVE_SUMMITS } from '../actions';
 
 const initialState = {
     loading: false,
@@ -6,10 +6,10 @@ const initialState = {
 }
 
 const baseReducer = (state = initialState, action) => {
-    if(action.type === LOADING){
+    if(action.type === LOADING || action.type === REQUEST_USER_INFO ){
         return {...state, loading: true };
     }
-    if(action.type === STOP_LOADING){
+    if(action.type === STOP_LOADING || action.type === RECEIVE_USER_INFO ){
         return {...state, loading: false };
     }
     if(action.type === RECEIVE_SUMMITS){

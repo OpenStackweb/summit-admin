@@ -7,8 +7,11 @@ export const SET_LOGGED_USER    = 'SET_LOGGED_USER';
 export const LOGOUT_USER        = 'LOGOUT_USER';
 export const LOADING            = "LOADING";
 export const STOP_LOADING       = "STOP_LOADING";
+export const REQUEST_USER_INFO  = "REQUEST_USER_INFO";
+export const RECEIVE_USER_INFO  = "RECEIVE_USER_INFO";
 export const RECEIVE_SUMMITS    = "RECEIVE_SUMMITS";
 const GROUP_ADMINS_CODE         = 'administrators';
+
 
 let apiBaseUrl                  = process.env['API_BASE_URL'];
 
@@ -61,8 +64,8 @@ export const getUserInfo = () => (dispatch, getState) => {
     let { accessToken }     = loggedUserState;
 
     getRequest(
-        createAction(LOADING),
-        createAction(STOP_LOADING),
+        createAction(REQUEST_USER_INFO),
+        createAction(RECEIVE_USER_INFO),
         `${apiBaseUrl}/api/v1/members/me?expand=groups&access_token=${accessToken}`,
         authErrorHandler
     )({})(dispatch, getState).then(() => {
