@@ -1,12 +1,15 @@
-import { SET_CURRENT_SUMMIT } from '../actions';
+import { SET_CURRENT_SUMMIT, LOGOUT_USER } from '../actions';
 
-const initialState = {
+const DEFAULT_STATE = {
     currentSummit: null
 }
 
-const currentSummitReducer = (state = initialState, action) => {
+const currentSummitReducer = (state = DEFAULT_STATE, action) => {
     if(action.type === SET_CURRENT_SUMMIT){
         return {...state, currentSummit: action.payload};
+    }
+    if(action.type === LOGOUT_USER){
+        return DEFAULT_STATE
     }
     return state
 }

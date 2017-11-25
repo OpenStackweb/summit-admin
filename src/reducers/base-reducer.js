@@ -1,11 +1,11 @@
 import { LOADING, REQUEST_USER_INFO, RECEIVE_USER_INFO, RECEIVE_SUMMITS , REQUEST_UNSCHEDULE_EVENTS_PAGE, RECEIVE_UNSCHEDULE_EVENTS_PAGE} from '../actions';
 import { STOP_LOADING  } from "openstack-uicore-foundation";
 
-const initialState = {
+const DEFAULT_STATE = {
     loading: false,
 }
 
-const baseReducer = (state = initialState, action) => {
+const baseReducer = (state = DEFAULT_STATE, action) => {
     switch(action.type){
         case LOADING:
         case REQUEST_USER_INFO:
