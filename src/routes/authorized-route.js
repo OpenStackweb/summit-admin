@@ -7,11 +7,11 @@ class AuthorizedRoute extends React.Component {
     }
 
     render() {
-        const { component: Component, getUserInfo, isLoggedUser, ...rest } = this.props;
+        const { component: Component, getUserInfo, isLoggedUser,currentSummit, ...rest } = this.props;
         return (
             <Route {...rest} render={props => {
                 return isLoggedUser
-                    ? <Component getUserInfo={getUserInfo} {...props} />
+                    ? <Component getUserInfo={getUserInfo} currentSummit={currentSummit} {...props} />
                     : <Redirect
                         to={{
                             pathname: '/',

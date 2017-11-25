@@ -31,21 +31,19 @@ T.setTexts(require(`./i18n/${language}.json`));
 
 class App extends React.PureComponent {
     render() {
-        let { isLoggedUser, onUserAuth, doLogout, getUserInfo} = this.props;
+        let { isLoggedUser, onUserAuth, doLogout, getUserInfo, currentSummit} = this.props;
         return (
             <BrowserRouter>
                 <div>
                     <AjaxLoader show={ this.props.loading } size={ 120 }/>
-
                     <div className="row header">
                         <div className="col-md-12 text-center">
-                            <h1>Openstack Summit Admin</h1>
+                            <h1>OpenStack Summit Admin</h1>
                             <AuthButton isLoggedUser={isLoggedUser} doLogin={doLogin} doLogout={doLogout}/>
                         </div>
                     </div>
-
                     <Switch>
-                        <AuthorizedRoute isLoggedUser={isLoggedUser} getUserInfo={getUserInfo} path="/app" component={PrimaryLayout} />
+                        <AuthorizedRoute currentSummit={currentSummit} isLoggedUser={isLoggedUser} getUserInfo={getUserInfo} path="/app" component={PrimaryLayout} />
                         <AuthorizationCallbackRoute onUserAuth={onUserAuth} path='/auth/callback'/>
                         <Route path="/404" render={props => (<p>404 - Not Found</p>)}/>
                         <DefaultRoute isLoggedUser={isLoggedUser} />
@@ -56,9 +54,10 @@ class App extends React.PureComponent {
     }
 }
 
-const mapStateToProps = ({ loggedUserState, baseState }) => ({
+const mapStateToProps = ({ loggedUserState, baseState, currentSummitState }) => ({
     isLoggedUser: loggedUserState.isLoggedUser,
-    loading : baseState.loading
+    loading : baseState.loading,
+    currentSummit: currentSummitState.currentSummit,
 })
 
 export default connect(mapStateToProps, {

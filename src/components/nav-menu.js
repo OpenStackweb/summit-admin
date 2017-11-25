@@ -20,6 +20,7 @@ export default class NavMenu extends React.Component {
     }
 
     render() {
+        if(!this.props.show) return null;
         return (
             <Menu noOverlay width={ 300 } pageWrapId={ "page-wrap" } >
                 <a id="directory-menu" className="menu-item" href="/app">

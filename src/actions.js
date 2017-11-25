@@ -1,18 +1,16 @@
-import { getRequest, putRequest, postRequest, deleteRequest, createAction } from "openstack-uicore-foundation";
+import { getRequest, putRequest, postRequest, deleteRequest, createAction, STOP_LOADING } from "openstack-uicore-foundation";
 import 'sweetalert2/dist/sweetalert2.css';
 import swal from 'sweetalert2';
 import T from 'i18n-react';
 
 export const SET_LOGGED_USER    = 'SET_LOGGED_USER';
 export const LOGOUT_USER        = 'LOGOUT_USER';
-export const LOADING            = "LOADING";
-export const STOP_LOADING       = "STOP_LOADING";
-export const REQUEST_USER_INFO  = "REQUEST_USER_INFO";
-export const RECEIVE_USER_INFO  = "RECEIVE_USER_INFO";
-export const RECEIVE_SUMMITS    = "RECEIVE_SUMMITS";
+export const LOADING            = 'LOADING';
+export const REQUEST_USER_INFO  = 'REQUEST_USER_INFO';
+export const RECEIVE_USER_INFO  = 'RECEIVE_USER_INFO';
+export const RECEIVE_SUMMITS    = 'RECEIVE_SUMMITS';
+export const SET_CURRENT_SUMMIT = 'SET_CURRENT_SUMMIT';
 const GROUP_ADMINS_CODE         = 'administrators';
-
-
 let apiBaseUrl                  = process.env['API_BASE_URL'];
 
 export const authErrorHandler = (err, res) => (dispatch) => {
@@ -55,6 +53,16 @@ export const doLogout = () => (dispatch) => {
         type: LOGOUT_USER,
         payload: {}
     });
+}
+
+export const setCurrentSummit = (summit, history) => (dispatch) =>
+{
+    dispatch({
+        type: SET_CURRENT_SUMMIT,
+        payload: summit
+    });
+    if(summit)
+       history.push(`/app/summits/${summit.id}/dashboard`);
 }
 
 export const getUserInfo = () => (dispatch, getState) => {

@@ -1,20 +1,32 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { loadSummits } from '../actions';
+import { loadSummits, setCurrentSummit } from '../actions';
 
 class SummitDirectoryPage extends React.Component {
 
-    componentDidMount () {
-        if(!this.props.items) {
-            this.props.loadItems();
+    constructor(props){
+        super(props);
+    }
+
+    onSelectedSummit(event, summit){
+        event.preventDefault();
+        this.props.setCurrentSummit(summit, this.props.history);
+        return false;
+    }
+
+    componentWillMount () {
+        this.props.setCurrentSummit(null);
+        if(!this.props.summits) {
+            this.props.loadSummits();
         }
     }
 
     render() {
+        let { summits } = this.props;
         return (
             <div className="container">
-                {this.props.items && this.props.items.map((summit,i) => (
-                    <a className="btn btn-default" href='/app/summit/${summit.id}/dashboard'>
+                {summits && summits.map((summit,i) => (
+                    <a key={summit.id} className="btn btn-default" href="#" onClick={ (e) => { return this.onSelectedSummit(e, summit) }}>
                         {summit.name}
                     </a>
                 ))}
@@ -23,15 +35,14 @@ class SummitDirectoryPage extends React.Component {
     }
 }
 
+const mapStateToProps = ({ directoryState }) => ({
+    summits : directoryState.items,
+})
+
 export default connect (
-    state => {
-        return {
-            items: state.items,
-        }
-    },
-    dispatch => ({
-        loadItems () {
-            dispatch(loadSummits());
-        }
-    })
+    mapStateToProps,
+    {
+        loadSummits,
+        setCurrentSummit,
+    }
 )(SummitDirectoryPage);

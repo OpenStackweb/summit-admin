@@ -14,7 +14,6 @@ const onBeforeLift = () => {
 
 ReactDOM.render(
     <Provider store={store}>
-
             <PersistGate
                 onBeforeLift={onBeforeLift}
                 persistor={persistor}>

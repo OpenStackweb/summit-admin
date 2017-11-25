@@ -3,6 +3,7 @@ import { Link, Switch, Route, Redirect } from 'react-router-dom';
 import NavMenu from '../components/nav-menu'
 import ScheduleBuilderPage from '../pages/schedule-builder-page';
 import SummitDirectoryPage from '../pages/summit-directory-page';
+import SummitDashboardPage from '../pages/summit-dashboard-page';
 
 class PrimaryLayout extends React.Component {
 
@@ -12,15 +13,16 @@ class PrimaryLayout extends React.Component {
     }
 
     render(){
-        let { getUserInfo, match } = this.props;
+        let { getUserInfo, match, currentSummit } = this.props;
         return(
             <div className="primary-layout">
-                <NavMenu />
+                <NavMenu show={currentSummit != null}/>
                 <main id="page-wrap">
                     <Switch>
-                        <Route exact path="/app" component={SummitDirectoryPage}/>
+                        <Route exact path="/app/directory" component={SummitDirectoryPage}/>
+                        <Route exact path="/app/summits/:summit_id/dashboard" component={SummitDashboardPage}/>
                         <Route exact path="/app/schedule" component={ScheduleBuilderPage}/>
-                        <Route render={props => (<Redirect to="/app"/>)}/>
+                        <Route render={props => (<Redirect to="/app/directory"/>)}/>
                     </Switch>
                 </main>
             </div>
