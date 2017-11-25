@@ -4,7 +4,7 @@ import NavMenu from '../components/nav-menu'
 import ScheduleBuilderPage from '../pages/schedule-builder-page';
 import SummitDirectoryPage from '../pages/summit-directory-page';
 import SummitDashboardPage from '../pages/summit-dashboard-page';
-
+import { withRouter } from 'react-router-dom'
 class PrimaryLayout extends React.Component {
 
     componentWillMount() {
@@ -16,12 +16,12 @@ class PrimaryLayout extends React.Component {
         let { getUserInfo, match, currentSummit } = this.props;
         return(
             <div className="primary-layout">
-                <NavMenu show={currentSummit != null}/>
+                <NavMenu currentSummit={currentSummit}/>
                 <main id="page-wrap">
                     <Switch>
                         <Route exact path="/app/directory" component={SummitDirectoryPage}/>
                         <Route exact path="/app/summits/:summit_id/dashboard" component={SummitDashboardPage}/>
-                        <Route exact path="/app/schedule" component={ScheduleBuilderPage}/>
+                        <Route exact path="/app/summits/:summit_id/events/schedule" component={ScheduleBuilderPage}/>
                         <Route render={props => (<Redirect to="/app/directory"/>)}/>
                     </Switch>
                 </main>
@@ -31,6 +31,6 @@ class PrimaryLayout extends React.Component {
 
 }
 
-export default PrimaryLayout;
+export default withRouter(PrimaryLayout)
 
 
