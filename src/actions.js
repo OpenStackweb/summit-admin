@@ -18,7 +18,7 @@ let apiBaseUrl                  = process.env['API_BASE_URL'];
 export const authErrorHandler = (err, res) => (dispatch) => {
     let code = err.status;
     if(code == 401 || code == 403){
-        swal("ERROR", T.translate("errors.user_not_set"), "error");
+        swal("ERROR", T.translate("errors.session_expired"), "error");
         dispatch({
             type: LOGOUT_USER,
             payload: {}
@@ -59,7 +59,6 @@ export const doLogout = () => (dispatch) => {
 
 export const getUserInfo = () => (dispatch, getState) => {
 
-    console.log('calling getUserInfo ...');
     let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
 
@@ -93,9 +92,17 @@ export const getUserInfo = () => (dispatch, getState) => {
     );
 }
 
-export const loadSummits = getRequest(
-    createAction(LOADING),
-    createAction(RECEIVE_SUMMITS),
-    `${apiBaseUrl}/api/v1/summits/all`
-);
+export const loadSummits = () => (dispatch, getState) => {
+
+    let { loggedUserState } = getState();
+    let { accessToken }     = loggedUserState;
+
+    getRequest(
+        createAction(LOADING),
+        createAction(RECEIVE_SUMMITS),
+        `${apiBaseUrl}/api/v1/summits/all?access_token=${accessToken}`,
+        authErrorHandler
+    )({})(dispatch, getState);
+}
+
 
