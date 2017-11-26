@@ -98,12 +98,9 @@ class ScheduleEventList extends React.Component
         this.state = {
             resizing: false,
         };
-        this.boundingBox = null;
     }
 
     componentDidMount() {
-        console.log('componentDidMount');
-        this.boundingBox = this.getBoundingBox();
     }
 
     onDroppedEvent(event, startTime){
@@ -115,6 +112,10 @@ class ScheduleEventList extends React.Component
     }
 
     canResize(eventId, newTop, newHeight){
+        let{ height } = this.getBoundingBox();
+        if( height < (newTop+newHeight)){
+            return false;
+        }
         let { events, currentDay, startTime, pixelsPerMinute, childEvents } = this.props;
         // try first to find events on main collection
         let event          = events.filter( evt => { return evt.id === eventId;}).shift();
@@ -132,8 +133,8 @@ class ScheduleEventList extends React.Component
         let upperLimitDate = null, lowerLimitDate = null;
         if(eventModel.isChildEvent()) { // its child event
             let parentEvent         = events.filter( evt => { return evt.id === event.parentId;}).shift();
-            let parentStartDateTime = moment(parentEvent.start_datetime, 'YYYY-MM-DD HH:mm');
-            let parentEndDateTime   = moment(parentEvent.end_datetime, 'YYYY-MM-DD HH:mm');
+            let parentStartDateTime = moment(parentEvent.start_datetime);
+            let parentEndDateTime   = moment(parentEvent.end_datetime);
             upperLimitDate          = parentStartDateTime.clone();
             lowerLimitDate          = parentEndDateTime.clone();
             startTime               = parentStartDateTime.format('HH:mm');
@@ -153,8 +154,8 @@ class ScheduleEventList extends React.Component
         if(lowerLimitDate !== null && endDateTime.isAfter(lowerLimitDate)) return false;
 
         for (let auxEvent of filteredEvents) {
-            let auxEventStartDateTime = moment(auxEvent.start_datetime, 'YYYY-MM-DD HH:mm');
-            let auxEventEndDateTime   = moment(auxEvent.end_datetime, 'YYYY-MM-DD HH:mm');
+            let auxEventStartDateTime = moment(auxEvent.start_datetime);
+            let auxEventEndDateTime   = moment(auxEvent.end_datetime);
             // if time segments overlap
             if(auxEventStartDateTime.isBefore(endDateTime) && auxEventEndDateTime.isAfter(startDateTime))
                 return false;
@@ -165,8 +166,8 @@ class ScheduleEventList extends React.Component
         if(eventModel.hasChilds()){
             let minStarDateTime = null, maxEndDateTime = null;
             for(let subEvent of event.subEvents){
-                let subEventStartDateTime = moment(subEvent.start_datetime, 'YYYY-MM-DD HH:mm');
-                let subEventEndDateTime   = moment(subEvent.end_datetime, 'YYYY-MM-DD HH:mm');
+                let subEventStartDateTime = moment(subEvent.start_datetime);
+                let subEventEndDateTime   = moment(subEvent.end_datetime);
                 if(minStarDateTime === null || minStarDateTime.isAfter(subEventStartDateTime))
                     minStarDateTime = subEventStartDateTime;
                 if(maxEndDateTime === null || maxEndDateTime.isBefore(subEventEndDateTime))
@@ -194,10 +195,10 @@ class ScheduleEventList extends React.Component
 
         if(event.parentId > 0) { // child event
             let parentEvent         = events.filter( evt => { return evt.id === event.parentId;}).shift();
-            let parentStartDateTime = moment(parentEvent.start_datetime, 'YYYY-MM-DD HH:mm');
-            let deltaMinutes      = moment.duration( parentStartDateTime.diff(startDateTime)).asMinutes();
-            startDateTime         = parentStartDateTime;
-            minutes               = minutes - deltaMinutes;
+            let parentStartDateTime = moment(parentEvent.start_datetime);
+            let deltaMinutes        = moment.duration( parentStartDateTime.diff(startDateTime)).asMinutes();
+            startDateTime           = parentStartDateTime;
+            minutes                 = minutes - deltaMinutes;
         }
 
         startDateTime = startDateTime.add(minutes, 'minutes');
@@ -206,7 +207,7 @@ class ScheduleEventList extends React.Component
     }
 
     getMaxHeight(){
-        return this.getBoundingBox().bottom;
+        return this.getBoundingBox().height;
     }
 
     getBoundingBox() {
@@ -215,7 +216,7 @@ class ScheduleEventList extends React.Component
 
     calculateInitialTop(event){
         let { currentDay, startTime, pixelsPerMinute} = this.props;
-        let eventStartDateTime = moment(event.start_datetime, 'YYYY-MM-DD HH:mm');
+        let eventStartDateTime = moment(event.start_datetime);
         let dayStartDateTime   = moment(currentDay+' '+ startTime, 'YYYY-MM-DD HH:mm');
         let minutes            = eventStartDateTime.diff(dayStartDateTime, 'minutes');
         return minutes * pixelsPerMinute;
@@ -223,8 +224,8 @@ class ScheduleEventList extends React.Component
 
     calculateInitialHeight(event){
         let { pixelsPerMinute } = this.props;
-        let eventStartDateTime  = moment(event.start_datetime, 'YYYY-MM-DD HH:mm');
-        let eventEndDateTime    = moment(event.end_datetime, 'YYYY-MM-DD HH:mm');
+        let eventStartDateTime  = moment(event.start_datetime);
+        let eventEndDateTime    = moment(event.end_datetime);
         let minutes             = eventEndDateTime.diff(eventStartDateTime, 'minutes');
 
         return minutes * pixelsPerMinute;
@@ -285,12 +286,10 @@ class ScheduleEventList extends React.Component
                                     canResize={this.canResize}
                                     onResized={this.onResized}
                                     maxHeight={this.getMaxHeight}
-                                    currentDay={currentDay}
-                                >
+                                    currentDay={currentDay}>
                                 </ScheduleEvent>)
                         })
                     }
-
                     {
                         events.map((event2, idx2) => {
                             return event2.subEvents.map((subEvent, idx3) => {

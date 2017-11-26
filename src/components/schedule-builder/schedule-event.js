@@ -156,8 +156,11 @@ class ScheduleEvent extends React.Component {
             newTop    = top;
         }
 
-        if(newHeight > this.props.maxHeight()){
-            newHeight = this.props.maxHeight();
+        let maxHeight = this.props.maxHeight;
+        if(typeof maxHeight === "function")
+            maxHeight = maxHeight();
+        if(newHeight > maxHeight){
+            newHeight = maxHeight;
             newYPos   = lastYPos;
             newTop    = top;
         }
@@ -210,7 +213,9 @@ class ScheduleEvent extends React.Component {
         let slots     = Math.floor(this.state.height / minHeight);
 
         let slotsJSX  = [];
-        let timeSlot = moment(event.start_datetime, 'HH:mm');
+        let eventStartDateTime = moment(event.start_datetime);
+        let startTime          = eventStartDateTime.format('HH:mm')
+        let timeSlot           = moment(startTime, 'HH:mm');
         for(let i = 0; i < slots; i++){
             slotsJSX.push(
                 <ScheduleEventTimeSlot

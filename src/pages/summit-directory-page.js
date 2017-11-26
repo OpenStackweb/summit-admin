@@ -16,7 +16,7 @@ class SummitDirectoryPage extends React.Component {
 
     componentWillMount () {
         this.props.setCurrentSummit(null);
-        if(!this.props.summits) {
+        if(!this.props.summits || !this.props.summits.length) {
             this.props.loadSummits();
         }
     }

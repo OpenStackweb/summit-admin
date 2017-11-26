@@ -15,7 +15,8 @@ import
     REQUEST_UNSCHEDULE_EVENTS_PAGE,
     RECEIVE_UNSCHEDULE_EVENTS_PAGE,
     REQUEST_PUBLISH_EVENT,
-    LOGOUT_USER
+    LOGOUT_USER,
+    SET_CURRENT_SUMMIT
 } from '../actions';
 import moment from 'moment';
 import SummitEvent from '../models/summit-event';
@@ -35,16 +36,16 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
         case REQUEST_PUBLISH_EVENT:
             let { event, startTime, day, minutes } = payload;
 
-            let eventModel     = new SummitEvent(event);
-            let start_datetime = moment(day+' '+startTime.format('HH:mm'), 'YYYY-MM-DD HH:mm');
-            let end_datetime   = moment(day+' '+startTime.format('HH:mm'), 'YYYY-MM-DD HH:mm').add(minutes, 'minutes');
-
+            let eventModel        = new SummitEvent(event);
+            let eventStarDateTime = moment(day+' '+startTime.format('HH:mm'), 'YYYY-MM-DD HH:mm');
+            let eventEndDateTime  = moment(day+' '+startTime.format('HH:mm'), 'YYYY-MM-DD HH:mm').add(minutes, 'minutes');
+            console.log(`publishing event ${event.title} - ${event.id} - start date ${eventStarDateTime.format()} - end date ${eventEndDateTime.format()}`);
             // published
             if(eventModel.isPublished()){
                 if(eventModel.isChildEvent()){
                     event = {...event,
-                        end_datetime,
-                        start_datetime,
+                        start_datetime: eventStarDateTime.valueOf(),
+                        end_datetime: eventEndDateTime.valueOf(),
                     };
 
                     // remove from schedule events (possible)
@@ -70,15 +71,15 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
                         let {formerParentId, ...eventClone} = event; // remove formerParentId attr
                         scheduleEvents = scheduleEvents.map(evt => { return evt.id === eventClone.parentId ?  {...evt, subEvents: [...evt.subEvents,
                             {...eventClone,
-                                end_datetime,
-                                start_datetime,
+                                start_datetime: eventStarDateTime.valueOf(),
+                                end_datetime: eventEndDateTime.valueOf(),
                                 published: true,
                             }
                         ] }: evt; });
 
                         childScheduleEvents = [...childScheduleEvents, {...eventClone,
-                            end_datetime,
-                            start_datetime,
+                            start_datetime: eventStarDateTime.valueOf(),
+                            end_datetime: eventEndDateTime.valueOf(),
                             published: true,
                         }]
                     }
@@ -98,11 +99,11 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
                     let childScheduleEvents = state.childScheduleEvents.filter( item => item.id !== event.id);
                     // add to main schedule events
                     let {formerParentId, ...eventClone} = event; // remove formerParentId attr
-                    scheduleEvents    = [...scheduleEvents, {...eventClone, end_datetime, start_datetime, published: true, subEvents: [],}];
+                    scheduleEvents    = [...scheduleEvents, {...eventClone,  start_datetime: eventStarDateTime.valueOf(), end_datetime: eventEndDateTime.valueOf(), published: true, subEvents: [],}];
                     return {...state, scheduleEvents, childScheduleEvents};
                 }
 
-                let scheduleEvents = state.scheduleEvents.map(evt => { return evt.id === event.id ?  {...event, end_datetime, start_datetime, published: true}: evt; })
+                let scheduleEvents = state.scheduleEvents.map(evt => { return evt.id === event.id ?  {...event, start_datetime: eventStarDateTime.valueOf(), end_datetime: eventEndDateTime.valueOf(), published: true}: evt; })
                 return {...state, scheduleEvents};
             }
 
@@ -114,8 +115,8 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
                 // add to parent sub-collection
                 let scheduleEvents = state.scheduleEvents.map(evt => { return evt.id === event.parentId ?  {...evt, subEvents: [...evt.subEvents,
                     {...event,
-                        end_datetime,
-                        start_datetime,
+                        start_datetime: eventStarDateTime.valueOf(),
+                        end_datetime: eventEndDateTime.valueOf(),
                         published: true,
                     }
                 ] }: evt; });
@@ -125,8 +126,8 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
                     scheduleEvents,
                     unScheduleEvents,
                     childScheduleEvents: [...state.childScheduleEvents, {...event,
-                        end_datetime,
-                        start_datetime,
+                        start_datetime: eventStarDateTime.valueOf(),
+                        end_datetime: eventEndDateTime.valueOf(),
                         published: true,
                     }]
                 };
@@ -135,8 +136,8 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
             return {...state,
                 scheduleEvents: [...state.scheduleEvents,
                     {...event,
-                        end_datetime,
-                        start_datetime,
+                        start_datetime: eventStarDateTime.valueOf(),
+                        end_datetime: eventEndDateTime.valueOf(),
                         published: true,
                         subEvents: [],
                     }
@@ -144,6 +145,7 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
                 unScheduleEvents
             };
         case LOGOUT_USER:
+        case SET_CURRENT_SUMMIT:
             return DEFAULT_STATE;
         default:
             return state;

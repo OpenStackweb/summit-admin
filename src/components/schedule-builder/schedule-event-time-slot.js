@@ -22,6 +22,7 @@ const ScheduleEventTimeSlotTarget = {
         let subEvent   = monitor.getItem();
         let eventModel = new SummitEvent(subEvent);
         let { event, height, currentDay, timeSlot} = props;
+        if(subEvent.id == event.id) return false;
         let minHeight = ( PixelsPerMinute * DefaultEventMinutesDuration);
         if(height !== minHeight) return false;
         if(eventModel.hasChilds()) return false;

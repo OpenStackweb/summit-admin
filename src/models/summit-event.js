@@ -29,8 +29,8 @@ class SummitEvent {
 
     getMinutesDuration(){
         if(this.event.hasOwnProperty('start_datetime') && this.event.hasOwnProperty('end_datetime') ) {
-            let eventStartDateTime = moment(this.event.start_datetime, 'YYYY-MM-DD HH:mm');
-            let eventEndDateTime = moment(this.event.end_datetime, 'YYYY-MM-DD HH:mm');
+            let eventStartDateTime = moment(this.event.start_datetime);
+            let eventEndDateTime   = moment(this.event.end_datetime);
             return eventEndDateTime.diff(eventStartDateTime, 'minutes');
         }
         // default duration is 5 minutes
@@ -53,17 +53,20 @@ class SummitEvent {
     recalculateChilds(day, startTime){
         // we need to recalculate sub events
         let newStartDateTime    = moment(day+' '+startTime.format('HH:mm'), 'YYYY-MM-DD HH:mm');
-        let formerStartDateTime = moment(this.event.start_datetime, 'YYYY-MM-DD HH:mm');
+        let formerStartDateTime = moment(this.event.start_datetime);
         for(let subEvent of this.event.subEvents){
             let deltaMinutesStart     = moment.duration(newStartDateTime.diff(formerStartDateTime)).asMinutes();
-            let subEventStartDateTime = moment(subEvent.start_datetime, 'YYYY-MM-DD HH:mm');
-            let subEventEndDateTime   = moment(subEvent.end_datetime, 'YYYY-MM-DD HH:mm');
+            let subEventStartDateTime = moment(subEvent.start_datetime);
+            let subEventEndDateTime   = moment(subEvent.end_datetime);
             let subEventMinutes       = moment.duration( subEventEndDateTime.diff(subEventStartDateTime)).asMinutes();
             let subEventNewStartTime  = subEventStartDateTime.add(deltaMinutesStart, 'minutes');
             subEventNewStartTime      = moment(subEventNewStartTime.format('HH:mm'), 'HH:mm');
             let newSubEventStartDate  = moment(day+' '+subEventNewStartTime.format('HH:mm'), 'YYYY-MM-DD HH:mm');
             let newSubEventEndDate    = moment(day+' '+subEventNewStartTime.format('HH:mm'), 'YYYY-MM-DD HH:mm').add(subEventMinutes, 'minutes');
-            this.event.subEvents = this.event.subEvents.map(evt => { return evt.id === subEvent.id ?  {...subEvent,start_datetime:newSubEventStartDate, end_datetime:newSubEventEndDate}: evt; });
+            this.event.subEvents = this.event.subEvents.map(evt => { return evt.id === subEvent.id ?  {...subEvent,
+                start_datetime : newSubEventStartDate.valueOf(),
+                end_datetime   : newSubEventEndDate.valueOf()
+            }: evt; });
         }
     }
 
@@ -79,8 +82,8 @@ class SummitEvent {
 
         // check siblings overlap
         for (let auxEvent of siblings.filter(item => item.id !== this.getId())) {
-            let auxEventStartDateTime = moment(auxEvent.start_datetime, 'YYYY-MM-DD HH:mm');
-            let auxEventEndDateTime   = moment(auxEvent.end_datetime, 'YYYY-MM-DD HH:mm');
+            let auxEventStartDateTime = moment(auxEvent.start_datetime);
+            let auxEventEndDateTime   = moment(auxEvent.end_datetime);
             // if time segments overlap
             if(auxEventStartDateTime.isBefore(endDateTime) && auxEventEndDateTime.isAfter(startDateTime))
                 return false;
@@ -96,8 +99,8 @@ class SummitEvent {
             duration = this.getMinutesDuration();
         // check if published to get real duration ...
         let filteredEvents  = parentEvent.subEvents.filter( evt => { return evt.id !== this.event.id;});
-        let parentStartDate = moment(parentEvent.start_datetime, 'YYYY-MM-DD HH:mm');
-        let parentEndDate   = moment(parentEvent.end_datetime, 'YYYY-MM-DD HH:mm');
+        let parentStartDate = moment(parentEvent.start_datetime);
+        let parentEndDate   = moment(parentEvent.end_datetime);
 
         let startDateTime   = moment(day+' '+ startTime.format('HH:mm'), 'YYYY-MM-DD HH:mm');
         let endDateTime     = moment(day+' '+ startTime.format('HH:mm'), 'YYYY-MM-DD HH:mm');
@@ -109,8 +112,8 @@ class SummitEvent {
 
         // check siblings overlap
         for (let auxEvent of filteredEvents) {
-            let auxEventStartDateTime = moment(auxEvent.start_datetime, 'YYYY-MM-DD HH:mm');
-            let auxEventEndDateTime   = moment(auxEvent.end_datetime, 'YYYY-MM-DD HH:mm');
+            let auxEventStartDateTime = moment(auxEvent.start_datetime);
+            let auxEventEndDateTime   = moment(auxEvent.end_datetime);
             // if time segments overlap
             if(auxEventStartDateTime.isBefore(endDateTime) && auxEventEndDateTime.isAfter(startDateTime))
                 return false;

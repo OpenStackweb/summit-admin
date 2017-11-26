@@ -15,8 +15,9 @@ class NavMenu extends React.Component {
 
     toggleSubMenu(event, submenu) {
         event.preventDefault();
-        this.setState({
-            subMenuOpen: submenu
+        this.setState({ ...this.state,
+            subMenuOpen: submenu,
+            menuOpen: true
         });
     }
 
