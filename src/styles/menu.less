@@ -1,3 +1,4 @@
+@import 'schedule-builder-variables';
 //
 // Burger menu custom styles
 //
@@ -11,7 +12,7 @@
 
 .bm-menu-wrap {
     top: 0;
-    z-index:9999999999 !important;
+    z-index: @event_z_index+1 !important;
 }
 
 .right .bm-burger-button {
