@@ -36,8 +36,8 @@ class App extends React.PureComponent {
             <BrowserRouter>
                 <div>
                     <AjaxLoader show={ this.props.loading } size={ 120 }/>
-                    <div className="row header">
-                        <div className="col-md-12 text-center">
+                    <div className="header">
+                        <div className="text-center">
                             <h1>OpenStack Summit Admin</h1>
                             <AuthButton isLoggedUser={isLoggedUser} doLogin={doLogin} doLogout={doLogout}/>
                         </div>

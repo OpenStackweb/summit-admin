@@ -25,11 +25,15 @@ class SummitDirectoryPage extends React.Component {
         let { summits } = this.props;
         return (
             <div className="container">
-                {summits && summits.map((summit,i) => (
-                    <a key={summit.id} className="btn btn-default" href="#" onClick={ (e) => { return this.onSelectedSummit(e, summit) }}>
-                        {summit.name}
-                    </a>
-                ))}
+                <div className="row justify-content-center">
+                    {summits && summits.map((summit,i) => (
+                        <div key={summit.id} className="col-md-4" style={{marginTop: '10px'}}>
+                            <a className="btn btn-default form-control" onClick={ (e) => { return this.onSelectedSummit(e, summit) }}>
+                                {summit.name}
+                            </a>
+                        </div>
+                    ))}
+                </div>
             </div>
         );
     }
