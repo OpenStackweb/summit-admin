@@ -51,6 +51,7 @@
     "history": "^4.7.2",
     "i18n-react": "^0.6.3",
     "lodash": "^4.17.4",
+    "moment-timezone": "^0.5.14",
     "react": "^16.1.1",
     "react-bootstrap": "^0.31.5",
     "react-burger-menu": "^2.1.11",
