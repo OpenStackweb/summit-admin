@@ -46,6 +46,7 @@
     "webpack-dev-server": "^2.9.4"
   },
   "dependencies": {
+    "@tinymce/tinymce-react": "^2.0.3",
     "babel-polyfill": "^6.26.0",
     "dotenv": "^4.0.0",
     "history": "^4.7.2",
