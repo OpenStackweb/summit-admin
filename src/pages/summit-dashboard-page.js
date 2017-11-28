@@ -25,9 +25,9 @@ class SummitDashboardPage extends React.Component {
         });
     }
 
-    getFormattedTime(atime, in_seconds) {
-        atime = (in_seconds) ? atime * 1000 : atime;
-        return moment(atime).format('MMMM Do YYYY, h:mm:ss a');
+    getFormattedTime(atime) {
+        atime = atime * 1000;
+        return moment(atime).tz(this.props.currentSummit.time_zone.name).format('MMMM Do YYYY, h:mm:ss a');
     }
 
     getTimeClass(start_time, end_time) {
@@ -46,59 +46,59 @@ class SummitDashboardPage extends React.Component {
                 <hr/>
                 <h4>Dates & Times</h4>
                 <div className="row">
-                    <div className="col-md-2"> {currentSummit.time_zone.name} </div>
-                    <div className="col-md-4"> {this.getFormattedTime(this.state.localtime)} </div>
+                    <div className="col-md-3"> {currentSummit.time_zone.name} </div>
+                    <div className="col-md-4"> {this.getFormattedTime(this.state.localtime / 1000)} </div>
                 </div>
                 <div className={'row ' + this.getTimeClass(currentSummit.start_date, currentSummit.end_date)}>
                     <div className="col-md-2"> <i className="fa fa-calendar"></i> Summit </div>
-                    <div className="col-md-4"> {this.getFormattedTime(currentSummit.start_date, true)} </div>
+                    <div className="col-md-4"> {this.getFormattedTime(currentSummit.start_date)} </div>
                     <div className="col-md-1"> <i className="fa fa-angle-double-right"></i> </div>
-                    <div className="col-md-4"> {this.getFormattedTime(currentSummit.end_date, true)} </div>
+                    <div className="col-md-4"> {this.getFormattedTime(currentSummit.end_date)} </div>
                 </div>
                 <div className={'row ' + this.getTimeClass(currentSummit.start_date, currentSummit.end_date)}>
                     <div className="col-md-2"> <i className="fa fa-calendar"></i> Submission </div>
-                    <div className="col-md-4"> {this.getFormattedTime(currentSummit.start_date, true)} </div>
+                    <div className="col-md-4"> {this.getFormattedTime(currentSummit.submission_begin_date)} </div>
                     <div className="col-md-1"> <i className="fa fa-angle-double-right"></i> </div>
-                    <div className="col-md-4"> {this.getFormattedTime(currentSummit.end_date, true)} </div>
+                    <div className="col-md-4"> {this.getFormattedTime(currentSummit.submission_end_date)} </div>
                 </div>
                 <div className={'row ' + this.getTimeClass(currentSummit.start_date, currentSummit.end_date)}>
                     <div className="col-md-2"> <i className="fa fa-calendar"></i> Voting </div>
-                    <div className="col-md-4"> {this.getFormattedTime(currentSummit.start_date, true)} </div>
+                    <div className="col-md-4"> {this.getFormattedTime(currentSummit.voting_begin_date)} </div>
                     <div className="col-md-1"> <i className="fa fa-angle-double-right"></i> </div>
-                    <div className="col-md-4"> {this.getFormattedTime(currentSummit.end_date, true)} </div>
+                    <div className="col-md-4"> {this.getFormattedTime(currentSummit.voting_end_date)} </div>
                 </div>
                 <div className={'row ' + this.getTimeClass(currentSummit.start_date, currentSummit.end_date)}>
                     <div className="col-md-2"> <i className="fa fa-calendar"></i> Selection </div>
-                    <div className="col-md-4"> {this.getFormattedTime(currentSummit.start_date, true)} </div>
+                    <div className="col-md-4"> {this.getFormattedTime(currentSummit.selection_begin_date)} </div>
                     <div className="col-md-1"> <i className="fa fa-angle-double-right"></i> </div>
-                    <div className="col-md-4"> {this.getFormattedTime(currentSummit.end_date, true)} </div>
+                    <div className="col-md-4"> {this.getFormattedTime(currentSummit.selection_end_date)} </div>
                 </div>
                 <div className={'row ' + this.getTimeClass(currentSummit.start_date, currentSummit.end_date)}>
                     <div className="col-md-2"> <i className="fa fa-calendar"></i> Registration </div>
-                    <div className="col-md-4"> {this.getFormattedTime(currentSummit.start_date, true)} </div>
+                    <div className="col-md-4"> {this.getFormattedTime(currentSummit.registration_begin_date)} </div>
                     <div className="col-md-1"> <i className="fa fa-angle-double-right"></i> </div>
-                    <div className="col-md-4"> {this.getFormattedTime(currentSummit.end_date, true)} </div>
+                    <div className="col-md-4"> {this.getFormattedTime(currentSummit.registration_end_date)} </div>
                 </div>
                 <hr/>
                 <h4>Events & Attendees</h4>
                 <div className="row">
                     <div className="col-md-6">
                         <i className="fa fa-users"></i>&nbsp;Attendees&nbsp;
-                        <strong>1428</strong>
+                        <strong>{currentSummit.attendees_count}</strong>
                     </div>
                     <div className="col-md-6">
                         <i className="fa fa-users"></i>&nbsp;Speakers&nbsp;
-                        <strong>521</strong>
+                        <strong>{currentSummit.speakers_count}</strong>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-md-6">
                         <i className="fa fa-calendar-plus-o"></i>&nbsp;Submitted Events&nbsp;
-                        <strong>1237</strong>
+                        <strong>{currentSummit.presentations_submitted_count}</strong>
                     </div>
                     <div className="col-md-6">
                         <i className="fa fa-calendar-check-o"></i>&nbsp;Published Events&nbsp;
-                        <strong>521</strong>
+                        <strong>{currentSummit.published_events_count}</strong>
                     </div>
                 </div>
                 <div className="row">
@@ -112,11 +112,11 @@ class SummitDashboardPage extends React.Component {
                 <div className="row">
                     <div className="col-md-6">
                         <i className="fa fa-users"></i>&nbsp;Voters&nbsp;
-                        <strong>3067</strong>
+                        <strong>{currentSummit.presentation_voters_count}</strong>
                     </div>
                     <div className="col-md-6">
                         <i className="fa fa fa-thumbs-o-up"></i>&nbsp;Votes&nbsp;
-                        <strong>16173</strong>
+                        <strong>{currentSummit.presentation_votes_count}</strong>
                     </div>
                 </div>
                 <hr/>
@@ -124,29 +124,29 @@ class SummitDashboardPage extends React.Component {
                 <div className="row">
                     <div className="col-md-4">
                         <i className="fa fa-paper-plane"></i>&nbsp;Accepted&nbsp;
-                        <strong>155</strong>
+                        <strong>{currentSummit.speaker_announcement_email_accepted_count}</strong>
                     </div>
                     <div className="col-md-4">
                         <i className="fa fa-paper-plane"></i>&nbsp;Rejected&nbsp;
-                        <strong>887</strong>
+                        <strong>{currentSummit.speaker_announcement_email_rejected_count}</strong>
                     </div>
                     <div className="col-md-4">
                         <i className="fa fa-paper-plane"></i>&nbsp;Alternate&nbsp;
-                        <strong>56</strong>
+                        <strong>{currentSummit.speaker_announcement_email_alternate_count}</strong>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-md-4">
                         <i className="fa fa-paper-plane"></i>&nbsp;Accepted Alternate&nbsp;
-                        <strong>21</strong>
+                        <strong>{currentSummit.speaker_announcement_email_accepted_alternate_count}</strong>
                     </div>
                     <div className="col-md-4">
                         <i className="fa fa-paper-plane"></i>&nbsp;Accepted Rejected&nbsp;
-                        <strong>96</strong>
+                        <strong>{currentSummit.speaker_announcement_email_accepted_rejected_count}</strong>
                     </div>
                     <div className="col-md-4">
                         <i className="fa fa-paper-plane"></i>&nbsp;Alternate Rejected&nbsp;
-                        <strong>38</strong>
+                        <strong>{currentSummit.speaker_announcement_email_alternate_rejected_count}</strong>
                     </div>
                 </div>
             </div>
