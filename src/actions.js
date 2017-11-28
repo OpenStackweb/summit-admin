@@ -1,21 +1,21 @@
-import { getRequest, putRequest, postRequest, deleteRequest, createAction, STOP_LOADING } from "openstack-uicore-foundation";
+import { getRequest, putRequest, postRequest, deleteRequest, createAction, stopLoading, startLoading } from "openstack-uicore-foundation";
 import 'sweetalert2/dist/sweetalert2.css';
 import swal from 'sweetalert2';
 import T from 'i18n-react';
 
-export const SET_LOGGED_USER    = 'SET_LOGGED_USER';
-export const LOGOUT_USER        = 'LOGOUT_USER';
-export const LOADING            = 'LOADING';
-export const REQUEST_USER_INFO  = 'REQUEST_USER_INFO';
-export const RECEIVE_USER_INFO  = 'RECEIVE_USER_INFO';
-export const RECEIVE_SUMMITS    = 'RECEIVE_SUMMITS';
-export const SET_CURRENT_SUMMIT = 'SET_CURRENT_SUMMIT';
+export const SET_LOGGED_USER                = 'SET_LOGGED_USER';
+export const LOGOUT_USER                    = 'LOGOUT_USER';
+export const REQUEST_USER_INFO              = 'REQUEST_USER_INFO';
+export const RECEIVE_USER_INFO              = 'RECEIVE_USER_INFO';
+export const REQUEST_SUMMITS                = 'REQUEST_SUMMITS';
+export const RECEIVE_SUMMITS                = 'RECEIVE_SUMMITS';
+export const SET_CURRENT_SUMMIT             = 'SET_CURRENT_SUMMIT';
 export const REQUEST_UNSCHEDULE_EVENTS_PAGE = "REQUEST_UNSCHEDULE_EVENTS_PAGE";
 export const RECEIVE_UNSCHEDULE_EVENTS_PAGE = "RECEIVE_UNSCHEDULE_EVENTS_PAGE";
 export const REQUEST_PUBLISH_EVENT          = 'REQUEST_PUBLISH_EVENT';
 
-const GROUP_ADMINS_CODE         = 'administrators';
-let apiBaseUrl                  = process.env['API_BASE_URL'];
+const GROUP_ADMINS_CODE       = 'administrators';
+let apiBaseUrl                = process.env['API_BASE_URL'];
 
 export const authErrorHandler = (err, res) => (dispatch) => {
     let code = err.status;
@@ -72,7 +72,10 @@ export const setCurrentSummit = (summit, history) => (dispatch) =>
 export const getUserInfo = () => (dispatch, getState) => {
 
     let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    let { accessToken, member }     = loggedUserState;
+    if(member != null) return;
+
+    dispatch(startLoading());
 
     getRequest(
         createAction(REQUEST_USER_INFO),
@@ -80,6 +83,7 @@ export const getUserInfo = () => (dispatch, getState) => {
         `${apiBaseUrl}/api/v1/members/me?expand=groups&access_token=${accessToken}`,
         authErrorHandler
     )({})(dispatch, getState).then(() => {
+            dispatch(stopLoading());
             let { member } = getState().loggedUserState;
             if( member == null || member == undefined){
                 swal("ERROR", T.translate("errors.user_not_set"), "error");
@@ -108,28 +112,27 @@ export const loadSummits = () => (dispatch, getState) => {
 
     let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
-
+    dispatch(startLoading());
     getRequest(
-        createAction(LOADING),
+        createAction(REQUEST_SUMMITS),
         createAction(RECEIVE_SUMMITS),
         `${apiBaseUrl}/api/v1/summits/all?access_token=${accessToken}`,
         authErrorHandler
-    )({})(dispatch, getState);
+    )({})(dispatch, getState).then(dispatch(stopLoading()));;
 }
 
 export const getUnScheduleEventsPage = (summitId, source = 'presentations', page = 1, page_size = 10, order = 'SummitEvent.Title', track_id = null, status = null ) =>
     (dispatch, getState) => {
         let { loggedUserState } = getState();
         let { accessToken }     = loggedUserState;
-
+        dispatch(startLoading());
         return getRequest(
             createAction(REQUEST_UNSCHEDULE_EVENTS_PAGE),
             createAction(RECEIVE_UNSCHEDULE_EVENTS_PAGE),
             `${apiBaseUrl}/api/v1/summits/${summitId}/events?access_token=${accessToken}`,
             authErrorHandler
-        )({
-        })(dispatch);
-    };
+        )({})(dispatch).then(dispatch(stopLoading()));
+};
 
 export const publishEvent = (event, day, startTime, minutes) =>
     (dispatch, getState) => {
@@ -141,4 +144,4 @@ export const publishEvent = (event, day, startTime, minutes) =>
                 minutes,
             }
         ));
-    };
+};

@@ -28,7 +28,7 @@
     "less-loader": "^4.0.5",
     "moment": "^2.19.2",
     "node-sass": "^4.7.2",
-    "openstack-uicore-foundation": "^1.0.6",
+    "openstack-uicore-foundation": "^1.0.8",
     "postcss-loader": "^2.0.9",
     "react-dnd": "^2.5.4",
     "react-dnd-html5-backend": "^2.5.4",
