@@ -14,8 +14,9 @@
 import React from 'react';
 import 'react-select/dist/react-select.css';
 import Select from 'react-select';
+import {querySpeakers} from '../../actions';
 
-export default class TagInput extends React.Component {
+export default class SpeakerInput extends React.Component {
 
     constructor(props) {
         super(props);
@@ -25,7 +26,7 @@ export default class TagInput extends React.Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
-        this.getTags = this.getTags.bind(this);
+        this.getSpeakers = this.getSpeakers.bind(this);
     }
 
     handleChange(value) {
@@ -36,18 +37,18 @@ export default class TagInput extends React.Component {
         let ev = {target: {
             id: this.props.id,
             value: value,
-            type: 'taginput'
+            type: 'speakerinput'
         }};
 
         this.props.onChange(ev);
     }
 
-    getTags (input) {
+    getSpeakers (input) {
         if (!input) {
             return Promise.resolve({ options: [] });
         }
 
-        return fetch(`https://testresource-server.openstack.org/api/v1/summits/23/tags?q=${input}`)
+        return fetch(`${apiBaseUrl}/api/v1/summits/${summitId}/speakers?q=${query}&access_token=${accessToken}`)
             .then((response) => response.json())
             .then((json) => {
                 return { options: json.items };
@@ -56,21 +57,18 @@ export default class TagInput extends React.Component {
 
     render() {
 
-        const AsyncComponent = this.props.allow_new
-            ? Select.AsyncCreatable
-            : Select.Async;
-
         return (
-            <AsyncComponent
+            <Select.Async
                 multi={true}
                 value={this.state.value}
                 onChange={this.handleChange}
                 valueKey="id"
-                labelKey="tags"
-                loadOptions={this.getTags}
+                labelKey="speakers"
+                loadOptions={this.getSpeakers}
                 backspaceRemoves={true}
             />
         );
 
     }
 }
+

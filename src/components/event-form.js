@@ -16,6 +16,8 @@ import { Editor } from '@tinymce/tinymce-react'
 import Dropdown from './dropdown'
 import GroupedDropdown from './grouped_dropdown'
 import DateTimePicker from './datetimepicker'
+import TagInput from './tag_input'
+import SpeakerInput from './speaker_input'
 
 class EventForm extends React.Component {
     constructor(props) {
@@ -213,13 +215,28 @@ class EventForm extends React.Component {
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> Tags </label>
-                        <Dropdown
+                        <TagInput
                             id="tags"
                             value={entity.tags}
                             onChange={this.handleChange}
+                            allow_new={false}
                         />
                     </div>
                 </div>
+                {entity.type == 'presentation' &&
+                <div className="row form-group">
+                    <div className="col-md-4">
+                        <label> Speakers </label>
+                        <SpeakerInput
+                            id="speakers"
+                            value={entity.speakers}
+                            onChange={this.handleChange}
+                            allow_new={false}
+                            summitId={currentSummit.id}
+                        />
+                    </div>
+                </div>
+                }
 
                 <input type="submit" className="btn btn-primary" value="Submit" />
             </form>
