@@ -26,7 +26,7 @@
     "json-loader": "^0.5.7",
     "less": "^2.7.3",
     "less-loader": "^4.0.5",
-    "moment": "^2.19.2",
+    "moment": "^2.19.3",
     "node-sass": "^4.7.2",
     "openstack-uicore-foundation": "^1.0.8",
     "postcss-loader": "^2.0.9",
@@ -53,12 +53,14 @@
     "i18n-react": "^0.6.3",
     "lodash": "^4.17.4",
     "moment-timezone": "^0.5.14",
-    "react": "^16.1.1",
+    "react": "^16.2.0",
     "react-bootstrap": "^0.31.5",
     "react-burger-menu": "^2.1.11",
-    "react-dom": "^16.1.1",
+    "react-datetime": "^2.11.0",
+    "react-dom": "^16.2.0",
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^5.0.0-alpha.8",
+    "react-select": "^1.1.0",
     "redux-persist": "^5.4.0"
   }
 }
