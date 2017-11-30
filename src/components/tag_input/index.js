@@ -14,6 +14,7 @@
 import React from 'react';
 import 'react-select/dist/react-select.css';
 import Select from 'react-select';
+import {queryTags} from '../../actions';
 
 export default class TagInput extends React.Component {
 
@@ -47,11 +48,7 @@ export default class TagInput extends React.Component {
             return Promise.resolve({ options: [] });
         }
 
-        return fetch(`https://testresource-server.openstack.org/api/v1/summits/23/tags?q=${input}`)
-            .then((response) => response.json())
-            .then((json) => {
-                return { options: json.items };
-            });
+        return queryTags(input);
     }
 
     render() {
@@ -65,8 +62,6 @@ export default class TagInput extends React.Component {
                 multi={true}
                 value={this.state.value}
                 onChange={this.handleChange}
-                valueKey="id"
-                labelKey="tags"
                 loadOptions={this.getTags}
                 backspaceRemoves={true}
             />

@@ -17,6 +17,7 @@ import baseReducer from './reducers/base-reducer'
 import currentSummitReducer from './reducers/current-summit-reducer';
 import directoryReducer from './reducers/directory-reducer';
 import scheduleBuilderReducer from './reducers/schedule-builder-reducer';
+import summitEventReducer from './reducers/summit-event-reducer';
 
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
@@ -33,11 +34,16 @@ const reducers = persistCombineReducers(config, {
     directoryState: directoryReducer,
     currentSummitState: currentSummitReducer,
     currentScheduleBuilderState: scheduleBuilderReducer,
+    currentSummitEventState: summitEventReducer,
 })
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(reducers, composeEnhancers(applyMiddleware(thunk)));
 
-export const persistor = persistStore(store);
+const onRehydrateComplete = () => {
+    window.accessToken = store.getState().loggedUserState.accessToken;
+}
+
+export const persistor = persistStore(store, null, onRehydrateComplete);
 export default store;

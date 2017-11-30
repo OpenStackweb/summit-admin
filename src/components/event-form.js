@@ -12,12 +12,16 @@
  **/
 
 import React from 'react'
+import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import { Editor } from '@tinymce/tinymce-react'
 import Dropdown from './dropdown'
 import GroupedDropdown from './grouped_dropdown'
 import DateTimePicker from './datetimepicker'
 import TagInput from './tag_input'
 import SpeakerInput from './speaker_input'
+import CompanyInput from './company_input'
+import GroupInput from './group_input'
+
 
 class EventForm extends React.Component {
     constructor(props) {
@@ -49,13 +53,28 @@ class EventForm extends React.Component {
         ev.preventDefault();
     }
 
+    isEventType(type) {
+        let {entity} = this.state;
+
+        switch (type) {
+            case 'keynote':
+                return entity.type == 'keynote';
+                break;
+            case 'presentation':
+                return (['presentation', 'keynote', 'panel'].indexOf(entity.type) >= 0);
+                break;
+            default:
+                return false;
+        }
+    }
+
     render() {
         let {entity} = this.state;
         let { currentSummit } = this.props;
 
         let event_types_ddl = [
             {label: 'Presentation', value: 'presentation'},
-            {label: 'Keynotes', value: 'keynotes'},
+            {label: 'Keynotes', value: 'keynote'},
             {label: 'Panel', value: 'panel'}
         ];
 
@@ -74,12 +93,7 @@ class EventForm extends React.Component {
             ]}
         ];
 
-        let levels_ddl = [
-            {label: 'N/A', value: 'N/A'},
-            {label: 'Beginner', value: 'Beginner'},
-            {label: 'Intermediate', value: 'Intermediate'},
-            {label: 'Advanced', value: 'Advanced'}
-        ];
+        let levels_ddl = this.props.levelopts.map(l => ({label: l, value: l}));
 
         return (
             <form onSubmit={this.handleSubmit}>
@@ -108,7 +122,7 @@ class EventForm extends React.Component {
                         <textarea className="form-control" id="social_summary" value={entity.social_summary} onChange={this.handleChange} />
                     </div>
                 </div>
-                {entity.type == 'presentation' &&
+                {this.isEventType('presentation') &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> What can attendees expect to learn? </label>
@@ -204,12 +218,30 @@ class EventForm extends React.Component {
                 <div className="row form-group">
                     <div className="col-md-4">
                         <label> Feedback </label>
-                        <input type="checkbox" id="feedback" checked={entity.feedback} onChange={this.handleChange} />
+                        <div className="form-check abc-checkbox">
+                            <input type="checkbox" id="feedback" checked={entity.feedback} onChange={this.handleChange} className="form-check-input" />
+                            <label className="form-check-label" htmlFor="feedback"> Allow feedback ? </label>
+                        </div>
                     </div>
+                    {this.isEventType('presentation') &&
                     <div className="col-md-4">
-                        <label> Does this talk feature an OpenStack cloud? </label>
-                        <input type="radio" id="feature_cloud" value={1} checked={entity.feature_cloud} onChange={this.handleChange} />
-                        <input type="radio" id="feature_cloud" value={0} checked={!entity.feature_cloud} onChange={this.handleChange} />
+                        <label> Recording </label>
+                        <div className="form-check abc-checkbox">
+                            <input id="to_record" onChange={this.handleChange} checked={entity.to_record} className="form-check-input" type="checkbox" />
+                            <label className="form-check-label" htmlFor="to_record"> To record ? </label>
+                        </div>
+                    </div>
+                    }
+                    <div className="col-md-4">
+                        <label> Does this talk feature an OpenStack cloud? </label><br/>
+                        <div className="form-check abc-radio radio-inline">
+                            <input checked={entity.feature_cloud} onChange={this.handleChange} name="feature_cloud" id="feature_cloud_1" value={1} className="form-check-input" type="radio" />
+                            <label className="form-check-label" htmlFor="feature_cloud_1"> Yes </label>
+                        </div>
+                        <div className="form-check abc-radio radio-inline" style={{marginLeft: '100px'}}>
+                            <input checked={!entity.feature_cloud} onChange={this.handleChange} name="feature_cloud" id="feature_cloud_2" value={0} className="form-check-input" type="radio" />
+                            <label className="form-check-label" htmlFor="feature_cloud_2"> No </label>
+                        </div>
                     </div>
                 </div>
                 <div className="row form-group">
@@ -223,16 +255,58 @@ class EventForm extends React.Component {
                         />
                     </div>
                 </div>
-                {entity.type == 'presentation' &&
+                {this.isEventType('presentation') &&
                 <div className="row form-group">
-                    <div className="col-md-4">
+                    <div className="col-md-12">
+                        <label> Sponsors </label>
+                        <CompanyInput
+                            id="sponsors"
+                            value={entity.sponsors}
+                            onChange={this.handleChange}
+                            summitId={currentSummit.id}
+                            multi={true}
+                        />
+                    </div>
+                </div>
+                }
+                {this.isEventType('presentation') &&
+                <div className="row form-group">
+                    <div className="col-md-12">
                         <label> Speakers </label>
                         <SpeakerInput
                             id="speakers"
                             value={entity.speakers}
                             onChange={this.handleChange}
-                            allow_new={false}
                             summitId={currentSummit.id}
+                            multi={true}
+                        />
+                    </div>
+                </div>
+                }
+                {this.isEventType('keynote') &&
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <label> Moderator </label>
+                        <SpeakerInput
+                            id="moderator"
+                            value={entity.moderator}
+                            onChange={this.handleChange}
+                            summitId={currentSummit.id}
+                            multi={false}
+                        />
+                    </div>
+                </div>
+                }
+                {this.isEventType('fishbowl') &&
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <label> Discussion Leader </label>
+                        <SpeakerInput
+                            id="discussion_leader"
+                            value={entity.discussion_leader}
+                            onChange={this.handleChange}
+                            summitId={currentSummit.id}
+                            multi={false}
                         />
                     </div>
                 </div>

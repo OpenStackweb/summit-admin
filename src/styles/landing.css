@@ -31,3 +31,9 @@ body {
     background-color: white;
     padding: 30px;
 }
+
+.form-check-label {
+    padding-left: 10px !important;
+    padding-top: 2px;
+    font-weight: 400;
+}

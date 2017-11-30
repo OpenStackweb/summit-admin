@@ -22,14 +22,15 @@ class EditSummitEventPage extends React.Component {
             <div className="container">
                 <h3>Summit Event</h3>
                 <hr/>
-                <EventForm currentSummit={currentSummit} />
+                <EventForm currentSummit={currentSummit} levelopts={this.props.level_options}/>
             </div>
         )
     }
 }
 
-const mapStateToProps = ({ currentSummitState }) => ({
-    currentSummit : currentSummitState.currentSummit,
+const mapStateToProps = ({ currentSummitState, currentSummitEventState }) => ({
+    currentSummit: currentSummitState.currentSummit,
+    level_options: currentSummitEventState.level_options
 })
 
 export default connect (

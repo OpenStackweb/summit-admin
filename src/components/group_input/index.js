@@ -14,9 +14,9 @@
 import React from 'react';
 import 'react-select/dist/react-select.css';
 import Select from 'react-select';
-import {querySpeakers} from '../../actions';
+import {queryGroups} from '../../actions';
 
-export default class SpeakerInput extends React.Component {
+export default class GroupInput extends React.Component {
 
     constructor(props) {
         super(props);
@@ -26,7 +26,7 @@ export default class SpeakerInput extends React.Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
-        this.getSpeakers = this.getSpeakers.bind(this);
+        this.getGroups = this.getGroups.bind(this);
     }
 
     handleChange(value) {
@@ -37,18 +37,18 @@ export default class SpeakerInput extends React.Component {
         let ev = {target: {
             id: this.props.id,
             value: value,
-            type: 'speakerinput'
+            type: 'groupinput'
         }};
 
         this.props.onChange(ev);
     }
 
-    getSpeakers (input) {
+    getGroups (input) {
         if (!input) {
             return Promise.resolve({ options: [] });
         }
 
-        return querySpeakers(this.props.summitId, input);
+        return queryGroups(this.props.summitId, input);
     }
 
     render() {
@@ -58,7 +58,7 @@ export default class SpeakerInput extends React.Component {
                 multi={this.props.multi}
                 value={this.state.value}
                 onChange={this.handleChange}
-                loadOptions={this.getSpeakers}
+                loadOptions={this.getGroups}
                 backspaceRemoves={true}
             />
         );
