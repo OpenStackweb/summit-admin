@@ -48,7 +48,7 @@ export default class GroupInput extends React.Component {
             return Promise.resolve({ options: [] });
         }
 
-        return queryGroups(this.props.summitId, input);
+        return queryGroups(input);
     }
 
     render() {

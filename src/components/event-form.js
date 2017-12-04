@@ -21,6 +21,7 @@ import TagInput from './tag_input'
 import SpeakerInput from './speaker_input'
 import CompanyInput from './company_input'
 import GroupInput from './group_input'
+import UploadInput from './upload_input'
 
 
 class EventForm extends React.Component {
@@ -31,6 +32,7 @@ class EventForm extends React.Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
+        this.handleUpload = this.handleUpload.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -48,52 +50,46 @@ class EventForm extends React.Component {
         this.setState({entity: entity});
     }
 
+    handleUpload(ev) {
+        console.log('file uploaded');
+    }
+
     handleSubmit(ev) {
         alert('A name was submitted');
         ev.preventDefault();
     }
 
-    isEventType(type) {
+    isEventType(types) {
         let {entity} = this.state;
+        if (!entity.type) return false;
+        let entity_type = this.props.typeopts.find(t => t.id == entity.type);
 
-        switch (type) {
-            case 'keynote':
-                return entity.type == 'keynote';
-                break;
-            case 'presentation':
-                return (['presentation', 'keynote', 'panel'].indexOf(entity.type) >= 0);
-                break;
-            default:
-                return false;
-        }
+        types = Array.isArray(types) ? types : [types] ;
+
+        return ( types.indexOf(entity_type.class_name) != -1 || types.indexOf(entity_type.name) != -1 );
+
     }
 
     render() {
         let {entity} = this.state;
-        let { currentSummit } = this.props;
+        let { currentSummit, levelopts, typeopts, trackopts, locationopts } = this.props;
 
-        let event_types_ddl = [
-            {label: 'Presentation', value: 'presentation'},
-            {label: 'Keynotes', value: 'keynote'},
-            {label: 'Panel', value: 'panel'}
-        ];
+        let event_types_ddl = typeopts.map(t => ({label: t.name, value: t.id, type: t.class_name}));
 
-        let tracks_ddl = [
-            {label: 'Architecture & Operations', value: 'architecture'},
-            {label: 'Birds of a Feather', value: 'birds'},
-            {label: 'Enterprise', value: 'enterprise'}
-        ];
+        let tracks_ddl = trackopts.map(t => ({label: t.name, value: t.id}));
+
+        let venues = locationopts.map(l =>
+            ({label: l.name, value: l.rooms.map(r =>
+                ({label: r.name, value: r.id})
+            )})
+        );
 
         let locations_ddl = [
             {label: 'TBA', value: 'TBA'},
-            {label: 'SYDNEY CONVENTION CENTRE', value: [
-                {label: 'C2.4', value: 'C2.4'},
-                {label: 'C2.5', value: 'C2.5'},
-                {label: 'Main Foyer', value: 'main foyer'},
-            ]}
+            ...venues
         ];
 
-        let levels_ddl = this.props.levelopts.map(l => ({label: l, value: l}));
+        let levels_ddl = levelopts.map(l => ({label: l, value: l}));
 
         return (
             <form onSubmit={this.handleSubmit}>
@@ -122,7 +118,7 @@ class EventForm extends React.Component {
                         <textarea className="form-control" id="social_summary" value={entity.social_summary} onChange={this.handleChange} />
                     </div>
                 </div>
-                {this.isEventType('presentation') &&
+                {this.isEventType('PresentationType') &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> What can attendees expect to learn? </label>
@@ -223,7 +219,7 @@ class EventForm extends React.Component {
                             <label className="form-check-label" htmlFor="feedback"> Allow feedback ? </label>
                         </div>
                     </div>
-                    {this.isEventType('presentation') &&
+                    {this.isEventType('PresentationType') &&
                     <div className="col-md-4">
                         <label> Recording </label>
                         <div className="form-check abc-checkbox">
@@ -255,7 +251,7 @@ class EventForm extends React.Component {
                         />
                     </div>
                 </div>
-                {this.isEventType('presentation') &&
+                {this.isEventType('Presentation') &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> Sponsors </label>
@@ -269,7 +265,7 @@ class EventForm extends React.Component {
                     </div>
                 </div>
                 }
-                {this.isEventType('presentation') &&
+                {this.isEventType('PresentationType') &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> Speakers </label>
@@ -283,7 +279,7 @@ class EventForm extends React.Component {
                     </div>
                 </div>
                 }
-                {this.isEventType('keynote') &&
+                {this.isEventType(['Keynotes', 'Panel']) &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> Moderator </label>
@@ -297,7 +293,7 @@ class EventForm extends React.Component {
                     </div>
                 </div>
                 }
-                {this.isEventType('fishbowl') &&
+                {this.isEventType('Fishbowl') &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> Discussion Leader </label>
@@ -308,6 +304,32 @@ class EventForm extends React.Component {
                             summitId={currentSummit.id}
                             multi={false}
                         />
+                    </div>
+                </div>
+                }
+                {this.isEventType('Groups Events') &&
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <label> Groups </label>
+                        <GroupInput
+                            id="group"
+                            value={entity.group}
+                            onChange={this.handleChange}
+                            summitId={currentSummit.id}
+                            multi={true}
+                        />
+                    </div>
+                </div>
+                }
+
+                {this.isEventType('SummitEventType') &&
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <label> Attachment </label>
+                        <UploadInput
+                            handleUpload={this.handleUpload}
+                            label="Attachment"
+                        />;
                     </div>
                 </div>
                 }

@@ -59,6 +59,7 @@
     "react-burger-menu": "^2.1.11",
     "react-datetime": "^2.11.0",
     "react-dom": "^16.2.0",
+    "react-dropzone": "^4.2.3",
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^5.0.0-alpha.8",
     "react-select": "^1.1.0",

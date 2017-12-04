@@ -48,7 +48,7 @@ export default class CompanyInput extends React.Component {
             return Promise.resolve({ options: [] });
         }
 
-        return queryCompanies(this.props.summitId, input);
+        return queryCompanies(input);
     }
 
     render() {

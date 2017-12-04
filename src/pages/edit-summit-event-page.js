@@ -14,15 +14,34 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import EventForm from '../components/event-form';
+import { getTracks, getVenues, getEventTypes } from '../actions';
 
 class EditSummitEventPage extends React.Component {
+
+    componentWillMount () {
+        if(!this.props.track_options)
+            this.props.getTracks(this.props.currentSummit.id);
+
+        if(!this.props.location_options)
+            this.props.getVenues(this.props.currentSummit.id);
+
+        if(!this.props.type_options)
+            this.props.getEventTypes(this.props.currentSummit.id);
+    }
+
     render(){
         let {currentSummit} = this.props;
         return(
             <div className="container">
                 <h3>Summit Event</h3>
                 <hr/>
-                <EventForm currentSummit={currentSummit} levelopts={this.props.level_options}/>
+                <EventForm
+                    currentSummit={currentSummit}
+                    levelopts={this.props.level_options}
+                    trackopts={this.props.track_options}
+                    typeopts={this.props.type_options}
+                    locationopts={this.props.location_options}
+                />
             </div>
         )
     }
@@ -30,12 +49,17 @@ class EditSummitEventPage extends React.Component {
 
 const mapStateToProps = ({ currentSummitState, currentSummitEventState }) => ({
     currentSummit: currentSummitState.currentSummit,
-    level_options: currentSummitEventState.level_options
+    level_options: currentSummitEventState.level_options,
+    type_options: currentSummitEventState.type_options,
+    track_options: currentSummitEventState.track_options,
+    location_options: currentSummitEventState.location_options
 })
 
 export default connect (
     mapStateToProps,
     {
-
+        getTracks,
+        getVenues,
+        getEventTypes,
     }
 )(EditSummitEventPage);

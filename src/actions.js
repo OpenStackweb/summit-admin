@@ -196,15 +196,15 @@ export const queryTags = (input) => {
         });
 };
 
-export const queryGroups = (summitId, input) => {
+export const queryGroups = (input) => {
 
     let accessToken = window.accessToken;
-    let filters = `group=@${input}`;
+    let filters = `title=@${input},code=@${input}`;
 
-    return fetch(`${apiBaseUrl}/api/v1/summits/${summitId}/groups?filter=${filters}&access_token=${accessToken}`)
+    return fetch(`${apiBaseUrl}/api/v1/groups?filter=${filters}&access_token=${accessToken}`)
         .then((response) => response.json())
         .then((json) => {
-            let options = json.data.map((g) => ({value: g.id, label: g.name}) );
+            let options = json.data.map((g) => ({value: g.id, label: g.title}) );
 
             return {
                 options: options
@@ -212,15 +212,15 @@ export const queryGroups = (summitId, input) => {
         });
 };
 
-export const queryCompanies = (summitId, input) => {
+export const queryCompanies = (input) => {
 
     let accessToken = window.accessToken;
-    let filters = `company=@${input}`;
+    let filters = `name=@${input}`;
 
-    return fetch(`${apiBaseUrl}/api/v1/summits/${summitId}/companies?filter=${filters}&access_token=${accessToken}`)
+    return fetch(`${apiBaseUrl}/api/v1/companies?filter=${filters}&access_token=${accessToken}`)
         .then((response) => response.json())
         .then((json) => {
-            let options = json.data.map((g) => ({value: g.id, label: g.name}) );
+            let options = json.data.map((c) => ({value: c.id, label: c.name}) );
 
             return {
                 options: options
@@ -258,5 +258,6 @@ export const getEventTypes = (summitId) => (dispatch, getState) => {
         authErrorHandler
     )({})(dispatch);
 };
+
 
 
