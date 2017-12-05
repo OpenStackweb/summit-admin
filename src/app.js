@@ -19,7 +19,7 @@ import AuthorizationCallbackRoute from "./routes/authorization-callback-route"
 import AuthButton from './components/auth-button'
 import DefaultRoute from './routes/default-route'
 import { connect } from 'react-redux'
-import { onUserAuth, doLogin, doLogout, getUserInfo } from './actions'
+import { onUserAuth, doLogin, doLogout, getUserInfo } from './actions/auth-actions'
 import { BrowserRouter } from 'react-router-dom'
 import { AjaxLoader } from "openstack-uicore-foundation";
 import T from 'i18n-react';

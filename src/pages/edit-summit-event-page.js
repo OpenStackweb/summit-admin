@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import EventForm from '../components/event-form';
-import { getTracks, getVenues, getEventTypes } from '../actions';
+import { getTracks, getVenues, getEventTypes } from '../actions/actions';
 
 class EditSummitEventPage extends React.Component {
 

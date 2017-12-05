@@ -10,9 +10,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
+
 import React from 'react';
-import PropTypes from 'prop-types';
-import moment from 'moment';
+import moment from 'moment-timezone'
 import { DropTarget } from 'react-dnd';
 import { DraggableItemTypes } from './draggable-items-types';
 import ScheduleEvent from './schedule-event';
@@ -31,9 +31,9 @@ const TimeSlot = ({timeLabel}) => {
 
 const timeSlotContainerTarget = {
     canDrop(props, monitor) {
-        let eventModel = new SummitEvent(monitor.getItem());
-        let {timeSlot, events, currentDay} = props;
-        return eventModel.canMoveMain(events, currentDay, timeSlot);
+        let {timeSlot, events, currentDay, currentSummit} = props;
+        let eventModel = new SummitEvent(monitor.getItem(), currentSummit);
+        return eventModel.canMove(events, currentDay, timeSlot);
     },
     drop(props, monitor, component) {
         props.onDroppedEvent(monitor.getItem(), props.timeSlot);
@@ -116,92 +116,39 @@ class ScheduleEventList extends React.Component
         if( height < (newTop+newHeight)){
             return false;
         }
-        let { events, currentDay, startTime, pixelsPerMinute, childEvents } = this.props;
+        let { events, currentDay, startTime, pixelsPerMinute, currentSummit } = this.props;
         // try first to find events on main collection
         let event          = events.filter( evt => { return evt.id === eventId;}).shift();
-
-        if(!event) // if not look for child ones
-            event = childEvents.filter( evt => { return evt.id === eventId;}).shift();
-
-        let eventModel = new SummitEvent(event);
+        let eventModel     = new SummitEvent(event);
 
         let filteredEvents = events.filter( evt => { return evt.id !== eventId;});
         // calculate new event start date, end date
         let minutes        = Math.floor(newTop / pixelsPerMinute);
         let duration       = Math.floor(newHeight / pixelsPerMinute);
-        let startDateTime  = moment(currentDay+' '+ startTime, 'YYYY-MM-DD HH:mm');
-        let upperLimitDate = null, lowerLimitDate = null;
-        if(eventModel.isChildEvent()) { // its child event
-            let parentEvent         = events.filter( evt => { return evt.id === event.parentId;}).shift();
-            let parentStartDateTime = moment(parentEvent.start_datetime);
-            let parentEndDateTime   = moment(parentEvent.end_datetime);
-            upperLimitDate          = parentStartDateTime.clone();
-            lowerLimitDate          = parentEndDateTime.clone();
-            startTime               = parentStartDateTime.format('HH:mm');
-            filteredEvents          = parentEvent.subEvents.filter( evt => { return evt.id !== eventId;});
-            let deltaMinutes        = moment.duration( parentStartDateTime.diff(startDateTime)).asMinutes();
-            startDateTime           = parentStartDateTime;
-            minutes                 = minutes - deltaMinutes;
-        }
-
-        startDateTime   = startDateTime.add(minutes, 'minutes');
-        let endDateTime = moment(currentDay+' '+ startTime, 'YYYY-MM-DD HH:mm');
-        endDateTime     = endDateTime.add(minutes+duration, 'minutes');
-
-        // its a child and we should respect parent bounds ...
-        if(upperLimitDate !== null && startDateTime.isBefore(upperLimitDate)) return false;
-
-        if(lowerLimitDate !== null && endDateTime.isAfter(lowerLimitDate)) return false;
+        let startDateTime  = moment.tz(currentDay+' '+ startTime, 'YYYY-MM-DD HH:mm', currentSummit.time_zone.name);
+        startDateTime      = startDateTime.add(minutes, 'minutes');
+        let endDateTime    = moment.tz(currentDay+' '+ startTime, 'YYYY-MM-DD HH:mm', currentSummit.time_zone.name);
+        endDateTime        = endDateTime.add(minutes+duration, 'minutes');
 
         for (let auxEvent of filteredEvents) {
-            let auxEventStartDateTime = moment(auxEvent.start_datetime);
-            let auxEventEndDateTime   = moment(auxEvent.end_datetime);
+            let auxEventStartDateTime = moment(auxEvent.start_date * 1000).tz(currentSummit.time_zone.name);
+            let auxEventEndDateTime   = moment(auxEvent.end_date * 1000).tz(currentSummit.time_zone.name);
             // if time segments overlap
             if(auxEventStartDateTime.isBefore(endDateTime) && auxEventEndDateTime.isAfter(startDateTime))
                 return false;
-        }
-
-        // has childs
-
-        if(eventModel.hasChilds()){
-            let minStarDateTime = null, maxEndDateTime = null;
-            for(let subEvent of event.subEvents){
-                let subEventStartDateTime = moment(subEvent.start_datetime);
-                let subEventEndDateTime   = moment(subEvent.end_datetime);
-                if(minStarDateTime === null || minStarDateTime.isAfter(subEventStartDateTime))
-                    minStarDateTime = subEventStartDateTime;
-                if(maxEndDateTime === null || maxEndDateTime.isBefore(subEventEndDateTime))
-                    maxEndDateTime = subEventEndDateTime;
-            }
-
-            if(endDateTime.isBefore(maxEndDateTime)) return false;
-
-            if(startDateTime.isAfter(minStarDateTime)) return false;
         }
 
         return true;
     }
 
     onResized(eventId, newTop, newHeight){
-        let { events, currentDay, startTime, pixelsPerMinute, childEvents } = this.props;
+        let { events, currentDay, startTime, pixelsPerMinute, currentSummit } = this.props;
 
         let event            = events.filter( evt => { return evt.id === eventId;}).shift();
-        if(!event)
-            event = childEvents.filter( evt => { return evt.id === eventId;}).shift();
-
         let minutes          = Math.floor(newTop / pixelsPerMinute);
         let duration         = Math.floor(newHeight / pixelsPerMinute);
-        let startDateTime    = moment(currentDay+' '+ startTime, 'YYYY-MM-DD HH:mm');
-
-        if(event.parentId > 0) { // child event
-            let parentEvent         = events.filter( evt => { return evt.id === event.parentId;}).shift();
-            let parentStartDateTime = moment(parentEvent.start_datetime);
-            let deltaMinutes        = moment.duration( parentStartDateTime.diff(startDateTime)).asMinutes();
-            startDateTime           = parentStartDateTime;
-            minutes                 = minutes - deltaMinutes;
-        }
-
-        startDateTime = startDateTime.add(minutes, 'minutes');
+        let startDateTime    = moment.tz(currentDay+' '+ startTime, 'YYYY-MM-DD HH:mm', currentSummit.time_zone.name);
+        startDateTime        = startDateTime.add(minutes, 'minutes');
 
         this.props.onScheduleEventWithDuration(event, currentDay, moment(startDateTime.format('HH:mm'), 'HH:mm'), duration);
     }
@@ -215,24 +162,23 @@ class ScheduleEventList extends React.Component
     }
 
     calculateInitialTop(event){
-        let { currentDay, startTime, pixelsPerMinute} = this.props;
-        let eventStartDateTime = moment(event.start_datetime);
-        let dayStartDateTime   = moment(currentDay+' '+ startTime, 'YYYY-MM-DD HH:mm');
+        let { currentDay, startTime, pixelsPerMinute, currentSummit} = this.props;
+        let eventStartDateTime = moment(event.start_date * 1000).tz(currentSummit.time_zone.name);
+        let dayStartDateTime   = moment.tz(currentDay+' '+ startTime, 'YYYY-MM-DD HH:mm', currentSummit.time_zone.name);
         let minutes            = eventStartDateTime.diff(dayStartDateTime, 'minutes');
         return minutes * pixelsPerMinute;
     }
 
     calculateInitialHeight(event){
-        let { pixelsPerMinute } = this.props;
-        let eventStartDateTime  = moment(event.start_datetime);
-        let eventEndDateTime    = moment(event.end_datetime);
+        let { pixelsPerMinute, currentSummit } = this.props;
+        let eventStartDateTime  = moment(event.start_date * 1000).tz(currentSummit.time_zone.name);
+        let eventEndDateTime    = moment(event.end_date * 1000).tz(currentSummit.time_zone.name);
         let minutes             = eventEndDateTime.diff(eventStartDateTime, 'minutes');
-
         return minutes * pixelsPerMinute;
     }
 
     render(){
-        let { events, startTime, endTime, interval, pixelsPerMinute, currentDay } = this.props;
+        let { events, startTime, endTime, interval, pixelsPerMinute, currentDay, currentSummit } = this.props;
 
         let timeSlotsList = [];
         let done          = false;
@@ -249,7 +195,7 @@ class ScheduleEventList extends React.Component
         } while(!done);
 
         return (
-            <div className="row">
+            <div className="row outer-schedule-events-container">
                 <div className="col-md-2 no-margin no-padding">
                     {
                         timeSlotsList.map((slot, idx) => (
@@ -267,6 +213,7 @@ class ScheduleEventList extends React.Component
                                 onDroppedEvent={this.onDroppedEvent}
                                 key={idx}
                                 events={events}
+                                currentSummit={currentSummit}
                                 currentDay={currentDay}>
                             </TimeSlotContainer>
                         ))
@@ -276,7 +223,7 @@ class ScheduleEventList extends React.Component
                             return (
                                 <ScheduleEvent
                                     event={event}
-                                    key={event.id + idx}
+                                    key={event.id}
                                     type={"MAIN"}
                                     step={pixelsPerMinute}
                                     minHeight={(pixelsPerMinute * interval)}
@@ -290,29 +237,6 @@ class ScheduleEventList extends React.Component
                                 </ScheduleEvent>)
                         })
                     }
-                    {
-                        events.map((event2, idx2) => {
-                            return event2.subEvents.map((subEvent, idx3) => {
-                                return (
-                                    <ScheduleEvent
-                                        event={subEvent}
-                                        key={subEvent.id + idx3 + idx2 + event2.id}
-                                        type={"CHILD"}
-                                        step={pixelsPerMinute}
-                                        minHeight={(pixelsPerMinute * interval)}
-                                        initialTop={this.calculateInitialTop(subEvent)}
-                                        initialHeight={this.calculateInitialHeight(subEvent)}
-                                        canResize={this.canResize}
-                                        onResized={this.onResized}
-                                        maxHeight={this.calculateInitialHeight(event2)}
-                                        currentDay={currentDay}
-                                    >
-                                    </ScheduleEvent>
-                                )
-                            })
-                        })
-                    }
-
                 </div>
             </div>
         );

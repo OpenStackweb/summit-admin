@@ -16,7 +16,7 @@ import
     RECEIVE_TRACKS,
     RECEIVE_VENUES,
     RECEIVE_EVENT_TYPES,
-} from '../actions';
+} from '../actions/actions';
 
 const DEFAULT_STATE = {
     track_options:  [],

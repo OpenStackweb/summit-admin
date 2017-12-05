@@ -27,8 +27,6 @@ class ScheduleBuilderPage extends React.Component {
     }
 }
 
-
-
 const mapStateToProps = ({ currentSummitState }) => ({
     currentSummit : currentSummitState.currentSummit,
 })

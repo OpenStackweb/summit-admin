@@ -11,13 +11,9 @@
  * limitations under the License.
  **/
 import React from 'react';
-import PropTypes from 'prop-types';
 import ReactDOM    from 'react-dom';
 import { DraggableItemTypes } from './draggable-items-types';
 import { DragSource, DropTarget } from 'react-dnd';
-import { DefaultEventMinutesDuration, PixelsPerMinute } from '../../constants';
-import ScheduleEventTimeSlot from './schedule-event-time-slot';
-import moment from 'moment';
 
 const RESIZING_DIR_NORTH = 'N';
 const RESIZING_DIR_SOUTH = 'S';
@@ -200,71 +196,6 @@ class ScheduleEvent extends React.Component {
 
     // end resize behavior
 
-    renderTimeSlotGrid(){
-        const {
-            event,
-            type,
-            currentDay
-        } = this.props;
-
-        if(type !== 'MAIN') return null;
-
-        let minHeight = DefaultEventMinutesDuration * PixelsPerMinute;
-        let slots     = Math.floor(this.state.height / minHeight);
-
-        let slotsJSX  = [];
-        let eventStartDateTime = moment(event.start_datetime);
-        let startTime          = eventStartDateTime.format('HH:mm')
-        let timeSlot           = moment(startTime, 'HH:mm');
-        for(let i = 0; i < slots; i++){
-            slotsJSX.push(
-                <ScheduleEventTimeSlot
-                    key={event.id+i}
-                    height={minHeight}
-                    event={event}
-                    timeSlot={timeSlot}
-                    onDroppedSubEvent={this.props.onDroppedSubEvent}
-                    currentDay={currentDay}
-                >
-                </ScheduleEventTimeSlot>
-            );
-            timeSlot = timeSlot.clone();
-            timeSlot.add(DefaultEventMinutesDuration, 'minutes');
-        }
-
-        let reminder = this.state.height % minHeight;
-        if(reminder > 0){
-
-            slotsJSX.push(
-                <ScheduleEventTimeSlot
-                    key={event.id+slotsJSX.length}
-                    height={reminder}
-                    event={event}
-                    timeSlot={timeSlot}
-                    onDroppedSubEvent={this.props.onDroppedSubEvent}
-                    currentDay={currentDay}
-                >
-                </ScheduleEventTimeSlot>
-            );
-        }
-
-        return (
-            <div style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                height: '100%',
-                width: '100%',
-            }}>
-
-                {
-                    slotsJSX
-                }
-            </div>
-        );
-
-    }
-
     render() {
         const { connectDragSource,
             isDragging,
@@ -273,16 +204,15 @@ class ScheduleEvent extends React.Component {
         } = this.props;
 
         return connectDragSource(
-            <div className={'row '+(type == 'CHILD' ?'schedule-sub-event':'schedule-event')+' is-resizable'}
+            <div className="row schedule-event is-resizable"
                  onMouseDown={this.onMouseDown}
                  ref={(div) => { this.scheduleEvent = div; }}
                  style={this.getInlineStyles(isDragging)}>
                 <div className="col-md-12 event-container">
-                    <div className={((type == 'MAIN' && event.subEvents.length == 0) || type == 'CHILD')?'event-content':'event-content-half'}>
+                    <div className="event-content">
                         <span>{ event.title }</span>
                     </div>
                 </div>
-                {this.renderTimeSlotGrid()}
             </div>
         );
     }

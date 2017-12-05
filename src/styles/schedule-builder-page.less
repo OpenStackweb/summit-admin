@@ -10,7 +10,7 @@
 }
 
 .unschedule-event{
-  background-color: red;
+  background-color: @unschedule_event_background_color;
   height: @event_initial_height !important;
   width: 90%;
 }
@@ -24,7 +24,7 @@
 }
 
 .schedule-event {
-  background-color: #b3d6ed;
+  background-color: @schedule_event_background_color;
   z-index: @event_z_index;
   min-height: @event_initial_height !important;
   width: 100%;
@@ -111,15 +111,15 @@
 }
 
 .border-left() {
-  border-left: 1px solid #000000;
+  border-left: 1px solid @schedule_border_color;
 }
 
 .border-bottom() {
-  border-bottom: 1px solid #000000;
+  border-bottom: 1px solid @schedule_border_color;
 }
 
 .border-right() {
-  border-right: 1px solid #000000;
+  border-right: 1px solid @schedule_border_color;
 }
 
 .time-slot{
@@ -167,4 +167,36 @@
 
 .no-margin{
   .no-margin
+}
+
+.location-option-venue{
+  font-weight: bold;
+}
+
+.location-option-room{
+  margin-left: 15px;
+}
+
+.swal2-container{
+  z-index: @event_z_index + 2;
+}
+
+.venues-selector, .day-selector, .event-type-selector, .track-selector, .presentation-selection-status-selector {
+  padding-bottom: 10px;
+}
+
+.event-type-selector, .track-selector, .presentation-selection-status-selector{
+  width: 50%;
+}
+
+.outer-schedule-events-container{
+  border-top: 1px solid @schedule_border_color;
+}
+
+.empty-list-message{
+  font-weight: bold;
+}
+
+.fa-spinner{
+  z-index: @time_slot_overlay_z_index + 2;
 }

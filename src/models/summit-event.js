@@ -10,80 +10,58 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-import moment from 'moment';
 import { PixelsPerMinute, DefaultEventMinutesDuration } from './../constants';
+import moment from 'moment-timezone'
 
 class SummitEvent {
 
-    constructor(event){
-        this.event = event;
+    constructor(event, summit = null){
+        this._event  = event;
+        this._summit = summit;
+    }
+
+    set summit(summit){
+        this._summit = summit;
+    }
+
+    get summit(){
+        return this._summit;
     }
 
     getId(){
-        return this.event.id;
+        return this._event.id;
     }
 
     isPublished(){
-        return this.event.hasOwnProperty('published') && this.event.published;
+        return this._event.hasOwnProperty('is_published') && this._event.is_published;
     }
 
     getMinutesDuration(){
-        if(this.event.hasOwnProperty('start_datetime') && this.event.hasOwnProperty('end_datetime') ) {
-            let eventStartDateTime = moment(this.event.start_datetime);
-            let eventEndDateTime   = moment(this.event.end_datetime);
+        if(this._event.hasOwnProperty('start_date') && this._event.hasOwnProperty('end_date')  && this._event.start_date != null && this._event.end_date != null ) {
+            let eventStartDateTime = moment(this._event.start_date * 1000).tz(this._summit.time_zone.name);
+            let eventEndDateTime   = moment(this._event.end_date * 1000).tz(this._summit.time_zone.name);
             return eventEndDateTime.diff(eventStartDateTime, 'minutes');
         }
-        // default duration is 5 minutes
+        // default
 
         return DefaultEventMinutesDuration;
     }
 
-    isChildEvent(){
-        return this.event.parentId > 0;
-    }
 
-    getParentId(){
-        return this.event.parentId;
-    }
-
-    hasChilds(){
-        return this.event.parentId == 0 && this.event.hasOwnProperty('subEvents') && this.event.subEvents.length > 0;
-    }
-
-    recalculateChilds(day, startTime){
-        // we need to recalculate sub events
-        let newStartDateTime    = moment(day+' '+startTime.format('HH:mm'), 'YYYY-MM-DD HH:mm');
-        let formerStartDateTime = moment(this.event.start_datetime);
-        for(let subEvent of this.event.subEvents){
-            let deltaMinutesStart     = moment.duration(newStartDateTime.diff(formerStartDateTime)).asMinutes();
-            let subEventStartDateTime = moment(subEvent.start_datetime);
-            let subEventEndDateTime   = moment(subEvent.end_datetime);
-            let subEventMinutes       = moment.duration( subEventEndDateTime.diff(subEventStartDateTime)).asMinutes();
-            let subEventNewStartTime  = subEventStartDateTime.add(deltaMinutesStart, 'minutes');
-            subEventNewStartTime      = moment(subEventNewStartTime.format('HH:mm'), 'HH:mm');
-            let newSubEventStartDate  = moment(day+' '+subEventNewStartTime.format('HH:mm'), 'YYYY-MM-DD HH:mm');
-            let newSubEventEndDate    = moment(day+' '+subEventNewStartTime.format('HH:mm'), 'YYYY-MM-DD HH:mm').add(subEventMinutes, 'minutes');
-            this.event.subEvents = this.event.subEvents.map(evt => { return evt.id === subEvent.id ?  {...subEvent,
-                start_datetime : newSubEventStartDate.valueOf(),
-                end_datetime   : newSubEventEndDate.valueOf()
-            }: evt; });
-        }
-    }
-
-    canMoveMain(siblings, day, startTime){
+    canMove(siblings, day, startTime){
         let duration       = DefaultEventMinutesDuration;
         // check if published to get real duration ...
         if(this.isPublished())
             duration = this.getMinutesDuration();
 
-        let startDateTime   = moment(day+' '+ startTime.format('HH:mm'), 'YYYY-MM-DD HH:mm');
-        let endDateTime     = moment(day+' '+ startTime.format('HH:mm'), 'YYYY-MM-DD HH:mm');
+        let startDateTime   = moment.tz(day+' '+ startTime.format('HH:mm'), 'YYYY-MM-DD HH:mm', this._summit.time_zone.name);
+        let endDateTime     = moment.tz(day+' '+ startTime.format('HH:mm'), 'YYYY-MM-DD HH:mm', this._summit.time_zone.name);
         endDateTime         = endDateTime.add(duration, 'minutes');
 
         // check siblings overlap
         for (let auxEvent of siblings.filter(item => item.id !== this.getId())) {
-            let auxEventStartDateTime = moment(auxEvent.start_datetime);
-            let auxEventEndDateTime   = moment(auxEvent.end_datetime);
+            let auxEventStartDateTime = moment(auxEvent.start_date * 1000).tz(this._summit.time_zone.name);
+            let auxEventEndDateTime   = moment(auxEvent.end_date * 1000).tz(this._summit.time_zone.name);
             // if time segments overlap
             if(auxEventStartDateTime.isBefore(endDateTime) && auxEventEndDateTime.isAfter(startDateTime))
                 return false;
@@ -92,46 +70,10 @@ class SummitEvent {
         return true;
     }
 
-    canMoveChild(parentEvent, day, startTime){
-        let duration       = DefaultEventMinutesDuration;
-        // check if published to get real duration ...
-        if(this.isPublished())
-            duration = this.getMinutesDuration();
-        // check if published to get real duration ...
-        let filteredEvents  = parentEvent.subEvents.filter( evt => { return evt.id !== this.event.id;});
-        let parentStartDate = moment(parentEvent.start_datetime);
-        let parentEndDate   = moment(parentEvent.end_datetime);
-
-        let startDateTime   = moment(day+' '+ startTime.format('HH:mm'), 'YYYY-MM-DD HH:mm');
-        let endDateTime     = moment(day+' '+ startTime.format('HH:mm'), 'YYYY-MM-DD HH:mm');
-        endDateTime         = endDateTime.add(duration, 'minutes');
-
-        // check parent bounds
-        if(startDateTime.isBefore(parentStartDate) || endDateTime.isAfter(parentEndDate))
-            return false;
-
-        // check siblings overlap
-        for (let auxEvent of filteredEvents) {
-            let auxEventStartDateTime = moment(auxEvent.start_datetime);
-            let auxEventEndDateTime   = moment(auxEvent.end_datetime);
-            // if time segments overlap
-            if(auxEventStartDateTime.isBefore(endDateTime) && auxEventEndDateTime.isAfter(startDateTime))
-                return false;
-        }
-
-        return true;
-    }
-
-    wasMain(){
-        return this.event.hasOwnProperty('formerParentId') && this.event.formerParentId == 0;
-    }
-
-    wasChild(){
-        return this.event.hasOwnProperty('formerParentId') && this.event.formerParentId > 0;
-    }
-
-    getFormerParentId(){
-        return this.event.formerParentId;
+    calculateNewDates(day, startTime, minutes){
+        let newStarDateTime = moment.tz(day+' '+startTime.format('HH:mm'), 'YYYY-MM-DD HH:mm', this._summit.time_zone.name);
+        let newEndDateTime  = moment.tz(day+' '+startTime.format('HH:mm'), 'YYYY-MM-DD HH:mm', this._summit.time_zone.name).add(minutes, 'minutes');
+        return [newStarDateTime, newEndDateTime];
     }
 
 }

@@ -13,7 +13,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { loadSummits, setCurrentSummit } from '../actions';
+import { loadSummits, setCurrentSummit } from '../actions/actions';
 
 class SummitDirectoryPage extends React.Component {
 
@@ -29,9 +29,7 @@ class SummitDirectoryPage extends React.Component {
 
     componentWillMount () {
         this.props.setCurrentSummit(null);
-        if(!this.props.summits || !this.props.summits.length) {
-            this.props.loadSummits();
-        }
+        this.props.loadSummits();
     }
 
     render() {

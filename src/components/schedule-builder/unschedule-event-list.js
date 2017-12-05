@@ -11,24 +11,46 @@
  * limitations under the License.
  **/
 import React from 'react';
-import PropTypes from 'prop-types';
 import UnScheduleEvent from './unschedule-event';
+import { Pagination } from 'react-bootstrap';
+import T from "i18n-react/dist/i18n-react";
 
 class UnScheduleEventList extends React.Component
 {
     render(){
-        let { events } = this.props;
+        let { events, currentPage, lastPage, onPageChange } = this.props;
         return (
-            <ul className="unschedule-list">
-                {
-                    events.map((event, index) => (
-                        <li key={index}>
-                            <UnScheduleEvent event={event}></UnScheduleEvent>
-                        </li>
-                    ))
-
+            <div>
+                { events.length == 0 &&
+                    <p className="empty-list-message">{T.translate("errors.empty_list")}</p>
                 }
-            </ul>
+                {   events.length > 0 &&
+                    <ul className="unschedule-list">
+                        {
+                            events.map((event, index) => (
+                                <li key={index}>
+                                    <UnScheduleEvent event={event}></UnScheduleEvent>
+                                </li>
+                            ))
+                        }
+                    </ul>
+                }
+                {   events.length > 0 &&
+                    <Pagination
+                        bsSize="medium"
+                        prev
+                        next
+                        first
+                        last
+                        ellipsis
+                        boundaryLinks
+                        maxButtons={10}
+                        items={lastPage}
+                        activePage={currentPage}
+                        onSelect={onPageChange}
+                    />
+                }
+            </div>
         );
     }
 }

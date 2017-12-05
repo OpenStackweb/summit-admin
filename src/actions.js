@@ -27,9 +27,7 @@ export const SET_CURRENT_SUMMIT             = 'SET_CURRENT_SUMMIT';
 export const REQUEST_UNSCHEDULE_EVENTS_PAGE = "REQUEST_UNSCHEDULE_EVENTS_PAGE";
 export const RECEIVE_UNSCHEDULE_EVENTS_PAGE = "RECEIVE_UNSCHEDULE_EVENTS_PAGE";
 export const REQUEST_PUBLISH_EVENT          = 'REQUEST_PUBLISH_EVENT';
-export const RECEIVE_TRACKS                 = 'RECEIVE_TRACKS';
-export const RECEIVE_VENUES                 = 'RECEIVE_VENUES';
-export const RECEIVE_EVENT_TYPES            = 'RECEIVE_EVENT_TYPES';
+
 
 const GROUP_ADMINS_CODE       = 'administrators';
 let apiBaseUrl                = process.env['API_BASE_URL'];
@@ -163,101 +161,7 @@ export const publishEvent = (event, day, startTime, minutes) =>
         ));
 };
 
-export const querySpeakers = (summitId, input) => {
 
-    let accessToken = window.accessToken;
-    let filters = `first_name=@${input},last_name=@${input},email=@${input}`;
-
-    return fetch(`${apiBaseUrl}/api/v1/summits/${summitId}/speakers?filter=${filters}&access_token=${accessToken}`)
-        .then((response) => response.json())
-        .then((json) => {
-            let options = json.data.map((s) =>
-                ({value: s.id, label: s.first_name + ' ' + s.last_name + ' (' + s.id + ')'})
-            );
-
-            return {
-                options: options
-            };
-        });
-};
-
-export const queryTags = (input) => {
-
-    let accessToken = window.accessToken;
-
-    return fetch(`${apiBaseUrl}/api/v1/tags?filter=tag=@${input}&order=tag&access_token=${accessToken}`)
-        .then((response) => response.json())
-        .then((json) => {
-            let options = json.data.map((t) => ({value: t.id, label: t.tag}) );
-
-            return {
-                options: options
-            };
-        });
-};
-
-export const queryGroups = (input) => {
-
-    let accessToken = window.accessToken;
-    let filters = `title=@${input},code=@${input}`;
-
-    return fetch(`${apiBaseUrl}/api/v1/groups?filter=${filters}&access_token=${accessToken}`)
-        .then((response) => response.json())
-        .then((json) => {
-            let options = json.data.map((g) => ({value: g.id, label: g.title}) );
-
-            return {
-                options: options
-            };
-        });
-};
-
-export const queryCompanies = (input) => {
-
-    let accessToken = window.accessToken;
-    let filters = `name=@${input}`;
-
-    return fetch(`${apiBaseUrl}/api/v1/companies?filter=${filters}&access_token=${accessToken}`)
-        .then((response) => response.json())
-        .then((json) => {
-            let options = json.data.map((c) => ({value: c.id, label: c.name}) );
-
-            return {
-                options: options
-            };
-        });
-};
-
-
-export const getTracks = (summitId) => (dispatch, getState) => {
-    let { accessToken } = getState().loggedUserState;
-    return getRequest(
-        createAction(NADA),
-        createAction(RECEIVE_TRACKS),
-        `${apiBaseUrl}/api/v1/summits/${summitId}/tracks?access_token=${accessToken}`,
-        authErrorHandler
-    )({})(dispatch);
-};
-
-export const getVenues = (summitId) => (dispatch, getState) => {
-    let { accessToken } = getState().loggedUserState;
-    return getRequest(
-        createAction(NADA),
-        createAction(RECEIVE_VENUES),
-        `${apiBaseUrl}/api/v1/summits/${summitId}/locations/venues?access_token=${accessToken}`,
-        authErrorHandler
-    )({})(dispatch);
-};
-
-export const getEventTypes = (summitId) => (dispatch, getState) => {
-    let { accessToken } = getState().loggedUserState;
-    return getRequest(
-        createAction(NADA),
-        createAction(RECEIVE_EVENT_TYPES),
-        `${apiBaseUrl}/api/v1/summits/${summitId}/event-types?access_token=${accessToken}`,
-        authErrorHandler
-    )({})(dispatch);
-};
 
 
 

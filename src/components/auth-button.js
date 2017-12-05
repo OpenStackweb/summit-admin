@@ -14,7 +14,7 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 
-const AuthButton = withRouter(({ history,isLoggedUser, doLogin, doLogout }) => (
+const AuthButton = withRouter(({ history, isLoggedUser, doLogin, doLogout }) => (
     isLoggedUser ? (
         <div className="logout">
             <button className="btn btn-default" onClick={() => { doLogout(); }}>Sign out</button>

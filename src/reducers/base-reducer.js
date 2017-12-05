@@ -20,14 +20,16 @@ const DEFAULT_STATE = {
 const baseReducer = (state = DEFAULT_STATE, action) => {
     switch(action.type){
         case START_LOADING:
-            return {...state, loading: true };
-            break;
+            console.log('START_LOADING')
+            return {...state, loading: true};
+        break;
         case STOP_LOADING:
-            return {...state, loading: false };
-            break;
+            console.log('STOP_LOADING')
+              return {...state, loading: false};
+        break;
         default:
             return state;
-          break;
+        break;
     }
 }
 

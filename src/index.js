@@ -20,6 +20,7 @@ import { PersistGate } from 'redux-persist/es/integration/react'
 import 'font-awesome/css/font-awesome.css';
 import './styles/menu.less';
 import './styles/landing.css';
+import 'sweetalert2/dist/sweetalert2.css';
 
 const onBeforeLift = () => {
    console.log("reading state ...")
