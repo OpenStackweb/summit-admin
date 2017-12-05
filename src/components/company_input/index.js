@@ -14,7 +14,7 @@
 import React from 'react';
 import 'react-select/dist/react-select.css';
 import Select from 'react-select';
-import {queryCompanies} from '../../actions';
+import {queryCompanies} from '../../actions/actions';
 
 export default class CompanyInput extends React.Component {
 
