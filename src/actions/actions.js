@@ -141,7 +141,7 @@ export const getEvent = (summitId, eventId) =>
         let { accessToken }     = loggedUserState;
         //dispatch(startLoading());
         return getRequest(
-            createAction(NADA),
+            null,
             createAction(RECEIVE_EVENT),
             `${apiBaseUrl}/api/v1/summits/${summitId}/events/${eventId}?access_token=${accessToken}`,
             authErrorHandler
@@ -155,7 +155,7 @@ export const saveEvent = (summitId, entity) => (dispatch, getState) => {
 
     if (entity.id) {
         return putRequest(
-            createAction(NADA),
+            null,
             createAction(EVENT_UPDATED),
             `${apiBaseUrl}/api/v1/summits/${summitId}/events/${entity.id}?access_token=${accessToken}`,
             authErrorHandler,
@@ -163,7 +163,7 @@ export const saveEvent = (summitId, entity) => (dispatch, getState) => {
         )(entity)(dispatch).then(dispatch(stopLoading()));
     } else {
         return postRequest(
-            createAction(NADA),
+           null,
             createAction(EVENT_ADDED),
             `${apiBaseUrl}/api/v1/summits/${summitId}/events?access_token=${accessToken}`,
             authErrorHandler,
