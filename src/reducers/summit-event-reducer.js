@@ -16,13 +16,44 @@ import
     RECEIVE_TRACKS,
     RECEIVE_VENUES,
     RECEIVE_EVENT_TYPES,
+    RECEIVE_EVENT,
+    EVENT_UPDATED,
+    EVENT_ADDED,
+    EVENT_DELETED
 } from '../actions/actions';
+
+const default_entity = {
+    id: 0,
+    title: '',
+    description: '',
+    social_description: '',
+    attendees_expected_learnt: '',
+    head_count: 0,
+    rsvp_link: '',
+    location_id: 0,
+    start_date: '',
+    end_date: '',
+    type_id: 0,
+    track_id: 0,
+    level: 'N/A',
+    allow_feedback: 0,
+    to_record: 0,
+    feature_cloud: 0,
+    tags: [],
+    sponsors: [],
+    speakers: [],
+    moderator_speaker_id: 0,
+    discussion_leader: 0,
+    groups: [],
+    files: []
+}
 
 const DEFAULT_STATE = {
     track_options:  [],
     type_options: [],
-    location_options:[],
-    level_options:['N/A', 'Beginner', 'Intermediate', 'Advanced' ],
+    location_options: [],
+    level_options: ['N/A', 'Beginner', 'Intermediate', 'Advanced' ],
+    entity: default_entity
 };
 
 const summitEventReducer = (state = DEFAULT_STATE, action) => {
@@ -34,6 +65,14 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  location_options: payload.response.data };
         case RECEIVE_EVENT_TYPES:
             return {...state,  type_options: payload.response.data };
+        case RECEIVE_EVENT:
+            let entity = payload.response;
+            for(var key in entity) {
+                if(entity.hasOwnProperty(key)) {
+                    entity[key] = (entity[key] == null) ? '' : entity[key] ;
+                }
+            }
+            return {...state,  entity: entity };
         default:
             return state;
     }

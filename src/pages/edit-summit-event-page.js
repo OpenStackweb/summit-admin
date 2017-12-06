@@ -14,28 +14,38 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import EventForm from '../components/event-form';
-import { getTracks, getVenues, getEventTypes } from '../actions/actions';
+import { getTracks, getVenues, getEventTypes, getEvent, saveEvent } from '../actions/actions';
 
 class EditSummitEventPage extends React.Component {
 
     componentWillMount () {
-        if(!this.props.track_options)
-            this.props.getTracks(this.props.currentSummit.id);
 
-        if(!this.props.location_options)
-            this.props.getVenues(this.props.currentSummit.id);
+        let eventId = this.props.match.params.summit_event_id;
+        let {currentSummit, track_options, location_options, type_options} = this.props;
 
-        if(!this.props.type_options)
-            this.props.getEventTypes(this.props.currentSummit.id);
+        if(eventId) {
+            this.props.getEvent(currentSummit.id, eventId);
+        }
+
+        if(!track_options)
+            this.props.getTracks(currentSummit.id);
+
+        if(!location_options)
+            this.props.getVenues(currentSummit.id);
+
+        if(!type_options)
+            this.props.getEventTypes(currentSummit.id);
     }
 
     render(){
-        let {currentSummit} = this.props;
+        let {currentSummit, entity} = this.props;
         return(
             <div className="container">
                 <h3>Summit Event</h3>
                 <hr/>
                 <EventForm
+                    entity={entity}
+                    onSubmit={this.props.saveEvent}
                     currentSummit={currentSummit}
                     levelopts={this.props.level_options}
                     trackopts={this.props.track_options}
@@ -52,7 +62,8 @@ const mapStateToProps = ({ currentSummitState, currentSummitEventState }) => ({
     level_options: currentSummitEventState.level_options,
     type_options: currentSummitEventState.type_options,
     track_options: currentSummitEventState.track_options,
-    location_options: currentSummitEventState.location_options
+    location_options: currentSummitEventState.location_options,
+    entity: currentSummitEventState.entity
 })
 
 export default connect (
@@ -61,5 +72,7 @@ export default connect (
         getTracks,
         getVenues,
         getEventTypes,
+        getEvent,
+        saveEvent,
     }
 )(EditSummitEventPage);

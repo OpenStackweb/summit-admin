@@ -8,6 +8,10 @@ export const SET_CURRENT_SUMMIT             = 'SET_CURRENT_SUMMIT';
 export const RECEIVE_TRACKS                 = 'RECEIVE_TRACKS';
 export const RECEIVE_VENUES                 = 'RECEIVE_VENUES';
 export const RECEIVE_EVENT_TYPES            = 'RECEIVE_EVENT_TYPES';
+export const RECEIVE_EVENT                  = 'RECEIVE_EVENT';
+export const EVENT_UPDATED                  = 'EVENT_UPDATED';
+export const EVENT_ADDED                    = 'EVENT_ADDED';
+export const EVENT_DELETED                  = 'EVENT_DELETED';
 
 export const setCurrentSummit = (summit, history) => (dispatch) =>
 {
@@ -130,3 +134,40 @@ export const getEventTypes = (summitId) => (dispatch, getState) => {
         authErrorHandler
     )({})(dispatch);
 };
+
+export const getEvent = (summitId, eventId) =>
+    (dispatch, getState) => {
+        let { loggedUserState } = getState();
+        let { accessToken }     = loggedUserState;
+        //dispatch(startLoading());
+        return getRequest(
+            createAction(NADA),
+            createAction(RECEIVE_EVENT),
+            `${apiBaseUrl}/api/v1/summits/${summitId}/events/${eventId}?access_token=${accessToken}`,
+            authErrorHandler
+        )({})(dispatch).then(dispatch(stopLoading()));
+    };
+
+export const saveEvent = (summitId, entity) => (dispatch, getState) => {
+    let { loggedUserState } = getState();
+    let { accessToken }     = loggedUserState;
+    //dispatch(startLoading());
+
+    if (entity.id) {
+        return putRequest(
+            createAction(NADA),
+            createAction(EVENT_UPDATED),
+            `${apiBaseUrl}/api/v1/summits/${summitId}/events/${entity.id}?access_token=${accessToken}`,
+            authErrorHandler,
+            entity
+        )(entity)(dispatch).then(dispatch(stopLoading()));
+    } else {
+        return postRequest(
+            createAction(NADA),
+            createAction(EVENT_ADDED),
+            `${apiBaseUrl}/api/v1/summits/${summitId}/events?access_token=${accessToken}`,
+            authErrorHandler,
+            entity
+        )(entity)(dispatch).then(dispatch(stopLoading()));
+    }
+}

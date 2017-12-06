@@ -12,6 +12,7 @@
  **/
 
 import React from 'react'
+import moment from 'moment-timezone'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import { Editor } from '@tinymce/tinymce-react'
 import Dropdown from './dropdown'
@@ -27,13 +28,19 @@ import UploadInput from './upload_input'
 class EventForm extends React.Component {
     constructor(props) {
         super(props);
+
         this.state = {
-            entity: {}
+            entity: this.props.entity
         };
 
         this.handleChange = this.handleChange.bind(this);
-        this.handleUpload = this.handleUpload.bind(this);
+        this.handleUploadFile = this.handleUploadFile.bind(this);
+        this.handleRemoveFile = this.handleRemoveFile.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({entity: nextProps.entity});
     }
 
     handleChange(ev) {
@@ -50,13 +57,19 @@ class EventForm extends React.Component {
         this.setState({entity: entity});
     }
 
-    handleUpload(ev) {
+    handleUploadFile(ev) {
         console.log('file uploaded');
     }
 
+    handleRemoveFile(ev) {
+        console.log('file removed');
+    }
+
     handleSubmit(ev) {
-        alert('A name was submitted');
+        console.log('event submitted');
         ev.preventDefault();
+
+        this.props.onSubmit(this.props.currentSummit.id, this.state.entity);
     }
 
     isEventType(types) {
@@ -68,6 +81,11 @@ class EventForm extends React.Component {
 
         return ( types.indexOf(entity_type.class_name) != -1 || types.indexOf(entity_type.name) != -1 );
 
+    }
+
+    getFormattedTime(atime) {
+        atime = atime * 1000;
+        return moment(atime).tz(this.props.currentSummit.time_zone.name).format('MMMM Do YYYY, h:mm:ss a');
     }
 
     render() {
@@ -93,6 +111,7 @@ class EventForm extends React.Component {
 
         return (
             <form onSubmit={this.handleSubmit}>
+                <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> Title </label>
@@ -104,6 +123,7 @@ class EventForm extends React.Component {
                         <label> Short Description / Abstract </label>
                         <Editor
                             id="description"
+                            initialValue={entity.description}
                             init={{
                                 plugins: 'link image code',
                                 toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
@@ -115,7 +135,7 @@ class EventForm extends React.Component {
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> Social Summary </label>
-                        <textarea className="form-control" id="social_summary" value={entity.social_summary} onChange={this.handleChange} />
+                        <textarea className="form-control" id="social_description" value={entity.social_description} onChange={this.handleChange} />
                     </div>
                 </div>
                 {this.isEventType('PresentationType') &&
@@ -123,7 +143,8 @@ class EventForm extends React.Component {
                     <div className="col-md-12">
                         <label> What can attendees expect to learn? </label>
                         <Editor
-                            id="expect_to_learn"
+                            id="attendees_expected_learnt"
+                            initialValue={entity.attendees_expected_learnt}
                             init={{
                                 plugins: 'link image code',
                                 toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
@@ -147,8 +168,8 @@ class EventForm extends React.Component {
                     <div className="col-md-4">
                         <label> Location </label>
                         <GroupedDropdown
-                            id="location"
-                            value={entity.location}
+                            id="location_id"
+                            value={entity.location_id}
                             options={locations_ddl}
                             placeholder="-- Select a Venue --"
                             onChange={this.handleChange}
@@ -160,7 +181,7 @@ class EventForm extends React.Component {
                             onChange={this.handleChange}
                             validation={{after: currentSummit.start_date, before: entity.end_date}}
                             format={{date:"YYYY-MM-DD", time: "HH:mm:ss"}}
-                            value={entity.start_date}
+                            value={this.getFormattedTime(entity.start_date)}
                             inputProps={{placeholder: 'Start Date'}}
                             timezone={currentSummit.time_zone.name}
                         />
@@ -171,7 +192,7 @@ class EventForm extends React.Component {
                             onChange={this.handleChange}
                             validation={{after: entity.start_date, before: currentSummit.end_date}}
                             format={{date:"YYYY-MM-DD", time: "HH:mm:ss"}}
-                            value={entity.end_date}
+                            value={this.getFormattedTime(entity.end_date)}
                             inputProps={{placeholder: 'End Date'}}
                             timezone={currentSummit.time_zone.name}
                         />
@@ -181,8 +202,8 @@ class EventForm extends React.Component {
                     <div className="col-md-4">
                         <label> Event Type </label>
                         <Dropdown
-                            id="type"
-                            value={entity.type}
+                            id="type_id"
+                            value={entity.type_id}
                             onChange={this.handleChange}
                             placeholder="-- Select a Type --"
                             options={event_types_ddl}
@@ -191,8 +212,8 @@ class EventForm extends React.Component {
                     <div className="col-md-4">
                         <label> Track </label>
                         <Dropdown
-                            id="track"
-                            value={entity.track}
+                            id="track_id"
+                            value={entity.track_id}
                             onChange={this.handleChange}
                             placeholder="-- Select a Track --"
                             options={tracks_ddl}
@@ -215,7 +236,7 @@ class EventForm extends React.Component {
                     <div className="col-md-4">
                         <label> Feedback </label>
                         <div className="form-check abc-checkbox">
-                            <input type="checkbox" id="feedback" checked={entity.feedback} onChange={this.handleChange} className="form-check-input" />
+                            <input type="checkbox" id="allow_feedback" checked={entity.allow_feedback} onChange={this.handleChange} className="form-check-input" />
                             <label className="form-check-label" htmlFor="feedback"> Allow feedback ? </label>
                         </div>
                     </div>
@@ -284,8 +305,8 @@ class EventForm extends React.Component {
                     <div className="col-md-12">
                         <label> Moderator </label>
                         <SpeakerInput
-                            id="moderator"
-                            value={entity.moderator}
+                            id="moderator_speaker_id"
+                            value={entity.moderator_speaker_id}
                             onChange={this.handleChange}
                             summitId={currentSummit.id}
                             multi={false}
@@ -298,8 +319,8 @@ class EventForm extends React.Component {
                     <div className="col-md-12">
                         <label> Discussion Leader </label>
                         <SpeakerInput
-                            id="discussion_leader"
-                            value={entity.discussion_leader}
+                            id="moderator_speaker_id"
+                            value={entity.moderator_speaker_id}
                             onChange={this.handleChange}
                             summitId={currentSummit.id}
                             multi={false}
@@ -312,8 +333,8 @@ class EventForm extends React.Component {
                     <div className="col-md-12">
                         <label> Groups </label>
                         <GroupInput
-                            id="group"
-                            value={entity.group}
+                            id="groups"
+                            value={entity.groups}
                             onChange={this.handleChange}
                             summitId={currentSummit.id}
                             multi={true}
@@ -327,9 +348,11 @@ class EventForm extends React.Component {
                     <div className="col-md-12">
                         <label> Attachment </label>
                         <UploadInput
-                            handleUpload={this.handleUpload}
+                            value={entity.files}
+                            handleUpload={this.handleUploadFile}
+                            handleRemove={this.handleRemoveFile}
                             label="Attachment"
-                        />;
+                        />
                     </div>
                 </div>
                 }
