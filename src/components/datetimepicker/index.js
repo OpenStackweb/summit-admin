@@ -28,6 +28,12 @@ export default class DateTimePicker extends React.Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(this.state.value != nextProps.value) {
+            this.setState({value: nextProps.value});
+        }
+    }
+
     handleChange(date) {
         this.setState({
             value: date.format('YYYY-MM-DD HH:mm:ss')

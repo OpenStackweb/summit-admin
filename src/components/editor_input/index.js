@@ -12,11 +12,10 @@
  **/
 
 import React from 'react';
-import 'react-select/dist/react-select.css';
-import Select from 'react-select';
-import {queryGroups} from '../../actions/actions';
+import TinyMCE from 'tinymce-react'
 
-export default class GroupInput extends React.Component {
+
+export default class TextEditor extends React.Component {
 
     constructor(props) {
         super(props);
@@ -26,53 +25,41 @@ export default class GroupInput extends React.Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
-        this.getGroups = this.getGroups.bind(this);
     }
 
-    handleChange(value) {
+    componentWillReceiveProps(nextProps) {
+        if(this.state.value != nextProps.value) {
+            this.setState({value: nextProps.value});
+        }
+    }
+
+    handleChange(text) {
+        if (!text) return;
+
         this.setState({
-            value: value
+            value: text.getContent()
         });
 
         let ev = {target: {
             id: this.props.id,
-            value: value,
-            type: 'groupinput'
+            value: text.getContent(),
+            type: 'texteditor'
         }};
 
         this.props.onChange(ev);
     }
 
-    getGroups (input) {
-        if (!input) {
-            return Promise.resolve({ options: [] });
-        }
-
-        return queryGroups(input);
-    }
-
-    processTagValues(new_values) {
-        let values = [];
-
-        for(let i in new_values) {
-            values.push({value: new_values[i].id, label: new_values[i].title});
-        }
-
-        return values;
-    }
-
     render() {
 
+        let {onChange, value, ...rest} = this.props;
+
         return (
-            <Select.Async
-                multi={this.props.multi}
-                value={this.processTagValues(this.state.value)}
-                onChange={this.handleChange}
-                loadOptions={this.getGroups}
-                backspaceRemoves={true}
+            <TinyMCE
+                config={{ height: 200, plugins: 'image table' }}
+                content={this.state.value}
+                onContentChanged={this.handleChange}
             />
         );
 
     }
 }
-

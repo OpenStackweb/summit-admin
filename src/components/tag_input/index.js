@@ -51,6 +51,15 @@ export default class TagInput extends React.Component {
         return queryTags(input);
     }
 
+    processTagValues(new_values) {
+        let values = [];
+        for(let i in new_values) {
+            values.push({value: new_values[i].id, label: new_values[i].tag});
+        }
+
+        return values;
+    }
+
     render() {
 
         const AsyncComponent = this.props.allow_new
@@ -60,7 +69,7 @@ export default class TagInput extends React.Component {
         return (
             <AsyncComponent
                 multi={true}
-                value={this.state.value}
+                value={this.processTagValues(this.state.value)}
                 onChange={this.handleChange}
                 loadOptions={this.getTags}
                 backspaceRemoves={true}

@@ -13,39 +13,54 @@
 
 import React from 'react';
 import Dropzone from 'react-dropzone';
-import './upload.css';
+import './upload.less';
 
 export default class UploadInput extends React.Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            show_veil: false
+        }
     }
 
     onImageDrop(files) {
         this.props.handleUpload(files[0]);
     }
 
+    showVeil() {
+        this.setState({show_veil:true});
+    }
+
+    hideVeil() {
+        this.setState({show_veil:false});
+    }
+
     render() {
-        let {value, handleRemove} = this.props;
+        let {value, handleRemove, handleUpload, ...rest} = this.props;
 
         return (
             <div className="file-upload">
                 <Dropzone
                     onDrop={this.onImageDrop.bind(this)}
-                    className="dropzone col-md-6"
-                    multiple={true}
-                    accept="image/*">
+                    {...rest}
+                >
                     <div>Drop images or click to select files to upload.</div>
                 </Dropzone>
                 <div className="selected-files-box col-md-6">
                     <p>Selected Files</p>
                     <div className="selected-files">
-                        {value && value.map(f => (
-                            <div className="file-box">
-                                <img src={f.url} />
-                                <p>{f.name}</p>
-                                <i className="fa fa-times" onClick={handleRemove(f.id)}></i>
+                        {value &&
+                        <div className="file-box" onMouseEnter={this.showVeil.bind(this)} onMouseLeave={this.hideVeil.bind(this)}>
+                            <img src={value} />
+                            <a href={value} target="_blank">link</a>
+                            {this.state.show_veil &&
+                            <div className="veil">
+                                <p onClick={handleRemove}>Remove</p>
                             </div>
-                        ))}
+                            }
+                        </div>
+                        }
                     </div>
                 </div>
             </div>

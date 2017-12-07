@@ -26,6 +26,12 @@ export default class GroupedDropdown extends React.Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(this.state.value != nextProps.value) {
+            this.setState({value: nextProps.value});
+        }
+    }
+
     handleChange(ev) {
         this.setState({
             value: ev.target.value

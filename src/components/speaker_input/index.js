@@ -51,12 +51,36 @@ export default class SpeakerInput extends React.Component {
         return querySpeakers(this.props.summitId, input);
     }
 
+    processTagValues(new_values) {
+        if (this.props.multi) {
+            let values = [];
+            if (!new_values) return values;
+            new_values = Array.isArray(new_values) ? new_values : [new_values];
+
+            for(let i in new_values) {
+                let label = new_values[i].first_name + ' ' + new_values[i].last_name + ' (' + new_values[i].id + ')';
+                values.push({value: new_values[i].id, label: label});
+            }
+
+            return values;
+        } else {
+            let value = {};
+            if (!new_values) return value;
+
+            let label = new_values.first_name + ' ' + new_values.last_name + ' (' + new_values.id + ')';
+            value = {value: new_values.id, label: label};
+
+            return value;
+        }
+
+    }
+
     render() {
 
         return (
             <Select.Async
                 multi={this.props.multi}
-                value={this.state.value}
+                value={this.processTagValues(this.state.value)}
                 onChange={this.handleChange}
                 loadOptions={this.getSpeakers}
                 backspaceRemoves={true}

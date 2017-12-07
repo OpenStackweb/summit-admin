@@ -14,7 +14,7 @@
 import React from 'react'
 import moment from 'moment-timezone'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { Editor } from '@tinymce/tinymce-react'
+import TextEditor from './editor_input'
 import Dropdown from './dropdown'
 import GroupedDropdown from './grouped_dropdown'
 import DateTimePicker from './datetimepicker'
@@ -45,37 +45,40 @@ class EventForm extends React.Component {
 
     handleChange(ev) {
         let entity = this.state.entity;
-        let value = '';
 
-        if (ev.target.type == 'setupeditor') {
-            value = ev.target.getContent();
-        } else {
-            value = ev.target.value;
-        }
-
-        entity[ev.target.id] = value;
+        entity[ev.target.id] = ev.target.value;
         this.setState({entity: entity});
     }
 
-    handleUploadFile(ev) {
+    handleUploadFile(file) {
         console.log('file uploaded');
+        let formData = new FormData();
+        formData.append('file', file);
+        this.props.onAttach(this.props.currentSummit.id, this.state.entity, formData)
     }
 
     handleRemoveFile(ev) {
-        console.log('file removed');
+        let entity = this.state.entity;
+
+        entity.attachment = '';
+        this.setState({entity:entity});
     }
 
     handleSubmit(ev) {
         console.log('event submitted');
         ev.preventDefault();
 
+        let {entity} = this.state;
+        if (!entity.start_date) delete entity['start_date'];
+        if (!entity.end_date) delete entity['end_date'];
+
         this.props.onSubmit(this.props.currentSummit.id, this.state.entity);
     }
 
     isEventType(types) {
         let {entity} = this.state;
-        if (!entity.type) return false;
-        let entity_type = this.props.typeopts.find(t => t.id == entity.type);
+        if (!entity.type_id) return false;
+        let entity_type = this.props.typeopts.find(t => t.id == entity.type_id);
 
         types = Array.isArray(types) ? types : [types] ;
 
@@ -84,6 +87,7 @@ class EventForm extends React.Component {
     }
 
     getFormattedTime(atime) {
+        if(!atime) return atime;
         atime = atime * 1000;
         return moment(atime).tz(this.props.currentSummit.time_zone.name).format('MMMM Do YYYY, h:mm:ss a');
     }
@@ -103,7 +107,7 @@ class EventForm extends React.Component {
         );
 
         let locations_ddl = [
-            {label: 'TBA', value: 'TBA'},
+            {label: 'TBA', value: 0},
             ...venues
         ];
 
@@ -121,15 +125,7 @@ class EventForm extends React.Component {
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> Short Description / Abstract </label>
-                        <Editor
-                            id="description"
-                            initialValue={entity.description}
-                            init={{
-                                plugins: 'link image code',
-                                toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
-                            }}
-                            onChange={this.handleChange}
-                        />
+                        <TextEditor id="description" value={entity.description} onChange={this.handleChange} />
                     </div>
                 </div>
                 <div className="row form-group">
@@ -142,15 +138,7 @@ class EventForm extends React.Component {
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> What can attendees expect to learn? </label>
-                        <Editor
-                            id="attendees_expected_learnt"
-                            initialValue={entity.attendees_expected_learnt}
-                            init={{
-                                plugins: 'link image code',
-                                toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
-                            }}
-                            onChange={this.handleChange}
-                        />
+                        <TextEditor id="attendees_expected_learnt" value={entity.attendees_expected_learnt} onChange={this.handleChange} />
                     </div>
                 </div>
                 }
@@ -305,8 +293,8 @@ class EventForm extends React.Component {
                     <div className="col-md-12">
                         <label> Moderator </label>
                         <SpeakerInput
-                            id="moderator_speaker_id"
-                            value={entity.moderator_speaker_id}
+                            id="moderator"
+                            value={entity.moderator}
                             onChange={this.handleChange}
                             summitId={currentSummit.id}
                             multi={false}
@@ -319,8 +307,8 @@ class EventForm extends React.Component {
                     <div className="col-md-12">
                         <label> Discussion Leader </label>
                         <SpeakerInput
-                            id="moderator_speaker_id"
-                            value={entity.moderator_speaker_id}
+                            id="moderator"
+                            value={entity.moderator}
                             onChange={this.handleChange}
                             summitId={currentSummit.id}
                             multi={false}
@@ -348,10 +336,12 @@ class EventForm extends React.Component {
                     <div className="col-md-12">
                         <label> Attachment </label>
                         <UploadInput
-                            value={entity.files}
+                            value={entity.attachment}
                             handleUpload={this.handleUploadFile}
                             handleRemove={this.handleRemoveFile}
-                            label="Attachment"
+                            className="dropzone col-md-6"
+                            multiple={this.props.multi}
+                            accept="image/*"
                         />
                     </div>
                 </div>

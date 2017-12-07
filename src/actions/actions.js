@@ -2,6 +2,8 @@ import { getRequest, putRequest, postRequest, deleteRequest, createAction, stopL
 
 import { authErrorHandler, apiBaseUrl} from './base-actions';
 
+import {DEFAULT_ENTITY} from "../reducers/summit-event-reducer";
+
 export const REQUEST_SUMMITS                = 'REQUEST_SUMMITS';
 export const RECEIVE_SUMMITS                = 'RECEIVE_SUMMITS';
 export const SET_CURRENT_SUMMIT             = 'SET_CURRENT_SUMMIT';
@@ -9,9 +11,11 @@ export const RECEIVE_TRACKS                 = 'RECEIVE_TRACKS';
 export const RECEIVE_VENUES                 = 'RECEIVE_VENUES';
 export const RECEIVE_EVENT_TYPES            = 'RECEIVE_EVENT_TYPES';
 export const RECEIVE_EVENT                  = 'RECEIVE_EVENT';
+export const RESET_EVENT                    = 'RESET_EVENT';
 export const EVENT_UPDATED                  = 'EVENT_UPDATED';
 export const EVENT_ADDED                    = 'EVENT_ADDED';
 export const EVENT_DELETED                  = 'EVENT_DELETED';
+export const FILE_ATTACHED                  = 'FILE_ATTACHED';
 
 export const setCurrentSummit = (summit, history) => (dispatch) =>
 {
@@ -143,10 +147,14 @@ export const getEvent = (summitId, eventId) =>
         return getRequest(
             null,
             createAction(RECEIVE_EVENT),
-            `${apiBaseUrl}/api/v1/summits/${summitId}/events/${eventId}?access_token=${accessToken}`,
+            `${apiBaseUrl}/api/v1/summits/${summitId}/events/${eventId}?access_token=${accessToken}&expand=tags,speakers,sponsors,groups`,
             authErrorHandler
         )({})(dispatch).then(dispatch(stopLoading()));
-    };
+};
+
+export const resetEventForm = () => (dispatch, getState) => {
+    dispatch(createAction(RESET_EVENT)({default_entity: DEFAULT_ENTITY}));
+};
 
 export const saveEvent = (summitId, entity) => (dispatch, getState) => {
     let { loggedUserState } = getState();
@@ -158,16 +166,47 @@ export const saveEvent = (summitId, entity) => (dispatch, getState) => {
             null,
             createAction(EVENT_UPDATED),
             `${apiBaseUrl}/api/v1/summits/${summitId}/events/${entity.id}?access_token=${accessToken}`,
-            authErrorHandler,
-            entity
-        )(entity)(dispatch).then(dispatch(stopLoading()));
+            entity,
+            authErrorHandler
+        )({})(dispatch).then(dispatch(stopLoading()));
     } else {
         return postRequest(
-           null,
+            null,
             createAction(EVENT_ADDED),
             `${apiBaseUrl}/api/v1/summits/${summitId}/events?access_token=${accessToken}`,
-            authErrorHandler,
-            entity
-        )(entity)(dispatch).then(dispatch(stopLoading()));
+            entity,
+            authErrorHandler
+        )({})(dispatch).then(dispatch(stopLoading()));
     }
+}
+
+export const attachFile = (summitId, entity, file) => (dispatch, getState) => {
+    let { loggedUserState } = getState();
+    let { accessToken }     = loggedUserState;
+    //dispatch(startLoading());
+
+    if (entity.id) {
+        return dispatch(uploadFile(summitId, entity, file));
+    } else {
+        return postRequest(
+            null,
+            createAction(EVENT_UPDATED),
+            `${apiBaseUrl}/api/v1/summits/${summitId}/events/${entity.id}?access_token=${accessToken}`,
+            entity,
+            authErrorHandler
+        )({})(dispatch).then(dispatch(uploadFile(summitId, entity, file))).then(dispatch(stopLoading()));
+    }
+}
+
+const uploadFile = (summitId, entity, file) => (dispatch, getState) => {
+    let {loggedUserState} = getState();
+    let {accessToken} = loggedUserState;
+
+    return postRequest(
+        null,
+        createAction(FILE_ATTACHED),
+        `${apiBaseUrl}/api/v1/summits/${summitId}/events/${entity.id}/attachment?access_token=${accessToken}`,
+        file,
+        authErrorHandler
+    )({})(dispatch)
 }

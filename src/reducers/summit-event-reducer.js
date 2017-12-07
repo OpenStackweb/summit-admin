@@ -17,12 +17,13 @@ import
     RECEIVE_VENUES,
     RECEIVE_EVENT_TYPES,
     RECEIVE_EVENT,
+    RESET_EVENT,
     EVENT_UPDATED,
     EVENT_ADDED,
     EVENT_DELETED
 } from '../actions/actions';
 
-const default_entity = {
+export const DEFAULT_ENTITY = {
     id: 0,
     title: '',
     description: '',
@@ -42,10 +43,10 @@ const default_entity = {
     tags: [],
     sponsors: [],
     speakers: [],
-    moderator_speaker_id: 0,
+    moderator: {},
     discussion_leader: 0,
     groups: [],
-    files: []
+    attachment: ''
 }
 
 const DEFAULT_STATE = {
@@ -53,7 +54,7 @@ const DEFAULT_STATE = {
     type_options: [],
     location_options: [],
     level_options: ['N/A', 'Beginner', 'Intermediate', 'Advanced' ],
-    entity: default_entity
+    entity: DEFAULT_ENTITY
 };
 
 const summitEventReducer = (state = DEFAULT_STATE, action) => {
@@ -65,6 +66,9 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  location_options: payload.response.data };
         case RECEIVE_EVENT_TYPES:
             return {...state,  type_options: payload.response.data };
+        case RESET_EVENT:
+            let default_entity = payload.default_entity;
+            return {...state,  entity: default_entity };
         case RECEIVE_EVENT:
             let entity = payload.response;
             for(var key in entity) {

@@ -14,17 +14,46 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import EventForm from '../components/event-form';
-import { getTracks, getVenues, getEventTypes, getEvent, saveEvent } from '../actions/actions';
+import { getTracks, getVenues, getEventTypes, getEvent, resetEventForm, saveEvent, attachFile } from '../actions/actions';
 
 class EditSummitEventPage extends React.Component {
 
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            eventId: props.match.params.summit_event_id
+        };
+
+    }
+
+    componentWillReceiveProps(nextProps) {
+        let {eventId} = this.state;
+        let new_event_id = nextProps.match.params.summit_event_id;
+
+        if(eventId != new_event_id) {
+
+            this.setState({eventId: new_event_id});
+
+            if(new_event_id) {
+                this.props.getEvent(currentSummit.id, new_event_id);
+            } else {
+                this.props.resetEventForm();
+            }
+        }
+
+
+    }
+
     componentWillMount () {
 
-        let eventId = this.props.match.params.summit_event_id;
+        let {eventId} = this.state;
         let {currentSummit, track_options, location_options, type_options} = this.props;
 
         if(eventId) {
             this.props.getEvent(currentSummit.id, eventId);
+        } else {
+            this.props.resetEventForm();
         }
 
         if(!track_options)
@@ -46,6 +75,7 @@ class EditSummitEventPage extends React.Component {
                 <EventForm
                     entity={entity}
                     onSubmit={this.props.saveEvent}
+                    onAttach={this.props.attachFile}
                     currentSummit={currentSummit}
                     levelopts={this.props.level_options}
                     trackopts={this.props.track_options}
@@ -73,6 +103,8 @@ export default connect (
         getVenues,
         getEventTypes,
         getEvent,
+        resetEventForm,
         saveEvent,
+        attachFile
     }
 )(EditSummitEventPage);

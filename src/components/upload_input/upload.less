@@ -19,3 +19,34 @@
     color: gray;
     text-align: center;
 }
+
+.file-box {
+    width: 100px;
+    position: relative;
+    text-align: center;
+
+    img {
+        width: 100%;
+    }
+
+    .veil {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background-color: rgba(0,0,0,0.5);
+        text-align: center;
+        border: 2px solid black;
+        p {
+            cursor: pointer;
+            margin-top: 35%;
+            color: white;
+            &:hover {
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+

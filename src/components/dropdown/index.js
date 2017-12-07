@@ -27,6 +27,12 @@ export default class Dropdown extends React.Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(this.state.value != nextProps.value) {
+            this.setState({value: nextProps.value});
+        }
+    }
+
     handleChange(selection) {
         this.setState({
             value: selection.value
