@@ -24,7 +24,9 @@ import {
     changeCurrentTrack,
     changeCurrentPresentationSelectionStatus,
     changeCurrentUnscheduleSearchTerm,
-    unPublishEvent
+    unPublishEvent,
+    changeCurrentScheduleSearchTerm,
+    searchScheduleEvents
 } from '../../actions/summit-builder-actions';
 import UnScheduleEventList from './unschedule-event-list';
 import ScheduleEventList from './schedule-event-list';
@@ -36,10 +38,14 @@ import ScheduleAdminEventTypeSelector from './schedule-admin-event-type-selector
 import ScheduleAdminTrackSelector from './schedule-admin-track-selector';
 import ScheduleAdminPresentationSelectionStatusSelector from './schedule-admin-presentation-selection-status-selector';
 import ScheduleAdminSearchFreeTextUnScheduleEvents from './schedule-admin-search-free-text-unschedule-events';
+import ScheduleAdminSearchFreeTextScheduleEvents from './schedule-admin-search-free-text-schedule-events';
+import ScheduleAdminScheduleEventsSearchResults from './schedule-admin-schedule-events-search-results';
+
 import T from "i18n-react/dist/i18n-react";
 import moment from 'moment-timezone';
 import FragmentParser from '../../utils/fragmen-parser';
 import * as Scroll from 'react-scroll';
+import swal from "sweetalert2";
 
 class ScheduleAdminDashBoard extends React.Component {
 
@@ -55,6 +61,7 @@ class ScheduleAdminDashBoard extends React.Component {
         this.onPresentationSelectionStatusChanged = this.onPresentationSelectionStatusChanged.bind(this);
         this.onUnscheduledEventsFilterTextChanged = this.onUnscheduledEventsFilterTextChanged.bind(this);
         this.onUnPublishEvent                     = this.onUnPublishEvent.bind(this);
+        this.onScheduledEventsFilterTextChanged   = this.onScheduledEventsFilterTextChanged.bind(this);
 
         this.fragmentParser = new FragmentParser();
         this.filters        = this.parseFilterFromFragment();
@@ -86,7 +93,7 @@ class ScheduleAdminDashBoard extends React.Component {
                     filters['currentTime'] = value;
                     break;
                 case 'q':
-
+                    filters['currentScheduleEventsSearchTerm'] = value;
                     break;
             }
         }
@@ -130,16 +137,16 @@ class ScheduleAdminDashBoard extends React.Component {
     componentWillMount () {
     }
 
+    componentWillReceiveProps(nextProps){
+
+    }
+
     componentWillUpdate(nextProps, nextState) {
     }
 
     onScheduleEvent(event, currentDay, startDateTime){
         let eventModel = new SummitEvent(event, this.props.currentSummit);
         this.props.publishEvent(event, currentDay, startDateTime, eventModel.getMinutesDuration());
-    }
-
-    componentWillReceiveProps(nextProps){
-
     }
 
     onDayChanged(day){
@@ -196,6 +203,11 @@ class ScheduleAdminDashBoard extends React.Component {
         this.props.getUnScheduleEventsPage(summit.id, 1, 10, eventTypeId, trackId, currentPresentationSelectionStatus, term);
     }
 
+    onScheduledEventsFilterTextChanged(term){
+        this.props.changeCurrentScheduleSearchTerm(term);
+        this.props.searchScheduleEvents(term);
+    }
+
     onScheduleEventWithDuration(event, currentDay, startTime, duration){
         this.props.publishEvent
         (
@@ -206,7 +218,7 @@ class ScheduleAdminDashBoard extends React.Component {
         );
     }
 
-    buildFragment(locationId = null, day = null) {
+    buildFragment(locationId = null, day = null, searchTerm = null) {
 
         this.fragmentParser.setParam('q','');
         this.fragmentParser.setParam('day','');
@@ -222,11 +234,19 @@ class ScheduleAdminDashBoard extends React.Component {
             this.fragmentParser.setParam('day', day)
         }
 
+        if(searchTerm != null ){
+            this.fragmentParser.setParam('q', searchTerm)
+        }
+
         window.location.hash = this.fragmentParser.serialize();
     }
 
     componentDidUpdate(){
         console.log("componentDidUpdate");
+        this.testDeepLinks();
+    }
+
+    testDeepLinks(){
         if(this.timeoutHandler != null){
             window.clearTimeout(this.timeoutHandler)
         }
@@ -259,7 +279,21 @@ class ScheduleAdminDashBoard extends React.Component {
     }
 
     onUnPublishEvent(event){
-        this.props.unPublishEvent(event);
+
+        swal({
+            title: 'Are you sure?',
+            text: "You are about to UnPublish this event!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, UnPublish it!'
+        }).then((result) => {
+            if (result) {
+                this.props.unPublishEvent(event);
+            }
+        })
+
     }
 
     render(){
@@ -277,7 +311,9 @@ class ScheduleAdminDashBoard extends React.Component {
             currentTrack,
             currentPresentationSelectionStatus,
             unScheduleEventsCurrentOrder,
-            unScheduleEventsCurrentSearchTerm
+            unScheduleEventsCurrentSearchTerm,
+            scheduleEventsCurrentSearchTerm,
+            scheduleEventsSearch
         } = this.props;
 
         if(currentSummit == null ) return null;
@@ -286,12 +322,12 @@ class ScheduleAdminDashBoard extends React.Component {
         // parse summits dates
         let days = [];
 
-        let summitLocalStartDate     = moment(currentSummit.start_date * 1000).tz(currentSummit.time_zone.name);
-        let summitLocalEndDate       = moment(currentSummit.end_date * 1000).tz(currentSummit.time_zone.name);
-        let currentAuxDay            = summitLocalStartDate.clone();
-        let currentDaySelectorItem   = null;
-        let currentVenueSelectorItem = null;
-        let currentTrackSelectorItem = null;
+        let summitLocalStartDate         = moment(currentSummit.start_date * 1000).tz(currentSummit.time_zone.name);
+        let summitLocalEndDate           = moment(currentSummit.end_date * 1000).tz(currentSummit.time_zone.name);
+        let currentAuxDay                = summitLocalStartDate.clone();
+        let currentDaySelectorItem       = null;
+        let currentVenueSelectorItem     = null;
+        let currentTrackSelectorItem     = null;
         let currentEventTypeSelectorItem = null;
 
         do{
@@ -358,9 +394,20 @@ class ScheduleAdminDashBoard extends React.Component {
         return(
             <div className="row schedule-app-container no-margin">
                 <div className="col-md-6 published-container">
-                    <ScheduleAdminDaySelector onDayChanged={this.onDayChanged} days={days} currentValue={ currentDaySelectorItem }/>
-                    <ScheduleAdminVenueSelector onVenueChanged={this.onVenueChanged} venues={venues} currentValue={ currentVenueSelectorItem } />
-                    { currentDay != null && currentLocation != null &&
+                    <ScheduleAdminSearchFreeTextScheduleEvents
+                        onFilterTextChange={this.onScheduledEventsFilterTextChanged}
+                        currentValue={scheduleEventsCurrentSearchTerm}
+                    />
+                    {
+                        ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm == '' ) &&
+                        <ScheduleAdminDaySelector onDayChanged={this.onDayChanged} days={days}
+                                                  currentValue={currentDaySelectorItem}/>
+                    }
+                    { ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm == '' ) &&
+                        <ScheduleAdminVenueSelector onVenueChanged={this.onVenueChanged}
+                                                    venues={venues} currentValue={currentVenueSelectorItem} />
+                    }
+                    { ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm == '' ) && currentDay != null && currentLocation != null &&
                         <ScheduleEventList
                         startTime={"07:00"}
                         endTime={"22:00"}
@@ -374,6 +421,10 @@ class ScheduleAdminDashBoard extends React.Component {
                         childEvents={childScheduleEvents}
                         onUnPublishEvent={this.onUnPublishEvent}/>
                     }
+
+                    <ScheduleAdminScheduleEventsSearchResults
+                        events={scheduleEventsSearch}
+                        searchTerm={scheduleEventsCurrentSearchTerm}/>
                     { (currentDay == null || currentLocation == null) &&
                     <p className="empty-list-message">{T.translate("errors.empty_list_schedule_events")}</p>
                     }
@@ -429,6 +480,8 @@ function mapStateToProps({ currentScheduleBuilderState, currentSummitState  }) {
         unScheduleEventsCurrentOrder       : currentScheduleBuilderState.unScheduleEventsCurrentOrder,
         currentPresentationSelectionStatus : currentScheduleBuilderState.currentPresentationSelectionStatus,
         unScheduleEventsCurrentSearchTerm  : currentScheduleBuilderState.unScheduleEventsCurrentSearchTerm,
+        scheduleEventsCurrentSearchTerm    : currentScheduleBuilderState.scheduleEventsCurrentSearchTerm,
+        scheduleEventsSearch               : currentScheduleBuilderState.scheduleEventsSearch,
     }
 }
 
@@ -442,5 +495,7 @@ export default connect(mapStateToProps, {
     changeCurrentEventType,
     changeCurrentTrack,
     changeCurrentPresentationSelectionStatus,
-    changeCurrentUnscheduleSearchTerm
+    changeCurrentUnscheduleSearchTerm,
+    changeCurrentScheduleSearchTerm,
+    searchScheduleEvents
 })(ScheduleAdminDashBoard);

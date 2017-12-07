@@ -14,6 +14,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { DraggableItemTypes } from './draggable-items-types';
 import { DragSource } from 'react-dnd';
+import {Popover, OverlayTrigger} from 'react-bootstrap';
+import RawHTML from '../raw-html';
 
 const UnScheduleEventSource = {
     beginDrag(props) {
@@ -45,19 +47,36 @@ class UnScheduleEvent extends React.Component {
         return 80;
     }
 
+    popoverHoverFocus(){
+        const { event } = this.props;
+        return(
+            <Popover id="popover-trigger-focus" title={event.title}>
+                <RawHTML>{event.description}</RawHTML>
+            </Popover>
+        )
+    }
+
     render() {
         const { connectDragSource, isDragging, event } = this.props;
         return connectDragSource(
-            <div className='row unschedule-event'
-                 style={{
-                     opacity: isDragging ? 0.5 : 1,
-                     cursor: 'move'
-                 }}>
-                <i className="fa fa-pencil-square-o edit-unpublished-event-btn" title="edit event" aria-hidden="true"></i>
-                <div className="col-md-12">
-                    { event.title }
+
+                <div className='row unschedule-event'
+                     style={{
+                         opacity: isDragging ? 0.5 : 1,
+                         cursor: 'move'
+                     }}>
+                        <div className="row">
+                            <div className="col-md-12">
+                                <i className="fa fa-pencil-square-o edit-unpublished-event-btn" title="edit event" aria-hidden="true"></i>
+                                <OverlayTrigger trigger={['hover']} placement="bottom" overlay={this.popoverHoverFocus()}>
+                                    <span className="event-title">
+                                        { event.title }
+                                    </span>
+                                </OverlayTrigger>
+                            </div>
+                        </div>
                 </div>
-            </div>
+
         );
     }
 }

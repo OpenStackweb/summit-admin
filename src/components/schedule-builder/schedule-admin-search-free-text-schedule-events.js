@@ -13,7 +13,7 @@
 import React from 'react';
 import T from "i18n-react/dist/i18n-react";
 
-class ScheduleAdminSearchFreeTextUnScheduleEvents extends React.Component {
+class ScheduleAdminSearchFreeTextScheduleEvents extends React.Component {
 
     constructor(props){
         super(props);
@@ -53,7 +53,7 @@ class ScheduleAdminSearchFreeTextUnScheduleEvents extends React.Component {
                                defaultValue={this.props.currentValue}
                                className="form-control input-global-search"
                                ref={(input) => { this.searchTxt = input; }}
-                               placeholder={T.translate("placeholders.search_unpublished")}
+                               placeholder={T.translate("placeholders.search_published")}
                                onKeyPress={this.onKeyPressed}
                         />
                         <span className="input-group-btn" style={{width: 5 +'%'}}>
@@ -63,6 +63,9 @@ class ScheduleAdminSearchFreeTextUnScheduleEvents extends React.Component {
                             <button onClick={this.onClearClick} className="btn btn-default btn-global-search-clear" title={T.translate("titles.clear")}>
                                 <i className="fa fa-times"></i>
                             </button>
+                            <button className="btn btn-default" title={T.translate("titles.find_empty_spots")}>
+                                Find Empty
+                            </button>
                         </span>
                     </div>
                 </div>
@@ -71,4 +74,4 @@ class ScheduleAdminSearchFreeTextUnScheduleEvents extends React.Component {
     }
 }
 
-export default ScheduleAdminSearchFreeTextUnScheduleEvents;
+export default ScheduleAdminSearchFreeTextScheduleEvents;

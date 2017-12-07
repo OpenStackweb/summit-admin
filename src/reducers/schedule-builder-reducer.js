@@ -23,7 +23,9 @@ import
     CHANGE_CURRENT_TRACK,
     CHANGE_CURRENT_PRESENTATION_SELECTION_STATUS,
     CHANGE_CURRENT_UNSCHEDULE_SEARCH_TERM,
-    UNPUBLISHED_EVENT
+    CHANGE_CURRENT_SCHEDULE_SEARCH_TERM,
+    UNPUBLISHED_EVENT,
+    RECEIVE_SCHEDULE_EVENTS_SEARCH_PAGE,
 } from '../actions/summit-builder-actions';
 
 import { LOGOUT_USER } from '../actions/auth-actions';
@@ -44,7 +46,9 @@ const DEFAULT_STATE = {
     currentTrack : null,
     unScheduleEventsCurrentOrder : null,
     currentPresentationSelectionStatus: null,
-    unScheduleEventsCurrentSearchTerm: null
+    unScheduleEventsCurrentSearchTerm: null,
+    scheduleEventsCurrentSearchTerm: null,
+    scheduleEventsSearch: [],
 };
 
 const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
@@ -93,10 +97,22 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
             return {...state, unScheduleEventsCurrentSearchTerm : term};
         }
         break;
+        case CHANGE_CURRENT_SCHEDULE_SEARCH_TERM:{
+            let {term}               = payload;
+            let scheduleEventsSearch = (term == null || term == '') ? [] : state.scheduleEventsSearch;
+            return {...state, scheduleEventsSearch, scheduleEventsCurrentSearchTerm : term };
+        }
+        break;
+        case RECEIVE_SCHEDULE_EVENTS_SEARCH_PAGE:{
+            let { data } = payload.response;
+            return {...state,
+                scheduleEventsSearch: data
+            };
+        }
         case RECEIVE_SCHEDULE_EVENTS_PAGE:{
             let { data } = payload.response;
             return {...state,
-                scheduleEvents : data
+                scheduleEvents  : data
             };
         }
         break;

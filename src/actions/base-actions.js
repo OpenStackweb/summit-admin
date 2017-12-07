@@ -2,7 +2,6 @@ import T from "i18n-react/dist/i18n-react";
 import {stopLoading} from "openstack-uicore-foundation";
 import swal from "sweetalert2";
 
-
 export const apiBaseUrl             = process.env['API_BASE_URL'];
 
 export const authErrorHandler = (err, res) => (dispatch) => {

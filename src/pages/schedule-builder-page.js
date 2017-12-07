@@ -10,13 +10,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-
 import React from 'react'
 import ScheduleAdminDashBoard from '../components/schedule-builder/schedule-admin-dashboard';
 import { connect } from 'react-redux';
 import '../styles/schedule-builder-page.less';
 import { getSummitById}  from '../actions/summit-actions';
-
 
 class ScheduleBuilderPage extends React.Component {
 

@@ -14,6 +14,8 @@ import React from 'react';
 import ReactDOM    from 'react-dom';
 import { DraggableItemTypes } from './draggable-items-types';
 import { DragSource, DropTarget } from 'react-dnd';
+import {Popover, OverlayTrigger} from 'react-bootstrap';
+import RawHTML from '../raw-html';
 
 const RESIZING_DIR_NORTH = 'N';
 const RESIZING_DIR_SOUTH = 'S';
@@ -85,6 +87,15 @@ class ScheduleEvent extends React.Component {
             opacity: isDragging ? 0.5 : 1,
             cursor: 'move',
         };
+    }
+
+    popoverHoverFocus(){
+        const { event } = this.props;
+        return(
+            <Popover id="popover-trigger-focus" title={event.title}>
+                <RawHTML>{event.description}</RawHTML>
+            </Popover>
+        )
     }
 
     // resize behavior
@@ -214,13 +225,21 @@ class ScheduleEvent extends React.Component {
                  onMouseDown={this.onMouseDown}
                  ref={(div) => { this.scheduleEvent = div; }}
                  style={this.getInlineStyles(isDragging)}>
-                <i className="fa fa-minus-circle unpublish-event-btn" aria-hidden="true" title="unpublish event" onClick={this.onUnPublishEvent}></i>
-                <i className="fa fa-pencil-square-o edit-published-event-btn" title="edit event" aria-hidden="true"></i>
-                <div className="col-md-12 event-container">
-                    <div className="event-content">
-                        <span>{ event.title }</span>
+                    <div className="row">
+                        <div className="col-md-12">
+                            <i className="fa fa-minus-circle unpublish-event-btn" aria-hidden="true" title="unpublish event" onClick={this.onUnPublishEvent}></i>
+                            <i className="fa fa-pencil-square-o edit-published-event-btn" title="edit event" aria-hidden="true"></i>
+                            <div className="col-md-12 event-container">
+                                <div className="event-content">
+                                        <OverlayTrigger trigger={['hover']} placement="bottom" overlay={this.popoverHoverFocus()}>
+                                           <span className="event-title">
+                                               { event.title }
+                                            </span>
+                                         </OverlayTrigger>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
             </div>
         );
     }

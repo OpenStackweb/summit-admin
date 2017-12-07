@@ -14,7 +14,9 @@ export const CHANGE_CURRENT_EVENT_TYPE                    = 'CHANGE_CURRENT_EVEN
 export const CHANGE_CURRENT_TRACK                         = 'CHANGE_CURRENT_TRACK';
 export const CHANGE_CURRENT_PRESENTATION_SELECTION_STATUS = 'CHANGE_CURRENT_PRESENTATION_SELECTION_STATUS';
 export const CHANGE_CURRENT_UNSCHEDULE_SEARCH_TERM        = 'CHANGE_CURRENT_UNSCHEDULE_SEARCH_TERM';
+export const CHANGE_CURRENT_SCHEDULE_SEARCH_TERM          = 'CHANGE_CURRENT_SCHEDULE_SEARCH_TERM';
 export const UNPUBLISHED_EVENT                            = 'UNPUBLISHED_EVENT';
+export const RECEIVE_SCHEDULE_EVENTS_SEARCH_PAGE          = 'RECEIVE_SCHEDULE_EVENTS_SEARCH_PAGE';
 
 export const getUnScheduleEventsPage =
     (
@@ -188,6 +190,15 @@ export const changeCurrentUnscheduleSearchTerm = (term) => (dispatch, getState) 
     ));
 }
 
+export const changeCurrentScheduleSearchTerm = (term) => (dispatch, getState) => {
+
+    dispatch(createAction(CHANGE_CURRENT_SCHEDULE_SEARCH_TERM)(
+        {
+            term
+        }
+    ));
+}
+
 export const unPublishEvent = (event) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -211,4 +222,30 @@ export const unPublishEvent = (event) => (dispatch, getState) => {
             }
         );
 
+}
+
+export const searchScheduleEvents = (term) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let params = {
+        page         : 1,
+        per_page     : 25,
+        access_token : accessToken,
+        filter: `title=@${term},abstract=@${term},social_summary=@${term},tags=@${term},speaker=@${term},speaker_email=@${term}`,
+        order:'title+,id+'
+    };
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_SCHEDULE_EVENTS_SEARCH_PAGE),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/published`,
+        authErrorHandler
+    )(params)(dispatch)
+        .then(() =>
+            dispatch(stopLoading())
+        );
 }

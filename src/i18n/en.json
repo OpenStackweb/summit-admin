@@ -12,12 +12,14 @@
     "select_event_type": "Select an Event Type ...",
     "select_track":  "Select a Track ...",
     "select_presentation_selection_status": "Select a Selection Status ...",
-    "search_unpublished": "Search for unpublished Events"
+    "search_unpublished": "Search for UnPublished Events ...",
+    "search_published": "Search for Published Events ..."
   },
   "titles":
   {
-    "clear"   : "Clear",
-    "search"  : "Search",
-    "refresh" : "Refresh"
+    "clear"           : "Clear",
+    "search"          : "Search",
+    "refresh"         : "Refresh",
+    "find_empty_spots": "Find empty spots for Day/Location"
   }
 }
