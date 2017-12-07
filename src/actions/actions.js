@@ -35,7 +35,7 @@ export const loadSummits = () => (dispatch, getState) => {
     getRequest(
         createAction(REQUEST_SUMMITS),
         createAction(RECEIVE_SUMMITS),
-        `${apiBaseUrl}/api/v1/summits/all?access_token=${accessToken}&expand=event_types,tracks`,
+        `${apiBaseUrl}/api/v1/summits?access_token=${accessToken}&expand=event_types,tracks`,
         authErrorHandler
     )({})(dispatch, getState).then(() => {
             dispatch(stopLoading());
