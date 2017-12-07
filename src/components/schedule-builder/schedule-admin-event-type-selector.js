@@ -7,25 +7,21 @@ class ScheduleAdminEventTypeSelector extends React.Component {
 
     constructor(props){
         super(props);
-        this.state = {
-            selectedOption: props.currentValue
-        }
         this.onChange = this.onChange.bind(this);
     }
 
     onChange(selectedOption){
-        this.setState({ ...this.state, selectedOption: selectedOption});
         this.props.onEventTypeChanged(selectedOption ? selectedOption.value : null);
     }
 
     render(){
-        let { eventTypes } = this.props;
+        let { eventTypes, currentValue } = this.props;
         return (
             <Select
                 placeholder={T.translate("placeholders.select_event_type")}
                 className="event-type-selector"
                 name="form-field-name"
-                value={this.state.selectedOption}
+                value={currentValue}
                 onChange={this.onChange}
                 options={eventTypes}
             />

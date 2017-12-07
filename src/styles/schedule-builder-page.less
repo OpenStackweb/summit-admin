@@ -181,7 +181,7 @@
   z-index: @event_z_index + 2;
 }
 
-.venues-selector, .day-selector, .event-type-selector, .track-selector, .presentation-selection-status-selector {
+.venues-selector, .day-selector, .event-type-selector, .track-selector, .presentation-selection-status-selector, .search-container {
   padding-bottom: 10px;
 }
 
@@ -198,5 +198,9 @@
 }
 
 .fa-spinner{
-  z-index: @time_slot_overlay_z_index + 2;
+  z-index: @event_z_index + 2;
+}
+
+.Select-menu-outer{
+  z-index: @event_z_index + 2 !important;
 }

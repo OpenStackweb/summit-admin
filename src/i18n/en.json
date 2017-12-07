@@ -11,6 +11,13 @@
     "select_venue": "Select a Summit Venue ...",
     "select_event_type": "Select an Event Type ...",
     "select_track":  "Select a Track ...",
-    "select_presentation_selection_status": "Select a Selection Status ..."
+    "select_presentation_selection_status": "Select a Selection Status ...",
+    "search_unpublished": "Search for unpublished Events"
+  },
+  "titles":
+  {
+    "clear"   : "Clear",
+    "search"  : "Search",
+    "refresh" : "Refresh"
   }
 }

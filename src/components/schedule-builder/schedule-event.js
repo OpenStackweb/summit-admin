@@ -204,7 +204,7 @@ class ScheduleEvent extends React.Component {
         } = this.props;
 
         return connectDragSource(
-            <div className="row schedule-event is-resizable"
+            <div className="row schedule-event is-resizable" id={`event_${event.id}`}
                  onMouseDown={this.onMouseDown}
                  ref={(div) => { this.scheduleEvent = div; }}
                  style={this.getInlineStyles(isDragging)}>

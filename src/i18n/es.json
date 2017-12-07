@@ -1,7 +1,7 @@
 {
   "errors": {
-    "user_not_authz": "Un momento. Tu usuario no esta autorizado!.",
-    "user_not_set": "Un momento. No podemos encontrar un usuario valido.",
+    "user_not_authz": "Hold on. Your user is not authorized!.",
+    "user_not_set": "Hold on. Can not get any valid user.",
     "session_expired": "Hold on. Your session expired!.",
     "empty_list": "there not are any item that match your criteria.",
     "empty_list_schedule_events": "Please select a Day and a Location ..."
@@ -11,6 +11,13 @@
     "select_venue": "Select a Summit Venue ...",
     "select_event_type": "Select an Event Type ...",
     "select_track":  "Select a Track ...",
-    "select_presentation_selection_status": "Select a Selection Status ..."
+    "select_presentation_selection_status": "Select a Selection Status ...",
+    "search_unpublished": "Search for unpublished Events"
+  },
+  "titles":
+  {
+    "clear"   : "Clear",
+    "search"  : "Search",
+    "refresh" : "Refresh"
   }
 }

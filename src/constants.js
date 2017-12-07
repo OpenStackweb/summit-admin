@@ -12,4 +12,5 @@
  **/
 
 export const DefaultEventMinutesDuration = 5;
-export const PixelsPerMinute = 16;
+export const PixelsPerMinute             = 16;
+export const AdminGroupCode              = 'administrators';

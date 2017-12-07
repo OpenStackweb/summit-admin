@@ -15,10 +15,22 @@ import React from 'react'
 import ScheduleAdminDashBoard from '../components/schedule-builder/schedule-admin-dashboard';
 import { connect } from 'react-redux';
 import '../styles/schedule-builder-page.less';
+import { getSummitById}  from '../actions/summit-actions';
+
 
 class ScheduleBuilderPage extends React.Component {
+
+    componentWillMount () {
+        let summitId = this.props.match.params.summit_id;
+        let {currentSummit } = this.props;
+        if(currentSummit == null){
+            this.props.getSummitById(summitId);
+        }
+    }
+
     render(){
         let {currentSummit} = this.props;
+        if(currentSummit == null) return null;
         return(
             <div>
                 <ScheduleAdminDashBoard summit={currentSummit} pixelsPerMinute={16}/>
@@ -28,12 +40,12 @@ class ScheduleBuilderPage extends React.Component {
 }
 
 const mapStateToProps = ({ currentSummitState }) => ({
-    currentSummit : currentSummitState.currentSummit,
-})
+    currentSummit : currentSummitState.currentSummit
+});
 
 export default connect (
     mapStateToProps,
     {
-
+        getSummitById
     }
 )(ScheduleBuilderPage);

@@ -13,7 +13,7 @@
 
 import URI from "urijs"
 import React from 'react'
-import { Route, Redirect, withRouter } from 'react-router-dom'
+import { Route, Redirect } from 'react-router-dom'
 
 class AuthorizationCallbackRoute extends React.Component {
 
@@ -29,15 +29,30 @@ class AuthorizationCallbackRoute extends React.Component {
         let accessToken = this.extractToken();
         if(accessToken == undefined){
             return (
-                <Route render={props => {
+                <Route render={ props => {
                     return <Redirect to="/error" />
                 }} />
             )
         }
         this.props.onUserAuth(accessToken, "");
+        let url              = URI( window.location.href);
+        let query            = url.search(true);
+        let fragment         = URI.parseQuery(url.fragment());
+
+        // purge fragment
+        delete fragment['access_token'];
+        delete fragment['expires_in'];
+        delete fragment['token_type'];
+        delete fragment['scope'];
+        delete fragment['id_token'];
+        delete fragment['session_state'];
+
+        let backUrl = query.hasOwnProperty('BackUrl') ? query['BackUrl'] : '/app';
+        backUrl     += `#${URI.buildQuery(fragment)}`;
+
         return (
-            <Route render={props => {
-                return <Redirect to="/app" />
+            <Route render={ props => {
+                return <Redirect to={backUrl} />
             }} />
         )
     }

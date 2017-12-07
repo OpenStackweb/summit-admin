@@ -23,12 +23,20 @@ class AuthorizedRoute extends React.Component {
         const { component: Component, getUserInfo, isLoggedUser,currentSummit, ...rest } = this.props;
         return (
             <Route {...rest} render={props => {
+                let { location } = this.props;
+                let backUrl = location.pathname;
+                if(location.search != null && location.search != null){
+                    backUrl += location.search
+                }
+                if(location.hash != null && location.hash != null){
+                    backUrl += location.hash
+                }
                 return isLoggedUser
                     ? <Component getUserInfo={getUserInfo} currentSummit={currentSummit} {...props} />
                     : <Redirect
                         to={{
-                            pathname: '/',
-                            state: { from: props.location }
+                            pathname: `/?BackUrl=${backUrl}`,
+                            state: { from: location }
                         }}
                       />
             }} />

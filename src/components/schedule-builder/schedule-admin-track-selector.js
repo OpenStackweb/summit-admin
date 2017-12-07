@@ -7,25 +7,21 @@ class ScheduleAdminTrackSelector extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            selectedOption: props.currentValue
-        }
         this.onChange     = this.onChange.bind(this);
     }
 
     onChange(selectedOption){
-        this.setState({ ...this.state, selectedOption: selectedOption});
         this.props.onTrackChanged(selectedOption ? selectedOption.value : null);
     }
 
     render() {
-        let {tracks} = this.props;
+        let {tracks, currentValue} = this.props;
         return (
             <Select
                 placeholder={T.translate("placeholders.select_track")}
                 className="track-selector"
                 name="form-field-name"
-                value={this.state.selectedOption}
+                value={currentValue}
                 onChange={this.onChange}
                 options={tracks}
             />);

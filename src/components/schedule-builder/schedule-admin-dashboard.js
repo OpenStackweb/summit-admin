@@ -22,7 +22,8 @@ import {
     getPublishedEventsBySummitDayLocation,
     changeCurrentEventType,
     changeCurrentTrack,
-    changeCurrentPresentationSelectionStatus
+    changeCurrentPresentationSelectionStatus,
+    changeCurrentUnscheduleSearchTerm
 } from '../../actions/summit-builder-actions';
 import UnScheduleEventList from './unschedule-event-list';
 import ScheduleEventList from './schedule-event-list';
@@ -33,29 +34,100 @@ import ScheduleAdminVenueSelector from './schedule-admin-venue-selector';
 import ScheduleAdminEventTypeSelector from './schedule-admin-event-type-selector';
 import ScheduleAdminTrackSelector from './schedule-admin-track-selector';
 import ScheduleAdminPresentationSelectionStatusSelector from './schedule-admin-presentation-selection-status-selector';
+import ScheduleAdminSearchFreeTextUnScheduleEvents from './schedule-admin-search-free-text-unschedule-events';
 import T from "i18n-react/dist/i18n-react";
-
 import moment from 'moment-timezone';
+import FragmentParser from '../../utils/fragmen-parser';
+import * as Scroll from 'react-scroll';
 
 class ScheduleAdminDashBoard extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.onScheduleEvent                      = this.onScheduleEvent.bind(this);
-        this.onScheduleEventWithDuration          = this.onScheduleEventWithDuration.bind(this);
-        this.onDayChanged                         = this.onDayChanged.bind(this);
-        this.onVenueChanged                       = this.onVenueChanged.bind(this);
-        this.onUnScheduleEventsPageChange         = this.onUnScheduleEventsPageChange.bind(this);
-        this.onEventTypeChanged                   = this.onEventTypeChanged.bind(this);
-        this.onTrackChanged                       = this.onTrackChanged.bind(this);
+        this.onScheduleEvent = this.onScheduleEvent.bind(this);
+        this.onScheduleEventWithDuration = this.onScheduleEventWithDuration.bind(this);
+        this.onDayChanged = this.onDayChanged.bind(this);
+        this.onVenueChanged = this.onVenueChanged.bind(this);
+        this.onUnScheduleEventsPageChange = this.onUnScheduleEventsPageChange.bind(this);
+        this.onEventTypeChanged = this.onEventTypeChanged.bind(this);
+        this.onTrackChanged = this.onTrackChanged.bind(this);
         this.onPresentationSelectionStatusChanged = this.onPresentationSelectionStatusChanged.bind(this);
+        this.onUnscheduledEventsFilterTextChanged = this.onUnscheduledEventsFilterTextChanged.bind(this);
+        this.fragmentParser = new FragmentParser();
+        this.filters        = this.parseFilterFromFragment();
+        this.timeoutHandler = null;
+    }
+
+    parseFilterFromFragment(){
+        // read url hash and redirect to event
+        let { currentSummit } = this.props;
+        if(currentSummit == null) return;
+        var hash =this.fragmentParser.getParams();
+        var filters = {};
+        for(let key in hash) {
+            let value = hash[key];
+            switch(key) {
+                case 'day':
+                    filters['currentDay'] = value;
+                    break;
+                case 'location_id':
+                    let location = currentSummit.locations.filter((location) => location.id == value).shift()
+                    if(location) {
+                        filters['currentLocation'] = location;
+                    }
+                    break;
+                case 'event':
+                        filters['currentEvent'] = value;
+                    break;
+                case 'time':
+                    filters['currentTime'] = value;
+                    break;
+                case 'q':
+
+                    break;
+            }
+        }
+        return filters;
     }
 
     componentDidMount(){
-        let { summit, currentEventType, currentTrack, currentPresentationSelectionStatus } = this.props;
+
+        let { currentSummit, currentEventType, currentTrack, currentPresentationSelectionStatus, currentDay, currentLocation } = this.props;
+        if(currentSummit == null) return;
+
         let eventTypeId = currentEventType == null ? null : currentEventType.id;
         let trackId     = currentTrack == null ? null : currentTrack.id;
-        this.props.getUnScheduleEventsPage(summit.id, 1, 10, eventTypeId, trackId, currentPresentationSelectionStatus);
+        this.props.getUnScheduleEventsPage(currentSummit.id, 1, 10, eventTypeId, trackId, currentPresentationSelectionStatus);
+
+        if(this.filters.hasOwnProperty('currentDay')) {
+            currentDay = this.filters['currentDay'];
+            this.props.changeCurrentSelectedDay(currentDay);
+        }
+
+        if(this.filters.hasOwnProperty('currentLocation')) {
+            currentLocation = this.filters['currentLocation'];
+            this.props.changeCurrentSelectedLocation(currentLocation);
+        }
+
+        this.updatePublishedList(currentDay, currentLocation);
+
+    }
+
+    updatePublishedList(day, location){
+        let { currentSummit } = this.props;
+        if( day != null && location != null)
+            this.props.getPublishedEventsBySummitDayLocation
+            (
+                currentSummit,
+                day,
+                location
+            );
+    }
+
+    componentWillMount () {
+    }
+
+    componentWillUpdate(nextProps, nextState) {
     }
 
     onScheduleEvent(event, currentDay, startDateTime){
@@ -64,16 +136,24 @@ class ScheduleAdminDashBoard extends React.Component {
     }
 
     componentWillReceiveProps(nextProps){
-        if(
-            ( nextProps.currentDay != null && nextProps.currentDay != this.props.currentDay && nextProps.currentLocation != null && this.props.currentLocation != null )||
-            ( nextProps.currentLocation != null && nextProps.currentLocation != this.props.currentLocation && nextProps.currentDay != null &&  this.props.currentDay != null)
-        )
-            this.props.getPublishedEventsBySummitDayLocation
-            (
-                this.props.currentSummit,
-                nextProps.currentDay,
-                nextProps.currentLocation
-            );
+
+    }
+
+    onDayChanged(day){
+        let { currentLocation } = this.props;
+        this.props.changeCurrentSelectedDay(day);
+        let locationId = currentLocation != null ? currentLocation.id: null;
+        this.buildFragment(locationId, day);
+        this.filters  = this.parseFilterFromFragment();
+        this.updatePublishedList(day, currentLocation);
+    }
+
+    onVenueChanged(location){
+        let { currentDay } = this.props;
+        this.props.changeCurrentSelectedLocation(location);
+        this.buildFragment(location.id, currentDay);
+        this.filters  = this.parseFilterFromFragment();
+        this.updatePublishedList(currentDay, location);
     }
 
     onUnScheduleEventsPageChange(currentPage){
@@ -81,36 +161,36 @@ class ScheduleAdminDashBoard extends React.Component {
         this.props.getUnScheduleEventsPage(summit.id, currentPage);
     }
 
-    onDayChanged(day){
-        this.props.changeCurrentSelectedDay(day);
-    }
-
-    onVenueChanged(location){
-        this.props.changeCurrentSelectedLocation(location);
-    }
-
     onEventTypeChanged(eventType){
-        let { summit, currentTrack, currentPresentationSelectionStatus } = this.props;
+        let { summit, currentTrack, currentPresentationSelectionStatus, unScheduleEventsCurrentSearchTerm} = this.props;
         let trackId = currentTrack == null ? null : currentTrack.id;
         let eventTypeId = eventType == null ? null : eventType.id;
         this.props.changeCurrentEventType(eventType);
-        this.props.getUnScheduleEventsPage(summit.id, 1, 10, eventTypeId, trackId, currentPresentationSelectionStatus);
+        this.props.getUnScheduleEventsPage(summit.id, 1, 10, eventTypeId, trackId, currentPresentationSelectionStatus, unScheduleEventsCurrentSearchTerm);
     }
 
     onTrackChanged(track){
-        let { summit, currentEventType , currentPresentationSelectionStatus} = this.props;
+        let { summit, currentEventType , currentPresentationSelectionStatus, unScheduleEventsCurrentSearchTerm} = this.props;
         let eventTypeId = currentEventType == null ? null : currentEventType.id;
         let trackId     = track == null ? null : track.id;
         this.props.changeCurrentTrack(track);
-        this.props.getUnScheduleEventsPage(summit.id, 1, 10, eventTypeId, trackId, currentPresentationSelectionStatus);
+        this.props.getUnScheduleEventsPage(summit.id, 1, 10, eventTypeId, trackId, currentPresentationSelectionStatus, unScheduleEventsCurrentSearchTerm);
     }
 
     onPresentationSelectionStatusChanged(presentationSelectionStatus){
-        let { summit, currentEventType, currentTrack } = this.props;
+        let { summit, currentEventType, currentTrack, unScheduleEventsCurrentSearchTerm } = this.props;
         let eventTypeId = currentEventType == null ? null : currentEventType.id;
         let trackId = currentTrack == null ? null : currentTrack.id;
         this.props.changeCurrentPresentationSelectionStatus(presentationSelectionStatus);
-        this.props.getUnScheduleEventsPage(summit.id, 1, 10, eventTypeId, trackId, presentationSelectionStatus);
+        this.props.getUnScheduleEventsPage(summit.id, 1, 10, eventTypeId, trackId, presentationSelectionStatus, unScheduleEventsCurrentSearchTerm);
+    }
+
+    onUnscheduledEventsFilterTextChanged(term){
+        let { summit, currentEventType, currentTrack, currentPresentationSelectionStatus} = this.props;
+        let eventTypeId = currentEventType == null ? null : currentEventType.id;
+        let trackId    = currentTrack == null ? null : currentTrack.id;
+        this.props.changeCurrentUnscheduleSearchTerm(term)
+        this.props.getUnScheduleEventsPage(summit.id, 1, 10, eventTypeId, trackId, currentPresentationSelectionStatus, term);
     }
 
     onScheduleEventWithDuration(event, currentDay, startTime, duration){
@@ -123,7 +203,60 @@ class ScheduleAdminDashBoard extends React.Component {
         );
     }
 
+    buildFragment(locationId = null, day = null) {
+
+        this.fragmentParser.setParam('q','');
+        this.fragmentParser.setParam('day','');
+        this.fragmentParser.setParam('location_id','');
+        this.fragmentParser.setParam('event','');
+        this.fragmentParser.setParam('time','');
+
+        if(locationId != null ){
+            this.fragmentParser.setParam('location_id', locationId)
+        }
+
+        if(day != null ){
+            this.fragmentParser.setParam('day', day)
+        }
+
+        window.location.hash = this.fragmentParser.serialize();
+    }
+
+    componentDidUpdate(){
+        console.log("componentDidUpdate");
+        if(this.timeoutHandler != null){
+            window.clearTimeout(this.timeoutHandler)
+        }
+        this.timeoutHandler =  window.setTimeout(() => {
+            if (this.filters.hasOwnProperty('currentTime')) {
+                let time = this.filters['currentTime'];
+                this.scrollToElement(time);
+            }
+
+            if (this.filters.hasOwnProperty('currentEvent')) {
+                let eventId = this.filters['currentEvent'];
+                this.scrollToElement(`event_${eventId}`);
+            }
+        }, 2000);
+    }
+
+
+    scrollToElement(elementId) {
+
+        var el = document.getElementById(elementId);
+        if(!el) return;
+        let yPos = el.getClientRects()[0].top;
+        var scroll = Scroll.animateScroll;
+
+        scroll.scrollTo(yPos, {
+            duration: 1500,
+            delay: 100,
+            smooth: "easeInOutQuint",
+        });
+    }
+
     render(){
+
         let {
             scheduleEvents,
             unScheduleEvents,
@@ -136,8 +269,13 @@ class ScheduleAdminDashBoard extends React.Component {
             currentEventType,
             currentTrack,
             currentPresentationSelectionStatus,
-            unScheduleEventsCurrentOrder
+            unScheduleEventsCurrentOrder,
+            unScheduleEventsCurrentSearchTerm
         } = this.props;
+
+        if(currentSummit == null ) return null;
+
+
         // parse summits dates
         let days = [];
 
@@ -233,6 +371,10 @@ class ScheduleAdminDashBoard extends React.Component {
                     }
                 </div>
                 <div className="col-md-6 unpublished-container">
+                    <ScheduleAdminSearchFreeTextUnScheduleEvents
+                        onFilterTextChange={this.onUnscheduledEventsFilterTextChanged}
+                        currentValue={unScheduleEventsCurrentSearchTerm}
+                    />
                     <ScheduleAdminEventTypeSelector
                         onEventTypeChanged={this.onEventTypeChanged}
                         eventTypes={eventTypes}
@@ -251,11 +393,11 @@ class ScheduleAdminDashBoard extends React.Component {
                             currentValue={currentPresentationSelectionStatus}
                         />
                     }
-                    <UnScheduleEventList
-                        events={ unScheduleEvents }
-                        currentPage={ unScheduleEventsCurrentPage }
-                        lastPage={ unScheduleEventsLasPage }
-                        onPageChange={this.onUnScheduleEventsPageChange}/>
+                   <UnScheduleEventList
+                            events={unScheduleEvents}
+                            currentPage={unScheduleEventsCurrentPage}
+                            lastPage={unScheduleEventsLasPage}
+                            onPageChange={this.onUnScheduleEventsPageChange}/>
                 </div>
             </div>
         );
@@ -277,7 +419,8 @@ function mapStateToProps({ currentScheduleBuilderState, currentSummitState  }) {
         unScheduleEventsCurrentPage        : currentScheduleBuilderState.unScheduleEventsCurrentPage,
         unScheduleEventsLasPage            : currentScheduleBuilderState.unScheduleEventsLasPage,
         unScheduleEventsCurrentOrder       : currentScheduleBuilderState.unScheduleEventsCurrentOrder,
-        currentPresentationSelectionStatus : currentScheduleBuilderState.currentPresentationSelectionStatus
+        currentPresentationSelectionStatus : currentScheduleBuilderState.currentPresentationSelectionStatus,
+        unScheduleEventsCurrentSearchTerm  : currentScheduleBuilderState.unScheduleEventsCurrentSearchTerm,
     }
 }
 
@@ -289,5 +432,6 @@ export default connect(mapStateToProps, {
     getPublishedEventsBySummitDayLocation,
     changeCurrentEventType,
     changeCurrentTrack,
-    changeCurrentPresentationSelectionStatus
+    changeCurrentPresentationSelectionStatus,
+    changeCurrentUnscheduleSearchTerm
 })(ScheduleAdminDashBoard);

@@ -23,7 +23,7 @@ import { onUserAuth, doLogin, doLogout, getUserInfo } from './actions/auth-actio
 import { BrowserRouter } from 'react-router-dom'
 import { AjaxLoader } from "openstack-uicore-foundation";
 import T from 'i18n-react';
-
+import URI from "urijs";
 // here is set by default user lang as en
 
 let language = (navigator.languages && navigator.languages[0]) || navigator.language || navigator.userLanguage;
@@ -43,6 +43,18 @@ T.setTexts(require(`./i18n/${language}.json`));
 
 
 class App extends React.PureComponent {
+
+    onClickLogin(){
+        let url      = URI( window.location.href);
+        let query    = url.search(true);
+        let fragment = url.fragment();
+        let backUrl  = query.hasOwnProperty('BackUrl') ? query['BackUrl'] : null;
+        if(fragment != null && fragment != ''){
+            backUrl += `#${fragment}`;
+        }
+        doLogin(backUrl);
+    }
+
     render() {
         let { isLoggedUser, onUserAuth, doLogout, getUserInfo, currentSummit} = this.props;
         return (
@@ -52,7 +64,7 @@ class App extends React.PureComponent {
                     <div className="header">
                         <div className="text-center">
                             <h1>OpenStack Summit Admin</h1>
-                            <AuthButton isLoggedUser={isLoggedUser} doLogin={doLogin} doLogout={doLogout}/>
+                            <AuthButton isLoggedUser={isLoggedUser} doLogin={this.onClickLogin.bind(this)} doLogout={doLogout}/>
                         </div>
                     </div>
                     <Switch>
@@ -75,7 +87,6 @@ const mapStateToProps = ({ loggedUserState, baseState, currentSummitState }) => 
 
 export default connect(mapStateToProps, {
     onUserAuth,
-    doLogin,
     doLogout,
     getUserInfo,
 })(App)

@@ -19,9 +19,9 @@ import ScheduleEvent from './schedule-event';
 import ReactDOM  from 'react-dom';
 import SummitEvent from '../../models/summit-event';
 
-const TimeSlot = ({timeLabel}) => {
+const TimeSlot = ({timeLabel, id}) => {
     return (
-        <div className="row time-slot">
+        <div id={id} className="row time-slot">
             <div className="col-md-12">
                 <span>{timeLabel}</span>
             </div>
@@ -199,7 +199,7 @@ class ScheduleEventList extends React.Component
                 <div className="col-md-2 no-margin no-padding">
                     {
                         timeSlotsList.map((slot, idx) => (
-                            <TimeSlot timeLabel={slot.format("hh:mm A")} key={idx}></TimeSlot>
+                            <TimeSlot timeLabel={slot.format("hh:mm A")} key={idx} id={slot.format("HH_mm")}></TimeSlot>
                         ))
                     }
                 </div>

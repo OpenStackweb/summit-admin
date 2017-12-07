@@ -7,9 +7,6 @@ class ScheduleAdminVenueSelector extends React.Component {
 
     constructor(props){
         super(props);
-        this.state = {
-            selectedOption: props.currentValue
-        }
         this.onChange = this.onChange.bind(this);
     }
 
@@ -21,18 +18,17 @@ class ScheduleAdminVenueSelector extends React.Component {
     }
 
     onChange(selectedOption){
-        this.setState({ ...this.state, selectedOption: selectedOption});
         this.props.onVenueChanged(selectedOption ? selectedOption.value : null);
     }
 
     render(){
-        let { venues } = this.props;
+        let { venues, currentValue } = this.props;
         return (
             <Select
-                placeholder={T.translate("placeholders.select_track")}
+                placeholder={T.translate("placeholders.select_venue")}
                 className="venues-selector"
                 name="form-field-name"
-                value={this.state.selectedOption}
+                value={currentValue}
                 onChange={this.onChange}
                 options={venues}
                 optionRenderer={this.renderOption}

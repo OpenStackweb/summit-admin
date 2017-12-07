@@ -21,7 +21,8 @@ import
     RECEIVE_SCHEDULE_EVENTS_PAGE,
     CHANGE_CURRENT_EVENT_TYPE,
     CHANGE_CURRENT_TRACK,
-    CHANGE_CURRENT_PRESENTATION_SELECTION_STATUS
+    CHANGE_CURRENT_PRESENTATION_SELECTION_STATUS,
+    CHANGE_CURRENT_UNSCHEDULE_SEARCH_TERM
 } from '../actions/summit-builder-actions';
 
 import { LOGOUT_USER } from '../actions/auth-actions';
@@ -42,6 +43,7 @@ const DEFAULT_STATE = {
     currentTrack : null,
     unScheduleEventsCurrentOrder : null,
     currentPresentationSelectionStatus: null,
+    unScheduleEventsCurrentSearchTerm: null
 };
 
 const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
@@ -83,6 +85,11 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
                 return {...state, currentLocation : null, scheduleEvents : []};
             }
             return {...state, currentLocation : location};
+        }
+        break;
+        case CHANGE_CURRENT_UNSCHEDULE_SEARCH_TERM:{
+            let {term} = payload;
+            return {...state, unScheduleEventsCurrentSearchTerm : term};
         }
         break;
         case RECEIVE_SCHEDULE_EVENTS_PAGE:{

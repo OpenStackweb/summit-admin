@@ -7,25 +7,21 @@ class ScheduleAdminPresentationSelectionStatusSelector extends React.Component {
 
     constructor(props){
         super(props);
-        this.state = {
-            selectedOption: props.currentValue
-        }
         this.onChange = this.onChange.bind(this);
     }
 
     onChange(selectedOption){
-        this.setState({ ...this.state, selectedOption: selectedOption});
         this.props.onPresentationSelectionStatusChanged(selectedOption ? selectedOption.value : null);
     }
 
     render(){
-        let { presentationSelectionStatus } = this.props;
+        let { presentationSelectionStatus, currentValue } = this.props;
         return (
             <Select
                 placeholder={T.translate("placeholders.select_presentation_selection_status")}
                 className="presentation-selection-status-selector"
                 name="form-field-name"
-                value={this.state.selectedOption}
+                value={currentValue}
                 onChange={this.onChange}
                 options={presentationSelectionStatus}
             />
