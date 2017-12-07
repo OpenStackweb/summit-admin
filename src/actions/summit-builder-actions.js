@@ -1,4 +1,4 @@
-import {createAction, getRequest, putRequest, startLoading, stopLoading} from "openstack-uicore-foundation";
+import {createAction, getRequest, putRequest, startLoading, stopLoading, deleteRequest } from "openstack-uicore-foundation";
 import moment from "moment-timezone";
 import SummitEvent from "../models/summit-event";
 import { authErrorHandler, apiBaseUrl } from './base-actions';
@@ -14,6 +14,7 @@ export const CHANGE_CURRENT_EVENT_TYPE                    = 'CHANGE_CURRENT_EVEN
 export const CHANGE_CURRENT_TRACK                         = 'CHANGE_CURRENT_TRACK';
 export const CHANGE_CURRENT_PRESENTATION_SELECTION_STATUS = 'CHANGE_CURRENT_PRESENTATION_SELECTION_STATUS';
 export const CHANGE_CURRENT_UNSCHEDULE_SEARCH_TERM        = 'CHANGE_CURRENT_UNSCHEDULE_SEARCH_TERM';
+export const UNPUBLISHED_EVENT                            = 'UNPUBLISHED_EVENT';
 
 export const getUnScheduleEventsPage =
     (
@@ -114,8 +115,7 @@ export const publishEvent = (event, day, startTime, minutes) =>
                     dispatch(stopLoading())
                 }
             );
-
-    };
+}
 
 export const changeCurrentSelectedDay = (currentSelectedDay) => (dispatch, getState) => {
     dispatch(createAction(CHANGE_CURRENT_DAY)(
@@ -186,4 +186,29 @@ export const changeCurrentUnscheduleSearchTerm = (term) => (dispatch, getState) 
             term
         }
     ));
+}
+
+export const unPublishEvent = (event) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+    deleteRequest(
+        null,
+        createAction(UNPUBLISHED_EVENT)(
+            {
+                event
+            }
+        ),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${event.id}/publish?access_token=${accessToken}`,
+        {},
+        authErrorHandler
+    )({})(dispatch)
+        .then(
+            () => {
+                dispatch(stopLoading())
+            }
+        );
+
 }

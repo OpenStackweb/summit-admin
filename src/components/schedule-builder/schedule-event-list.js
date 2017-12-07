@@ -95,6 +95,7 @@ class ScheduleEventList extends React.Component
         this.onDroppedSubEvent = this.onDroppedSubEvent.bind(this);
         this.onResized         = this.onResized.bind(this);
         this.getMaxHeight      = this.getMaxHeight.bind(this);
+        this.onUnPublishEvent  = this.onUnPublishEvent.bind(this);
         this.state = {
             resizing: false,
         };
@@ -109,6 +110,11 @@ class ScheduleEventList extends React.Component
 
     onDroppedSubEvent(subEvent, parentEvent, startTime, duration){
         this.props.onScheduleSubEvent(subEvent, parentEvent, this.props.currentDay, startTime, duration)
+    }
+
+    onUnPublishEvent(event){
+        let {onUnPublishEvent} = this.props;
+        onUnPublishEvent(event);
     }
 
     canResize(eventId, newTop, newHeight){
@@ -233,6 +239,7 @@ class ScheduleEventList extends React.Component
                                     canResize={this.canResize}
                                     onResized={this.onResized}
                                     maxHeight={this.getMaxHeight}
+                                    onUnPublishEvent={this.onUnPublishEvent}
                                     currentDay={currentDay}>
                                 </ScheduleEvent>)
                         })

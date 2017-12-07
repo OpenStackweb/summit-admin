@@ -22,7 +22,8 @@ import
     CHANGE_CURRENT_EVENT_TYPE,
     CHANGE_CURRENT_TRACK,
     CHANGE_CURRENT_PRESENTATION_SELECTION_STATUS,
-    CHANGE_CURRENT_UNSCHEDULE_SEARCH_TERM
+    CHANGE_CURRENT_UNSCHEDULE_SEARCH_TERM,
+    UNPUBLISHED_EVENT
 } from '../actions/summit-builder-actions';
 
 import { LOGOUT_USER } from '../actions/auth-actions';
@@ -96,6 +97,24 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
             let { data } = payload.response;
             return {...state,
                 scheduleEvents : data
+            };
+        }
+        break;
+        case UNPUBLISHED_EVENT:
+        {
+            let { event } = payload;
+
+            // remove from scheduled events
+            let scheduleEvents =  state.scheduleEvents.filter(item => event.id !== item.id);
+
+            // main
+            return {...state,
+                unScheduleEvents: [...state.unScheduleEvents,
+                    {...event,
+                        is_published: false,
+                    }
+                ],
+                scheduleEvents
             };
         }
         break;

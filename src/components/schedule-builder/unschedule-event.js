@@ -53,6 +53,7 @@ class UnScheduleEvent extends React.Component {
                      opacity: isDragging ? 0.5 : 1,
                      cursor: 'move'
                  }}>
+                <i className="fa fa-pencil-square-o edit-unpublished-event-btn" title="edit event" aria-hidden="true"></i>
                 <div className="col-md-12">
                     { event.title }
                 </div>

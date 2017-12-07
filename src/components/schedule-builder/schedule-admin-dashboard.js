@@ -23,7 +23,8 @@ import {
     changeCurrentEventType,
     changeCurrentTrack,
     changeCurrentPresentationSelectionStatus,
-    changeCurrentUnscheduleSearchTerm
+    changeCurrentUnscheduleSearchTerm,
+    unPublishEvent
 } from '../../actions/summit-builder-actions';
 import UnScheduleEventList from './unschedule-event-list';
 import ScheduleEventList from './schedule-event-list';
@@ -53,6 +54,8 @@ class ScheduleAdminDashBoard extends React.Component {
         this.onTrackChanged = this.onTrackChanged.bind(this);
         this.onPresentationSelectionStatusChanged = this.onPresentationSelectionStatusChanged.bind(this);
         this.onUnscheduledEventsFilterTextChanged = this.onUnscheduledEventsFilterTextChanged.bind(this);
+        this.onUnPublishEvent                     = this.onUnPublishEvent.bind(this);
+
         this.fragmentParser = new FragmentParser();
         this.filters        = this.parseFilterFromFragment();
         this.timeoutHandler = null;
@@ -255,6 +258,10 @@ class ScheduleAdminDashBoard extends React.Component {
         });
     }
 
+    onUnPublishEvent(event){
+        this.props.unPublishEvent(event);
+    }
+
     render(){
 
         let {
@@ -364,7 +371,8 @@ class ScheduleAdminDashBoard extends React.Component {
                         onScheduleEvent={this.onScheduleEvent}
                         onScheduleEventWithDuration={this.onScheduleEventWithDuration}
                         events={scheduleEvents}
-                        childEvents={childScheduleEvents}/>
+                        childEvents={childScheduleEvents}
+                        onUnPublishEvent={this.onUnPublishEvent}/>
                     }
                     { (currentDay == null || currentLocation == null) &&
                     <p className="empty-list-message">{T.translate("errors.empty_list_schedule_events")}</p>
@@ -427,6 +435,7 @@ function mapStateToProps({ currentScheduleBuilderState, currentSummitState  }) {
 export default connect(mapStateToProps, {
     getUnScheduleEventsPage,
     publishEvent,
+    unPublishEvent,
     changeCurrentSelectedDay,
     changeCurrentSelectedLocation,
     getPublishedEventsBySummitDayLocation,
