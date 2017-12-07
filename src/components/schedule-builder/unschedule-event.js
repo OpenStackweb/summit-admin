@@ -56,6 +56,11 @@ class UnScheduleEvent extends React.Component {
         )
     }
 
+    onClickEdit(){
+        let { event, onEditEvent } = this.props;
+        onEditEvent(event);
+    }
+
     render() {
         const { connectDragSource, isDragging, event } = this.props;
         return connectDragSource(
@@ -67,16 +72,19 @@ class UnScheduleEvent extends React.Component {
                      }}>
                         <div className="row">
                             <div className="col-md-12">
-                                <i className="fa fa-pencil-square-o edit-unpublished-event-btn" title="edit event" aria-hidden="true"></i>
-                                <OverlayTrigger trigger={['hover']} placement="bottom" overlay={this.popoverHoverFocus()}>
-                                    <span className="event-title">
-                                        { event.title }
-                                    </span>
-                                </OverlayTrigger>
+                                <i className="fa fa-pencil-square-o edit-unpublished-event-btn" title="edit event" aria-hidden="true" onClick={this.onClickEdit.bind(this)}></i>
+                                <div className="col-md-12 event-container">
+                                    <div className="event-content">
+                                        <OverlayTrigger trigger={['hover']} placement="bottom" overlay={this.popoverHoverFocus()}>
+                                            <span className="event-title">
+                                                { event.title }
+                                            </span>
+                                        </OverlayTrigger>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                 </div>
-
         );
     }
 }

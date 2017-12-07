@@ -17,7 +17,7 @@ import T from "i18n-react/dist/i18n-react";
 class ScheduleAdminScheduleEventsSearchResults extends React.Component
 {
     render(){
-        let{ searchTerm, events } = this.props;
+        let{ searchTerm, events, onEditEvent } = this.props;
         if(searchTerm == null || searchTerm == '') return null;
         if(events == null || events.length == 0) return(
           <p className="empty-list-message">There are no match for your search criteria.</p>
@@ -27,7 +27,7 @@ class ScheduleAdminScheduleEventsSearchResults extends React.Component
             {
                 events.map((event, index) => (
                     <li key={index}>
-                        <ScheduleEventResult event={event}></ScheduleEventResult>
+                        <ScheduleEventResult event={event} onEditEvent={onEditEvent}></ScheduleEventResult>
                     </li>
                 ))
             }

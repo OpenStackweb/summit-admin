@@ -31,7 +31,7 @@ class ScheduleBuilderPage extends React.Component {
         if(currentSummit == null) return null;
         return(
             <div>
-                <ScheduleAdminDashBoard summit={currentSummit} pixelsPerMinute={16}/>
+                <ScheduleAdminDashBoard history={this.props.history} summit={currentSummit} pixelsPerMinute={16}/>
             </div>
         )
     }

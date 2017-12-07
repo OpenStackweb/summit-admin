@@ -58,7 +58,6 @@ class ScheduleEvent extends React.Component {
         this.onMouseDown = this.onMouseDown.bind(this);
         this.onMouseUp   = this.onMouseUp.bind(this);
         this.onMouseMove = this.onMouseMove.bind(this);
-        this.onUnPublishEvent = this.onUnPublishEvent.bind(this);
     }
 
     get height(){
@@ -208,9 +207,14 @@ class ScheduleEvent extends React.Component {
 
     // end resize behavior
 
-    onUnPublishEvent(){
+    onClickUnPublish(){
         let {event, onUnPublishEvent} = this.props;
         onUnPublishEvent(event);
+    }
+
+    onClickEdit(){
+        let { event, onEditEvent } = this.props;
+        onEditEvent(event);
     }
 
     render() {
@@ -227,8 +231,8 @@ class ScheduleEvent extends React.Component {
                  style={this.getInlineStyles(isDragging)}>
                     <div className="row">
                         <div className="col-md-12">
-                            <i className="fa fa-minus-circle unpublish-event-btn" aria-hidden="true" title="unpublish event" onClick={this.onUnPublishEvent}></i>
-                            <i className="fa fa-pencil-square-o edit-published-event-btn" title="edit event" aria-hidden="true"></i>
+                            <i className="fa fa-minus-circle unpublish-event-btn" aria-hidden="true" title="unpublish event" onClick={this.onClickUnPublish.bind(this)}></i>
+                            <i className="fa fa-pencil-square-o edit-published-event-btn" title="edit event" aria-hidden="true" onClick={this.onClickEdit.bind(this)}></i>
                             <div className="col-md-12 event-container">
                                 <div className="event-content">
                                         <OverlayTrigger trigger={['hover']} placement="bottom" overlay={this.popoverHoverFocus()}>

@@ -2,6 +2,7 @@ import {createAction, getRequest, putRequest, startLoading, stopLoading, deleteR
 import moment from "moment-timezone";
 import SummitEvent from "../models/summit-event";
 import { authErrorHandler, apiBaseUrl } from './base-actions';
+import { ScheduleEventsSearchResultMaxPage } from '../constants';
 
 export const REQUEST_UNSCHEDULE_EVENTS_PAGE               = 'REQUEST_UNSCHEDULE_EVENTS_PAGE';
 export const RECEIVE_UNSCHEDULE_EVENTS_PAGE               = 'RECEIVE_UNSCHEDULE_EVENTS_PAGE';
@@ -15,6 +16,7 @@ export const CHANGE_CURRENT_TRACK                         = 'CHANGE_CURRENT_TRAC
 export const CHANGE_CURRENT_PRESENTATION_SELECTION_STATUS = 'CHANGE_CURRENT_PRESENTATION_SELECTION_STATUS';
 export const CHANGE_CURRENT_UNSCHEDULE_SEARCH_TERM        = 'CHANGE_CURRENT_UNSCHEDULE_SEARCH_TERM';
 export const CHANGE_CURRENT_SCHEDULE_SEARCH_TERM          = 'CHANGE_CURRENT_SCHEDULE_SEARCH_TERM';
+export const CHANGE_CURRENT_ORDER_BY                      = 'CHANGE_CURRENT_ORDER_BY';
 export const UNPUBLISHED_EVENT                            = 'UNPUBLISHED_EVENT';
 export const RECEIVE_SCHEDULE_EVENTS_SEARCH_PAGE          = 'RECEIVE_SCHEDULE_EVENTS_SEARCH_PAGE';
 
@@ -105,18 +107,18 @@ export const publishEvent = (event, day, startTime, minutes) =>
             ),
             `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${event.id}/publish?access_token=${accessToken}`,
             {
-                location_id:currentLocation.id,
-                start_date: eventStarDateTime.valueOf()/1000,
-                end_date: eventEndDateTime.valueOf()/1000,
+                location_id : currentLocation.id,
+                start_date  : eventStarDateTime.valueOf()/1000,
+                end_date    : eventEndDateTime.valueOf()/1000,
             },
             authErrorHandler
         )({})(dispatch)
             .then(
-                () => {
-                    console.log('then');
-                    dispatch(stopLoading())
-                }
-            );
+            () => {
+                dispatch(stopLoading())
+            }
+        );
+
 }
 
 export const changeCurrentSelectedDay = (currentSelectedDay) => (dispatch, getState) => {
@@ -181,6 +183,16 @@ export const changeCurrentPresentationSelectionStatus = (currentPresentationSele
     ));
 }
 
+export const changeCurrentUnScheduleOrderBy = (orderBy) => (dispatch, getState) => {
+
+    dispatch(createAction(CHANGE_CURRENT_ORDER_BY)(
+        {
+            orderBy: orderBy
+        }
+    ));
+}
+
+
 export const changeCurrentUnscheduleSearchTerm = (term) => (dispatch, getState) => {
 
     dispatch(createAction(CHANGE_CURRENT_UNSCHEDULE_SEARCH_TERM)(
@@ -233,7 +245,7 @@ export const searchScheduleEvents = (term) => (dispatch, getState) => {
 
     let params = {
         page         : 1,
-        per_page     : 25,
+        per_page     : ScheduleEventsSearchResultMaxPage,
         access_token : accessToken,
         filter: `title=@${term},abstract=@${term},social_summary=@${term},tags=@${term},speaker=@${term},speaker_email=@${term}`,
         order:'title+,id+'

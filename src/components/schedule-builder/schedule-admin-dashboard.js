@@ -26,7 +26,8 @@ import {
     changeCurrentUnscheduleSearchTerm,
     unPublishEvent,
     changeCurrentScheduleSearchTerm,
-    searchScheduleEvents
+    searchScheduleEvents,
+    changeCurrentUnScheduleOrderBy
 } from '../../actions/summit-builder-actions';
 import UnScheduleEventList from './unschedule-event-list';
 import ScheduleEventList from './schedule-event-list';
@@ -40,7 +41,8 @@ import ScheduleAdminPresentationSelectionStatusSelector from './schedule-admin-p
 import ScheduleAdminSearchFreeTextUnScheduleEvents from './schedule-admin-search-free-text-unschedule-events';
 import ScheduleAdminSearchFreeTextScheduleEvents from './schedule-admin-search-free-text-schedule-events';
 import ScheduleAdminScheduleEventsSearchResults from './schedule-admin-schedule-events-search-results';
-
+import ScheduleAdminOrderSelector from './schedule-admin-order-selector';
+import { withRouter } from 'react-router';
 import T from "i18n-react/dist/i18n-react";
 import moment from 'moment-timezone';
 import FragmentParser from '../../utils/fragmen-parser';
@@ -51,17 +53,20 @@ class ScheduleAdminDashBoard extends React.Component {
 
     constructor(props) {
         super(props);
-        this.onScheduleEvent = this.onScheduleEvent.bind(this);
-        this.onScheduleEventWithDuration = this.onScheduleEventWithDuration.bind(this);
-        this.onDayChanged = this.onDayChanged.bind(this);
-        this.onVenueChanged = this.onVenueChanged.bind(this);
-        this.onUnScheduleEventsPageChange = this.onUnScheduleEventsPageChange.bind(this);
-        this.onEventTypeChanged = this.onEventTypeChanged.bind(this);
-        this.onTrackChanged = this.onTrackChanged.bind(this);
+
+        this.onScheduleEvent                      = this.onScheduleEvent.bind(this);
+        this.onScheduleEventWithDuration          = this.onScheduleEventWithDuration.bind(this);
+        this.onDayChanged                         = this.onDayChanged.bind(this);
+        this.onVenueChanged                       = this.onVenueChanged.bind(this);
+        this.onUnScheduleEventsPageChange         = this.onUnScheduleEventsPageChange.bind(this);
+        this.onEventTypeChanged                   = this.onEventTypeChanged.bind(this);
+        this.onTrackChanged                       = this.onTrackChanged.bind(this);
         this.onPresentationSelectionStatusChanged = this.onPresentationSelectionStatusChanged.bind(this);
         this.onUnscheduledEventsFilterTextChanged = this.onUnscheduledEventsFilterTextChanged.bind(this);
         this.onUnPublishEvent                     = this.onUnPublishEvent.bind(this);
         this.onScheduledEventsFilterTextChanged   = this.onScheduledEventsFilterTextChanged.bind(this);
+        this.onEditEvent                          = this.onEditEvent.bind(this);
+        this.onOrderByChanged                     = this.onOrderByChanged.bind(this);
 
         this.fragmentParser = new FragmentParser();
         this.filters        = this.parseFilterFromFragment();
@@ -102,12 +107,18 @@ class ScheduleAdminDashBoard extends React.Component {
 
     componentDidMount(){
 
-        let { currentSummit, currentEventType, currentTrack, currentPresentationSelectionStatus, currentDay, currentLocation } = this.props;
+        let { currentSummit, currentEventType, currentTrack, currentPresentationSelectionStatus, currentDay, currentLocation, scheduleEventsCurrentSearchTerm } = this.props;
         if(currentSummit == null) return;
 
         let eventTypeId = currentEventType == null ? null : currentEventType.id;
         let trackId     = currentTrack == null ? null : currentTrack.id;
         this.props.getUnScheduleEventsPage(currentSummit.id, 1, 10, eventTypeId, trackId, currentPresentationSelectionStatus);
+
+        if(this.filters.hasOwnProperty('currentScheduleEventsSearchTerm')) {
+            scheduleEventsCurrentSearchTerm = this.filters['currentScheduleEventsSearchTerm'];
+            this.onScheduledEventsFilterTextChanged(scheduleEventsCurrentSearchTerm);
+            return;
+        }
 
         if(this.filters.hasOwnProperty('currentDay')) {
             currentDay = this.filters['currentDay'];
@@ -167,45 +178,48 @@ class ScheduleAdminDashBoard extends React.Component {
     }
 
     onUnScheduleEventsPageChange(currentPage){
-        let { summit } = this.props;
-        this.props.getUnScheduleEventsPage(summit.id, currentPage);
+        let { currentSummit } = this.props;
+        this.props.getUnScheduleEventsPage(currentSummit.id, currentPage);
     }
 
     onEventTypeChanged(eventType){
-        let { summit, currentTrack, currentPresentationSelectionStatus, unScheduleEventsCurrentSearchTerm} = this.props;
+        let { currentSummit, currentTrack, currentPresentationSelectionStatus, unScheduleEventsCurrentSearchTerm} = this.props;
         let trackId = currentTrack == null ? null : currentTrack.id;
         let eventTypeId = eventType == null ? null : eventType.id;
         this.props.changeCurrentEventType(eventType);
-        this.props.getUnScheduleEventsPage(summit.id, 1, 10, eventTypeId, trackId, currentPresentationSelectionStatus, unScheduleEventsCurrentSearchTerm);
+        this.props.getUnScheduleEventsPage(currentSummit.id, 1, 10, eventTypeId, trackId, currentPresentationSelectionStatus, unScheduleEventsCurrentSearchTerm);
     }
 
     onTrackChanged(track){
-        let { summit, currentEventType , currentPresentationSelectionStatus, unScheduleEventsCurrentSearchTerm} = this.props;
+        let { currentSummit, currentEventType , currentPresentationSelectionStatus, unScheduleEventsCurrentSearchTerm} = this.props;
         let eventTypeId = currentEventType == null ? null : currentEventType.id;
         let trackId     = track == null ? null : track.id;
         this.props.changeCurrentTrack(track);
-        this.props.getUnScheduleEventsPage(summit.id, 1, 10, eventTypeId, trackId, currentPresentationSelectionStatus, unScheduleEventsCurrentSearchTerm);
+        this.props.getUnScheduleEventsPage(currentSummit.id, 1, 10, eventTypeId, trackId, currentPresentationSelectionStatus, unScheduleEventsCurrentSearchTerm);
     }
 
     onPresentationSelectionStatusChanged(presentationSelectionStatus){
-        let { summit, currentEventType, currentTrack, unScheduleEventsCurrentSearchTerm } = this.props;
+        let { currentSummit, currentEventType, currentTrack, unScheduleEventsCurrentSearchTerm } = this.props;
         let eventTypeId = currentEventType == null ? null : currentEventType.id;
         let trackId = currentTrack == null ? null : currentTrack.id;
         this.props.changeCurrentPresentationSelectionStatus(presentationSelectionStatus);
-        this.props.getUnScheduleEventsPage(summit.id, 1, 10, eventTypeId, trackId, presentationSelectionStatus, unScheduleEventsCurrentSearchTerm);
+        this.props.getUnScheduleEventsPage(currentSummit.id, 1, 10, eventTypeId, trackId, presentationSelectionStatus, unScheduleEventsCurrentSearchTerm);
     }
 
     onUnscheduledEventsFilterTextChanged(term){
-        let { summit, currentEventType, currentTrack, currentPresentationSelectionStatus} = this.props;
+        let { currentSummit, currentEventType, currentTrack, currentPresentationSelectionStatus} = this.props;
         let eventTypeId = currentEventType == null ? null : currentEventType.id;
         let trackId    = currentTrack == null ? null : currentTrack.id;
         this.props.changeCurrentUnscheduleSearchTerm(term)
-        this.props.getUnScheduleEventsPage(summit.id, 1, 10, eventTypeId, trackId, currentPresentationSelectionStatus, term);
+        this.props.getUnScheduleEventsPage(currentSummit.id, 1, 10, eventTypeId, trackId, currentPresentationSelectionStatus, term);
     }
 
     onScheduledEventsFilterTextChanged(term){
         this.props.changeCurrentScheduleSearchTerm(term);
         this.props.searchScheduleEvents(term);
+        this.props.changeCurrentSelectedDay(null);
+        this.props.changeCurrentSelectedLocation(null);
+        this.buildFragment(null, null, term);
     }
 
     onScheduleEventWithDuration(event, currentDay, startTime, duration){
@@ -263,7 +277,6 @@ class ScheduleAdminDashBoard extends React.Component {
         }, 2000);
     }
 
-
     scrollToElement(elementId) {
 
         var el = document.getElementById(elementId);
@@ -276,6 +289,12 @@ class ScheduleAdminDashBoard extends React.Component {
             delay: 100,
             smooth: "easeInOutQuint",
         });
+    }
+
+    onEditEvent(event){
+        let { history, currentSummit } = this.props;
+        console.log(event);
+        history.push(`/app/summits/${currentSummit.id}/events/${event.id}`);
     }
 
     onUnPublishEvent(event){
@@ -296,6 +315,32 @@ class ScheduleAdminDashBoard extends React.Component {
 
     }
 
+    onOrderByChanged(orderBy){
+        let {
+            currentSummit,
+            currentEventType,
+            currentTrack,
+            currentPresentationSelectionStatus,
+            unScheduleEventsCurrentSearchTerm,
+            unScheduleEventsCurrentPage
+        } = this.props;
+        let eventTypeId = currentEventType == null ? null : currentEventType.id;
+        let trackId    = currentTrack == null ? null : currentTrack.id;
+
+        this.props.changeCurrentUnScheduleOrderBy(orderBy);
+        this.props.getUnScheduleEventsPage
+        (
+            currentSummit.id,
+            unScheduleEventsCurrentPage,
+            10,
+            eventTypeId,
+            trackId,
+            currentPresentationSelectionStatus,
+            unScheduleEventsCurrentSearchTerm,
+            orderBy
+        );
+    }
+
     render(){
 
         let {
@@ -313,7 +358,8 @@ class ScheduleAdminDashBoard extends React.Component {
             unScheduleEventsCurrentOrder,
             unScheduleEventsCurrentSearchTerm,
             scheduleEventsCurrentSearchTerm,
-            scheduleEventsSearch
+            scheduleEventsSearch,
+            currentUnScheduleOrderBy
         } = this.props;
 
         if(currentSummit == null ) return null;
@@ -383,13 +429,20 @@ class ScheduleAdminDashBoard extends React.Component {
 
         // presentation selection status
 
-        let presentationSelectionStatus = [
+        let presentationSelectionStatusOptions = [
             { value : 'selected', label: 'Selected' },
             { value : 'accepted', label:  'Accepted' },
             { value : 'alternate', label: 'Alternate'},
             { value : 'lightning-accepted', label: 'Lightning Accepted' },
             { value : 'lightning-alternate', label: 'Lightning Alternate' },
         ];
+
+        // sort options
+
+        let orderByOptions = [
+            { value : 'title+', label: 'Title' },
+            { value : 'id+', label: 'Id' },
+        ]
 
         return(
             <div className="row schedule-app-container no-margin">
@@ -419,13 +472,18 @@ class ScheduleAdminDashBoard extends React.Component {
                         onScheduleEventWithDuration={this.onScheduleEventWithDuration}
                         events={scheduleEvents}
                         childEvents={childScheduleEvents}
-                        onUnPublishEvent={this.onUnPublishEvent}/>
+                        onUnPublishEvent={this.onUnPublishEvent}
+                        onEditEvent={this.onEditEvent}/>
                     }
 
                     <ScheduleAdminScheduleEventsSearchResults
                         events={scheduleEventsSearch}
-                        searchTerm={scheduleEventsCurrentSearchTerm}/>
-                    { (currentDay == null || currentLocation == null) &&
+                        searchTerm={scheduleEventsCurrentSearchTerm}
+                        onEditEvent={this.onEditEvent}
+                    />
+                    {
+                        ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm == '' ) &&
+                        (currentDay == null || currentLocation == null) &&
                     <p className="empty-list-message">{T.translate("errors.empty_list_schedule_events")}</p>
                     }
                 </div>
@@ -434,33 +492,61 @@ class ScheduleAdminDashBoard extends React.Component {
                         onFilterTextChange={this.onUnscheduledEventsFilterTextChanged}
                         currentValue={unScheduleEventsCurrentSearchTerm}
                     />
-                    <ScheduleAdminEventTypeSelector
-                        onEventTypeChanged={this.onEventTypeChanged}
-                        eventTypes={eventTypes}
-                        currentValue={currentEventTypeSelectorItem}
-                    />
-                    <ScheduleAdminTrackSelector
-                        onTrackChanged={this.onTrackChanged}
-                        tracks={tracks}
-                        currentValue={currentTrackSelectorItem}
-                        />
-                    { currentEventType != null && currentEventType.class_name == "PresentationType" &&
+                    <div className="row">
+                        <div className="col-md-12">
+                            <div className="row">
+                                <div className="col-md-6">
+                                    <ScheduleAdminEventTypeSelector
+                                        onEventTypeChanged={this.onEventTypeChanged}
+                                        eventTypes={eventTypes}
+                                        currentValue={currentEventTypeSelectorItem}
+                                    />
+                                </div>
+                                <div className="col-md-6">
+                                    <ScheduleAdminOrderSelector
+                                        onOrderByChanged={this.onOrderByChanged}
+                                        sortOptions={orderByOptions}
+                                        currentValue={currentUnScheduleOrderBy}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-md-12">
+                            <div className="row">
+                                <div className="col-md-6">
+                                    <ScheduleAdminTrackSelector
+                                        onTrackChanged={this.onTrackChanged}
+                                        tracks={tracks}
+                                        currentValue={currentTrackSelectorItem}
+                                    />
+                                </div>
+                                <div className="col-md-6">
+                                    { currentEventType != null && currentEventType.class_name == "PresentationType" &&
 
-                        <ScheduleAdminPresentationSelectionStatusSelector
-                            presentationSelectionStatus={presentationSelectionStatus}
-                            onPresentationSelectionStatusChanged={this.onPresentationSelectionStatusChanged}
-                            currentValue={currentPresentationSelectionStatus}
-                        />
-                    }
-                   <UnScheduleEventList
+                                    <ScheduleAdminPresentationSelectionStatusSelector
+                                        presentationSelectionStatus={presentationSelectionStatusOptions}
+                                        onPresentationSelectionStatusChanged={this.onPresentationSelectionStatusChanged}
+                                        currentValue={currentPresentationSelectionStatus}
+                                    />
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  <UnScheduleEventList
                             events={unScheduleEvents}
                             currentPage={unScheduleEventsCurrentPage}
                             lastPage={unScheduleEventsLasPage}
-                            onPageChange={this.onUnScheduleEventsPageChange}/>
+                            onEditEvent={this.onEditEvent}
+                            onPageChange={this.onUnScheduleEventsPageChange}
+                   />
                 </div>
             </div>
         );
     }
+
 }
 
 ScheduleAdminDashBoard = DragDropContext(HTML5Backend)(ScheduleAdminDashBoard);
@@ -482,6 +568,7 @@ function mapStateToProps({ currentScheduleBuilderState, currentSummitState  }) {
         unScheduleEventsCurrentSearchTerm  : currentScheduleBuilderState.unScheduleEventsCurrentSearchTerm,
         scheduleEventsCurrentSearchTerm    : currentScheduleBuilderState.scheduleEventsCurrentSearchTerm,
         scheduleEventsSearch               : currentScheduleBuilderState.scheduleEventsSearch,
+        currentUnScheduleOrderBy           : currentScheduleBuilderState.currentUnScheduleOrderBy
     }
 }
 
@@ -497,5 +584,6 @@ export default connect(mapStateToProps, {
     changeCurrentPresentationSelectionStatus,
     changeCurrentUnscheduleSearchTerm,
     changeCurrentScheduleSearchTerm,
-    searchScheduleEvents
+    searchScheduleEvents,
+    changeCurrentUnScheduleOrderBy
 })(ScheduleAdminDashBoard);

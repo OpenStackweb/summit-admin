@@ -12,7 +12,8 @@
     "select_event_type": "Select an Event Type ...",
     "select_track":  "Select a Track ...",
     "select_presentation_selection_status": "Select a Selection Status ...",
-    "search_unpublished": "Search for unpublished Events"
+    "search_unpublished": "Search for unpublished Events",
+    "select_order_by"  : "Select Order By ..."
   },
   "titles":
   {

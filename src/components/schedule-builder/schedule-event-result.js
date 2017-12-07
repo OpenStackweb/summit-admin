@@ -25,11 +25,16 @@ class ScheduleEventResult extends React.Component {
         )
     }
 
+    onClickEdit(){
+        let { event, onEditEvent } = this.props;
+        onEditEvent(event);
+    }
+
     render(){
         const { event } = this.props;
         return (
                 <div className='row schedule-event-result'>
-                    <i className="fa fa-pencil-square-o edit-published-event-btn" title="edit event" aria-hidden="true"></i>
+                    <i className="fa fa-pencil-square-o edit-published-event-btn" title="edit event" aria-hidden="true" onClick={this.onClickEdit.bind(this)}></i>
                     <div className="col-md-12">
                         <OverlayTrigger trigger={['hover']} placement="bottom" overlay={this.popoverHoverFocus()}>
                             <span className="event-title">

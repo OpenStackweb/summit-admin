@@ -13,6 +13,13 @@
   background-color: @unschedule_event_background_color;
   height: @event_initial_height !important;
   width: 90%;
+  color: @unschedule_event_text_color;
+  .no-margin;
+  .event-container{
+    height: 100%;
+    .no-margin;
+    .no-padding;
+  }
 }
 
 .no-margin(){
@@ -129,7 +136,7 @@
   .border-bottom;
   .border-right;
   .border-left;
-  background-color: gainsboro;
+  background-color: @time_slot_color;
   color: white;
   font-weight: bold;
 }
@@ -181,12 +188,12 @@
   z-index: @event_z_index + 2;
 }
 
-.venues-selector, .day-selector, .event-type-selector, .track-selector, .presentation-selection-status-selector, .search-container {
+.venues-selector, .day-selector, .event-type-selector, .track-selector, .presentation-selection-status-selector, .search-container, .order-by-selector {
   padding-bottom: 10px;
 }
 
-.event-type-selector, .track-selector, .presentation-selection-status-selector{
-  width: 50%;
+.event-type-selector, .track-selector, .presentation-selection-status-selector, .order-by-selector{
+  width: 100%;
 }
 
 .outer-schedule-events-container{
@@ -242,6 +249,7 @@
 }
 
 .event-title {
+  padding: 10px;
   &:hover{
     cursor: pointer;
   }

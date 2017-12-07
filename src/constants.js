@@ -11,6 +11,7 @@
  * limitations under the License.
  **/
 
-export const DefaultEventMinutesDuration = 5;
-export const PixelsPerMinute             = 16;
-export const AdminGroupCode              = 'administrators';
+export const DefaultEventMinutesDuration       = 5;
+export const PixelsPerMinute                   = 16;
+export const AdminGroupCode                    = 'administrators';
+export const ScheduleEventsSearchResultMaxPage = 25;
