@@ -145,10 +145,11 @@ export const getPublishedEventsBySummitDayLocation = (currentSummit, currentDay,
     let endDate             = ( currentDay.clone().hours(23).minutes(59).seconds(59).valueOf()) /1000;
 
     dispatch(startLoading());
+    let locationId = currentLocation.id == 0 ? 'tbd': currentLocation.id;
     return getRequest(
         createAction(REQUEST_SCHEDULE_EVENTS_PAGE),
         createAction(RECEIVE_SCHEDULE_EVENTS_PAGE),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${currentLocation.id}/events/published?access_token=${accessToken}&filter[]=start_date>=${startDate}&filter[]=end_date<=${endDate}`,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}/events/published?access_token=${accessToken}&filter[]=start_date>=${startDate}&filter[]=end_date<=${endDate}`,
         authErrorHandler
     )({})(dispatch)
         .then(() =>

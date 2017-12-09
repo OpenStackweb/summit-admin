@@ -387,7 +387,22 @@ class ScheduleAdminDashBoard extends React.Component {
 
 
         // parse summit venues
-        let venues = [];
+        // TBD location
+        let tbdLocation = { id : 0 , name: 'TBD',  class_name: 'SummitVenue'};
+
+        let tbdOption   = {
+            value: tbdLocation,
+            label: tbdLocation.name,
+        };
+
+        let venues = [
+            tbdOption
+        ];
+
+        if(currentLocation != null && tbdLocation.id == currentLocation.id){
+            currentVenueSelectorItem = tbdOption;
+        }
+
         for(let i = 0; i < currentSummit.locations.length; i++) {
             let location = currentSummit.locations[i];
             if (location.class_name != "SummitVenue") continue;
