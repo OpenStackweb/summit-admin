@@ -21,7 +21,7 @@ export default class TextEditor extends React.Component {
         super(props);
 
         this.state = {
-            value: props.value
+            value: this.props.value
         };
 
         this.handleChange = this.handleChange.bind(this);

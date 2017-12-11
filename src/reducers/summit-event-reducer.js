@@ -39,7 +39,7 @@ export const DEFAULT_ENTITY = {
     level: 'N/A',
     allow_feedback: 0,
     to_record: 0,
-    feature_cloud: 0,
+    feature_cloud: false,
     tags: [],
     sponsors: [],
     speakers: [],
@@ -71,12 +71,13 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  entity: default_entity };
         case RECEIVE_EVENT:
             let entity = payload.response;
+
             for(var key in entity) {
                 if(entity.hasOwnProperty(key)) {
                     entity[key] = (entity[key] == null) ? '' : entity[key] ;
                 }
             }
-            return {...state,  entity: entity };
+            return {...state,  entity: {...state.entity, ...entity} };
         default:
             return state;
     }

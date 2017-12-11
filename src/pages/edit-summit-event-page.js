@@ -14,6 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import EventForm from '../components/event-form';
+import { getSummitById}  from '../actions/summit-actions';
 import { getTracks, getVenues, getEventTypes, getEvent, resetEventForm, saveEvent, attachFile } from '../actions/actions';
 
 class EditSummitEventPage extends React.Component {
@@ -46,24 +47,35 @@ class EditSummitEventPage extends React.Component {
     }
 
     componentWillMount () {
+        let summitId = this.props.match.params.summit_id;
+        let {currentSummit} = this.props;
 
+        if(currentSummit == null){
+            this.props.getSummitById(summitId);
+        }
+
+    }
+
+    componentDidMount() {
         let {eventId} = this.state;
         let {currentSummit, track_options, location_options, type_options} = this.props;
 
-        if(eventId) {
-            this.props.getEvent(currentSummit.id, eventId);
-        } else {
-            this.props.resetEventForm();
+        if (this.props.currentSummit) {
+            if(eventId) {
+                this.props.getEvent(currentSummit.id, eventId);
+            } else {
+                this.props.resetEventForm();
+            }
+
+            if(!track_options)
+                this.props.getTracks(currentSummit.id);
+
+            if(!location_options)
+                this.props.getVenues(currentSummit.id);
+
+            if(!type_options)
+                this.props.getEventTypes(currentSummit.id);
         }
-
-        if(!track_options)
-            this.props.getTracks(currentSummit.id);
-
-        if(!location_options)
-            this.props.getVenues(currentSummit.id);
-
-        if(!type_options)
-            this.props.getEventTypes(currentSummit.id);
     }
 
     render(){
@@ -72,6 +84,7 @@ class EditSummitEventPage extends React.Component {
             <div className="container">
                 <h3>Summit Event</h3>
                 <hr/>
+                {currentSummit &&
                 <EventForm
                     entity={entity}
                     onSubmit={this.props.saveEvent}
@@ -82,6 +95,7 @@ class EditSummitEventPage extends React.Component {
                     typeopts={this.props.type_options}
                     locationopts={this.props.location_options}
                 />
+                }
             </div>
         )
     }
@@ -99,6 +113,7 @@ const mapStateToProps = ({ currentSummitState, currentSummitEventState }) => ({
 export default connect (
     mapStateToProps,
     {
+        getSummitById,
         getTracks,
         getVenues,
         getEventTypes,

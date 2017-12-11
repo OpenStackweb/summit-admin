@@ -45,8 +45,13 @@ class EventForm extends React.Component {
 
     handleChange(ev) {
         let entity = this.state.entity;
+        let {value, id} = ev.target;
 
-        entity[ev.target.id] = ev.target.value;
+        if (event.target.type == 'radio') {
+            id = ev.target.name;
+        }
+
+        entity[id] = value;
         this.setState({entity: entity});
     }
 
