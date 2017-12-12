@@ -13,9 +13,6 @@
 
 import
 {
-    RECEIVE_TRACKS,
-    RECEIVE_VENUES,
-    RECEIVE_EVENT_TYPES,
     RECEIVE_EVENT,
     RESET_EVENT,
     EVENT_UPDATED,
@@ -50,9 +47,6 @@ export const DEFAULT_ENTITY = {
 }
 
 const DEFAULT_STATE = {
-    track_options:  [],
-    type_options: [],
-    location_options: [],
     level_options: ['N/A', 'Beginner', 'Intermediate', 'Advanced' ],
     entity: DEFAULT_ENTITY
 };
@@ -60,12 +54,6 @@ const DEFAULT_STATE = {
 const summitEventReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
-        case RECEIVE_TRACKS:
-            return {...state,  track_options: payload.response.data };
-        case RECEIVE_VENUES:
-            return {...state,  location_options: payload.response.data };
-        case RECEIVE_EVENT_TYPES:
-            return {...state,  type_options: payload.response.data };
         case RESET_EVENT:
             let default_entity = payload.default_entity;
             return {...state,  entity: default_entity };

@@ -23,6 +23,9 @@ import SpeakerInput from './speaker_input'
 import CompanyInput from './company_input'
 import GroupInput from './group_input'
 import UploadInput from './upload_input'
+import Input from 'react-validation/build/input'
+import Form from 'react-validation/build/form'
+import {required, email} from './form_validation'
 
 
 class EventForm extends React.Component {
@@ -73,6 +76,8 @@ class EventForm extends React.Component {
         console.log('event submitted');
         ev.preventDefault();
 
+        this.form.validateAll();
+
         let {entity} = this.state;
         if (!entity.start_date) delete entity['start_date'];
         if (!entity.end_date) delete entity['end_date'];
@@ -105,7 +110,7 @@ class EventForm extends React.Component {
 
         let tracks_ddl = trackopts.map(t => ({label: t.name, value: t.id}));
 
-        let venues = locationopts.map(l =>
+        let venues = locationopts.filter(v => (v.class_name == 'SummitVenue')).map(l =>
             ({label: l.name, value: l.rooms.map(r =>
                 ({label: r.name, value: r.id})
             )})
@@ -119,12 +124,12 @@ class EventForm extends React.Component {
         let levels_ddl = levelopts.map(l => ({label: l, value: l}));
 
         return (
-            <form>
+            <Form ref={c => { this.form = c }} >
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
                     <div className="col-md-12">
-                        <label> Title </label>
-                        <input className="form-control" id="title" value={entity.title} onChange={this.handleChange} />
+                        <label> Title *</label>
+                        <Input className="form-control" name="title" id="title" value={entity.title} onChange={this.handleChange} validations={[required]}/>
                     </div>
                 </div>
                 <div className="row form-group">
@@ -193,23 +198,26 @@ class EventForm extends React.Component {
                 </div>
                 <div className="row form-group">
                     <div className="col-md-4">
-                        <label> Event Type </label>
+                        <label> Event Type *</label>
                         <Dropdown
                             id="type_id"
                             value={entity.type_id}
                             onChange={this.handleChange}
                             placeholder="-- Select a Type --"
                             options={event_types_ddl}
+                            required
                         />
                     </div>
                     <div className="col-md-4">
-                        <label> Track </label>
+                        <label> Track *</label>
                         <Dropdown
                             id="track_id"
                             value={entity.track_id}
                             onChange={this.handleChange}
                             placeholder="-- Select a Track --"
                             options={tracks_ddl}
+                            validations={[required]}
+                            required
                         />
                     </div>
                     {entity.type == 'presentation' &&
@@ -354,7 +362,7 @@ class EventForm extends React.Component {
 
                 <input type="button" onClick={this.handleSubmit.bind(this, false)} className="btn btn-primary" value="Save" />
                 <input type="button" onClick={this.handleSubmit.bind(this, true)} className="btn btn-primary" value="Save & Publish" />
-            </form>
+            </Form>
         );
     }
 }

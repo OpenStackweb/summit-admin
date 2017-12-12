@@ -65,6 +65,8 @@
     "react-scroll": "^1.7.3",
     "react-select": "^1.1.0",
     "react-tinymce": "^0.7.0",
-    "redux-persist": "^5.4.0"
+    "react-validation": "^3.0.7",
+    "redux-persist": "^5.4.0",
+    "validator": "^9.2.0"
   }
 }

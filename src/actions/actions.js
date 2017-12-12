@@ -109,46 +109,6 @@ export const queryCompanies = (input) => {
         });
 };
 
-
-export const getTracks = () => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-
-    return getRequest(
-        null,
-        createAction(RECEIVE_TRACKS),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/tracks?access_token=${accessToken}`,
-        authErrorHandler
-    )({})(dispatch);
-};
-
-export const getVenues = () => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-
-    return getRequest(
-        null,
-        createAction(RECEIVE_VENUES),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/venues?access_token=${accessToken}`,
-        authErrorHandler
-    )({})(dispatch);
-};
-
-export const getEventTypes = () => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-
-    return getRequest(
-        null,
-        createAction(RECEIVE_EVENT_TYPES),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types?access_token=${accessToken}`,
-        authErrorHandler
-    )({})(dispatch);
-};
-
 export const getEvent = (eventId) => (dispatch, getState) => {
         let { loggedUserState, currentSummitState } = getState();
         let { accessToken }     = loggedUserState;

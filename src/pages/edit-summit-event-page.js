@@ -80,6 +80,9 @@ class EditSummitEventPage extends React.Component {
 
     render(){
         let {currentSummit, entity} = this.props;
+
+        if(currentSummit == null) return null;
+
         return(
             <div className="container">
                 <h3>Summit Event</h3>
@@ -91,9 +94,9 @@ class EditSummitEventPage extends React.Component {
                     onAttach={this.props.attachFile}
                     currentSummit={currentSummit}
                     levelopts={this.props.level_options}
-                    trackopts={this.props.track_options}
-                    typeopts={this.props.type_options}
-                    locationopts={this.props.location_options}
+                    trackopts={currentSummit.tracks}
+                    typeopts={currentSummit.event_types}
+                    locationopts={currentSummit.locations}
                 />
                 }
             </div>

@@ -21,10 +21,13 @@ export default class Dropdown extends React.Component {
         super(props);
 
         this.state = {
-            value: props.value
+            value: props.value,
+            error: false,
+            touched: false
         };
 
         this.handleChange = this.handleChange.bind(this);
+        this.validate = this.validate.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -35,7 +38,8 @@ export default class Dropdown extends React.Component {
 
     handleChange(selection) {
         this.setState({
-            value: selection.value
+            value: selection.value,
+            touched: false
         });
 
         let ev = {target: {
@@ -47,12 +51,37 @@ export default class Dropdown extends React.Component {
         this.props.onChange(ev);
     }
 
+    validate(ev) {
+        let {value} = this.state;
+        let error = (value == 0);
+
+        this.setState({
+            error: error,
+            touched: true
+        });
+
+    }
+
     render() {
 
-        let {onChange, id, value, ...rest} = this.props;
+        let {onChange, id, value, required, ...rest} = this.props;
+        let {error, touched} = this.state;
+
+        let has_error = (required && error && touched);
 
         return (
-            <Select value={this.state.value} onChange={this.handleChange} {...rest} />
+            <div>
+                <Select
+                    className={has_error ? 'is-invalid-select' : ''}
+                    value={this.state.value}
+                    onChange={this.handleChange}
+                    onBlur={this.validate}
+                    {...rest}
+                />
+                {has_error &&
+                <p className="error-label">Required</p>
+                }
+            </div>
         );
 
     }
