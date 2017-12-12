@@ -37,7 +37,7 @@ class EditSummitEventPage extends React.Component {
             this.setState({eventId: new_event_id});
 
             if(new_event_id) {
-                this.props.getEvent(currentSummit.id, new_event_id);
+                this.props.getEvent(new_event_id);
             } else {
                 this.props.resetEventForm();
             }
@@ -62,19 +62,19 @@ class EditSummitEventPage extends React.Component {
 
         if (this.props.currentSummit) {
             if(eventId) {
-                this.props.getEvent(currentSummit.id, eventId);
+                this.props.getEvent(eventId);
             } else {
                 this.props.resetEventForm();
             }
 
             if(!track_options)
-                this.props.getTracks(currentSummit.id);
+                this.props.getTracks();
 
             if(!location_options)
-                this.props.getVenues(currentSummit.id);
+                this.props.getVenues();
 
             if(!type_options)
-                this.props.getEventTypes(currentSummit.id);
+                this.props.getEventTypes();
         }
     }
 

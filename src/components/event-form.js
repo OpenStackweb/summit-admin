@@ -47,7 +47,7 @@ class EventForm extends React.Component {
         let entity = this.state.entity;
         let {value, id} = ev.target;
 
-        if (event.target.type == 'radio') {
+        if (ev.target.type == 'radio') {
             id = ev.target.name;
         }
 
@@ -69,7 +69,7 @@ class EventForm extends React.Component {
         this.setState({entity:entity});
     }
 
-    handleSubmit(ev) {
+    handleSubmit(publish, ev) {
         console.log('event submitted');
         ev.preventDefault();
 
@@ -77,7 +77,7 @@ class EventForm extends React.Component {
         if (!entity.start_date) delete entity['start_date'];
         if (!entity.end_date) delete entity['end_date'];
 
-        this.props.onSubmit(this.props.currentSummit.id, this.state.entity);
+        this.props.onSubmit(this.state.entity, publish);
     }
 
     isEventType(types) {
@@ -119,7 +119,7 @@ class EventForm extends React.Component {
         let levels_ddl = levelopts.map(l => ({label: l, value: l}));
 
         return (
-            <form onSubmit={this.handleSubmit}>
+            <form>
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
                     <div className="col-md-12">
@@ -352,7 +352,8 @@ class EventForm extends React.Component {
                 </div>
                 }
 
-                <input type="submit" className="btn btn-primary" value="Submit" />
+                <input type="button" onClick={this.handleSubmit.bind(this, false)} className="btn btn-primary" value="Save" />
+                <input type="button" onClick={this.handleSubmit.bind(this, true)} className="btn btn-primary" value="Save & Publish" />
             </form>
         );
     }

@@ -31,6 +31,7 @@ export const loadSummits = () => (dispatch, getState) => {
 
     let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
+
     dispatch(startLoading());
     getRequest(
         createAction(REQUEST_SUMMITS),
@@ -68,7 +69,7 @@ export const queryTags = (input) => {
     return fetch(`${apiBaseUrl}/api/v1/tags?filter=tag=@${input}&order=tag&access_token=${accessToken}`)
         .then((response) => response.json())
         .then((json) => {
-            let options = json.data.map((t) => ({value: t.id, label: t.tag}) );
+            let options = json.data.map((t) => ({id: t.id, tag: t.tag}) );
 
             return {
                 options: options
@@ -109,45 +110,55 @@ export const queryCompanies = (input) => {
 };
 
 
-export const getTracks = (summitId) => (dispatch, getState) => {
-    let { accessToken } = getState().loggedUserState;
+export const getTracks = () => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
     return getRequest(
         null,
         createAction(RECEIVE_TRACKS),
-        `${apiBaseUrl}/api/v1/summits/${summitId}/tracks?access_token=${accessToken}`,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/tracks?access_token=${accessToken}`,
         authErrorHandler
     )({})(dispatch);
 };
 
-export const getVenues = (summitId) => (dispatch, getState) => {
-    let { accessToken } = getState().loggedUserState;
+export const getVenues = () => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
     return getRequest(
         null,
         createAction(RECEIVE_VENUES),
-        `${apiBaseUrl}/api/v1/summits/${summitId}/locations/venues?access_token=${accessToken}`,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/venues?access_token=${accessToken}`,
         authErrorHandler
     )({})(dispatch);
 };
 
-export const getEventTypes = (summitId) => (dispatch, getState) => {
-    let { accessToken } = getState().loggedUserState;
+export const getEventTypes = () => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
     return getRequest(
         null,
         createAction(RECEIVE_EVENT_TYPES),
-        `${apiBaseUrl}/api/v1/summits/${summitId}/event-types?access_token=${accessToken}`,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types?access_token=${accessToken}`,
         authErrorHandler
     )({})(dispatch);
 };
 
-export const getEvent = (summitId, eventId) =>
-    (dispatch, getState) => {
-        let { loggedUserState } = getState();
+export const getEvent = (eventId) => (dispatch, getState) => {
+        let { loggedUserState, currentSummitState } = getState();
         let { accessToken }     = loggedUserState;
+        let { currentSummit }   = currentSummitState;
+
         //dispatch(startLoading());
         return getRequest(
             null,
             createAction(RECEIVE_EVENT),
-            `${apiBaseUrl}/api/v1/summits/${summitId}/events/${eventId}?access_token=${accessToken}&expand=tags,speakers,sponsors,groups`,
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${eventId}?access_token=${accessToken}&expand=tags,speakers,sponsors,groups`,
             authErrorHandler
         )({})(dispatch).then(dispatch(stopLoading()));
 };
@@ -156,56 +167,87 @@ export const resetEventForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_EVENT)({default_entity: DEFAULT_ENTITY}));
 };
 
-export const saveEvent = (summitId, entity) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
+export const saveEvent = (entity, publish) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    console.log('publish: '+ publish);
     //dispatch(startLoading());
 
     if (entity.id) {
         return putRequest(
             null,
             createAction(EVENT_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${summitId}/events/${entity.id}?access_token=${accessToken}`,
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}?access_token=${accessToken}`,
             entity,
             authErrorHandler
-        )({})(dispatch).then(dispatch(stopLoading()));
+        )({})(dispatch)
+            .then((publish, entity) => {
+                if (publish) dispatch(publishEvent(entity))
+            })
+            .then(dispatch(stopLoading()));
     } else {
         return postRequest(
             null,
             createAction(EVENT_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${summitId}/events?access_token=${accessToken}`,
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events?access_token=${accessToken}`,
             entity,
             authErrorHandler
-        )({})(dispatch).then(dispatch(stopLoading()));
+        )({})(dispatch)
+            .then((publish) => {if (publish) dispatch(publishEvent(entity))})
+            .then(dispatch(stopLoading()));
     }
 }
 
-export const attachFile = (summitId, entity, file) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
+export const publishEvent = (entity) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+    //dispatch(startLoading());
+
+    putRequest(
+        null,
+        createAction(EVENT_PUBLISHED),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}/publish?access_token=${accessToken}`,
+        {
+            location_id : entity.location_id,
+            start_date  : entity.start_date/1000,
+            end_date    : entity.end_date/1000,
+        },
+        authErrorHandler
+    )({})(dispatch).then(dispatch(stopLoading()));
+}
+
+export const attachFile = (entity, file) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
     //dispatch(startLoading());
 
     if (entity.id) {
-        return dispatch(uploadFile(summitId, entity, file));
+        return dispatch(uploadFile(entity, file));
     } else {
         return postRequest(
             null,
             createAction(EVENT_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${summitId}/events/${entity.id}?access_token=${accessToken}`,
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}?access_token=${accessToken}`,
             entity,
             authErrorHandler
-        )({})(dispatch).then(dispatch(uploadFile(summitId, entity, file))).then(dispatch(stopLoading()));
+        )({})(dispatch).then(dispatch(uploadFile(entity, file))).then(dispatch(stopLoading()));
     }
 }
 
-const uploadFile = (summitId, entity, file) => (dispatch, getState) => {
-    let {loggedUserState} = getState();
-    let {accessToken} = loggedUserState;
+const uploadFile = (entity, file) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
 
     return postRequest(
         null,
         createAction(FILE_ATTACHED),
-        `${apiBaseUrl}/api/v1/summits/${summitId}/events/${entity.id}/attachment?access_token=${accessToken}`,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}/attachment?access_token=${accessToken}`,
         file,
         authErrorHandler
     )({})(dispatch)

@@ -12,37 +12,22 @@
  **/
 
 import React from 'react';
-import TinyMCE from 'tinymce-react'
-
+//import TinyMCEInput from 'react-tinymce-input'
+import TinyMCE from 'react-tinymce';
 
 export default class TextEditor extends React.Component {
 
     constructor(props) {
         super(props);
 
-        this.state = {
-            value: this.props.value
-        };
-
         this.handleChange = this.handleChange.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
-        if(this.state.value != nextProps.value) {
-            this.setState({value: nextProps.value});
-        }
-    }
-
-    handleChange(text) {
-        if (!text) return;
-
-        this.setState({
-            value: text.getContent()
-        });
+    handleChange(e) {
 
         let ev = {target: {
             id: this.props.id,
-            value: text.getContent(),
+            value: e.target.getContent(),
             type: 'texteditor'
         }};
 
@@ -56,8 +41,8 @@ export default class TextEditor extends React.Component {
         return (
             <TinyMCE
                 config={{ height: 200, plugins: 'image table' }}
-                content={this.state.value}
-                onContentChanged={this.handleChange}
+                content={value}
+                onChange={this.handleChange}
             />
         );
 
