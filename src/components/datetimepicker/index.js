@@ -49,13 +49,19 @@ export default class DateTimePicker extends React.Component {
     }
 
     isValidDate(compareDateAfter, compareDateBefore, selectedDate, currentDate) {
+        let { timezone } = this.props;
         currentDate = (typeof currentDate == 'string') ? moment(currentDate) : currentDate;
         if (compareDateAfter == '<')
             return (selectedDate < moment(compareDateBefore));
         else if(compareDateAfter == '>')
             return (selectedDate > moment(compareDateBefore));
-        else
-            return (selectedDate >= moment(compareDateAfter) && selectedDate <= moment(compareDateBefore));
+        else {
+            selectedDate   = moment.tz(selectedDate.valueOf(), timezone);
+            let beforeDate = moment.tz(compareDateBefore * 1000, timezone);
+            let afterDate  = moment.tz(compareDateAfter * 1000, timezone);
+
+            return selectedDate.isAfter(afterDate) && selectedDate.isBefore(beforeDate);
+        }
     }
 
     render() {
