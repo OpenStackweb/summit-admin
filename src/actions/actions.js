@@ -54,7 +54,7 @@ export const querySpeakers = (summitId, input) => {
         .then((response) => response.json())
         .then((json) => {
             let options = json.data.map((s) =>
-                ({value: s.id, label: s.first_name + ' ' + s.last_name + ' (' + s.id + ')'})
+                ({id: s.id, name: s.first_name + ' ' + s.last_name + ' (' + s.id + ')'})
             );
 
             return {
@@ -102,7 +102,7 @@ export const queryCompanies = (input) => {
     return fetch(`${apiBaseUrl}/api/v1/companies?filter=${filters}&access_token=${accessToken}`)
         .then((response) => response.json())
         .then((json) => {
-            let options = json.data.map((c) => ({value: c.id, label: c.name}) );
+            let options = json.data.map((c) => ({id: c.id, name: c.name}) );
 
             return {
                 options: options
@@ -150,7 +150,9 @@ export const saveEvent = (entity, publish) => (dispatch, getState) => {
             .then((payload) => {
                 if (publish) dispatch(publishEvent(payload.response))
             })
-            .then(dispatch(showMessage(...success_message)));
+            .then((payload) => {
+                dispatch(showMessage(...success_message))
+            });
 
     } else {
         postRequest(

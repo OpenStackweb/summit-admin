@@ -57,6 +57,7 @@ class EventForm extends React.Component {
         if (ev.target.type == 'datetime') {
             value = value.valueOf() / 1000;
         }
+
         entity[id] = value;
         this.setState({entity: entity});
     }
@@ -86,6 +87,8 @@ class EventForm extends React.Component {
         if (!entity.end_date) delete entity['end_date'];
 
         entity.tags = entity.tags.map(t => t.tag);
+        entity.sponsors = entity.sponsors.map(s => s.id);
+        entity.speakers = entity.speakers.map(s => s.id);
 
         this.props.onSubmit(entity, publish);
     }

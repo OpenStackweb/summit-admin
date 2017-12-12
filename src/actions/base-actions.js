@@ -7,15 +7,20 @@ export const apiBaseUrl             = process.env['API_BASE_URL'];
 export const authErrorHandler = (err, res) => (dispatch) => {
     let code = err.status;
     dispatch(stopLoading());
-    if(code == 401 || code == 403){
-        swal("ERROR", T.translate("errors.session_expired"), "error");
-        dispatch({
-            type: "LOGOUT_USER",
-            payload: {}
-        });
-    }
-    if(code == 412 ){
-        swal("ERROR", err.response.body.errors[0], "error");
+
+    switch (code) {
+        case 401:
+        case 403:
+            swal("ERROR", T.translate("errors.session_expired"), "error");
+            dispatch({
+                type: "LOGOUT_USER",
+                payload: {}
+            });
+            break;
+        case 412:
+            swal("ERROR", err.response.body.errors[0], "error");
+        case 500:
+            swal("ERROR", "There was a problem with our server, please contact admin.", "error");
     }
 }
 

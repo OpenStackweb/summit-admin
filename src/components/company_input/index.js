@@ -30,16 +30,12 @@ export default class CompanyInput extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if(this.state.value != nextProps.value) {
+        if(nextProps.hasOwnProperty('value') && this.state.value != nextProps.value) {
             this.setState({value: nextProps.value});
         }
     }
 
     handleChange(value) {
-        this.setState({
-            value: value
-        });
-
         let ev = {target: {
             id: this.props.id,
             value: value,
@@ -57,25 +53,17 @@ export default class CompanyInput extends React.Component {
         return queryCompanies(input);
     }
 
-    processTagValues(new_values) {
-        let values = [];
-
-        for(let i in new_values) {
-            values.push({value: new_values[i].id, label: new_values[i].name});
-        }
-
-        return values;
-    }
-
     render() {
 
         return (
             <Select.Async
                 multi={this.props.multi}
-                value={this.processTagValues(this.state.value)}
+                value={this.state.value}
                 onChange={this.handleChange}
                 loadOptions={this.getCompanies}
                 backspaceRemoves={true}
+                valueKey="id"
+                labelKey="name"
             />
         );
 

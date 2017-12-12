@@ -29,11 +29,13 @@ export default class SpeakerInput extends React.Component {
         this.getSpeakers = this.getSpeakers.bind(this);
     }
 
-    handleChange(value) {
-        this.setState({
-            value: value
-        });
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.hasOwnProperty('value') && this.state.value != nextProps.value) {
+            this.setState({value: nextProps.value});
+        }
+    }
 
+    handleChange(value) {
         let ev = {target: {
             id: this.props.id,
             value: value,
@@ -53,24 +55,23 @@ export default class SpeakerInput extends React.Component {
 
     processTagValues(new_values) {
         if (this.props.multi) {
-            let values = [];
-            if (!new_values) return values;
+            if (!new_values) return [];
             new_values = Array.isArray(new_values) ? new_values : [new_values];
 
-            for(let i in new_values) {
-                let label = new_values[i].first_name + ' ' + new_values[i].last_name + ' (' + new_values[i].id + ')';
-                values.push({value: new_values[i].id, label: label});
-            }
+            return new_values.map(v => {
+                if (v.hasOwnProperty('name'))
+                    return {id: v.id, name: v.name};
+                else
+                    return {id: v.id, name: v.first_name + ' ' + v.last_name + ' (' + v.id + ')'};
+            });
 
-            return values;
         } else {
             let value = {};
             if (!new_values) return value;
 
-            let label = new_values.first_name + ' ' + new_values.last_name + ' (' + new_values.id + ')';
-            value = {value: new_values.id, label: label};
+            let label = new_values.hasOwnProperty('name') ? new_values.name : new_values.first_name + ' ' + new_values.last_name + ' (' + new_values.id + ')';
 
-            return value;
+            return {id: new_values.id, name: label};
         }
 
     }
@@ -84,6 +85,8 @@ export default class SpeakerInput extends React.Component {
                 onChange={this.handleChange}
                 loadOptions={this.getSpeakers}
                 backspaceRemoves={true}
+                valueKey="id"
+                labelKey="name"
             />
         );
 

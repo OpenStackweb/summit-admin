@@ -29,6 +29,12 @@ export default class TagInput extends React.Component {
         this.getTags = this.getTags.bind(this);
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.hasOwnProperty('value') && this.state.value != nextProps.value) {
+            this.setState({value: nextProps.value});
+        }
+    }
+
     handleChange(value) {
         let ev = {target: {
             id: this.props.id,

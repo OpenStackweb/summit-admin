@@ -29,10 +29,13 @@ export default class GroupInput extends React.Component {
         this.getGroups = this.getGroups.bind(this);
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.hasOwnProperty('value') && this.state.value != nextProps.value) {
+            this.setState({value: nextProps.value});
+        }
+    }
+
     handleChange(value) {
-        this.setState({
-            value: value
-        });
 
         let ev = {target: {
             id: this.props.id,

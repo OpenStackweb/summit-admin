@@ -31,14 +31,13 @@ export default class Dropdown extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if(this.state.value != nextProps.value) {
+        if(nextProps.hasOwnProperty('value') &&  this.state.value != nextProps.value) {
             this.setState({value: nextProps.value});
         }
     }
 
     handleChange(selection) {
         this.setState({
-            value: selection.value,
             touched: false
         });
 
