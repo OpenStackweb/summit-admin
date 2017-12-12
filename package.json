@@ -67,6 +67,7 @@
     "react-tinymce": "^0.7.0",
     "react-validation": "^3.0.7",
     "redux-persist": "^5.4.0",
+    "uglifyjs-webpack-plugin": "^1.1.2",
     "validator": "^9.2.0"
   }
 }

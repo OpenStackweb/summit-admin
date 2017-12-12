@@ -1,9 +1,10 @@
-const path     = require('path');
-const webpack  = require('webpack');
+const path              = require('path');
+const webpack           = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const UglifyJSPlugin    = require('uglifyjs-webpack-plugin');
+const                 _ = require('lodash');
 
-const _ = require('lodash');
 var PRODUCTION  = process.env.NODE_ENV === 'production';
 console.log(`FLAVOR ${process.env.FLAVOR}`);
 let suffix      = process.env.FLAVOR == 'dev' ? '.dev' : '';
@@ -39,7 +40,7 @@ var plugins = [
 ];
 
 var productionPlugins = [
-    new webpack.optimize.UglifyJsPlugin({minimize: true}),
+    new UglifyJSPlugin(),
     new webpack.DefinePlugin({
         'process.env': {
             'NODE_ENV': JSON.stringify('production')
