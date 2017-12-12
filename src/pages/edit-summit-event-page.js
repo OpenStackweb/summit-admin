@@ -16,6 +16,7 @@ import { connect } from 'react-redux';
 import EventForm from '../components/event-form';
 import { getSummitById}  from '../actions/summit-actions';
 import { getTracks, getVenues, getEventTypes, getEvent, resetEventForm, saveEvent, attachFile } from '../actions/actions';
+import '../styles/edit-summit-event-page.less';
 
 class EditSummitEventPage extends React.Component {
 

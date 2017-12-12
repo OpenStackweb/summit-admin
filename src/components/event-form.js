@@ -33,7 +33,7 @@ class EventForm extends React.Component {
         super(props);
 
         this.state = {
-            entity: this.props.entity
+            entity: {...this.props.entity}
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -47,7 +47,7 @@ class EventForm extends React.Component {
     }
 
     handleChange(ev) {
-        let entity = this.state.entity;
+        let entity = {...this.state.entity};
         let {value, id} = ev.target;
 
         if (ev.target.type == 'radio') {
@@ -69,7 +69,7 @@ class EventForm extends React.Component {
     }
 
     handleRemoveFile(ev) {
-        let entity = this.state.entity;
+        let entity = {...this.state.entity};
 
         entity.attachment = '';
         this.setState({entity:entity});
@@ -81,11 +81,13 @@ class EventForm extends React.Component {
 
         this.form.validateAll();
 
-        let {entity} = this.state;
+        let entity = {...this.state.entity};
         if (!entity.start_date) delete entity['start_date'];
         if (!entity.end_date) delete entity['end_date'];
 
-        this.props.onSubmit(this.state.entity, publish);
+        entity.tags = entity.tags.map(t => t.tag);
+
+        this.props.onSubmit(entity, publish);
     }
 
     isEventType(types) {
@@ -109,7 +111,12 @@ class EventForm extends React.Component {
         let {entity} = this.state;
         let { currentSummit, levelopts, typeopts, trackopts, locationopts } = this.props;
 
-        let event_types_ddl = typeopts.map(t => ({label: t.name, value: t.id, type: t.class_name}));
+        let event_types_ddl = typeopts.map(
+            t => {
+                let disabled = (entity.id) ? !this.isEventType(t.class_name) : false;
+                return {label: t.name, value: t.id, type: t.class_name, disabled: disabled}
+            }
+        );
 
         let tracks_ddl = trackopts.map(t => ({label: t.name, value: t.id}));
 
@@ -363,8 +370,12 @@ class EventForm extends React.Component {
                 </div>
                 }
 
-                <input type="button" onClick={this.handleSubmit.bind(this, false)} className="btn btn-primary" value="Save" />
-                <input type="button" onClick={this.handleSubmit.bind(this, true)} className="btn btn-primary" value="Save & Publish" />
+                <div className="row">
+                    <div className="col-md-12 submit-buttons">
+                        <input type="button" onClick={this.handleSubmit.bind(this, false)} className="btn btn-primary pull-right" value="Save" />
+                        <input type="button" onClick={this.handleSubmit.bind(this, true)} className="btn btn-success pull-right" value="Save & Publish" />
+                    </div>
+                </div>
             </Form>
         );
     }

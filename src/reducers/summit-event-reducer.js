@@ -17,6 +17,7 @@ import
     RESET_EVENT,
     EVENT_UPDATED,
     EVENT_ADDED,
+    EVENT_PUBLISHED,
     EVENT_DELETED
 } from '../actions/actions';
 
@@ -66,6 +67,12 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
                 }
             }
             return {...state,  entity: {...state.entity, ...entity} };
+        case EVENT_PUBLISHED:
+            return state;
+        case EVENT_UPDATED:
+            return state;
+        case EVENT_ADDED:
+            return state;
         default:
             return state;
     }

@@ -30,10 +30,6 @@ export default class TagInput extends React.Component {
     }
 
     handleChange(value) {
-        this.setState({
-            value: value
-        });
-
         let ev = {target: {
             id: this.props.id,
             value: value,
@@ -60,7 +56,7 @@ export default class TagInput extends React.Component {
         return (
             <AsyncComponent
                 multi={true}
-                value={this.state.value}
+                value={this.props.value}
                 onChange={this.handleChange}
                 loadOptions={this.getTags}
                 backspaceRemoves={true}

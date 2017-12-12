@@ -1,6 +1,6 @@
 import { getRequest, putRequest, postRequest, deleteRequest, createAction, stopLoading, startLoading } from "openstack-uicore-foundation";
 
-import { authErrorHandler, apiBaseUrl} from './base-actions';
+import { authErrorHandler, apiBaseUrl, showMessage} from './base-actions';
 
 import {DEFAULT_ENTITY} from "../reducers/summit-event-reducer";
 
@@ -14,6 +14,7 @@ export const RECEIVE_EVENT                  = 'RECEIVE_EVENT';
 export const RESET_EVENT                    = 'RESET_EVENT';
 export const EVENT_UPDATED                  = 'EVENT_UPDATED';
 export const EVENT_ADDED                    = 'EVENT_ADDED';
+export const EVENT_PUBLISHED                = 'EVENT_PUBLISHED';
 export const EVENT_DELETED                  = 'EVENT_DELETED';
 export const FILE_ATTACHED                  = 'FILE_ATTACHED';
 
@@ -132,35 +133,41 @@ export const saveEvent = (entity, publish) => (dispatch, getState) => {
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
-    console.log('publish: '+ publish);
-    //dispatch(startLoading());
+    dispatch(startLoading());
 
     if (entity.id) {
-        return putRequest(
+
+        let success_message = ['Done!', 'Event saved successfully.', 'success'];
+        if (publish) success_message[1] = 'Event saved & published successfully.';
+
+        putRequest(
             null,
             createAction(EVENT_UPDATED),
             `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}?access_token=${accessToken}`,
             entity,
             authErrorHandler
-        )({})(dispatch)
-            .then((publish, entity) => {
-                if (publish) dispatch(publishEvent(entity))
+        )({})(dispatch, publish, success_message)
+            .then((payload) => {
+                if (publish) dispatch(publishEvent(payload.response))
             })
-            .then(dispatch(stopLoading()));
+            .then(dispatch(showMessage(...success_message)));
+
     } else {
-        return postRequest(
+        postRequest(
             null,
             createAction(EVENT_ADDED),
             `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events?access_token=${accessToken}`,
             entity,
             authErrorHandler
-        )({})(dispatch)
-            .then((publish) => {if (publish) dispatch(publishEvent(entity))})
-            .then(dispatch(stopLoading()));
+        )({})(dispatch, publish, success_message)
+            .then((payload) => {
+                if (publish) dispatch(publishEvent(payload.response))
+            })(publish)
+            .then(dispatch(showMessage(...success_message)));
     }
 }
 
-export const publishEvent = (entity) => (dispatch, getState) => {
+const publishEvent = (entity) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
@@ -172,11 +179,11 @@ export const publishEvent = (entity) => (dispatch, getState) => {
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}/publish?access_token=${accessToken}`,
         {
             location_id : entity.location_id,
-            start_date  : entity.start_date/1000,
-            end_date    : entity.end_date/1000,
+            start_date  : entity.start_date,
+            end_date    : entity.end_date,
         },
         authErrorHandler
-    )({})(dispatch).then(dispatch(stopLoading()));
+    )({})(dispatch);
 }
 
 export const attachFile = (entity, file) => (dispatch, getState) => {
@@ -204,7 +211,7 @@ const uploadFile = (entity, file) => (dispatch, getState) => {
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
-    return postRequest(
+    postRequest(
         null,
         createAction(FILE_ATTACHED),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}/attachment?access_token=${accessToken}`,

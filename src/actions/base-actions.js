@@ -18,3 +18,8 @@ export const authErrorHandler = (err, res) => (dispatch) => {
         swal("ERROR", err.response.body.errors[0], "error");
     }
 }
+
+export const showMessage = (title, msg, msg_type) => (dispatch) => {
+    dispatch(stopLoading());
+    swal(title, msg, msg_type);
+}

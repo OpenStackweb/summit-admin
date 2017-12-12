@@ -19,7 +19,7 @@ export const OptionGroup =  ({
     options
 }) => {
     return ([
-        <option className="option-group" value={value}>{label}</option>,
+        <option key={"group" + value} className="option-group" value={value}>{label}</option>,
         options.map((opt,i) => (
             <option className="option-child" key={opt.value} value={opt.value}> - {opt.label}</option>
         ))
