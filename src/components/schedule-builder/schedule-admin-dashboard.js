@@ -27,7 +27,8 @@ import {
     unPublishEvent,
     changeCurrentScheduleSearchTerm,
     searchScheduleEvents,
-    changeCurrentUnScheduleOrderBy
+    changeCurrentUnScheduleOrderBy,
+    getEmptySpots
 } from '../../actions/summit-builder-actions';
 import UnScheduleEventList from './unschedule-event-list';
 import ScheduleEventList from './schedule-event-list';
@@ -48,6 +49,8 @@ import moment from 'moment-timezone';
 import FragmentParser from '../../utils/fragmen-parser';
 import * as Scroll from 'react-scroll';
 import swal from "sweetalert2";
+import ScheduleAdminEmptySpotsModal from './schedule-admin-empty-spots-modal';
+import ScheduleAdminEmptySpotsList from './schedule-admin-empty-spots-list';
 
 class ScheduleAdminDashBoard extends React.Component {
 
@@ -67,10 +70,16 @@ class ScheduleAdminDashBoard extends React.Component {
         this.onScheduledEventsFilterTextChanged   = this.onScheduledEventsFilterTextChanged.bind(this);
         this.onEditEvent                          = this.onEditEvent.bind(this);
         this.onOrderByChanged                     = this.onOrderByChanged.bind(this);
-
+        this.onFindEmptyClick                     = this.onFindEmptyClick.bind(this);
+        this.onCloseModal                         = this.onCloseModal.bind(this);
+        this.onFindEmptySpots                     = this.onFindEmptySpots.bind(this);
         this.fragmentParser = new FragmentParser();
         this.filters        = this.parseFilterFromFragment();
         this.timeoutHandler = null;
+
+        this.state = {
+            showModal : false,
+        }
     }
 
     parseFilterFromFragment(){
@@ -341,6 +350,25 @@ class ScheduleAdminDashBoard extends React.Component {
         );
     }
 
+    onFindEmptyClick(){
+        this.setState({ ... this.state, showModal: true})
+    }
+
+    onCloseModal(){
+        this.setState({ ... this.state, showModal: false})
+    }
+
+    onFindEmptySpots({
+        currentLocation,
+        dateFrom,
+        dateTo,
+        gapSize,
+    })
+    {
+        this.setState({ ... this.state, showModal: false})
+        this.props.getEmptySpots(currentLocation, dateFrom, dateTo, gapSize);
+    }
+
     render(){
 
         let {
@@ -359,7 +387,8 @@ class ScheduleAdminDashBoard extends React.Component {
             unScheduleEventsCurrentSearchTerm,
             scheduleEventsCurrentSearchTerm,
             scheduleEventsSearch,
-            currentUnScheduleOrderBy
+            currentUnScheduleOrderBy,
+            emptySpots
         } = this.props;
 
         if(currentSummit == null ) return null;
@@ -460,22 +489,48 @@ class ScheduleAdminDashBoard extends React.Component {
         ]
 
         return(
+
             <div className="row schedule-app-container no-margin">
+                <ScheduleAdminEmptySpotsModal
+                    currentSummit={currentSummit}
+                    showModal={this.state.showModal}
+                    onCloseModal={this.onCloseModal}
+                    venues={venues}
+                    onFindEmptySpots={this.onFindEmptySpots}
+                />
                 <div className="col-md-6 published-container">
-                    <ScheduleAdminSearchFreeTextScheduleEvents
-                        onFilterTextChange={this.onScheduledEventsFilterTextChanged}
-                        currentValue={scheduleEventsCurrentSearchTerm}
-                    />
+                    {
+                        (emptySpots.length > 0)
+                        &&
+                        <ScheduleAdminEmptySpotsList
+                            emptySpots={emptySpots}
+                        />
+                    }
+                    {
+                       (emptySpots.length == 0 )
+                        &&
+                        <ScheduleAdminSearchFreeTextScheduleEvents
+                            onFilterTextChange={this.onScheduledEventsFilterTextChanged}
+                            currentValue={scheduleEventsCurrentSearchTerm}
+                            onFindEmptyClick={this.onFindEmptyClick}
+                        />
+                    }
                     {
                         ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm == '' ) &&
+                        (emptySpots.length == 0 ) &&
                         <ScheduleAdminDaySelector onDayChanged={this.onDayChanged} days={days}
                                                   currentValue={currentDaySelectorItem}/>
                     }
                     { ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm == '' ) &&
+                        ( emptySpots.length == 0 ) &&
                         <ScheduleAdminVenueSelector onVenueChanged={this.onVenueChanged}
                                                     venues={venues} currentValue={currentVenueSelectorItem} />
                     }
-                    { ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm == '' ) && currentDay != null && currentLocation != null &&
+                    { ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm == '' )
+                        && currentDay != null
+                        && currentLocation != null
+                        && (emptySpots.length == 0 )
+                        &&
                         <ScheduleEventList
                         startTime={"07:00"}
                         endTime={"22:00"}
@@ -499,7 +554,8 @@ class ScheduleAdminDashBoard extends React.Component {
                     {
                         ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm == '' ) &&
                         (currentDay == null || currentLocation == null) &&
-                    <p className="empty-list-message">{T.translate("errors.empty_list_schedule_events")}</p>
+                        (emptySpots.length == 0 ) &&
+                        <p className="empty-list-message">{T.translate("errors.empty_list_schedule_events")}</p>
                     }
                 </div>
                 <div className="col-md-6 unpublished-container">
@@ -583,7 +639,8 @@ function mapStateToProps({ currentScheduleBuilderState, currentSummitState  }) {
         unScheduleEventsCurrentSearchTerm  : currentScheduleBuilderState.unScheduleEventsCurrentSearchTerm,
         scheduleEventsCurrentSearchTerm    : currentScheduleBuilderState.scheduleEventsCurrentSearchTerm,
         scheduleEventsSearch               : currentScheduleBuilderState.scheduleEventsSearch,
-        currentUnScheduleOrderBy           : currentScheduleBuilderState.currentUnScheduleOrderBy
+        currentUnScheduleOrderBy           : currentScheduleBuilderState.currentUnScheduleOrderBy,
+        emptySpots                         : currentScheduleBuilderState.emptySpots,
     }
 }
 
@@ -600,5 +657,6 @@ export default connect(mapStateToProps, {
     changeCurrentUnscheduleSearchTerm,
     changeCurrentScheduleSearchTerm,
     searchScheduleEvents,
-    changeCurrentUnScheduleOrderBy
+    changeCurrentUnScheduleOrderBy,
+    getEmptySpots
 })(ScheduleAdminDashBoard);

@@ -48,6 +48,7 @@ class ScheduleAdminSearchFreeTextScheduleEvents extends React.Component {
     }
 
     render(){
+        let{ onFindEmptyClick } = this.props;
         return(
             <div className="row search-container">
                 <div className="col-md-12">
@@ -68,7 +69,7 @@ class ScheduleAdminSearchFreeTextScheduleEvents extends React.Component {
                             <button onClick={this.onClearClick} className="btn btn-default btn-global-search-clear" title={T.translate("titles.clear")}>
                                 <i className="fa fa-times"></i>
                             </button>
-                            <button className="btn btn-default" title={T.translate("titles.find_empty_spots")}>
+                            <button className="btn btn-default" title={T.translate("titles.find_empty_spots")} onClick={onFindEmptyClick}>
                                 Find Empty
                             </button>
                         </span>

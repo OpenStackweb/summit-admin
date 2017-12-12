@@ -27,6 +27,7 @@ import
     UNPUBLISHED_EVENT,
     RECEIVE_SCHEDULE_EVENTS_SEARCH_PAGE,
     CHANGE_CURRENT_ORDER_BY,
+    RECEIVE_EMPTY_SPOTS,
 } from '../actions/summit-builder-actions';
 
 import { LOGOUT_USER } from '../actions/auth-actions';
@@ -51,6 +52,7 @@ const DEFAULT_STATE = {
     scheduleEventsCurrentSearchTerm: null,
     scheduleEventsSearch: [],
     currentUnScheduleOrderBy : null,
+    emptySpots: [],
 };
 
 const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
@@ -79,6 +81,11 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
         case CHANGE_CURRENT_PRESENTATION_SELECTION_STATUS: {
             let {presentationSelectionStatus} = payload;
             return {...state, currentPresentationSelectionStatus : presentationSelectionStatus};
+        }
+        break;
+        case RECEIVE_EMPTY_SPOTS:{
+            let { data } = payload.response;
+            return {...state, emptySpots : data};
         }
         break;
         case CHANGE_CURRENT_ORDER_BY:{

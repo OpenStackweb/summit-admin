@@ -19,6 +19,7 @@ export const CHANGE_CURRENT_SCHEDULE_SEARCH_TERM          = 'CHANGE_CURRENT_SCHE
 export const CHANGE_CURRENT_ORDER_BY                      = 'CHANGE_CURRENT_ORDER_BY';
 export const UNPUBLISHED_EVENT                            = 'UNPUBLISHED_EVENT';
 export const RECEIVE_SCHEDULE_EVENTS_SEARCH_PAGE          = 'RECEIVE_SCHEDULE_EVENTS_SEARCH_PAGE';
+export const RECEIVE_EMPTY_SPOTS                          = 'RECEIVE_EMPTY_SPOTS';
 
 export const getUnScheduleEventsPage =
     (
@@ -256,6 +257,34 @@ export const searchScheduleEvents = (term) => (dispatch, getState) => {
         null,
         createAction(RECEIVE_SCHEDULE_EVENTS_SEARCH_PAGE),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/published`,
+        authErrorHandler
+    )(params)(dispatch)
+        .then(() =>
+            dispatch(stopLoading())
+        );
+}
+
+export const getEmptySpots = (location, fromDate, toDate, gapSize) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let params = {
+        access_token : accessToken,
+        'filter[]': [
+            `location_id==${location.id}`,
+            `start_date>=${fromDate}`,
+            `end_date<=${toDate}`,
+            `gap<=${gapSize}`,
+        ]
+    };
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_EMPTY_SPOTS),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/published/empty-spots`,
         authErrorHandler
     )(params)(dispatch)
         .then(() =>
