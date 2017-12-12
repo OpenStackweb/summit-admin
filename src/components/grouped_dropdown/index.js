@@ -13,6 +13,7 @@
 
 import React from 'react';
 import { OptionGroup } from './OptionGroup';
+import './optiongroup.less';
 
 export default class GroupedDropdown extends React.Component {
 
@@ -48,9 +49,9 @@ export default class GroupedDropdown extends React.Component {
             <select id={id} className="form-control" value={value} onChange={this.handleChange}>
                 <option value="" disabled>{placeholder}</option>
                 {options.map((opt,i) => {
-                    if (Array.isArray(opt.value)) {
+                    if (typeof opt.options != 'undefined') {
                         return (
-                            <OptionGroup key={'group_opt_'+i} label={opt.label} options={opt.value}/>
+                            <OptionGroup key={'group_opt_'+i} label={opt.label} value={opt.value} options={opt.options}/>
                         );
                     } else {
                         return (

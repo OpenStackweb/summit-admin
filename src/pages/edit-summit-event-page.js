@@ -66,15 +66,6 @@ class EditSummitEventPage extends React.Component {
             } else {
                 this.props.resetEventForm();
             }
-
-            if(!track_options)
-                this.props.getTracks();
-
-            if(!location_options)
-                this.props.getVenues();
-
-            if(!type_options)
-                this.props.getEventTypes();
         }
     }
 

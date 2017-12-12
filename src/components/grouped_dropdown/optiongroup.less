@@ -11,17 +11,11 @@
  * limitations under the License.
  **/
 
-import React from 'react';
+.option-group {
+    font-weight: bold;
+    font-style: italic;
+}
 
-export const OptionGroup =  ({
-    value,
-    label,
-    options
-}) => {
-    return ([
-        <option className="option-group" value={value}>{label}</option>,
-        options.map((opt,i) => (
-            <option className="option-child" key={opt.value} value={opt.value}> - {opt.label}</option>
-        ))
-    ]);
-};
+.option-child {
+    padding-left: 15px;
+}
