@@ -54,6 +54,9 @@ class EventForm extends React.Component {
             id = ev.target.name;
         }
 
+        if (ev.target.type == 'datetime') {
+            value = value.valueOf() / 1000;
+        }
         entity[id] = value;
         this.setState({entity: entity});
     }
@@ -99,7 +102,7 @@ class EventForm extends React.Component {
     getFormattedTime(atime) {
         if(!atime) return atime;
         atime = atime * 1000;
-        return moment(atime).tz(this.props.currentSummit.time_zone.name).format('MMMM Do YYYY, h:mm:ss a');
+        return moment(atime).tz(this.props.currentSummit.time_zone.name);
     }
 
     render() {
@@ -177,7 +180,7 @@ class EventForm extends React.Component {
                         <DateTimePicker
                             id="start_date"
                             onChange={this.handleChange}
-                            validation={{after: currentSummit.start_date, before: entity.end_date}}
+                            validation={{after: currentSummit.start_date, before: currentSummit.end_date}}
                             format={{date:"YYYY-MM-DD", time: "HH:mm:ss"}}
                             value={this.getFormattedTime(entity.start_date)}
                             inputProps={{placeholder: 'Start Date'}}
@@ -188,7 +191,7 @@ class EventForm extends React.Component {
                         <DateTimePicker
                             id="end_date"
                             onChange={this.handleChange}
-                            validation={{after: entity.start_date, before: currentSummit.end_date}}
+                            validation={{after: currentSummit.start_date, before: currentSummit.end_date}}
                             format={{date:"YYYY-MM-DD", time: "HH:mm:ss"}}
                             value={this.getFormattedTime(entity.end_date)}
                             inputProps={{placeholder: 'End Date'}}

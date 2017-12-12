@@ -35,13 +35,11 @@ export default class DateTimePicker extends React.Component {
     }
 
     handleChange(date) {
-        this.setState({
-            value: date.format('YYYY-MM-DD HH:mm:ss')
-        });
+        let { timezone } = this.props;
 
         let ev = {target: {
             id: this.props.id,
-            value: moment.utc(date).unix(),
+            value: moment.tz(date.valueOf(), timezone),
             type: 'datetime'
         }};
 
