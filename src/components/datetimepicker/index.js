@@ -29,7 +29,7 @@ export default class DateTimePicker extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if(this.state.value != nextProps.value) {
+        if(nextProps.hasOwnProperty('value') && this.state.value != nextProps.value) {
             this.setState({value: nextProps.value});
         }
     }
