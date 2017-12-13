@@ -17,6 +17,7 @@ import EventForm from '../components/event-form';
 import { getSummitById}  from '../actions/summit-actions';
 import { getTracks, getVenues, getEventTypes, getEvent, resetEventForm, saveEvent, attachFile } from '../actions/actions';
 import '../styles/edit-summit-event-page.less';
+import '../components/form_validation/validate.less';
 
 class EditSummitEventPage extends React.Component {
 
@@ -71,7 +72,7 @@ class EditSummitEventPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity} = this.props;
+        let {currentSummit, entity, errors} = this.props;
 
         if(currentSummit == null) return null;
 
@@ -82,6 +83,7 @@ class EditSummitEventPage extends React.Component {
                 {currentSummit &&
                 <EventForm
                     entity={entity}
+                    errors={errors}
                     onSubmit={this.props.saveEvent}
                     onAttach={this.props.attachFile}
                     currentSummit={currentSummit}
@@ -102,7 +104,8 @@ const mapStateToProps = ({ currentSummitState, currentSummitEventState }) => ({
     type_options: currentSummitEventState.type_options,
     track_options: currentSummitEventState.track_options,
     location_options: currentSummitEventState.location_options,
-    entity: currentSummitEventState.entity
+    entity: currentSummitEventState.entity,
+    errors: currentSummitEventState.errors
 })
 
 export default connect (

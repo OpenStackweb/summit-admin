@@ -12,38 +12,88 @@
  **/
 
 import React from 'react';
-//import TinyMCEInput from 'react-tinymce-input'
-import TinyMCE from 'react-tinymce';
+import RichTextEditor from 'react-rte';
+
 
 export default class TextEditor extends React.Component {
 
     constructor(props) {
         super(props);
 
+        this.state = {
+            editorValue: RichTextEditor.createEmptyValue()
+        };
+
+        this._currentValue = null;
+
         this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange(e) {
+    componentWillMount() {
+        this._updateStateFromProps(this.props);
+    }
 
-        let ev = {target: {
-            id: this.props.id,
-            value: e.target.getContent(),
-            type: 'texteditor'
-        }};
+    componentWillReceiveProps(newProps) {
+        this._updateStateFromProps(newProps);
+    }
 
-        this.props.onChange(ev);
+    _updateStateFromProps(newProps) {
+        let {value} = newProps;
+        if (this._currentValue != null) {
+            let currentValue = this._currentValue;
+            if (value === currentValue) {
+                return;
+            }
+        }
+        let {editorValue} = this.state;
+        this.setState({
+            editorValue: editorValue.setContentFromString(value, 'html'),
+        });
+        this._currentValue = value;
+    }
+
+
+    handleChange(editorValue) {
+
+        let oldEditorValue = this.state.editorValue;
+        this.setState({editorValue});
+
+        let oldContentState = oldEditorValue ? oldEditorValue.getEditorState().getCurrentContent() : null;
+        let newContentState = editorValue.getEditorState().getCurrentContent();
+
+        if (oldContentState !== newContentState) {
+            let stringValue = editorValue.toString('html');
+
+            this._currentValue = stringValue;
+
+            if (stringValue !== this.props.value) {
+                let ev = {target: {
+                    id: this.props.id,
+                    value: stringValue,
+                    type: 'texteditor'
+                }};
+
+                this.props.onChange(ev);
+            }
+        }
     }
 
     render() {
 
-        let {onChange, value, ...rest} = this.props;
+        let {onChange, value, error, className, ...rest} = this.props;
+        let has_error = ( this.props.hasOwnProperty('error') && error != '' );
 
         return (
-            <TinyMCE
-                config={{ height: 200, plugins: 'image table' }}
-                content={value}
-                onChange={this.handleChange}
-            />
+            <div>
+                <RichTextEditor
+                    className={className + ' ' + (has_error ? 'error' : '')}
+                    value={this.state.editorValue}
+                    onChange={this.handleChange}
+                />
+                {has_error &&
+                <p className="error-label">{error}</p>
+                }
+            </div>
         );
 
     }

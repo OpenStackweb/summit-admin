@@ -18,9 +18,38 @@ export const authErrorHandler = (err, res) => (dispatch) => {
             });
             break;
         case 412:
-            swal("ERROR", err.response.body.errors[0], "error");
+            let msg = '';
+            for (var [key, value] of Object.entries(err.response.body.errors)) {
+                msg += '- ' + value + '<br>';
+            }
+            swal("Validation ERROR", msg, "error");
+            break;
+        default:
+            swal("ERROR", "There was a problem with our server, please contact admin.", "error");
+    }
+}
+
+export const fetchErrorHandler = (response) => {
+    let code = response.status;
+    let msg = response.statusText;
+
+    switch (code) {
+        case 401:
+        case 403:
+            swal("ERROR", T.translate("errors.session_expired"), "error");
+            break;
+        case 412:
+            swal("ERROR", msg, "error");
         case 500:
             swal("ERROR", "There was a problem with our server, please contact admin.", "error");
+    }
+}
+
+export const fetchResponseHandler = (response) => {
+    if (!response.ok) {
+        throw response;
+    } else {
+        return response.json();
     }
 }
 

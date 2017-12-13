@@ -23,9 +23,7 @@ import SpeakerInput from './speaker_input'
 import CompanyInput from './company_input'
 import GroupInput from './group_input'
 import UploadInput from './upload_input'
-import Input from 'react-validation/build/input'
-import Form from 'react-validation/build/form'
-import {required, email} from './form_validation'
+import Input from './text_input'
 
 
 class EventForm extends React.Component {
@@ -33,7 +31,8 @@ class EventForm extends React.Component {
         super(props);
 
         this.state = {
-            entity: {...this.props.entity}
+            entity: {...props.entity},
+            errors: props.errors
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -43,21 +42,40 @@ class EventForm extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({entity: nextProps.entity});
+
+        this.setState({
+            entity: {...nextProps.entity},
+            errors: nextProps.errors
+        });
+
+        //scroll to first error
+        if(Object.keys(nextProps.errors).length > 0) {
+            let firstError = Object.keys(nextProps.errors)[0]
+            let firstNode = document.getElementById(firstError);
+            window.scrollTo(0, firstNode.offsetTop);
+
+        }
     }
 
     handleChange(ev) {
         let entity = {...this.state.entity};
+        let {errors} = this.state;
         let {value, id} = ev.target;
 
         if (ev.target.type == 'radio') {
             id = ev.target.name;
+            value = parseInt(ev.target.value);
+        }
+
+        if (ev.target.type == 'checkbox') {
+            value = ev.target.checked;
         }
 
         if (ev.target.type == 'datetime') {
             value = value.valueOf() / 1000;
         }
 
+        errors[id] = '';
         entity[id] = value;
         this.setState({entity: entity});
     }
@@ -79,8 +97,6 @@ class EventForm extends React.Component {
     handleSubmit(publish, ev) {
         console.log('event submitted');
         ev.preventDefault();
-
-        this.form.validateAll();
 
         let entity = {...this.state.entity};
         if (!entity.start_date) delete entity['start_date'];
@@ -110,6 +126,15 @@ class EventForm extends React.Component {
         return moment(atime).tz(this.props.currentSummit.time_zone.name);
     }
 
+    hasErrors(field) {
+        let {errors} = this.state;
+        if(field in errors) {
+            return errors[field];
+        }
+
+        return '';
+    }
+
     render() {
         let {entity} = this.state;
         let { currentSummit, levelopts, typeopts, trackopts, locationopts } = this.props;
@@ -137,18 +162,29 @@ class EventForm extends React.Component {
         let levels_ddl = levelopts.map(l => ({label: l, value: l}));
 
         return (
-            <Form ref={c => { this.form = c }} >
+            <form>
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> Title *</label>
-                        <Input className="form-control" name="title" id="title" value={entity.title} onChange={this.handleChange} validations={[required]}/>
+                        <Input
+                            className="form-control"
+                            error={this.hasErrors('title')}
+                            id="title"
+                            value={entity.title}
+                            onChange={this.handleChange}
+                        />
                     </div>
                 </div>
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> Short Description / Abstract </label>
-                        <TextEditor id="description" value={entity.description} onChange={this.handleChange} />
+                        <TextEditor
+                            id="description"
+                            value={entity.description}
+                            onChange={this.handleChange}
+                            error={this.hasErrors('description')}
+                        />
                     </div>
                 </div>
                 <div className="row form-group">
@@ -218,7 +254,7 @@ class EventForm extends React.Component {
                             onChange={this.handleChange}
                             placeholder="-- Select a Type --"
                             options={event_types_ddl}
-                            required
+                            error={this.hasErrors('type_id')}
                         />
                     </div>
                     <div className="col-md-4">
@@ -229,11 +265,10 @@ class EventForm extends React.Component {
                             onChange={this.handleChange}
                             placeholder="-- Select a Track --"
                             options={tracks_ddl}
-                            validations={[required]}
-                            required
+                            error={this.hasErrors('track_id')}
                         />
                     </div>
-                    {entity.type == 'presentation' &&
+                    {this.isEventType('Presentation') &&
                     <div className="col-md-4">
                         <label> Level </label>
                         <Dropdown
@@ -251,7 +286,7 @@ class EventForm extends React.Component {
                         <label> Feedback </label>
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="allow_feedback" checked={entity.allow_feedback} onChange={this.handleChange} className="form-check-input" />
-                            <label className="form-check-label" htmlFor="feedback"> Allow feedback ? </label>
+                            <label className="form-check-label" htmlFor="allow_feedback"> Allow feedback ? </label>
                         </div>
                     </div>
                     {this.isEventType('PresentationType') &&
@@ -283,6 +318,7 @@ class EventForm extends React.Component {
                             value={entity.tags}
                             onChange={this.handleChange}
                             allow_new={false}
+                            error={this.hasErrors('tags')}
                         />
                     </div>
                 </div>
@@ -379,7 +415,7 @@ class EventForm extends React.Component {
                         <input type="button" onClick={this.handleSubmit.bind(this, true)} className="btn btn-success pull-right" value="Save & Publish" />
                     </div>
                 </div>
-            </Form>
+            </form>
         );
     }
 }

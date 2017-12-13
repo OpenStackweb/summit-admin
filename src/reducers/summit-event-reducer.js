@@ -14,11 +14,13 @@
 import
 {
     RECEIVE_EVENT,
-    RESET_EVENT,
+    RESET_EVENT_FORM,
+    UPDATE_EVENT,
     EVENT_UPDATED,
     EVENT_ADDED,
     EVENT_PUBLISHED,
-    EVENT_DELETED
+    EVENT_DELETED,
+    EVENT_VALIDATION
 } from '../actions/actions';
 
 export const DEFAULT_ENTITY = {
@@ -32,8 +34,6 @@ export const DEFAULT_ENTITY = {
     location_id: 0,
     start_date: '',
     end_date: '',
-    type_id: 0,
-    track_id: 0,
     level: 'N/A',
     allow_feedback: 0,
     to_record: 0,
@@ -49,15 +49,17 @@ export const DEFAULT_ENTITY = {
 
 const DEFAULT_STATE = {
     level_options: ['N/A', 'Beginner', 'Intermediate', 'Advanced' ],
-    entity: DEFAULT_ENTITY
+    entity: DEFAULT_ENTITY,
+    errors: {}
 };
 
 const summitEventReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
-        case RESET_EVENT:
-            let default_entity = payload.default_entity;
-            return {...state,  entity: default_entity };
+        case RESET_EVENT_FORM:
+            return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
+        case UPDATE_EVENT:
+            return {...state,  entity: {...payload} };
         case RECEIVE_EVENT:
             let entity = payload.response;
 
@@ -73,6 +75,8 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
             return state;
         case EVENT_ADDED:
             return state;
+        case EVENT_VALIDATION:
+            return {...state,  errors: payload.errors };
         default:
             return state;
     }

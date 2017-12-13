@@ -12,10 +12,8 @@
  **/
 
 import React from 'react';
-import 'react-select/dist/react-select.css';
-import Select from 'react-select';
 
-export default class Dropdown extends React.Component {
+export default class Input extends React.Component {
 
     constructor(props) {
         super(props);
@@ -28,30 +26,25 @@ export default class Dropdown extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.hasOwnProperty('value') &&  this.state.value != nextProps.value) {
-            this.setState({value: nextProps.value});
+        if( nextProps.hasOwnProperty('value') && this.state.value != nextProps.value ) {
+            this.setState({
+                value: nextProps.value
+            });
         }
     }
 
-    handleChange(selection) {
-
-        let ev = {target: {
-            id: this.props.id,
-            value: selection.value,
-            type: 'dropdown'
-        }};
-
+    handleChange(ev) {
         this.props.onChange(ev);
     }
 
     render() {
 
         let {onChange, value, className, error, ...rest} = this.props;
-        let has_error = ( this.props.hasOwnProperty('error') && error != '' );
+        let has_error = ( error != '' );
 
         return (
             <div>
-                <Select
+                <input
                     className={className + ' ' + (has_error ? 'error' : '')}
                     value={this.state.value}
                     onChange={this.handleChange}

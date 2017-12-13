@@ -67,7 +67,7 @@ export default class SpeakerInput extends React.Component {
 
         } else {
             let value = {};
-            if (!new_values) return value;
+            if (!new_values || !new_values.hasOwnProperty('id')) return value;
 
             let label = new_values.hasOwnProperty('name') ? new_values.name : new_values.first_name + ' ' + new_values.last_name + ' (' + new_values.id + ')';
 

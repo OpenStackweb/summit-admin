@@ -59,16 +59,25 @@ export default class TagInput extends React.Component {
             ? Select.AsyncCreatable
             : Select.Async;
 
+        let {className, error, ...rest} = this.props;
+        let has_error = ( this.props.hasOwnProperty('error') && error != '' );
+
         return (
-            <AsyncComponent
-                multi={true}
-                value={this.props.value}
-                onChange={this.handleChange}
-                loadOptions={this.getTags}
-                backspaceRemoves={true}
-                valueKey="id"
-                labelKey="tag"
-            />
+            <div>
+                <AsyncComponent
+                    className={className + ' ' + (has_error ? 'error' : '')}
+                    multi={true}
+                    value={this.props.value}
+                    onChange={this.handleChange}
+                    loadOptions={this.getTags}
+                    backspaceRemoves={true}
+                    valueKey="id"
+                    labelKey="tag"
+                />
+                {has_error &&
+                <p className="error-label">{error}</p>
+                }
+            </div>
         );
 
     }

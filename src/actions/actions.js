@@ -1,22 +1,20 @@
 import { getRequest, putRequest, postRequest, deleteRequest, createAction, stopLoading, startLoading } from "openstack-uicore-foundation";
-
-import { authErrorHandler, apiBaseUrl, showMessage} from './base-actions';
-
-import {DEFAULT_ENTITY} from "../reducers/summit-event-reducer";
+import { authErrorHandler, fetchResponseHandler, fetchErrorHandler, apiBaseUrl, showMessage} from './base-actions';
+import swal from "sweetalert2";
+import T from "i18n-react/dist/i18n-react";
 
 export const REQUEST_SUMMITS                = 'REQUEST_SUMMITS';
 export const RECEIVE_SUMMITS                = 'RECEIVE_SUMMITS';
 export const SET_CURRENT_SUMMIT             = 'SET_CURRENT_SUMMIT';
-export const RECEIVE_TRACKS                 = 'RECEIVE_TRACKS';
-export const RECEIVE_VENUES                 = 'RECEIVE_VENUES';
-export const RECEIVE_EVENT_TYPES            = 'RECEIVE_EVENT_TYPES';
 export const RECEIVE_EVENT                  = 'RECEIVE_EVENT';
-export const RESET_EVENT                    = 'RESET_EVENT';
+export const RESET_EVENT_FORM               = 'RESET_EVENT_FORM';
+export const UPDATE_EVENT                   = 'UPDATE_EVENT';
 export const EVENT_UPDATED                  = 'EVENT_UPDATED';
 export const EVENT_ADDED                    = 'EVENT_ADDED';
 export const EVENT_PUBLISHED                = 'EVENT_PUBLISHED';
 export const EVENT_DELETED                  = 'EVENT_DELETED';
 export const FILE_ATTACHED                  = 'FILE_ATTACHED';
+export const EVENT_VALIDATION               = 'EVENT_VALIDATION';
 
 export const setCurrentSummit = (summit, history) => (dispatch) =>
 {
@@ -51,7 +49,7 @@ export const querySpeakers = (summitId, input) => {
     let filters = `first_name=@${input},last_name=@${input},email=@${input}`;
 
     return fetch(`${apiBaseUrl}/api/v1/summits/${summitId}/speakers?filter=${filters}&access_token=${accessToken}`)
-        .then((response) => response.json())
+        .then(fetchResponseHandler)
         .then((json) => {
             let options = json.data.map((s) =>
                 ({id: s.id, name: s.first_name + ' ' + s.last_name + ' (' + s.id + ')'})
@@ -60,7 +58,8 @@ export const querySpeakers = (summitId, input) => {
             return {
                 options: options
             };
-        });
+        })
+        .catch(fetchErrorHandler);
 };
 
 export const queryTags = (input) => {
@@ -68,14 +67,15 @@ export const queryTags = (input) => {
     let accessToken = window.accessToken;
 
     return fetch(`${apiBaseUrl}/api/v1/tags?filter=tag=@${input}&order=tag&access_token=${accessToken}`)
-        .then((response) => response.json())
+        .then(fetchResponseHandler)
         .then((json) => {
             let options = json.data.map((t) => ({id: t.id, tag: t.tag}) );
 
             return {
                 options: options
             };
-        });
+        })
+        .catch(fetchErrorHandler);
 };
 
 export const queryGroups = (input) => {
@@ -84,14 +84,15 @@ export const queryGroups = (input) => {
     let filters = `title=@${input},code=@${input}`;
 
     return fetch(`${apiBaseUrl}/api/v1/groups?filter=${filters}&access_token=${accessToken}`)
-        .then((response) => response.json())
+        .then(fetchResponseHandler)
         .then((json) => {
             let options = json.data.map((g) => ({value: g.id, label: g.title}) );
 
             return {
                 options: options
             };
-        });
+        })
+        .catch(fetchErrorHandler);
 };
 
 export const queryCompanies = (input) => {
@@ -100,14 +101,15 @@ export const queryCompanies = (input) => {
     let filters = `name=@${input}`;
 
     return fetch(`${apiBaseUrl}/api/v1/companies?filter=${filters}&access_token=${accessToken}`)
-        .then((response) => response.json())
+        .then(fetchResponseHandler)
         .then((json) => {
             let options = json.data.map((c) => ({id: c.id, name: c.name}) );
 
             return {
                 options: options
             };
-        });
+        })
+        .catch(fetchErrorHandler);
 };
 
 export const getEvent = (eventId) => (dispatch, getState) => {
@@ -115,7 +117,7 @@ export const getEvent = (eventId) => (dispatch, getState) => {
         let { accessToken }     = loggedUserState;
         let { currentSummit }   = currentSummitState;
 
-        //dispatch(startLoading());
+        dispatch(startLoading());
         return getRequest(
             null,
             createAction(RECEIVE_EVENT),
@@ -125,7 +127,7 @@ export const getEvent = (eventId) => (dispatch, getState) => {
 };
 
 export const resetEventForm = () => (dispatch, getState) => {
-    dispatch(createAction(RESET_EVENT)({default_entity: DEFAULT_ENTITY}));
+    dispatch(createAction(RESET_EVENT_FORM)({}));
 };
 
 export const saveEvent = (entity, publish) => (dispatch, getState) => {
@@ -141,31 +143,38 @@ export const saveEvent = (entity, publish) => (dispatch, getState) => {
         if (publish) success_message[1] = 'Event saved & published successfully.';
 
         putRequest(
-            null,
+            createAction(UPDATE_EVENT),
             createAction(EVENT_UPDATED),
             `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}?access_token=${accessToken}`,
             entity,
-            authErrorHandler
-        )({})(dispatch, publish, success_message)
-            .then((payload) => {
-                if (publish) dispatch(publishEvent(payload.response))
-            })
-            .then((payload) => {
-                dispatch(showMessage(...success_message))
-            });
+            authErrorHandler,
+            entity
+        )({})(dispatch)
+        .then((payload) => {
+            if (publish) dispatch(publishEvent(payload.response))
+        })
+        .then((payload) => {
+            dispatch(showMessage(...success_message))
+        });
 
     } else {
+        let success_message = ['Done!', 'Event created successfully.', 'success'];
+        if (publish) success_message[1] = 'Event created & published successfully.';
+
         postRequest(
-            null,
+            createAction(UPDATE_EVENT),
             createAction(EVENT_ADDED),
             `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events?access_token=${accessToken}`,
             entity,
-            authErrorHandler
-        )({})(dispatch, publish, success_message)
-            .then((payload) => {
-                if (publish) dispatch(publishEvent(payload.response))
-            })(publish)
-            .then(dispatch(showMessage(...success_message)));
+            eventErrorHandler,
+            entity
+        )({})(dispatch)
+        .then((payload) => {
+            if (publish) dispatch(publishEvent(payload.response))
+        })
+        .then((payload) => {
+            dispatch(showMessage(...success_message))
+        });
     }
 }
 
@@ -220,4 +229,33 @@ const uploadFile = (entity, file) => (dispatch, getState) => {
         file,
         authErrorHandler
     )({})(dispatch)
+}
+
+const eventErrorHandler = (err, res) => (dispatch) => {
+    let code = err.status;
+    dispatch(stopLoading());
+
+    switch (code) {
+        case 401:
+        case 403:
+            swal("ERROR", T.translate("errors.session_expired"), "error");
+            dispatch({
+                type: "LOGOUT_USER",
+                payload: {}
+            });
+            break;
+        case 412:
+            let msg = '';
+            for (var [key, value] of Object.entries(err.response.body.errors)) {
+                msg += '- ' + value + '<br>';
+            }
+            swal("Validation ERROR", msg, "error");
+            dispatch({
+                type: EVENT_VALIDATION,
+                payload: {errors: err.response.body.errors}
+            });
+            break;
+        default:
+            swal("ERROR", "There was a problem with our server, please contact admin.", "error");
+    }
 }
