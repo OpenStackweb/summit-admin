@@ -125,7 +125,7 @@ export const saveEvent = (entity, publish, history) => (dispatch, getState) => {
         )({})(dispatch)
         .then((payload) => {
             if (publish)
-                dispatch(publishEvent(payload.response));
+                dispatch(publishEvent(normalizedEntity));
             else
                 dispatch(showMessage(...success_message));
         });
@@ -142,8 +142,10 @@ export const saveEvent = (entity, publish, history) => (dispatch, getState) => {
             entity
         )({})(dispatch)
         .then((payload) => {
-            if (publish)
-                dispatch(publishEvent(payload.response));
+            if (publish) {
+                normalizedEntity.id = payload.response.id;
+                dispatch(publishEvent(normalizedEntity));
+            }
             else
                 dispatch(showMessage(
                     ...success_message,

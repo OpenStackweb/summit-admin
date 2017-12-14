@@ -24,6 +24,7 @@ import CompanyInput from '../company-input'
 import GroupInput from '../group-input'
 import UploadInput from '../upload-input'
 import Input from '../text-input'
+import {findElementPos} from '../../utils/methods'
 
 
 class EventForm extends React.Component {
@@ -52,8 +53,7 @@ class EventForm extends React.Component {
         if(Object.keys(nextProps.errors).length > 0) {
             let firstError = Object.keys(nextProps.errors)[0]
             let firstNode = document.getElementById(firstError);
-            window.scrollTo(0, firstNode.offsetTop);
-
+            if (firstNode) window.scrollTo(0, findElementPos(firstNode));
         }
     }
 
@@ -245,6 +245,7 @@ class EventForm extends React.Component {
                             value={this.getFormattedTime(entity.start_date)}
                             inputProps={{placeholder: 'Start Date'}}
                             timezone={currentSummit.time_zone.name}
+                            error={this.hasErrors('start_date')}
                         />
                     </div>
                     <div className="col-md-4" style={{paddingTop: '24px'}}>
@@ -256,6 +257,7 @@ class EventForm extends React.Component {
                             value={this.getFormattedTime(entity.end_date)}
                             inputProps={{placeholder: 'End Date'}}
                             timezone={currentSummit.time_zone.name}
+                            error={this.hasErrors('end_date')}
                         />
                     </div>
                 </div>
