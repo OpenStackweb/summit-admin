@@ -13,7 +13,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { loadSummits, setCurrentSummit } from '../actions/actions';
+import { loadSummits, setCurrentSummit } from '../actions/summit-actions';
 
 class SummitDirectoryPage extends React.Component {
 

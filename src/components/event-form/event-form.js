@@ -14,16 +14,16 @@
 import React from 'react'
 import moment from 'moment-timezone'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import TextEditor from './editor_input'
-import Dropdown from './dropdown'
-import GroupedDropdown from './grouped_dropdown'
-import DateTimePicker from './datetimepicker'
-import TagInput from './tag_input'
-import SpeakerInput from './speaker_input'
-import CompanyInput from './company_input'
-import GroupInput from './group_input'
-import UploadInput from './upload_input'
-import Input from './text_input'
+import TextEditor from '../editor-input'
+import Dropdown from '../dropdown'
+import GroupedDropdown from '../grouped-dropdown'
+import DateTimePicker from '../datetimepicker'
+import TagInput from '../tag-input'
+import SpeakerInput from '../speaker-input'
+import CompanyInput from '../company-input'
+import GroupInput from '../group-input'
+import UploadInput from '../upload-input'
+import Input from '../text-input'
 
 
 class EventForm extends React.Component {
@@ -64,7 +64,7 @@ class EventForm extends React.Component {
 
         if (ev.target.type == 'radio') {
             id = ev.target.name;
-            value = parseInt(ev.target.value);
+            value = (ev.target.value == 1);
         }
 
         if (ev.target.type == 'checkbox') {
@@ -95,24 +95,33 @@ class EventForm extends React.Component {
     }
 
     handleSubmit(publish, ev) {
-        console.log('event submitted');
+        let entity = {...this.state.entity};
         ev.preventDefault();
 
-        let entity = {...this.state.entity};
-        if (!entity.start_date) delete entity['start_date'];
-        if (!entity.end_date) delete entity['end_date'];
+        this.props.onSubmit(this.state.entity, publish, this.props.history);
+    }
 
-        entity.tags = entity.tags.map(t => t.tag);
-        entity.sponsors = entity.sponsors.map(s => s.id);
-        entity.speakers = entity.speakers.map(s => s.id);
+    handleUnpublish(ev) {
+        ev.preventDefault();
+        this.props.onUnpublish(this.state.entity);
+    }
 
-        this.props.onSubmit(entity, publish);
+    handleScheduleLink(ev) {
+        let {entity} = this.state;
+        let {currentSummit, history} = this.props;
+
+        ev.preventDefault();
+
+        let start_date = this.getFormattedTime(entity.start_date).format('YYYY-MM-DD');
+        let location_id = entity.location_id;
+
+        history.push(`/app/summits/${currentSummit.id}/events/schedule#location_id=${location_id}&day=${start_date}`);
     }
 
     isEventType(types) {
         let {entity} = this.state;
         if (!entity.type_id) return false;
-        let entity_type = this.props.typeopts.find(t => t.id == entity.type_id);
+        let entity_type = this.props.typeOpts.find(t => t.id == entity.type_id);
 
         types = Array.isArray(types) ? types : [types] ;
 
@@ -137,18 +146,18 @@ class EventForm extends React.Component {
 
     render() {
         let {entity} = this.state;
-        let { currentSummit, levelopts, typeopts, trackopts, locationopts } = this.props;
+        let { currentSummit, levelOpts, typeOpts, trackOpts, locationOpts } = this.props;
 
-        let event_types_ddl = typeopts.map(
+        let event_types_ddl = typeOpts.map(
             t => {
                 let disabled = (entity.id) ? !this.isEventType(t.class_name) : false;
                 return {label: t.name, value: t.id, type: t.class_name, disabled: disabled}
             }
         );
 
-        let tracks_ddl = trackopts.map(t => ({label: t.name, value: t.id}));
+        let tracks_ddl = trackOpts.map(t => ({label: t.name, value: t.id}));
 
-        let venues = locationopts.filter(v => (v.class_name == 'SummitVenue')).map(l =>
+        let venues = locationOpts.filter(v => (v.class_name == 'SummitVenue')).map(l =>
             ({label: l.name, value: l.id, options: l.rooms.map(r =>
                 ({label: r.name, value: r.id})
             )})
@@ -159,13 +168,13 @@ class EventForm extends React.Component {
             ...venues
         ];
 
-        let levels_ddl = levelopts.map(l => ({label: l, value: l}));
+        let levels_ddl = levelOpts.map(l => ({label: l, value: l}));
 
         return (
             <form>
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
-                    <div className="col-md-12">
+                    <div className="col-md-9">
                         <label> Title *</label>
                         <Input
                             className="form-control"
@@ -174,6 +183,10 @@ class EventForm extends React.Component {
                             value={entity.title}
                             onChange={this.handleChange}
                         />
+                    </div>
+                    <div className="col-md-3 published">
+                        <label> Published </label>
+                        <div><i className={"fa fa-2x " + (entity.is_published ? 'fa-check' : 'fa-times')}></i></div>
                     </div>
                 </div>
                 <div className="row form-group">
@@ -220,6 +233,7 @@ class EventForm extends React.Component {
                             options={locations_ddl}
                             placeholder="-- Select a Venue --"
                             onChange={this.handleChange}
+                            error={this.hasErrors('location_id')}
                         />
                     </div>
                     <div className="col-md-4" style={{paddingTop: '24px'}}>
@@ -411,8 +425,28 @@ class EventForm extends React.Component {
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">
-                        <input type="button" onClick={this.handleSubmit.bind(this, false)} className="btn btn-primary pull-right" value="Save" />
-                        <input type="button" onClick={this.handleSubmit.bind(this, true)} className="btn btn-success pull-right" value="Save & Publish" />
+                        {!entity.is_published &&
+                        <div>
+                            <input type="button" onClick={this.handleSubmit.bind(this, false)}
+                                   className="btn btn-primary pull-right" value="Save"/>
+                            <input type="button" onClick={this.handleSubmit.bind(this, true)}
+                                className="btn btn-success pull-right" value="Save & Publish" />
+                        </div>
+                        }
+
+                        {entity.is_published &&
+                        <div>
+                            <input type="button" onClick={this.handleSubmit.bind(this, true)}
+                                   className="btn btn-success pull-right" value="Save & Publish" />
+                            <input type="button" onClick={this.handleUnpublish.bind(this)}
+                                   className="btn btn-danger pull-right" value="Unpublish"/>
+                            <input type="button"
+                                   onClick={this.handleScheduleLink.bind(this)}
+                                   className="btn btn-default pull-left" value="Got to Calendar"/>
+                            <input type="button" className="btn btn-default pull-left" value="View Event" disabled/>
+                        </div>
+                        }
+
                     </div>
                 </div>
             </form>

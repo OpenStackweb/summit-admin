@@ -3,9 +3,6 @@ import { authErrorHandler, fetchResponseHandler, fetchErrorHandler, apiBaseUrl, 
 import swal from "sweetalert2";
 import T from "i18n-react/dist/i18n-react";
 
-export const REQUEST_SUMMITS                = 'REQUEST_SUMMITS';
-export const RECEIVE_SUMMITS                = 'RECEIVE_SUMMITS';
-export const SET_CURRENT_SUMMIT             = 'SET_CURRENT_SUMMIT';
 export const RECEIVE_EVENT                  = 'RECEIVE_EVENT';
 export const RESET_EVENT_FORM               = 'RESET_EVENT_FORM';
 export const UPDATE_EVENT                   = 'UPDATE_EVENT';
@@ -16,32 +13,6 @@ export const EVENT_DELETED                  = 'EVENT_DELETED';
 export const FILE_ATTACHED                  = 'FILE_ATTACHED';
 export const EVENT_VALIDATION               = 'EVENT_VALIDATION';
 
-export const setCurrentSummit = (summit, history) => (dispatch) =>
-{
-    dispatch({
-        type: SET_CURRENT_SUMMIT,
-        payload: summit
-    });
-    if(summit)
-       history.push(`/app/summits/${summit.id}/dashboard`);
-}
-
-export const loadSummits = () => (dispatch, getState) => {
-
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
-
-    dispatch(startLoading());
-    getRequest(
-        createAction(REQUEST_SUMMITS),
-        createAction(RECEIVE_SUMMITS),
-        `${apiBaseUrl}/api/v1/summits?access_token=${accessToken}&expand=event_types,tracks`,
-        authErrorHandler
-    )({})(dispatch, getState).then(() => {
-            dispatch(stopLoading());
-        }
-    );
-}
 
 export const querySpeakers = (summitId, input) => {
 
@@ -69,7 +40,7 @@ export const queryTags = (input) => {
     return fetch(`${apiBaseUrl}/api/v1/tags?filter=tag=@${input}&order=tag&access_token=${accessToken}`)
         .then(fetchResponseHandler)
         .then((json) => {
-            let options = json.data.map((t) => ({id: t.id, tag: t.tag}) );
+            let options = json.data.map((t) => ({tag: t.tag}) );
 
             return {
                 options: options
@@ -121,7 +92,7 @@ export const getEvent = (eventId) => (dispatch, getState) => {
         return getRequest(
             null,
             createAction(RECEIVE_EVENT),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${eventId}?access_token=${accessToken}&expand=tags,speakers,sponsors,groups`,
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${eventId}?access_token=${accessToken}&expand=speakers,sponsors,groups`,
             authErrorHandler
         )({})(dispatch).then(dispatch(stopLoading()));
 };
@@ -130,12 +101,14 @@ export const resetEventForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_EVENT_FORM)({}));
 };
 
-export const saveEvent = (entity, publish) => (dispatch, getState) => {
+export const saveEvent = (entity, publish, history) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
+
+    let normalizedEntity = normalizeEntity(entity);
 
     if (entity.id) {
 
@@ -146,34 +119,36 @@ export const saveEvent = (entity, publish) => (dispatch, getState) => {
             createAction(UPDATE_EVENT),
             createAction(EVENT_UPDATED),
             `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}?access_token=${accessToken}`,
-            entity,
-            authErrorHandler,
+            normalizedEntity,
+            eventErrorHandler,
             entity
         )({})(dispatch)
         .then((payload) => {
-            if (publish) dispatch(publishEvent(payload.response))
-        })
-        .then((payload) => {
-            dispatch(showMessage(...success_message))
+            if (publish)
+                dispatch(publishEvent(payload.response));
+            else
+                dispatch(showMessage(...success_message));
         });
 
     } else {
         let success_message = ['Done!', 'Event created successfully.', 'success'];
-        if (publish) success_message[1] = 'Event created & published successfully.';
 
         postRequest(
             createAction(UPDATE_EVENT),
             createAction(EVENT_ADDED),
             `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events?access_token=${accessToken}`,
-            entity,
+            normalizedEntity,
             eventErrorHandler,
             entity
         )({})(dispatch)
         .then((payload) => {
-            if (publish) dispatch(publishEvent(payload.response))
-        })
-        .then((payload) => {
-            dispatch(showMessage(...success_message))
+            if (publish)
+                dispatch(publishEvent(payload.response));
+            else
+                dispatch(showMessage(
+                    ...success_message,
+                    history.push(`/app/summits/${currentSummit.id}/events/${payload.response.id}`)
+                ));
         });
     }
 }
@@ -182,7 +157,8 @@ const publishEvent = (entity) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
-    //dispatch(startLoading());
+
+    let success_message = ['Done!', 'Event saved & published successfully.', 'success'];
 
     putRequest(
         null,
@@ -194,7 +170,10 @@ const publishEvent = (entity) => (dispatch, getState) => {
             end_date    : entity.end_date,
         },
         authErrorHandler
-    )({})(dispatch);
+    )({})(dispatch)
+    .then((payload) => {
+        dispatch(showMessage(...success_message))
+    });
 }
 
 export const attachFile = (entity, file) => (dispatch, getState) => {
@@ -241,7 +220,7 @@ const eventErrorHandler = (err, res) => (dispatch) => {
             swal("ERROR", T.translate("errors.session_expired"), "error");
             dispatch({
                 type: "LOGOUT_USER",
-                payload: {}
+                payload: {persistStore: true}
             });
             break;
         case 412:
@@ -258,4 +237,23 @@ const eventErrorHandler = (err, res) => (dispatch) => {
         default:
             swal("ERROR", "There was a problem with our server, please contact admin.", "error");
     }
+}
+
+const normalizeEntity = (entity) => {
+    let normalizedEntity = {...entity};
+    if (!normalizedEntity.start_date) delete normalizedEntity['start_date'];
+    if (!normalizedEntity.end_date) delete normalizedEntity['end_date'];
+
+    normalizedEntity.tags = normalizedEntity.tags.map((t) => {
+        if (typeof t == 'string') return t;
+        else return t.tag;
+    });
+    normalizedEntity.sponsors = normalizedEntity.sponsors.map(s => s.id);
+    normalizedEntity.speakers = normalizedEntity.speakers.map(s => s.id);
+
+    if (Object.keys(normalizedEntity.moderator).length > 0)
+        normalizedEntity.moderator_speaker_id = normalizedEntity.moderator.id;
+
+    return normalizedEntity;
+
 }

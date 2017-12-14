@@ -33,7 +33,7 @@ import
 
 import { LOGOUT_USER } from '../actions/auth-actions';
 
-import { SET_CURRENT_SUMMIT } from '../actions/actions'
+import { SET_CURRENT_SUMMIT } from '../actions/summit-actions'
 
 import SummitEvent from '../models/summit-event';
 

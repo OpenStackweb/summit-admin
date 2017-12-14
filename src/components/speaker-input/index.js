@@ -14,9 +14,9 @@
 import React from 'react';
 import 'react-select/dist/react-select.css';
 import Select from 'react-select';
-import {queryCompanies} from '../../actions/actions';
+import {querySpeakers} from '../../actions/edit-summit-event-actions';
 
-export default class CompanyInput extends React.Component {
+export default class SpeakerInput extends React.Component {
 
     constructor(props) {
         super(props);
@@ -26,7 +26,7 @@ export default class CompanyInput extends React.Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
-        this.getCompanies = this.getCompanies.bind(this);
+        this.getSpeakers = this.getSpeakers.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -39,18 +39,41 @@ export default class CompanyInput extends React.Component {
         let ev = {target: {
             id: this.props.id,
             value: value,
-            type: 'companyinput'
+            type: 'speakerinput'
         }};
 
         this.props.onChange(ev);
     }
 
-    getCompanies (input) {
+    getSpeakers (input) {
         if (!input) {
             return Promise.resolve({ options: [] });
         }
 
-        return queryCompanies(input);
+        return querySpeakers(this.props.summitId, input);
+    }
+
+    processTagValues(new_values) {
+        if (this.props.multi) {
+            if (!new_values) return [];
+            new_values = Array.isArray(new_values) ? new_values : [new_values];
+
+            return new_values.map(v => {
+                if (v.hasOwnProperty('name'))
+                    return {id: v.id, name: v.name};
+                else
+                    return {id: v.id, name: v.first_name + ' ' + v.last_name + ' (' + v.id + ')'};
+            });
+
+        } else {
+            let value = {};
+            if (!new_values || !new_values.hasOwnProperty('id')) return value;
+
+            let label = new_values.hasOwnProperty('name') ? new_values.name : new_values.first_name + ' ' + new_values.last_name + ' (' + new_values.id + ')';
+
+            return {id: new_values.id, name: label};
+        }
+
     }
 
     render() {
@@ -58,9 +81,9 @@ export default class CompanyInput extends React.Component {
         return (
             <Select.Async
                 multi={this.props.multi}
-                value={this.state.value}
+                value={this.processTagValues(this.state.value)}
                 onChange={this.handleChange}
-                loadOptions={this.getCompanies}
+                loadOptions={this.getSpeakers}
                 backspaceRemoves={true}
                 valueKey="id"
                 labelKey="name"

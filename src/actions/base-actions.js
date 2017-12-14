@@ -8,6 +8,8 @@ export const authErrorHandler = (err, res) => (dispatch) => {
     let code = err.status;
     dispatch(stopLoading());
 
+    let msg = '';
+
     switch (code) {
         case 401:
         case 403:
@@ -17,8 +19,11 @@ export const authErrorHandler = (err, res) => (dispatch) => {
                 payload: {}
             });
             break;
+        case 404:
+            msg = err.message;
+            swal("Validation ERROR", msg, "error");
+            break;
         case 412:
-            let msg = '';
             for (var [key, value] of Object.entries(err.response.body.errors)) {
                 msg += '- ' + value + '<br>';
             }
@@ -53,7 +58,7 @@ export const fetchResponseHandler = (response) => {
     }
 }
 
-export const showMessage = (title, msg, msg_type) => (dispatch) => {
+export const showMessage = (title, msg, msg_type, callback = {}) => (dispatch) => {
     dispatch(stopLoading());
-    swal(title, msg, msg_type);
+    swal(title, msg, msg_type, callback);
 }

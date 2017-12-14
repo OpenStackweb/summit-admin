@@ -13,11 +13,13 @@
 
 import React from 'react'
 import { connect } from 'react-redux';
-import EventForm from '../components/event-form';
-import { getSummitById}  from '../actions/summit-actions';
-import { getTracks, getVenues, getEventTypes, getEvent, resetEventForm, saveEvent, attachFile } from '../actions/actions';
+import EventForm from '../components/event-form/event-form';
+import { getSummitById }  from '../actions/summit-actions';
 import '../styles/edit-summit-event-page.less';
-import '../components/form_validation/validate.less';
+import '../components/form-validation/validate.less';
+import { getEvent, resetEventForm, saveEvent, attachFile } from '../actions/edit-summit-event-actions';
+import { unPublishEvent } from '../actions/summit-builder-actions';
+
 
 class EditSummitEventPage extends React.Component {
 
@@ -60,7 +62,7 @@ class EditSummitEventPage extends React.Component {
 
     componentDidMount() {
         let {eventId} = this.state;
-        let {currentSummit, track_options, location_options, type_options} = this.props;
+        let {currentSummit, trackOptions, locationOptions, typeOptions} = this.props;
 
         if (this.props.currentSummit) {
             if(eventId) {
@@ -82,15 +84,17 @@ class EditSummitEventPage extends React.Component {
                 <hr/>
                 {currentSummit &&
                 <EventForm
+                    history={this.props.history}
+                    currentSummit={currentSummit}
+                    levelOpts={this.props.levelOptions}
+                    trackOpts={currentSummit.tracks}
+                    typeOpts={currentSummit.event_types}
+                    locationOpts={currentSummit.locations}
                     entity={entity}
                     errors={errors}
                     onSubmit={this.props.saveEvent}
                     onAttach={this.props.attachFile}
-                    currentSummit={currentSummit}
-                    levelopts={this.props.level_options}
-                    trackopts={currentSummit.tracks}
-                    typeopts={currentSummit.event_types}
-                    locationopts={currentSummit.locations}
+                    onUnpublish={this.props.unPublishEvent}
                 />
                 }
             </div>
@@ -100,10 +104,10 @@ class EditSummitEventPage extends React.Component {
 
 const mapStateToProps = ({ currentSummitState, currentSummitEventState }) => ({
     currentSummit: currentSummitState.currentSummit,
-    level_options: currentSummitEventState.level_options,
-    type_options: currentSummitEventState.type_options,
-    track_options: currentSummitEventState.track_options,
-    location_options: currentSummitEventState.location_options,
+    levelOptions: currentSummitEventState.levelOptions,
+    typeOptions: currentSummitEventState.typeOptions,
+    trackOptions: currentSummitEventState.trackOptions,
+    locationOptions: currentSummitEventState.locationOptions,
     entity: currentSummitEventState.entity,
     errors: currentSummitEventState.errors
 })
@@ -112,12 +116,10 @@ export default connect (
     mapStateToProps,
     {
         getSummitById,
-        getTracks,
-        getVenues,
-        getEventTypes,
         getEvent,
         resetEventForm,
         saveEvent,
-        attachFile
+        attachFile,
+        unPublishEvent
     }
 )(EditSummitEventPage);

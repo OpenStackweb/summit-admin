@@ -1,4 +1,4 @@
-import { RECEIVE_SUMMITS } from '../actions/actions';
+import { RECEIVE_SUMMITS } from '../actions/summit-actions';
 import{ LOGOUT_USER } from '../actions/auth-actions';
 
 const DEFAULT_STATE = {

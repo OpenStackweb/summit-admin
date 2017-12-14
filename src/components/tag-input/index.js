@@ -14,7 +14,7 @@
 import React from 'react';
 import 'react-select/dist/react-select.css';
 import Select from 'react-select';
-import {queryTags} from '../../actions/actions';
+import {queryTags} from '../../actions/edit-summit-event-actions';
 
 export default class TagInput extends React.Component {
 
@@ -31,7 +31,9 @@ export default class TagInput extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if(nextProps.hasOwnProperty('value') && this.state.value != nextProps.value) {
-            this.setState({value: nextProps.value});
+            let nextValue = nextProps.value.map((t) => ({tag: t.tag}));
+
+            this.setState({value: nextValue});
         }
     }
 
@@ -67,11 +69,11 @@ export default class TagInput extends React.Component {
                 <AsyncComponent
                     className={className + ' ' + (has_error ? 'error' : '')}
                     multi={true}
-                    value={this.props.value}
+                    value={this.state.value}
                     onChange={this.handleChange}
                     loadOptions={this.getTags}
                     backspaceRemoves={true}
-                    valueKey="id"
+                    valueKey="tag"
                     labelKey="tag"
                 />
                 {has_error &&

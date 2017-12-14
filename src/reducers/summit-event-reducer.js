@@ -21,7 +21,11 @@ import
     EVENT_PUBLISHED,
     EVENT_DELETED,
     EVENT_VALIDATION
-} from '../actions/actions';
+} from '../actions/edit-summit-event-actions';
+
+import { LOGOUT_USER } from '../actions/auth-actions';
+import { SET_CURRENT_SUMMIT } from '../actions/summit-actions';
+import { UNPUBLISHED_EVENT } from '../actions/summit-builder-actions';
 
 export const DEFAULT_ENTITY = {
     id: 0,
@@ -35,8 +39,8 @@ export const DEFAULT_ENTITY = {
     start_date: '',
     end_date: '',
     level: 'N/A',
-    allow_feedback: 0,
-    to_record: 0,
+    allow_feedback: false,
+    to_record: false,
     feature_cloud: false,
     tags: [],
     sponsors: [],
@@ -48,7 +52,7 @@ export const DEFAULT_ENTITY = {
 }
 
 const DEFAULT_STATE = {
-    level_options: ['N/A', 'Beginner', 'Intermediate', 'Advanced' ],
+    levelOptions: ['N/A', 'Beginner', 'Intermediate', 'Advanced' ],
     entity: DEFAULT_ENTITY,
     errors: {}
 };
@@ -56,11 +60,25 @@ const DEFAULT_STATE = {
 const summitEventReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
-        case RESET_EVENT_FORM:
-            return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
-        case UPDATE_EVENT:
-            return {...state,  entity: {...payload} };
-        case RECEIVE_EVENT:
+        case LOGOUT_USER: {
+            // we need this in case the token expired while editing the form
+            if (payload.hasOwnProperty('persistStore')) {
+                return state;
+            } else {
+                return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
+            }
+        }
+        break;
+        case SET_CURRENT_SUMMIT:
+        case RESET_EVENT_FORM: {
+            return DEFAULT_STATE;
+        }
+        break;
+        case UPDATE_EVENT: {
+            return {...state,  entity: {...payload}, errors: {} };
+        }
+        break;
+        case RECEIVE_EVENT: {
             let entity = payload.response;
 
             for(var key in entity) {
@@ -68,15 +86,29 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
                     entity[key] = (entity[key] == null) ? '' : entity[key] ;
                 }
             }
-            return {...state,  entity: {...state.entity, ...entity} };
-        case EVENT_PUBLISHED:
+            return {...state, entity: {...state.entity, ...entity}, errors: {} };
+        }
+        break;
+        case EVENT_PUBLISHED: {
+            return {...state, entity: {...state.entity, is_published: true}, errors: {} };
+        }
+        break;
+        case UNPUBLISHED_EVENT: {
+            return {...state, entity: {...state.entity, is_published: false}, errors: {} };
+        }
+        break;
+        case EVENT_UPDATED: {
             return state;
-        case EVENT_UPDATED:
+        }
+        break;
+        case EVENT_ADDED: {
             return state;
-        case EVENT_ADDED:
-            return state;
-        case EVENT_VALIDATION:
+        }
+        break;
+        case EVENT_VALIDATION: {
             return {...state,  errors: payload.errors };
+        }
+        break;
         default:
             return state;
     }

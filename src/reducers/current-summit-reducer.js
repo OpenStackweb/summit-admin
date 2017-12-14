@@ -1,6 +1,5 @@
-import { SET_CURRENT_SUMMIT } from '../actions/actions';
 import{ LOGOUT_USER } from '../actions/auth-actions';
-import { RECEIVE_SUMMIT } from '../actions/summit-actions';
+import { SET_CURRENT_SUMMIT, RECEIVE_SUMMIT } from '../actions/summit-actions';
 
 const DEFAULT_STATE = {
     currentSummit: null

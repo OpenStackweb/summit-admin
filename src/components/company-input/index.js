@@ -12,10 +12,11 @@
  **/
 
 import React from 'react';
-import { OptionGroup } from './OptionGroup';
-import './optiongroup.less';
+import 'react-select/dist/react-select.css';
+import Select from 'react-select';
+import {queryCompanies} from '../../actions/edit-summit-event-actions';
 
-export default class GroupedDropdown extends React.Component {
+export default class CompanyInput extends React.Component {
 
     constructor(props) {
         super(props);
@@ -25,6 +26,7 @@ export default class GroupedDropdown extends React.Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
+        this.getCompanies = this.getCompanies.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -33,31 +35,38 @@ export default class GroupedDropdown extends React.Component {
         }
     }
 
-    handleChange(ev) {
+    handleChange(value) {
+        let ev = {target: {
+            id: this.props.id,
+            value: value,
+            type: 'companyinput'
+        }};
+
         this.props.onChange(ev);
     }
 
+    getCompanies (input) {
+        if (!input) {
+            return Promise.resolve({ options: [] });
+        }
+
+        return queryCompanies(input);
+    }
+
     render() {
-        let {id, options, placeholder} = this.props;
-        let {value} = this.state;
 
         return (
-            <select id={id} className="form-control" value={value} onChange={this.handleChange}>
-                <option value="" disabled>{placeholder}</option>
-                {options.map((opt,i) => {
-                    if (typeof opt.options != 'undefined') {
-                        return (
-                            <OptionGroup key={'group_opt_'+i} label={opt.label} value={opt.value} options={opt.options}/>
-                        );
-                    } else {
-                        return (
-                            <option key={opt.value} value={opt.value}>{opt.label}</option>
-                        );
-                    }
-                }
-
-                )}
-            </select>
+            <Select.Async
+                multi={this.props.multi}
+                value={this.state.value}
+                onChange={this.handleChange}
+                loadOptions={this.getCompanies}
+                backspaceRemoves={true}
+                valueKey="id"
+                labelKey="name"
+            />
         );
+
     }
 }
+
