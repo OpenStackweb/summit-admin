@@ -28,6 +28,7 @@ import
     RECEIVE_SCHEDULE_EVENTS_SEARCH_PAGE,
     CHANGE_CURRENT_ORDER_BY,
     RECEIVE_EMPTY_SPOTS,
+    CLEAR_EMPTY_SPOTS,
 } from '../actions/summit-builder-actions';
 
 import { LOGOUT_USER } from '../actions/auth-actions';
@@ -86,6 +87,10 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
         case RECEIVE_EMPTY_SPOTS:{
             let { data } = payload.response;
             return {...state, emptySpots : data};
+        }
+        break;
+        case CLEAR_EMPTY_SPOTS: {
+            return {...state, emptySpots : []};
         }
         break;
         case CHANGE_CURRENT_ORDER_BY:{

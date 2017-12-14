@@ -109,11 +109,38 @@
   width: 50%;
 }
 
-.unschedule-list, .schedule-list-search-results{
+.unschedule-list, .schedule-list-search-results, .empty-spots-list{
   list-style: none;
   width: 100%;
   li {
     margin-bottom: @event_spacing;
+  }
+}
+
+.empty-spots-list
+{
+  li {
+    .empty-spot {
+      background: gainsboro;
+      height: @event_initial_height;
+      cursor: pointer;
+      position: relative;
+      text-align: center;
+      vertical-align: middle;
+      padding-top: 2.4em;
+      .to {
+        padding-right: 10px;
+        font-weight: bold;
+      }
+      .from {
+        padding-right: 10px;
+        font-weight: bold;
+      }
+      .gap {
+        padding-right: 10px;
+        font-weight: bold;
+      }
+    }
   }
 }
 

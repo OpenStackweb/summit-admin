@@ -11,29 +11,40 @@
  * limitations under the License.
  **/
 import React from 'react';
+import moment from 'moment-timezone';
 
 class ScheduleAdminEmptySpotsList extends React.Component
 {
 
+
     render(){
 
-        let {emptySpots} = this.props;
+        let {emptySpots, currentSummit, onClickSpot } = this.props;
 
+        let emptySpotsItems = [];
+        let lastLocation    = null;
+        let idx             = 1;
+        for(let spot of emptySpots){
+            if(lastLocation == null || lastLocation.id != spot.location_id) {
+                lastLocation = currentSummit.locations.filter((location) => location.id == spot.location_id).shift();
+                emptySpotsItems.push(<li key={idx} className="empty-spot-location"><h2>{ lastLocation.name }</h2></li>)
+                ++idx;
+            }
+            let start_date = moment.tz(spot.start_date * 1000, currentSummit.time_zone.name);
+            let end_date   = moment.tz(spot.end_date * 1000, currentSummit.time_zone.name);
+
+            emptySpotsItems.push(<li key={idx}><div title="Click to navigate to empty spot ..." className="empty-spot" onClick={() => onClickSpot(spot)}>
+                From&nbsp;<span className="from">{start_date.format('YYYY-MM-DD hh:mm')}</span>
+                To&nbsp;<span className="to">{end_date.format('YYYY-MM-DD hh:mm')}</span>
+                &nbsp;-&nbsp;Empty Spot&nbsp;(<span className="gap">{spot.total_minutes} minutes</span>)
+            </div>
+            </li>);
+            ++idx;
+        }
 
         return (
-            <ul>
-                {
-                    emptySpots.map((spot, idx) => (
-                        <li>
-                            <div>
-                                {spot.location_id}
-                                {spot.start_date}
-                                {spot.end_date}
-                                {spot.total_minutes}
-                            </div>
-                        </li>
-                    ))
-                }
+            <ul className="empty-spots-list">
+                {emptySpotsItems}
             </ul>
         )
     }

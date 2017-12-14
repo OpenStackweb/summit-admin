@@ -8,7 +8,7 @@ class FragmentParser {
 
     convertToHash(strHash)
     {
-        strHash   = strHash.substr(1).toLowerCase();
+        strHash    = strHash.substr(1).toLowerCase();
         let params = strHash.split('&');
         let res = {};
         for(let param of params)
@@ -20,6 +20,11 @@ class FragmentParser {
             res[param[0]] = param[1];
         }
         return res;
+    }
+
+    clearParams(){
+        this.originalHash = '';
+        this.hash         = {};
     }
 
     getParam(key){
@@ -38,7 +43,16 @@ class FragmentParser {
             this.hash = this.convertToHash(this.originalHash);
         }
 
-        return this.hash;
+        return { ... this.hash };
+    }
+
+    deleteParam(param){
+        var hash    = this.getParams();
+        this.clearParams();
+        for(let key in hash) {
+            if(key == param) continue;
+            this.hash[key] = hash[key];
+        }
     }
 
     setParam(key, value){

@@ -29,6 +29,7 @@ class ScheduleAdminSearchFreeTextScheduleEvents extends React.Component {
     onClearClick(){
         this.searchTxt.value = "";
         this.doFiltering(this.searchTxt.value);
+        this.props.onClearClick();
     }
 
     doFiltering(term){

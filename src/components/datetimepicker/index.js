@@ -39,7 +39,7 @@ export default class DateTimePicker extends React.Component {
 
         let ev = {target: {
             id: this.props.id,
-            value: moment.tz(date.format('YYYY-MM-DD HH:mm:ss'), timezone),
+            value: date != null && moment.isMoment(date)? moment.tz(date.format('YYYY-MM-DD HH:mm:ss'), timezone) : '',
             type: 'datetime'
         }};
 

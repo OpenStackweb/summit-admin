@@ -20,6 +20,7 @@ export const CHANGE_CURRENT_ORDER_BY                      = 'CHANGE_CURRENT_ORDE
 export const UNPUBLISHED_EVENT                            = 'UNPUBLISHED_EVENT';
 export const RECEIVE_SCHEDULE_EVENTS_SEARCH_PAGE          = 'RECEIVE_SCHEDULE_EVENTS_SEARCH_PAGE';
 export const RECEIVE_EMPTY_SPOTS                          = 'RECEIVE_EMPTY_SPOTS';
+export const CLEAR_EMPTY_SPOTS                            = 'CLEAR_EMPTY_SPOTS';
 
 export const getUnScheduleEventsPage =
     (
@@ -277,7 +278,7 @@ export const getEmptySpots = (location, fromDate, toDate, gapSize) => (dispatch,
             `location_id==${location.id}`,
             `start_date>=${fromDate}`,
             `end_date<=${toDate}`,
-            `gap<=${gapSize}`,
+            `gap>=${gapSize}`,
         ]
     };
 
@@ -290,4 +291,8 @@ export const getEmptySpots = (location, fromDate, toDate, gapSize) => (dispatch,
         .then(() =>
             dispatch(stopLoading())
         );
+}
+
+export const clearEmptySpots = () => (dispatch, getState) => {
+    dispatch(createAction(CLEAR_EMPTY_SPOTS)());
 }

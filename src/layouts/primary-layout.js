@@ -13,12 +13,10 @@ import { withRouter } from 'react-router-dom'
 class PrimaryLayout extends React.Component {
 
     componentWillMount() {
-        let { getUserInfo, match } = this.props;
-        getUserInfo();
     }
 
     render(){
-        let { getUserInfo, match, currentSummit } = this.props;
+        let { match, currentSummit } = this.props;
         return(
             <div className="primary-layout">
                 <NavMenu currentSummit={currentSummit}/>

@@ -14,10 +14,17 @@
 import URI from "urijs"
 import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 
 class AuthorizationCallbackRoute extends React.Component {
 
+    constructor(props){
+        super(props);
+        // control variable to avoid double api call
+        this.accessTokenParsed = false;
+    }
     componentWillMount() {
+
     }
 
     extractToken() {
@@ -26,6 +33,11 @@ class AuthorizationCallbackRoute extends React.Component {
     }
 
     render() {
+        let { getUserInfo, history } = this.props;
+
+        if(this.accessTokenParsed) return null;
+
+
         let accessToken = this.extractToken();
         if(accessToken == undefined){
             return (
@@ -34,6 +46,8 @@ class AuthorizationCallbackRoute extends React.Component {
                 }} />
             )
         }
+
+        this.accessTokenParsed = true;
         this.props.onUserAuth(accessToken, "");
         let url              = URI( window.location.href);
         let query            = url.search(true);
@@ -50,13 +64,11 @@ class AuthorizationCallbackRoute extends React.Component {
         let backUrl = query.hasOwnProperty('BackUrl') ? query['BackUrl'] : '/app';
         backUrl     += `#${URI.buildQuery(fragment)}`;
 
-        return (
-            <Route render={ props => {
-                return <Redirect to={backUrl} />
-            }} />
-        )
+        getUserInfo(history, backUrl);
+
+        return null;
     }
 }
 
-export default AuthorizationCallbackRoute;
+export default withRouter(AuthorizationCallbackRoute);
 
