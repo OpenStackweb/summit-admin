@@ -13,6 +13,7 @@
 
 import React from 'react'
 import { connect } from 'react-redux';
+import T from "i18n-react/dist/i18n-react";
 import EventForm from '../components/event-form/event-form';
 import { getSummitById }  from '../actions/summit-actions';
 import '../styles/edit-summit-event-page.less';
@@ -80,7 +81,7 @@ class EditSummitEventPage extends React.Component {
 
         return(
             <div className="container">
-                <h3>Summit Event</h3>
+                <h3>{T.translate("titles.summit_event")}</h3>
                 <hr/>
                 {currentSummit &&
                 <EventForm

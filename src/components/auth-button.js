@@ -12,17 +12,23 @@
  **/
 
 import React from 'react'
+import T from 'i18n-react/dist/i18n-react'
 import { withRouter } from 'react-router-dom'
 
 const AuthButton = withRouter(({ history, isLoggedUser, doLogin, doLogout }) => (
     isLoggedUser ? (
         <div className="logout">
-            <button className="btn btn-default" onClick={() => { doLogout(); }}>Sign out</button>
+            <button className="btn btn-default" onClick={() => { doLogout(); }}>
+                {T.translate("titles.sign_out")}
+            </button>
         </div>
     ) : (
         <div className="login">
-            You are not logged in. Please log in to continue:<br/><br/>
-            <button className="btn btn-primary btn-lg" onClick={() => { doLogin(); }}>Log in</button>
+            {T.translate("titles.not_logged_in")}
+            <br/><br/>
+            <button className="btn btn-primary btn-lg" onClick={() => { doLogin(); }}>
+                {T.translate("titles.log_in")}
+            </button>
         </div>
     )
 ))

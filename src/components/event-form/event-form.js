@@ -12,6 +12,7 @@
  **/
 
 import React from 'react'
+import T from 'i18n-react/dist/i18n-react'
 import moment from 'moment-timezone'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import TextEditor from '../editor-input'
@@ -114,8 +115,21 @@ class EventForm extends React.Component {
 
         let start_date = this.getFormattedTime(entity.start_date).format('YYYY-MM-DD');
         let location_id = entity.location_id;
+        let event_id = entity.id;
 
-        history.push(`/app/summits/${currentSummit.id}/events/schedule#location_id=${location_id}&day=${start_date}`);
+        history.push(`/app/summits/${currentSummit.id}/events/schedule#location_id=${location_id}&day=${start_date}&event=${event_id}`);
+    }
+
+    handleEventLink(ev) {
+        let {entity} = this.state;
+        let {currentSummit, history} = this.props;
+
+        ev.preventDefault();
+
+        let event_id = entity.id;
+        let event_detail_url = currentSummit.schedule_event_detail_url.replace(':event_id',event_id).replace(':event_title','');
+
+        window.open(event_detail_url, '_blank');
     }
 
     isEventType(types) {
@@ -175,7 +189,7 @@ class EventForm extends React.Component {
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
                     <div className="col-md-9">
-                        <label> Title *</label>
+                        <label> {T.translate("titles.title")} *</label>
                         <Input
                             className="form-control"
                             error={this.hasErrors('title')}
@@ -185,13 +199,13 @@ class EventForm extends React.Component {
                         />
                     </div>
                     <div className="col-md-3 published">
-                        <label> Published </label>
+                        <label> {T.translate("titles.published")} </label>
                         <div><i className={"fa fa-2x " + (entity.is_published ? 'fa-check' : 'fa-times')}></i></div>
                     </div>
                 </div>
                 <div className="row form-group">
                     <div className="col-md-12">
-                        <label> Short Description / Abstract </label>
+                        <label> {T.translate("titles.short_description")} </label>
                         <TextEditor
                             id="description"
                             value={entity.description}
@@ -202,36 +216,36 @@ class EventForm extends React.Component {
                 </div>
                 <div className="row form-group">
                     <div className="col-md-12">
-                        <label> Social Summary </label>
+                        <label> {T.translate("titles.social_summary")} </label>
                         <textarea className="form-control" id="social_description" value={entity.social_description} onChange={this.handleChange} />
                     </div>
                 </div>
                 {this.isEventType('PresentationType') &&
                 <div className="row form-group">
                     <div className="col-md-12">
-                        <label> What can attendees expect to learn? </label>
+                        <label> {T.translate("titles.expect_to_learn")} </label>
                         <TextEditor id="attendees_expected_learnt" value={entity.attendees_expected_learnt} onChange={this.handleChange} />
                     </div>
                 </div>
                 }
                 <div className="row form-group">
                     <div className="col-md-4">
-                        <label> Head Count </label>
+                        <label> {T.translate("titles.head_count")} </label>
                         <input className="form-control" type="number" id="head_count" value={entity.head_count} onChange={this.handleChange} />
                     </div>
                     <div className="col-md-8">
-                        <label> RSVP Link </label>
+                        <label> {T.translate("titles.rsvp_link")} </label>
                         <input className="form-control" id="rsvp_link" value={entity.rsvp_link} onChange={this.handleChange} />
                     </div>
                 </div>
                 <div className="row form-group">
                     <div className="col-md-4">
-                        <label> Location </label>
+                        <label> {T.translate("titles.location")} </label>
                         <GroupedDropdown
                             id="location_id"
                             value={entity.location_id}
                             options={locations_ddl}
-                            placeholder="-- Select a Venue --"
+                            placeholder={T.translate("placeholders.select_venue")}
                             onChange={this.handleChange}
                             error={this.hasErrors('location_id')}
                         />
@@ -243,7 +257,7 @@ class EventForm extends React.Component {
                             validation={{after: currentSummit.start_date, before: currentSummit.end_date}}
                             format={{date:"YYYY-MM-DD", time: "HH:mm:ss"}}
                             value={this.getFormattedTime(entity.start_date)}
-                            inputProps={{placeholder: 'Start Date'}}
+                            inputProps={{placeholder: T.translate("placeholders.start_date")}}
                             timezone={currentSummit.time_zone.name}
                             error={this.hasErrors('start_date')}
                         />
@@ -255,7 +269,7 @@ class EventForm extends React.Component {
                             validation={{after: currentSummit.start_date, before: currentSummit.end_date}}
                             format={{date:"YYYY-MM-DD", time: "HH:mm:ss"}}
                             value={this.getFormattedTime(entity.end_date)}
-                            inputProps={{placeholder: 'End Date'}}
+                            inputProps={{placeholder: T.translate("placeholders.end_date")}}
                             timezone={currentSummit.time_zone.name}
                             error={this.hasErrors('end_date')}
                         />
@@ -263,35 +277,35 @@ class EventForm extends React.Component {
                 </div>
                 <div className="row form-group">
                     <div className="col-md-4">
-                        <label> Event Type *</label>
+                        <label> {T.translate("titles.event_type")} *</label>
                         <Dropdown
                             id="type_id"
                             value={entity.type_id}
                             onChange={this.handleChange}
-                            placeholder="-- Select a Type --"
+                            placeholder={T.translate("placeholders.select_event_type")}
                             options={event_types_ddl}
                             error={this.hasErrors('type_id')}
                         />
                     </div>
                     <div className="col-md-4">
-                        <label> Track *</label>
+                        <label> {T.translate("titles.track")} *</label>
                         <Dropdown
                             id="track_id"
                             value={entity.track_id}
                             onChange={this.handleChange}
-                            placeholder="-- Select a Track --"
+                            placeholder={T.translate("placeholders.select_track")}
                             options={tracks_ddl}
                             error={this.hasErrors('track_id')}
                         />
                     </div>
                     {this.isEventType('Presentation') &&
                     <div className="col-md-4">
-                        <label> Level </label>
+                        <label> {T.translate("titles.level")} </label>
                         <Dropdown
                             id="level"
                             value={entity.level}
                             onChange={this.handleChange}
-                            placeholder="-- Select a Level --"
+                            placeholder={T.translate("placeholders.select_level")}
                             options={levels_ddl}
                         />
                     </div>
@@ -299,36 +313,36 @@ class EventForm extends React.Component {
                 </div>
                 <div className="row form-group">
                     <div className="col-md-4">
-                        <label> Feedback </label>
+                        <label> {T.translate("titles.feedback")} </label>
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="allow_feedback" checked={entity.allow_feedback} onChange={this.handleChange} className="form-check-input" />
-                            <label className="form-check-label" htmlFor="allow_feedback"> Allow feedback ? </label>
+                            <label className="form-check-label" htmlFor="allow_feedback"> {T.translate("titles.allow_feedback")} </label>
                         </div>
                     </div>
                     {this.isEventType('PresentationType') &&
                     <div className="col-md-4">
-                        <label> Recording </label>
+                        <label> {T.translate("titles.recording")} </label>
                         <div className="form-check abc-checkbox">
                             <input id="to_record" onChange={this.handleChange} checked={entity.to_record} className="form-check-input" type="checkbox" />
-                            <label className="form-check-label" htmlFor="to_record"> To record ? </label>
+                            <label className="form-check-label" htmlFor="to_record"> {T.translate("titles.to_record")} </label>
                         </div>
                     </div>
                     }
                     <div className="col-md-4">
-                        <label> Does this talk feature an OpenStack cloud? </label><br/>
+                        <label> {T.translate("titles.feature_os_cloud")} </label><br/>
                         <div className="form-check abc-radio radio-inline">
                             <input checked={entity.feature_cloud} onChange={this.handleChange} name="feature_cloud" id="feature_cloud_1" value={1} className="form-check-input" type="radio" />
-                            <label className="form-check-label" htmlFor="feature_cloud_1"> Yes </label>
+                            <label className="form-check-label" htmlFor="feature_cloud_1"> {T.translate("titles.yes")} </label>
                         </div>
                         <div className="form-check abc-radio radio-inline" style={{marginLeft: '100px'}}>
                             <input checked={!entity.feature_cloud} onChange={this.handleChange} name="feature_cloud" id="feature_cloud_2" value={0} className="form-check-input" type="radio" />
-                            <label className="form-check-label" htmlFor="feature_cloud_2"> No </label>
+                            <label className="form-check-label" htmlFor="feature_cloud_2"> {T.translate("titles.no")} </label>
                         </div>
                     </div>
                 </div>
                 <div className="row form-group">
                     <div className="col-md-12">
-                        <label> Tags </label>
+                        <label> {T.translate("titles.tags")} </label>
                         <TagInput
                             id="tags"
                             value={entity.tags}
@@ -341,7 +355,7 @@ class EventForm extends React.Component {
                 {this.isEventType('Presentation') &&
                 <div className="row form-group">
                     <div className="col-md-12">
-                        <label> Sponsors </label>
+                        <label> {T.translate("titles.sponsors")} </label>
                         <CompanyInput
                             id="sponsors"
                             value={entity.sponsors}
@@ -355,7 +369,7 @@ class EventForm extends React.Component {
                 {this.isEventType('PresentationType') &&
                 <div className="row form-group">
                     <div className="col-md-12">
-                        <label> Speakers </label>
+                        <label> {T.translate("titles.speakers")} </label>
                         <SpeakerInput
                             id="speakers"
                             value={entity.speakers}
@@ -369,7 +383,7 @@ class EventForm extends React.Component {
                 {this.isEventType(['Keynotes', 'Panel']) &&
                 <div className="row form-group">
                     <div className="col-md-12">
-                        <label> Moderator </label>
+                        <label> {T.translate("titles.moderator")} </label>
                         <SpeakerInput
                             id="moderator"
                             value={entity.moderator}
@@ -383,7 +397,7 @@ class EventForm extends React.Component {
                 {this.isEventType('Fishbowl') &&
                 <div className="row form-group">
                     <div className="col-md-12">
-                        <label> Discussion Leader </label>
+                        <label> {T.translate("titles.discussion_leader")} </label>
                         <SpeakerInput
                             id="moderator"
                             value={entity.moderator}
@@ -397,7 +411,7 @@ class EventForm extends React.Component {
                 {this.isEventType('Groups Events') &&
                 <div className="row form-group">
                     <div className="col-md-12">
-                        <label> Groups </label>
+                        <label> {T.translate("titles.groups")} </label>
                         <GroupInput
                             id="groups"
                             value={entity.groups}
@@ -412,7 +426,7 @@ class EventForm extends React.Component {
                 {this.isEventType('SummitEventType') &&
                 <div className="row form-group">
                     <div className="col-md-12">
-                        <label> Attachment </label>
+                        <label> {T.translate("titles.attachment")} </label>
                         <UploadInput
                             value={entity.attachment}
                             handleUpload={this.handleUploadFile}
@@ -430,22 +444,24 @@ class EventForm extends React.Component {
                         {!entity.is_published &&
                         <div>
                             <input type="button" onClick={this.handleSubmit.bind(this, false)}
-                                   className="btn btn-primary pull-right" value="Save"/>
+                                   className="btn btn-primary pull-right" value={T.translate("titles.save")}/>
                             <input type="button" onClick={this.handleSubmit.bind(this, true)}
-                                className="btn btn-success pull-right" value="Save & Publish" />
+                                className="btn btn-success pull-right" value={T.translate("titles.save_and_publish")} />
                         </div>
                         }
 
                         {entity.is_published &&
                         <div>
                             <input type="button" onClick={this.handleSubmit.bind(this, true)}
-                                   className="btn btn-success pull-right" value="Save & Publish" />
+                                   className="btn btn-success pull-right" value={T.translate("titles.save_and_publish")} />
                             <input type="button" onClick={this.handleUnpublish.bind(this)}
-                                   className="btn btn-danger pull-right" value="Unpublish"/>
+                                   className="btn btn-danger pull-right" value={T.translate("titles.unpublish")}/>
                             <input type="button"
                                    onClick={this.handleScheduleLink.bind(this)}
-                                   className="btn btn-default pull-left" value="Got to Calendar"/>
-                            <input type="button" className="btn btn-default pull-left" value="View Event" disabled/>
+                                   className="btn btn-default pull-left" value={T.translate("titles.go_to_calendar")}/>
+                            <input type="button"
+                                   onClick={this.handleEventLink.bind(this)}
+                                   className="btn btn-default pull-left" value={T.translate("titles.view_event")}/>
                         </div>
                         }
 

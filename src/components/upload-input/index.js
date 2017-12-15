@@ -13,6 +13,7 @@
 
 import React from 'react';
 import Dropzone from 'react-dropzone';
+import T from 'i18n-react/dist/i18n-react';
 import './upload.less';
 
 export default class UploadInput extends React.Component {
@@ -45,7 +46,7 @@ export default class UploadInput extends React.Component {
                     onDrop={this.onImageDrop.bind(this)}
                     {...rest}
                 >
-                    <div>Drop images or click to select files to upload.</div>
+                    <div>{T.translate("titles.drop_files")}</div>
                 </Dropzone>
                 <div className="selected-files-box col-md-6">
                     <p>Selected Files</p>
@@ -56,7 +57,7 @@ export default class UploadInput extends React.Component {
                             <a href={value} target="_blank">link</a>
                             {this.state.show_veil &&
                             <div className="veil">
-                                <p onClick={handleRemove}>Remove</p>
+                                <p onClick={handleRemove}>{T.translate("titles.remove")}</p>
                             </div>
                             }
                         </div>

@@ -63,7 +63,7 @@ class App extends React.PureComponent {
                     <AjaxLoader show={ this.props.loading } size={ 120 }/>
                     <div className="header">
                         <div className="text-center">
-                            <h1>OpenStack Summit Admin</h1>
+                            <h1>{T.translate("titles.os_summit_admin")}</h1>
                             <AuthButton isLoggedUser={isLoggedUser} doLogin={this.onClickLogin.bind(this)} doLogout={doLogout}/>
                         </div>
                     </div>
