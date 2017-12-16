@@ -17,7 +17,8 @@
     "search_published"                    : "Search for Published Events ...",
     "select_order_by"                     : "Select Order By ...",
     "start_date"                          : "Start Date",
-    "end_date"                            : "End Date"
+    "end_date"                            : "End Date",
+    "search_speakers"                     : "Search Speakers by Name or Email"
   },
   "titles":
   {
@@ -30,8 +31,8 @@
     "save_and_publish"    : "Save & Publish",
     "unpublish"           : "Unpublish",
     "os_summit_admin"     : "OpenStack Summit Admin",
-    "sign_out"            : "Log in",
-    "log_in"              : "Sign out",
+    "sign_out"            : "Sign out",
+    "log_in"              : "Log in",
     "not_logged_in"       : "You are not logged in. Please log in to continue:",
     "refresh"             : "Refresh",
     "directory"           : "Directory",
@@ -67,6 +68,13 @@
     "attachment"          : "Attachment",
     "go_to_calendar"      : "Go to Calendar",
     "view_event"          : "View Event",
-    "drop_files"          : "Drop images or click to select files to upload."
+    "drop_files"          : "Drop images or click to select files to upload.",
+    "speaker_list"        : "Speaker List",
+    "name"                : "Name",
+    "email"               : "Email",
+    "member_id"           : "Member Id",
+    "registration_code"   : "Registration Code",
+    "on_site_phone"       : "On Site Phone",
+    "presentations"       : "Presentations"
   }
 }
