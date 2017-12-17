@@ -255,7 +255,7 @@ class EventForm extends React.Component {
                             id="start_date"
                             onChange={this.handleChange}
                             validation={{after: currentSummit.start_date, before: currentSummit.end_date}}
-                            format={{date:"YYYY-MM-DD", time: "HH:mm:ss"}}
+                            format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                             value={this.getFormattedTime(entity.start_date)}
                             inputProps={{placeholder: T.translate("placeholders.start_date")}}
                             timezone={currentSummit.time_zone.name}
@@ -267,7 +267,7 @@ class EventForm extends React.Component {
                             id="end_date"
                             onChange={this.handleChange}
                             validation={{after: currentSummit.start_date, before: currentSummit.end_date}}
-                            format={{date:"YYYY-MM-DD", time: "HH:mm:ss"}}
+                            format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                             value={this.getFormattedTime(entity.end_date)}
                             inputProps={{placeholder: T.translate("placeholders.end_date")}}
                             timezone={currentSummit.time_zone.name}
