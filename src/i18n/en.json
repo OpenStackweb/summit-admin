@@ -6,10 +6,6 @@
     "empty_list"                : "there not are any item that match your criteria.",
     "empty_list_schedule_events": "Please select a Day and a Location ..."
   },
-  "messages": {
-    "bulk_events_update_success" : "Events saved successfully.",
-    "bulk_events_update_publish_success": "Events saved and published successfully."
-  },
   "placeholders":{
     "select_day"                          : "Select a Summit Day ...",
     "select_venue"                        : "Select a Summit Venue ...",
@@ -79,12 +75,28 @@
     "member_id"           : "Member Id",
     "registration_code"   : "Registration Code",
     "on_site_phone"       : "On Site Phone",
-    "presentations"       : "Presentations",
-    "bulk_actions_title": "Summit Event Bulk Actions",
-    "bulk_actions_event_id": "Event Id",
-    "bulk_actions_event_name": "Event Title",
-    "bulk_actions_event_location": "Event Location",
-    "bulk_actions_event_start_date": "Start Date",
-    "bulk_actions_event_end_date": "End Date"
+    "presentations"       : "Presentations"
+  },
+  "bulk_actions_page": {
+    "title": "Summit Event Bulk Actions",
+    "event_id_label" : "Event Id",
+    "event_name_label": "Event Title",
+    "event_location_label": "Event Location",
+    "event_start_date_label": "Start Date",
+    "event_end_date_label": "End Date",
+    "btn_apply_changes": "Apply Changes",
+    "btn_apply_publish_changes": "Apply And Publish Changes",
+    "messages": {
+      "update_success" : "Events saved successfully.",
+      "update_publish_success": "Events saved and published successfully."
+    },
+    "placeholders":{
+      "event_title": "Enter event title",
+      "start_date": "Enter start date",
+      "end_date": "Enter end date"
+    },
+    "titles": {
+      "view_event": "View Event"
+    }
   }
 }

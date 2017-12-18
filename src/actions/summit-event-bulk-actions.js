@@ -64,7 +64,7 @@ export const updateEvents = (summitId, events) =>  (dispatch, getState) => {
     let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
     dispatch(startLoading());
-    let success_message = ['Done!', T.translate("messages.bulk_events_update_success") , 'success'];
+    let success_message = ['Done!', T.translate("bulk_actions_page.messages.update_success") , 'success'];
     putRequest(
         null,
         createAction(UPDATED_REMOTE_EVENTS)({}),
@@ -85,26 +85,30 @@ export const updateEvents = (summitId, events) =>  (dispatch, getState) => {
                 dispatch(stopLoading());
                 dispatch(showMessage(...success_message))
             }
-        );
+        )
+        .catch(()=> {
+            console.log("ERROR");
+        });
 }
 
 export const updateAndPublishEvents = (summitId, events) =>  (dispatch, getState) => {
     let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
     dispatch(startLoading());
-    let success_message = ['Done!', T.translate("messages.bulk_events_update_publish_success") , 'success'];
+    let success_message = ['Done!', T.translate("bulk_actions_page.messages.update_publish_success") , 'success'];
+    events = events.map((event) => ({
+        id:event.id,
+        title:event.title,
+        location_id:event.location_id,
+        start_date:event.start_date,
+        end_date:event.end_date,
+    }))
     putRequest(
         null,
         createAction(UPDATED_REMOTE_EVENTS)({}),
         `${apiBaseUrl}/api/v1/summits/${summitId}/events/?access_token=${accessToken}`,
         {
-            events: events.map((event) => ({
-                id:event.id,
-                title:event.title,
-                location_id:event.location_id,
-                start_date:event.start_date,
-                end_date:event.end_date,
-            }))
+            events
         },
         authErrorHandler
     )({})(dispatch)

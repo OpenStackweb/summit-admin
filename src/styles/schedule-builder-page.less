@@ -266,6 +266,7 @@
   left:95%;
   cursor: pointer;
   padding-top: 10px;
+  z-index: @event_z_index + 1;
 }
 
 .edit-published-event-btn{
@@ -273,6 +274,7 @@
   left:92%;
   cursor: pointer;
   padding-top: 10px;
+  z-index: @event_z_index + 1;
 }
 
 .edit-unpublished-event-btn{
@@ -304,4 +306,22 @@
 
 .modal{
   z-index: @event_z_index + 6 !important;
+}
+
+.ajax-loader-container{
+  z-index: @event_z_index + 10 !important;
+}
+.bulk-actions-editor-container {
+  margin: 1em;
+  padding: 1em;
+  background-color: #FFFFFF;
+  .col-title{
+    font-weight: bold;
+    padding: 1em;
+  }
+  .col-form-buttons {
+    button {
+      margin-right: 10px;
+    }
+  }
 }

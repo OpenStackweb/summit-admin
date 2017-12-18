@@ -10,7 +10,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-
 import React from 'react'
 import {connect} from "react-redux"
 import URI from "urijs"
@@ -49,8 +48,8 @@ class SummitEventsBulkActionsPage extends React.Component {
         if(currentSummit == null) return null;
 
         return (
-            <div>
-                <h2>{T.translate("titles.bulk_actions_title")}</h2>
+            <div className="bulk-actions-editor-container">
+                <h2>{T.translate("bulk_actions_page.title")}</h2>
                 <SummitEventBulkEditorForm
                     events={events}
                     currentSummit={currentSummit}
@@ -60,6 +59,7 @@ class SummitEventsBulkActionsPage extends React.Component {
                     updateEventEndDateLocal={updateEventEndDateLocal}
                     updateEvents={updateEvents}
                     updateAndPublishEvents={updateAndPublishEvents}
+                    history={this.props.history}
                 ></SummitEventBulkEditorForm>
             </div>
         );

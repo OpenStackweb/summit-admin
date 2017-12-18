@@ -25,9 +25,12 @@ class SummitEventBulkEditorForm extends React.Component
         this.onTitleChanged           = this.onTitleChanged.bind(this);
         this.onStartDateChanged       = this.onStartDateChanged.bind(this);
         this.onEndDateChanged         = this.onEndDateChanged.bind(this);
+        this.onSelectedEvent          = this.onSelectedEvent.bind(this);
     }
 
-    onApplyChanges(){
+    onApplyChanges(evt){
+        evt.stopPropagation();
+        evt.preventDefault();
         let {currentSummit, events }  = this.props;
         let invalidEvents = events.filter((event) => !event.is_valid);
         if(invalidEvents.length > 0){
@@ -36,7 +39,9 @@ class SummitEventBulkEditorForm extends React.Component
         this.props.updateEvents(currentSummit.id, events);
     }
 
-    onApplyChangesAndPublish(){
+    onApplyChangesAndPublish(evt){
+        evt.stopPropagation();
+        evt.preventDefault();
         let {currentSummit, events }  = this.props;
         let invalidEvents = events.filter((event) => !event.is_valid);
         if(invalidEvents.length > 0){
@@ -47,6 +52,7 @@ class SummitEventBulkEditorForm extends React.Component
 
     onLocationChanged(idx, location, isValid) {
         let { events } = this.props;
+        if(location == null) return;
         this.props.updateEventLocationLocal(events[idx], location, isValid);
     }
 
@@ -65,11 +71,20 @@ class SummitEventBulkEditorForm extends React.Component
         this.props.updateEventEndDateLocal(events[idx], endDate, isValid)
     }
 
+    onSelectedEvent(event){
+        let { currentSummit} = this.props;
+        this.props.history.push(`/app/summits/${currentSummit.id}/events/${event.id}`);
+        return false;
+    }
+
     render(){
         let { events, currentSummit} = this.props;
         if(!currentSummit) return null;
+        let tbaLocation = { id: 0, name:'TBA'};
+        let venuesOptions = [
+            { value:tbaLocation, label: tbaLocation.name }
+        ];
 
-        let venuesOptions = [];
         for(let i = 0; i < currentSummit.locations.length; i++) {
             let location = currentSummit.locations[i];
             if (location.class_name != "SummitVenue") continue;
@@ -83,11 +98,11 @@ class SummitEventBulkEditorForm extends React.Component
         return (
             <form>
                 <div className="row">
-                    <div className="col-md-1">{T.translate("titles.bulk_actions_event_id")}</div>
-                    <div className="col-md-4">{T.translate("titles.bulk_actions_event_name")}</div>
-                    <div className="col-md-2">{T.translate("titles.bulk_actions_event_location")}</div>
-                    <div className="col-md-2">{T.translate("titles.bulk_actions_event_start_date")}</div>
-                    <div className="col-md-2">{T.translate("titles.bulk_actions_event_end_date")}</div>
+                    <div className="col-md-1 col-title">{T.translate("bulk_actions_page.event_id_label")}</div>
+                    <div className="col-md-4 col-title">{T.translate("bulk_actions_page.event_name_label")}</div>
+                    <div className="col-md-2 col-title">{T.translate("bulk_actions_page.event_location_label")}</div>
+                    <div className="col-md-2 col-title">{T.translate("bulk_actions_page.event_start_date_label")}</div>
+                    <div className="col-md-2 col-title">{T.translate("bulk_actions_page.event_end_date_label")}</div>
                 </div>
                 {
                     events.map((event, idx) => (
@@ -101,11 +116,16 @@ class SummitEventBulkEditorForm extends React.Component
                             onTitleChanged={this.onTitleChanged}
                             onStartDateChanged={this.onStartDateChanged}
                             onEndDateChanged={this.onEndDateChanged}
+                            onSelectedEvent={this.onSelectedEvent}
                         ></SummitEventBulkEditorItem>
                     ))
                 }
-                <Button onClick={this.onApplyChanges}>Apply Changes</Button>
-                <Button onClick={this.onApplyChangesAndPublish}>Apply And Publish Changes</Button>
+                <div className="row">
+                    <div className="col-md-12 col-form-buttons">
+                        <button className="btn btn-primary pull-left" onClick={this.onApplyChanges}>{T.translate("bulk_actions_page.btn_apply_changes")}</button>
+                        <button className="btn btn-success pull-left" onClick={this.onApplyChangesAndPublish}>{T.translate("bulk_actions_page.btn_apply_publish_changes")}</button>
+                    </div>
+                </div>
             </form>
         )
     }

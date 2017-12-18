@@ -15,6 +15,7 @@ import { FormGroup, FormControl } from 'react-bootstrap';
 import DateTimePicker from '../datetimepicker'
 import moment from "moment-timezone";
 import ScheduleAdminVenueSelector from '../schedule-builder/schedule-admin-venue-selector';
+import T from 'i18n-react/dist/i18n-react'
 
 class SummitEventBulkEditorItem extends React.Component
 {
@@ -25,6 +26,13 @@ class SummitEventBulkEditorItem extends React.Component
         this.handleChangeDateTo   = this.handleChangeDateTo.bind(this);
         this.onTitleChanged       = this.onTitleChanged.bind(this);
         this.onLocationChanged    = this.onLocationChanged.bind(this);
+        this.onSelectedEvent      = this.onSelectedEvent.bind(this);
+    }
+
+    onSelectedEvent(evt){
+        evt.stopPropagation();
+        evt.preventDefault();
+        this.props.onSelectedEvent(this.props.event);
     }
 
     getFormattedTime(atime) {
@@ -93,7 +101,8 @@ class SummitEventBulkEditorItem extends React.Component
     }
 
     onLocationChanged(location){
-        this.props.onLocationChanged(this.props.index, location, true);
+        let isValid = location == null ? false:true;
+        this.props.onLocationChanged(this.props.index, location, isValid);
     }
 
     render(){
@@ -105,13 +114,13 @@ class SummitEventBulkEditorItem extends React.Component
         return (
             <div className="row event-bulk-editor-item">
                 <div className="col-md-1">
-                    <a className="event-edit" href="#">{event.id}</a>
+                    <a className="event-edit" title={T.translate("bulk_actions_page.titles.view_event")} onClick={this.onSelectedEvent} href="#">{event.id}</a>
                 </div>
                 <div className="col-md-4">
                     <FormGroup validationState={this.getValidationEventTitle()}>
                         <FormControl
                             type="text"
-                            placeholder="Enter Event Title"
+                            placeholder={T.translate("bulk_actions_page.placeholders.event_title")}
                             onChange={this.onTitleChanged}
                             defaultValue={event.title}
                         />
@@ -133,7 +142,7 @@ class SummitEventBulkEditorItem extends React.Component
                         <DateTimePicker
                             id="start_date"
                             format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                            inputProps={{placeholder: 'Start Date'}}
+                            inputProps={{placeholder: T.translate("bulk_actions_page.placeholders.start_date")}}
                             timezone={currentSummit.time_zone.name}
                             timeConstraints={{ hours: { min: 7, max: 22}}}
                             validation={{after: currenSummitStartDate.valueOf()/1000, before: currenSummitEndDate.valueOf()/1000}}
@@ -149,7 +158,7 @@ class SummitEventBulkEditorItem extends React.Component
                             id="end_date"
                             format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                             timeConstraints={{ hours: { min: 7, max: 22}}}
-                            inputProps={{placeholder: 'End Date'}}
+                            inputProps={{placeholder: T.translate("bulk_actions_page.placeholders.end_date")}}
                             timezone={currentSummit.time_zone.name}
                             validation={{after: currenSummitStartDate.valueOf()/1000, before: currenSummitEndDate.valueOf()/1000}}
                             onChange={this.handleChangeDateTo}
