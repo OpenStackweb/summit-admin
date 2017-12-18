@@ -32,7 +32,7 @@ export const getSpeakers = ( term = null, page = 1, perPage = 10, order = 'id', 
     // order
     if(order != null && orderDir != null){
         orderDir = (orderDir == '1') ? '+' : '-';
-        //params['order']= `${orderDir}${order}`;
+        params['order']= `${orderDir}${order}`;
     }
 
 

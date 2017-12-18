@@ -42,7 +42,9 @@ const speakerReducer = (state = DEFAULT_STATE, action) => {
             let speakers = payload.response.data.map(s => ({
                 ...s,
                 name: s.first_name + ' ' + s.last_name,
-                presentation_count: Object.keys(s.presentations).length
+                presentation_count: Object.keys(s.presentations).length,
+                on_site_phone: (s.hasOwnProperty('summit_assistance') ? s.summit_assistance.on_site_phone : ''),
+                registration_code: (s.hasOwnProperty('registration_code') ? s.registration_code.code : '')
             }))
 
             return {...state, speakers: speakers, currentPage: current_page, totalSpeakers: total, lastPage: last_page };
