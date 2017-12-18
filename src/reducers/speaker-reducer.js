@@ -13,41 +13,70 @@
 
 import
 {
-    RECEIVE_SPEAKERS
+    RECEIVE_SPEAKER,
+    RESET_SPEAKER_FORM,
+    UPDATE_SPEAKER,
+    SPEAKER_UPDATED,
+    SPEAKER_VALIDATION
 } from '../actions/speaker-actions';
 
 import { LOGOUT_USER } from '../actions/auth-actions';
 import { SET_CURRENT_SUMMIT } from '../actions/summit-actions';
 
+export const DEFAULT_ENTITY = {
+    id: 0,
+    title: '',
+    first_name: '',
+    last_name: '',
+    member_id: 0,
+    email: '',
+    twitter: '',
+    irc: '',
+    bio: '',
+    pic: '',
+    presentations: [],
+    registration_code: {},
+    summit_assistance: {}
+}
+
 const DEFAULT_STATE = {
-    speakers        : {},
-    term            : null,
-    order           : null,
-    orderDir        : null,
-    currentPage     : 1,
-    lastPage        : 1,
-    perPage         : 10,
-    totalSpeakers   : 0
+    entity: DEFAULT_ENTITY,
+    errors: {}
 };
 
 const speakerReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
         case LOGOUT_USER: {
+            return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
+        }
+        break;
+        case SET_CURRENT_SUMMIT:
+        case RESET_SPEAKER_FORM: {
+            return DEFAULT_STATE;
+        }
+        break;
+        case UPDATE_SPEAKER: {
+            return {...state,  entity: {...payload}, errors: {} };
+        }
+        break;
+        case RECEIVE_SPEAKER: {
+            let entity = payload.response;
+
+            for(var key in entity) {
+                if(entity.hasOwnProperty(key)) {
+                    entity[key] = (entity[key] == null) ? '' : entity[key] ;
+                }
+            }
+            return {...state, entity: {...state.entity, ...entity}, errors: {} };
+        }
+        break;
+        case SPEAKER_UPDATED: {
             return state;
         }
         break;
-        case RECEIVE_SPEAKERS: {
-            let {current_page, total, last_page} = payload.response;
-            let speakers = payload.response.data.map(s => ({
-                ...s,
-                name: s.first_name + ' ' + s.last_name,
-                presentation_count: Object.keys(s.presentations).length,
-                on_site_phone: (s.hasOwnProperty('summit_assistance') ? s.summit_assistance.on_site_phone : ''),
-                registration_code: (s.hasOwnProperty('registration_code') ? s.registration_code.code : '')
-            }))
-
-            return {...state, speakers: speakers, currentPage: current_page, totalSpeakers: total, lastPage: last_page };
+        case SPEAKER_VALIDATION: {
+            return {...state,  errors: payload.errors };
         }
         break;
         default:

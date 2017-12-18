@@ -18,6 +18,7 @@ import currentSummitReducer from './reducers/current-summit-reducer';
 import directoryReducer from './reducers/directory-reducer';
 import scheduleBuilderReducer from './reducers/schedule-builder-reducer';
 import summitEventReducer from './reducers/summit-event-reducer';
+import speakerListReducer from './reducers/speaker-list-reducer';
 import speakerReducer from './reducers/speaker-reducer';
 import summitEventBulkActionReducer from './reducers/summit-event-bulk-actions-reducer';
 import thunk from 'redux-thunk';
@@ -36,6 +37,7 @@ const reducers = persistCombineReducers(config, {
     currentSummitState: currentSummitReducer,
     currentScheduleBuilderState: scheduleBuilderReducer,
     currentSummitEventState: summitEventReducer,
+    currentSpeakerListState: speakerListReducer,
     currentSpeakerState: speakerReducer,
     summitEventsBulkActionsState: summitEventBulkActionReducer,
 })

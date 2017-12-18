@@ -18,7 +18,7 @@ import { Pagination } from 'react-bootstrap';
 import FreeTextSearch from "../components/free-text-search/index";
 import Table from "../components/table/Table";
 import { getSummitById }  from '../actions/summit-actions';
-import { getSpeakers} from "../actions/speaker-actions";
+import { getSpeakers } from "../actions/speaker-actions";
 
 class SummitSpeakerListPage extends React.Component {
 
@@ -131,9 +131,9 @@ class SummitSpeakerListPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentSpeakerState }) => ({
+const mapStateToProps = ({ currentSummitState, currentSpeakerListState }) => ({
     currentSummit   : currentSummitState.currentSummit,
-    ...currentSpeakerState
+    ...currentSpeakerListState
 })
 
 export default connect (

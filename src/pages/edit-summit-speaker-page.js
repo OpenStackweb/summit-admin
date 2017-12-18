@@ -13,25 +13,73 @@
 
 import React from 'react'
 import { connect } from 'react-redux';
+import SpeakerForm from '../components/speaker-form/speaker-form';
+import { getSummitById }  from '../actions/summit-actions';
+import { getSpeaker, resetSpeakerForm, saveSpeaker, attachPicture } from "../actions/speaker-actions";
 
 class EditSummitSpeakerPage extends React.Component {
-    render(){
+
+    constructor(props) {
+        super(props);
+
+        //this.handleEdit = this.handleEdit.bind(this);
+
+        this.state = {}
+    }
+
+
+    componentWillMount () {
+        let summitId = this.props.match.params.summit_id;
         let {currentSummit} = this.props;
+
+        if(currentSummit == null){
+            this.props.getSummitById(summitId);
+        }
+    }
+
+    componentDidMount () {
+        let {currentSummit, entity, errors} = this.props;
+        let speakerId = this.props.match.params.speaker_id;
+
+        if(currentSummit != null) {
+            this.props.getSpeaker(speakerId);
+        }
+    }
+
+    render(){
+        let {currentSummit, entity, errors} = this.props;
+
         return(
-            <div>
-                <h1>Edit Speaker</h1>
+            <div className="container">
+                <h3>Edit Speaker</h3>
+                <hr/>
+                {currentSummit &&
+                <SpeakerForm
+                    history={this.props.history}
+                    currentSummit={currentSummit}
+                    entity={entity}
+                    errors={errors}
+                    onSubmit={this.props.saveSpeaker}
+                    onAttach={this.props.attachPicture}
+                />
+                }
             </div>
         )
     }
 }
 
-const mapStateToProps = ({ currentSummitState }) => ({
+const mapStateToProps = ({ currentSummitState, currentSpeakerState }) => ({
     currentSummit : currentSummitState.currentSummit,
+    ...currentSpeakerState
 })
 
 export default connect (
     mapStateToProps,
     {
-
+        getSummitById,
+        getSpeaker,
+        resetSpeakerForm,
+        saveSpeaker,
+        attachPicture
     }
 )(EditSummitSpeakerPage);
