@@ -9,6 +9,7 @@ export const RECEIVE_UNSCHEDULE_EVENTS_PAGE               = 'RECEIVE_UNSCHEDULE_
 export const REQUEST_SCHEDULE_EVENTS_PAGE                 = 'REQUEST_SCHEDULE_EVENTS_PAGE';
 export const RECEIVE_SCHEDULE_EVENTS_PAGE                 = 'RECEIVE_SCHEDULE_EVENTS_PAGE';
 export const REQUEST_PUBLISH_EVENT                        = 'REQUEST_PUBLISH_EVENT';
+export const ERROR_PUBLISH_EVENT                          = 'ERROR_PUBLISH_EVENT';
 export const CHANGE_CURRENT_DAY                           = 'CHANGE_CURRENT_DAY';
 export const CHANGE_CURRENT_LOCATION                      = 'CHANGE_CURRENT_LOCATION';
 export const CHANGE_CURRENT_EVENT_TYPE                    = 'CHANGE_CURRENT_EVENT_TYPE';
@@ -115,11 +116,15 @@ export const publishEvent = (event, day, startTime, minutes) =>
             },
             authErrorHandler
         )({})(dispatch)
-            .then(
+        .then(
             () => {
                 dispatch(stopLoading())
             }
-        );
+        )
+        .catch(() => {
+                if(event.is_published)
+                    dispatch(createAction(ERROR_PUBLISH_EVENT)({event}));
+        });
 
 }
 

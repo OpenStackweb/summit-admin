@@ -58,7 +58,7 @@ export default class DateTimePicker extends React.Component {
             let beforeDate = moment.tz(compareDateBefore * 1000, timezone);
             let afterDate  = moment.tz(compareDateAfter * 1000, timezone);
 
-            return selectedDate.isAfter(afterDate) && selectedDate.isBefore(beforeDate);
+            return ( selectedDate.isAfter(afterDate) || selectedDate.isSame(afterDate) )  && ( selectedDate.isBefore(beforeDate) || selectedDate.isSame(beforeDate));
         }
     }
 

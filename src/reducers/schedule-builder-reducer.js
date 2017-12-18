@@ -29,6 +29,7 @@ import
     CHANGE_CURRENT_ORDER_BY,
     RECEIVE_EMPTY_SPOTS,
     CLEAR_EMPTY_SPOTS,
+    ERROR_PUBLISH_EVENT,
 } from '../actions/summit-builder-actions';
 
 import { LOGOUT_USER } from '../actions/auth-actions';
@@ -187,11 +188,20 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
                 ],
                 unScheduleEvents
             };
+        break;
+        case ERROR_PUBLISH_EVENT:
+            // force update of schedule events ...
+            return {...state,
+                scheduleEvents: [...state.scheduleEvents],
+            };
+            break;
         case LOGOUT_USER:
         case SET_CURRENT_SUMMIT:
             return DEFAULT_STATE;
+            break;
         default:
             return state;
+            break;
     }
 };
 

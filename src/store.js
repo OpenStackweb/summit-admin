@@ -19,7 +19,7 @@ import directoryReducer from './reducers/directory-reducer';
 import scheduleBuilderReducer from './reducers/schedule-builder-reducer';
 import summitEventReducer from './reducers/summit-event-reducer';
 import speakerReducer from './reducers/speaker-reducer';
-
+import summitEventBulkActionReducer from './reducers/summit-event-bulk-actions-reducer';
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
 import storage from 'redux-persist/es/storage' // default: localStorage if web, AsyncStorage if react-native
@@ -37,6 +37,7 @@ const reducers = persistCombineReducers(config, {
     currentScheduleBuilderState: scheduleBuilderReducer,
     currentSummitEventState: summitEventReducer,
     currentSpeakerState: speakerReducer,
+    summitEventsBulkActionsState: summitEventBulkActionReducer,
 })
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -44,6 +45,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(reducers, composeEnhancers(applyMiddleware(thunk)));
 
 const onRehydrateComplete = () => {
+    // repopulate access token on global access variable
     window.accessToken = store.getState().loggedUserState.accessToken;
 }
 

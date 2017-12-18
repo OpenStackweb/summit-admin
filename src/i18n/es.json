@@ -6,6 +6,10 @@
     "empty_list"                : "there not are any item that match your criteria.",
     "empty_list_schedule_events": "Please select a Day and a Location ..."
   },
+  "messages": {
+    "bulk_events_update_success" : "Events saved successfully.",
+    "bulk_events_update_publish_success": "Events saved and published successfully."
+  },
   "placeholders":{
     "select_day"                          : "Select a Summit Day ...",
     "select_venue"                        : "Select a Summit Venue ...",
@@ -75,6 +79,12 @@
     "member_id"           : "Member Id",
     "registration_code"   : "Registration Code",
     "on_site_phone"       : "On Site Phone",
-    "presentations"       : "Presentations"
+    "presentations"       : "Presentations",
+    "bulk_actions_title": "Summit Event Bulk Actions",
+    "bulk_actions_event_id": "Event Id",
+    "bulk_actions_event_name": "Event Title",
+    "bulk_actions_event_location": "Event Location",
+    "bulk_actions_event_start_date": "Start Date",
+    "bulk_actions_event_end_date": "End Date"
   }
 }

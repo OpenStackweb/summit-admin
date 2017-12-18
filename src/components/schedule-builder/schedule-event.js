@@ -231,6 +231,7 @@ class ScheduleEvent extends React.Component {
                  style={this.getInlineStyles(isDragging)}>
                     <div className="row">
                         <div className="col-md-12">
+                            <input className="select-event-btn" id={`selected_event_${event.id}`} data-event-id={event.id} type="checkbox"/>
                             <i className="fa fa-minus-circle unpublish-event-btn" aria-hidden="true" title="unpublish event" onClick={this.onClickUnPublish.bind(this)}></i>
                             <i className="fa fa-pencil-square-o edit-published-event-btn" title="edit event" aria-hidden="true" onClick={this.onClickEdit.bind(this)}></i>
                             <div className="col-md-12 event-container">

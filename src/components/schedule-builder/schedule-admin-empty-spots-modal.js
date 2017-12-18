@@ -75,6 +75,7 @@ class ScheduleAdminEmptySpotsModal extends React.Component {
         this.validationState = { ... this.validationState, dateFrom: isValid};
         return isValid ? 'success':'warning';
     }
+
     handleChangeDateTo(ev) {
         let {value, id} = ev.target;
         this.setState({...this.state, dateTo: value});
@@ -139,7 +140,6 @@ class ScheduleAdminEmptySpotsModal extends React.Component {
                         <div className="col-md-12">
                             <FormGroup validationState={this.getValidationStateVenue()}>
                                 <ScheduleAdminVenueSelector
-                                    multi={true}
                                     onVenueChanged={this.onVenueChanged}
                                     currentValue={this.state.currentLocation}
                                     venues={venues}
