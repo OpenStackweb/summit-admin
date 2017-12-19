@@ -8,7 +8,28 @@ export const RECEIVE_SPEAKER        = 'RECEIVE_SPEAKER';
 export const RESET_SPEAKER_FORM     = 'RESET_SPEAKER_FORM';
 export const UPDATE_SPEAKER         = 'UPDATE_SPEAKER';
 export const SPEAKER_UPDATED        = 'SPEAKER_UPDATED';
+export const SPEAKER_ADDED          = 'SPEAKER_ADDED';
 export const SPEAKER_VALIDATION     = 'SPEAKER_VALIDATION';
+
+
+export const queryMembers = (summitId, input) => {
+
+    let accessToken = window.accessToken;
+    let filters = `first_name=@${input},last_name=@${input},email=@${input}`;
+
+    return fetch(`${apiBaseUrl}/api/v1/summits/${summitId}/members?filter=${filters}&access_token=${accessToken}`)
+        .then(fetchResponseHandler)
+        .then((json) => {
+            let options = json.data.map((s) =>
+                ({id: s.id, name: s.first_name + ' ' + s.last_name + ' (' + s.id + ')'})
+            );
+
+            return {
+                options: options
+            };
+        })
+        .catch(fetchErrorHandler);
+};
 
 
 export const getSpeakers = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = '1' ) => (dispatch, getState) => {
@@ -58,16 +79,16 @@ export const getSpeaker = (speakerId) => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_SPEAKER),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers/${speakerId}?access_token=${accessToken}`,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers/${speakerId}?access_token=${accessToken}&expand=member`,
         authErrorHandler
     )({})(dispatch).then(dispatch(stopLoading()));
 };
 
 export const resetSpeakerForm = () => (dispatch, getState) => {
-    //dispatch(createAction(RESET_EVENT_FORM)({}));
+    dispatch(createAction(RESET_SPEAKER_FORM)({}));
 };
 
-export const saveSpeaker = (entity, publish, history) => (dispatch, getState) => {
+export const saveSpeaker = (entity, history) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
@@ -78,45 +99,36 @@ export const saveSpeaker = (entity, publish, history) => (dispatch, getState) =>
 
     if (entity.id) {
 
-        let success_message = ['Done!', 'Event saved successfully.', 'success'];
-        if (publish) success_message[1] = 'Event saved & published successfully.';
+        let success_message = ['Done!', 'Speaker saved successfully.', 'success'];
 
         putRequest(
-            createAction(UPDATE_EVENT),
-            createAction(EVENT_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}?access_token=${accessToken}`,
+            createAction(UPDATE_SPEAKER),
+            createAction(SPEAKER_UPDATED),
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers/${entity.id}?access_token=${accessToken}`,
             normalizedEntity,
-            eventErrorHandler,
+            authErrorHandler,
             entity
         )({})(dispatch)
             .then((payload) => {
-                if (publish)
-                    dispatch(publishEvent(normalizedEntity));
-                else
-                    dispatch(showMessage(...success_message));
+                dispatch(showMessage(...success_message));
             });
 
     } else {
-        let success_message = ['Done!', 'Event created successfully.', 'success'];
+        let success_message = ['Done!', 'Speaker created successfully.', 'success'];
 
         postRequest(
-            createAction(UPDATE_EVENT),
-            createAction(EVENT_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events?access_token=${accessToken}`,
+            createAction(UPDATE_SPEAKER),
+            createAction(SPEAKER_ADDED),
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers?access_token=${accessToken}`,
             normalizedEntity,
-            eventErrorHandler,
+            authErrorHandler,
             entity
         )({})(dispatch)
             .then((payload) => {
-                if (publish) {
-                    normalizedEntity.id = payload.response.id;
-                    dispatch(publishEvent(normalizedEntity));
-                }
-                else
-                    dispatch(showMessage(
-                        ...success_message,
-                        history.push(`/app/summits/${currentSummit.id}/events/${payload.response.id}`)
-                    ));
+                dispatch(showMessage(
+                    ...success_message,
+                    history.push(`/app/summits/${currentSummit.id}/speakers/${payload.response.id}`)
+                ));
             });
     }
 }
@@ -133,8 +145,8 @@ export const attachPicture = (entity, file) => (dispatch, getState) => {
     } else {
         return postRequest(
             null,
-            createAction(EVENT_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}?access_token=${accessToken}`,
+            createAction(SPEAKER_UPDATED),
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers/${entity.id}?access_token=${accessToken}`,
             entity,
             authErrorHandler
         )({})(dispatch).then(dispatch(uploadFile(entity, file))).then(dispatch(stopLoading()));
@@ -149,8 +161,29 @@ const uploadFile = (entity, file) => (dispatch, getState) => {
     postRequest(
         null,
         createAction(FILE_ATTACHED),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}/attachment?access_token=${accessToken}`,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers/${entity.id}/attachment?access_token=${accessToken}`,
         file,
         authErrorHandler
     )({})(dispatch)
+}
+
+const normalizeEntity = (entity) => {
+    /*let normalizedEntity = {...entity};
+    if (!normalizedEntity.start_date) delete normalizedEntity['start_date'];
+    if (!normalizedEntity.end_date) delete normalizedEntity['end_date'];
+
+    normalizedEntity.tags = normalizedEntity.tags.map((t) => {
+        if (typeof t == 'string') return t;
+        else return t.tag;
+    });
+    normalizedEntity.sponsors = normalizedEntity.sponsors.map(s => s.id);
+    normalizedEntity.speakers = normalizedEntity.speakers.map(s => s.id);
+
+    if (Object.keys(normalizedEntity.moderator).length > 0)
+        normalizedEntity.moderator_speaker_id = normalizedEntity.moderator.id;
+
+    return normalizedEntity;*/
+
+    return entity;
+
 }

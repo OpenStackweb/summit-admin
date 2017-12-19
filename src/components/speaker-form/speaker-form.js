@@ -13,16 +13,9 @@
 
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
-import moment from 'moment-timezone'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import TextEditor from '../editor-input'
-import Dropdown from '../dropdown'
-import GroupedDropdown from '../grouped-dropdown'
-import DateTimePicker from '../datetimepicker'
-import TagInput from '../tag-input'
-import SpeakerInput from '../speaker-input'
-import CompanyInput from '../company-input'
-import GroupInput from '../group-input'
+import MemberInput from '../speaker-input'
 import UploadInput from '../upload-input'
 import Input from '../text-input'
 import {findElementPos} from '../../utils/methods'
@@ -63,17 +56,8 @@ class SpeakerForm extends React.Component {
         let errors = {...this.state.errors};
         let {value, id} = ev.target;
 
-        if (ev.target.type == 'radio') {
-            id = ev.target.name;
-            value = (ev.target.value == 1);
-        }
-
         if (ev.target.type == 'checkbox') {
             value = ev.target.checked;
-        }
-
-        if (ev.target.type == 'datetime') {
-            value = value.valueOf() / 1000;
         }
 
         errors[id] = '';
@@ -99,7 +83,7 @@ class SpeakerForm extends React.Component {
         let entity = {...this.state.entity};
         ev.preventDefault();
 
-        this.props.onSubmit(this.state.entity, publish, this.props.history);
+        this.props.onSubmit(this.state.entity);
     }
 
     handlePresentationLink(ev) {
@@ -126,19 +110,6 @@ class SpeakerForm extends React.Component {
     render() {
         let {entity} = this.state;
         let { currentSummit } = this.props;
-        let registration_code = '', on_site_phone = '', registered = false, checked_in = false, confirmed = false;
-
-
-        if (Object.keys(entity.registration_code).length) {
-            registration_code = entity.registration_code.code;
-        }
-
-        if (Object.keys(entity.summit_assistance).length) {
-            on_site_phone = entity.summit_assistance.on_site_phone;
-            registered = entity.summit_assistance.registered;
-            checked_in = entity.summit_assistance.checked_in;
-            confirmed = entity.summit_assistance.confirmed;
-        }
 
         return (
             <form>
@@ -146,11 +117,12 @@ class SpeakerForm extends React.Component {
                 <div className="row form-group">
                     <div className="col-md-4">
                         <label> {T.translate("titles.member")} *</label>
-                        <Input
-                            className="form-control"
+                        <MemberInput
                             id="member_id"
                             value={entity.member_id}
                             onChange={this.handleChange}
+                            summitId={currentSummit.id}
+                            multi={false}
                         />
                     </div>
                     <div className="col-md-4">
@@ -158,7 +130,7 @@ class SpeakerForm extends React.Component {
                         <Input
                             className="form-control"
                             id="email"
-                            disabled="true"
+                            disabled={entity.id != 0}
                             value={entity.email}
                             onChange={this.handleChange}
                         />
@@ -167,8 +139,8 @@ class SpeakerForm extends React.Component {
                         <label> {T.translate("titles.registration_code")} </label>
                         <Input
                             className="form-control"
-                            id="registration_code"
-                            value={registration_code}
+                            id="registration_code_code"
+                            value={entity.registration_code_code}
                             onChange={this.handleChange}
                         />
                     </div>
@@ -176,19 +148,19 @@ class SpeakerForm extends React.Component {
                 <div className="row form-group">
                     <div className="col-md-4">
                         <div className="form-check abc-checkbox">
-                            <input type="checkbox" id="registered" checked={registered} onChange={this.handleChange} className="form-check-input" />
-                            <label className="form-check-label" htmlFor="allow_feedback"> {T.translate("titles.registered")} </label>
+                            <input type="checkbox" id="registered" checked={entity.registered} onChange={this.handleChange} className="form-check-input" />
+                            <label className="form-check-label" htmlFor="registered"> {T.translate("titles.registered")} </label>
                         </div>
                     </div>
                     <div className="col-md-4">
                         <div className="form-check abc-checkbox">
-                            <input type="checkbox" id="checked_id" checked={checked_in} onChange={this.handleChange} className="form-check-input" />
-                            <label className="form-check-label" htmlFor="checked_id"> {T.translate("titles.checked_id")} </label>
+                            <input type="checkbox" id="checked_in" checked={entity.checked_in} onChange={this.handleChange} className="form-check-input" />
+                            <label className="form-check-label" htmlFor="checked_in"> {T.translate("titles.checked_id")} </label>
                         </div>
                     </div>
                     <div className="col-md-4">
                         <div className="form-check abc-checkbox">
-                            <input type="checkbox" id="confirmed" checked={confirmed} onChange={this.handleChange} className="form-check-input" />
+                            <input type="checkbox" id="confirmed" checked={entity.confirmed} onChange={this.handleChange} className="form-check-input" />
                             <label className="form-check-label" htmlFor="confirmed"> {T.translate("titles.confirmed")} </label>
                         </div>
                     </div>
@@ -210,15 +182,15 @@ class SpeakerForm extends React.Component {
                 <div className="row form-group">
                     <div className="col-md-4">
                         <label> {T.translate("titles.on_site_phone")} </label>
-                        <Input className="form-control" id="on_site_phone" value={on_site_phone} onChange={this.handleChange} />
+                        <Input className="form-control" id="on_site_phone" value={entity.on_site_phone} onChange={this.handleChange} />
                     </div>
                     <div className="col-md-4">
                         <label> {T.translate("titles.twitter_name")} </label>
-                        <Input className="form-control" id="twitter_name" value={entity.twitter_name} onChange={this.handleChange} />
+                        <Input className="form-control" id="twitter" value={entity.twitter} onChange={this.handleChange} />
                     </div>
                     <div className="col-md-4">
                         <label> {T.translate("titles.irc_name")} </label>
-                        <Input className="form-control" id="irc_name" value={entity.irc_name} onChange={this.handleChange} />
+                        <Input className="form-control" id="irc" value={entity.irc} onChange={this.handleChange} />
                     </div>
                 </div>
                 <div className="row form-group">
@@ -231,7 +203,7 @@ class SpeakerForm extends React.Component {
                     <div className="col-md-12">
                         <label> {T.translate("titles.attachment")} </label>
                         <UploadInput
-                            value={entity.attachment}
+                            value={entity.pic}
                             handleUpload={this.handleUploadFile}
                             handleRemove={this.handleRemoveFile}
                             className="dropzone col-md-6"

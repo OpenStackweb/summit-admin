@@ -19,11 +19,11 @@ import
     EVENT_UPDATED,
     EVENT_ADDED,
     EVENT_PUBLISHED,
-    EVENT_DELETED,
-    EVENT_VALIDATION
+    EVENT_DELETED
 } from '../actions/edit-summit-event-actions';
 
 import { LOGOUT_USER } from '../actions/auth-actions';
+import { VALIDATE } from '../actions/base-actions';
 import { SET_CURRENT_SUMMIT } from '../actions/summit-actions';
 import { UNPUBLISHED_EVENT } from '../actions/summit-builder-actions';
 
@@ -105,7 +105,7 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
             return state;
         }
         break;
-        case EVENT_VALIDATION: {
+        case VALIDATE: {
             return {...state,  errors: payload.errors };
         }
         break;

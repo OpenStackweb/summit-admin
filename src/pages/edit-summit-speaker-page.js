@@ -24,9 +24,26 @@ class EditSummitSpeakerPage extends React.Component {
 
         //this.handleEdit = this.handleEdit.bind(this);
 
-        this.state = {}
+        this.state = {
+            speakerId: props.match.params.speaker_id
+        }
     }
 
+    componentWillReceiveProps(nextProps) {
+        let {speakerId} = this.state;
+        let new_speaker_id = nextProps.match.params.speaker_id;
+
+        if(speakerId != new_speaker_id) {
+
+            this.setState({speakerId: new_speaker_id});
+
+            if(new_speaker_id) {
+                this.props.getSpeaker(new_speaker_id);
+            } else {
+                this.props.resetSpeakerForm();
+            }
+        }
+    }
 
     componentWillMount () {
         let summitId = this.props.match.params.summit_id;
@@ -42,16 +59,21 @@ class EditSummitSpeakerPage extends React.Component {
         let speakerId = this.props.match.params.speaker_id;
 
         if(currentSummit != null) {
-            this.props.getSpeaker(speakerId);
+            if (speakerId != null) {
+                this.props.getSpeaker(speakerId);
+            } else {
+                this.props.resetSpeakerForm();
+            }
         }
     }
 
     render(){
         let {currentSummit, entity, errors} = this.props;
+        let title = (entity.id) ? 'Edit' : 'Add';
 
         return(
             <div className="container">
-                <h3>Edit Speaker</h3>
+                <h3>{title} Speaker</h3>
                 <hr/>
                 {currentSummit &&
                 <SpeakerForm

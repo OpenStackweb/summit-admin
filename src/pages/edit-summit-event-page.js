@@ -47,8 +47,6 @@ class EditSummitEventPage extends React.Component {
                 this.props.resetEventForm();
             }
         }
-
-
     }
 
     componentWillMount () {

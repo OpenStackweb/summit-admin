@@ -11,7 +11,6 @@ export const EVENT_ADDED                    = 'EVENT_ADDED';
 export const EVENT_PUBLISHED                = 'EVENT_PUBLISHED';
 export const EVENT_DELETED                  = 'EVENT_DELETED';
 export const FILE_ATTACHED                  = 'FILE_ATTACHED';
-export const EVENT_VALIDATION               = 'EVENT_VALIDATION';
 
 
 export const querySpeakers = (summitId, input) => {
@@ -120,7 +119,7 @@ export const saveEvent = (entity, publish, history) => (dispatch, getState) => {
             createAction(EVENT_UPDATED),
             `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}?access_token=${accessToken}`,
             normalizedEntity,
-            eventErrorHandler,
+            authErrorHandler,
             entity
         )({})(dispatch)
         .then((payload) => {
@@ -138,7 +137,7 @@ export const saveEvent = (entity, publish, history) => (dispatch, getState) => {
             createAction(EVENT_ADDED),
             `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events?access_token=${accessToken}`,
             normalizedEntity,
-            eventErrorHandler,
+            authErrorHandler,
             entity
         )({})(dispatch)
         .then((payload) => {
@@ -210,35 +209,6 @@ const uploadFile = (entity, file) => (dispatch, getState) => {
         file,
         authErrorHandler
     )({})(dispatch)
-}
-
-const eventErrorHandler = (err, res) => (dispatch) => {
-    let code = err.status;
-    dispatch(stopLoading());
-
-    switch (code) {
-        case 401:
-        case 403:
-            swal("ERROR", T.translate("errors.session_expired"), "error");
-            dispatch({
-                type: "LOGOUT_USER",
-                payload: {persistStore: true}
-            });
-            break;
-        case 412:
-            let msg = '';
-            for (var [key, value] of Object.entries(err.response.body.errors)) {
-                msg += '- ' + value + '<br>';
-            }
-            swal("Validation ERROR", msg, "error");
-            dispatch({
-                type: EVENT_VALIDATION,
-                payload: {errors: err.response.body.errors}
-            });
-            break;
-        default:
-            swal("ERROR", "There was a problem with our server, please contact admin.", "error");
-    }
 }
 
 const normalizeEntity = (entity) => {

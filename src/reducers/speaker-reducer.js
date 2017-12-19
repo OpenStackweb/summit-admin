@@ -16,11 +16,11 @@ import
     RECEIVE_SPEAKER,
     RESET_SPEAKER_FORM,
     UPDATE_SPEAKER,
-    SPEAKER_UPDATED,
-    SPEAKER_VALIDATION
+    SPEAKER_UPDATED
 } from '../actions/speaker-actions';
 
 import { LOGOUT_USER } from '../actions/auth-actions';
+import { VALIDATE } from '../actions/base-actions';
 import { SET_CURRENT_SUMMIT } from '../actions/summit-actions';
 
 export const DEFAULT_ENTITY = {
@@ -35,8 +35,11 @@ export const DEFAULT_ENTITY = {
     bio: '',
     pic: '',
     presentations: [],
-    registration_code: {},
-    summit_assistance: {}
+    registration_code_code: '',
+    on_site_phone: '',
+    registered: false,
+    checked_in: false,
+    confirmed: false
 }
 
 const DEFAULT_STATE = {
@@ -61,13 +64,26 @@ const speakerReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case RECEIVE_SPEAKER: {
-            let entity = payload.response;
+            let entity = {...payload.response};
+            let registration_code = '', on_site_phone = '', registered = false, checked_in = false, confirmed = false;
 
             for(var key in entity) {
                 if(entity.hasOwnProperty(key)) {
                     entity[key] = (entity[key] == null) ? '' : entity[key] ;
                 }
             }
+
+            if (entity.hasOwnProperty('registration_code')) {
+                entity.registration_code_code = entity.registration_code.code;
+            }
+
+            if (entity.hasOwnProperty('summit_assistance')) {
+                entity.on_site_phone = entity.summit_assistance.on_site_phone;
+                entity.registered = entity.summit_assistance.registered;
+                entity.checked_in = entity.summit_assistance.checked_in;
+                entity.confirmed = entity.summit_assistance.confirmed;
+            }
+
             return {...state, entity: {...state.entity, ...entity}, errors: {} };
         }
         break;
@@ -75,7 +91,7 @@ const speakerReducer = (state = DEFAULT_STATE, action) => {
             return state;
         }
         break;
-        case SPEAKER_VALIDATION: {
+        case VALIDATE: {
             return {...state,  errors: payload.errors };
         }
         break;

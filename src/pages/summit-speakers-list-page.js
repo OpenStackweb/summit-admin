@@ -29,6 +29,7 @@ class SummitSpeakerListPage extends React.Component {
         this.handlePageChange = this.handlePageChange.bind(this);
         this.handleSort = this.handleSort.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
+        this.handleNewSpeaker = this.handleNewSpeaker.bind(this);
 
         this.state = {}
     }
@@ -71,6 +72,11 @@ class SummitSpeakerListPage extends React.Component {
         this.props.getSpeakers(term, page, perPage, order, orderDir);
     }
 
+    handleNewSpeaker(ev) {
+        let {currentSummit, history} = this.props;
+        history.push(`/app/summits/${currentSummit.id}/speakers/new`);
+    }
+
     render(){
         let {currentSummit, speakers, lastPage, currentPage, term} = this.props;
 
@@ -99,6 +105,9 @@ class SummitSpeakerListPage extends React.Component {
                 <div className={'row'}>
                     <div className={'col-md-6'}>
                         <FreeTextSearch value={term} onSearch={this.handleSearch} />
+                    </div>
+                    <div className="col-md-2">
+                        <button className="btn btn-primary" onClick={this.handleNewSpeaker}>Add Speaker</button>
                     </div>
                 </div>
 

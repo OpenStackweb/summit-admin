@@ -3,6 +3,7 @@ import {stopLoading} from "openstack-uicore-foundation";
 import swal from "sweetalert2";
 
 export const apiBaseUrl             = process.env['API_BASE_URL'];
+export const VALIDATE               = 'VALIDATE';
 
 export const authErrorHandler = (err, res) => (dispatch) => {
     let code = err.status;
@@ -28,6 +29,10 @@ export const authErrorHandler = (err, res) => (dispatch) => {
                 msg += '- ' + value + '<br>';
             }
             swal("Validation ERROR", msg, "error");
+            dispatch({
+                type: VALIDATE,
+                payload: {errors: err.response.body.errors}
+            });
             break;
         default:
             swal("ERROR", "There was a problem with our server, please contact admin.", "error");
