@@ -23,13 +23,19 @@ class SummitDashboardPage extends React.Component {
 
         let localtime = moment().tz(this.props.currentSummit.time_zone.name);
 
+        this.interval = null;
+
         this.state = {
             localtime: localtime
         }
     }
 
     componentDidMount() {
-        setInterval(this.localTimer.bind(this), 1000);
+        this.interval = setInterval(this.localTimer.bind(this), 1000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
     }
 
     localTimer() {
