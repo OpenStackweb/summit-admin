@@ -47,7 +47,6 @@ class SummitEvent {
         return DefaultEventMinutesDuration;
     }
 
-
     canMove(siblings, day, startTime){
         let duration       = DefaultEventMinutesDuration;
         // check if published to get real duration ...
@@ -74,6 +73,32 @@ class SummitEvent {
         let newStarDateTime = moment.tz(day+' '+startTime.format('HH:mm'), 'YYYY-MM-DD HH:mm', this._summit.time_zone.name);
         let newEndDateTime  = moment.tz(day+' '+startTime.format('HH:mm'), 'YYYY-MM-DD HH:mm', this._summit.time_zone.name).add(minutes, 'minutes');
         return [newStarDateTime, newEndDateTime];
+    }
+
+    isValidEndDate(endDate){
+        if(endDate == null) return false;
+        let startDate       = moment.tz(this._event.start_date * 1000, this._summit.time_zone.name);
+        endDate             = moment.tz(endDate * 1000, this._summit.time_zone.name);
+        let summitEndDate   = moment.tz(this._summit.end_date * 1000, this._summit.time_zone.name);
+        return endDate.isAfter(startDate) && (endDate.isBefore(summitEndDate) || endDate.isSame(summitEndDate));
+    }
+
+    isValidStartDate(startDate){
+        if(startDate == null) return false;
+        startDate           = moment.tz(startDate* 1000, this._summit.time_zone.name);
+        let endDate         = moment.tz(this._event.end_date * 1000, this._summit.time_zone.name);
+        let summitStartDate = moment.tz(this._summit.start_date * 1000, this._summit.time_zone.name);
+        return moment.isMoment(startDate) && startDate.isAfter(summitStartDate) && startDate.isBefore(endDate);
+    }
+
+    isValidTitle(title){
+        return title.trim() != '';
+    }
+
+    isValid(){
+        return this.isValidTitle(this._event.title)
+            && this.isValidStartDate(this._event.start_date)
+            && this.isValidEndDate(this._event.end_date);
     }
 
 }

@@ -14,4 +14,8 @@
 export const DefaultEventMinutesDuration       = 5;
 export const PixelsPerMinute                   = 16;
 export const AdminGroupCode                    = 'administrators';
+export const SummitAdminGroupCode              = 'administrators';
 export const ScheduleEventsSearchResultMaxPage = 25;
+export const BulkActionEdit                    = 'BULK_ACTION_EDIT';
+export const BulkActionPublish                 = 'BULK_ACTION_PUBLISH';
+export const BulkActionUnPublish               = 'BULK_ACTION_UNPUBLISH';

@@ -178,7 +178,7 @@ class EventForm extends React.Component {
         );
 
         let locations_ddl = [
-            {label: 'TBA', value: 0},
+            {label: 'TBD', value: 0},
             ...venues
         ];
 

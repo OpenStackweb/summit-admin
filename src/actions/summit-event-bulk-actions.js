@@ -1,15 +1,23 @@
-import {createAction, getRequest, putRequest, startLoading, stopLoading} from "openstack-uicore-foundation";
+import {createAction, getRequest, putRequest, deleteRequest, startLoading, stopLoading} from "openstack-uicore-foundation";
 import {apiBaseUrl, authErrorHandler, showMessage} from "./base-actions";
 import T from 'i18n-react/dist/i18n-react'
+import URI from "urijs";
+import {BulkActionEdit, BulkActionUnPublish} from '../constants';
+import { getPublishedEventsBySummitDayLocation } from './summit-builder-actions';
 
-export const UPDATE_LOCAL_EVENT       = 'UPDATE_LOCAL_EVENT';
-export const RECEIVE_SELECTED_EVENTS  = 'REQUEST_SELECTED_EVENTS';
-export const UPDATED_REMOTE_EVENTS    = 'UPDATED_REMOTE_EVENTS';
 
-export const getSummitEventsById = (summitId, eventIds) => (dispatch, getState) => {
+export const UPDATE_LOCAL_EVENT               = 'UPDATE_LOCAL_EVENT';
+export const RECEIVE_SELECTED_EVENTS          = 'REQUEST_SELECTED_EVENTS';
+export const UPDATED_REMOTE_EVENTS            = 'UPDATED_REMOTE_EVENTS';
+export const UPDATE_EVENT_SELECTED_STATE      = 'UPDATE_EVENT_SELECTED_STATE';
+export const UPDATE_EVENT_SELECTED_STATE_BULK = 'UPDATE_EVENT_SELECTED_STATE_BULK';
+export const UPDATE_VALIDATION_STATE          = 'UPDATE_VALIDATION_STATE';
 
-    let { loggedUserState } = getState();
+export const getSummitEventsById = (summitId, eventIds, published = false ) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
     dispatch(startLoading());
     let filter = '';
     for(let id of eventIds){
@@ -24,10 +32,11 @@ export const getSummitEventsById = (summitId, eventIds) => (dispatch, getState) 
     return getRequest(
         null,
         createAction(RECEIVE_SELECTED_EVENTS),
-        `${apiBaseUrl}/api/v1/summits/${summitId}/events/published`,
+        `${apiBaseUrl}/api/v1/summits/${summitId}/events`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
+            dispatch(createAction(UPDATE_VALIDATION_STATE)({currentSummit}));
         }
     );
 };
@@ -137,4 +146,49 @@ export const updateAndPublishEvents = (summitId, events) =>  (dispatch, getState
                     );
             }
         );
+}
+
+export const setEventSelectedState = (event) => (dispatch) => {
+    dispatch(createAction(UPDATE_EVENT_SELECTED_STATE)({event}));
+}
+
+export const setBulkEventSelectedState = (events, selectedState, published) => (dispatch) => {
+    dispatch(createAction(UPDATE_EVENT_SELECTED_STATE_BULK)({events, selectedState, published} ));
+}
+
+export const performBulkAction = (eventsIds, bulkAction, published, history) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState,  currentScheduleBuilderState } = getState();
+    let { accessToken }                         = loggedUserState;
+    let { currentSummit }                       = currentSummitState;
+    let { currentDay,  currentLocation }        = currentScheduleBuilderState;
+
+    switch(bulkAction){
+        case BulkActionEdit:{
+            let url = URI(`/app/summits/${currentSummit.id}/events/bulk-actions`);
+            url     = url.query({'id[]':eventsIds, 'published': published });
+            history.push(url.toString());
+        }
+        break;
+        case BulkActionUnPublish:{
+            let params = {
+                access_token: accessToken
+            }
+            dispatch(startLoading());
+            deleteRequest(
+                null,
+                createAction(UPDATED_REMOTE_EVENTS)({}),
+                `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/publish`,
+                {
+                    events : eventsIds
+                },
+                authErrorHandler
+            )(params)(dispatch)
+            .then(() => {
+                    dispatch(stopLoading());
+                    getPublishedEventsBySummitDayLocation(currentSummit, currentDay, currentLocation)(dispatch, getState);
+                }
+            );
+        }
+        break;
+    }
 }

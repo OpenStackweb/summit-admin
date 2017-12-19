@@ -14,7 +14,14 @@ import React from 'react'
 import {connect} from "react-redux"
 import URI from "urijs"
 import SummitEventBulkEditorForm from '../components/summit-event-bulk-actions/summit-event-bulk-editor-form';
-import {getSummitEventsById, updateEventLocationLocal, updateEventTitleLocal, updateEventStartDateLocal, updateEventEndDateLocal, updateEvents, updateAndPublishEvents } from '../actions/summit-event-bulk-actions';
+import {
+    getSummitEventsById,
+    updateEventLocationLocal,
+    updateEventTitleLocal,
+    updateEventStartDateLocal,
+    updateEventEndDateLocal,
+    updateEvents,
+    updateAndPublishEvents } from '../actions/summit-event-bulk-actions';
 import {getSummitById} from "../actions/summit-actions";
 import T from 'i18n-react/dist/i18n-react'
 
@@ -23,17 +30,23 @@ class SummitEventsBulkActionsPage extends React.Component {
     constructor(props) {
         super(props);
         // get events ids from query string
-        let { search } = this.props.location;
-        let query      = URI.parseQuery(search);
-        console.log(query.id);
+        let { location, history } = this.props;
+        let query      = URI.parseQuery(location.search);
+        if(!query.hasOwnProperty('id[]')) {
+            history.push('/app/directory');
+            return;
+        }
+        let eventIds =  query['id[]'];
+        if(!Array.isArray(eventIds)) eventIds = [eventIds];
         this.state = {
-            eventIds : query.id.split(',')
+            eventIds
         }
     }
 
     componentDidMount(){
         let summitId           = this.props.match.params.summit_id;
-        let { currentSummit } = this.props;
+        let { currentSummit }  = this.props;
+        if(this.state == null || !this.state.hasOwnProperty('eventIds')) return;
         if(currentSummit == null){
             this.props.getSummitById(summitId).then(() => {
                 this.props.getSummitEventsById(summitId, this.state.eventIds);
@@ -44,7 +57,7 @@ class SummitEventsBulkActionsPage extends React.Component {
     }
 
     render(){
-        let {events, currentSummit, updateEventLocationLocal, updateEventTitleLocal, updateEventStartDateLocal, updateEventEndDateLocal, updateEvents, updateAndPublishEvents } = this.props;
+        let {events, currentSummit, updateEventLocationLocal, updateEventTitleLocal, updateEventStartDateLocal, updateEventEndDateLocal, updateEvents, updateAndPublishEvents, updateEventValidationLocal } = this.props;
         if(currentSummit == null) return null;
 
         return (
@@ -71,7 +84,7 @@ const mapStateToProps = ({
                              summitEventsBulkActionsState,
                          }) => ({
     currentSummit   : currentSummitState.currentSummit,
-    events          : summitEventsBulkActionsState.selectedEvents
+    events          : summitEventsBulkActionsState.eventOnBulkEdition
 })
 
 export default connect (
@@ -84,6 +97,6 @@ export default connect (
         updateEventStartDateLocal,
         updateEventEndDateLocal,
         updateEvents,
-        updateAndPublishEvents
+        updateAndPublishEvents,
     }
 )(SummitEventsBulkActionsPage);

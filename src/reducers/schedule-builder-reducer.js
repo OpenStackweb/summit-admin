@@ -30,6 +30,7 @@ import
     RECEIVE_EMPTY_SPOTS,
     CLEAR_EMPTY_SPOTS,
     ERROR_PUBLISH_EVENT,
+    CLEAR_PUBLISHED_EVENTS,
 } from '../actions/summit-builder-actions';
 
 import { LOGOUT_USER } from '../actions/auth-actions';
@@ -92,6 +93,10 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
         break;
         case CLEAR_EMPTY_SPOTS: {
             return {...state, emptySpots : []};
+        }
+        break;
+        case CLEAR_PUBLISHED_EVENTS:{
+            return {...state, scheduleEvents : []};
         }
         break;
         case CHANGE_CURRENT_ORDER_BY:{

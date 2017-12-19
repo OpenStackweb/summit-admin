@@ -15,7 +15,7 @@ import T from "i18n-react/dist/i18n-react";
 import {createAction, getRequest, startLoading, stopLoading} from "openstack-uicore-foundation";
 import swal from "sweetalert2";
 import {authErrorHandler, apiBaseUrl} from "./base-actions";
-import { AdminGroupCode } from '../constants';
+import { AdminGroupCode, SummitAdminGroupCode } from '../constants';
 
 export const SET_LOGGED_USER                = 'SET_LOGGED_USER';
 export const LOGOUT_USER                    = 'LOGOUT_USER';
@@ -85,11 +85,11 @@ export const getUserInfo = (history, backUrl) => (dispatch, getState) => {
                 });
             }
 
-            let adminGroup = member.groups.filter((group, idx) => {
-                return group.code === AdminGroupCode;
+            let allowedGroups = member.groups.filter((group, idx) => {
+                return group.code === AdminGroupCode || group.code == SummitAdminGroupCode;
             })
 
-            if(adminGroup.length == 0){
+            if(allowedGroups.length == 0){
                 swal("ERROR", T.translate("errors.user_not_authz") , "error");
                 dispatch({
                     type: LOGOUT_USER,

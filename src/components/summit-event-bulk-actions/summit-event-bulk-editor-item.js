@@ -16,12 +16,12 @@ import DateTimePicker from '../datetimepicker'
 import moment from "moment-timezone";
 import ScheduleAdminVenueSelector from '../schedule-builder/schedule-admin-venue-selector';
 import T from 'i18n-react/dist/i18n-react'
+import SummitEvent from '../../models/summit-event';
 
 class SummitEventBulkEditorItem extends React.Component
 {
     constructor(props){
         super(props);
-
         this.handleChangeDateFrom = this.handleChangeDateFrom.bind(this);
         this.handleChangeDateTo   = this.handleChangeDateTo.bind(this);
         this.onTitleChanged       = this.onTitleChanged.bind(this);
@@ -36,19 +36,17 @@ class SummitEventBulkEditorItem extends React.Component
     }
 
     getFormattedTime(atime) {
+        if(atime == null) return '';
         if(!atime) return atime;
         atime = atime * 1000;
         return moment(atime).tz(this.props.currentSummit.time_zone.name);
     }
 
     getValidationEventTitle(){
-        let { event } = this.props;
-        let isValid = this.validateEventTitle(event.title);
+        let { event, currentSummit } = this.props;
+        let eventModel = new SummitEvent(event, currentSummit)
+        let isValid    = eventModel.isValidTitle(event.title);
         return isValid ? 'success':'warning';
-    }
-
-    validateEventTitle(title){
-        return title.trim() != '';
     }
 
     getValidationStateVenue(){
@@ -56,48 +54,40 @@ class SummitEventBulkEditorItem extends React.Component
     }
 
     getValidationStartDate(){
-        let { event } = this.props;
-        let isValid = this.validateEventStartDate(event.start_date);
-        return isValid ? 'success':'warning';
-    }
-
-    validateEventStartDate(startDate){
         let { event, currentSummit } = this.props;
-        startDate           = moment.tz(startDate* 1000, currentSummit.time_zone.name);
-        let endDate         = moment.tz(event.end_date * 1000, currentSummit.time_zone.name);
-        let summitStartDate = moment.tz(currentSummit.start_date * 1000, currentSummit.time_zone.name);
-        return moment.isMoment(startDate) && startDate.isAfter(summitStartDate) && startDate.isBefore(endDate);
+        let eventModel = new SummitEvent(event, currentSummit);
+        let isValid    = eventModel.isValidStartDate(event.start_date);
+        return isValid ? 'success':'warning';
     }
 
     getValidationEndDate(){
-        let { event } = this.props;
-        let isValid = this.validateEventEndDate(event.end_date);
-        return isValid ? 'success':'warning';
-    }
-
-    validateEventEndDate(endDate){
         let { event, currentSummit } = this.props;
-        let startDate       = moment.tz(event.start_date * 1000, currentSummit.time_zone.name);
-        endDate             = moment.tz(endDate * 1000, currentSummit.time_zone.name);
-        let summitEndDate   = moment.tz(currentSummit.end_date * 1000, currentSummit.time_zone.name);
-        return endDate.isAfter(startDate) && (endDate.isBefore(summitEndDate) || endDate.isSame(summitEndDate));
+        let eventModel = new SummitEvent(event, currentSummit);
+        let isValid    = eventModel.isValidEndDate(event.end_date);
+        return isValid ? 'success':'warning';
     }
 
     handleChangeDateFrom(ev){
         let {value, id} = ev.target;
         value = value.valueOf()/1000;
-        this.props.onStartDateChanged(this.props.index, value, this.validateEventStartDate(value));
+        let { event, currentSummit } = this.props;
+        let eventModel = new SummitEvent(event, currentSummit);
+        this.props.onStartDateChanged(this.props.index, value, eventModel.isValidStartDate(value));
     }
 
     handleChangeDateTo(ev){
         let {value, id} = ev.target;
         value = value.valueOf()/1000;
-        this.props.onEndDateChanged(this.props.index, value, this.validateEventEndDate(value));
+        let { event, currentSummit } = this.props;
+        let eventModel = new SummitEvent(event, currentSummit);
+        this.props.onEndDateChanged(this.props.index, value, eventModel.isValidEndDate(value));
     }
 
     onTitleChanged(ev){
         let title = ev.target.value.trim();
-        this.props.onTitleChanged(this.props.index, title, this.validateEventTitle(title))
+        let { event, currentSummit } = this.props;
+        let eventModel = new SummitEvent(event, currentSummit);
+        this.props.onTitleChanged(this.props.index, title, eventModel.isValidTitle(title))
     }
 
     onLocationChanged(location){

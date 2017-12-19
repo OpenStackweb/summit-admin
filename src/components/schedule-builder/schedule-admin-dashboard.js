@@ -30,12 +30,14 @@ import {
     changeCurrentUnScheduleOrderBy,
     getEmptySpots,
     clearEmptySpots,
-
+    clearPublishedEvents,
 } from '../../actions/summit-builder-actions';
+
+import { setEventSelectedState, setBulkEventSelectedState, performBulkAction } from '../../actions/summit-event-bulk-actions';
 import UnScheduleEventList from './unschedule-event-list';
 import ScheduleEventList from './schedule-event-list';
 import SummitEvent from '../../models/summit-event';
-import { DefaultEventMinutesDuration, PixelsPerMinute } from '../../constants';
+import {BulkActionUnPublish, DefaultEventMinutesDuration, PixelsPerMinute} from '../../constants';
 import ScheduleAdminDaySelector from './schedule-admin-day-selector';
 import ScheduleAdminVenueSelector from './schedule-admin-venue-selector';
 import ScheduleAdminEventTypeSelector from './schedule-admin-event-type-selector';
@@ -53,6 +55,7 @@ import * as Scroll from 'react-scroll';
 import swal from "sweetalert2";
 import ScheduleAdminEmptySpotsModal from './schedule-admin-empty-spots-modal';
 import ScheduleAdminEmptySpotsList from './schedule-admin-empty-spots-list';
+import ScheduleAdminsBulkActionsSelector from './bulk-actions/schedule-admin-bulk-actions-selector'
 
 class ScheduleAdminDashBoard extends React.Component {
 
@@ -77,6 +80,9 @@ class ScheduleAdminDashBoard extends React.Component {
         this.onFindEmptySpots                     = this.onFindEmptySpots.bind(this);
         this.onClearClick                         = this.onClearClick.bind(this);
         this.onClickSpot                          = this.onClickSpot.bind(this);
+        this.onClickSelected                      = this.onClickSelected.bind(this);
+        this.onSelectAllPublished                 = this.onSelectAllPublished.bind(this);
+        this.onSelectedBulkActionPublished        = this.onSelectedBulkActionPublished.bind(this);
 
         this.fragmentParser     = new FragmentParser();
         this.filters            = this.parseFilterFromFragment();
@@ -92,7 +98,7 @@ class ScheduleAdminDashBoard extends React.Component {
         // read url hash and redirect to event
         let { currentSummit } = this.props;
         if(currentSummit == null) return;
-        var hash    =this.fragmentParser.getParams();
+        var hash    = this.fragmentParser.getParams();
         var filters = {};
         for(let key in hash) {
             let value = hash[key];
@@ -104,6 +110,9 @@ class ScheduleAdminDashBoard extends React.Component {
                     let location = currentSummit.locations.filter((location) => location.id == value).shift()
                     if(location) {
                         filters['currentLocation'] = location;
+                    }
+                    if(value == 0){ //special case TBD location
+                        filters['currentLocation'] = {id : 0, name : 'TBD'};
                     }
                     break;
                 case 'event':
@@ -121,7 +130,7 @@ class ScheduleAdminDashBoard extends React.Component {
     }
 
     componentDidMount(){
-        console.log('componentDidMount');
+
         let { currentSummit, currentEventType, currentTrack, currentPresentationSelectionStatus, currentDay, currentLocation, scheduleEventsCurrentSearchTerm } = this.props;
         if(currentSummit == null) return;
 
@@ -145,6 +154,14 @@ class ScheduleAdminDashBoard extends React.Component {
             this.props.changeCurrentSelectedLocation(currentLocation);
         }
 
+
+        if(window.location.hash == '' && currentDay != null && currentLocation != null){
+            this.byPassHashRefresh = true;
+            this.fragmentParser.setParam('day', currentDay);
+            this.fragmentParser.setParam('location_id', currentLocation.id);
+            window.location.hash   = this.fragmentParser.serialize();
+        }
+
         this.updatePublishedList(currentDay, currentLocation);
 
         window.onhashchange = (event) =>
@@ -153,7 +170,7 @@ class ScheduleAdminDashBoard extends React.Component {
                 this.byPassHashRefresh = false;
                 return;
             }
-            console.log('window.onhashchange');
+
             this.filters = this.parseFilterFromFragment();
             this.shouldTestDeepLink = true;
             if(this.filters.hasOwnProperty('currentScheduleEventsSearchTerm')) {
@@ -179,13 +196,17 @@ class ScheduleAdminDashBoard extends React.Component {
 
     updatePublishedList(day, location){
         let { currentSummit } = this.props;
-        if( day != null && location != null)
-            this.props.getPublishedEventsBySummitDayLocation
-            (
-                currentSummit,
-                day,
-                location
-            );
+        if( day == null || location == null)
+        {
+            this.props.clearPublishedEvents();
+            return;
+        }
+        this.props.getPublishedEventsBySummitDayLocation
+        (
+            currentSummit,
+            day,
+            location
+        );
     }
 
     componentWillMount () {
@@ -208,7 +229,8 @@ class ScheduleAdminDashBoard extends React.Component {
         this.props.changeCurrentSelectedDay(day);
         let locationId = currentLocation != null ? currentLocation.id: null;
         this.buildFragment(locationId, day);
-        this.filters  = this.parseFilterFromFragment();
+        this.filters           = this.parseFilterFromFragment();
+        this.byPassHashRefresh = true;
         this.updatePublishedList(day, currentLocation);
     }
 
@@ -216,7 +238,8 @@ class ScheduleAdminDashBoard extends React.Component {
         let { currentDay } = this.props;
         this.props.changeCurrentSelectedLocation(location);
         this.buildFragment(location.id, currentDay);
-        this.filters  = this.parseFilterFromFragment();
+        this.filters           = this.parseFilterFromFragment();
+        this.byPassHashRefresh = true;
         this.updatePublishedList(currentDay, location);
     }
 
@@ -351,8 +374,11 @@ class ScheduleAdminDashBoard extends React.Component {
         history.push(`/app/summits/${currentSummit.id}/events/${event.id}`);
     }
 
-    onUnPublishEvent(event){
+    onClickSelected(event){
+        this.props.setEventSelectedState(event);
+    }
 
+    onUnPublishEvent(event){
         swal({
             title: 'Are you sure?',
             text: "You are about to UnPublish this event!",
@@ -366,7 +392,6 @@ class ScheduleAdminDashBoard extends React.Component {
                 this.props.unPublishEvent(event);
             }
         })
-
     }
 
     onOrderByChanged(orderBy){
@@ -435,6 +460,35 @@ class ScheduleAdminDashBoard extends React.Component {
         this.props.clearEmptySpots();
     }
 
+    onSelectAllPublished(evt){
+        console.log(evt.target.checked);
+        let {scheduleEvents, setBulkEventSelectedState} = this.props;
+        setBulkEventSelectedState(scheduleEvents, evt.target.checked, true);
+    }
+
+    onSelectedBulkActionPublished(bulkAction){
+        let {selectedPublishedEvents, performBulkAction, history} = this.props;
+        if(selectedPublishedEvents.length == 0) return;
+        if(bulkAction == BulkActionUnPublish){
+            swal({
+                title: 'Are you sure?',
+                text: "You are about to UnPublish these events!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, UnPublish them all!'
+            }).then((result) => {
+                if (result) {
+                    performBulkAction(selectedPublishedEvents, bulkAction, true, history);
+                }
+            })
+            return;
+        }
+
+        performBulkAction(selectedPublishedEvents, bulkAction, true, history);
+    }
+
     render(){
 
         let {
@@ -454,7 +508,8 @@ class ScheduleAdminDashBoard extends React.Component {
             scheduleEventsCurrentSearchTerm,
             scheduleEventsSearch,
             currentUnScheduleOrderBy,
-            emptySpots
+            emptySpots,
+            selectedPublishedEvents
         } = this.props;
 
         if(currentSummit == null ) return null;
@@ -592,6 +647,15 @@ class ScheduleAdminDashBoard extends React.Component {
                                                     venues={venues} currentValue={currentVenueSelectorItem} />
                     }
                     { ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm == '' )
+                      && ( emptySpots.length == 0 )
+                      && ( scheduleEvents.length > 0)
+                      && <ScheduleAdminsBulkActionsSelector
+                            onSelectAll={this.onSelectAllPublished}
+                            onSelectedBulkAction={this.onSelectedBulkActionPublished}
+                         >
+                         </ScheduleAdminsBulkActionsSelector>
+                    }
+                    { ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm == '' )
                         && currentDay != null
                         && currentLocation != null
                         && (emptySpots.length == 0 )
@@ -608,7 +672,10 @@ class ScheduleAdminDashBoard extends React.Component {
                         events={scheduleEvents}
                         childEvents={childScheduleEvents}
                         onUnPublishEvent={this.onUnPublishEvent}
-                        onEditEvent={this.onEditEvent}/>
+                        onEditEvent={this.onEditEvent}
+                        onClickSelected={this.onClickSelected}
+                        selectedPublishedEvents={selectedPublishedEvents}
+                        />
                     }
 
                     <ScheduleAdminScheduleEventsSearchResults
@@ -687,7 +754,7 @@ class ScheduleAdminDashBoard extends React.Component {
 
 ScheduleAdminDashBoard = DragDropContext(HTML5Backend)(ScheduleAdminDashBoard);
 
-function mapStateToProps({ currentScheduleBuilderState, currentSummitState  }) {
+function mapStateToProps({ currentScheduleBuilderState, currentSummitState, summitEventsBulkActionsState  }) {
     return {
         scheduleEvents                     : currentScheduleBuilderState.scheduleEvents,
         unScheduleEvents                   : currentScheduleBuilderState.unScheduleEvents,
@@ -706,6 +773,8 @@ function mapStateToProps({ currentScheduleBuilderState, currentSummitState  }) {
         scheduleEventsSearch               : currentScheduleBuilderState.scheduleEventsSearch,
         currentUnScheduleOrderBy           : currentScheduleBuilderState.currentUnScheduleOrderBy,
         emptySpots                         : currentScheduleBuilderState.emptySpots,
+        selectedPublishedEvents            : summitEventsBulkActionsState.selectedPublishedEvents,
+        selectedUnPublishedEvents          : summitEventsBulkActionsState.selectedUnPublishedEvents,
     }
 }
 
@@ -725,4 +794,8 @@ export default connect(mapStateToProps, {
     changeCurrentUnScheduleOrderBy,
     getEmptySpots,
     clearEmptySpots,
+    setEventSelectedState,
+    setBulkEventSelectedState,
+    performBulkAction,
+    clearPublishedEvents
 })(ScheduleAdminDashBoard);

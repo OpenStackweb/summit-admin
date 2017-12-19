@@ -177,7 +177,17 @@ class ScheduleEventList extends React.Component
     }
 
     render(){
-        let { events, startTime, endTime, interval, pixelsPerMinute, currentDay, currentSummit, onEditEvent, onUnPublishEvent } = this.props;
+        let { events,
+            startTime,
+            endTime,
+            interval,
+            pixelsPerMinute,
+            currentDay,
+            currentSummit,
+            onEditEvent,
+            onUnPublishEvent,
+            onClickSelected,
+            selectedPublishedEvents } = this.props;
 
         let timeSlotsList = [];
         let done          = false;
@@ -222,6 +232,7 @@ class ScheduleEventList extends React.Component
                             return (
                                 <ScheduleEvent
                                     event={event}
+                                    selectedPublishedEvents={selectedPublishedEvents}
                                     key={event.id}
                                     type={"MAIN"}
                                     step={pixelsPerMinute}
@@ -234,6 +245,7 @@ class ScheduleEventList extends React.Component
                                     maxHeight={this.getMaxHeight}
                                     onUnPublishEvent={onUnPublishEvent}
                                     onEditEvent={onEditEvent}
+                                    onClickSelected={onClickSelected}
                                     currentDay={currentDay}>
                                 </ScheduleEvent>)
                         })

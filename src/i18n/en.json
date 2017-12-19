@@ -88,7 +88,9 @@
     "btn_apply_publish_changes": "Apply And Publish Changes",
     "messages": {
       "update_success" : "Events saved successfully.",
-      "update_publish_success": "Events saved and published successfully."
+      "update_publish_success": "Events saved and published successfully.",
+      "validation_title": "Validation Errors",
+      "validation_message": "Please check data before to continue"
     },
     "placeholders":{
       "event_title": "Enter event title",
@@ -97,6 +99,19 @@
     },
     "titles": {
       "view_event": "View Event"
+    }
+  },
+  "published_bulk_actions_selector": {
+    "options": {
+      "default": "--SELECT A BULK ACTION--",
+      "edit": "Edit",
+      "unpublish": "Unpublish"
+    },
+    "buttons":{
+      "go": "GO"
+    },
+    "titles": {
+      "go": "Apply Bulk Action"
     }
   }
 }

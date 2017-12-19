@@ -28,7 +28,7 @@ class FragmentParser {
     }
 
     getParam(key){
-        if(this.originalHash !==  window.location.hash){
+        if(this.originalHash !== window.location.hash){
             this.originalHash = window.location.hash;
             this.hash = this.convertToHash(this.originalHash);
         }
