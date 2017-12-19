@@ -17,7 +17,9 @@ export const authErrorHandler = (err, res) => (dispatch) => {
             swal("ERROR", T.translate("errors.session_expired"), "error");
             dispatch({
                 type: "LOGOUT_USER",
-                payload: {}
+                payload: {
+                    persistStore: true
+                }
             });
             break;
         case 404:

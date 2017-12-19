@@ -35,7 +35,7 @@ export const DEFAULT_ENTITY = {
     bio: '',
     pic: '',
     presentations: [],
-    registration_code_code: '',
+    registration_code: '',
     on_site_phone: '',
     registered: false,
     checked_in: false,
@@ -51,7 +51,12 @@ const speakerReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
         case LOGOUT_USER: {
-            return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
+            // we need this in case the token expired while editing the form
+            if (payload.hasOwnProperty('persistStore')) {
+                return state;
+            } else {
+                return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
+            }
         }
         break;
         case SET_CURRENT_SUMMIT:
@@ -74,7 +79,7 @@ const speakerReducer = (state = DEFAULT_STATE, action) => {
             }
 
             if (entity.hasOwnProperty('registration_code')) {
-                entity.registration_code_code = entity.registration_code.code;
+                entity.registration_code = entity.registration_code.code;
             }
 
             if (entity.hasOwnProperty('summit_assistance')) {

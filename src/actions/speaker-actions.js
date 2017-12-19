@@ -9,7 +9,9 @@ export const RESET_SPEAKER_FORM     = 'RESET_SPEAKER_FORM';
 export const UPDATE_SPEAKER         = 'UPDATE_SPEAKER';
 export const SPEAKER_UPDATED        = 'SPEAKER_UPDATED';
 export const SPEAKER_ADDED          = 'SPEAKER_ADDED';
-export const SPEAKER_VALIDATION     = 'SPEAKER_VALIDATION';
+export const PIC_ATTACHED           = 'PIC_ATTACHED';
+
+
 
 
 export const queryMembers = (summitId, input) => {
@@ -79,7 +81,7 @@ export const getSpeaker = (speakerId) => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_SPEAKER),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers/${speakerId}?access_token=${accessToken}&expand=member`,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers/${speakerId}?access_token=${accessToken}&expand=member,presentations`,
         authErrorHandler
     )({})(dispatch).then(dispatch(stopLoading()));
 };
@@ -160,8 +162,8 @@ const uploadFile = (entity, file) => (dispatch, getState) => {
 
     postRequest(
         null,
-        createAction(FILE_ATTACHED),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers/${entity.id}/attachment?access_token=${accessToken}`,
+        createAction(PIC_ATTACHED),
+        `${apiBaseUrl}/api/v1/speakers/${entity.id}/photo?access_token=${accessToken}`,
         file,
         authErrorHandler
     )({})(dispatch)

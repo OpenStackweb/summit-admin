@@ -69,7 +69,7 @@ class SpeakerForm extends React.Component {
         console.log('file uploaded');
         let formData = new FormData();
         formData.append('file', file);
-        this.props.onAttach(this.props.currentSummit.id, this.state.entity, formData)
+        this.props.onAttach(this.state.entity, formData)
     }
 
     handleRemoveFile(ev) {
@@ -86,15 +86,10 @@ class SpeakerForm extends React.Component {
         this.props.onSubmit(this.state.entity);
     }
 
-    handlePresentationLink(ev) {
-        let {entity} = this.state;
-        let {currentSummit, history} = this.props;
-
+    handlePresentationLink(event_id, ev) {
+        let {currentSummit} = this.props;
         ev.preventDefault();
-
-        let event_id = entity.id;
         let event_detail_url = currentSummit.schedule_event_detail_url.replace(':event_id',event_id).replace(':event_title','');
-
         window.open(event_detail_url, '_blank');
     }
 
@@ -139,8 +134,8 @@ class SpeakerForm extends React.Component {
                         <label> {T.translate("titles.registration_code")} </label>
                         <Input
                             className="form-control"
-                            id="registration_code_code"
-                            value={entity.registration_code_code}
+                            id="registration_code"
+                            value={entity.registration_code}
                             onChange={this.handleChange}
                         />
                     </div>
@@ -212,6 +207,23 @@ class SpeakerForm extends React.Component {
                         />
                     </div>
                 </div>
+                {entity.presentations.length &&
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <label> {T.translate("titles.presentations")} </label>
+                        <ul>
+                        {entity.presentations.map(p => {
+                            return (
+                              <li>
+                                  <a href="" onClick={this.handlePresentationLink.bind(this, p.id)} >{p.title}</a>
+                              </li>
+                            );
+                        })}
+                        </ul>
+                    </div>
+                </div>
+                }
+
 
 
                 <div className="row">

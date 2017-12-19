@@ -85,7 +85,7 @@ class EventForm extends React.Component {
         console.log('file uploaded');
         let formData = new FormData();
         formData.append('file', file);
-        this.props.onAttach(this.props.currentSummit.id, this.state.entity, formData)
+        this.props.onAttach(this.state.entity, formData)
     }
 
     handleRemoveFile(ev) {
@@ -122,7 +122,7 @@ class EventForm extends React.Component {
 
     handleEventLink(ev) {
         let {entity} = this.state;
-        let {currentSummit, history} = this.props;
+        let {currentSummit} = this.props;
 
         ev.preventDefault();
 
