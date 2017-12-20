@@ -15,6 +15,7 @@ import URI from "urijs"
 import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
 import { withRouter } from 'react-router-dom'
+import IdTokenVerifier from 'idtoken-verifier'
 
 class AuthorizationCallbackRoute extends React.Component {
 
@@ -27,9 +28,27 @@ class AuthorizationCallbackRoute extends React.Component {
 
     }
 
-    extractToken() {
-        let parse = URI.parseQuery(this.props.location.hash.substr(1));
-        return parse.access_token;
+    extractHashParams() {
+        return URI.parseQuery(this.props.location.hash.substr(1));
+    }
+
+    validateIdToken(idToken){
+        let verifier = new IdTokenVerifier({
+            issuer:   process.env['IDP_BASE_URL'],
+            audience: process.env['OAUTH2_CLIENT_ID']
+        });
+        let storedNonce = window.localStorage.getItem('nonce');
+        window.localStorage.removeItem('nonce');
+        console.log(`retrieved nonce ${storedNonce}`);
+        let jwt    = verifier.decode(idToken);
+        let alg    = jwt.header.alg;
+        let kid    = jwt.header.kid;
+        let aud    = jwt.payload.aud;
+        let iss    = jwt.payload.iss;
+        let exp    = jwt.payload.exp;
+        let nbf    = jwt.payload.nbf;
+        let tnonce = jwt.payload.nonce || null;
+        return tnonce == storedNonce && aud == process.env['OAUTH2_CLIENT_ID'] && iss == process.env['IDP_BASE_URL'];
     }
 
     render() {
@@ -38,8 +57,18 @@ class AuthorizationCallbackRoute extends React.Component {
         if(this.accessTokenParsed) return null;
 
 
-        let accessToken = this.extractToken();
-        if(accessToken == undefined){
+        let { access_token , id_token} = this.extractHashParams();
+
+        if(access_token == undefined){
+            return (
+                <Route render={ props => {
+                    return <Redirect to="/error" />
+                }} />
+            )
+        }
+
+        if(!this.validateIdToken(id_token))
+        {
             return (
                 <Route render={ props => {
                     return <Redirect to="/error" />
@@ -48,7 +77,7 @@ class AuthorizationCallbackRoute extends React.Component {
         }
 
         this.accessTokenParsed = true;
-        this.props.onUserAuth(accessToken, "");
+        this.props.onUserAuth(access_token, id_token);
         let url              = URI( window.location.href);
         let query            = url.search(true);
         let fragment         = URI.parseQuery(url.fragment());

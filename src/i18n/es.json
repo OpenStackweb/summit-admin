@@ -169,5 +169,28 @@
     "irc"                 : "Irc",
     "bio"                 : "Bio",
     "profile_pic"         : "Picture"
+  },
+  "schedule_builder_page":{
+    "messages":{
+      "unpublish_confirmation": "You are about to UnPublish this event!",
+      "bulk_unpublish_confirmation": "You are about to UnPublish these events!"
+    },
+    "titles":{
+      "unpublish_confirmation": "Are you sure?",
+      "bulk_unpublish_confirmation": "Are you sure?"
+    },
+    "buttons":{
+      "unpublish_confirmation": "Yes, UnPublish it!",
+      "bulk_unpublish_confirmation": "Yes, UnPublish them all!"
+    }
+  },
+  "empty_spots_modal": {
+    "labels": {
+    },
+    "placeholders": {
+      "start_date": "Enter Start Date",
+      "end_date": "Enter End Date",
+      "gap_size": "Enter Gap Size (Minutes)"
+    }
   }
 }

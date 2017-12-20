@@ -37,7 +37,10 @@ import { setEventSelectedState, setBulkEventSelectedState, performBulkAction } f
 import UnScheduleEventList from './unschedule-event-list';
 import ScheduleEventList from './schedule-event-list';
 import SummitEvent from '../../models/summit-event';
-import {BulkActionUnPublish, DefaultEventMinutesDuration, PixelsPerMinute} from '../../constants';
+import {
+    BulkActionEdit, BulkActionUnPublish, DefaultEventMinutesDuration, PixelsPerMinute,
+    TBALocation
+} from '../../constants';
 import ScheduleAdminDaySelector from './schedule-admin-day-selector';
 import ScheduleAdminVenueSelector from './schedule-admin-venue-selector';
 import ScheduleAdminEventTypeSelector from './schedule-admin-event-type-selector';
@@ -83,6 +86,8 @@ class ScheduleAdminDashBoard extends React.Component {
         this.onClickSelected                      = this.onClickSelected.bind(this);
         this.onSelectAllPublished                 = this.onSelectAllPublished.bind(this);
         this.onSelectedBulkActionPublished        = this.onSelectedBulkActionPublished.bind(this);
+        this.onSelectedBulkActionUnPublished      = this.onSelectedBulkActionUnPublished.bind(this);
+        this.onSelectAllUnPublished               = this.onSelectAllUnPublished.bind(this);
 
         this.fragmentParser     = new FragmentParser();
         this.filters            = this.parseFilterFromFragment();
@@ -122,7 +127,7 @@ class ScheduleAdminDashBoard extends React.Component {
                     filters['currentTime'] = value;
                     break;
                 case 'q':
-                    filters['currentScheduleEventsSearchTerm'] = value;
+                    filters['currentScheduleEventsSearchTerm'] = decodeURIComponent(value.replace(/\+/g, '%20'));
                     break;
             }
         }
@@ -380,15 +385,15 @@ class ScheduleAdminDashBoard extends React.Component {
 
     onUnPublishEvent(event){
         swal({
-            title: 'Are you sure?',
-            text: "You are about to UnPublish this event!",
+            title: T.translate("schedule_builder_page.titles.unpublish_confirmation"),
+            text: T.translate("schedule_builder_page.messages.unpublish_confirmation"),
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, UnPublish it!'
+            confirmButtonText: T.translate("schedule_builder_page.buttons.unpublish_confirmation"),
         }).then((result) => {
-            if (result) {
+            if (result.value) {
                 this.props.unPublishEvent(event);
             }
         })
@@ -466,20 +471,26 @@ class ScheduleAdminDashBoard extends React.Component {
         setBulkEventSelectedState(scheduleEvents, evt.target.checked, true);
     }
 
+    onSelectAllUnPublished(evt){
+        console.log(evt.target.checked);
+        let {unScheduleEvents, setBulkEventSelectedState} = this.props;
+        setBulkEventSelectedState(unScheduleEvents, evt.target.checked, false);
+    }
+
     onSelectedBulkActionPublished(bulkAction){
         let {selectedPublishedEvents, performBulkAction, history} = this.props;
         if(selectedPublishedEvents.length == 0) return;
         if(bulkAction == BulkActionUnPublish){
             swal({
-                title: 'Are you sure?',
-                text: "You are about to UnPublish these events!",
+                title: T.translate("schedule_builder_page.titles.bulk_unpublish_confirmation"),
+                text: T.translate("schedule_builder_page.messages.bulk_unpublish_confirmation"),
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, UnPublish them all!'
+                confirmButtonText: T.translate("schedule_builder_page.buttons.bulk_unpublish_confirmation"),
             }).then((result) => {
-                if (result) {
+                if (result.value) {
                     performBulkAction(selectedPublishedEvents, bulkAction, true, history);
                 }
             })
@@ -487,6 +498,12 @@ class ScheduleAdminDashBoard extends React.Component {
         }
 
         performBulkAction(selectedPublishedEvents, bulkAction, true, history);
+    }
+
+    onSelectedBulkActionUnPublished(bulkAction){
+        let {selectedUnPublishedEvents, performBulkAction, history} = this.props;
+        if(selectedUnPublishedEvents.length == 0) return;
+        performBulkAction(selectedUnPublishedEvents, bulkAction, false, history);
     }
 
     render(){
@@ -509,7 +526,8 @@ class ScheduleAdminDashBoard extends React.Component {
             scheduleEventsSearch,
             currentUnScheduleOrderBy,
             emptySpots,
-            selectedPublishedEvents
+            selectedPublishedEvents,
+            selectedUnPublishedEvents,
         } = this.props;
 
         if(currentSummit == null ) return null;
@@ -538,18 +556,17 @@ class ScheduleAdminDashBoard extends React.Component {
 
         // parse summit venues
         // TBD location
-        let tbdLocation = { id : 0 , name: 'TBD',  class_name: 'SummitVenue'};
 
         let tbdOption   = {
-            value: tbdLocation,
-            label: tbdLocation.name,
+            value: TBALocation,
+            label: TBALocation.name,
         };
 
         let venues = [
             tbdOption
         ];
 
-        if(currentLocation != null && tbdLocation.id == currentLocation.id){
+        if(currentLocation != null && TBALocation.id == currentLocation.id){
             currentVenueSelectorItem = tbdOption;
         }
 
@@ -595,10 +612,10 @@ class ScheduleAdminDashBoard extends React.Component {
         // presentation selection status
 
         let presentationSelectionStatusOptions = [
-            { value : 'selected', label: 'Selected' },
-            { value : 'accepted', label:  'Accepted' },
-            { value : 'alternate', label: 'Alternate'},
-            { value : 'lightning-accepted', label: 'Lightning Accepted' },
+            { value : 'selected',            label: 'Selected'            },
+            { value : 'accepted',            label: 'Accepted'            },
+            { value : 'alternate',           label: 'Alternate'           },
+            { value : 'lightning-accepted',  label: 'Lightning Accepted'  },
             { value : 'lightning-alternate', label: 'Lightning Alternate' },
         ];
 
@@ -607,6 +624,17 @@ class ScheduleAdminDashBoard extends React.Component {
         let orderByOptions = [
             { value : 'title+', label: 'Title' },
             { value : 'id+', label: 'Id' },
+        ]
+
+        // bulk options published
+
+        let bulkOptionsPublished = [
+            { value : BulkActionEdit, label:T.translate("published_bulk_actions_selector.options.edit")},
+            { value : BulkActionUnPublish, label:T.translate("published_bulk_actions_selector.options.unpublish")},
+        ];
+
+        let bulkOptionsUnPublished = [
+            { value : BulkActionEdit, label:T.translate("published_bulk_actions_selector.options.edit")},
         ]
 
         return(
@@ -650,6 +678,7 @@ class ScheduleAdminDashBoard extends React.Component {
                       && ( emptySpots.length == 0 )
                       && ( scheduleEvents.length > 0)
                       && <ScheduleAdminsBulkActionsSelector
+                            bulkOptions={bulkOptionsPublished}
                             onSelectAll={this.onSelectAllPublished}
                             onSelectedBulkAction={this.onSelectedBulkActionPublished}
                          >
@@ -661,20 +690,20 @@ class ScheduleAdminDashBoard extends React.Component {
                         && (emptySpots.length == 0 )
                         &&
                         <ScheduleEventList
-                        startTime={"07:00"}
-                        endTime={"22:00"}
-                        currentSummit={currentSummit}
-                        interval={DefaultEventMinutesDuration}
-                        currentDay={currentDay}
-                        pixelsPerMinute={PixelsPerMinute}
-                        onScheduleEvent={this.onScheduleEvent}
-                        onScheduleEventWithDuration={this.onScheduleEventWithDuration}
-                        events={scheduleEvents}
-                        childEvents={childScheduleEvents}
-                        onUnPublishEvent={this.onUnPublishEvent}
-                        onEditEvent={this.onEditEvent}
-                        onClickSelected={this.onClickSelected}
-                        selectedPublishedEvents={selectedPublishedEvents}
+                            startTime={"07:00"}
+                            endTime={"22:00"}
+                            currentSummit={currentSummit}
+                            interval={DefaultEventMinutesDuration}
+                            currentDay={currentDay}
+                            pixelsPerMinute={PixelsPerMinute}
+                            onScheduleEvent={this.onScheduleEvent}
+                            onScheduleEventWithDuration={this.onScheduleEventWithDuration}
+                            events={scheduleEvents}
+                            childEvents={childScheduleEvents}
+                            onUnPublishEvent={this.onUnPublishEvent}
+                            onEditEvent={this.onEditEvent}
+                            onClickSelected={this.onClickSelected}
+                            selectedPublishedEvents={selectedPublishedEvents}
                         />
                     }
 
@@ -727,7 +756,6 @@ class ScheduleAdminDashBoard extends React.Component {
                                 </div>
                                 <div className="col-md-6">
                                     { currentEventType != null && currentEventType.class_name == "PresentationType" &&
-
                                     <ScheduleAdminPresentationSelectionStatusSelector
                                         presentationSelectionStatus={presentationSelectionStatusOptions}
                                         onPresentationSelectionStatusChanged={this.onPresentationSelectionStatusChanged}
@@ -741,8 +769,9 @@ class ScheduleAdminDashBoard extends React.Component {
                     {
                          ( unScheduleEvents.length > 0) &&
                          <ScheduleAdminsBulkActionsSelector
-                            onSelectAll={this.onSelectAllPublished}
-                            onSelectedBulkAction={this.onSelectedBulkActionPublished}
+                             bulkOptions={bulkOptionsUnPublished}
+                             onSelectAll={this.onSelectAllUnPublished}
+                             onSelectedBulkAction={this.onSelectedBulkActionUnPublished}
                         />
                     }
                     <UnScheduleEventList
@@ -751,6 +780,8 @@ class ScheduleAdminDashBoard extends React.Component {
                             lastPage={unScheduleEventsLasPage}
                             onEditEvent={this.onEditEvent}
                             onPageChange={this.onUnScheduleEventsPageChange}
+                            onClickSelected={this.onClickSelected}
+                            selectedUnPublishedEvents={selectedUnPublishedEvents}
                    />
                 </div>
             </div>

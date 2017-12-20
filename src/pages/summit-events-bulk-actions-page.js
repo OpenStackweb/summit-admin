@@ -21,7 +21,11 @@ import {
     updateEventStartDateLocal,
     updateEventEndDateLocal,
     updateEvents,
-    updateAndPublishEvents } from '../actions/summit-event-bulk-actions';
+    updateAndPublishEvents,
+    updateEventsLocationLocal,
+    updateEventsStartDateLocal,
+    updateEventsEndDateLocal,
+} from '../actions/summit-event-bulk-actions';
 import {getSummitById} from "../actions/summit-actions";
 import T from 'i18n-react/dist/i18n-react'
 
@@ -57,7 +61,19 @@ class SummitEventsBulkActionsPage extends React.Component {
     }
 
     render(){
-        let {events, currentSummit, updateEventLocationLocal, updateEventTitleLocal, updateEventStartDateLocal, updateEventEndDateLocal, updateEvents, updateAndPublishEvents, updateEventValidationLocal } = this.props;
+        let {
+            events,
+            currentSummit,
+            updateEventLocationLocal,
+            updateEventTitleLocal,
+            updateEventStartDateLocal,
+            updateEventEndDateLocal,
+            updateEvents,
+            updateAndPublishEvents,
+            updateEventsLocationLocal,
+            updateEventsStartDateLocal,
+            updateEventsEndDateLocal,
+        } = this.props;
         if(currentSummit == null) return null;
 
         return (
@@ -72,6 +88,9 @@ class SummitEventsBulkActionsPage extends React.Component {
                     updateEventEndDateLocal={updateEventEndDateLocal}
                     updateEvents={updateEvents}
                     updateAndPublishEvents={updateAndPublishEvents}
+                    updateEventsLocationLocal={updateEventsLocationLocal}
+                    updateEventsStartDateLocal={updateEventsStartDateLocal}
+                    updateEventsEndDateLocal={updateEventsEndDateLocal}
                     history={this.props.history}
                 ></SummitEventBulkEditorForm>
             </div>
@@ -98,5 +117,8 @@ export default connect (
         updateEventEndDateLocal,
         updateEvents,
         updateAndPublishEvents,
+        updateEventsLocationLocal,
+        updateEventsStartDateLocal,
+        updateEventsEndDateLocal,
     }
 )(SummitEventsBulkActionsPage);

@@ -16,31 +16,45 @@ import {createAction, getRequest, startLoading, stopLoading} from "openstack-uic
 import swal from "sweetalert2";
 import {authErrorHandler, apiBaseUrl} from "./base-actions";
 import { AdminGroupCode, SummitAdminGroupCode } from '../constants';
-
+import URI from "urijs";
 export const SET_LOGGED_USER                = 'SET_LOGGED_USER';
 export const LOGOUT_USER                    = 'LOGOUT_USER';
 export const REQUEST_USER_INFO              = 'REQUEST_USER_INFO';
 export const RECEIVE_USER_INFO              = 'RECEIVE_USER_INFO';
+
+const createNonce = (length) => {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for(var i = 0; i < length; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
+}
 
 export const doLogin = (backUrl = null) => {
 
     let oauth2ClientId = process.env['OAUTH2_CLIENT_ID'];
     let baseUrl        = process.env['IDP_BASE_URL'];
     let scopes         = process.env['SCOPES'];
-    let redirectUri    =  window.location.origin+'/auth/callback';
+    let redirectUri    =`${ window.location.origin}/auth/callback`;
+
     if(backUrl != null)
-        redirectUri += `?BackUrl=${encodeURIComponent(backUrl)}`;
+        redirectUri += `?BackUrl=${encodeURI(backUrl)}`;
 
-    var authUrl        = baseUrl +"/oauth2/auth"+
-        "?response_type=token id_token" +
-        "&approval_prompt=force"+
-        "&prompt=login+consent"+
-        "&scope=" + encodeURI(scopes)+
-        "&nonce=12345"+
-        "&client_id="  + encodeURI(oauth2ClientId) +
-        "&redirect_uri=" + redirectUri;
-
-    window.location = authUrl;
+    let nonce = createNonce(16);
+    console.log(`created nonce ${nonce}`);
+    window.localStorage.setItem('nonce', nonce);
+    let url   = URI(`${baseUrl}/oauth2/auth`);
+    url       = url.query({
+        "response_type"   : encodeURI("token id_token"),
+        "approval_prompt" : "force",
+        "prompt"          : "login+consent",
+        "scope"           : encodeURI(scopes),
+        "nonce"           : nonce,
+        "client_id"       : encodeURI(oauth2ClientId),
+        "redirect_uri"    : encodeURI(redirectUri)
+    });
+    window.location = url.toString();
 }
 
 export const onUserAuth = (accessToken, idToken) => (dispatch) => {

@@ -15,6 +15,12 @@
   width: 90%;
   color: @unschedule_event_text_color;
   .no-margin;
+  .row{
+    height: 100%;
+    .col-md-12{
+      height: 100%;
+    }
+  }
   .event-container{
     height: 100%;
     .no-margin;
@@ -107,9 +113,9 @@
 }
 
 .event-content{
-  height: 90%;
+  height: 100%;
   width: 100%;
-  padding: 1em;
+  padding: 2em;
 }
 
 .event-content-half{
@@ -278,17 +284,28 @@
 }
 
 .edit-unpublished-event-btn{
-  position: relative;
-  left:97%;
   cursor: pointer;
+  padding-top: 10px;
+  z-index: @event_z_index + 1;
+  left: 95%;
+  position: absolute;
 }
 
 .schedule-event-result {
   background-color: @schedule_event_background_color;
   height: @event_initial_height !important;
   width: 100%;
-  .edit-published-event-btn{
-    left:97%;
+  position: relative;
+
+  .edit-published-event-btn {
+    cursor: pointer;
+    padding-top: 10px;
+    z-index: @event_z_index + 1;
+    left: 97.5%;
+    position: absolute;
+  }
+  .col-md-12{
+    padding:1em
   }
 }
 
@@ -298,7 +315,6 @@
 }
 
 .event-title {
-  padding: 10px;
   &:hover{
     cursor: pointer;
   }

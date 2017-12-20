@@ -31,11 +31,12 @@ class AuthorizedRoute extends React.Component {
                 if(location.hash != null && location.hash != null){
                     backUrl += location.hash
                 }
+
                 return isLoggedUser
                     ? <Component currentSummit={currentSummit} {...props} />
                     : <Redirect
                         to={{
-                            pathname: `/?BackUrl=${backUrl}`,
+                            pathname: `/?BackUrl=${encodeURIComponent(backUrl)}`,
                             state: { from: location }
                         }}
                       />

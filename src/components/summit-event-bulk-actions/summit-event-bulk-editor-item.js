@@ -97,9 +97,9 @@ class SummitEventBulkEditorItem extends React.Component
 
     render(){
         let { event, currentSummit, venuesOptions } = this.props;
-        let currentLocation       = venuesOptions.filter((option) => option.value.id == event.location_id).shift()
-        let currenSummitStartDate = moment.tz(currentSummit.start_date * 1000, currentSummit.time_zone.name).hour(0).minute(0).second(0);
-        let currenSummitEndDate   = moment.tz(currentSummit.end_date * 1000, currentSummit.time_zone.name).hour(23).minute(59).second(59);
+        let currentLocation        = venuesOptions.filter((option) => option.value.id == event.location_id).shift()
+        let currentSummitStartDate = moment.tz(currentSummit.start_date * 1000, currentSummit.time_zone.name).hour(0).minute(0).second(0);
+        let currentSummitEndDate   = moment.tz(currentSummit.end_date * 1000, currentSummit.time_zone.name).hour(23).minute(59).second(59);
 
         return (
             <div className="row event-bulk-editor-item">
@@ -135,9 +135,9 @@ class SummitEventBulkEditorItem extends React.Component
                             inputProps={{placeholder: T.translate("bulk_actions_page.placeholders.start_date")}}
                             timezone={currentSummit.time_zone.name}
                             timeConstraints={{ hours: { min: 7, max: 22}}}
-                            validation={{after: currenSummitStartDate.valueOf()/1000, before: currenSummitEndDate.valueOf()/1000}}
+                            validation={{after: currentSummitStartDate.valueOf()/1000, before: currentSummitEndDate.valueOf()/1000}}
                             onChange={this.handleChangeDateFrom}
-                            defaultValue={this.getFormattedTime(event.start_date)}
+                            value={this.getFormattedTime(event.start_date)}
                         />
                         <FormControl.Feedback/>
                     </FormGroup>
@@ -150,9 +150,9 @@ class SummitEventBulkEditorItem extends React.Component
                             timeConstraints={{ hours: { min: 7, max: 22}}}
                             inputProps={{placeholder: T.translate("bulk_actions_page.placeholders.end_date")}}
                             timezone={currentSummit.time_zone.name}
-                            validation={{after: currenSummitStartDate.valueOf()/1000, before: currenSummitEndDate.valueOf()/1000}}
+                            validation={{after: currentSummitStartDate.valueOf()/1000, before: currentSummitEndDate.valueOf()/1000}}
                             onChange={this.handleChangeDateTo}
-                            defaultValue={this.getFormattedTime(event.end_date)}
+                            value={this.getFormattedTime(event.end_date)}
                         />
                         <FormControl.Feedback />
                     </FormGroup>

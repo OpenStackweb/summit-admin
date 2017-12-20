@@ -17,7 +17,7 @@ import swal from "sweetalert2";
 import DateTimePicker from '../datetimepicker'
 import ScheduleAdminVenueSelector from '../schedule-builder/schedule-admin-venue-selector';
 import moment from "moment-timezone";
-import SummitEvent from "../../models/summit-event";
+import {TBALocation} from "../../constants";
 
 class SummitEventBulkEditorForm extends React.Component
 {
@@ -30,10 +30,12 @@ class SummitEventBulkEditorForm extends React.Component
         this.onStartDateChanged        = this.onStartDateChanged.bind(this);
         this.onEndDateChanged          = this.onEndDateChanged.bind(this);
         this.onSelectedEvent           = this.onSelectedEvent.bind(this);
-        this.onChangeValidationState   = this.onChangeValidationState.bind(this);
         this.onBulkLocationChange      = this.onBulkLocationChange.bind(this);
         this.handleChangeBulkStartDate = this.handleChangeBulkStartDate.bind(this);
         this.handleChangeBulkEndDate   = this.handleChangeBulkEndDate.bind(this);
+        this.state = {
+            currentBulkLocation : null
+        }
     }
 
     onApplyChanges(evt){
@@ -89,42 +91,39 @@ class SummitEventBulkEditorForm extends React.Component
         this.props.updateEventEndDateLocal(events[idx], endDate, isValid)
     }
 
-    onChangeValidationState(event, isValid){
-        this.props.updateEventValidationLocal(event, isValid)
-    }
-
     onSelectedEvent(event){
         let { currentSummit} = this.props;
         this.props.history.push(`/app/summits/${currentSummit.id}/events/${event.id}`);
         return false;
     }
 
+    // bulk controls handlers
     onBulkLocationChange(location){
-
+        this.setState({ ...this.state, currentBulkLocation: location});
+        this.props.updateEventsLocationLocal(location)
     }
 
     handleChangeBulkStartDate(ev){
-        let {value, id} = ev.target;
-        value = value.valueOf()/1000;
-
+        let { value } = ev.target;
+        this.props.updateEventsStartDateLocal(value.valueOf()/1000)
     }
 
     handleChangeBulkEndDate(ev){
-        let {value, id} = ev.target;
-        value = value.valueOf()/1000;
-
+        let { value } = ev.target;
+        this.props.updateEventsEndDateLocal(value.valueOf()/1000)
     }
 
     render(){
         let { events, currentSummit} = this.props;
-        let currenSummitStartDate = moment.tz(currentSummit.start_date * 1000, currentSummit.time_zone.name).hour(0).minute(0).second(0);
-        let currenSummitEndDate   = moment.tz(currentSummit.end_date * 1000, currentSummit.time_zone.name).hour(23).minute(59).second(59);
+        let currentSummitStartDate   = moment.tz(currentSummit.start_date * 1000, currentSummit.time_zone.name).hour(0).minute(0).second(0);
+        let currentSummitEndDate     = moment.tz(currentSummit.end_date * 1000, currentSummit.time_zone.name).hour(23).minute(59).second(59);
+
 
         if(!currentSummit) return null;
-        let tbaLocation = { id: 0, name:'TBD'};
         let venuesOptions = [
-            { value:tbaLocation, label: tbaLocation.name }
+            { value: TBALocation, label: TBALocation.name }
         ];
+
 
         for(let i = 0; i < currentSummit.locations.length; i++) {
             let location = currentSummit.locations[i];
@@ -136,11 +135,15 @@ class SummitEventBulkEditorForm extends React.Component
                 venuesOptions.push(subOption);
             }
         }
+
+        let currentBulkLocation = venuesOptions.filter((option) =>  this.state.currentBulkLocation != null && option.value.id == this.state.currentBulkLocation.id).shift();
+
         return (
             <form>
                 <div className="row">
                     <div className="col-md-4">
                         <ScheduleAdminVenueSelector
+                            currentValue={currentBulkLocation}
                             onVenueChanged={this.onBulkLocationChange}
                             venues={venuesOptions}
                         />
@@ -152,9 +155,9 @@ class SummitEventBulkEditorForm extends React.Component
                             inputProps={{placeholder: T.translate("bulk_actions_page.placeholders.start_date")}}
                             timezone={currentSummit.time_zone.name}
                             timeConstraints={{ hours: { min: 7, max: 22}}}
-                            validation={{after: currenSummitStartDate.valueOf()/1000, before: currenSummitEndDate.valueOf()/1000}}
+                            validation={{after: currentSummitStartDate.valueOf()/1000, before: currentSummitEndDate.valueOf()/1000}}
                             onChange={this.handleChangeBulkStartDate}
-                        />
+                         />
                     </div>
                     <div className="col-md-4">
                         <DateTimePicker
@@ -163,7 +166,7 @@ class SummitEventBulkEditorForm extends React.Component
                             timeConstraints={{ hours: { min: 7, max: 22}}}
                             inputProps={{placeholder: T.translate("bulk_actions_page.placeholders.end_date")}}
                             timezone={currentSummit.time_zone.name}
-                            validation={{after: currenSummitStartDate.valueOf()/1000, before: currenSummitEndDate.valueOf()/1000}}
+                            validation={{after: currentSummitStartDate.valueOf()/1000, before: currentSummitEndDate.valueOf()/1000}}
                             onChange={this.handleChangeBulkEndDate}
                         />
                     </div>
@@ -188,7 +191,6 @@ class SummitEventBulkEditorForm extends React.Component
                             onStartDateChanged={this.onStartDateChanged}
                             onEndDateChanged={this.onEndDateChanged}
                             onSelectedEvent={this.onSelectedEvent}
-                            onChangeValidationState={this.onChangeValidationState}
                         ></SummitEventBulkEditorItem>
                     ))
                 }

@@ -61,8 +61,18 @@ class UnScheduleEvent extends React.Component {
         onEditEvent(event);
     }
 
+    onClickSelected(){
+        let { event, onClickSelected } = this.props;
+        onClickSelected(event);
+    }
+
+    onChanged(){
+
+    }
+
     render() {
-        const { connectDragSource, isDragging, event } = this.props;
+        const { connectDragSource, isDragging, event, selectedUnPublishedEvents } = this.props;
+        let isSelected = selectedUnPublishedEvents.includes(event.id);
         return connectDragSource(
 
                 <div className='row unschedule-event'
@@ -72,6 +82,12 @@ class UnScheduleEvent extends React.Component {
                      }}>
                         <div className="row">
                             <div className="col-md-12">
+                                <input className="select-event-btn"
+                                       id={`selected_event_${event.id}`}
+                                       type="checkbox"
+                                       checked={isSelected}
+                                       onChange={this.onChanged.bind(this)}
+                                       onClick={this.onClickSelected.bind(this)}/>
                                 <i className="fa fa-pencil-square-o edit-unpublished-event-btn" title="edit event" aria-hidden="true" onClick={this.onClickEdit.bind(this)}></i>
                                 <div className="col-md-12 event-container">
                                     <div className="event-content">

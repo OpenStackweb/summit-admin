@@ -11,7 +11,6 @@
  * limitations under the License.
  **/
 import React from 'react';
-import {BulkActionEdit, BulkActionUnPublish} from "../../../constants";
 import T from "i18n-react/dist/i18n-react";
 import './styles.less';
 
@@ -24,15 +23,18 @@ class ScheduleAdminsBulkActionsSelector extends React.Component {
     }
 
     render(){
-        let {onSelectAll} = this.props;
+        let { onSelectAll, bulkOptions } = this.props;
         return (
             <div className="row bulk-actions-selector-container">
                 <div className="col-md-6">
                     <input type="checkbox" onClick={onSelectAll}/>
                     <select ref={(select) => { this.actionTypeSelect = select; }}>
                         <option value="">{T.translate("published_bulk_actions_selector.options.default")}</option>
-                        <option value={BulkActionEdit}>{T.translate("published_bulk_actions_selector.options.edit")}</option>
-                        <option value={BulkActionUnPublish}>{T.translate("published_bulk_actions_selector.options.unpublish")}</option>
+                        {
+                            bulkOptions.map((option, idx) => (
+                                <option key={idx} value={option.value}>{option.label}</option>
+                            ))
+                        }
                     </select>
                 </div>
                 <div className="col-md-6">

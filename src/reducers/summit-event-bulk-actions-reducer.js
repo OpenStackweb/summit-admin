@@ -16,7 +16,10 @@ import { RECEIVE_SELECTED_EVENTS,
     UPDATED_REMOTE_EVENTS,
     UPDATE_EVENT_SELECTED_STATE,
     UPDATE_EVENT_SELECTED_STATE_BULK,
-    UPDATE_VALIDATION_STATE
+    UPDATE_VALIDATION_STATE,
+    UPDATE_LOCATION_BULK,
+    UPDATE_START_DATE_BULK,
+    UPDATE_END_DATE_BULK,
 } from '../actions/summit-event-bulk-actions';
 
 import{ LOGOUT_USER } from '../actions/auth-actions';
@@ -59,8 +62,8 @@ const summitEventBulkActionReducer = (state = DEFAULT_STATE, action) => {
                 return {...event, is_valid : model.isValid()}
             });
             return { ... state, eventOnBulkEdition}
-            break;
         }
+       break;
         case RECEIVE_SELECTED_EVENTS:
             let { data } = payload.response;
             return {...state,
@@ -128,9 +131,37 @@ const summitEventBulkActionReducer = (state = DEFAULT_STATE, action) => {
             return {...state, selectedUnPublishedEvents}
         }
         break;
+        case UPDATE_LOCATION_BULK:{
+            let { location }      = payload;
+            let { eventOnBulkEdition } = state;
+            eventOnBulkEdition = eventOnBulkEdition.map(event => {
+                return {...event, location_id : location.id}
+            });
+            return { ... state, eventOnBulkEdition}
+        }
+        break;
+        case UPDATE_START_DATE_BULK:{
+            let { start_date }      = payload;
+            let { eventOnBulkEdition } = state;
+            eventOnBulkEdition = eventOnBulkEdition.map(event => {
+                return {...event, start_date:start_date }
+            });
+            return { ... state, eventOnBulkEdition}
+        }
+            break;
+        case UPDATE_END_DATE_BULK:{
+            let { end_date }      = payload;
+            let { eventOnBulkEdition } = state;
+            eventOnBulkEdition = eventOnBulkEdition.map(event => {
+                return {...event, end_date}
+            });
+            return { ... state, eventOnBulkEdition}
+        }
+            break;
         case LOGOUT_USER:{
             return DEFAULT_STATE;
         }
+            break;
         case UPDATED_REMOTE_EVENTS:
         default:
             return state;

@@ -18,7 +18,7 @@ import T from "i18n-react/dist/i18n-react";
 class UnScheduleEventList extends React.Component
 {
     render(){
-        let { events, currentPage, lastPage, onPageChange, onEditEvent } = this.props;
+        let { events, currentPage, lastPage, onPageChange, onEditEvent, selectedUnPublishedEvents, onClickSelected } = this.props;
         return (
             <div>
                 { events.length == 0 &&
@@ -29,7 +29,12 @@ class UnScheduleEventList extends React.Component
                         {
                             events.map((event, index) => (
                                 <li key={index}>
-                                    <UnScheduleEvent event={event} onEditEvent={onEditEvent}></UnScheduleEvent>
+                                    <UnScheduleEvent
+                                        event={event}
+                                        onEditEvent={onEditEvent}
+                                        selectedUnPublishedEvents={selectedUnPublishedEvents}
+                                        onClickSelected={onClickSelected}
+                                    />
                                 </li>
                             ))
                         }

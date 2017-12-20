@@ -1,3 +1,16 @@
+/**
+ * Copyright 2017 OpenStack Foundation
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ **/
+
 import {createAction, getRequest, putRequest, deleteRequest, startLoading, stopLoading} from "openstack-uicore-foundation";
 import {apiBaseUrl, authErrorHandler, showMessage} from "./base-actions";
 import T from 'i18n-react/dist/i18n-react'
@@ -5,15 +18,17 @@ import URI from "urijs";
 import {BulkActionEdit, BulkActionUnPublish} from '../constants';
 import { getPublishedEventsBySummitDayLocation } from './summit-builder-actions';
 
-
 export const UPDATE_LOCAL_EVENT               = 'UPDATE_LOCAL_EVENT';
 export const RECEIVE_SELECTED_EVENTS          = 'REQUEST_SELECTED_EVENTS';
 export const UPDATED_REMOTE_EVENTS            = 'UPDATED_REMOTE_EVENTS';
 export const UPDATE_EVENT_SELECTED_STATE      = 'UPDATE_EVENT_SELECTED_STATE';
 export const UPDATE_EVENT_SELECTED_STATE_BULK = 'UPDATE_EVENT_SELECTED_STATE_BULK';
 export const UPDATE_VALIDATION_STATE          = 'UPDATE_VALIDATION_STATE';
+export const UPDATE_LOCATION_BULK             = 'UPDATE_LOCATION_BULK';
+export const UPDATE_START_DATE_BULK           = 'UPDATE_START_DATE_BULK';
+export const UPDATE_END_DATE_BULK             = 'UPDATE_END_DATE_BULK';
 
-export const getSummitEventsById = (summitId, eventIds, published = false ) => (dispatch, getState) => {
+export const getSummitEventsById = (summitId, eventIds ) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -24,9 +39,12 @@ export const getSummitEventsById = (summitId, eventIds, published = false ) => (
         if(filter!='') filter += ',';
         filter += `id==${id}`;
     }
+
     let params = {
         access_token : accessToken,
-        filter: filter
+        filter: filter,
+        page: 1,
+        per_page: eventIds.length < 5 ? 5 : eventIds.length
     };
 
     return getRequest(
@@ -191,4 +209,16 @@ export const performBulkAction = (eventsIds, bulkAction, published, history) => 
         }
         break;
     }
+}
+
+export const updateEventsLocationLocal = (location) => (dispatch) => {
+    dispatch(createAction(UPDATE_LOCATION_BULK)({location}));
+}
+
+export const updateEventsStartDateLocal = (startDate) => (dispatch) => {
+    dispatch(createAction(UPDATE_START_DATE_BULK)({start_date:startDate}));
+}
+
+export const updateEventsEndDateLocal = (endDate) => (dispatch) => {
+    dispatch(createAction(UPDATE_END_DATE_BULK)({end_date:endDate}));
 }
