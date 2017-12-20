@@ -30,7 +30,7 @@ class ScheduleAdminDaySelector extends React.Component {
         let { days, currentValue } = this.props;
         return (
             <Select
-                placeholder={T.translate("placeholders.select_day")}
+                placeholder={T.translate("schedule.placeholders.select_day")}
                 className="day-selector"
                 name="form-field-name"
                 value={currentValue}

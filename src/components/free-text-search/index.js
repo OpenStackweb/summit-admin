@@ -51,14 +51,14 @@ class FreeTextSearch extends React.Component {
                                defaultValue={this.props.value}
                                className="form-control"
                                ref={(input) => { this.searchTxt = input; }}
-                               placeholder={T.translate("placeholders.search_speakers")}
+                               placeholder={T.translate("general.placeholders.search_speakers")}
                                onKeyPress={this.onKeyPressed}
                         />
                         <span className="input-group-btn" style={{width: 5 +'%'}}>
-                            <button onClick={this.onSearchClick} className="btn btn-default" title={T.translate("titles.search")}>
+                            <button onClick={this.onSearchClick} className="btn btn-default" title={T.translate("general.search")}>
                                 <i className="fa fa-search"></i>
                             </button>
-                            <button onClick={this.onClearClick} className="btn btn-default" title={T.translate("titles.clear")}>
+                            <button onClick={this.onClearClick} className="btn btn-default" title={T.translate("general.clear")}>
                                 <i className="fa fa-times"></i>
                             </button>
                         </span>

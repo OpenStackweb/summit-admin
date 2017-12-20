@@ -37,7 +37,7 @@ class ScheduleAdminVenueSelector extends React.Component {
         let { venues, currentValue } = this.props;
         return (
             <Select
-                placeholder={T.translate("placeholders.select_venue")}
+                placeholder={T.translate("schedule.placeholders.select_venue")}
                 className="venues-selector"
                 name="form-field-name"
                 value={currentValue}

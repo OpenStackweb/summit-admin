@@ -66,31 +66,31 @@ class NavMenu extends React.Component {
             <Menu isOpen={ this.state.menuOpen }  noOverlay width={ 300 } pageWrapId={ "page-wrap" } >
                 <a id="directory-menu" className="menu-item" onClick={(e) => this.onMenuItemClick(e,'directory')} >
                     <i className="fa fa-fw fa-list-ul" />
-                    {T.translate("titles.directory")}
+                    {T.translate("menu.directory")}
                 </a>
                 <a id="dashboard-menu" className="menu-item" onClick={(e) => this.onMenuItemClick(e,'dashboard')} href="#">
                     <i className="fa fa-dashboard" />
-                    {T.translate("titles.dashboard")}
+                    {T.translate("menu.dashboard")}
                 </a>
                 <a id="events-menu" className="menu-item" onClick={(e) => this.toggleSubMenu(e, 'events')} href="#">
                     <i className="fa fa-calendar" />
-                    {T.translate("titles.events")}
+                    {T.translate("menu.events")}
                 </a>
                 {this.state.subMenuOpen == 'events' &&
                 <div className="submenu">
                     <a id="schedule-menu" className="menu-item" onClick={(e) => this.onMenuItemClick(e,'schedule')} >
                         <i className="fa fa-chevron-right"/>
-                        {T.translate("titles.schedule")}
+                        {T.translate("menu.schedule")}
                     </a>
                     <a id="new-event-menu" className="menu-item" onClick={(e) => this.onMenuItemClick(e,'new_event')}>
                         <i className="fa fa-chevron-right"/>
-                        {T.translate("titles.new_event")}
+                        {T.translate("menu.new_event")}
                     </a>
                 </div>
                 }
                 <a id="speakers-menu" className="menu-item" onClick={(e) => this.onMenuItemClick(e,'speakers')}>
                     <i className="fa fa-users" />
-                    {T.translate("titles.speakers")}
+                    {T.translate("general.speakers")}
                 </a>
             </Menu>
         );

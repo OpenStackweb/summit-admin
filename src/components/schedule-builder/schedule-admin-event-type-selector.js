@@ -30,7 +30,7 @@ class ScheduleAdminEventTypeSelector extends React.Component {
         let { eventTypes, currentValue } = this.props;
         return (
             <Select
-                placeholder={T.translate("placeholders.select_event_type")}
+                placeholder={T.translate("schedule.placeholders.select_event_type")}
                 className="event-type-selector"
                 name="form-field-name"
                 value={currentValue}

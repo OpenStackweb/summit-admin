@@ -15,7 +15,7 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import TextEditor from '../editor-input'
-import MemberInput from '../speaker-input'
+import MemberInput from '../member-input'
 import UploadInput from '../upload-input'
 import Input from '../text-input'
 import {findElementPos} from '../../utils/methods'
@@ -60,6 +60,10 @@ class SpeakerForm extends React.Component {
             value = ev.target.checked;
         }
 
+        if (ev.target.type == 'memberinput') {
+            entity.email = '';
+        }
+
         errors[id] = '';
         entity[id] = value;
         this.setState({entity: entity, errors: errors});
@@ -83,7 +87,7 @@ class SpeakerForm extends React.Component {
         let entity = {...this.state.entity};
         ev.preventDefault();
 
-        this.props.onSubmit(this.state.entity);
+        this.props.onSubmit(this.state.entity, this.props.history);
     }
 
     handlePresentationLink(event_id, ev) {
@@ -111,31 +115,34 @@ class SpeakerForm extends React.Component {
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
                     <div className="col-md-4">
-                        <label> {T.translate("titles.member")} *</label>
+                        <label> {T.translate("general.member")} *</label>
                         <MemberInput
-                            id="member_id"
-                            value={entity.member_id}
+                            id="member"
+                            value={entity.member}
                             onChange={this.handleChange}
                             summitId={currentSummit.id}
                             multi={false}
                         />
                     </div>
+                    {entity.id != 0 &&
                     <div className="col-md-4">
-                        <label> {T.translate("titles.email")} </label>
+                        <label> {T.translate("general.email")} </label>
                         <Input
                             className="form-control"
                             id="email"
-                            disabled={entity.id != 0}
+                            disabled="true"
                             value={entity.email}
                             onChange={this.handleChange}
                         />
                     </div>
+                    }
                     <div className="col-md-4">
-                        <label> {T.translate("titles.registration_code")} </label>
+                        <label> {T.translate("edit_speaker.registration_code")} </label>
                         <Input
                             className="form-control"
                             id="registration_code"
                             value={entity.registration_code}
+                            disabled={entity.code_redeemed}
                             onChange={this.handleChange}
                         />
                     </div>
@@ -144,59 +151,59 @@ class SpeakerForm extends React.Component {
                     <div className="col-md-4">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="registered" checked={entity.registered} onChange={this.handleChange} className="form-check-input" />
-                            <label className="form-check-label" htmlFor="registered"> {T.translate("titles.registered")} </label>
+                            <label className="form-check-label" htmlFor="registered"> {T.translate("edit_speaker.registered")} </label>
                         </div>
                     </div>
                     <div className="col-md-4">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="checked_in" checked={entity.checked_in} onChange={this.handleChange} className="form-check-input" />
-                            <label className="form-check-label" htmlFor="checked_in"> {T.translate("titles.checked_id")} </label>
+                            <label className="form-check-label" htmlFor="checked_in"> {T.translate("edit_speaker.checked_in")} </label>
                         </div>
                     </div>
                     <div className="col-md-4">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="confirmed" checked={entity.confirmed} onChange={this.handleChange} className="form-check-input" />
-                            <label className="form-check-label" htmlFor="confirmed"> {T.translate("titles.confirmed")} </label>
+                            <label className="form-check-label" htmlFor="confirmed"> {T.translate("edit_speaker.confirmed")} </label>
                         </div>
                     </div>
                 </div>
                 <div className="row form-group">
                     <div className="col-md-4">
-                        <label> {T.translate("titles.title")} </label>
+                        <label> {T.translate("edit_speaker.title")} </label>
                         <Input className="form-control" id="title" value={entity.title} onChange={this.handleChange} />
                     </div>
                     <div className="col-md-4">
-                        <label> {T.translate("titles.first_name")} </label>
+                        <label> {T.translate("general.first_name")} </label>
                         <Input className="form-control" id="first_name" value={entity.first_name} onChange={this.handleChange} />
                     </div>
                     <div className="col-md-4">
-                        <label> {T.translate("titles.last_name")} </label>
+                        <label> {T.translate("general.last_name")} </label>
                         <Input className="form-control" id="last_name" value={entity.last_name} onChange={this.handleChange} />
                     </div>
                 </div>
                 <div className="row form-group">
                     <div className="col-md-4">
-                        <label> {T.translate("titles.on_site_phone")} </label>
+                        <label> {T.translate("edit_speaker.on_site_phone")} </label>
                         <Input className="form-control" id="on_site_phone" value={entity.on_site_phone} onChange={this.handleChange} />
                     </div>
                     <div className="col-md-4">
-                        <label> {T.translate("titles.twitter_name")} </label>
+                        <label> {T.translate("edit_speaker.twitter")} </label>
                         <Input className="form-control" id="twitter" value={entity.twitter} onChange={this.handleChange} />
                     </div>
                     <div className="col-md-4">
-                        <label> {T.translate("titles.irc_name")} </label>
+                        <label> {T.translate("edit_speaker.irc")} </label>
                         <Input className="form-control" id="irc" value={entity.irc} onChange={this.handleChange} />
                     </div>
                 </div>
                 <div className="row form-group">
                     <div className="col-md-12">
-                        <label> {T.translate("titles.bio")} </label>
+                        <label> {T.translate("edit_speaker.bio")} </label>
                         <TextEditor id="bio" value={entity.bio} onChange={this.handleChange} />
                     </div>
                 </div>
                 <div className="row form-group">
                     <div className="col-md-12">
-                        <label> {T.translate("titles.attachment")} </label>
+                        <label> {T.translate("edit_speaker.profile_pic")} </label>
                         <UploadInput
                             value={entity.pic}
                             handleUpload={this.handleUploadFile}
@@ -207,29 +214,28 @@ class SpeakerForm extends React.Component {
                         />
                     </div>
                 </div>
-                {entity.presentations.length &&
                 <div className="row form-group">
-                    <div className="col-md-12">
-                        <label> {T.translate("titles.presentations")} </label>
+                    {entity.all_presentations && entity.all_presentations.length &&
+                    <div className="col-md-6">
+                        <label> {T.translate("general.presentations")} </label>
                         <ul>
-                        {entity.presentations.map(p => {
+                        {entity.all_presentations.map(p => {
                             return (
-                              <li>
+                              <li key={'pres' + p.id}>
                                   <a href="" onClick={this.handlePresentationLink.bind(this, p.id)} >{p.title}</a>
+                                  - <i>{p.status}</i>
                               </li>
                             );
                         })}
                         </ul>
                     </div>
+                    }
                 </div>
-                }
-
-
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">
                         <input type="button" onClick={this.handleSubmit.bind(this, false)}
-                               className="btn btn-primary pull-right" value={T.translate("titles.save")}/>
+                               className="btn btn-primary pull-right" value={T.translate("general.save")}/>
                     </div>
                 </div>
             </form>

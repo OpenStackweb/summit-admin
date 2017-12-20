@@ -19,11 +19,11 @@ export const queryMembers = (summitId, input) => {
     let accessToken = window.accessToken;
     let filters = `first_name=@${input},last_name=@${input},email=@${input}`;
 
-    return fetch(`${apiBaseUrl}/api/v1/summits/${summitId}/members?filter=${filters}&access_token=${accessToken}`)
+    return fetch(`${apiBaseUrl}/api/v1/members?filter=${filters}&access_token=${accessToken}`)
         .then(fetchResponseHandler)
         .then((json) => {
-            let options = json.data.map((s) =>
-                ({id: s.id, name: s.first_name + ' ' + s.last_name + ' (' + s.id + ')'})
+            let options = json.data.map((m) =>
+                ({id: m.id, name: m.first_name + ' ' + m.last_name + ' (' + m.id + ')'})
             );
 
             return {
@@ -165,27 +165,27 @@ const uploadFile = (entity, file) => (dispatch, getState) => {
         createAction(PIC_ATTACHED),
         `${apiBaseUrl}/api/v1/speakers/${entity.id}/photo?access_token=${accessToken}`,
         file,
-        authErrorHandler
+        authErrorHandler,
+        {pic: entity.pic}
     )({})(dispatch)
 }
 
 const normalizeEntity = (entity) => {
-    /*let normalizedEntity = {...entity};
-    if (!normalizedEntity.start_date) delete normalizedEntity['start_date'];
-    if (!normalizedEntity.end_date) delete normalizedEntity['end_date'];
+    let normalizedEntity = {...entity};
 
-    normalizedEntity.tags = normalizedEntity.tags.map((t) => {
-        if (typeof t == 'string') return t;
-        else return t.tag;
-    });
-    normalizedEntity.sponsors = normalizedEntity.sponsors.map(s => s.id);
-    normalizedEntity.speakers = normalizedEntity.speakers.map(s => s.id);
+    normalizedEntity.member_id = (normalizedEntity.member != null) ? normalizedEntity.member.id : 0;
 
-    if (Object.keys(normalizedEntity.moderator).length > 0)
-        normalizedEntity.moderator_speaker_id = normalizedEntity.moderator.id;
+    delete normalizedEntity['presentations'];
+    delete normalizedEntity['all_presentations'];
+    delete normalizedEntity['moderated_presentations'];
+    delete normalizedEntity['all_moderated_presentations'];
+    delete normalizedEntity['affiliations'];
+    delete normalizedEntity['gender'];
+    delete normalizedEntity['pic'];
+    delete normalizedEntity['member'];
+    delete normalizedEntity['summit_assistance'];
+    delete normalizedEntity['code_redeemed'];
 
-    return normalizedEntity;*/
-
-    return entity;
+    return normalizedEntity;
 
 }

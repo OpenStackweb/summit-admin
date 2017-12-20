@@ -82,12 +82,12 @@ class SummitSpeakerListPage extends React.Component {
 
         let columns = [
             { columnKey: 'id', value: 'Id', sortable: true },
-            { columnKey: 'name', value: T.translate("titles.name"), sortable: true },
-            { columnKey: 'email', value: T.translate("titles.email"), sortable: true },
-            { columnKey: 'member_id', value: T.translate("titles.member_id") },
-            { columnKey: 'on_site_phone', value: T.translate("titles.registration_code") },
-            { columnKey: 'registration_code', value: T.translate("titles.on_site_phone") },
-            { columnKey: 'presentation_count', value: T.translate("titles.presentations") }
+            { columnKey: 'name', value: T.translate("general.name"), sortable: true },
+            { columnKey: 'email', value: T.translate("general.email"), sortable: true },
+            { columnKey: 'member_id', value: T.translate("speaker_list.member_id") },
+            { columnKey: 'on_site_phone', value: T.translate("speaker_list.registration_code") },
+            { columnKey: 'registration_code', value: T.translate("speaker_list.on_site_phone") },
+            { columnKey: 'presentation_count', value: T.translate("general.presentations") }
         ];
 
         let table_options = {
@@ -101,13 +101,15 @@ class SummitSpeakerListPage extends React.Component {
 
         return(
             <div className="container">
-                <h3> {T.translate("titles.speaker_list")} </h3>
+                <h3> {T.translate("speaker_list.speaker_list")} </h3>
                 <div className={'row'}>
                     <div className={'col-md-6'}>
                         <FreeTextSearch value={term} onSearch={this.handleSearch} />
                     </div>
                     <div className="col-md-2">
-                        <button className="btn btn-primary" onClick={this.handleNewSpeaker}>Add Speaker</button>
+                        <button className="btn btn-primary" onClick={this.handleNewSpeaker}>
+                            {T.translate("speaker_list.add_speaker")}
+                        </button>
                     </div>
                 </div>
 

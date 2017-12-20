@@ -46,7 +46,7 @@ export default class UploadInput extends React.Component {
                     onDrop={this.onImageDrop.bind(this)}
                     {...rest}
                 >
-                    <div>{T.translate("titles.drop_files")}</div>
+                    <div>{T.translate("general.drop_files")}</div>
                 </Dropzone>
                 <div className="selected-files-box col-md-6">
                     <p>Selected Files</p>
@@ -57,7 +57,7 @@ export default class UploadInput extends React.Component {
                             <a href={value} target="_blank">link</a>
                             {this.state.show_veil &&
                             <div className="veil">
-                                <p onClick={handleRemove}>{T.translate("titles.remove")}</p>
+                                <p onClick={handleRemove}>{T.translate("general.remove")}</p>
                             </div>
                             }
                         </div>

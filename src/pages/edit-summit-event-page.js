@@ -79,7 +79,7 @@ class EditSummitEventPage extends React.Component {
 
         return(
             <div className="container">
-                <h3>{T.translate("titles.summit_event")}</h3>
+                <h3>{T.translate("general.summit_event")}</h3>
                 <hr/>
                 {currentSummit &&
                 <EventForm

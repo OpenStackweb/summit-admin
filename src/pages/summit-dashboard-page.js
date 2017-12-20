@@ -14,6 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import moment from 'moment-timezone'
+import T from "i18n-react/dist/i18n-react"
 import '../styles/summit-dashboard-page.less'
 
 class SummitDashboardPage extends React.Component {
@@ -61,110 +62,110 @@ class SummitDashboardPage extends React.Component {
 
         return (
             <div className="container dashboard">
-                <h3>{currentSummit.name} Summit</h3>
+                <h3>{currentSummit.name} {T.translate("general.summit")}</h3>
                 <hr/>
-                <h4>Dates & Times</h4>
+                <h4>{T.translate("dashboard.dates")}</h4>
                 <div className="row">
                     <div className="col-md-3"> {currentSummit.time_zone.name} </div>
                     <div className="col-md-4"> {this.getFormattedTime(this.state.localtime / 1000)} </div>
                 </div>
                 <div className={'row ' + this.getTimeClass(currentSummit.start_date, currentSummit.end_date)}>
-                    <div className="col-md-2"> <i className="fa fa-calendar"></i> Summit </div>
+                    <div className="col-md-2"> <i className="fa fa-calendar"></i> {T.translate("general.summit")} </div>
                     <div className="col-md-4"> {this.getFormattedTime(currentSummit.start_date)} </div>
                     <div className="col-md-1"> <i className="fa fa-angle-double-right"></i> </div>
                     <div className="col-md-4"> {this.getFormattedTime(currentSummit.end_date)} </div>
                 </div>
                 <div className={'row ' + this.getTimeClass(currentSummit.start_date, currentSummit.end_date)}>
-                    <div className="col-md-2"> <i className="fa fa-calendar"></i> Submission </div>
+                    <div className="col-md-2"> <i className="fa fa-calendar"></i> {T.translate("dashboard.submission")} </div>
                     <div className="col-md-4"> {this.getFormattedTime(currentSummit.submission_begin_date)} </div>
                     <div className="col-md-1"> <i className="fa fa-angle-double-right"></i> </div>
                     <div className="col-md-4"> {this.getFormattedTime(currentSummit.submission_end_date)} </div>
                 </div>
                 <div className={'row ' + this.getTimeClass(currentSummit.start_date, currentSummit.end_date)}>
-                    <div className="col-md-2"> <i className="fa fa-calendar"></i> Voting </div>
+                    <div className="col-md-2"> <i className="fa fa-calendar"></i> {T.translate("dashboard.voting")} </div>
                     <div className="col-md-4"> {this.getFormattedTime(currentSummit.voting_begin_date)} </div>
                     <div className="col-md-1"> <i className="fa fa-angle-double-right"></i> </div>
                     <div className="col-md-4"> {this.getFormattedTime(currentSummit.voting_end_date)} </div>
                 </div>
                 <div className={'row ' + this.getTimeClass(currentSummit.start_date, currentSummit.end_date)}>
-                    <div className="col-md-2"> <i className="fa fa-calendar"></i> Selection </div>
+                    <div className="col-md-2"> <i className="fa fa-calendar"></i> {T.translate("dashboard.selection")} </div>
                     <div className="col-md-4"> {this.getFormattedTime(currentSummit.selection_begin_date)} </div>
                     <div className="col-md-1"> <i className="fa fa-angle-double-right"></i> </div>
                     <div className="col-md-4"> {this.getFormattedTime(currentSummit.selection_end_date)} </div>
                 </div>
                 <div className={'row ' + this.getTimeClass(currentSummit.start_date, currentSummit.end_date)}>
-                    <div className="col-md-2"> <i className="fa fa-calendar"></i> Registration </div>
+                    <div className="col-md-2"> <i className="fa fa-calendar"></i> {T.translate("dashboard.registration")} </div>
                     <div className="col-md-4"> {this.getFormattedTime(currentSummit.registration_begin_date)} </div>
                     <div className="col-md-1"> <i className="fa fa-angle-double-right"></i> </div>
                     <div className="col-md-4"> {this.getFormattedTime(currentSummit.registration_end_date)} </div>
                 </div>
                 <hr/>
-                <h4>Events & Attendees</h4>
+                <h4>{T.translate("dashboard.events")}</h4>
                 <div className="row">
                     <div className="col-md-6">
-                        <i className="fa fa-users"></i>&nbsp;Attendees&nbsp;
+                        <i className="fa fa-users"></i>&nbsp;{T.translate("dashboard.attendees")}&nbsp;
                         <strong>{currentSummit.attendees_count}</strong>
                     </div>
                     <div className="col-md-6">
-                        <i className="fa fa-users"></i>&nbsp;Speakers&nbsp;
+                        <i className="fa fa-users"></i>&nbsp;{T.translate("general.speakers")}&nbsp;
                         <strong>{currentSummit.speakers_count}</strong>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-md-6">
-                        <i className="fa fa-calendar-plus-o"></i>&nbsp;Submitted Events&nbsp;
+                        <i className="fa fa-calendar-plus-o"></i>&nbsp;{T.translate("dashboard.submitted_events")}&nbsp;
                         <strong>{currentSummit.presentations_submitted_count}</strong>
                     </div>
                     <div className="col-md-6">
-                        <i className="fa fa-calendar-check-o"></i>&nbsp;Published Events&nbsp;
+                        <i className="fa fa-calendar-check-o"></i>&nbsp;{T.translate("dashboard.published_events")}&nbsp;
                         <strong>{currentSummit.published_events_count}</strong>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-md-6">
-                        <i className="fa fa-building"></i>&nbsp;Venues&nbsp;
+                        <i className="fa fa-building"></i>&nbsp;{T.translate("dashboard.venues")}&nbsp;
                         <strong>{currentSummit.locations.filter(l => l.class_name == 'SummitVenue').length}</strong>
                     </div>
                 </div>
                 <hr/>
-                <h4>Voting</h4>
+                <h4>{T.translate("dashboard.voting")}</h4>
                 <div className="row">
                     <div className="col-md-6">
-                        <i className="fa fa-users"></i>&nbsp;Voters&nbsp;
+                        <i className="fa fa-users"></i>&nbsp;{T.translate("dashboard.voters")}&nbsp;
                         <strong>{currentSummit.presentation_voters_count}</strong>
                     </div>
                     <div className="col-md-6">
-                        <i className="fa fa fa-thumbs-o-up"></i>&nbsp;Votes&nbsp;
+                        <i className="fa fa fa-thumbs-o-up"></i>&nbsp;{T.translate("dashboard.votes")}&nbsp;
                         <strong>{currentSummit.presentation_votes_count}</strong>
                     </div>
                 </div>
                 <hr/>
-                <h4>Emails</h4>
+                <h4>{T.translate("dashboard.emails")}</h4>
                 <div className="row">
                     <div className="col-md-4">
-                        <i className="fa fa-paper-plane"></i>&nbsp;Accepted&nbsp;
+                        <i className="fa fa-paper-plane"></i>&nbsp;{T.translate("dashboard.accepted")}&nbsp;
                         <strong>{currentSummit.speaker_announcement_email_accepted_count}</strong>
                     </div>
                     <div className="col-md-4">
-                        <i className="fa fa-paper-plane"></i>&nbsp;Rejected&nbsp;
+                        <i className="fa fa-paper-plane"></i>&nbsp;{T.translate("dashboard.rejected")}&nbsp;
                         <strong>{currentSummit.speaker_announcement_email_rejected_count}</strong>
                     </div>
                     <div className="col-md-4">
-                        <i className="fa fa-paper-plane"></i>&nbsp;Alternate&nbsp;
+                        <i className="fa fa-paper-plane"></i>&nbsp;{T.translate("dashboard.alternate")}&nbsp;
                         <strong>{currentSummit.speaker_announcement_email_alternate_count}</strong>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-md-4">
-                        <i className="fa fa-paper-plane"></i>&nbsp;Accepted Alternate&nbsp;
+                        <i className="fa fa-paper-plane"></i>&nbsp;{T.translate("dashboard.accepted_alternate")}&nbsp;
                         <strong>{currentSummit.speaker_announcement_email_accepted_alternate_count}</strong>
                     </div>
                     <div className="col-md-4">
-                        <i className="fa fa-paper-plane"></i>&nbsp;Accepted Rejected&nbsp;
+                        <i className="fa fa-paper-plane"></i>&nbsp;{T.translate("dashboard.accepted_rejected")}&nbsp;
                         <strong>{currentSummit.speaker_announcement_email_accepted_rejected_count}</strong>
                     </div>
                     <div className="col-md-4">
-                        <i className="fa fa-paper-plane"></i>&nbsp;Alternate Rejected&nbsp;
+                        <i className="fa fa-paper-plane"></i>&nbsp;{T.translate("dashboard.alternate_rejected")}&nbsp;
                         <strong>{currentSummit.speaker_announcement_email_alternate_rejected_count}</strong>
                     </div>
                 </div>

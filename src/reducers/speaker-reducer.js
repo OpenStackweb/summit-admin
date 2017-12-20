@@ -16,7 +16,8 @@ import
     RECEIVE_SPEAKER,
     RESET_SPEAKER_FORM,
     UPDATE_SPEAKER,
-    SPEAKER_UPDATED
+    SPEAKER_UPDATED,
+    PIC_ATTACHED
 } from '../actions/speaker-actions';
 
 import { LOGOUT_USER } from '../actions/auth-actions';
@@ -28,7 +29,7 @@ export const DEFAULT_ENTITY = {
     title: '',
     first_name: '',
     last_name: '',
-    member_id: 0,
+    member: {},
     email: '',
     twitter: '',
     irc: '',
@@ -36,6 +37,7 @@ export const DEFAULT_ENTITY = {
     pic: '',
     presentations: [],
     registration_code: '',
+    code_redeemed: false,
     on_site_phone: '',
     registered: false,
     checked_in: false,
@@ -80,6 +82,7 @@ const speakerReducer = (state = DEFAULT_STATE, action) => {
 
             if (entity.hasOwnProperty('registration_code')) {
                 entity.registration_code = entity.registration_code.code;
+                entity.code_redeemed = entity.registration_code.redeemed;
             }
 
             if (entity.hasOwnProperty('summit_assistance')) {
@@ -92,6 +95,10 @@ const speakerReducer = (state = DEFAULT_STATE, action) => {
             return {...state, entity: {...state.entity, ...entity}, errors: {} };
         }
         break;
+        case PIC_ATTACHED: {
+            let pic = state.entity.pic + '?' + new Date().getTime();
+            return {...state, entity: {...state.entity, pic: pic} };;
+        }
         case SPEAKER_UPDATED: {
             return state;
         }

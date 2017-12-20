@@ -30,7 +30,7 @@ class ScheduleAdminTrackSelector extends React.Component {
         let {tracks, currentValue} = this.props;
         return (
             <Select
-                placeholder={T.translate("placeholders.select_track")}
+                placeholder={T.translate("schedule.placeholders.select_track")}
                 className="track-selector"
                 name="form-field-name"
                 value={currentValue}

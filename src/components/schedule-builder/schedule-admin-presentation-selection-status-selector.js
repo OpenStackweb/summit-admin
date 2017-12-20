@@ -30,7 +30,7 @@ class ScheduleAdminPresentationSelectionStatusSelector extends React.Component {
         let { presentationSelectionStatus, currentValue } = this.props;
         return (
             <Select
-                placeholder={T.translate("placeholders.select_presentation_selection_status")}
+                placeholder={T.translate("schedule.placeholders.select_presentation_selection_status")}
                 className="presentation-selection-status-selector"
                 name="form-field-name"
                 value={currentValue}

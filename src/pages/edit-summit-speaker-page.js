@@ -13,6 +13,7 @@
 
 import React from 'react'
 import { connect } from 'react-redux';
+import T from "i18n-react/dist/i18n-react";
 import SpeakerForm from '../components/speaker-form/speaker-form';
 import { getSummitById }  from '../actions/summit-actions';
 import { getSpeaker, resetSpeakerForm, saveSpeaker, attachPicture } from "../actions/speaker-actions";
@@ -73,7 +74,7 @@ class EditSummitSpeakerPage extends React.Component {
 
         return(
             <div className="container">
-                <h3>{title} Speaker</h3>
+                <h3>{title} {T.translate("general.speaker")}</h3>
                 <hr/>
                 {currentSummit &&
                 <SpeakerForm

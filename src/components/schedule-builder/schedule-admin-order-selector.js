@@ -25,7 +25,7 @@ class ScheduleAdminOrderSelector extends React.Component {
         let { sortOptions, currentValue } = this.props;
         return (
             <Select
-                placeholder={T.translate("placeholders.select_order_by")}
+                placeholder={T.translate("schedule.placeholders.select_order_by")}
                 className="order-by-selector"
                 name="form-field-name"
                 value={currentValue}

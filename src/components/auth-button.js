@@ -19,15 +19,15 @@ const AuthButton = withRouter(({ history, isLoggedUser, doLogin, doLogout }) => 
     isLoggedUser ? (
         <div className="logout">
             <button className="btn btn-default" onClick={() => { doLogout(); }}>
-                {T.translate("titles.sign_out")}
+                {T.translate("landing.sign_out")}
             </button>
         </div>
     ) : (
         <div className="login">
-            {T.translate("titles.not_logged_in")}
+            {T.translate("landing.not_logged_in")}
             <br/><br/>
             <button className="btn btn-primary btn-lg" onClick={() => { doLogin(); }}>
-                {T.translate("titles.log_in")}
+                {T.translate("landing.log_in")}
             </button>
         </div>
     )
