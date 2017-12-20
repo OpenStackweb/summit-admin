@@ -17,6 +17,7 @@ export const PIC_ATTACHED           = 'PIC_ATTACHED';
 export const queryMembers = (summitId, input) => {
 
     let accessToken = window.accessToken;
+    input       = encodeURIComponent(input);
     let filters = `first_name=@${input},last_name=@${input},email=@${input}`;
 
     return fetch(`${apiBaseUrl}/api/v1/members?filter=${filters}&access_token=${accessToken}`)
