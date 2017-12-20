@@ -1,9 +1,23 @@
+/**
+ * Copyright 2017 OpenStack Foundation
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ **/
+
 import T from "i18n-react/dist/i18n-react";
 import {stopLoading} from "openstack-uicore-foundation";
 import swal from "sweetalert2";
 
-export const apiBaseUrl             = process.env['API_BASE_URL'];
-export const VALIDATE               = 'VALIDATE';
+export const apiBaseUrl  = process.env['API_BASE_URL'];
+export const VALIDATE    = 'VALIDATE';
+const LOGOUT_USER        = 'LOGOUT_USER';
 
 export const authErrorHandler = (err, res) => (dispatch) => {
     let code = err.status;
@@ -12,11 +26,13 @@ export const authErrorHandler = (err, res) => (dispatch) => {
     let msg = '';
 
     switch (code) {
-        case 401:
         case 403:
+            swal("ERROR", T.translate("errors.user_not_authz"), "warning ");
+            break;
+        case 401:
             swal("ERROR", T.translate("errors.session_expired"), "error");
             dispatch({
-                type: "LOGOUT_USER",
+                type: LOGOUT_USER,
                 payload: {
                     persistStore: true
                 }
@@ -24,20 +40,20 @@ export const authErrorHandler = (err, res) => (dispatch) => {
             break;
         case 404:
             msg = err.message;
-            swal("Validation ERROR", msg, "error");
+            swal("Not Found", msg, "warning");
             break;
         case 412:
             for (var [key, value] of Object.entries(err.response.body.errors)) {
                 msg += '- ' + value + '<br>';
             }
-            swal("Validation ERROR", msg, "error");
+            swal("Validation error", msg, "warning");
             dispatch({
                 type: VALIDATE,
                 payload: {errors: err.response.body.errors}
             });
             break;
         default:
-            swal("ERROR", "There was a problem with our server, please contact admin.", "error");
+            swal("ERROR", T.translate("errors.server_error"), "error");
     }
 }
 
@@ -46,14 +62,16 @@ export const fetchErrorHandler = (response) => {
     let msg = response.statusText;
 
     switch (code) {
-        case 401:
         case 403:
+            swal("ERROR", T.translate("errors.user_not_authz"), "warning");
+            break;
+        case 401:
             swal("ERROR", T.translate("errors.session_expired"), "error");
             break;
         case 412:
-            swal("ERROR", msg, "error");
+            swal("ERROR", msg, "warning");
         case 500:
-            swal("ERROR", "There was a problem with our server, please contact admin.", "error");
+            swal("ERROR", T.translate("errors.server_error"), "error");
     }
 }
 

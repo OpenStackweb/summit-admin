@@ -738,7 +738,14 @@ class ScheduleAdminDashBoard extends React.Component {
                             </div>
                         </div>
                     </div>
-                  <UnScheduleEventList
+                    {
+                         ( unScheduleEvents.length > 0) &&
+                         <ScheduleAdminsBulkActionsSelector
+                            onSelectAll={this.onSelectAllPublished}
+                            onSelectedBulkAction={this.onSelectedBulkActionPublished}
+                        />
+                    }
+                    <UnScheduleEventList
                             events={unScheduleEvents}
                             currentPage={unScheduleEventsCurrentPage}
                             lastPage={unScheduleEventsLasPage}

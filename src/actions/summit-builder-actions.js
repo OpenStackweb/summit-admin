@@ -257,7 +257,7 @@ export const searchScheduleEvents = (term) => (dispatch, getState) => {
         per_page     : ScheduleEventsSearchResultMaxPage,
         access_token : accessToken,
         filter: `title=@${term},abstract=@${term},social_summary=@${term},tags=@${term},speaker=@${term},speaker_email=@${term}`,
-        order:'title+,id+'
+        order:'+title,+id'
     };
 
     return getRequest(
