@@ -160,7 +160,7 @@ class EventForm extends React.Component {
 
     render() {
         let {entity} = this.state;
-        let { currentSummit, levelOpts, typeOpts, trackOpts, locationOpts } = this.props;
+        let { currentSummit, levelOpts, typeOpts, trackOpts, locationOpts, history } = this.props;
 
         let event_types_ddl = typeOpts.map(
             t => {
@@ -374,8 +374,9 @@ class EventForm extends React.Component {
                             id="speakers"
                             value={entity.speakers}
                             onChange={this.handleChange}
-                            summitId={currentSummit.id}
+                            summit={currentSummit}
                             multi={true}
+                            history={history}
                         />
                     </div>
                 </div>
@@ -388,8 +389,9 @@ class EventForm extends React.Component {
                             id="moderator"
                             value={entity.moderator}
                             onChange={this.handleChange}
-                            summitId={currentSummit.id}
+                            summit={currentSummit}
                             multi={false}
+                            history={history}
                         />
                     </div>
                 </div>
@@ -402,8 +404,9 @@ class EventForm extends React.Component {
                             id="moderator"
                             value={entity.moderator}
                             onChange={this.handleChange}
-                            summitId={currentSummit.id}
+                            summit={currentSummit}
                             multi={false}
+                            history={history}
                         />
                     </div>
                 </div>

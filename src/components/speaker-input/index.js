@@ -27,6 +27,7 @@ export default class SpeakerInput extends React.Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.getSpeakers = this.getSpeakers.bind(this);
+        this.handleClick = this.handleClick.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -45,12 +46,18 @@ export default class SpeakerInput extends React.Component {
         this.props.onChange(ev);
     }
 
+    handleClick(value) {
+        let {history, summit} = this.props;
+
+        history.push(`/app/summits/${summit.id}/speakers/${value.id}`);
+    }
+
     getSpeakers (input) {
         if (!input) {
             return Promise.resolve({ options: [] });
         }
 
-        return querySpeakers(this.props.summitId, input);
+        return querySpeakers(this.props.summit.id, input);
     }
 
     processTagValues(new_values) {
@@ -84,6 +91,7 @@ export default class SpeakerInput extends React.Component {
                 value={this.processTagValues(this.state.value)}
                 onChange={this.handleChange}
                 loadOptions={this.getSpeakers}
+                onValueClick={this.handleClick}
                 backspaceRemoves={true}
                 valueKey="id"
                 labelKey="name"
