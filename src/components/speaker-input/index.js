@@ -28,6 +28,7 @@ export default class SpeakerInput extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.getSpeakers = this.getSpeakers.bind(this);
         this.handleClick = this.handleClick.bind(this);
+        this.filterOptions = this.filterOptions.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -50,6 +51,18 @@ export default class SpeakerInput extends React.Component {
         let {history, summit} = this.props;
 
         history.push(`/app/summits/${summit.id}/speakers/${value.id}`);
+    }
+
+    filterOptions(options, filterString, values) {
+        if (this.props.multi) {
+            let filtered_options = options.filter( op => {
+                return values.map(val => val.id).indexOf( op.id ) < 0;
+            } );
+
+            return filtered_options;
+        } else {
+            return options;
+        }
     }
 
     getSpeakers (input) {
@@ -95,6 +108,7 @@ export default class SpeakerInput extends React.Component {
                 backspaceRemoves={true}
                 valueKey="id"
                 labelKey="name"
+                filterOptions={this.filterOptions}
             />
         );
 

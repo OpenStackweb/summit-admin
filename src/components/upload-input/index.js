@@ -55,11 +55,11 @@ export default class UploadInput extends React.Component {
                         <div className="file-box" onMouseEnter={this.showVeil.bind(this)} onMouseLeave={this.hideVeil.bind(this)}>
                             <img src={value} />
                             <a href={value} target="_blank">link</a>
-                            {this.state.show_veil &&
+                            {/*{this.state.show_veil &&
                             <div className="veil">
                                 <p onClick={handleRemove}>{T.translate("general.remove")}</p>
                             </div>
-                            }
+                            }*/}
                         </div>
                         }
                     </div>

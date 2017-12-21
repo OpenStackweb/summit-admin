@@ -27,6 +27,7 @@ export default class MemberInput extends React.Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.getMembers = this.getMembers.bind(this);
+        this.filterOptions = this.filterOptions.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -43,6 +44,10 @@ export default class MemberInput extends React.Component {
         }};
 
         this.props.onChange(ev);
+    }
+
+    filterOptions(options, filterString, values) {
+        return options;
     }
 
     getMembers (input) {
@@ -87,6 +92,7 @@ export default class MemberInput extends React.Component {
                 backspaceRemoves={true}
                 valueKey="id"
                 labelKey="name"
+                filterOptions={this.filterOptions}
             />
         );
 
