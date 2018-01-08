@@ -52,8 +52,11 @@ class NavMenu extends React.Component {
             case 'new_event':
                 history.push(`/app/summits/${currentSummit.id}/events/new`);
                 break;
-            case 'speakers':
+            case 'speaker_list':
                 history.push(`/app/summits/${currentSummit.id}/speakers`);
+                break;
+            case 'merge_speakers':
+                history.push(`/app/summits/${currentSummit.id}/speakers/merge`);
                 break;
         }
         return false;
@@ -88,10 +91,22 @@ class NavMenu extends React.Component {
                     </a>
                 </div>
                 }
-                <a id="speakers-menu" className="menu-item" onClick={(e) => this.onMenuItemClick(e,'speakers')}>
+                <a id="speakers-menu" className="menu-item" onClick={(e) => this.toggleSubMenu(e,'speakers')}>
                     <i className="fa fa-users" />
                     {T.translate("general.speakers")}
                 </a>
+                {this.state.subMenuOpen == 'speakers' &&
+                <div className="submenu">
+                    <a id="speakers-menu" className="menu-item" onClick={(e) => this.onMenuItemClick(e,'speaker_list')} >
+                        <i className="fa fa-chevron-right"/>
+                        {T.translate("menu.speaker_list")}
+                    </a>
+                    <a id="merge-speakers-menu" className="menu-item" onClick={(e) => this.onMenuItemClick(e,'merge_speakers')}>
+                        <i className="fa fa-chevron-right"/>
+                        {T.translate("menu.merge_speakers")}
+                    </a>
+                </div>
+                }
             </Menu>
         );
     }

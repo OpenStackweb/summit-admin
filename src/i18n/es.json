@@ -42,7 +42,9 @@
     "dashboard"           : "Dashboard",
     "events"              : "Events",
     "schedule"            : "Schedule",
-    "new_event"           : "New Event"
+    "new_event"           : "New Event",
+    "speaker_list"        : "CRUD List",
+    "merge_speakers"      : "Merge"
   },
   "schedule": {
     "find_empty_spots"    : "Find empty spots for Day/Location",
@@ -169,6 +171,17 @@
     "irc"                 : "Irc",
     "bio"                 : "Bio",
     "profile_pic"         : "Picture"
+  },
+  "merge_speakers": {
+    "merge_speakers"  : "Merge Speakers",
+    "select_speaker"  : "Please select a speaker first.",
+    "speaker_one"     : "Speaker 1",
+    "speaker_two"     : "Speaker 2",
+    "merge"           : "Merge",
+    "title"           : "Title",
+    "first_name"      : "First Name",
+    "placeholders": {
+    }
   },
   "schedule_builder_page":{
     "messages":{

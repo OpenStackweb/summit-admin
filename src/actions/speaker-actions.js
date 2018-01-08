@@ -5,13 +5,14 @@ import T from "i18n-react/dist/i18n-react";
 
 export const RECEIVE_SPEAKERS       = 'RECEIVE_SPEAKERS';
 export const RECEIVE_SPEAKER        = 'RECEIVE_SPEAKER';
+export const REQUEST_SPEAKER        = 'REQUEST_SPEAKER';
 export const RESET_SPEAKER_FORM     = 'RESET_SPEAKER_FORM';
 export const UPDATE_SPEAKER         = 'UPDATE_SPEAKER';
 export const SPEAKER_UPDATED        = 'SPEAKER_UPDATED';
 export const SPEAKER_ADDED          = 'SPEAKER_ADDED';
 export const PIC_ATTACHED           = 'PIC_ATTACHED';
-
-
+export const MERGE_SPEAKERS         = 'MERGE_SPEAKERS';
+export const SPEAKER_MERGED         = 'SPEAKER_MERGED';
 
 
 export const queryMembers = (summitId, input) => {
@@ -85,6 +86,30 @@ export const getSpeaker = (speakerId) => (dispatch, getState) => {
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers/${speakerId}?access_token=${accessToken}&expand=member,presentations`,
         authErrorHandler
     )({})(dispatch).then(dispatch(stopLoading()));
+};
+
+export const getSpeakerForMerge = (speakerId, speakerCol) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken,
+        expand: 'member,presentations'
+    };
+
+    return getRequest(
+        createAction(REQUEST_SPEAKER),
+        createAction(RECEIVE_SPEAKER),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers/${speakerId}`,
+        authErrorHandler,
+        {speakerCol}
+    )(params)(dispatch).then(dispatch(stopLoading()));
+};
+
+export const mergeSpeakers = () => (dispatch, getState) => {
+    dispatch(createAction(MERGE_SPEAKERS)({}));
 };
 
 export const resetSpeakerForm = () => (dispatch, getState) => {

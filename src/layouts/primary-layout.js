@@ -8,6 +8,7 @@ import EditSummitEventPage from '../pages/edit-summit-event-page';
 import SummitSpeakerListPage from '../pages/summit-speakers-list-page';
 import EditSummitSpeakerPage from '../pages/edit-summit-speaker-page';
 import SummitEventsBulkActionsPage from '../pages/summit-events-bulk-actions-page';
+import MergeSpeakersPage from '../pages/merge-speakers-page';
 
 import { withRouter } from 'react-router-dom'
 
@@ -30,6 +31,7 @@ class PrimaryLayout extends React.Component {
                         <Route exact path="/app/summits/:summit_id/events/new" component={EditSummitEventPage}/>
                         <Route exact path="/app/summits/:summit_id/events/:summit_event_id" component={EditSummitEventPage}/>
                         <Route exact path="/app/summits/:summit_id/speakers" component={SummitSpeakerListPage}/>
+                        <Route exact path="/app/summits/:summit_id/speakers/merge" component={MergeSpeakersPage}/>
                         <Route exact path="/app/summits/:summit_id/speakers/new" component={EditSummitSpeakerPage}/>
                         <Route exact path="/app/summits/:summit_id/speakers/:speaker_id" component={EditSummitSpeakerPage}/>
                         <Route render={props => (<Redirect to="/app/directory"/>)}/>
