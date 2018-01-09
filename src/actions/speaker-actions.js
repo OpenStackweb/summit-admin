@@ -108,8 +108,23 @@ export const getSpeakerForMerge = (speakerId, speakerCol) => (dispatch, getState
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
 
-export const mergeSpeakers = () => (dispatch, getState) => {
-    dispatch(createAction(MERGE_SPEAKERS)({}));
+export const mergeSpeakers = (selectedFields, history) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    console.log(selectedFields.map((f,k) => k).join());
+
+    swal({
+        title: "Success! Speakers merged.",
+        text: "Changes made on ",
+        confirmButtonText: "Done!",
+        type: "success"
+    }).then(function(){
+        history.push(`/app/summits/${currentSummit.id}/speakers/merge`)
+    }).catch(swal.noop);
+
+    dispatch(createAction(null));
 };
 
 export const resetSpeakerForm = () => (dispatch, getState) => {

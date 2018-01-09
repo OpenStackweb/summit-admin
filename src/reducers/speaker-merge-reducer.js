@@ -25,19 +25,26 @@ import { SET_CURRENT_SUMMIT } from '../actions/summit-actions';
 
 const DEFAULT_STATE = {
     speakerCol: '',
-    canMerge: false,
-    speakerOne: null,
-    speakerTwo: null,
-    selected: {
-        title: 1,
-        first_name: 1,
-        last_name: 1
+    speakers: [null, null],
+    selectedFields: {
+        title: 0,
+        first_name: 0,
+        last_name: 0,
+        reg_email: 0,
+        twitter: 0,
+        irc: 0,
+        bio: 0,
+        pic: 0,
+        expertise: 0,
+        travel: 0,
+        languages: 0,
+        title: 0,
+        title: 0,
     }
 };
 
 const speakerMergeReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
-    let speakerCol = '';
 
     switch (type) {
         case LOGOUT_USER: {
@@ -51,13 +58,11 @@ const speakerMergeReducer = (state = DEFAULT_STATE, action) => {
         break;
         case RECEIVE_SPEAKER: {
             let entity = {...payload.response};
-            let currentState = {...state};
-            let canMerge = currentState.speakerOne && currentState.speakerTwo
+            let speakers = [...state.speakers];
 
-            currentState[currentState.speakerCol] = entity;
-            currentState.canMerge = canMerge;
+            speakers[state.speakerCol] = entity;
 
-            return currentState;
+            return {...state, speakers};
         }
         break;
         case REQUEST_SPEAKER: {

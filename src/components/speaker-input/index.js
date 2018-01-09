@@ -97,10 +97,10 @@ export default class SpeakerInput extends React.Component {
     }
 
     render() {
+        let {value, onChange, history, summit, id, ...rest} = this.props;
 
         return (
             <Select.Async
-                multi={this.props.multi}
                 value={this.processTagValues(this.state.value)}
                 onChange={this.handleChange}
                 loadOptions={this.getSpeakers}
@@ -109,6 +109,7 @@ export default class SpeakerInput extends React.Component {
                 valueKey="id"
                 labelKey="name"
                 filterOptions={this.filterOptions}
+                {...rest}
             />
         );
 
