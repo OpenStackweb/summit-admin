@@ -87,3 +87,99 @@ export const showMessage = (title, msg, msg_type, callback = {}) => (dispatch) =
     dispatch(stopLoading());
     swal(title, msg, msg_type, callback);
 }
+
+export const queryMembers = (summitId, input) => {
+
+    let accessToken = window.accessToken;
+    input       = encodeURIComponent(input);
+    let filters = `first_name=@${input},last_name=@${input},email=@${input}`;
+
+    return fetch(`${apiBaseUrl}/api/v1/members?filter=${filters}&access_token=${accessToken}`)
+        .then(fetchResponseHandler)
+        .then((json) => {
+            let options = json.data.map((m) =>
+                ({id: m.id, name: m.first_name + ' ' + m.last_name + ' (' + m.id + ')'})
+            );
+
+            return {
+                options: options
+            };
+        })
+        .catch(fetchErrorHandler);
+};
+
+export const querySpeakers = (summitId, input) => {
+
+    let accessToken = window.accessToken;
+    let filters = `first_name=@${input},last_name=@${input},email=@${input}`;
+    let apiUrl = `${apiBaseUrl}/api/v1`;
+
+    if (summitId) {
+        apiUrl += `/summits/${summitId}`;
+    }
+
+    apiUrl += `/speakers?filter=${filters}&access_token=${accessToken}`;
+
+    return fetch(apiUrl)
+        .then(fetchResponseHandler)
+        .then((json) => {
+            let options = json.data.map((s) =>
+                ({id: s.id, name: s.first_name + ' ' + s.last_name + ' (' + s.id + ')'})
+            );
+
+            return {
+                options: options
+            };
+        })
+        .catch(fetchErrorHandler);
+};
+
+export const queryTags = (input) => {
+
+    let accessToken = window.accessToken;
+
+    return fetch(`${apiBaseUrl}/api/v1/tags?filter=tag=@${input}&order=tag&access_token=${accessToken}`)
+        .then(fetchResponseHandler)
+        .then((json) => {
+            let options = json.data.map((t) => ({tag: t.tag}) );
+
+            return {
+                options: options
+            };
+        })
+        .catch(fetchErrorHandler);
+};
+
+export const queryGroups = (input) => {
+
+    let accessToken = window.accessToken;
+    let filters = `title=@${input},code=@${input}`;
+
+    return fetch(`${apiBaseUrl}/api/v1/groups?filter=${filters}&access_token=${accessToken}`)
+        .then(fetchResponseHandler)
+        .then((json) => {
+            let options = json.data.map((g) => ({value: g.id, label: g.title}) );
+
+            return {
+                options: options
+            };
+        })
+        .catch(fetchErrorHandler);
+};
+
+export const queryCompanies = (input) => {
+
+    let accessToken = window.accessToken;
+    let filters = `name=@${input}`;
+
+    return fetch(`${apiBaseUrl}/api/v1/companies?filter=${filters}&access_token=${accessToken}`)
+        .then(fetchResponseHandler)
+        .then((json) => {
+            let options = json.data.map((c) => ({id: c.id, name: c.name}) );
+
+            return {
+                options: options
+            };
+        })
+        .catch(fetchErrorHandler);
+};

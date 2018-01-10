@@ -14,7 +14,7 @@
 import React from 'react';
 import 'react-select/dist/react-select.css';
 import Select from 'react-select';
-import {querySpeakers} from '../../actions/edit-summit-event-actions';
+import {querySpeakers} from '../../actions/base-actions';
 
 export default class SpeakerInput extends React.Component {
 

@@ -14,7 +14,7 @@
 import React from 'react';
 import 'react-select/dist/react-select.css';
 import Select from 'react-select';
-import {queryMembers} from '../../actions/speaker-actions';
+import {queryMembers} from '../../actions/base-actions';
 
 export default class MemberInput extends React.Component {
 

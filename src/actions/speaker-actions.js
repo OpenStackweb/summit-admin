@@ -15,27 +15,6 @@ export const MERGE_SPEAKERS         = 'MERGE_SPEAKERS';
 export const SPEAKER_MERGED         = 'SPEAKER_MERGED';
 
 
-export const queryMembers = (summitId, input) => {
-
-    let accessToken = window.accessToken;
-    input       = encodeURIComponent(input);
-    let filters = `first_name=@${input},last_name=@${input},email=@${input}`;
-
-    return fetch(`${apiBaseUrl}/api/v1/members?filter=${filters}&access_token=${accessToken}`)
-        .then(fetchResponseHandler)
-        .then((json) => {
-            let options = json.data.map((m) =>
-                ({id: m.id, name: m.first_name + ' ' + m.last_name + ' (' + m.id + ')'})
-            );
-
-            return {
-                options: options
-            };
-        })
-        .catch(fetchErrorHandler);
-};
-
-
 export const getSpeakers = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = '1' ) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();

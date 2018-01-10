@@ -11,6 +11,7 @@
     "summit"              : "Summit",
     "speakers"            : "Speakers",
     "speaker"             : "Speaker",
+    "attendees"           : "Attendees",
     "summit_event"        : "Summit Event",
     "presentation"        : "Presentation",
     "presentations"       : "Presentations",
@@ -44,7 +45,8 @@
     "schedule"            : "Schedule",
     "new_event"           : "New Event",
     "speaker_list"        : "CRUD List",
-    "merge_speakers"      : "Merge"
+    "merge_speakers"      : "Merge",
+    "attendee_list"       : "CRUD List"
   },
   "schedule": {
     "find_empty_spots"    : "Find empty spots for Day/Location",

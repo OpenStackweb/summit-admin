@@ -14,7 +14,7 @@
 import React from 'react';
 import 'react-select/dist/react-select.css';
 import Select from 'react-select';
-import {queryTags} from '../../actions/edit-summit-event-actions';
+import {queryTags} from '../../actions/base-actions';
 
 export default class TagInput extends React.Component {
 
