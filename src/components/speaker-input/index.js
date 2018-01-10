@@ -70,7 +70,9 @@ export default class SpeakerInput extends React.Component {
             return Promise.resolve({ options: [] });
         }
 
-        return querySpeakers(this.props.summit.id, input);
+        let summitId = (this.props.hasOwnProperty('queryAll')) ? null : this.props.summit.id;
+
+        return querySpeakers(summitId, input);
     }
 
     processTagValues(new_values) {

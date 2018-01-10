@@ -17,8 +17,15 @@ export const querySpeakers = (summitId, input) => {
 
     let accessToken = window.accessToken;
     let filters = `first_name=@${input},last_name=@${input},email=@${input}`;
+    let apiUrl = `${apiBaseUrl}/api/v1`;
 
-    return fetch(`${apiBaseUrl}/api/v1/summits/${summitId}/speakers?filter=${filters}&access_token=${accessToken}`)
+    if (summitId) {
+        apiUrl += `/summits/${summitId}`;
+    }
+
+    apiUrl += `/speakers?filter=${filters}&access_token=${accessToken}`;
+
+    return fetch(apiUrl)
         .then(fetchResponseHandler)
         .then((json) => {
             let options = json.data.map((s) =>

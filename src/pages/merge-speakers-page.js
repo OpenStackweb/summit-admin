@@ -78,9 +78,17 @@ class MergeSpeakerPage extends React.Component {
     }
 
     handleMerge(ev) {
-        let {selectedFields} = this.state;
-        let {history} = this.props;
+        let selectedFields = {...this.state.selectedFields};
+        let {history, speakers} = this.props;
         let props = this.props;
+        let changedFields = [];
+
+        for (var key in selectedFields) {
+            let field = selectedFields[key];
+            selectedFields[key] = speakers[field].id;
+
+            if (field == 1) changedFields.push(key);
+        }
 
         swal({
             title: "Attention!",
@@ -90,7 +98,7 @@ class MergeSpeakerPage extends React.Component {
             confirmButtonColor: "#DD6B55",
             confirmButtonText: "Yes, merge and delete."
         }).then(function(){
-            this.props.mergeSpeakers(selectedFields, history);
+            props.mergeSpeakers(selectedFields, changedFields, history);
         }).catch(swal.noop);
 
     }
@@ -116,6 +124,7 @@ class MergeSpeakerPage extends React.Component {
                             multi={false}
                             clearable={false}
                             history={history}
+                            queryAll
                         />
 
                     </div>
@@ -129,6 +138,7 @@ class MergeSpeakerPage extends React.Component {
                             multi={false}
                             clearable={false}
                             history={history}
+                            queryAll
                         />
                     </div>
                 </div>

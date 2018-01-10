@@ -34,12 +34,7 @@ const DEFAULT_STATE = {
         twitter: 0,
         irc: 0,
         bio: 0,
-        pic: 0,
-        expertise: 0,
-        travel: 0,
-        languages: 0,
-        title: 0,
-        title: 0,
+        pic: 0
     }
 };
 

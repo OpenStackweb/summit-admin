@@ -92,7 +92,6 @@ export const getSpeakerForMerge = (speakerId, speakerCol) => (dispatch, getState
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
 
     let params = {
         access_token : accessToken,
@@ -102,26 +101,24 @@ export const getSpeakerForMerge = (speakerId, speakerCol) => (dispatch, getState
     return getRequest(
         createAction(REQUEST_SPEAKER),
         createAction(RECEIVE_SPEAKER),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers/${speakerId}`,
+        `${apiBaseUrl}/api/v1/speakers/${speakerId}`,
         authErrorHandler,
         {speakerCol}
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
 
-export const mergeSpeakers = (selectedFields, history) => (dispatch, getState) => {
+export const mergeSpeakers = (selectedFields, changedFields, history) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
-    console.log(selectedFields.map((f,k) => k).join());
-
     swal({
         title: "Success! Speakers merged.",
-        text: "Changes made on ",
+        text: "Changes made on: " + changedFields.join(', '),
         confirmButtonText: "Done!",
         type: "success"
     }).then(function(){
-        history.push(`/app/summits/${currentSummit.id}/speakers/merge`)
+        dispatch(createAction(RESET_SPEAKER_FORM));
     }).catch(swal.noop);
 
     dispatch(createAction(null));

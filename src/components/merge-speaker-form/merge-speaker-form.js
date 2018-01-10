@@ -93,18 +93,6 @@ class MergeSpeakerForm extends React.Component {
                 {this.drawSelectableRow('first_name', null)}
                 {this.drawSelectableRow('last_name', null)}
                 {this.drawSelectableRow('reg_email', null)}
-                {this.drawMergeableRow('presentations',
-                    speaker => {
-                        return speaker.all_presentations.map(p => {
-                            return (
-                                <div key={p.id + '_pres'}>
-                                    Summit {p.summit_id}:
-                                    <a href="" onClick={this.handlePresentationLink.bind(this, p.id)} >{p.title}</a>
-                                </div>
-                            );
-                        })
-                    }
-                )}
                 {this.drawSelectableRow('twitter', null)}
                 {this.drawSelectableRow('irc', null)}
                 {this.drawSelectableRow('bio', null)}
@@ -113,40 +101,92 @@ class MergeSpeakerForm extends React.Component {
                         return (<img src={speaker.pic} />);
                     }
                 )}
-                {this.drawSelectableRow('expertise',
+                {this.drawMergeableRow('presentations',
                     speaker => {
-                        return 'expertise missing';
-                    }
-                )}
+                        let groupedPres = [];
 
-                {this.drawSelectableRow('travel',
-                    speaker => {
-                        return 'travel missing';
+                        for (var i in speaker.all_presentations) {
+                            let pres = speaker.all_presentations[i];
+                            if (!groupedPres.hasOwnProperty(pres.summit_id))
+                                groupedPres[pres.summit_id] = [];
+
+                            groupedPres[pres.summit_id].push(pres);
+                        }
+
+                        return groupedPres.map((pres,summitId) => {
+                            return (
+                                <div key={summitId + '_pres'}>
+                                    <strong>Summit {summitId}:</strong><br/>
+                                    {pres.map(p =>
+                                        <div key={p.id + '_pres'}>
+                                            -
+                                            <a href="" onClick={this.handlePresentationLink.bind(this, p.id)} >
+                                                {p.title}
+                                            </a>
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })
                     }
                 )}
-                {this.drawSelectableRow('languages',
+                {this.drawMergeableRow('areas_of_expertise',
                     speaker => {
-                        return 'languages missing';
+                        return speaker.areas_of_expertise.map(e => e.expertise).join(', ');
                     }
                 )}
-                {this.drawMergeableRow('promo_codes',
+                {this.drawMergeableRow('other_presentation_links',
                     speaker => {
-                        return 'registration missing';
+                        return speaker.other_presentation_links.map(p => {
+                            return (
+                                <div key={p.id + '_otherpres'}>
+                                    <a href={p.link}>{p.title || p.link}</a>
+                                </div>
+                            );
+                        })
                     }
                 )}
-                {this.drawMergeableRow('attendance',
+                {this.drawMergeableRow('travel_preferences',
                     speaker => {
-                        return 'attendance missing';
+                        return speaker.travel_preferences.map(t => t.country).join(', ');
                     }
                 )}
-                {this.drawMergeableRow('org_roles',
+                {this.drawMergeableRow('languages',
                     speaker => {
-                        return 'org roles missing';
+                        return speaker.languages.map(l => l.language).join(', ');
                     }
                 )}
-                {this.drawMergeableRow('involvements',
+                {this.drawMergeableRow('registration_codes',
                     speaker => {
-                        return 'involvements missing';
+                        return speaker.registration_codes.map(c => {
+                            return (
+                                <div key={c.id + '_pcode'}>
+                                    <strong>Summit {c.summit_id}:</strong> {c.code} {c.redeemed ? '- redeemed' : ''}
+                                </div>
+                            );
+                        })
+                    }
+                )}
+                {this.drawMergeableRow('summit_assistances',
+                    speaker => {
+                        return speaker.summit_assistances.map(a => {
+                            return (
+                                <div key={a.id + '_assist'}>
+                                    <strong>Summit {a.summit_id}:</strong> <br/>
+                                    Ph: {a.on_site_phone} {a.registered ? '- Registered' : ''} {a.is_confirmed ? '- Confirmed' : ''}
+                                </div>
+                            );
+                        })
+                    }
+                )}
+                {this.drawMergeableRow('organizational_roles',
+                    speaker => {
+                        return speaker.organizational_roles.map(r => r.role).join(', ');
+                    }
+                )}
+                {this.drawMergeableRow('active_involvements',
+                    speaker => {
+                        return speaker.active_involvements.map(i => i.id).join(', ');
                     }
                 )}
 

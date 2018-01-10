@@ -14,6 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import moment from 'moment-timezone'
+import { getSummitById }  from '../actions/summit-actions'
 import T from "i18n-react/dist/i18n-react"
 import '../styles/summit-dashboard-page.less'
 
@@ -22,12 +23,19 @@ class SummitDashboardPage extends React.Component {
     constructor(props){
         super(props);
 
-        let localtime = moment().tz(this.props.currentSummit.time_zone.name);
-
         this.interval = null;
 
         this.state = {
-            localtime: localtime
+            localtime: moment()
+        }
+    }
+
+    componentWillMount () {
+        let summitId = this.props.match.params.summit_id;
+        let {currentSummit} = this.props;
+
+        if(currentSummit == null){
+            this.props.getSummitById(summitId);
         }
     }
 
@@ -37,6 +45,17 @@ class SummitDashboardPage extends React.Component {
 
     componentWillUnmount() {
         clearInterval(this.interval);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        let {currentSummit} = nextProps;
+
+        if(currentSummit){
+            let localtime = moment().tz(currentSummit.time_zone.name);
+            this.setState({
+                localtime: localtime
+            });
+        }
     }
 
     localTimer() {
@@ -59,6 +78,8 @@ class SummitDashboardPage extends React.Component {
     render() {
         let { currentSummit } = this.props;
         let currentSummitTime = (new Date).getTime();
+
+        if(currentSummit == null) return (<div></div>);
 
         return (
             <div className="container dashboard">
@@ -181,6 +202,6 @@ const mapStateToProps = ({ currentSummitState }) => ({
 export default connect (
     mapStateToProps,
     {
-
+        getSummitById
     }
 )(SummitDashboardPage);
