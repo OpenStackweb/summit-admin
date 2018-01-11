@@ -86,21 +86,28 @@ export const getSpeakerForMerge = (speakerId, speakerCol) => (dispatch, getState
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
 
-export const mergeSpeakers = (selectedFields, changedFields, history) => (dispatch, getState) => {
+export const mergeSpeakers = (speakers, selectedFields, changedFields, history) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
-    swal({
-        title: "Success! Speakers merged.",
-        text: "Changes made on: " + changedFields.join(', '),
-        confirmButtonText: "Done!",
-        type: "success"
-    }).then(function(){
-        dispatch(createAction(RESET_SPEAKER_FORM));
-    }).catch(swal.noop);
+    let success_message = [
+        'Success! Speakers merged.',
+        'Changes made on: ' + changedFields.join(', ') ,
+        'success',
+        history.push(`/app/summits/${currentSummit.id}/speakers/${speakers[0].id}`)
+    ];
 
-    dispatch(createAction(null));
+    putRequest(
+        null,
+        createAction(RESET_SPEAKER_FORM),
+        `${apiBaseUrl}/api/v1/speakers/merge/${speakers[1].id}/${speakers[0].id}?access_token=${accessToken}`,
+        selectedFields,
+        authErrorHandler
+    )({})(dispatch)
+        .then((payload) => {
+            dispatch(showMessage(...success_message));
+        });
 };
 
 export const resetSpeakerForm = () => (dispatch, getState) => {
