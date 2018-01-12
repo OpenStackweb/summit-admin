@@ -227,5 +227,17 @@
       "end_date": "Enter End Date",
       "gap_size": "Enter Gap Size (Minutes)"
     }
+  },
+  "attendee_list": {
+    "attendee_list"           : "Attendee List",
+    "add_attendee"            : "Add Attendee",
+    "member_id"               : "Member Id",
+    "eventbrite_id"           : "Eventbrite Id",
+    "bought_date"             : "Bought Date",
+    "summit_hall_checked_in"  : "Checked In",
+    "schedule"                : "Schedule",
+    "placeholders": {
+      "search_attendees": "Search Attendees by Name or Email"
+    }
   }
 }

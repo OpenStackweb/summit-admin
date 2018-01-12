@@ -51,7 +51,7 @@ class FreeTextSearch extends React.Component {
                                defaultValue={this.props.value}
                                className="form-control"
                                ref={(input) => { this.searchTxt = input; }}
-                               placeholder={T.translate("general.placeholders.search_speakers")}
+                               placeholder={this.props.placeholder}
                                onKeyPress={this.onKeyPressed}
                         />
                         <span className="input-group-btn" style={{width: 5 +'%'}}>

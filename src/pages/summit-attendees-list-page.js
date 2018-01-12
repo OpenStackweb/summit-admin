@@ -16,6 +16,7 @@ import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import { Pagination } from 'react-bootstrap';
 import FreeTextSearch from "../components/free-text-search/index";
+import ScheduleModal from "../components/schedule-modal/index";
 import Table from "../components/table/Table";
 import { getSummitById }  from '../actions/summit-actions';
 import { getAttendees } from "../actions/attendee-actions";
@@ -27,12 +28,18 @@ class SummitAttendeeListPage extends React.Component {
 
         this.handleEdit = this.handleEdit.bind(this);
         this.handleViewSchedule = this.handleViewSchedule.bind(this);
+        this.hasSchedule = this.hasSchedule.bind(this);
+        this.onCloseSchedule = this.onCloseSchedule.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
         this.handleSort = this.handleSort.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.handleNewAttendee = this.handleNewAttendee.bind(this);
 
-        this.state = {}
+        this.state = {
+            showModal: false,
+            modalTitle: '',
+            modalSchedule: []
+        }
     }
 
     componentWillMount () {
@@ -57,9 +64,29 @@ class SummitAttendeeListPage extends React.Component {
         history.push(`/app/summits/${currentSummit.id}/attendees/${attendee_id}`);
     }
 
-    handleViewSchedule(attendee_id) {
-        let {currentSummit, history} = this.props;
-        history.push(`/app/summits/${currentSummit.id}/attendees/${attendee_id}`);
+    handleViewSchedule(attendee_id, ev) {
+        ev.preventDefault();
+
+        let {attendees} = this.props;
+        let attendee = attendees.find(a => a.id == attendee_id);
+
+        this.setState({
+            showModal: true,
+            modalTitle: attendee.name,
+            modalSchedule: attendee.schedule
+        });
+    }
+
+    hasSchedule(attendee_id) {
+
+        let {attendees} = this.props;
+        let attendee = attendees.find(a => a.id == attendee_id);
+
+        return attendee.schedule.length > 0;
+    }
+
+    onCloseSchedule() {
+        this.setState({showModal: false})
     }
 
     handlePageChange(page) {
@@ -85,6 +112,7 @@ class SummitAttendeeListPage extends React.Component {
 
     render(){
         let {currentSummit, attendees, lastPage, currentPage, term} = this.props;
+        let {showModal, modalSchedule, modalTitle} = this.state;
 
         let columns = [
             { columnKey: 'member_id', value: T.translate("attendee_list.member_id"), sortable: true },
@@ -92,14 +120,21 @@ class SummitAttendeeListPage extends React.Component {
             { columnKey: 'email', value: T.translate("general.email"), sortable: true },
             { columnKey: 'eventbrite_id', value: T.translate("attendee_list.eventbrite_id") },
             { columnKey: 'bought_date', value: T.translate("attendee_list.bought_date") },
-            { columnKey: 'checked_in', value: T.translate("attendee_list.checked_in") },
+            { columnKey: 'summit_hall_checked_in', value: T.translate("attendee_list.summit_hall_checked_in") },
         ];
 
         let table_options = {
             className: "table table-striped table-bordered table-hover dataTable",
             actions: {
                 edit: this.handleEdit,
-                view_schedule: this.handleViewSchedule
+                custom: [
+                    {
+                        name: 'show_schedule',
+                        icon: <i className="fa fa-list"></i>,
+                        onClick: this.handleViewSchedule,
+                        display: this.hasSchedule
+                    }
+                ]
             }
         }
 
@@ -110,7 +145,11 @@ class SummitAttendeeListPage extends React.Component {
                 <h3> {T.translate("attendee_list.attendee_list")} </h3>
                 <div className={'row'}>
                     <div className={'col-md-6'}>
-                        <FreeTextSearch value={term} onSearch={this.handleSearch} />
+                        <FreeTextSearch
+                            value={term}
+                            placeholder={T.translate("attendee_list.placeholders.search_attendees")}
+                            onSearch={this.handleSearch}
+                        />
                     </div>
                     <div className="col-md-2">
                         <button className="btn btn-primary" onClick={this.handleNewAttendee}>
@@ -143,6 +182,14 @@ class SummitAttendeeListPage extends React.Component {
                     />
                 </div>
                 }
+                <ScheduleModal
+                    show={showModal}
+                    title={modalTitle}
+                    schedule={modalSchedule}
+                    summit={currentSummit}
+                    onClose={this.onCloseSchedule}
+                />
+
             </div>
         )
     }

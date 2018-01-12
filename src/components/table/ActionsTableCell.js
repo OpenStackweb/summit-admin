@@ -20,7 +20,7 @@ export default class ActionsTableCell extends React.Component {
     render() {
         let {actions, id} = this.props;
         return (
-            <td key='actions'>
+            <td className="actions" key="actions" style={{width:'60px'}}>
                 {'edit' in actions &&
                     <a href="" onClick={this.onEdit.bind(this,id)} >
                         <i className="fa fa-pencil-square-o"></i>
@@ -31,6 +31,12 @@ export default class ActionsTableCell extends React.Component {
                         <i className="fa fa-trash-o"></i>
                     </a>
                 }
+                {'custom' in actions && actions.custom.map(a =>
+                    a.display(id) &&
+                    <a href="" key={'custom_' + a.name} onClick={a.onClick.bind(this, id)}>
+                        {a.icon}
+                    </a>
+                )}
             </td>
         );
     }

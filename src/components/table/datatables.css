@@ -16,6 +16,9 @@ table.dataTable {
     margin-bottom: 6px !important;
     max-width: none !important
 }
+table.dataTable .actions a {
+    margin-left: 10px;
+}
 table.dataTable td,
 table.dataTable th {
     -webkit-box-sizing: content-box;
@@ -463,3 +466,4 @@ div.dtr-modal div.dtr-modal-background {
         width: 95%
     }
 }
+

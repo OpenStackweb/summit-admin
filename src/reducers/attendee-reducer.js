@@ -28,21 +28,9 @@ export const DEFAULT_ENTITY = {
     member: null,
     affiliation: {title: '', company: {}, start_date: '', end_date: '', current: 0},
     shared_contact_info: 0,
-    checked_in: 0,
-    last_name: '',
-    member: null,
-    email: '',
-    twitter: '',
-    irc: '',
-    bio: '',
-    pic: '',
-    presentations: [],
-    registration_code: '',
-    code_redeemed: false,
-    on_site_phone: '',
-    registered: false,
-    checked_in: false,
-    confirmed: false
+    summit_hall_checked_in: 0,
+    summit_hall_checked_in_date: '',
+    tickets: {}
 }
 
 const DEFAULT_STATE = {
@@ -73,27 +61,8 @@ const attendeeReducer = (state = DEFAULT_STATE, action) => {
         break;
         case RECEIVE_ATTENDEE: {
             let entity = {...payload.response};
-            let registration_code = '', on_site_phone = '', registered = false, checked_in = false, confirmed = false;
 
-            for(var key in entity) {
-                if(entity.hasOwnProperty(key)) {
-                    entity[key] = (entity[key] == null) ? '' : entity[key] ;
-                }
-            }
-
-            if (entity.hasOwnProperty('registration_code')) {
-                entity.registration_code = entity.registration_code.code;
-                entity.code_redeemed = entity.registration_code.redeemed;
-            }
-
-            if (entity.hasOwnProperty('summit_assistance')) {
-                entity.on_site_phone = entity.summit_assistance.on_site_phone;
-                entity.registered = entity.summit_assistance.registered;
-                entity.checked_in = entity.summit_assistance.checked_in;
-                entity.confirmed = entity.summit_assistance.confirmed;
-            }
-
-            return {...state, entity: {...state.entity, ...entity}, errors: {} };
+            return state;
         }
         break;
         case ATTENDEE_UPDATED: {

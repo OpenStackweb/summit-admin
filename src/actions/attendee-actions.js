@@ -26,7 +26,7 @@ export const getAttendees = ( term = null, page = 1, perPage = 10, order = 'id',
     }
 
     let params = {
-        expand       : 'tickets, schedule',
+        expand       : 'member, tickets, schedule',
         page         : page,
         per_page     : perPage,
         access_token : accessToken,

@@ -104,7 +104,11 @@ class SummitSpeakerListPage extends React.Component {
                 <h3> {T.translate("speaker_list.speaker_list")} </h3>
                 <div className={'row'}>
                     <div className={'col-md-6'}>
-                        <FreeTextSearch value={term} onSearch={this.handleSearch} />
+                        <FreeTextSearch
+                            value={term}
+                            placeholder={T.translate("general.placeholders.search_speakers")}
+                            onSearch={this.handleSearch}
+                        />
                     </div>
                     <div className="col-md-2">
                         <button className="btn btn-primary" onClick={this.handleNewSpeaker}>

@@ -11,6 +11,7 @@
  * limitations under the License.
  **/
 
+import moment from 'moment-timezone';
 import
 {
     RECEIVE_ATTENDEES
@@ -39,13 +40,21 @@ const attendeeListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case RECEIVE_ATTENDEES: {
             let {current_page, total, last_page} = payload.response;
-            let attendees = payload.response.data.map(s => ({
-                ...s,
-                name: s.first_name + ' ' + s.last_name,
-                presentation_count: Object.keys(s.presentations).length,
-                on_site_phone: (s.hasOwnProperty('summit_assistance') ? s.summit_assistance.on_site_phone : ''),
-                registration_code: (s.hasOwnProperty('registration_code') ? s.registration_code.code : '')
-            }))
+            let attendees = payload.response.data.map(a => {
+                let bought_date = Math.max(a.tickets.map(t => {return t.bought_date ? t.bought_date : 0;})) * 1000;
+                bought_date = (bought_date > 0 ? moment(bought_date).format('MMMM Do YYYY, h:mm:ss a') : '-');
+
+                return {
+                    id: a.id,
+                    member_id: a.member.id,
+                    name: a.member.first_name + ' ' + a.member.last_name,
+                    email: a.member.email,
+                    eventbrite_id: a.tickets.map(t => t.external_order_id).join(', '),
+                    bought_date: bought_date,
+                    summit_hall_checked_in: (a.summit_hall_checked_in ? 'Yes' : 'No'),
+                    schedule: a.schedule
+                };
+            })
 
             return {...state, attendees: attendees, currentPage: current_page, totalAttendees: total, lastPage: last_page };
         }
