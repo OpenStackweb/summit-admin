@@ -3,6 +3,7 @@ import { authErrorHandler, fetchResponseHandler, fetchErrorHandler, apiBaseUrl, 
 import swal from "sweetalert2";
 import T from "i18n-react/dist/i18n-react";
 
+export const REQUEST_ATTENDEES       = 'REQUEST_ATTENDEES';
 export const RECEIVE_ATTENDEES       = 'RECEIVE_ATTENDEES';
 export const RECEIVE_ATTENDEE        = 'RECEIVE_ATTENDEE';
 export const REQUEST_ATTENDEE        = 'REQUEST_ATTENDEE';
@@ -12,7 +13,7 @@ export const ATTENDEE_UPDATED        = 'ATTENDEE_UPDATED';
 export const ATTENDEE_ADDED          = 'ATTENDEE_ADDED';
 
 
-export const getAttendees = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = '1' ) => (dispatch, getState) => {
+export const getAttendees = ( term = null, page = 1, perPage = 10, order = 'last_name', orderDir = 1 ) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -38,16 +39,17 @@ export const getAttendees = ( term = null, page = 1, perPage = 10, order = 'id',
 
     // order
     if(order != null && orderDir != null){
-        orderDir = (orderDir == '1') ? '+' : '-';
-        params['order']= `${orderDir}${order}`;
+        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        params['order']= `${orderDirSign}${order}`;
     }
 
 
     return getRequest(
-        null,
+        createAction(REQUEST_ATTENDEES),
         createAction(RECEIVE_ATTENDEES),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/attendees`,
-        authErrorHandler
+        authErrorHandler,
+        {page, perPage, order, orderDir}
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
 

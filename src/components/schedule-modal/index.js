@@ -35,6 +35,11 @@ export default class ScheduleModal extends React.Component {
         return moment(atime).tz(this.props.summit.time_zone.name).format('dddd D');
     }
 
+    getFormattedLocation(location_id) {
+        let venue = this.props.summit.locations.find(l => l.id == location_id).name;
+        return venue;
+    }
+
     getFormatedSchedule() {
         let groupedSchedule = {};
         let sortedSchedule = this.props.schedule.sort(
@@ -62,7 +67,7 @@ export default class ScheduleModal extends React.Component {
                     {groupedSchedule[day].map(e =>
                         <tr key={e.id}>
                             <td>{e.title}</td>
-                            <td>need location in schedule</td>
+                            <td>{this.getFormattedLocation(e.location_id)}</td>
                             <td>{this.getFormattedTime(e.start_date)}</td>
                         </tr>
                     )}

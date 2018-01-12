@@ -14,7 +14,8 @@
 import moment from 'moment-timezone';
 import
 {
-    RECEIVE_ATTENDEES
+    RECEIVE_ATTENDEES,
+    REQUEST_ATTENDEES,
 } from '../actions/attendee-actions';
 
 import { LOGOUT_USER } from '../actions/auth-actions';
@@ -23,8 +24,8 @@ import { SET_CURRENT_SUMMIT } from '../actions/summit-actions';
 const DEFAULT_STATE = {
     attendees       : {},
     term            : null,
-    order           : null,
-    orderDir        : null,
+    order           : 'name',
+    orderDir        : 1,
     currentPage     : 1,
     lastPage        : 1,
     perPage         : 10,
@@ -36,6 +37,12 @@ const attendeeListReducer = (state = DEFAULT_STATE, action) => {
     switch (type) {
         case LOGOUT_USER: {
             return state;
+        }
+        break;
+        case REQUEST_ATTENDEES: {
+            let {order, orderDir} = payload;
+
+            return {...state, order, orderDir }
         }
         break;
         case RECEIVE_ATTENDEES: {

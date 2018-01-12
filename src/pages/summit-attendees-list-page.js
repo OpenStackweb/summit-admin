@@ -111,13 +111,13 @@ class SummitAttendeeListPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, attendees, lastPage, currentPage, term} = this.props;
+        let {currentSummit, attendees, lastPage, currentPage, term, order, orderDir} = this.props;
         let {showModal, modalSchedule, modalTitle} = this.state;
 
         let columns = [
-            { columnKey: 'member_id', value: T.translate("attendee_list.member_id"), sortable: true },
+            { columnKey: 'member_id', value: T.translate("attendee_list.member_id") },
             { columnKey: 'name', value: T.translate("general.name"), sortable: true },
-            { columnKey: 'email', value: T.translate("general.email"), sortable: true },
+            { columnKey: 'email', value: T.translate("general.email") },
             { columnKey: 'eventbrite_id', value: T.translate("attendee_list.eventbrite_id") },
             { columnKey: 'bought_date', value: T.translate("attendee_list.bought_date") },
             { columnKey: 'summit_hall_checked_in', value: T.translate("attendee_list.summit_hall_checked_in") },
@@ -125,6 +125,8 @@ class SummitAttendeeListPage extends React.Component {
 
         let table_options = {
             className: "table table-striped table-bordered table-hover dataTable",
+            sortCol: (order == 'last_name') ? 'name' : order,
+            sortDir: orderDir,
             actions: {
                 edit: this.handleEdit,
                 custom: [
