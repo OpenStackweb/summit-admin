@@ -23,6 +23,7 @@ import speakerReducer from './reducers/speaker-reducer';
 import speakerMergeReducer from './reducers/speaker-merge-reducer';
 import summitEventBulkActionReducer from './reducers/summit-event-bulk-actions-reducer';
 import attendeeListReducer from './reducers/attendee-list-reducer';
+import attendeeReducer from './reducers/attendee-reducer';
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
 import storage from 'redux-persist/es/storage' // default: localStorage if web, AsyncStorage if react-native
@@ -44,6 +45,7 @@ const reducers = persistCombineReducers(config, {
     currentSpeakerMergeState: speakerMergeReducer,
     summitEventsBulkActionsState: summitEventBulkActionReducer,
     currentAttendeeListState: attendeeListReducer,
+    currentAttendeeState: attendeeReducer,
 })
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

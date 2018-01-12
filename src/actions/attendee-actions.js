@@ -26,6 +26,7 @@ export const getAttendees = ( term = null, page = 1, perPage = 10, order = 'id',
     }
 
     let params = {
+        expand       : 'tickets, schedule',
         page         : page,
         per_page     : perPage,
         access_token : accessToken,
@@ -45,7 +46,7 @@ export const getAttendees = ( term = null, page = 1, perPage = 10, order = 'id',
     return getRequest(
         null,
         createAction(RECEIVE_ATTENDEES),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/attendees?access_token=${accessToken}`,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/attendees`,
         authErrorHandler
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
@@ -56,12 +57,17 @@ export const getAttendee = (attendeeId) => (dispatch, getState) => {
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
+    let params = {
+        expand       : 'member, speaker, tickets, ticket_type',
+        access_token : accessToken,
+    };
+
     return getRequest(
         null,
         createAction(RECEIVE_ATTENDEE),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}?access_token=${accessToken}&expand=member,presentations`,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}`,
         authErrorHandler
-    )({})(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(dispatch(stopLoading()));
 };
 
 export const resetAttendeeForm = () => (dispatch, getState) => {
