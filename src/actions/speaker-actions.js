@@ -95,7 +95,7 @@ export const mergeSpeakers = (speakers, selectedFields, changedFields, history) 
         'Success! Speakers merged.',
         'Changes made on: ' + changedFields.join(', ') ,
         'success',
-        history.push(`/app/summits/${currentSummit.id}/speakers/${speakers[0].id}`)
+        () => { history.push(`/app/summits/${currentSummit.id}/speakers/${speakers[0].id}`) }
     ];
 
     putRequest(
@@ -105,9 +105,9 @@ export const mergeSpeakers = (speakers, selectedFields, changedFields, history) 
         selectedFields,
         authErrorHandler
     )({})(dispatch)
-        .then((payload) => {
-            dispatch(showMessage(...success_message));
-        });
+    .then((payload) => {
+        dispatch(showMessage(...success_message));
+    });
 };
 
 export const resetSpeakerForm = () => (dispatch, getState) => {
@@ -153,7 +153,7 @@ export const saveSpeaker = (entity, history) => (dispatch, getState) => {
             .then((payload) => {
                 dispatch(showMessage(
                     ...success_message,
-                    history.push(`/app/summits/${currentSummit.id}/speakers/${payload.response.id}`)
+                    () => { history.push(`/app/summits/${currentSummit.id}/speakers/${payload.response.id}`) }
                 ));
             });
     }

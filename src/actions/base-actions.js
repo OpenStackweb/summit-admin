@@ -83,9 +83,13 @@ export const fetchResponseHandler = (response) => {
     }
 }
 
-export const showMessage = (title, msg, msg_type, callback = {}) => (dispatch) => {
+export const showMessage = (title, text, type, callback = {}) => (dispatch) => {
     dispatch(stopLoading());
-    swal(title, msg, msg_type, callback);
+    swal({title, text, type}).then((result) => {
+        if (result.value) {
+            callback();
+        }
+    });
 }
 
 export const queryMembers = (summitId, input) => {
