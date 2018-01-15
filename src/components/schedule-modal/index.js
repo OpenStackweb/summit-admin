@@ -78,12 +78,12 @@ export default class ScheduleModal extends React.Component {
     }
 
     render() {
-        let {show, title, onClose} = this.props;
+        let {show, title, onClose, schedule} = this.props;
 
         return (
             <Modal show={show} onHide={onClose} dialogClassName="schedule-modal">
                 <Modal.Header closeButton>
-                    <Modal.Title>{title} {T.translate("attendee_list.schedule")}</Modal.Title>
+                    <Modal.Title>{title} {T.translate("attendee_list.schedule")} ({schedule.length})</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     {this.getFormatedSchedule()}
