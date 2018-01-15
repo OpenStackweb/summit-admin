@@ -128,6 +128,7 @@ class AttendeeForm extends React.Component {
                 </div>
                 {entity.member != null &&
                 <div>
+                    {entity.hasOwnProperty('affiliation') &&
                     <div className="row form-group">
                         <legend>{T.translate("edit_attendee.current_affiliation")}</legend>
                         <div className="col-md-3">
@@ -171,8 +172,9 @@ class AttendeeForm extends React.Component {
                             </div>
                         </div>
                     </div>
+                    }
                     <div className="row form-group">
-                        <legend>{T.translate("edit_attendee.attendee")}</legend>
+                        <legend>{T.translate("general.attendee")}</legend>
                         <div className="col-md-3">
                             <div className="form-check abc-checkbox">
                                 <input type="checkbox" id="attendee_shared_contact_info" checked={entity.shared_contact_info}
@@ -204,9 +206,8 @@ class AttendeeForm extends React.Component {
 
                         </div>
                     </div>
-                    <hr />
                     <div className="row form-group">
-                        <legend>{T.translate("edit_attendee.speaker_details")}</legend>
+                        <legend>{T.translate("general.speaker")}</legend>
                         <div className="col-md-4">
 
                         </div>

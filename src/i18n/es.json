@@ -12,6 +12,7 @@
     "speakers"            : "Speakers",
     "speaker"             : "Speaker",
     "attendees"           : "Attendees",
+    "attendee"            : "Attendee",
     "summit_event"        : "Summit Event",
     "presentation"        : "Presentation",
     "presentations"       : "Presentations",
@@ -238,6 +239,20 @@
     "schedule"                : "Schedule",
     "placeholders": {
       "search_attendees": "Search Attendees by Name or Email"
+    }
+  },
+  "edit_attendee": {
+    "current_affiliation"     : "Current Affiliation",
+    "affiliation_title"       : "Title",
+    "company"                 : "Company",
+    "affiliation_current"     : "Current",
+    "shared_contact_info"     : "Share Contact Info",
+    "checked_in"              : "Checked In",
+    "tickets"                 : "Tickets",
+    "rsvp"                    : "RSVP",
+    "placeholders": {
+      "start_date"          : "Start Date",
+      "end_date"            : "End Date"
     }
   }
 }
