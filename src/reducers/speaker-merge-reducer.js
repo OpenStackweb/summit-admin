@@ -27,14 +27,14 @@ const DEFAULT_STATE = {
     speakerCol: '',
     speakers: [null, null],
     selectedFields: {
-        title: 0,
-        first_name: 0,
-        last_name: 0,
-        reg_email: 0,
-        twitter: 0,
-        irc: 0,
-        bio: 0,
-        pic: 0
+        title: 1,
+        first_name: 1,
+        last_name: 1,
+        reg_email: 1,
+        twitter: 1,
+        irc: 1,
+        bio: 1,
+        pic: 1
     }
 };
 

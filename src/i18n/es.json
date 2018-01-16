@@ -178,8 +178,8 @@
   "merge_speakers": {
     "merge_speakers"        : "Merge Speakers",
     "select_speaker"        : "Please select a speaker first.",
-    "speaker_one"           : "Speaker 1",
-    "speaker_two"           : "Speaker 2",
+    "speaker_from"          : "Merge From Speaker",
+    "speaker_to"            : "To Speaker",
     "merge"                 : "Merge",
     "title"                 : "Title",
     "first_name"            : "First Name",

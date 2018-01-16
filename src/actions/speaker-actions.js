@@ -95,13 +95,13 @@ export const mergeSpeakers = (speakers, selectedFields, changedFields, history) 
         'Success! Speakers merged.',
         'Changes made on: ' + changedFields.join(', ') ,
         'success',
-        () => { history.push(`/app/summits/${currentSummit.id}/speakers/${speakers[0].id}`) }
+        () => { history.push(`/app/summits/${currentSummit.id}/speakers/${speakers[1].id}`) }
     ];
 
     putRequest(
         null,
         createAction(RESET_SPEAKER_FORM),
-        `${apiBaseUrl}/api/v1/speakers/merge/${speakers[1].id}/${speakers[0].id}?access_token=${accessToken}`,
+        `${apiBaseUrl}/api/v1/speakers/merge/${speakers[0].id}/${speakers[1].id}?access_token=${accessToken}`,
         selectedFields,
         authErrorHandler
     )({})(dispatch)

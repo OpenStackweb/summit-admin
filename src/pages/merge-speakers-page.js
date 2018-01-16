@@ -87,12 +87,12 @@ class MergeSpeakerPage extends React.Component {
             let field = selectedFields[key];
             selectedFields[key] = speakers[field].id;
 
-            if (field == 1) changedFields.push(key);
+            if (field == 0) changedFields.push(key);
         }
 
         swal({
             title: "Attention!",
-            text: "There is no going back. Speaker 1 on the left will have all the green fields and Speaker 2 will be erased",
+            text: "There is no going back. Speaker on the right will have all the green fields and Speaker on the left will be erased",
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
@@ -115,7 +115,7 @@ class MergeSpeakerPage extends React.Component {
                 <hr/>
                 <div className="row">
                     <div className="col-md-5 col-md-offset-2">
-                        <label> {T.translate("merge_speakers.speaker_one")} </label>
+                        <label> {T.translate("merge_speakers.speaker_from")} </label>
                         <SpeakerInput
                             id="0"
                             value={speakers[0]}
@@ -129,7 +129,7 @@ class MergeSpeakerPage extends React.Component {
 
                     </div>
                     <div className="col-md-5">
-                        <label> {T.translate("merge_speakers.speaker_two")} </label>
+                        <label> {T.translate("merge_speakers.speaker_to")} </label>
                         <SpeakerInput
                             id="1"
                             value={speakers[1]}
