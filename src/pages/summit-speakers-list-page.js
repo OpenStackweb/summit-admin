@@ -78,7 +78,7 @@ class SummitSpeakerListPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, speakers, lastPage, currentPage, term} = this.props;
+        let {currentSummit, speakers, lastPage, currentPage, term, totalSpeakers } = this.props;
 
         let columns = [
             { columnKey: 'id', value: 'Id', sortable: true },
@@ -101,7 +101,7 @@ class SummitSpeakerListPage extends React.Component {
 
         return(
             <div className="container">
-                <h3> {T.translate("speaker_list.speaker_list")} </h3>
+                <h3> {T.translate("speaker_list.speaker_list")} ({totalSpeakers}) </h3>
                 <div className={'row'}>
                     <div className={'col-md-6'}>
                         <FreeTextSearch
@@ -117,7 +117,7 @@ class SummitSpeakerListPage extends React.Component {
                     </div>
                 </div>
 
-                {this.props.speakers.length > 0 &&
+                {speakers.length > 0 &&
                 <div>
                     <Table
                         options={table_options}

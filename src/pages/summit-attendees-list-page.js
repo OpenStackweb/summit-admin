@@ -111,7 +111,7 @@ class SummitAttendeeListPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, attendees, lastPage, currentPage, term, order, orderDir} = this.props;
+        let {currentSummit, attendees, lastPage, currentPage, term, order, orderDir, totalAttendees} = this.props;
         let {showModal, modalSchedule, modalTitle} = this.state;
 
         let columns = [
@@ -144,7 +144,7 @@ class SummitAttendeeListPage extends React.Component {
 
         return(
             <div className="container">
-                <h3> {T.translate("attendee_list.attendee_list")} </h3>
+                <h3> {T.translate("attendee_list.attendee_list")} ({totalAttendees})</h3>
                 <div className={'row'}>
                     <div className={'col-md-6'}>
                         <FreeTextSearch
@@ -160,7 +160,7 @@ class SummitAttendeeListPage extends React.Component {
                     </div>
                 </div>
 
-                {this.props.attendees.length > 0 &&
+                {attendees.length > 0 &&
                 <div>
                     <Table
                         options={table_options}
