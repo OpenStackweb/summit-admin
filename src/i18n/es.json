@@ -46,8 +46,10 @@
     "events"              : "Events",
     "schedule"            : "Schedule",
     "new_event"           : "New Event",
+    "speakers"            : "Speakers",
     "speaker_list"        : "CRUD List",
     "merge_speakers"      : "Merge",
+    "attendees"           : "Attendees",
     "attendee_list"       : "CRUD List"
   },
   "schedule": {
