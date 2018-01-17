@@ -19,6 +19,7 @@ import MemberInput from '../member-input'
 import CompanyInput from '../company-input'
 import DateTimePicker from '../datetimepicker'
 import Input from '../text-input'
+import TicketComponent from './ticket-component'
 import {findElementPos} from '../../utils/methods'
 
 
@@ -112,7 +113,7 @@ class AttendeeForm extends React.Component {
         let { currentSummit } = this.props;
 
         return (
-            <form>
+            <form className="summit-attendee-form">
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
                     <div className="col-md-4">
@@ -125,6 +126,12 @@ class AttendeeForm extends React.Component {
                             multi={false}
                         />
                     </div>
+                    {entity.member.speaker &&
+                    <div className="col-md-4">
+                        <label> {T.translate("general.speaker")} </label>
+                        <a href="" > speaker name </a>
+                    </div>
+                    }
                 </div>
                 {entity.member != null &&
                 <div>
@@ -194,20 +201,11 @@ class AttendeeForm extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <div className="row form-group">
-                        <legend>{T.translate("edit_attendee.tickets")}</legend>
-                        <div className="col-md-4">
-
-                        </div>
-                    </div>
+                    {entity.hasOwnProperty('tickets') &&
+                    <TicketComponent tickets={entity.tickets} summit={currentSummit}/>
+                    }
                     <div className="row form-group">
                         <legend>{T.translate("edit_attendee.rsvp")}</legend>
-                        <div className="col-md-4">
-
-                        </div>
-                    </div>
-                    <div className="row form-group">
-                        <legend>{T.translate("general.speaker")}</legend>
                         <div className="col-md-4">
 
                         </div>

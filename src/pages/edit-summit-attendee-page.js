@@ -17,6 +17,7 @@ import T from "i18n-react/dist/i18n-react";
 import AttendeeForm from '../components/attendee-form/attendee-form';
 import { getSummitById }  from '../actions/summit-actions';
 import { getAttendee, resetAttendeeForm, saveAttendee } from "../actions/attendee-actions";
+import '../styles/edit-summit-attendee-page.less';
 
 class EditSummitAttendeePage extends React.Component {
 

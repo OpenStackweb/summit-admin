@@ -29,6 +29,7 @@
     "search"              : "Search",
     "save"                : "Save",
     "save_and_publish"    : "Save & Publish",
+    "are_you_sure"        : "Are you sure?",
     "placeholders": {
       "search_speakers"     : "Search Speakers by Name or Email"
     }
@@ -188,7 +189,7 @@
     "member"                : "Member",
     "name"                  : "Name",
     "email"                 : "Email",
-    "eb_ticket"             : "EB Ticket",
+    "eb_ticket"             : "EventBrite Tickets",
     "presentations"         : "Presentations",
     "twitter"               : "Twitter",
     "irc"                   : "IRC",
@@ -242,17 +243,29 @@
     }
   },
   "edit_attendee": {
-    "current_affiliation"     : "Current Affiliation",
-    "affiliation_title"       : "Title",
-    "company"                 : "Company",
-    "affiliation_current"     : "Current",
-    "shared_contact_info"     : "Share Contact Info",
-    "checked_in"              : "Checked In",
-    "tickets"                 : "Tickets",
-    "rsvp"                    : "RSVP",
+    "current_affiliation"         : "Current Affiliation",
+    "affiliation_title"           : "Title",
+    "company"                     : "Company",
+    "affiliation_current"         : "Current",
+    "shared_contact_info"         : "Share Contact Info",
+    "checked_in"                  : "Checked In",
+    "tickets"                     : "Tickets",
+    "rsvp"                        : "RSVP",
+    "remove_ticket_from_attendee" : "Do you really want to remove this ticket from this attendee?",
+    "add_ticket"                  : "Add Ticket",
+    "ticket_details"              : "Ticket Details",
+    "eb_order_number"             : "Eventbrite Order #",
+    "eb_attendee_id"              : "Eventbrite Attendee Id",
+    "ticket_type"                 : "Ticket Type",
+    "assign_to_member"            : "Assign to another member",
+    "new_ticket"                  : "New Ticket",
+    "add_ticket"                  : "Add Ticket",
+    "add_ticket"                  : "Add Ticket",
+    "add_ticket"                  : "Add Ticket",
     "placeholders": {
-      "start_date"          : "Start Date",
-      "end_date"            : "End Date"
+      "start_date"            : "Start Date",
+      "end_date"              : "End Date",
+      "select_ticket_type"    : "Select Ticket Type"
     }
   }
 }
