@@ -29,6 +29,7 @@
     "search"              : "Search",
     "save"                : "Save",
     "save_and_publish"    : "Save & Publish",
+    "export"              : "Export",
     "are_you_sure"        : "Are you sure?",
     "placeholders": {
       "search_speakers"     : "Search Speakers by Name or Email"
@@ -50,7 +51,9 @@
     "speaker_list"        : "CRUD List",
     "merge_speakers"      : "Merge",
     "attendees"           : "Attendees",
-    "attendee_list"       : "CRUD List"
+    "attendee_list"       : "CRUD List",
+    "promocodes"          : "Promocodes",
+    "promocode_list"      : "CRUD List"
   },
   "schedule": {
     "find_empty_spots"    : "Find empty spots for Day/Location",
@@ -261,13 +264,25 @@
     "ticket_type"                 : "Ticket Type",
     "assign_to_member"            : "Assign to another member",
     "new_ticket"                  : "New Ticket",
-    "add_ticket"                  : "Add Ticket",
-    "add_ticket"                  : "Add Ticket",
-    "add_ticket"                  : "Add Ticket",
     "placeholders": {
       "start_date"            : "Start Date",
       "end_date"              : "End Date",
       "select_ticket_type"    : "Select Ticket Type"
+    }
+  },
+  "promocode_list": {
+    "promocode_list"            : "Promocode List",
+    "add_promocode"             : "Add Promocode",
+    "code"                      : "Code",
+    "type"                      : "Type",
+    "owner"                     : "Owner",
+    "owner_email"               : "Owner Email",
+    "emailed"                   : "Emailed",
+    "redeemed"                  : "Redeemed",
+    "source"                    : "Source",
+    "placeholders": {
+      "search_promocodes": "Search by Code, Speaker, Member, Email, Company",
+      "select_type": "Select a Type"
     }
   }
 }

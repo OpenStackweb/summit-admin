@@ -128,7 +128,7 @@ class SummitAttendeeListPage extends React.Component {
             sortCol: (order == 'last_name') ? 'name' : order,
             sortDir: orderDir,
             actions: {
-                edit: this.handleEdit,
+                edit: {onClick: this.handleEdit},
                 custom: [
                     {
                         name: 'show_schedule',

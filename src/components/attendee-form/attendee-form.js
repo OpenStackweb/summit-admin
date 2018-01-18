@@ -126,7 +126,7 @@ class AttendeeForm extends React.Component {
                             multi={false}
                         />
                     </div>
-                    {entity.member.speaker &&
+                    {entity.member && entity.member.speaker &&
                     <div className="col-md-4">
                         <label> {T.translate("general.speaker")} </label>
                         <a href="" > speaker name </a>
