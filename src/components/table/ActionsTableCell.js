@@ -20,7 +20,7 @@ export default class ActionsTableCell extends React.Component {
     render() {
         let {actions, id} = this.props;
         return (
-            <td className="actions" key="actions" style={{width:'60px'}}>
+            <td className="actions" key="actions">
                 {actions.hasOwnProperty('edit') && this.shouldDisplayAction(actions.edit) &&
                     <a href="" onClick={actions.edit.onClick.bind(this, id)} >
                         <i className="fa fa-pencil-square-o"></i>

@@ -16,6 +16,7 @@ import
 {
     RECEIVE_ATTENDEES,
     REQUEST_ATTENDEES,
+    ATTENDEE_DELETED,
 } from '../actions/attendee-actions';
 
 import { LOGOUT_USER } from '../actions/auth-actions';
@@ -64,6 +65,11 @@ const attendeeListReducer = (state = DEFAULT_STATE, action) => {
             })
 
             return {...state, attendees: attendees, currentPage: current_page, totalAttendees: total, lastPage: last_page };
+        }
+        break;
+        case ATTENDEE_DELETED: {
+            let {attendeeId} = payload;
+            return {...state, attendees: state.attendees.filter(a => a.id != attendeeId)};
         }
         break;
         default:

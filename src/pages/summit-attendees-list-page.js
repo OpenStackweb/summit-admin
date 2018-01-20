@@ -14,12 +14,13 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
+import swal from "sweetalert2";
 import { Pagination } from 'react-bootstrap';
 import FreeTextSearch from "../components/free-text-search/index";
 import ScheduleModal from "../components/schedule-modal/index";
 import Table from "../components/table/Table";
 import { getSummitById }  from '../actions/summit-actions';
-import { getAttendees } from "../actions/attendee-actions";
+import { getAttendees, deleteAttendee } from "../actions/attendee-actions";
 
 class SummitAttendeeListPage extends React.Component {
 
@@ -34,6 +35,7 @@ class SummitAttendeeListPage extends React.Component {
         this.handleSort = this.handleSort.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.handleNewAttendee = this.handleNewAttendee.bind(this);
+        this.handleDeleteAttendee = this.handleDeleteAttendee.bind(this);
 
         this.state = {
             showModal: false,
@@ -110,6 +112,24 @@ class SummitAttendeeListPage extends React.Component {
         history.push(`/app/summits/${currentSummit.id}/attendees/new`);
     }
 
+    handleDeleteAttendee(attendee_id, ev) {
+        let {deleteAttendee, attendees} = this.props;
+        let attendee = attendees.find(a => a.id == attendee_id);
+
+        ev.preventDefault();
+
+        swal({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("attendee_list.delete_attendee_warning") + attendee.name,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes, delete."
+        }).then(function(){
+            deleteAttendee(attendee.id);
+        }).catch(swal.noop);
+    }
+
     render(){
         let {currentSummit, attendees, lastPage, currentPage, term, order, orderDir, totalAttendees} = this.props;
         let {showModal, modalSchedule, modalTitle} = this.state;
@@ -129,6 +149,7 @@ class SummitAttendeeListPage extends React.Component {
             sortDir: orderDir,
             actions: {
                 edit: {onClick: this.handleEdit},
+                delete: { onClick: this.handleDeleteAttendee },
                 custom: [
                     {
                         name: 'show_schedule',
@@ -206,6 +227,7 @@ export default connect (
     mapStateToProps,
     {
         getSummitById,
-        getAttendees
+        getAttendees,
+        deleteAttendee
     }
 )(SummitAttendeeListPage);

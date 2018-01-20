@@ -27,7 +27,7 @@ export default class TicketComponent extends React.Component {
             showEditModal: false,
             showAddModal: false,
             editTicket: null,
-            newTicket: null
+            newTicket: {external_order_id: '', external_attendee_id: '', ticket_type_id: 0}
         };
 
         this.handleMemberChange = this.handleMemberChange.bind(this);
@@ -44,15 +44,18 @@ export default class TicketComponent extends React.Component {
     }
 
     onDelete(ticket_id, ev)  {
+        let {onDelete, attendeeId} = this.props;
+
         ev.preventDefault();
         let msg = {
             title: T.translate("general.are_you_sure"),
             text: T.translate("edit_attendee.remove_ticket_from_attendee"),
-            type: 'danger'
+            type: 'warning'
         };
-        swal(msg, () => {
-           // delete ticket ticekt_id
-        });
+
+        swal(msg).then(function(){
+            onDelete(attendeeId, ticket_id);
+        }).catch(swal.noop);
 
     }
 
@@ -70,7 +73,15 @@ export default class TicketComponent extends React.Component {
     }
 
     handleTicketSave(ev) {
+        let {onSave, attendeeId} = this.props;
+        let newTicket = {...this.state.newTicket};
 
+        this.setState({
+            showAddModal: false,
+            newTicket: {external_order_id: '', external_attendee_id: '', ticket_type_id: 0}
+        });
+
+        onSave(attendeeId, newTicket);
     }
 
     handleTicketChange(ev) {
@@ -83,7 +94,7 @@ export default class TicketComponent extends React.Component {
 
     render() {
         let {tickets, summit} = this.props;
-        let {showEditModal, showAddModal, editTicket} = this.state;
+        let {showEditModal, showAddModal, editTicket, newTicket} = this.state;
 
         let ticket_types_ddl = summit.ticket_types.map(
             t => {
@@ -117,24 +128,24 @@ export default class TicketComponent extends React.Component {
                     </Modal.Header>
                     <Modal.Body>
                         {editTicket &&
-                        <div class="row">
-                            <div class="col-md-4">
+                        <div className="row">
+                            <div className="col-md-4">
                                 <label>{T.translate("edit_attendee.eb_order_number")}</label><br/>
                                 <div>{editTicket.external_order_id}</div>
                             </div>
-                            <div class="col-md-4">
+                            <div className="col-md-4">
                                 <label>{T.translate("edit_attendee.eb_attendee_id")}</label><br/>
                                 <div>{editTicket.external_attendee_id}</div>
                             </div>
-                            <div class="col-md-4">
+                            <div className="col-md-4">
                                 <label>{T.translate("edit_attendee.ticket_type")}</label><br/>
-                                <div>{editTicket.ticket_type.name}</div>
+                                <div>{summit.ticket_types.find(t => t.id == editTicket.ticket_type_id).name}</div>
                             </div>
                         </div>
                         }
                         <br/>
-                        <div class="row">
-                            <div class="col-md-8">
+                        <div className="row">
+                            <div className="col-md-8">
                                 <label>{T.translate("edit_attendee.assign_to_member")}</label><br/>
                                 <MemberInput
                                     id="member"
@@ -151,22 +162,33 @@ export default class TicketComponent extends React.Component {
                         <Modal.Title>{T.translate("edit_attendee.new_ticket")}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <div class="row">
-                            <div class="col-md-4">
+                        <div className="row">
+                            <div className="col-md-4">
                                 <label>{T.translate("edit_attendee.eb_order_number")}</label><br/>
-                                <input id="external_order_id" className="form-control" onChange={this.handleTicketChange} />
+                                <input
+                                    id="external_order_id"
+                                    className="form-control"
+                                    onChange={this.handleTicketChange}
+                                    value={newTicket ? newTicket.external_order_id : ''}
+                                />
                             </div>
-                            <div class="col-md-4">
+                            <div className="col-md-4">
                                 <label>{T.translate("edit_attendee.eb_attendee_id")}</label><br/>
-                                <input id="external_attendee_id" className="form-control" onChange={this.handleTicketChange} />
+                                <input
+                                    id="external_attendee_id"
+                                    className="form-control"
+                                    onChange={this.handleTicketChange}
+                                    value={newTicket ? newTicket.external_attendee_id : ''}
+                                />
                             </div>
-                            <div class="col-md-4">
+                            <div className="col-md-4">
                                 <label>{T.translate("edit_attendee.ticket_type")}</label>
                                 <Dropdown
-                                    id="ticket_type"
+                                    id="ticket_type_id"
                                     placeholder={T.translate("edit_attendee.placeholders.select_ticket_type")}
                                     options={ticket_types_ddl}
                                     onChange={this.handleTicketChange}
+                                    value={newTicket ? newTicket.ticket_type_id : ''}
                                 />
                             </div>
                         </div>

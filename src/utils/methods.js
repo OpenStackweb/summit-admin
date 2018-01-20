@@ -11,6 +11,8 @@
  * limitations under the License.
  **/
 
+import moment from 'moment-timezone';
+
 export const findElementPos = (obj) => {
     var curtop = -70;
     if (obj.offsetParent) {
@@ -19,4 +21,16 @@ export const findElementPos = (obj) => {
         } while (obj = obj.offsetParent);
         return [curtop];
     }
+}
+
+export const epochToMoment = (atime) => {
+    if(!atime) return atime;
+    atime = atime * 1000;
+    return moment(atime);
+}
+
+export const epochToMomentTimeZone = (atime, time_zone) => {
+    if(!atime) return atime;
+    atime = atime * 1000;
+    return moment(atime).tz(time_zone);
 }

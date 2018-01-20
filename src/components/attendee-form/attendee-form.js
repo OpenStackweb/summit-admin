@@ -14,13 +14,13 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import TextEditor from '../editor-input'
 import MemberInput from '../member-input'
 import CompanyInput from '../company-input'
 import DateTimePicker from '../datetimepicker'
 import Input from '../text-input'
 import TicketComponent from './ticket-component'
-import {findElementPos} from '../../utils/methods'
+import RsvpComponent from './rsvp-component'
+import {epochToMoment} from '../../utils/methods'
 
 
 class AttendeeForm extends React.Component {
@@ -33,8 +33,6 @@ class AttendeeForm extends React.Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
-        this.handleUploadFile = this.handleUploadFile.bind(this);
-        this.handleRemoveFile = this.handleRemoveFile.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -62,30 +60,12 @@ class AttendeeForm extends React.Component {
             value = ev.target.checked;
         }
 
-        if (ev.target.type == 'memberinput') {
-            entity.email = '';
-        }
-
         errors[id] = '';
         entity[id] = value;
         this.setState({entity: entity, errors: errors});
     }
 
-    handleUploadFile(file) {
-        console.log('file uploaded');
-        let formData = new FormData();
-        formData.append('file', file);
-        this.props.onAttach(this.state.entity, formData)
-    }
-
-    handleRemoveFile(ev) {
-        let entity = {...this.state.entity};
-
-        entity.attachment = '';
-        this.setState({entity:entity});
-    }
-
-    handleSubmit(publish, ev) {
+    handleSubmit(ev) {
         let entity = {...this.state.entity};
         ev.preventDefault();
 
@@ -97,6 +77,13 @@ class AttendeeForm extends React.Component {
         ev.preventDefault();
         let event_detail_url = currentSummit.schedule_event_detail_url.replace(':event_id',event_id).replace(':event_title','');
         window.open(event_detail_url, '_blank');
+    }
+
+    handleSpeakerLink(speaker_id, ev) {
+        let {currentSummit, history} = this.props;
+        ev.preventDefault();
+
+        history.push(`/app/summits/${currentSummit.id}/speakers/${speaker_id}`);
     }
 
     hasErrors(field) {
@@ -116,7 +103,7 @@ class AttendeeForm extends React.Component {
             <form className="summit-attendee-form">
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
-                    <div className="col-md-4">
+                    <div className="col-md-6">
                         <label> {T.translate("general.member")} *</label>
                         <MemberInput
                             id="member"
@@ -126,97 +113,109 @@ class AttendeeForm extends React.Component {
                             multi={false}
                         />
                     </div>
-                    {entity.member && entity.member.speaker &&
+                    {entity.speaker &&
                     <div className="col-md-4">
-                        <label> {T.translate("general.speaker")} </label>
-                        <a href="" > speaker name </a>
+                        <label> {T.translate("general.speaker")} </label><br/>
+                        <a href="" onClick={this.handleSpeakerLink.bind(this, entity.speaker.id)}>
+                            {entity.speaker.first_name} {entity.speaker.last_name}
+                        </a>
                     </div>
                     }
                 </div>
                 {entity.member != null &&
                 <div>
-                    {entity.hasOwnProperty('affiliation') &&
-                    <div className="row form-group">
-                        <legend>{T.translate("edit_attendee.current_affiliation")}</legend>
-                        <div className="col-md-3">
-                            <label> {T.translate("edit_attendee.affiliation_title")} </label>
-                            <Input className="form-control" id="affiliation_title" value={entity.affiliation.title} onChange={this.handleChange} />
-                        </div>
-                        <div className="col-md-3">
-                            <label> {T.translate("edit_attendee.company")} </label>
-                            <CompanyInput
-                                id="sponsors"
-                                value={entity.sponsors}
-                                onChange={this.handleChange}
-                                summitId={currentSummit.id}
-                                multi={true}
-                            />
-                        </div>
-                        <div className="col-md-2" style={{paddingTop: '24px'}}>
-                            <DateTimePicker
-                                id="affiliation_start_date"
-                                onChange={this.handleChange}
-                                format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                                value={this.getFormattedTime(entity.affiliation.start_date)}
-                                inputProps={{placeholder: T.translate("edit_attendee.placeholders.start_date")}}
-                            />
-                        </div>
-                        <div className="col-md-2" style={{paddingTop: '24px'}}>
-                            <DateTimePicker
-                                id="affiliation_end_date"
-                                onChange={this.handleChange}
-                                format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                                value={this.getFormattedTime(entity.affiliation.end_date)}
-                                inputProps={{placeholder: T.translate("edit_attendee.placeholders.end_date")}}
-                            />
-                        </div>
-                        <div className="col-md-2">
-                            <div className="form-check abc-checkbox">
-                                <input type="checkbox" id="affiliation_current" checked={entity.affiliation.current}
-                                       onChange={this.handleChange} className="form-check-input"/>
-                                <label className="form-check-label"
-                                       htmlFor="affiliation_current"> {T.translate("edit_attendee.affiliation_current")} </label>
+                    {entity.member.affiliations.length &&
+                        <div className="row form-group">
+                            <legend>{T.translate("edit_attendee.current_affiliation")}</legend>
+                            <div className="col-md-3">
+                                <label> {T.translate("edit_attendee.affiliation_title")} </label>
+                                <Input
+                                    className="form-control"
+                                    id="affiliation_title"
+                                    value={entity.affiliation_title}
+                                    onChange={this.handleChange}
+                                />
+                            </div>
+                            <div className="col-md-3">
+                                <label> {T.translate("edit_attendee.company")} </label>
+                                <CompanyInput
+                                    id="affiliation_organization"
+                                    value={{name: entity.affiliation_organization_name, value: entity.affiliation_organization_id}}
+                                    onChange={this.handleChange}
+                                    summitId={currentSummit.id}
+                                    multi={true}
+                                />
+                            </div>
+                            <div className="col-md-2" style={{paddingTop: '24px'}}>
+                                <DateTimePicker
+                                    id="affiliation_start_date"
+                                    onChange={this.handleChange}
+                                    format={{date:"YYYY-MM-DD", time: "HH:mm"}}
+                                    value={epochToMoment(entity.affiliation_start_date)}
+                                    inputProps={{placeholder: T.translate("edit_attendee.placeholders.start_date")}}
+                                />
+                            </div>
+                            <div className="col-md-2" style={{paddingTop: '24px'}}>
+                                <DateTimePicker
+                                    id="affiliation_end_date"
+                                    onChange={this.handleChange}
+                                    format={{date:"YYYY-MM-DD", time: "HH:mm"}}
+                                    value={epochToMoment(entity.affiliation_end_date)}
+                                    inputProps={{placeholder: T.translate("edit_attendee.placeholders.end_date")}}
+                                />
+                            </div>
+                            <div className="col-md-2">
+                                <div className="form-check abc-checkbox current_affiliation">
+                                    <input type="checkbox" id="affiliation_current" checked={entity.affiliation_current}
+                                           onChange={this.handleChange} className="form-check-input"/>
+                                    <label className="form-check-label"
+                                           htmlFor="affiliation_current"> {T.translate("edit_attendee.affiliation_current")} </label>
+                                </div>
                             </div>
                         </div>
-                    </div>
+
                     }
                     <div className="row form-group">
                         <legend>{T.translate("general.attendee")}</legend>
                         <div className="col-md-3">
                             <div className="form-check abc-checkbox">
-                                <input type="checkbox" id="attendee_shared_contact_info" checked={entity.shared_contact_info}
+                                <input type="checkbox" id="shared_contact_info" checked={entity.shared_contact_info}
                                        onChange={this.handleChange} className="form-check-input"/>
-                                <label className="form-check-label" htmlFor="attendee_shared_contact_info">
+                                <label className="form-check-label" htmlFor="shared_contact_info">
                                     {T.translate("edit_attendee.shared_contact_info")}
                                 </label>
                             </div>
                         </div>
                         <div className="col-md-3">
                             <div className="form-check abc-checkbox">
-                                <input type="checkbox" id="attendee_checked_in" checked={entity.checked_in}
+                                <input type="checkbox" id="summit_hall_checked_in" checked={entity.summit_hall_checked_in}
                                        onChange={this.handleChange} className="form-check-input"/>
-                                <label className="form-check-label" htmlFor="attendee_checked_in">
+                                <label className="form-check-label" htmlFor="summit_hall_checked_in">
                                     {T.translate("edit_attendee.checked_in")}
                                 </label>
                             </div>
                         </div>
                     </div>
                     {entity.hasOwnProperty('tickets') &&
-                    <TicketComponent tickets={entity.tickets} summit={currentSummit}/>
+                    <TicketComponent
+                        attendeeId={entity.id}
+                        tickets={entity.tickets}
+                        summit={currentSummit}
+                        onSave={this.props.onSaveTicket}
+                        onDelete={this.props.onDeleteTicket}
+                    />
                     }
-                    <div className="row form-group">
-                        <legend>{T.translate("edit_attendee.rsvp")}</legend>
-                        <div className="col-md-4">
 
-                        </div>
-                    </div>
+                    {entity.member.hasOwnProperty('rsvp') && entity.member.rsvp.length &&
+                    <RsvpComponent member={entity.member} onDelete={this.props.onDeleteRsvp} />
+                    }
 
                 </div>
                 }
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">
-                        <input type="button" onClick={this.handleSubmit.bind(this, false)}
+                        <input type="button" onClick={this.handleSubmit}
                                className="btn btn-primary pull-right" value={T.translate("general.save")}/>
                     </div>
                 </div>

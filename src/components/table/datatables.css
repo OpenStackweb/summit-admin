@@ -16,6 +16,9 @@ table.dataTable {
     margin-bottom: 6px !important;
     max-width: none !important
 }
+table.dataTable .actions {
+    width: 70px;
+}
 table.dataTable .actions a {
     margin-left: 10px;
 }

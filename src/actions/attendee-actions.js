@@ -3,14 +3,18 @@ import { authErrorHandler, fetchResponseHandler, fetchErrorHandler, apiBaseUrl, 
 import swal from "sweetalert2";
 import T from "i18n-react/dist/i18n-react";
 
-export const REQUEST_ATTENDEES       = 'REQUEST_ATTENDEES';
-export const RECEIVE_ATTENDEES       = 'RECEIVE_ATTENDEES';
-export const RECEIVE_ATTENDEE        = 'RECEIVE_ATTENDEE';
-export const REQUEST_ATTENDEE        = 'REQUEST_ATTENDEE';
-export const RESET_ATTENDEE_FORM     = 'RESET_ATTENDEE_FORM';
-export const UPDATE_ATTENDEE         = 'UPDATE_ATTENDEE';
-export const ATTENDEE_UPDATED        = 'ATTENDEE_UPDATED';
-export const ATTENDEE_ADDED          = 'ATTENDEE_ADDED';
+export const REQUEST_ATTENDEES          = 'REQUEST_ATTENDEES';
+export const RECEIVE_ATTENDEES          = 'RECEIVE_ATTENDEES';
+export const RECEIVE_ATTENDEE           = 'RECEIVE_ATTENDEE';
+export const REQUEST_ATTENDEE           = 'REQUEST_ATTENDEE';
+export const RESET_ATTENDEE_FORM        = 'RESET_ATTENDEE_FORM';
+export const UPDATE_ATTENDEE            = 'UPDATE_ATTENDEE';
+export const ATTENDEE_UPDATED           = 'ATTENDEE_UPDATED';
+export const ATTENDEE_ADDED             = 'ATTENDEE_ADDED';
+export const ATTENDEE_DELETED           = 'ATTENDEE_DELETED';
+export const TICKET_ADDED               = 'TICKET_ADDED';
+export const TICKET_DELETED             = 'TICKET_DELETED';
+export const RSVP_DELETED               = 'RSVP_DELETED';
 
 
 export const getAttendees = ( term = null, page = 1, perPage = 10, order = 'last_name', orderDir = 1 ) => (dispatch, getState) => {
@@ -60,7 +64,7 @@ export const getAttendee = (attendeeId) => (dispatch, getState) => {
     let { currentSummit }   = currentSummitState;
 
     let params = {
-        expand       : 'member, speaker, tickets, ticket_type',
+        expand       : 'member, speaker, tickets, rsvp, schedule_summit_events',
         access_token : accessToken,
     };
 
@@ -85,6 +89,10 @@ export const saveAttendee = (entity, history) => (dispatch, getState) => {
 
     let normalizedEntity = normalizeEntity(entity);
 
+    let params = {
+        access_token : accessToken,
+    };
+
     if (entity.id) {
 
         let success_message = ['Done!', 'Attendee saved successfully.', 'success'];
@@ -92,11 +100,14 @@ export const saveAttendee = (entity, history) => (dispatch, getState) => {
         putRequest(
             createAction(UPDATE_ATTENDEE),
             createAction(ATTENDEE_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/attendees/${entity.id}?access_token=${accessToken}`,
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/attendees/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
-        )({})(dispatch)
+        )(params)(dispatch)
+            .then((payload) => {
+                updateAffiliation(normalizedEntity.affiliation)
+            })
             .then((payload) => {
                 dispatch(showMessage(...success_message));
             });
@@ -107,11 +118,14 @@ export const saveAttendee = (entity, history) => (dispatch, getState) => {
         postRequest(
             createAction(UPDATE_ATTENDEE),
             createAction(ATTENDEE_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/attendees?access_token=${accessToken}`,
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/attendees`,
             normalizedEntity,
             authErrorHandler,
             entity
-        )({})(dispatch)
+        )(params)(dispatch)
+            .then((payload) => {
+                updateAffiliation(normalizedEntity.affiliation)
+            })
             .then((payload) => {
                 dispatch(showMessage(
                     ...success_message,
@@ -121,21 +135,123 @@ export const saveAttendee = (entity, history) => (dispatch, getState) => {
     }
 }
 
+export const updateAffiliation = (affiliation) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    putRequest(
+        createAction(UPDATE_ATTENDEE),
+        createAction(ATTENDEE_UPDATED),
+        `${apiBaseUrl}/api/v1/members/${affiliation.owner_id}/affiliations/${affiliation.id}`,
+        affiliation,
+        authErrorHandler
+    )(params)(dispatch)
+
+}
+
+export const deleteAttendee = (attendeeId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    return deleteRequest(
+        null,
+        createAction(ATTENDEE_DELETED)({attendeeId}),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}`,
+        authErrorHandler
+    )(params)(dispatch).then(dispatch(stopLoading()));
+};
+
+export const deleteTicket = (attendeeId, ticketId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    return deleteRequest(
+        null,
+        createAction(TICKET_DELETED)({ticketId}),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}/tickets/${ticketId}`,
+        authErrorHandler
+    )(params)(dispatch).then(dispatch(stopLoading()));
+};
+
+export const saveTicket = (attendeeId, newTicket) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    postRequest(
+        null,
+        createAction(TICKET_ADDED),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}/tickets`,
+        newTicket,
+        authErrorHandler
+    )(params)(dispatch).then(dispatch(stopLoading()));
+};
+
+export const deleteRsvp = (memberId, rsvpId) => (dispatch, getState) => {
+
+    let { loggedUserState } = getState();
+    let { accessToken }     = loggedUserState;
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    deleteRequest(
+        null,
+        createAction(RSVP_DELETED)({ticketId}),
+        `${apiBaseUrl}/api/v1/members/${memberId}/rsvp/${rsvpId}`,
+        authErrorHandler
+    )(params)(dispatch).then(dispatch(stopLoading()));
+};
+
 const normalizeEntity = (entity) => {
     let normalizedEntity = {...entity};
 
     normalizedEntity.member_id = (normalizedEntity.member != null) ? normalizedEntity.member.id : 0;
 
-    delete normalizedEntity['presentations'];
-    delete normalizedEntity['all_presentations'];
-    delete normalizedEntity['moderated_presentations'];
-    delete normalizedEntity['all_moderated_presentations'];
-    delete normalizedEntity['affiliations'];
-    delete normalizedEntity['gender'];
-    delete normalizedEntity['pic'];
+    normalizedEntity.affiliation = {
+        id: entity.affiliation_id,
+        owner_id: entity.affiliation_owner_id,
+        start_date: entity.affiliation_start_date,
+        end_date: entity.affiliation_end_date,
+        is_current: entity.affiliation_current,
+        job_title: entity.affiliation_title,
+        organization_id: entity.affiliation_organization_id
+    }
+
+    delete normalizedEntity['affiliation_start_date'];
+    delete normalizedEntity['affiliation_end_date'];
+    delete normalizedEntity['affiliation_current'];
+    delete normalizedEntity['affiliation_title'];
+    delete normalizedEntity['affiliation_organization_id'];
+    delete normalizedEntity['affiliation_organization_name'];
     delete normalizedEntity['member'];
-    delete normalizedEntity['summit_assistance'];
-    delete normalizedEntity['code_redeemed'];
+    delete normalizedEntity['speaker'];
+    delete normalizedEntity['tickets'];
 
     return normalizedEntity;
 
