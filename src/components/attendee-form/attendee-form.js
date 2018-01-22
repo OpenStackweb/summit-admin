@@ -60,6 +60,10 @@ class AttendeeForm extends React.Component {
             value = ev.target.checked;
         }
 
+        if (ev.target.type == 'memberinput') {
+            this.props.onMemberChange(value);
+        }
+
         errors[id] = '';
         entity[id] = value;
         this.setState({entity: entity, errors: errors});
@@ -113,7 +117,7 @@ class AttendeeForm extends React.Component {
                             multi={false}
                         />
                     </div>
-                    {entity.speaker &&
+                    {entity.speaker != null &&
                     <div className="col-md-4">
                         <label> {T.translate("general.speaker")} </label><br/>
                         <a href="" onClick={this.handleSpeakerLink.bind(this, entity.speaker.id)}>
@@ -124,7 +128,7 @@ class AttendeeForm extends React.Component {
                 </div>
                 {entity.member != null &&
                 <div>
-                    {entity.member.affiliations.length &&
+                    {entity.member.affiliations && entity.member.affiliations.length > 0 &&
                         <div className="row form-group">
                             <legend>{T.translate("edit_attendee.current_affiliation")}</legend>
                             <div className="col-md-3">
@@ -206,7 +210,7 @@ class AttendeeForm extends React.Component {
                     />
                     }
 
-                    {entity.member.hasOwnProperty('rsvp') && entity.member.rsvp.length &&
+                    {entity.member.hasOwnProperty('rsvp') && entity.member.rsvp.length > 0 &&
                     <RsvpComponent member={entity.member} onDelete={this.props.onDeleteRsvp} />
                     }
 

@@ -79,7 +79,7 @@ export const saveEvent = (entity, publish, history) => (dispatch, getState) => {
             else
                 dispatch(showMessage(
                     ...success_message,
-                    history.push(`/app/summits/${currentSummit.id}/events/${payload.response.id}`)
+                    () => { history.push(`/app/summits/${currentSummit.id}/events/${payload.response.id}`) }
                 ));
         });
     }

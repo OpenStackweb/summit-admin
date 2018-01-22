@@ -19,7 +19,7 @@ import FreeTextSearch from "../components/free-text-search/index";
 import Dropdown from '../components/dropdown';
 import Table from "../components/table/Table";
 import { getSummitById }  from '../actions/summit-actions';
-import { getPromocodes } from "../actions/promocode-actions";
+import { getPromocodes, deletePromocode } from "../actions/promocode-actions";
 
 class PromocodeListPage extends React.Component {
 
@@ -89,7 +89,7 @@ class PromocodeListPage extends React.Component {
 
     handleTypeChange(type) {
         let {term, order, orderDir, perPage, page} = this.props;
-        this.props.getPromocodes(term, page, perPage, order, orderDir, type);
+        this.props.getPromocodes(term, page, perPage, order, orderDir, type.target.value);
     }
 
     handleSort(index, key, dir, func) {
@@ -117,9 +117,9 @@ class PromocodeListPage extends React.Component {
             { columnKey: 'type', value: T.translate("general.type"), sortable: true },
             { columnKey: 'owner', value: T.translate("general.owner") },
             { columnKey: 'owner_email', value: T.translate("promocode_list.owner_email") },
-            { columnKey: 'emailed', value: T.translate("promocode_list.emailed") },
+            { columnKey: 'email_sent', value: T.translate("promocode_list.emailed") },
             { columnKey: 'redeemed', value: T.translate("promocode_list.redeemed") },
-            { columnKey: 'source', value: T.translate("promocode_list.source") },
+            { columnKey: 'creator', value: T.translate("promocode_list.creator") },
         ];
 
         let table_options = {
@@ -135,10 +135,10 @@ class PromocodeListPage extends React.Component {
         if(currentSummit == null) return null;
 
         let promocode_types_ddl = [
-            {label: 'ALL', value: '1'},
-            {label: 'ACCEPTED', value: '2'},
-            {label: 'ALTERNATE', value: '3'},
-            {label: 'VIP', value: '4'}
+            {label: 'ALL', value: 'ALL'},
+            {label: 'ACCEPTED', value: 'ACCEPTED'},
+            {label: 'ALTERNATE', value: 'ALTERNATE'},
+            {label: 'VIP', value: 'VIP'}
         ]
 
         return(
@@ -211,6 +211,7 @@ export default connect (
     mapStateToProps,
     {
         getSummitById,
-        getPromocodes
+        getPromocodes,
+        deletePromocode,
     }
 )(PromocodeListPage);

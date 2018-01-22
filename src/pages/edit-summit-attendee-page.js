@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import AttendeeForm from '../components/attendee-form/attendee-form';
 import { getSummitById }  from '../actions/summit-actions';
-import { getAttendee, resetAttendeeForm, saveAttendee, saveTicket, deleteTicket, deleteRsvp } from "../actions/attendee-actions";
+import { getAttendee, resetAttendeeForm, saveAttendee, changeMember, saveTicket, deleteTicket, deleteRsvp } from "../actions/attendee-actions";
 import '../styles/edit-summit-attendee-page.less';
 
 class EditSummitAttendeePage extends React.Component {
@@ -82,6 +82,7 @@ class EditSummitAttendeePage extends React.Component {
                     entity={entity}
                     errors={errors}
                     onSubmit={this.props.saveAttendee}
+                    onMemberChange={this.props.changeMember}
                     onSaveTicket={this.props.saveTicket}
                     onDeleteTicket={this.props.deleteTicket}
                     onDeleteRsvp={this.props.deleteRsvp}
@@ -104,6 +105,7 @@ export default connect (
         getAttendee,
         resetAttendeeForm,
         saveAttendee,
+        changeMember,
         saveTicket,
         deleteTicket,
         deleteRsvp,

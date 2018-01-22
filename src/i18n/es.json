@@ -236,6 +236,7 @@
     }
   },
   "attendee_list": {
+    "no_attendees"            : "No attendees found for current search criteria.",
     "attendee_list"           : "Attendee List",
     "add_attendee"            : "Add Attendee",
     "member_id"               : "Member Id",
@@ -243,6 +244,7 @@
     "bought_date"             : "Bought Date",
     "summit_hall_checked_in"  : "Checked In",
     "schedule"                : "Schedule",
+    "delete_attendee_warning" : "Are you sure you want to delete attendee",
     "placeholders": {
       "search_attendees": "Search Attendees by Name or Email"
     }
@@ -279,7 +281,7 @@
     "owner_email"               : "Owner Email",
     "emailed"                   : "Emailed",
     "redeemed"                  : "Redeemed",
-    "source"                    : "Source",
+    "creator"                   : "Creator",
     "placeholders": {
       "search_promocodes": "Search by Code, Speaker, Member, Email, Company",
       "select_type": "Select a Type"

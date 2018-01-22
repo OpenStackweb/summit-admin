@@ -120,7 +120,7 @@ class SummitAttendeeListPage extends React.Component {
 
         swal({
             title: T.translate("general.are_you_sure"),
-            text: T.translate("attendee_list.delete_attendee_warning") + attendee.name,
+            text: T.translate("attendee_list.delete_attendee_warning") + ' ' + attendee.name,
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
@@ -180,6 +180,10 @@ class SummitAttendeeListPage extends React.Component {
                         </button>
                     </div>
                 </div>
+
+                {attendees.length == 0 &&
+                <div>{T.translate("attendee_list.no_attendees")}</div>
+                }
 
                 {attendees.length > 0 &&
                 <div>

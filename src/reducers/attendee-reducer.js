@@ -14,12 +14,14 @@
 import
 {
     RECEIVE_ATTENDEE,
+    CHANGE_MEMBER,
     RESET_ATTENDEE_FORM,
     UPDATE_ATTENDEE,
     ATTENDEE_UPDATED,
     TICKET_ADDED,
     TICKET_DELETED,
     RSVP_DELETED,
+    AFFILIATION_UPDATED,
 } from '../actions/attendee-actions';
 
 import { LOGOUT_USER } from '../actions/auth-actions';
@@ -73,8 +75,15 @@ const attendeeReducer = (state = DEFAULT_STATE, action) => {
         case RECEIVE_ATTENDEE: {
             let entity = {...payload.response};
 
+
             if (entity.member.hasOwnProperty('affiliations') && entity.member.affiliations.length) {
-                let last_affiliation = entity.member.affiliations[0];
+                let last_affiliation = {...entity.member.affiliations.slice(-1)[0]};
+
+                for(var key in last_affiliation) {
+                    if(last_affiliation.hasOwnProperty(key)) {
+                        last_affiliation[key] = (last_affiliation[key] == null) ? '' : last_affiliation[key] ;
+                    }
+                }
 
                 entity.affiliation_id = last_affiliation.id;
                 entity.affiliation_owner_id = last_affiliation.owner_id;
@@ -91,6 +100,34 @@ const attendeeReducer = (state = DEFAULT_STATE, action) => {
         break;
         case ATTENDEE_UPDATED: {
             return state;
+        }
+        break;
+        case CHANGE_MEMBER: {
+            let {member} = payload;
+            let entity = {...state.entity}
+
+            entity.member = {...member};
+
+            if (member.hasOwnProperty('affiliations') && member.affiliations.length) {
+                let last_affiliation = {...member.affiliations.slice(-1)[0]};
+
+                for(var key in last_affiliation) {
+                    if(last_affiliation.hasOwnProperty(key)) {
+                        last_affiliation[key] = (last_affiliation[key] == null) ? '' : last_affiliation[key] ;
+                    }
+                }
+
+                entity.affiliation_id = last_affiliation.id;
+                entity.affiliation_owner_id = last_affiliation.owner_id;
+                entity.affiliation_title = last_affiliation.job_title;
+                entity.affiliation_organization_id = last_affiliation.organization.id;
+                entity.affiliation_organization_name = last_affiliation.organization.name;
+                entity.affiliation_start_date = last_affiliation.start_date;
+                entity.affiliation_end_date = last_affiliation.end_date;
+                entity.affiliation_current = last_affiliation.is_current;
+            }
+
+            return {...state,  entity: {...entity} };
         }
         break;
         case TICKET_ADDED: {

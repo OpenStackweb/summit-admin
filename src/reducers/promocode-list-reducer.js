@@ -16,15 +16,17 @@ import
 {
     RECEIVE_PROMOCODES,
     REQUEST_PROMOCODES,
+    PROMOCODE_DELETED
 } from '../actions/promocode-actions';
 
 import { LOGOUT_USER } from '../actions/auth-actions';
 import { SET_CURRENT_SUMMIT } from '../actions/summit-actions';
 
 const DEFAULT_STATE = {
-    promocodes       : {},
+    promocodes       : [],
     term            : null,
-    order           : 'name',
+    type            : 'ALL',
+    order           : 'code',
     orderDir        : 1,
     currentPage     : 1,
     lastPage        : 1,
@@ -40,30 +42,33 @@ const promocodeListReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case REQUEST_PROMOCODES: {
-            let {order, orderDir} = payload;
+            let {order, orderDir, type} = payload;
 
-            return {...state, order, orderDir }
+            return {...state, order, orderDir, type }
         }
         break;
         case RECEIVE_PROMOCODES: {
             let {current_page, total, last_page} = payload.response;
-            let promocodes = payload.response.data.map(a => {
-                let bought_date = Math.max(a.tickets.map(t => {return t.bought_date ? t.bought_date : 0;})) * 1000;
-                bought_date = (bought_date > 0 ? moment(bought_date).format('MMMM Do YYYY, h:mm:ss a') : '-');
+            let promocodes = payload.response.data.map(p => {
 
                 return {
-                    id: a.id,
-                    member_id: a.member.id,
-                    name: a.member.first_name + ' ' + a.member.last_name,
-                    email: a.member.email,
-                    eventbrite_id: a.tickets.map(t => t.external_order_id).join(', '),
-                    bought_date: bought_date,
-                    summit_hall_checked_in: (a.summit_hall_checked_in ? 'Yes' : 'No'),
-                    schedule: a.schedule
+                    id: p.id,
+                    code: p.code,
+                    type: p.type,
+                    owner: p.speaker.first_name + ' ' + p.speaker.last_name,
+                    owner_email: p.speaker.email,
+                    email_sent: (p.email_sent ? 'Yes' : 'No'),
+                    redeemed: (p.redeemed ? 'Yes' : 'No'),
+                    creator: p.creator.first_name + ' ' + p.creator.last_name
                 };
             })
 
             return {...state, promocodes: promocodes, currentPage: current_page, totalPromocodes: total, lastPage: last_page };
+        }
+        break;
+        case PROMOCODE_DELETED: {
+            let {promocodeId} = payload;
+            return {...state, promocodes: state.promocodes.filter(p => p.id != promocodeId)};
         }
         break;
         default:

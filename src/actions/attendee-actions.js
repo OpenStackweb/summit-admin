@@ -6,7 +6,7 @@ import T from "i18n-react/dist/i18n-react";
 export const REQUEST_ATTENDEES          = 'REQUEST_ATTENDEES';
 export const RECEIVE_ATTENDEES          = 'RECEIVE_ATTENDEES';
 export const RECEIVE_ATTENDEE           = 'RECEIVE_ATTENDEE';
-export const REQUEST_ATTENDEE           = 'REQUEST_ATTENDEE';
+export const CHANGE_MEMBER              = 'CHANGE_MEMBER';
 export const RESET_ATTENDEE_FORM        = 'RESET_ATTENDEE_FORM';
 export const UPDATE_ATTENDEE            = 'UPDATE_ATTENDEE';
 export const ATTENDEE_UPDATED           = 'ATTENDEE_UPDATED';
@@ -15,6 +15,7 @@ export const ATTENDEE_DELETED           = 'ATTENDEE_DELETED';
 export const TICKET_ADDED               = 'TICKET_ADDED';
 export const TICKET_DELETED             = 'TICKET_DELETED';
 export const RSVP_DELETED               = 'RSVP_DELETED';
+export const AFFILIATION_UPDATED        = 'AFFILIATION_UPDATED';
 
 
 export const getAttendees = ( term = null, page = 1, perPage = 10, order = 'last_name', orderDir = 1 ) => (dispatch, getState) => {
@@ -31,7 +32,7 @@ export const getAttendees = ( term = null, page = 1, perPage = 10, order = 'last
     }
 
     let params = {
-        expand       : 'member, tickets, schedule',
+        expand       : 'member, tickets, schedule_summit_events',
         page         : page,
         per_page     : perPage,
         access_token : accessToken,
@@ -64,7 +65,7 @@ export const getAttendee = (attendeeId) => (dispatch, getState) => {
     let { currentSummit }   = currentSummitState;
 
     let params = {
-        expand       : 'member, speaker, tickets, rsvp, schedule_summit_events',
+        expand       : 'member, speaker, tickets, rsvp, schedule_summit_events, all_affiliations',
         access_token : accessToken,
     };
 
@@ -78,6 +79,12 @@ export const getAttendee = (attendeeId) => (dispatch, getState) => {
 
 export const resetAttendeeForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_ATTENDEE_FORM)({}));
+};
+
+export const changeMember = (member) => (dispatch, getState) => {
+    if (member !== null) {
+        dispatch(createAction(CHANGE_MEMBER)({member}));
+    }
 };
 
 export const saveAttendee = (entity, history) => (dispatch, getState) => {
@@ -106,7 +113,7 @@ export const saveAttendee = (entity, history) => (dispatch, getState) => {
             entity
         )(params)(dispatch)
             .then((payload) => {
-                updateAffiliation(normalizedEntity.affiliation)
+                dispatch(updateAffiliation(normalizedEntity.affiliation));
             })
             .then((payload) => {
                 dispatch(showMessage(...success_message));
@@ -124,12 +131,15 @@ export const saveAttendee = (entity, history) => (dispatch, getState) => {
             entity
         )(params)(dispatch)
             .then((payload) => {
-                updateAffiliation(normalizedEntity.affiliation)
+                dispatch(updateAffiliation(normalizedEntity.affiliation));
+                return payload;
             })
             .then((payload) => {
+                console.log('sna');
+                console.log('nnnn');
                 dispatch(showMessage(
                     ...success_message,
-                    history.push(`/app/summits/${currentSummit.id}/attendees/${payload.response.id}`)
+                    () => { history.push(`/app/summits/${currentSummit.id}/attendees/${payload.response.id}`) }
                 ));
             });
     }
@@ -147,8 +157,8 @@ export const updateAffiliation = (affiliation) => (dispatch, getState) => {
     };
 
     putRequest(
-        createAction(UPDATE_ATTENDEE),
-        createAction(ATTENDEE_UPDATED),
+        null,
+        createAction(AFFILIATION_UPDATED),
         `${apiBaseUrl}/api/v1/members/${affiliation.owner_id}/affiliations/${affiliation.id}`,
         affiliation,
         authErrorHandler
@@ -220,9 +230,9 @@ export const deleteRsvp = (memberId, rsvpId) => (dispatch, getState) => {
         access_token : accessToken,
     };
 
-    deleteRequest(
+    return deleteRequest(
         null,
-        createAction(RSVP_DELETED)({ticketId}),
+        createAction(RSVP_DELETED)({rsvpId}),
         `${apiBaseUrl}/api/v1/members/${memberId}/rsvp/${rsvpId}`,
         authErrorHandler
     )(params)(dispatch).then(dispatch(stopLoading()));
@@ -243,6 +253,9 @@ const normalizeEntity = (entity) => {
         organization_id: entity.affiliation_organization_id
     }
 
+    delete normalizedEntity['summit_hall_checked_in_date'];
+    delete normalizedEntity['affiliation_id'];
+    delete normalizedEntity['affiliation_owner_id'];
     delete normalizedEntity['affiliation_start_date'];
     delete normalizedEntity['affiliation_end_date'];
     delete normalizedEntity['affiliation_current'];

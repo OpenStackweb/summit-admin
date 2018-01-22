@@ -86,7 +86,7 @@ export const fetchResponseHandler = (response) => {
 export const showMessage = (title, text, type, callback = {}) => (dispatch) => {
     dispatch(stopLoading());
     swal({title, text, type}).then((result) => {
-        if (result.value) {
+        if (result.value && typeof callback === 'function') {
             callback();
         }
     });
@@ -97,12 +97,13 @@ export const queryMembers = (summitId, input) => {
     let accessToken = window.accessToken;
     input       = encodeURIComponent(input);
     let filters = `first_name=@${input},last_name=@${input},email=@${input}`;
+    let expand = `tickets,rsvp,schedule_summit_events,all_affiliations`
 
-    return fetch(`${apiBaseUrl}/api/v1/members?filter=${filters}&access_token=${accessToken}`)
+    return fetch(`${apiBaseUrl}/api/v1/members?filter=${filters}&expand=${expand}&access_token=${accessToken}`)
         .then(fetchResponseHandler)
         .then((json) => {
             let options = json.data.map((m) =>
-                ({id: m.id, name: m.first_name + ' ' + m.last_name + ' (' + m.id + ')'})
+                ({id: m.id, name: m.first_name + ' ' + m.last_name + ' (' + m.id + ')', ...m})
             );
 
             return {

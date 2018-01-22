@@ -11,9 +11,10 @@ export const RESET_PROMOCODE_FORM     = 'RESET_PROMOCODE_FORM';
 export const UPDATE_PROMOCODE         = 'UPDATE_PROMOCODE';
 export const PROMOCODE_UPDATED        = 'PROMOCODE_UPDATED';
 export const PROMOCODE_ADDED          = 'PROMOCODE_ADDED';
+export const PROMOCODE_DELETED        = 'PROMOCODE_DELETED';
 
 
-export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'last_name', orderDir = 1 ) => (dispatch, getState) => {
+export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'code', orderDir = 1, type = 'ALL' ) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -23,11 +24,15 @@ export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'las
     dispatch(startLoading());
 
     if(term != null){
-        filter.push(`first_name=@${term},last_name=@${term},email=@${term}`);
+        filter.push(`code=@${term},creator=@${term},creator_email=@${term},owner=@${term},owner_email=@${term},speaker=@${term},speaker_email=@${term},sponsor=@${term}`);
+    }
+
+    if (type != 'ALL') {
+        filter.push(`class_name==${type}`);
     }
 
     let params = {
-        expand       : 'member, tickets, schedule',
+        expand       : 'speaker, owner, sponsor, creator',
         page         : page,
         per_page     : perPage,
         access_token : accessToken,
@@ -47,9 +52,9 @@ export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'las
     return getRequest(
         createAction(REQUEST_PROMOCODES),
         createAction(RECEIVE_PROMOCODES),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promocodes`,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes`,
         authErrorHandler,
-        {page, perPage, order, orderDir}
+        {page, perPage, order, orderDir, type}
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
 
@@ -67,7 +72,7 @@ export const getPromocode = (promocodeId) => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_PROMOCODE),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promocodes/${promocodeId}`,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes/${promocodeId}`,
         authErrorHandler
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
@@ -92,7 +97,7 @@ export const savePromocode = (entity, history) => (dispatch, getState) => {
         putRequest(
             createAction(UPDATE_PROMOCODE),
             createAction(PROMOCODE_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promocodes/${entity.id}?access_token=${accessToken}`,
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes/${entity.id}?access_token=${accessToken}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -104,10 +109,11 @@ export const savePromocode = (entity, history) => (dispatch, getState) => {
     } else {
         let success_message = ['Done!', 'Promocode created successfully.', 'success'];
 
+
         postRequest(
             createAction(UPDATE_PROMOCODE),
             createAction(PROMOCODE_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promocodes?access_token=${accessToken}`,
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes?access_token=${accessToken}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -115,11 +121,29 @@ export const savePromocode = (entity, history) => (dispatch, getState) => {
             .then((payload) => {
                 dispatch(showMessage(
                     ...success_message,
-                    history.push(`/app/summits/${currentSummit.id}/promocodes/${payload.response.id}`)
+                    () => { history.push(`/app/summits/${currentSummit.id}/promocodes/${payload.response.id}`) }
                 ));
             });
     }
 }
+
+export const deletePromocode = (promocodeId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    return deleteRequest(
+        null,
+        createAction(PROMOCODE_DELETED)({promocodeId}),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes/${attendeeId}`,
+        authErrorHandler
+    )(params)(dispatch).then(dispatch(stopLoading()));
+};
 
 const normalizeEntity = (entity) => {
     let normalizedEntity = {...entity};
