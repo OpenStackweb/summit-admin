@@ -19,7 +19,7 @@ import FreeTextSearch from "../components/free-text-search/index";
 import Dropdown from '../components/dropdown';
 import Table from "../components/table/Table";
 import { getSummitById }  from '../actions/summit-actions';
-import { getPromocodes, deletePromocode } from "../actions/promocode-actions";
+import { getPromocodes, getPromocodeMeta, deletePromocode } from "../actions/promocode-actions";
 
 class PromocodeListPage extends React.Component {
 
@@ -28,7 +28,7 @@ class PromocodeListPage extends React.Component {
 
         this.handleEdit = this.handleEdit.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
-        this.isRedeemed = this.isRedeemed.bind(this);
+        this.isNotRedeemed = this.isNotRedeemed.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
         this.handleTypeChange = this.handleTypeChange.bind(this);
         this.handleSort = this.handleSort.bind(this);
@@ -42,10 +42,14 @@ class PromocodeListPage extends React.Component {
 
     componentWillMount () {
         let summitId = this.props.match.params.summit_id;
-        let {currentSummit} = this.props;
+        let {currentSummit, allTypes} = this.props;
 
         if(currentSummit == null){
             this.props.getSummitById(summitId);
+        }
+
+        if(allTypes.length == 0){
+            this.props.getPromocodeMeta();
         }
 
     }
@@ -62,24 +66,24 @@ class PromocodeListPage extends React.Component {
         history.push(`/app/summits/${currentSummit.id}/promocodes/${promocode_id}`);
     }
 
-    handleExport(promocode_id, ev) {
+    handleExport(promocodeId, ev) {
         ev.preventDefault();
 
         //export
     }
 
-    handleDelete(promocode_id, ev) {
+    handleDelete(promocodeId, ev) {
         ev.preventDefault();
 
-        //delete
+        this.props.deletePromocode(promocodeId);
     }
 
-    isRedeemed(promocode_id) {
+    isNotRedeemed(promocodeId) {
 
         let {promocodes} = this.props;
-        let promocode = promocodes.find(a => a.id == promocode_id);
+        let promocode = promocodes.find(a => a.id == promocodeId);
 
-        return promocode.redeemed;
+        return (promocode.redeemed == 'No');
     }
 
     handlePageChange(page) {
@@ -109,8 +113,7 @@ class PromocodeListPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, promocodes, lastPage, currentPage, term, order, orderDir, totalPromocodes} = this.props;
-        let {showModal, modalSchedule, modalTitle} = this.state;
+        let {currentSummit, promocodes, lastPage, currentPage, term, order, orderDir, totalPromocodes, allTypes} = this.props;
 
         let columns = [
             { columnKey: 'code', value: T.translate("promocode_list.code") },
@@ -128,18 +131,13 @@ class PromocodeListPage extends React.Component {
             sortDir: orderDir,
             actions: {
                 edit: { onClick: this.handleEdit },
-                delete: { onClick: this.handleDelete, display: this.isRedeemed }
+                delete: { onClick: this.handleDelete, display: this.isNotRedeemed }
             }
         }
 
         if(currentSummit == null) return null;
 
-        let promocode_types_ddl = [
-            {label: 'ALL', value: 'ALL'},
-            {label: 'ACCEPTED', value: 'ACCEPTED'},
-            {label: 'ALTERNATE', value: 'ALTERNATE'},
-            {label: 'VIP', value: 'VIP'}
-        ]
+        let promocode_types_ddl = allTypes.map(t => ({label: t, value: t}));
 
         return(
             <div className="container">
@@ -212,6 +210,7 @@ export default connect (
     {
         getSummitById,
         getPromocodes,
+        getPromocodeMeta,
         deletePromocode,
     }
 )(PromocodeListPage);

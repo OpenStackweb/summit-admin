@@ -25,6 +25,7 @@ import summitEventBulkActionReducer from './reducers/summit-event-bulk-actions-r
 import attendeeListReducer from './reducers/attendee-list-reducer';
 import attendeeReducer from './reducers/attendee-reducer';
 import promocodeListReducer from './reducers/promocode-list-reducer';
+import promocodeReducer from './reducers/promocode-reducer';
 
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
@@ -49,6 +50,7 @@ const reducers = persistCombineReducers(config, {
     currentAttendeeListState: attendeeListReducer,
     currentAttendeeState: attendeeReducer,
     currentPromocodeListState: promocodeListReducer,
+    currentPromocodeState: promocodeReducer,
 })
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

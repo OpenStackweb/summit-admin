@@ -15,6 +15,7 @@ import moment from 'moment-timezone';
 import
 {
     RECEIVE_PROMOCODES,
+    RECEIVE_PROMOCODE_META,
     REQUEST_PROMOCODES,
     PROMOCODE_DELETED
 } from '../actions/promocode-actions';
@@ -31,7 +32,8 @@ const DEFAULT_STATE = {
     currentPage     : 1,
     lastPage        : 1,
     perPage         : 10,
-    totalPromocodes  : 0
+    totalPromocodes : 0,
+    allTypes       : ['ALL']
 };
 
 const promocodeListReducer = (state = DEFAULT_STATE, action) => {
@@ -45,6 +47,16 @@ const promocodeListReducer = (state = DEFAULT_STATE, action) => {
             let {order, orderDir, type} = payload;
 
             return {...state, order, orderDir, type }
+        }
+        break;
+        case RECEIVE_PROMOCODE_META: {
+            let types = [...DEFAULT_STATE.allTypes];
+
+            payload.response.map(t => {
+                types.concat(t.type)
+            })
+
+            return {...state, allTypes: types }
         }
         break;
         case RECEIVE_PROMOCODES: {

@@ -6,12 +6,31 @@ import T from "i18n-react/dist/i18n-react";
 export const REQUEST_PROMOCODES       = 'REQUEST_PROMOCODES';
 export const RECEIVE_PROMOCODES       = 'RECEIVE_PROMOCODES';
 export const RECEIVE_PROMOCODE        = 'RECEIVE_PROMOCODE';
-export const REQUEST_PROMOCODE        = 'REQUEST_PROMOCODE';
+export const RECEIVE_PROMOCODE_META   = 'RECEIVE_PROMOCODE_META';
 export const RESET_PROMOCODE_FORM     = 'RESET_PROMOCODE_FORM';
 export const UPDATE_PROMOCODE         = 'UPDATE_PROMOCODE';
 export const PROMOCODE_UPDATED        = 'PROMOCODE_UPDATED';
 export const PROMOCODE_ADDED          = 'PROMOCODE_ADDED';
 export const PROMOCODE_DELETED        = 'PROMOCODE_DELETED';
+
+
+export const getPromocodeMeta = () => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_PROMOCODE_META),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes/metadata`,
+        authErrorHandler
+    )(params)(dispatch).then(dispatch(stopLoading()));
+};
 
 
 export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'code', orderDir = 1, type = 'ALL' ) => (dispatch, getState) => {
@@ -134,13 +153,13 @@ export const deletePromocode = (promocodeId) => (dispatch, getState) => {
     let { currentSummit }   = currentSummitState;
 
     let params = {
-        access_token : accessToken,
+        access_token : accessToken
     };
 
     return deleteRequest(
         null,
         createAction(PROMOCODE_DELETED)({promocodeId}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes/${attendeeId}`,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes/${promocodeId}`,
         authErrorHandler
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
