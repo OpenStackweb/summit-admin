@@ -43,6 +43,7 @@ class PrimaryLayout extends React.Component {
                         <Route exact path="/app/summits/:summit_id/attendees/new" component={EditSummitAttendeePage}/>
                         <Route exact path="/app/summits/:summit_id/attendees/:attendee_id" component={EditSummitAttendeePage}/>
                         <Route exact path="/app/summits/:summit_id/promocodes" component={PromocodeListPage}/>
+                        <Route exact path="/app/summits/:summit_id/promocodes/new" component={EditPromocodePage}/>
                         <Route exact path="/app/summits/:summit_id/promocodes/:promocode_id" component={EditPromocodePage}/>
                         <Route render={props => (<Redirect to="/app/directory"/>)}/>
                     </Switch>

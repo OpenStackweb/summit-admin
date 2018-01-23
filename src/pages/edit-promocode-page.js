@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import PromocodeForm from '../components/promocode-form/promocode-form';
 import { getSummitById }  from '../actions/summit-actions';
-import { getPromocode, resetPromocodeForm, savePromocode } from "../actions/promocode-actions";
+import { getPromocode, getPromocodeMeta, resetPromocodeForm, savePromocode } from "../actions/promocode-actions";
 import '../styles/edit-promocode-page.less';
 
 class EditPromocodePage extends React.Component {
@@ -31,6 +31,7 @@ class EditPromocodePage extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         let {promocodeId} = this.state;
+
         let new_promocode_id = nextProps.match.params.promocode_id;
 
         if(promocodeId != new_promocode_id) {
@@ -55,7 +56,7 @@ class EditPromocodePage extends React.Component {
     }
 
     componentDidMount () {
-        let {currentSummit, entity, errors} = this.props;
+        let {currentSummit, allTypes, errors} = this.props;
         let promocodeId = this.props.match.params.promocode_id;
 
         if(currentSummit != null) {
@@ -64,21 +65,27 @@ class EditPromocodePage extends React.Component {
             } else {
                 this.props.resetPromocodeForm();
             }
+
+            if(allTypes.length == 0){
+                this.props.getPromocodeMeta();
+            }
         }
     }
 
     render(){
-        let {currentSummit, entity, errors} = this.props;
+        let {currentSummit, allTypes, allClasses, entity, errors} = this.props;
         let title = (entity.id) ? 'Edit' : 'Add';
 
         return(
             <div className="container">
-                <h3>{title} {T.translate("general.promocode")}</h3>
+                <h3>{title} {T.translate("edit_promocode.promocode")}</h3>
                 <hr/>
                 {currentSummit &&
                 <PromocodeForm
                     history={this.props.history}
                     currentSummit={currentSummit}
+                    allTypes={allTypes}
+                    allClasses={allClasses}
                     entity={entity}
                     errors={errors}
                     onSubmit={this.props.savePromocode}
@@ -99,6 +106,7 @@ export default connect (
     {
         getSummitById,
         getPromocode,
+        getPromocodeMeta,
         resetPromocodeForm,
         savePromocode
     }

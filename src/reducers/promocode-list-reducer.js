@@ -40,7 +40,7 @@ const promocodeListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
         case LOGOUT_USER: {
-            return state;
+            return DEFAULT_STATE;
         }
         break;
         case REQUEST_PROMOCODES: {
@@ -53,22 +53,53 @@ const promocodeListReducer = (state = DEFAULT_STATE, action) => {
             let types = [...DEFAULT_STATE.allTypes];
 
             payload.response.map(t => {
-                types.concat(t.type)
-            })
+                types = types.concat(t.type)
+            });
 
-            return {...state, allTypes: types }
+            let unique_types = [...new Set( types )];
+
+            return {...state, allTypes: unique_types }
         }
         break;
         case RECEIVE_PROMOCODES: {
             let {current_page, total, last_page} = payload.response;
             let promocodes = payload.response.data.map(p => {
+                let owner = '', owner_email = '';
+
+                switch (p.class_name) {
+                    case 'MEMBER_PROMO_CODE':
+                        if (p.owner) {
+                            owner = p.owner.first_name + ' ' + p.owner.last_name;
+                            owner_email = p.owner.email;
+                        } else {
+                            owner = (p.first_name && p.last_name) ? p.first_name + ' ' + p.last_name : '';
+                            owner_email = (p.email) ? p.email : '';
+                        }
+                        break;
+                    case 'SPEAKER_PROMO_CODE':
+                        owner = p.speaker.first_name + ' ' + p.speaker.last_name;
+                        owner_email = p.speaker.email;
+                        break;
+                    case 'SPONSOR_PROMO_CODE':
+                        if (p.owner) {
+                            owner = p.owner.first_name + ' ' + p.owner.last_name;
+                            owner_email = p.owner.email;
+                        } else if (p.sponsor) {
+                            owner = p.sponsor.name;
+                        } else {
+                            owner = (p.first_name && p.last_name) ? p.first_name + ' ' + p.last_name : '';
+                            owner_email = (p.email) ? p.email : '';
+                        }
+                        break;
+                }
 
                 return {
                     id: p.id,
+                    class_name: p.class_name,
                     code: p.code,
                     type: p.type,
-                    owner: p.speaker.first_name + ' ' + p.speaker.last_name,
-                    owner_email: p.speaker.email,
+                    owner: owner,
+                    owner_email: owner_email,
                     email_sent: (p.email_sent ? 'Yes' : 'No'),
                     redeemed: (p.redeemed ? 'Yes' : 'No'),
                     creator: p.creator.first_name + ' ' + p.creator.last_name

@@ -14,6 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
+import swal from "sweetalert2";
 import { Pagination } from 'react-bootstrap';
 import FreeTextSearch from "../components/free-text-search/index";
 import Dropdown from '../components/dropdown';
@@ -42,22 +43,23 @@ class PromocodeListPage extends React.Component {
 
     componentWillMount () {
         let summitId = this.props.match.params.summit_id;
-        let {currentSummit, allTypes} = this.props;
+        let {currentSummit} = this.props;
 
         if(currentSummit == null){
             this.props.getSummitById(summitId);
         }
 
-        if(allTypes.length == 0){
-            this.props.getPromocodeMeta();
-        }
-
     }
 
     componentDidMount () {
-        let {currentSummit} = this.props;
+        let {currentSummit, allTypes} = this.props;
+
         if(currentSummit != null) {
             this.props.getPromocodes();
+
+            if(allTypes.length == 1){
+                this.props.getPromocodeMeta();
+            }
         }
     }
 
@@ -73,9 +75,21 @@ class PromocodeListPage extends React.Component {
     }
 
     handleDelete(promocodeId, ev) {
+        let {deletePromocode, promocodes} = this.props;
+        let promocode = promocodes.find(p => p.id == promocodeId);
+
         ev.preventDefault();
 
-        this.props.deletePromocode(promocodeId);
+        swal({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("promocode_list.remove_promocode_warning") + ' ' + promocode.owner,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: T.translate("general.yes_delete")
+        }).then(function(){
+            deletePromocode(promocodeId);
+        }).catch(swal.noop);
     }
 
     isNotRedeemed(promocodeId) {
@@ -113,12 +127,12 @@ class PromocodeListPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, promocodes, lastPage, currentPage, term, order, orderDir, totalPromocodes, allTypes} = this.props;
+        let {currentSummit, promocodes, lastPage, currentPage, term, order, orderDir, totalPromocodes, allTypes, type} = this.props;
 
         let columns = [
             { columnKey: 'code', value: T.translate("promocode_list.code") },
-            { columnKey: 'type', value: T.translate("general.type"), sortable: true },
-            { columnKey: 'owner', value: T.translate("general.owner") },
+            { columnKey: 'type', value: T.translate("promocode_list.type"), sortable: true },
+            { columnKey: 'owner', value: T.translate("promocode_list.owner") },
             { columnKey: 'owner_email', value: T.translate("promocode_list.owner_email") },
             { columnKey: 'email_sent', value: T.translate("promocode_list.emailed") },
             { columnKey: 'redeemed', value: T.translate("promocode_list.redeemed") },
@@ -153,6 +167,7 @@ class PromocodeListPage extends React.Component {
                     <div className="col-md-2">
                         <Dropdown
                             id="ticket_type"
+                            value={type}
                             placeholder={T.translate("promocode_list.placeholders.select_type")}
                             options={promocode_types_ddl}
                             onChange={this.handleTypeChange}

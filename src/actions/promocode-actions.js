@@ -47,7 +47,7 @@ export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'cod
     }
 
     if (type != 'ALL') {
-        filter.push(`class_name==${type}`);
+        filter.push(`type==${type}`);
     }
 
     let params = {
@@ -167,18 +167,17 @@ export const deletePromocode = (promocodeId) => (dispatch, getState) => {
 const normalizeEntity = (entity) => {
     let normalizedEntity = {...entity};
 
-    normalizedEntity.member_id = (normalizedEntity.member != null) ? normalizedEntity.member.id : 0;
+    if (entity.class_name == 'MEMBER_PROMO_CODE') {
+        normalizedEntity.owner_id = (entity.member != null) ? entity.member.id : 0;
+    } else if (entity.class_name == 'SPEAKER_PROMO_CODE') {
+        normalizedEntity.speaker_id = (entity.speaker != null) ? entity.speaker.id : 0;
+    } else if (entity.class_name == 'SPONSOR_PROMO_CODE') {
+        normalizedEntity.sponsor_id = (entity.sponsor != null) ? entity.sponsor.id : 0;
+    }
 
-    delete normalizedEntity['presentations'];
-    delete normalizedEntity['all_presentations'];
-    delete normalizedEntity['moderated_presentations'];
-    delete normalizedEntity['all_moderated_presentations'];
-    delete normalizedEntity['affiliations'];
-    delete normalizedEntity['gender'];
-    delete normalizedEntity['pic'];
     delete normalizedEntity['member'];
-    delete normalizedEntity['summit_assistance'];
-    delete normalizedEntity['code_redeemed'];
+    delete normalizedEntity['speaker'];
+    delete normalizedEntity['sponsor'];
 
     return normalizedEntity;
 

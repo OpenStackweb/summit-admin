@@ -14,6 +14,7 @@
 import
 {
     RECEIVE_PROMOCODE,
+    RECEIVE_PROMOCODE_META,
     RESET_PROMOCODE_FORM,
     UPDATE_PROMOCODE,
     PROMOCODE_UPDATED
@@ -24,14 +25,25 @@ import { VALIDATE } from '../actions/base-actions';
 import { SET_CURRENT_SUMMIT } from '../actions/summit-actions';
 
 export const DEFAULT_ENTITY = {
-    id: 0,
-    member: null,
-    speaker: null,
+    id              : 0,
+    member          : null,
+    speaker         : null,
+    sponsor         : null,
+    first_name      : '',
+    last_name       : '',
+    email           : '',
+    type            : '',
+    class_name      : '',
+    code            : '',
+    email_sent      : false,
+    redeemed        : false
 }
 
 const DEFAULT_STATE = {
-    entity: DEFAULT_ENTITY,
-    errors: {}
+    entity      : DEFAULT_ENTITY,
+    errors      : {},
+    allTypes    : [],
+    allClasses  : []
 };
 
 const promocodeReducer = (state = DEFAULT_STATE, action) => {
@@ -48,7 +60,20 @@ const promocodeReducer = (state = DEFAULT_STATE, action) => {
         break;
         case SET_CURRENT_SUMMIT:
         case RESET_PROMOCODE_FORM: {
-            return DEFAULT_STATE;
+            return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
+        }
+        break;
+        case RECEIVE_PROMOCODE_META: {
+            let types = [...DEFAULT_STATE.allTypes];
+            let allClasses = [...payload.response];
+
+            allClasses.map(t => {
+                types = types.concat(t.type)
+            });
+
+            let unique_types = [...new Set( types )];
+
+            return {...state, allTypes: unique_types, allClasses: allClasses }
         }
         break;
         case UPDATE_PROMOCODE: {

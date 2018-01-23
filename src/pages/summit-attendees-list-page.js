@@ -112,9 +112,9 @@ class SummitAttendeeListPage extends React.Component {
         history.push(`/app/summits/${currentSummit.id}/attendees/new`);
     }
 
-    handleDeleteAttendee(attendee_id, ev) {
+    handleDeleteAttendee(attendeeId, ev) {
         let {deleteAttendee, attendees} = this.props;
-        let attendee = attendees.find(a => a.id == attendee_id);
+        let attendee = attendees.find(a => a.id == attendeeId);
 
         ev.preventDefault();
 
@@ -124,9 +124,9 @@ class SummitAttendeeListPage extends React.Component {
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Yes, delete."
+            confirmButtonText: T.translate("general.yes_delete")
         }).then(function(){
-            deleteAttendee(attendee.id);
+            deleteAttendee(attendeeId);
         }).catch(swal.noop);
     }
 

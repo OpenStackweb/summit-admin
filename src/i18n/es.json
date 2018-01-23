@@ -31,6 +31,7 @@
     "save_and_publish"    : "Save & Publish",
     "export"              : "Export",
     "are_you_sure"        : "Are you sure?",
+    "yes_delete"          : "Yes, delete.",
     "placeholders": {
       "search_speakers"     : "Search Speakers by Name or Email"
     }
@@ -266,6 +267,7 @@
     "ticket_type"                 : "Ticket Type",
     "assign_to_member"            : "Assign to another member",
     "new_ticket"                  : "New Ticket",
+    "remove_rsvp_from_attendee"   : "Do you really want to remove this rsvp from this attendee?",
     "placeholders": {
       "start_date"            : "Start Date",
       "end_date"              : "End Date",
@@ -282,9 +284,20 @@
     "emailed"                   : "Emailed",
     "redeemed"                  : "Redeemed",
     "creator"                   : "Creator",
+    "remove_promocode_warning"  : "Are you sure you want to delete promocode for attendee",
     "placeholders": {
       "search_promocodes": "Search by Code, Speaker, Member, Email, Company",
       "select_type": "Select a Type"
     }
+  },
+  "edit_promocode": {
+    "promocode"         : "Promocode",
+    "code"              : "Code",
+    "type"              : "Type",
+    "sponsor"           : "Sponsor",
+    "email_sent"        : "Email Sent",
+    "redeemed"          : "Redeemed",
+    "send_email"        : "Send Email",
+    "or"                : "OR"
   }
 }
