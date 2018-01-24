@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import PromocodeForm from '../components/promocode-form/promocode-form';
 import { getSummitById }  from '../actions/summit-actions';
-import { getPromocode, getPromocodeMeta, resetPromocodeForm, savePromocode } from "../actions/promocode-actions";
+import { getPromocode, getPromocodeMeta, resetPromocodeForm, sendEmail, savePromocode } from "../actions/promocode-actions";
 import '../styles/edit-promocode-page.less';
 
 class EditPromocodePage extends React.Component {
@@ -88,6 +88,7 @@ class EditPromocodePage extends React.Component {
                     allClasses={allClasses}
                     entity={entity}
                     errors={errors}
+                    onSendEmail={this.props.sendEmail}
                     onSubmit={this.props.savePromocode}
                 />
                 }
@@ -108,6 +109,7 @@ export default connect (
         getPromocode,
         getPromocodeMeta,
         resetPromocodeForm,
-        savePromocode
+        sendEmail,
+        savePromocode,
     }
 )(EditPromocodePage);

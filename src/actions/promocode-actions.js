@@ -12,6 +12,7 @@ export const UPDATE_PROMOCODE         = 'UPDATE_PROMOCODE';
 export const PROMOCODE_UPDATED        = 'PROMOCODE_UPDATED';
 export const PROMOCODE_ADDED          = 'PROMOCODE_ADDED';
 export const PROMOCODE_DELETED        = 'PROMOCODE_DELETED';
+export const EMAIL_SENT               = 'EMAIL_SENT';
 
 
 export const getPromocodeMeta = () => (dispatch, getState) => {
@@ -84,7 +85,7 @@ export const getPromocode = (promocodeId) => (dispatch, getState) => {
     let { currentSummit }   = currentSummitState;
 
     let params = {
-        expand       : 'member, speaker, tickets, ticket_type',
+        expand       : 'owner, sponsor, speaker, tickets, ticket_type',
         access_token : accessToken,
     };
 
@@ -164,18 +165,46 @@ export const deletePromocode = (promocodeId) => (dispatch, getState) => {
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
 
+export const sendEmail = (promocodeId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return postRequest(
+        null,
+        createAction(EMAIL_SENT),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes/${promocodeId}/mail`,
+        authErrorHandler
+    )(params)(dispatch).then(
+        (payload) => {
+            dispatch(stopLoading());
+            dispatch(showMessage('Done!', 'Email sent successfully.', 'success'));
+        });
+};
+
+
 const normalizeEntity = (entity) => {
     let normalizedEntity = {...entity};
 
     if (entity.class_name == 'MEMBER_PROMO_CODE') {
-        normalizedEntity.owner_id = (entity.member != null) ? entity.member.id : 0;
+        if (entity.owner != null)
+            normalizedEntity.owner_id = entity.owner.id;
     } else if (entity.class_name == 'SPEAKER_PROMO_CODE') {
-        normalizedEntity.speaker_id = (entity.speaker != null) ? entity.speaker.id : 0;
+        if (entity.speaker != null)
+            normalizedEntity.speaker_id = entity.speaker.id;
     } else if (entity.class_name == 'SPONSOR_PROMO_CODE') {
-        normalizedEntity.sponsor_id = (entity.sponsor != null) ? entity.sponsor.id : 0;
+        if (entity.sponsor != null)
+            normalizedEntity.sponsor_id = entity.sponsor.id;
+        else if (entity.owner != null)
+            normalizedEntity.owner_id = entity.owner.id;
     }
 
-    delete normalizedEntity['member'];
+    delete normalizedEntity['owner'];
     delete normalizedEntity['speaker'];
     delete normalizedEntity['sponsor'];
 

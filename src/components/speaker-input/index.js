@@ -48,9 +48,9 @@ export default class SpeakerInput extends React.Component {
     }
 
     handleClick(value) {
-        let {history, summit} = this.props;
+        let {history, summitId} = this.props;
 
-        history.push(`/app/summits/${summit.id}/speakers/${value.id}`);
+        history.push(`/app/summits/${summitId}/speakers/${value.id}`);
     }
 
     filterOptions(options, filterString, values) {
@@ -70,7 +70,7 @@ export default class SpeakerInput extends React.Component {
             return Promise.resolve({ options: [] });
         }
 
-        let summitId = (this.props.hasOwnProperty('queryAll')) ? null : this.props.summit.id;
+        let summitId = (this.props.hasOwnProperty('queryAll')) ? null : this.props.summitId;
 
         return querySpeakers(summitId, input);
     }
@@ -99,20 +99,26 @@ export default class SpeakerInput extends React.Component {
     }
 
     render() {
-        let {value, onChange, history, summit, id, ...rest} = this.props;
+        let {value, onChange, history, summitId, error, id, ...rest} = this.props;
+        let has_error = ( this.props.hasOwnProperty('error') && error != '' );
 
         return (
-            <Select.Async
-                value={this.processTagValues(this.state.value)}
-                onChange={this.handleChange}
-                loadOptions={this.getSpeakers}
-                onValueClick={this.handleClick}
-                backspaceRemoves={true}
-                valueKey="id"
-                labelKey="name"
-                filterOptions={this.filterOptions}
-                {...rest}
-            />
+            <div>
+                <Select.Async
+                    value={this.processTagValues(this.state.value)}
+                    onChange={this.handleChange}
+                    loadOptions={this.getSpeakers}
+                    onValueClick={this.handleClick}
+                    backspaceRemoves={true}
+                    valueKey="id"
+                    labelKey="name"
+                    filterOptions={this.filterOptions}
+                    {...rest}
+                />
+                {has_error &&
+                <p className="error-label">{error}</p>
+                }
+            </div>
         );
 
     }

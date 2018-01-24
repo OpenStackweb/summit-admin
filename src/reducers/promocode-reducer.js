@@ -17,7 +17,8 @@ import
     RECEIVE_PROMOCODE_META,
     RESET_PROMOCODE_FORM,
     UPDATE_PROMOCODE,
-    PROMOCODE_UPDATED
+    PROMOCODE_UPDATED,
+    EMAIL_SENT
 } from '../actions/promocode-actions';
 
 import { LOGOUT_USER } from '../actions/auth-actions';
@@ -26,7 +27,7 @@ import { SET_CURRENT_SUMMIT } from '../actions/summit-actions';
 
 export const DEFAULT_ENTITY = {
     id              : 0,
-    member          : null,
+    owner           : null,
     speaker         : null,
     sponsor         : null,
     first_name      : '',
@@ -83,11 +84,21 @@ const promocodeReducer = (state = DEFAULT_STATE, action) => {
         case RECEIVE_PROMOCODE: {
             let entity = {...payload.response};
 
-            return {...state };
+            for(var key in entity) {
+                if(entity.hasOwnProperty(key)) {
+                    entity[key] = (entity[key] == null) ? '' : entity[key] ;
+                }
+            }
+
+            return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
         }
         break;
         case PROMOCODE_UPDATED: {
             return state;
+        }
+        break;
+        case EMAIL_SENT: {
+            return {...state, entity: {...state.entity, email_sent: true}};
         }
         break;
         case VALIDATE: {

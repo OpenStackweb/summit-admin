@@ -14,7 +14,7 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import findElementPos from '../../utils/methods'
+import {findElementPos} from '../../utils/methods'
 import Dropdown from '../dropdown'
 import SpeakerInput from '../speaker-input'
 import MemberInput from '../member-input'
@@ -34,6 +34,7 @@ class PromocodeForm extends React.Component {
         this.shouldShowComponent = this.shouldShowComponent.bind(this);
         this.handleTypeChange = this.handleTypeChange.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleSendEmail = this.handleSendEmail.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -75,6 +76,13 @@ class PromocodeForm extends React.Component {
         entity.class_name = allClasses.find(c => c.type.indexOf(value) !== -1).class_name;
 
         this.setState({entity: entity});
+    }
+
+    handleSendEmail(ev) {
+        let {entity} = this.state;
+        ev.preventDefault();
+
+        this.props.onSendEmail(entity.id);
     }
 
     handleSubmit(ev) {
@@ -131,6 +139,7 @@ class PromocodeForm extends React.Component {
                             placeholder={T.translate("promocode_list.placeholders.select_type")}
                             options={promocode_types_ddl}
                             onChange={this.handleTypeChange}
+                            disabled={entity.id !== 0}
                         />
                     </div>
                     <div className="col-md-3">
@@ -140,19 +149,36 @@ class PromocodeForm extends React.Component {
                             value={entity.code}
                             onChange={this.handleChange}
                             className="form-control"
+                            error={this.hasErrors('code')}
                         />
                     </div>
                 </div>
+                {this.shouldShowComponent('sponsor') &&
+                <div className="row form-group">
+                    <div className="col-md-6">
+                        <label> {T.translate("edit_promocode.sponsor")} </label>
+                        <CompanyInput
+                            id="sponsor"
+                            value={entity.sponsor}
+                            onChange={this.handleChange}
+                            summitId={currentSummit.id}
+                            multi={false}
+                            error={this.hasErrors('sponsor_id')}
+                        />
+                    </div>
+                </div>
+                }
                 {this.shouldShowComponent('member') &&
                 <div className="row form-group">
                     <div className="col-md-6">
                         <label> {T.translate("general.member")} </label>
                         <MemberInput
-                            id="member"
-                            value={entity.member}
+                            id="owner"
+                            value={entity.owner}
                             onChange={this.handleChange}
                             summitId={currentSummit.id}
                             multi={false}
+                            error={this.hasErrors('owner_id')}
                         />
                     </div>
                 </div>
@@ -167,21 +193,7 @@ class PromocodeForm extends React.Component {
                             onChange={this.handleChange}
                             summitId={currentSummit.id}
                             multi={false}
-                        />
-                    </div>
-                </div>
-                }
-                {this.shouldShowComponent('sponsor') &&
-                <div className="row form-group">
-                    <div className="or-label col-md-12">{T.translate("edit_promocode.or")}</div><br/>
-                    <div className="col-md-6">
-                        <label> {T.translate("edit_promocode.sponsor")} </label>
-                        <CompanyInput
-                            id="sponsor"
-                            value={entity.sponsor}
-                            onChange={this.handleChange}
-                            summitId={currentSummit.id}
-                            multi={false}
+                            error={this.hasErrors('speaker_id')}
                         />
                     </div>
                 </div>
@@ -197,6 +209,7 @@ class PromocodeForm extends React.Component {
                             value={entity.first_name}
                             onChange={this.handleChange}
                             className="form-control"
+                            error={this.hasErrors('first_name')}
                         />
                     </div>
                     <div className="col-md-3">
@@ -220,26 +233,26 @@ class PromocodeForm extends React.Component {
                 </div>
                 }
                 <div className="row form-group checkboxes-div">
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <div className="form-check abc-checkbox">
-                            <input type="checkbox" id="email_sent" disabled checked={entity.email_sent}
+                            <input disabled type="checkbox" id="email_sent" checked={entity.email_sent}
                                    onChange={this.handleChange} className="form-check-input" />
                             <label className="form-check-label" htmlFor="email_sent">
                                 {T.translate("edit_promocode.email_sent")}
                             </label>
                         </div>
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <div className="form-check abc-checkbox">
-                            <input type="checkbox" id="redeemed" checked={entity.redeemed}
+                            <input disabled type="checkbox" id="redeemed" checked={entity.redeemed}
                                    onChange={this.handleChange} className="form-check-input" />
                             <label className="form-check-label" htmlFor="redeemed">
                                 {T.translate("edit_promocode.redeemed")}
                             </label>
                         </div>
                     </div>
-                    {entity.id !== 0 && entity.email_sent === true &&
-                    <div className="col-md-12">
+                    {entity.id !== 0 && entity.email_sent === false &&
+                    <div className="col-md-3">
                         <input type="button" onClick={this.handleSendEmail}
                                className="btn btn-default pull-right" value={T.translate("edit_promocode.send_email")}/>
                     </div>

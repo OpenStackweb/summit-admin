@@ -82,18 +82,26 @@ export default class MemberInput extends React.Component {
     }
 
     render() {
+        let {error} = this.props;
+        let has_error = ( this.props.hasOwnProperty('error') && error != '' );
 
         return (
-            <Select.Async
-                multi={this.props.multi}
-                value={this.processTagValues(this.state.value)}
-                onChange={this.handleChange}
-                loadOptions={this.getMembers}
-                backspaceRemoves={true}
-                valueKey="id"
-                labelKey="name"
-                filterOptions={this.filterOptions}
-            />
+            <div>
+                <Select.Async
+                    multi={this.props.multi}
+                    value={this.processTagValues(this.state.value)}
+                    onChange={this.handleChange}
+                    loadOptions={this.getMembers}
+                    backspaceRemoves={true}
+                    valueKey="id"
+                    labelKey="name"
+                    filterOptions={this.filterOptions}
+                />
+                {has_error &&
+                <p className="error-label">{error}</p>
+                }
+
+            </div>
         );
 
     }
