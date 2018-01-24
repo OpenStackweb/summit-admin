@@ -85,8 +85,8 @@ class SummitSpeakerListPage extends React.Component {
             { columnKey: 'name', value: T.translate("general.name"), sortable: true },
             { columnKey: 'email', value: T.translate("general.email"), sortable: true },
             { columnKey: 'member_id', value: T.translate("speaker_list.member_id") },
-            { columnKey: 'on_site_phone', value: T.translate("speaker_list.registration_code") },
-            { columnKey: 'registration_code', value: T.translate("speaker_list.on_site_phone") },
+            { columnKey: 'registration_code', value: T.translate("speaker_list.registration_code") },
+            { columnKey: 'on_site_phone', value: T.translate("speaker_list.on_site_phone") },
             { columnKey: 'presentation_count', value: T.translate("general.presentations") }
         ];
 
