@@ -17,7 +17,6 @@ import T from 'i18n-react/dist/i18n-react';
 import { Pagination } from 'react-bootstrap';
 import FreeTextSearch from "../components/free-text-search/index";
 import Table from "../components/table/Table";
-import { getSummitById }  from '../actions/summit-actions';
 import { getSpeakers } from "../actions/speaker-actions";
 
 class SummitSpeakerListPage extends React.Component {
@@ -34,26 +33,13 @@ class SummitSpeakerListPage extends React.Component {
         this.state = {}
     }
 
-    componentWillMount () {
-        let summitId = this.props.match.params.summit_id;
-        let {currentSummit} = this.props;
-
-        if(currentSummit == null){
-            this.props.getSummitById(summitId);
-        }
-
-    }
-
     componentDidMount () {
-        let {currentSummit} = this.props;
-        if(currentSummit != null) {
-            this.props.getSpeakers();
-        }
+        this.props.getSpeakers();
     }
 
     handleEdit(speaker_id) {
-        let {currentSummit, history} = this.props;
-        history.push(`/app/summits/${currentSummit.id}/speakers/${speaker_id}`);
+        let {history} = this.props;
+        history.push(`/app/speakers/${speaker_id}`);
     }
 
     handlePageChange(page) {
@@ -73,21 +59,18 @@ class SummitSpeakerListPage extends React.Component {
     }
 
     handleNewSpeaker(ev) {
-        let {currentSummit, history} = this.props;
-        history.push(`/app/summits/${currentSummit.id}/speakers/new`);
+        let {history} = this.props;
+        history.push(`/app/speakers/new`);
     }
 
     render(){
-        let {currentSummit, speakers, lastPage, currentPage, term, totalSpeakers } = this.props;
+        let {speakers, lastPage, currentPage, term, totalSpeakers } = this.props;
 
         let columns = [
             { columnKey: 'id', value: 'Id', sortable: true },
             { columnKey: 'name', value: T.translate("general.name"), sortable: true },
             { columnKey: 'email', value: T.translate("general.email"), sortable: true },
-            { columnKey: 'member_id', value: T.translate("speaker_list.member_id") },
-            { columnKey: 'registration_code', value: T.translate("speaker_list.registration_code") },
-            { columnKey: 'on_site_phone', value: T.translate("speaker_list.on_site_phone") },
-            { columnKey: 'presentation_count', value: T.translate("general.presentations") }
+            { columnKey: 'member_id', value: T.translate("speaker_list.member_id") }
         ];
 
         let table_options = {
@@ -96,8 +79,6 @@ class SummitSpeakerListPage extends React.Component {
                 edit: {onClick: this.handleEdit}
             }
         }
-
-        if(currentSummit == null) return null;
 
         return(
             <div className="container">
@@ -146,15 +127,13 @@ class SummitSpeakerListPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentSpeakerListState }) => ({
-    currentSummit   : currentSummitState.currentSummit,
+const mapStateToProps = ({ currentSpeakerListState }) => ({
     ...currentSpeakerListState
 })
 
 export default connect (
     mapStateToProps,
     {
-        getSummitById,
         getSpeakers
     }
 )(SummitSpeakerListPage);

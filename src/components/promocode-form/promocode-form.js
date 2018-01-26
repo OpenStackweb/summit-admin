@@ -176,7 +176,6 @@ class PromocodeForm extends React.Component {
                             id="owner"
                             value={entity.owner}
                             onChange={this.handleChange}
-                            summitId={currentSummit.id}
                             multi={false}
                             error={this.hasErrors('owner_id')}
                         />

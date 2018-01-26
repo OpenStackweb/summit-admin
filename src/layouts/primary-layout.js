@@ -30,15 +30,15 @@ class PrimaryLayout extends React.Component {
                 <main id="page-wrap">
                     <Switch>
                         <Route exact path="/app/directory" component={SummitDirectoryPage}/>
+                        <Route exact path="/app/speakers" component={SummitSpeakerListPage}/>
+                        <Route exact path="/app/speakers/merge" component={MergeSpeakersPage}/>
+                        <Route exact path="/app/speakers/new" component={EditSummitSpeakerPage}/>
+                        <Route exact path="/app/speakers/:speaker_id" component={EditSummitSpeakerPage}/>
                         <Route exact path="/app/summits/:summit_id/dashboard" component={SummitDashboardPage}/>
                         <Route exact path="/app/summits/:summit_id/events/schedule" component={ScheduleBuilderPage}/>
                         <Route exact path="/app/summits/:summit_id/events/bulk-actions" component={SummitEventsBulkActionsPage}/>
                         <Route exact path="/app/summits/:summit_id/events/new" component={EditSummitEventPage}/>
                         <Route exact path="/app/summits/:summit_id/events/:summit_event_id" component={EditSummitEventPage}/>
-                        <Route exact path="/app/summits/:summit_id/speakers" component={SummitSpeakerListPage}/>
-                        <Route exact path="/app/summits/:summit_id/speakers/merge" component={MergeSpeakersPage}/>
-                        <Route exact path="/app/summits/:summit_id/speakers/new" component={EditSummitSpeakerPage}/>
-                        <Route exact path="/app/summits/:summit_id/speakers/:speaker_id" component={EditSummitSpeakerPage}/>
                         <Route exact path="/app/summits/:summit_id/attendees" component={SummitAttendeeListPage}/>
                         <Route exact path="/app/summits/:summit_id/attendees/new" component={EditSummitAttendeePage}/>
                         <Route exact path="/app/summits/:summit_id/attendees/:attendee_id" component={EditSummitAttendeePage}/>

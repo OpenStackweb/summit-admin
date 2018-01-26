@@ -15,27 +15,34 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import SpeakerForm from '../components/speaker-form/speaker-form';
-import { getSummitById }  from '../actions/summit-actions';
 import { getSpeaker, resetSpeakerForm, saveSpeaker, attachPicture } from "../actions/speaker-actions";
+import { loadSummits } from '../actions/summit-actions';
+import '../styles/edit-summit-speaker-page.less';
 
 class EditSummitSpeakerPage extends React.Component {
 
     constructor(props) {
         super(props);
 
-        //this.handleEdit = this.handleEdit.bind(this);
-
         this.state = {
             speakerId: props.match.params.speaker_id
         }
     }
 
+    componentWillMount () {
+        this.props.loadSummits();
+    }
+
     componentWillReceiveProps(nextProps) {
         let {speakerId} = this.state;
+        let {summits}   = this.props;
         let new_speaker_id = nextProps.match.params.speaker_id;
 
-        if(speakerId != new_speaker_id) {
+        if (summits.length == 0) {
+            this.props.loadSummits();
+        }
 
+        if(speakerId != new_speaker_id) {
             this.setState({speakerId: new_speaker_id});
 
             if(new_speaker_id) {
@@ -46,60 +53,47 @@ class EditSummitSpeakerPage extends React.Component {
         }
     }
 
-    componentWillMount () {
-        let summitId = this.props.match.params.summit_id;
-        let {currentSummit} = this.props;
-
-        if(currentSummit == null){
-            this.props.getSummitById(summitId);
-        }
-    }
-
     componentDidMount () {
-        let {currentSummit, entity, errors} = this.props;
         let speakerId = this.props.match.params.speaker_id;
 
-        if(currentSummit != null) {
-            if (speakerId != null) {
-                this.props.getSpeaker(speakerId);
-            } else {
-                this.props.resetSpeakerForm();
-            }
+        if (speakerId != null) {
+            this.props.getSpeaker(speakerId);
+        } else {
+            this.props.resetSpeakerForm();
         }
     }
 
     render(){
-        let {currentSummit, entity, errors} = this.props;
+        let {entity, errors, summits, history, saveSpeaker, attachPicture} = this.props;
         let title = (entity.id) ? 'Edit' : 'Add';
+
+        if (summits.lenght === 0) return (<div> Hold on...</div>);
 
         return(
             <div className="container">
                 <h3>{title} {T.translate("general.speaker")}</h3>
                 <hr/>
-                {currentSummit &&
                 <SpeakerForm
-                    history={this.props.history}
-                    currentSummit={currentSummit}
+                    summits={summits}
+                    history={history}
                     entity={entity}
                     errors={errors}
-                    onSubmit={this.props.saveSpeaker}
-                    onAttach={this.props.attachPicture}
+                    onSubmit={saveSpeaker}
+                    onAttach={attachPicture}
                 />
-                }
             </div>
         )
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentSpeakerState }) => ({
-    currentSummit : currentSummitState.currentSummit,
+const mapStateToProps = ({ currentSpeakerState }) => ({
     ...currentSpeakerState
 })
 
 export default connect (
     mapStateToProps,
     {
-        getSummitById,
+        loadSummits,
         getSpeaker,
         resetSpeakerForm,
         saveSpeaker,

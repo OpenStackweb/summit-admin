@@ -55,17 +55,17 @@ class NavMenu extends React.Component {
 
         let menu_items = [
             {name: 'directory', iconClass: 'fa-fw fa-list-ul', show: true, linkUrl: 'directory'},
+            {name: 'speakers', iconClass: 'fa-users', show: true,
+                childs: [
+                    {name:'speaker_list', linkUrl:`speakers`},
+                    {name:'merge_speakers', linkUrl:`speakers/merge`}
+                ]
+            },
             {name: 'dashboard', iconClass: 'fa-dashboard', show: show, linkUrl: `summits/${summit_id}/dashboard`},
             {name: 'events', iconClass: 'fa-calendar', show: show,
                 childs: [
                     {name:'schedule', linkUrl:`summits/${summit_id}/events/schedule`},
                     {name:'new_event', linkUrl:`summits/${summit_id}/events/new`}
-                ]
-            },
-            {name: 'speakers', iconClass: 'fa-users', show: show,
-                childs: [
-                    {name:'speaker_list', linkUrl:`summits/${summit_id}/speakers`},
-                    {name:'merge_speakers', linkUrl:`summits/${summit_id}/speakers/merge`}
                 ]
             },
             {name: 'attendees', iconClass: 'fa-users', show: show,

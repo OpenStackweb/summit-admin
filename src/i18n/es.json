@@ -9,6 +9,7 @@
   },
   "general": {
     "summit"              : "Summit",
+    "select_summit"       : "Select a Summit...",
     "speakers"            : "Speakers",
     "speaker"             : "Speaker",
     "attendees"           : "Attendees",

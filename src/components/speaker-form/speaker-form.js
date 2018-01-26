@@ -18,6 +18,8 @@ import TextEditor from '../editor-input'
 import MemberInput from '../member-input'
 import UploadInput from '../upload-input'
 import Input from '../text-input'
+import SummitDropdown from '../summit-dropdown'
+import Select from 'react-select'
 import {findElementPos} from '../../utils/methods'
 
 
@@ -27,13 +29,18 @@ class SpeakerForm extends React.Component {
 
         this.state = {
             entity: {...props.entity},
-            errors: props.errors
+            errors: props.errors,
+            showSummit: null
         };
 
+        this.getPresentations = this.getPresentations.bind(this);
+        this.getAttendance = this.getAttendance.bind(this);
+        this.getPromocodes = this.getPromocodes.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleUploadFile = this.handleUploadFile.bind(this);
         this.handleRemoveFile = this.handleRemoveFile.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.toggleSummit = this.toggleSummit.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -90,10 +97,9 @@ class SpeakerForm extends React.Component {
         this.props.onSubmit(this.state.entity, this.props.history);
     }
 
-    handlePresentationLink(event_id, ev) {
-        let {currentSummit} = this.props;
+    handlePresentationLink(summit, event_id, ev) {
         ev.preventDefault();
-        let event_detail_url = currentSummit.schedule_event_detail_url.replace(':event_id',event_id).replace(':event_title','');
+        let event_detail_url = summit.schedule_event_detail_url.replace(':event_id',event_id).replace(':event_title','');
         window.open(event_detail_url, '_blank');
     }
 
@@ -106,12 +112,87 @@ class SpeakerForm extends React.Component {
         return '';
     }
 
-    render() {
-        let {entity} = this.state;
-        let { currentSummit } = this.props;
+    getPresentations(summitId) {
+        let presentations = this.state.entity.all_presentations.filter( p => p.summit_id === summitId );
+        let {history} = this.props;
 
         return (
-            <form>
+            <div>
+                Presentations:
+                {presentations.map(p =>
+                <li key={'pres' + p.id}>
+                    <a href="" onClick={() => {history.push(`/app/summits/${summitId}/events/${p.id}`)}} >
+                        {p.title}
+                    </a>
+                    <i> - {p.status}</i>
+                </li>
+                )}
+            </div>
+        );
+    }
+
+    getAttendance(summitId) {
+        let assistances = this.state.entity.summit_assistances.filter( a => a.summit_id === summitId );
+        let {history} = this.props;
+
+        return (
+            <div>
+                Attendance:
+                {assistances.map(a =>
+                <li key={'ass' + a.id}>
+                    <a href="" onClick={() => {history.push(`/app/summits/${summitId}/attendance/${a.id}`)}} >
+                        Ph:{a.on_site_phone ? a.on_site_phone : '-'}
+                        {a.registered ? <i> - Registered </i> : ''}
+                        {a.checked_in ? <i> - Checked in </i> :''}
+                        {a.is_confirmed ? <i> - Confirmed </i> :''}
+                    </a>
+                </li>
+                )}
+            </div>
+        );
+    }
+
+    getPromocodes(summitId) {
+        let promocodes = this.state.entity.registration_codes.filter( r => r.summit_id === summitId );
+        let {history, summits} = this.props;
+
+        return (
+            <div>
+                Promocodes:
+                {promocodes.map(p =>
+                <li key={'prom' + p.id}>
+                    <a href="" onClick={() => {history.push(`/app/summits/${summitId}/promocodes/${p.id}`)}} >
+                        {p.code}
+                    </a>
+                    {p.email_sent ? <i> - Email Sent </i> : ''}
+                    {p.redeemed ? <i> - Redeemed </i> : ''}
+                </li>
+                )}
+                <li>
+                    <SummitDropdown small summits={summits} actionLabel="Add" onClick={this.handlePresentationLink.bind(this, 1)} />
+                </li>
+            </div>
+        );
+    }
+
+    toggleSummit(summitId, ev) {
+        let {showSummit} = this.state;
+        let newShowSummit = (showSummit === summitId) ? null : summitId;
+        ev.preventDefault();
+
+        this.setState({showSummit: newShowSummit});
+    }
+
+    render() {
+        let {entity, showSummit} = this.state;
+        let {summits} = this.props;
+
+        let lastSummits = this.props.summits.sort(
+            (a, b) => (a.start_date > b.start_date ? 1 : (a.start_date < b.start_date ? -1 : 0))
+        ).slice(-3);
+
+        return (
+            <form className="summit-speaker-form">
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
                     <div className="col-md-4">
@@ -120,7 +201,6 @@ class SpeakerForm extends React.Component {
                             id="member"
                             value={entity.member}
                             onChange={this.handleChange}
-                            summitId={currentSummit.id}
                             multi={false}
                         />
                     </div>
@@ -136,36 +216,6 @@ class SpeakerForm extends React.Component {
                         />
                     </div>
                     }
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_speaker.registration_code")} </label>
-                        <Input
-                            className="form-control"
-                            id="registration_code"
-                            value={entity.registration_code}
-                            disabled={entity.code_redeemed}
-                            onChange={this.handleChange}
-                        />
-                    </div>
-                </div>
-                <div className="row form-group">
-                    <div className="col-md-4">
-                        <div className="form-check abc-checkbox">
-                            <input type="checkbox" id="registered" checked={entity.registered} onChange={this.handleChange} className="form-check-input" />
-                            <label className="form-check-label" htmlFor="registered"> {T.translate("edit_speaker.registered")} </label>
-                        </div>
-                    </div>
-                    <div className="col-md-4">
-                        <div className="form-check abc-checkbox">
-                            <input type="checkbox" id="checked_in" checked={entity.checked_in} onChange={this.handleChange} className="form-check-input" />
-                            <label className="form-check-label" htmlFor="checked_in"> {T.translate("edit_speaker.checked_in")} </label>
-                        </div>
-                    </div>
-                    <div className="col-md-4">
-                        <div className="form-check abc-checkbox">
-                            <input type="checkbox" id="confirmed" checked={entity.confirmed} onChange={this.handleChange} className="form-check-input" />
-                            <label className="form-check-label" htmlFor="confirmed"> {T.translate("edit_speaker.confirmed")} </label>
-                        </div>
-                    </div>
                 </div>
                 <div className="row form-group">
                     <div className="col-md-4">
@@ -182,10 +232,6 @@ class SpeakerForm extends React.Component {
                     </div>
                 </div>
                 <div className="row form-group">
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_speaker.on_site_phone")} </label>
-                        <Input className="form-control" id="on_site_phone" value={entity.on_site_phone} onChange={this.handleChange} />
-                    </div>
                     <div className="col-md-4">
                         <label> {T.translate("edit_speaker.twitter")} </label>
                         <Input className="form-control" id="twitter" value={entity.twitter} onChange={this.handleChange} />
@@ -209,28 +255,35 @@ class SpeakerForm extends React.Component {
                             handleUpload={this.handleUploadFile}
                             handleRemove={this.handleRemoveFile}
                             className="dropzone col-md-6"
-                            multiple={this.props.multi}
+                            multiple={false}
                             accept="image/*"
                         />
                     </div>
                 </div>
-                <div className="row form-group">
-                    {entity.all_presentations && entity.all_presentations.length &&
-                    <div className="col-md-6">
-                        <label> {T.translate("general.presentations")} </label>
-                        <ul>
-                        {entity.all_presentations.map(p => {
-                            return (
-                              <li key={'pres' + p.id}>
-                                  <a href="" onClick={this.handlePresentationLink.bind(this, p.id)} >{p.title}</a>
-                                  - <i>{p.status}</i>
-                              </li>
-                            );
-                        })}
-                        </ul>
+                <br/>
+                <hr/>
+                { lastSummits.map(s =>
+                    <div key={'last-summits-' + s.id} className="panel-group summit-data">
+                        <div className="panel panel-default">
+                            <div className="panel-heading">
+                                <h4 className="panel-title">
+                                    <a className={showSummit == s.id ? 'collapsed' : ''} onClick={this.toggleSummit.bind(this, s.id)}>
+                                        {s.name}
+                                    </a>
+                                </h4>
+                            </div>
+                            <div className="panel-collapse collapse in">
+                                {showSummit === s.id &&
+                                <div className="panel-body">
+                                    {this.getPresentations(s.id)}
+                                    {this.getAttendance(s.id)}
+                                    {this.getPromocodes(s.id)}
+                                </div>
+                                }
+                            </div>
+                        </div>
                     </div>
-                    }
-                </div>
+                )}
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">

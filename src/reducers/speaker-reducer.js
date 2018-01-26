@@ -22,7 +22,7 @@ import
 
 import { LOGOUT_USER } from '../actions/auth-actions';
 import { VALIDATE } from '../actions/base-actions';
-import { SET_CURRENT_SUMMIT } from '../actions/summit-actions';
+import { SET_CURRENT_SUMMIT, RECEIVE_SUMMITS } from '../actions/summit-actions';
 
 export const DEFAULT_ENTITY = {
     id: 0,
@@ -35,16 +35,13 @@ export const DEFAULT_ENTITY = {
     irc: '',
     bio: '',
     pic: '',
-    presentations: [],
-    registration_code: '',
-    code_redeemed: false,
-    on_site_phone: '',
-    registered: false,
-    checked_in: false,
-    confirmed: false
+    all_presentations: [],
+    registration_codes: [],
+    summit_assistances: []
 }
 
 const DEFAULT_STATE = {
+    summits: [],
     entity: DEFAULT_ENTITY,
     errors: {}
 };
@@ -64,6 +61,10 @@ const speakerReducer = (state = DEFAULT_STATE, action) => {
         case SET_CURRENT_SUMMIT:
         case RESET_SPEAKER_FORM: {
             return DEFAULT_STATE;
+        }
+        break;
+        case RECEIVE_SUMMITS: {
+            return {...state,  summits: action.payload.response.data };
         }
         break;
         case UPDATE_SPEAKER: {

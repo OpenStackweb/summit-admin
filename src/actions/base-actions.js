@@ -92,7 +92,7 @@ export const showMessage = (title, text, type, callback = {}) => (dispatch) => {
     });
 }
 
-export const queryMembers = (summitId, input) => {
+export const queryMembers = (input) => {
 
     let accessToken = window.accessToken;
     input       = encodeURIComponent(input);

@@ -55,7 +55,7 @@ export default class MemberInput extends React.Component {
             return Promise.resolve({ options: [] });
         }
 
-        return queryMembers(this.props.summitId, input);
+        return queryMembers(input);
     }
 
     processTagValues(new_values) {

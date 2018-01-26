@@ -150,7 +150,6 @@ export default class TicketComponent extends React.Component {
                                 <MemberInput
                                     id="member"
                                     onChange={this.handleMemberChange}
-                                    summitId={summit.id}
                                     multi={false}
                                 />
                             </div>

@@ -17,9 +17,8 @@ export const SPEAKER_MERGED         = 'SPEAKER_MERGED';
 
 export const getSpeakers = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = '1' ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
+    let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
     let filter = [];
 
     dispatch(startLoading());
@@ -48,28 +47,27 @@ export const getSpeakers = ( term = null, page = 1, perPage = 10, order = 'id', 
     return getRequest(
         null,
         createAction(RECEIVE_SPEAKERS),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers?access_token=${accessToken}`,
+        `${apiBaseUrl}/api/v1/speakers?access_token=${accessToken}`,
         authErrorHandler
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
 
 export const getSpeaker = (speakerId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
+    let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
 
     return getRequest(
         null,
         createAction(RECEIVE_SPEAKER),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers/${speakerId}?access_token=${accessToken}&expand=member,presentations`,
+        `${apiBaseUrl}/api/v1/speakers/${speakerId}?access_token=${accessToken}&expand=member,presentations`,
         authErrorHandler
     )({})(dispatch).then(dispatch(stopLoading()));
 };
 
 export const getSpeakerForMerge = (speakerId, speakerCol) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
+    let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
 
     let params = {
@@ -87,15 +85,14 @@ export const getSpeakerForMerge = (speakerId, speakerCol) => (dispatch, getState
 };
 
 export const mergeSpeakers = (speakers, selectedFields, changedFields, history) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
+    let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
 
     let success_message = [
         'Success! Speakers merged.',
         'Changes made on: ' + changedFields.join(', ') ,
         'success',
-        () => { history.push(`/app/summits/${currentSummit.id}/speakers/${speakers[1].id}`) }
+        () => { history.push(`/app/speakers/${speakers[1].id}`) }
     ];
 
     putRequest(
