@@ -171,11 +171,13 @@ class EventForm extends React.Component {
 
         let tracks_ddl = trackOpts.map(t => ({label: t.name, value: t.id}));
 
-        let venues = locationOpts.filter(v => (v.class_name == 'SummitVenue')).map(l =>
-            ({label: l.name, value: l.id, options: l.rooms.map(r =>
-                ({label: r.name, value: r.id})
-            )})
-        );
+        let venues = locationOpts.filter(v => (v.class_name == 'SummitVenue')).map(l => {
+            let options = [];
+            if (l.rooms) {
+                options = l.rooms.map(r => ({label: r.name, value: r.id}) );
+            }
+            return {label: l.name, value: l.id, options: options};
+        });
 
         let locations_ddl = [
             {label: 'TBD', value: 0},

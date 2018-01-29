@@ -52,7 +52,7 @@ export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'cod
     }
 
     let params = {
-        expand       : 'speaker, owner, sponsor, creator',
+        expand       : 'speaker,owner,sponsor,creator',
         page         : page,
         per_page     : perPage,
         access_token : accessToken,

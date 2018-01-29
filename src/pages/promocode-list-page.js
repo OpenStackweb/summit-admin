@@ -45,16 +45,16 @@ class PromocodeListPage extends React.Component {
         let summitId = this.props.match.params.summit_id;
         let {currentSummit} = this.props;
 
-        if(currentSummit == null){
+        if(currentSummit == null || currentSummit.id != summitId){
             this.props.getSummitById(summitId);
         }
 
     }
 
-    componentDidMount () {
+    componentWillReceiveProps(newProps) {
         let {currentSummit, allTypes} = this.props;
 
-        if(currentSummit != null) {
+        if (currentSummit.id != newProps.currentSummit.id) {
             this.props.getPromocodes();
 
             if(allTypes.length == 1){

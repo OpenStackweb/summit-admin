@@ -77,8 +77,10 @@ const promocodeListReducer = (state = DEFAULT_STATE, action) => {
                         }
                         break;
                     case 'SPEAKER_PROMO_CODE':
-                        owner = p.speaker.first_name + ' ' + p.speaker.last_name;
-                        owner_email = p.speaker.email;
+                        if (p.speaker) {
+                            owner = p.speaker.first_name + ' ' + p.speaker.last_name;
+                            owner_email = p.speaker.email;
+                        }
                         break;
                     case 'SPONSOR_PROMO_CODE':
                         if (p.owner) {

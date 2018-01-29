@@ -48,15 +48,16 @@ class SummitAttendeeListPage extends React.Component {
         let summitId = this.props.match.params.summit_id;
         let {currentSummit} = this.props;
 
-        if(currentSummit == null){
+        if(currentSummit == null || currentSummit.id != summitId){
             this.props.getSummitById(summitId);
         }
 
     }
 
-    componentDidMount () {
+    componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
-        if(currentSummit != null) {
+
+        if (currentSummit.id != newProps.currentSummit.id) {
             this.props.getAttendees();
         }
     }

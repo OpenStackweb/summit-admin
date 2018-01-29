@@ -18,8 +18,6 @@ import TextEditor from '../editor-input'
 import MemberInput from '../member-input'
 import UploadInput from '../upload-input'
 import Input from '../text-input'
-import SummitDropdown from '../summit-dropdown'
-import Select from 'react-select'
 import {findElementPos} from '../../utils/methods'
 
 
@@ -127,6 +125,11 @@ class SpeakerForm extends React.Component {
                     <i> - {p.status}</i>
                 </li>
                 )}
+                <li>
+                    <a href="" onClick={() => {history.push(`/app/summits/${summitId}/events/new`)}}>
+                        Add new
+                    </a>
+                </li>
             </div>
         );
     }
@@ -134,6 +137,8 @@ class SpeakerForm extends React.Component {
     getAttendance(summitId) {
         let assistances = this.state.entity.summit_assistances.filter( a => a.summit_id === summitId );
         let {history} = this.props;
+
+        if (assistances.length == 0) return (<div></div>);
 
         return (
             <div>
@@ -169,7 +174,9 @@ class SpeakerForm extends React.Component {
                 </li>
                 )}
                 <li>
-                    <SummitDropdown small summits={summits} actionLabel="Add" onClick={this.handlePresentationLink.bind(this, 1)} />
+                    <a href="" onClick={() => {history.push(`/app/summits/${summitId}/promocodes/new`)}} >
+                        Add new
+                    </a>
                 </li>
             </div>
         );
