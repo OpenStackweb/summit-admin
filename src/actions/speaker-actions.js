@@ -13,6 +13,9 @@ export const SPEAKER_ADDED          = 'SPEAKER_ADDED';
 export const PIC_ATTACHED           = 'PIC_ATTACHED';
 export const MERGE_SPEAKERS         = 'MERGE_SPEAKERS';
 export const SPEAKER_MERGED         = 'SPEAKER_MERGED';
+export const REQUEST_ATTENDANCES    = 'REQUEST_ATTENDANCES';
+export const RECEIVE_ATTENDANCES    = 'RECEIVE_ATTENDANCES';
+export const ATTENDANCE_DELETED     = 'ATTENDANCE_DELETED';
 
 
 export const getSpeakers = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = '1' ) => (dispatch, getState) => {
@@ -210,3 +213,67 @@ const normalizeEntity = (entity) => {
     return normalizedEntity;
 
 }
+
+export const getAttendances = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = '1' ) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let filter = [];
+
+    dispatch(startLoading());
+
+    if(term != null){
+        filter.push(`speaker=@${term},speaker_email=@${term},on_site_phone=@${term}`);
+    }
+
+    let req_params = {
+        order: order,
+        orderDir: parseInt(orderDir)
+    }
+
+    let params = {
+        expand       : 'speaker',
+        page         : page,
+        per_page     : perPage,
+        access_token : accessToken,
+    };
+
+    if(filter.length > 0){
+        params['filter[]']= filter;
+    }
+
+    // order
+    if(order != null && orderDir != null){
+        orderDir = (orderDir == '1') ? '+' : '-';
+        params['order']= `${orderDir}${order}`;
+    }
+
+
+    return getRequest(
+        createAction(REQUEST_ATTENDANCES),
+        createAction(RECEIVE_ATTENDANCES),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers-assistances?access_token=${accessToken}`,
+        authErrorHandler,
+        req_params
+    )(params)(dispatch).then(dispatch(stopLoading()));
+};
+
+export const deleteAttendance = (attendanceId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    return deleteRequest(
+        null,
+        createAction(ATTENDANCE_DELETED)({attendanceId}),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers-assistances/${attendanceId}`,
+        authErrorHandler
+    )(params)(dispatch).then(dispatch(stopLoading()));
+};

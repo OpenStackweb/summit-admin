@@ -58,6 +58,7 @@ class NavMenu extends React.Component {
             {name: 'speakers', iconClass: 'fa-users', show: true,
                 childs: [
                     {name:'speaker_list', linkUrl:`speakers`},
+                    {name:'speaker_attendance', linkUrl:`summits/${summit_id}/speakers/attendance`, show: show},
                     {name:'merge_speakers', linkUrl:`speakers/merge`}
                 ]
             },

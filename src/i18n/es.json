@@ -33,6 +33,7 @@
     "export"              : "Export",
     "are_you_sure"        : "Are you sure?",
     "yes_delete"          : "Yes, delete.",
+    "id"                  : "Id",
     "placeholders": {
       "search_speakers"     : "Search Speakers by Name or Email"
     }
@@ -300,5 +301,17 @@
     "redeemed"          : "Redeemed",
     "send_email"        : "Send Email",
     "or"                : "OR"
+  },
+  "speaker_attendance_list": {
+    "speaker_attendance_list"   : "Speaker Attendace List",
+    "created"                   : "Date Created",
+    "on_site_phone"             : "On Site Phone",
+    "is_confirmed"              : "Confirmed",
+    "confirmation_date"         : "Confirmation Date",
+    "no_attendances"            : "There are no attendances for this search criteria.",
+    "delete_attendance_warning" : "Are you sure you want to delete attendance for speaker",
+    "placeholders": {
+      "search_attendances": "Search by Speaker, Email, Phone"
+    }
   }
 }

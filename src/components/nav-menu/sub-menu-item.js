@@ -31,15 +31,18 @@ export default class SubMenuItem extends React.Component {
                 </a>
                 {subMenuOpen === name &&
                 <div className="submenu">
-                    {childs.map(ch =>
-                        <MenuItem
-                            key={ch.name}
-                            {...ch}
-                            show={true}
-                            iconClass="fa-chevron-right"
-                            onClick={(e) => onItemClick(e, ch.linkUrl)}
-                        />
-                    )}
+                    {childs.map(ch => {
+                        let show_item = (ch.hasOwnProperty('show') ? ch.show : show);
+                        return (
+                            <MenuItem
+                                key={ch.name}
+                                {...ch}
+                                show={show_item}
+                                iconClass="fa-chevron-right"
+                                onClick={(e) => onItemClick(e, ch.linkUrl)}
+                            />
+                        );
+                    })}
                 </div>
                 }
             </div>

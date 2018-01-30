@@ -34,3 +34,8 @@ export const epochToMomentTimeZone = (atime, time_zone) => {
     atime = atime * 1000;
     return moment(atime).tz(time_zone);
 }
+
+export const formatEpoch = (atime, format = 'M/D/YYYY h:mm a') => {
+    if(!atime) return atime;
+    return epochToMoment(atime).format(format);
+}
