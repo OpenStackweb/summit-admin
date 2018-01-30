@@ -52,6 +52,7 @@
     "new_event"           : "New Event",
     "speakers"            : "Speakers",
     "speaker_list"        : "CRUD List",
+    "speaker_attendance"  : "Summit Attendance",
     "merge_speakers"      : "Merge",
     "attendees"           : "Attendees",
     "attendee_list"       : "CRUD List",
@@ -313,5 +314,13 @@
     "placeholders": {
       "search_attendances": "Search by Speaker, Email, Phone"
     }
+  },
+  "edit_speaker_attendance": {
+    "speaker_attendance"  : "Speaker Attendance",
+    "on_site_phone"       : "On Site Phone",
+    "registered"          : "Registered",
+    "is_confirmed"        : "Confirmed",
+    "checked_in"          : "Checked In",
+    "send_email"          : "Send Email"
   }
 }

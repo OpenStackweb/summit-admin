@@ -16,6 +16,12 @@ export const SPEAKER_MERGED         = 'SPEAKER_MERGED';
 export const REQUEST_ATTENDANCES    = 'REQUEST_ATTENDANCES';
 export const RECEIVE_ATTENDANCES    = 'RECEIVE_ATTENDANCES';
 export const ATTENDANCE_DELETED     = 'ATTENDANCE_DELETED';
+export const RECEIVE_ATTENDANCE     = 'RECEIVE_ATTENDANCE';
+export const RESET_ATTENDANCE_FORM  = 'RESET_ATTENDANCE_FORM';
+export const UPDATE_ATTENDANCE      = 'UPDATE_ATTENDANCE';
+export const ATTENDANCE_UPDATED     = 'ATTENDANCE_UPDATED';
+export const ATTENDANCE_ADDED       = 'ATTENDANCE_ADDED';
+export const EMAIL_SENT             = 'EMAIL_SENT';
 
 
 export const getSpeakers = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = '1' ) => (dispatch, getState) => {
@@ -254,7 +260,7 @@ export const getAttendances = ( term = null, page = 1, perPage = 10, order = 'id
     return getRequest(
         createAction(REQUEST_ATTENDANCES),
         createAction(RECEIVE_ATTENDANCES),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers-assistances?access_token=${accessToken}`,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers-assistances`,
         authErrorHandler,
         req_params
     )(params)(dispatch).then(dispatch(stopLoading()));
@@ -276,4 +282,99 @@ export const deleteAttendance = (attendanceId) => (dispatch, getState) => {
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers-assistances/${attendanceId}`,
         authErrorHandler
     )(params)(dispatch).then(dispatch(stopLoading()));
+};
+
+export const getAttendance = (attendanceId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        expand       : 'speaker',
+        access_token : accessToken,
+    };
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_ATTENDANCE),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers-assistances/${attendanceId}`,
+        authErrorHandler
+    )(params)(dispatch).then(dispatch(stopLoading()));
+};
+
+export const resetAttendanceForm = () => (dispatch, getState) => {
+    dispatch(createAction(RESET_ATTENDANCE_FORM)({}));
+};
+
+export const saveAttendance = (entity, history) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    dispatch(startLoading());
+
+    let normalizedEntity = normalizeEntity(entity);
+
+    if (entity.id) {
+
+        let success_message = ['Done!', 'Speaker Attendance saved successfully.', 'success'];
+
+        putRequest(
+            createAction(UPDATE_ATTENDANCE),
+            createAction(ATTENDANCE_UPDATED),
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers-assistances/${entity.id}`,
+            normalizedEntity,
+            authErrorHandler,
+            entity
+        )(params)(dispatch)
+            .then((payload) => {
+                dispatch(showMessage(...success_message));
+            });
+
+    } else {
+        let success_message = ['Done!', 'Speaker Attendance created successfully.', 'success'];
+
+
+        postRequest(
+            createAction(UPDATE_ATTENDANCE),
+            createAction(ATTENDANCE_ADDED),
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers-assistances`,
+            normalizedEntity,
+            authErrorHandler,
+            entity
+        )(params)(dispatch)
+            .then((payload) => {
+                dispatch(showMessage(
+                    ...success_message,
+                    () => { history.push(`/app/summits/${currentSummit.id}/speakers/attendance/${payload.response.id}`) }
+                ));
+            });
+    }
+}
+
+export const sendAttendanceEmail = (attendanceId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return postRequest(
+        null,
+        createAction(EMAIL_SENT),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers-assistances/${attendanceId}/mail`,
+        authErrorHandler
+    )(params)(dispatch).then(
+        (payload) => {
+            dispatch(stopLoading());
+            dispatch(showMessage('Done!', 'Email sent successfully.', 'success'));
+        });
 };

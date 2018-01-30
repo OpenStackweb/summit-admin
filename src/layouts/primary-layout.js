@@ -7,6 +7,7 @@ import SummitDashboardPage from '../pages/summit-dashboard-page';
 import EditSummitEventPage from '../pages/edit-summit-event-page';
 import SummitEventsBulkActionsPage from '../pages/summit-events-bulk-actions-page';
 import SpeakerAttendanceListPage from '../pages/speaker-attendance-list-page';
+import EditSpeakerAttendancePage from '../pages/edit-speaker-attendance-page';
 import SummitSpeakerListPage from '../pages/summit-speakers-list-page';
 import EditSummitSpeakerPage from '../pages/edit-summit-speaker-page';
 import MergeSpeakersPage from '../pages/merge-speakers-page';
@@ -36,6 +37,8 @@ class PrimaryLayout extends React.Component {
                         <Route exact path="/app/speakers/new" component={EditSummitSpeakerPage}/>
                         <Route exact path="/app/speakers/:speaker_id" component={EditSummitSpeakerPage}/>
                         <Route exact path="/app/summits/:summit_id/speakers/attendance" component={SpeakerAttendanceListPage}/>
+                        <Route exact path="/app/summits/:summit_id/speakers/attendance/new" component={EditSpeakerAttendancePage}/>
+                        <Route exact path="/app/summits/:summit_id/speakers/attendance/:attendance_id" component={EditSpeakerAttendancePage}/>
                         <Route exact path="/app/summits/:summit_id/dashboard" component={SummitDashboardPage}/>
                         <Route exact path="/app/summits/:summit_id/events/schedule" component={ScheduleBuilderPage}/>
                         <Route exact path="/app/summits/:summit_id/events/bulk-actions" component={SummitEventsBulkActionsPage}/>
