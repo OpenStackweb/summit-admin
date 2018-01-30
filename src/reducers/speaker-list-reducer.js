@@ -13,6 +13,7 @@
 
 import
 {
+    REQUEST_SPEAKERS,
     RECEIVE_SPEAKERS
 } from '../actions/speaker-actions';
 
@@ -22,8 +23,8 @@ import { SET_CURRENT_SUMMIT } from '../actions/summit-actions';
 const DEFAULT_STATE = {
     speakers        : {},
     term            : null,
-    order           : null,
-    orderDir        : null,
+    order           : 'id',
+    orderDir        : 1,
     currentPage     : 1,
     lastPage        : 1,
     perPage         : 10,
@@ -35,6 +36,11 @@ const speakerListReducer = (state = DEFAULT_STATE, action) => {
     switch (type) {
         case LOGOUT_USER: {
             return state;
+        }
+        break;
+        case REQUEST_SPEAKERS: {
+            let {order, orderDir} = payload;
+            return {...state, order, orderDir};
         }
         break;
         case RECEIVE_SPEAKERS: {

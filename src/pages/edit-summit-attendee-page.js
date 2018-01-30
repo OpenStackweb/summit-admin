@@ -69,7 +69,7 @@ class EditSummitAttendeePage extends React.Component {
 
     render(){
         let {currentSummit, entity, errors} = this.props;
-        let title = (entity.id) ? 'Edit' : 'Add';
+        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
 
         return(
             <div className="container">

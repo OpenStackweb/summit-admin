@@ -16,6 +16,7 @@ import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import {findElementPos} from '../../utils/methods'
 import Input from '../text-input'
+import SpeakerInput from '../speaker-input'
 
 
 class SpeakerAttendanceForm extends React.Component {
@@ -84,6 +85,13 @@ class SpeakerAttendanceForm extends React.Component {
         return '';
     }
 
+    handleSpeakerLink(speaker_id, ev) {
+        let {history} = this.props;
+        ev.preventDefault();
+
+        history.push(`/app/speakers/${speaker_id}`);
+    }
+
     render() {
         let {entity} = this.state;
         let { currentSummit } = this.props;
@@ -93,13 +101,20 @@ class SpeakerAttendanceForm extends React.Component {
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
                     <div className="col-md-4">
-                        <label> {T.translate("general.speaker")} :</label>
-                        {entity.speaker ? entity.speaker.name : ''}
+                        <label> {T.translate("general.speaker")}: </label>
+                        <SpeakerInput
+                            id="speaker"
+                            value={entity.speaker}
+                            onChange={this.handleChange}
+                            summitId={currentSummit.id}
+                            multi={false}
+                            history={history}
+                        />
                     </div>
                     {entity.id !== 0 && entity.email_sent === false &&
-                    <div className="col-md-4">
+                    <div className="col-md-4 send-email-box">
                         <input type="button" onClick={this.handleSendEmail}
-                               className="btn btn-default pull-right"
+                               className="btn btn-default"
                                value={T.translate("edit_speaker_attendance.send_email")}
                         />
                     </div>

@@ -18,7 +18,7 @@ export const RSVP_DELETED               = 'RSVP_DELETED';
 export const AFFILIATION_UPDATED        = 'AFFILIATION_UPDATED';
 
 
-export const getAttendees = ( term = null, page = 1, perPage = 10, order = 'last_name', orderDir = 1 ) => (dispatch, getState) => {
+export const getAttendees = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -102,7 +102,11 @@ export const saveAttendee = (entity, history) => (dispatch, getState) => {
 
     if (entity.id) {
 
-        let success_message = ['Done!', 'Attendee saved successfully.', 'success'];
+        let success_message = [
+            T.translate("general.done"),
+            T.translate("edit_attendee.attendee_saved"),
+            'success'
+        ];
 
         putRequest(
             createAction(UPDATE_ATTENDEE),
@@ -120,7 +124,11 @@ export const saveAttendee = (entity, history) => (dispatch, getState) => {
             });
 
     } else {
-        let success_message = ['Done!', 'Attendee created successfully.', 'success'];
+        let success_message = [
+            T.translate("general.done"),
+            T.translate("edit_attendee.attendee_created"),
+            'success'
+        ];
 
         postRequest(
             createAction(UPDATE_ATTENDEE),

@@ -13,6 +13,7 @@ export const PROMOCODE_UPDATED        = 'PROMOCODE_UPDATED';
 export const PROMOCODE_ADDED          = 'PROMOCODE_ADDED';
 export const PROMOCODE_DELETED        = 'PROMOCODE_DELETED';
 export const EMAIL_SENT               = 'EMAIL_SENT';
+export const PROMOCODE_EXPORTED       = 'PROMOCODE_EXPORTED';
 
 
 export const getPromocodeMeta = () => (dispatch, getState) => {
@@ -112,7 +113,11 @@ export const savePromocode = (entity, history) => (dispatch, getState) => {
 
     if (entity.id) {
 
-        let success_message = ['Done!', 'Promocode saved successfully.', 'success'];
+        let success_message = [
+            T.translate("general.done"),
+            T.translate("edit_promocode.promocode_saved"),
+            'success'
+        ];
 
         putRequest(
             createAction(UPDATE_PROMOCODE),
@@ -127,8 +132,11 @@ export const savePromocode = (entity, history) => (dispatch, getState) => {
             });
 
     } else {
-        let success_message = ['Done!', 'Promocode created successfully.', 'success'];
-
+        let success_message = [
+            T.translate("general.done"),
+            T.translate("edit_promocode.promocode_created"),
+            'success'
+        ];
 
         postRequest(
             createAction(UPDATE_PROMOCODE),
@@ -183,8 +191,50 @@ export const sendEmail = (promocodeId) => (dispatch, getState) => {
     )(params)(dispatch).then(
         (payload) => {
             dispatch(stopLoading());
-            dispatch(showMessage('Done!', 'Email sent successfully.', 'success'));
+            dispatch(showMessage(T.translate("general.done"), T.translate("general.mail_sent"), 'success'));
         });
+};
+
+export const exportPromocodes = ( term = null, page = 1, perPage = 10, order = 'code', orderDir = 1, type = 'ALL' ) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+    let filter = [];
+
+    dispatch(startLoading());
+
+    if(term != null){
+        filter.push(`code=@${term},creator=@${term},creator_email=@${term},owner=@${term},owner_email=@${term},speaker=@${term},speaker_email=@${term},sponsor=@${term}`);
+    }
+
+    if (type != 'ALL') {
+        filter.push(`type==${type}`);
+    }
+
+    let params = {
+        page         : page,
+        per_page     : perPage,
+        access_token : accessToken,
+    };
+
+    if(filter.length > 0){
+        params['filter[]']= filter;
+    }
+
+    // order
+    if(order != null && orderDir != null){
+        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        params['order']= `${orderDirSign}${order}`;
+    }
+
+
+    return getRequest(
+        null,
+        createAction(PROMOCODE_EXPORTED),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes/csv`,
+        authErrorHandler
+    )(params)(dispatch).then( dispatch(stopLoading()) );
 };
 
 

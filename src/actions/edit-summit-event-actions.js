@@ -42,8 +42,13 @@ export const saveEvent = (entity, publish, history) => (dispatch, getState) => {
 
     if (entity.id) {
 
-        let success_message = ['Done!', 'Event saved successfully.', 'success'];
-        if (publish) success_message[1] = 'Event saved & published successfully.';
+        let success_message = [
+            T.translate("general.done"),
+            T.translate("edit_event.event_saved"),
+            'success'
+        ];
+
+        if (publish) success_message[1] = T.translate("edit_event.saved_and_published");
 
         putRequest(
             createAction(UPDATE_EVENT),
@@ -61,7 +66,11 @@ export const saveEvent = (entity, publish, history) => (dispatch, getState) => {
         });
 
     } else {
-        let success_message = ['Done!', 'Event created successfully.', 'success'];
+        let success_message = [
+            T.translate("general.done"),
+            T.translate("edit_event.event_created"),
+            'success'
+        ];
 
         postRequest(
             createAction(UPDATE_EVENT),
@@ -90,7 +99,11 @@ const publishEvent = (entity) => (dispatch, getState) => {
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
-    let success_message = ['Done!', 'Event saved & published successfully.', 'success'];
+    let success_message = [
+        T.translate("general.done"),
+        T.translate("edit_event.saved_and_published"),
+        'success'
+    ];
 
     putRequest(
         null,

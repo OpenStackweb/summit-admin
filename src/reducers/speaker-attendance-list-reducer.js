@@ -25,7 +25,7 @@ import {formatEpoch} from '../utils/methods'
 const DEFAULT_STATE = {
     attendances         : [],
     term                : null,
-    order               : 'id',
+    order               : '',
     orderDir            : 1,
     currentPage         : 1,
     lastPage            : 1,

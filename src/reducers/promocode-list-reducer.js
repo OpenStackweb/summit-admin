@@ -17,7 +17,8 @@ import
     RECEIVE_PROMOCODES,
     RECEIVE_PROMOCODE_META,
     REQUEST_PROMOCODES,
-    PROMOCODE_DELETED
+    PROMOCODE_DELETED,
+    PROMOCODE_EXPORTED
 } from '../actions/promocode-actions';
 
 import { LOGOUT_USER } from '../actions/auth-actions';
@@ -114,6 +115,15 @@ const promocodeListReducer = (state = DEFAULT_STATE, action) => {
         case PROMOCODE_DELETED: {
             let {promocodeId} = payload;
             return {...state, promocodes: state.promocodes.filter(p => p.id != promocodeId)};
+        }
+        break;
+        case PROMOCODE_EXPORTED: {
+            let encodedUri = encodeURI(payload);
+            let link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "my_data.csv");
+            document.body.appendChild(link); // Required for FF
+            link.click();
         }
         break;
         default:

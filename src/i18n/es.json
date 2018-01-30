@@ -24,6 +24,8 @@
     "member"              : "Member",
     "yes"                 : "Yes",
     "no"                  : "No",
+    "edit"                : "Edit",
+    "add"                 : "Add",
     "clear"               : "Clear",
     "remove"              : "Remove",
     "drop_files"          : "Drop images or click to select files to upload.",
@@ -34,6 +36,9 @@
     "are_you_sure"        : "Are you sure?",
     "yes_delete"          : "Yes, delete.",
     "id"                  : "Id",
+    "attention"           : "Attention!",
+    "done"                : "Done!",
+    "email_sent"          : "Email sent successfully.",
     "placeholders": {
       "search_speakers"     : "Search Speakers by Name or Email"
     }
@@ -156,6 +161,9 @@
     "go_to_calendar"      : "Go to Calendar",
     "view_event"          : "View Event",
     "unpublish"           : "Unpublish",
+    "event_saved"         : "Event saved successfully.",
+    "event_created"       : "Event created successfully.",
+    "saved_and_published" : "Event saved & published successfully.",
     "placeholders": {
       "select_venue"        : "Select a Summit Venue ...",
       "start_date"          : "Start Date",
@@ -183,7 +191,9 @@
     "twitter"             : "Twitter",
     "irc"                 : "Irc",
     "bio"                 : "Bio",
-    "profile_pic"         : "Picture"
+    "profile_pic"         : "Picture",
+    "speaker_saved"       : "Speaker saved successfully.",
+    "speaker_created"     : "Speaker created successfully."
   },
   "merge_speakers": {
     "merge_speakers"        : "Merge Speakers",
@@ -212,6 +222,10 @@
     "summit_assistances"    : "Attendance",
     "organizational_roles"  : "Org. Roles",
     "active_involvements"   : "Involvements",
+    "merge_warning"         : "There is no going back. Speaker on the right will have all the green fields and Speaker on the left will be erased",
+    "merge_and_delete"      : "Yes, merge and delete.",
+    "merge_success"         : "Success! Speakers merged.",
+    "merge_changes"         : "Changes made on: ",
     "placeholders": {
 
     }
@@ -271,6 +285,8 @@
     "assign_to_member"            : "Assign to another member",
     "new_ticket"                  : "New Ticket",
     "remove_rsvp_from_attendee"   : "Do you really want to remove this rsvp from this attendee?",
+    "attendee_saved"              : "Attendee saved successfully.",
+    "attendee_created"            : "Attendee created successfully.",
     "placeholders": {
       "start_date"            : "Start Date",
       "end_date"              : "End Date",
@@ -289,8 +305,8 @@
     "creator"                   : "Creator",
     "remove_promocode_warning"  : "Are you sure you want to delete promocode for attendee",
     "placeholders": {
-      "search_promocodes": "Search by Code, Speaker, Member, Email, Company",
-      "select_type": "Select a Type"
+      "search_promocodes"   : "Search by Code, Speaker, Member, Email, Company",
+      "select_type"         : "Select a Type"
     }
   },
   "edit_promocode": {
@@ -301,7 +317,9 @@
     "email_sent"        : "Email Sent",
     "redeemed"          : "Redeemed",
     "send_email"        : "Send Email",
-    "or"                : "OR"
+    "or"                : "OR",
+    "promocode_saved"   : "Promocode saved successfully.",
+    "promocode_created" : "Promocode created successfully."
   },
   "speaker_attendance_list": {
     "speaker_attendance_list"   : "Speaker Attendace List",
@@ -321,6 +339,8 @@
     "registered"          : "Registered",
     "is_confirmed"        : "Confirmed",
     "checked_in"          : "Checked In",
-    "send_email"          : "Send Email"
+    "send_email"          : "Send Email",
+    "attendance_saved"    : "Speaker Attendance saved successfully.",
+    "attendance_created"  : "Speaker Attendance created successfully."
   }
 }

@@ -3,6 +3,7 @@ import { authErrorHandler, fetchResponseHandler, fetchErrorHandler, apiBaseUrl, 
 import swal from "sweetalert2";
 import T from "i18n-react/dist/i18n-react";
 
+export const REQUEST_SPEAKERS       = 'REQUEST_SPEAKERS';
 export const RECEIVE_SPEAKERS       = 'RECEIVE_SPEAKERS';
 export const RECEIVE_SPEAKER        = 'RECEIVE_SPEAKER';
 export const REQUEST_SPEAKER        = 'REQUEST_SPEAKER';
@@ -24,7 +25,7 @@ export const ATTENDANCE_ADDED       = 'ATTENDANCE_ADDED';
 export const EMAIL_SENT             = 'EMAIL_SENT';
 
 
-export const getSpeakers = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = '1' ) => (dispatch, getState) => {
+export const getSpeakers = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
 
     let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
@@ -48,16 +49,17 @@ export const getSpeakers = ( term = null, page = 1, perPage = 10, order = 'id', 
 
     // order
     if(order != null && orderDir != null){
-        orderDir = (orderDir == '1') ? '+' : '-';
-        params['order']= `${orderDir}${order}`;
+        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        params['order']= `${orderDirSign}${order}`;
     }
 
 
     return getRequest(
-        null,
+        createAction(REQUEST_SPEAKERS),
         createAction(RECEIVE_SPEAKERS),
-        `${apiBaseUrl}/api/v1/speakers?access_token=${accessToken}`,
-        authErrorHandler
+        `${apiBaseUrl}/api/v1/speakers`,
+        authErrorHandler,
+        {order, orderDir}
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
 
@@ -98,8 +100,8 @@ export const mergeSpeakers = (speakers, selectedFields, changedFields, history) 
     let { accessToken }     = loggedUserState;
 
     let success_message = [
-        'Success! Speakers merged.',
-        'Changes made on: ' + changedFields.join(', ') ,
+        T.translate("merge_speakers.merge_success"),
+        T.translate("merge_speakers.merge_changes") + changedFields.join(', ') ,
         'success',
         () => { history.push(`/app/speakers/${speakers[1].id}`) }
     ];
@@ -131,7 +133,11 @@ export const saveSpeaker = (entity, history) => (dispatch, getState) => {
 
     if (entity.id) {
 
-        let success_message = ['Done!', 'Speaker saved successfully.', 'success'];
+        let success_message = [
+            T.translate("general.done"),
+            T.translate("edit_speaker.speaker_saved"),
+            'success'
+        ];
 
         putRequest(
             createAction(UPDATE_SPEAKER),
@@ -146,7 +152,11 @@ export const saveSpeaker = (entity, history) => (dispatch, getState) => {
             });
 
     } else {
-        let success_message = ['Done!', 'Speaker created successfully.', 'success'];
+        let success_message = [
+            T.translate("general.done"),
+            T.translate("edit_speaker.speaker_created"),
+            'success'
+        ];
 
         postRequest(
             createAction(UPDATE_SPEAKER),
@@ -217,8 +227,9 @@ const normalizeEntity = (entity) => {
     delete normalizedEntity['code_redeemed'];
 
     return normalizedEntity;
-
 }
+
+/* SPEAKER ATTENDANCE */
 
 export const getAttendances = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = '1' ) => (dispatch, getState) => {
 
@@ -318,11 +329,15 @@ export const saveAttendance = (entity, history) => (dispatch, getState) => {
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity);
+    let normalizedEntity = normalizeAttendance(entity);
 
     if (entity.id) {
 
-        let success_message = ['Done!', 'Speaker Attendance saved successfully.', 'success'];
+        let success_message = [
+            T.translate("general.done"),
+            T.translate("edit_speaker_attendance.attendance_saved"),
+            'success'
+        ];
 
         putRequest(
             createAction(UPDATE_ATTENDANCE),
@@ -337,7 +352,11 @@ export const saveAttendance = (entity, history) => (dispatch, getState) => {
             });
 
     } else {
-        let success_message = ['Done!', 'Speaker Attendance created successfully.', 'success'];
+        let success_message = [
+            T.translate("general.done"),
+            T.translate("edit_speaker_attendance.attendance_created"),
+            'success'
+        ];
 
 
         postRequest(
@@ -375,6 +394,18 @@ export const sendAttendanceEmail = (attendanceId) => (dispatch, getState) => {
     )(params)(dispatch).then(
         (payload) => {
             dispatch(stopLoading());
-            dispatch(showMessage('Done!', 'Email sent successfully.', 'success'));
+            dispatch(showMessage(T.translate("general.done"), T.translate("general.email_sent"), 'success'));
         });
 };
+
+const normalizeAttendance = (entity) => {
+    let normalizedEntity = {...entity};
+
+    normalizedEntity.speaker_id = (normalizedEntity.speaker != null) ? normalizedEntity.speaker.id : 0;
+
+    delete normalizedEntity['speaker'];
+
+    return normalizedEntity;
+
+}
+

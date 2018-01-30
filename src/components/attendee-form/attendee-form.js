@@ -84,10 +84,10 @@ class AttendeeForm extends React.Component {
     }
 
     handleSpeakerLink(speaker_id, ev) {
-        let {currentSummit, history} = this.props;
+        let {history} = this.props;
         ev.preventDefault();
 
-        history.push(`/app/summits/${currentSummit.id}/speakers/${speaker_id}`);
+        history.push(`/app/speakers/${speaker_id}`);
     }
 
     hasErrors(field) {

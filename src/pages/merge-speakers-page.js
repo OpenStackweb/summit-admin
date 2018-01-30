@@ -91,12 +91,12 @@ class MergeSpeakerPage extends React.Component {
         }
 
         swal({
-            title: "Attention!",
-            text: "There is no going back. Speaker on the right will have all the green fields and Speaker on the left will be erased",
+            title: T.translate("general.attention"),
+            text: T.translate("merge_speakers.merge_warning"),
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Yes, merge and delete."
+            confirmButtonText: T.translate("merge_speakers.merge_and_delete")
         }).then(function(){
             props.mergeSpeakers(speakers, selectedFields, changedFields, history);
         }).catch(swal.noop);

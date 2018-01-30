@@ -20,7 +20,7 @@ import FreeTextSearch from "../components/free-text-search/index";
 import Dropdown from '../components/dropdown';
 import Table from "../components/table/Table";
 import { getSummitById }  from '../actions/summit-actions';
-import { getPromocodes, getPromocodeMeta, deletePromocode } from "../actions/promocode-actions";
+import { getPromocodes, getPromocodeMeta, deletePromocode, exportPromocodes } from "../actions/promocode-actions";
 
 class PromocodeListPage extends React.Component {
 
@@ -48,13 +48,11 @@ class PromocodeListPage extends React.Component {
         if(currentSummit == null || currentSummit.id != summitId){
             this.props.getSummitById(summitId);
         }
-
     }
 
-    componentWillReceiveProps(newProps) {
+    componentDidMount() {
         let {currentSummit, allTypes} = this.props;
-
-        if (currentSummit.id != newProps.currentSummit.id) {
+        if(currentSummit !== null) {
             this.props.getPromocodes();
 
             if(allTypes.length == 1){
@@ -63,15 +61,24 @@ class PromocodeListPage extends React.Component {
         }
     }
 
+    componentWillReceiveProps(newProps) {
+        let {currentSummit} = this.props;
+
+        if (currentSummit.id != newProps.currentSummit.id) {
+            this.props.getPromocodes();
+        }
+    }
+
     handleEdit(promocode_id) {
         let {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/promocodes/${promocode_id}`);
     }
 
-    handleExport(promocodeId, ev) {
+    handleExport(ev) {
+        let {term, order, orderDir, perPage, page, type} = this.props;
         ev.preventDefault();
 
-        //export
+        this.props.exportPromocodes(term, page, perPage, order, orderDir, type);
     }
 
     handleDelete(promocodeId, ev) {
@@ -130,8 +137,8 @@ class PromocodeListPage extends React.Component {
         let {currentSummit, promocodes, lastPage, currentPage, term, order, orderDir, totalPromocodes, allTypes, type} = this.props;
 
         let columns = [
-            { columnKey: 'code', value: T.translate("promocode_list.code") },
-            { columnKey: 'type', value: T.translate("promocode_list.type"), sortable: true },
+            { columnKey: 'code', value: T.translate("promocode_list.code"), sortable: true },
+            { columnKey: 'type', value: T.translate("promocode_list.type") },
             { columnKey: 'owner', value: T.translate("promocode_list.owner") },
             { columnKey: 'owner_email', value: T.translate("promocode_list.owner_email") },
             { columnKey: 'email_sent', value: T.translate("promocode_list.emailed") },
@@ -141,7 +148,7 @@ class PromocodeListPage extends React.Component {
 
         let table_options = {
             className: "table table-striped table-bordered table-hover dataTable",
-            sortCol: 'code',
+            sortCol: order,
             sortDir: orderDir,
             actions: {
                 edit: { onClick: this.handleEdit },
@@ -227,5 +234,6 @@ export default connect (
         getPromocodes,
         getPromocodeMeta,
         deletePromocode,
+        exportPromocodes
     }
 )(PromocodeListPage);

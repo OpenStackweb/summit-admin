@@ -64,7 +64,7 @@ class SummitSpeakerListPage extends React.Component {
     }
 
     render(){
-        let {speakers, lastPage, currentPage, term, totalSpeakers } = this.props;
+        let {speakers, lastPage, currentPage, term, order, orderDir, totalSpeakers } = this.props;
 
         let columns = [
             { columnKey: 'id', value: 'Id', sortable: true },
@@ -75,6 +75,8 @@ class SummitSpeakerListPage extends React.Component {
 
         let table_options = {
             className: "table table-striped table-bordered table-hover dataTable",
+            sortCol: (order == 'last_name') ? 'name' : order,
+            sortDir: orderDir,
             actions: {
                 edit: {onClick: this.handleEdit}
             }

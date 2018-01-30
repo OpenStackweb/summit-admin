@@ -50,7 +50,7 @@ export default class SpeakerInput extends React.Component {
     handleClick(value) {
         let {history, summitId} = this.props;
 
-        history.push(`/app/summits/${summitId}/speakers/${value.id}`);
+        history.push(`/app/speakers/${value.id}`);
     }
 
     filterOptions(options, filterString, values) {

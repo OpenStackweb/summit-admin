@@ -65,7 +65,7 @@ class EditSummitSpeakerPage extends React.Component {
 
     render(){
         let {entity, errors, summits, history, saveSpeaker, attachPicture} = this.props;
-        let title = (entity.id) ? 'Edit' : 'Add';
+        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
 
         if (summits.lenght === 0) return (<div> Hold on...</div>);
 
