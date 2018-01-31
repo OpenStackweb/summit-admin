@@ -75,10 +75,10 @@ class PromocodeListPage extends React.Component {
     }
 
     handleExport(ev) {
-        let {term, order, orderDir, perPage, page, type} = this.props;
+        let {term, order, orderDir, type} = this.props;
         ev.preventDefault();
 
-        this.props.exportPromocodes(term, page, perPage, order, orderDir, type);
+        this.props.exportPromocodes(term, order, orderDir, type);
     }
 
     handleDelete(promocodeId, ev) {

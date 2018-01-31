@@ -1,5 +1,5 @@
 import { getRequest, putRequest, postRequest, deleteRequest, createAction, stopLoading, startLoading } from "openstack-uicore-foundation";
-import { authErrorHandler, fetchResponseHandler, fetchErrorHandler, apiBaseUrl, showMessage} from './base-actions';
+import { authErrorHandler, fetchResponseHandler, fetchErrorHandler, apiBaseUrl, showMessage, getCSV} from './base-actions';
 import swal from "sweetalert2";
 import T from "i18n-react/dist/i18n-react";
 
@@ -13,7 +13,6 @@ export const PROMOCODE_UPDATED        = 'PROMOCODE_UPDATED';
 export const PROMOCODE_ADDED          = 'PROMOCODE_ADDED';
 export const PROMOCODE_DELETED        = 'PROMOCODE_DELETED';
 export const EMAIL_SENT               = 'EMAIL_SENT';
-export const PROMOCODE_EXPORTED       = 'PROMOCODE_EXPORTED';
 
 
 export const getPromocodeMeta = () => (dispatch, getState) => {
@@ -195,14 +194,12 @@ export const sendEmail = (promocodeId) => (dispatch, getState) => {
         });
 };
 
-export const exportPromocodes = ( term = null, page = 1, perPage = 10, order = 'code', orderDir = 1, type = 'ALL' ) => (dispatch, getState) => {
+export const exportPromocodes = ( term = null, order = 'code', orderDir = 1, type = 'ALL' ) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
     let filter = [];
-
-    dispatch(startLoading());
 
     if(term != null){
         filter.push(`code=@${term},creator=@${term},creator_email=@${term},owner=@${term},owner_email=@${term},speaker=@${term},speaker_email=@${term},sponsor=@${term}`);
@@ -213,9 +210,7 @@ export const exportPromocodes = ( term = null, page = 1, perPage = 10, order = '
     }
 
     let params = {
-        page         : page,
-        per_page     : perPage,
-        access_token : accessToken,
+        access_token : accessToken
     };
 
     if(filter.length > 0){
@@ -228,13 +223,8 @@ export const exportPromocodes = ( term = null, page = 1, perPage = 10, order = '
         params['order']= `${orderDirSign}${order}`;
     }
 
+    dispatch(getCSV(`${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes/csv`, params, 'promocodes.csv'));
 
-    return getRequest(
-        null,
-        createAction(PROMOCODE_EXPORTED),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes/csv`,
-        authErrorHandler
-    )(params)(dispatch).then( dispatch(stopLoading()) );
 };
 
 

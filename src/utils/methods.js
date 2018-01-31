@@ -39,3 +39,15 @@ export const formatEpoch = (atime, format = 'M/D/YYYY h:mm a') => {
     if(!atime) return atime;
     return epochToMoment(atime).format(format);
 }
+
+export const objectToQueryString = (obj) => {
+    var str = "";
+    for (var key in obj) {
+        if (str != "") {
+            str += "&";
+        }
+        str += key + "=" + encodeURIComponent(obj[key]);
+    }
+
+    return str;
+}

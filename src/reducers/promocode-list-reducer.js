@@ -117,15 +117,6 @@ const promocodeListReducer = (state = DEFAULT_STATE, action) => {
             return {...state, promocodes: state.promocodes.filter(p => p.id != promocodeId)};
         }
         break;
-        case PROMOCODE_EXPORTED: {
-            let encodedUri = encodeURI(payload);
-            let link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "my_data.csv");
-            document.body.appendChild(link); // Required for FF
-            link.click();
-        }
-        break;
         default:
             return state;
     }

@@ -12,7 +12,8 @@
  **/
 
 import T from "i18n-react/dist/i18n-react";
-import {stopLoading} from "openstack-uicore-foundation";
+import {stopLoading, startLoading} from "openstack-uicore-foundation";
+import {objectToQueryString} from '../utils/methods';
 import swal from "sweetalert2";
 
 export const apiBaseUrl  = process.env['API_BASE_URL'];
@@ -185,6 +186,35 @@ export const queryCompanies = (input) => {
             return {
                 options: options
             };
+        })
+        .catch(fetchErrorHandler);
+};
+
+
+export const getCSV = (url, params, filename) => (dispatch) => {
+
+    let queryString = objectToQueryString(params);
+    let apiUrl = `${url}?${queryString}`;
+
+    dispatch(startLoading());
+
+    return fetch(apiUrl)
+        .then((response) => {
+            if (!response.ok) {
+                throw response;
+            } else {
+                return response.text();
+            }
+        })
+        .then((csv) => {
+            dispatch(stopLoading());
+
+            let link = document.createElement('a');
+            link.textContent = 'download';
+            link.download = filename;
+            link.href = 'data:text/csv;charset=utf-8,'+ encodeURI(csv);
+            document.body.appendChild(link); // Required for FF
+            link.click();
         })
         .catch(fetchErrorHandler);
 };
