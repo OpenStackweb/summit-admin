@@ -19,7 +19,7 @@ import { Pagination } from 'react-bootstrap';
 import FreeTextSearch from "../components/free-text-search/index";
 import Table from "../components/table/Table";
 import { getSummitById }  from '../actions/summit-actions';
-import { getAttendances, deleteAttendance } from "../actions/speaker-actions";
+import { getAttendances, deleteAttendance, exportAttendances } from "../actions/speaker-actions";
 
 class SpeakerAttendanceListPage extends React.Component {
 
@@ -32,6 +32,7 @@ class SpeakerAttendanceListPage extends React.Component {
         this.handleSearch = this.handleSearch.bind(this);
         this.handleDeleteAttendance = this.handleDeleteAttendance.bind(this);
         this.isNotConfirmed = this.isNotConfirmed.bind(this);
+        this.handleExport = this.handleExport.bind(this);
 
         this.state = {};
     }
@@ -56,7 +57,7 @@ class SpeakerAttendanceListPage extends React.Component {
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
             this.props.getAttendances();
         }
     }
@@ -107,6 +108,13 @@ class SpeakerAttendanceListPage extends React.Component {
         return (attendance.is_confirmed == 'No');
     }
 
+    handleExport(ev) {
+        let {term, order, orderDir} = this.props;
+        ev.preventDefault();
+
+        this.props.exportAttendances(term, order, orderDir);
+    }
+
     render(){
         let {currentSummit, attendances, lastPage, currentPage, term, order, orderDir, totalAttendances} = this.props;
 
@@ -142,6 +150,11 @@ class SpeakerAttendanceListPage extends React.Component {
                             placeholder={T.translate("speaker_attendance_list.placeholders.search_attendances")}
                             onSearch={this.handleSearch}
                         />
+                    </div>
+                    <div className="col-md-2">
+                        <button className="btn btn-default" onClick={this.handleExport}>
+                            {T.translate("general.export")}
+                        </button>
                     </div>
                 </div>
 
@@ -189,6 +202,7 @@ export default connect (
     {
         getSummitById,
         getAttendances,
-        deleteAttendance
+        deleteAttendance,
+        exportAttendances
     }
 )(SpeakerAttendanceListPage);

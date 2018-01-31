@@ -14,6 +14,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { loadSummits, setCurrentSummit } from '../actions/summit-actions';
+import { formatEpoch } from '../utils/methods';
 
 class SummitDirectoryPage extends React.Component {
 
@@ -34,16 +35,31 @@ class SummitDirectoryPage extends React.Component {
 
     render() {
         let { summits } = this.props;
+        let orderedSummits = summits.sort(
+            (a, b) => (a.start_date < b.start_date ? 1 : (a.start_date > b.start_date ? -1 : 0))
+        );
+
         return (
             <div className="container">
                 <div className="row justify-content-center">
-                    {summits && summits.map((summit,i) => (
-                        <div key={summit.id} className="col-md-4" style={{marginTop: '10px'}}>
-                            <a className="btn btn-default form-control" onClick={ (e) => { return this.onSelectedSummit(e, summit) }}>
-                                {summit.name}
-                            </a>
-                        </div>
-                    ))}
+                    <div className="col-md-12">
+                        <table className="table" id="summit_table">
+                            <tbody>
+                                {summits && orderedSummits.map((summit,i) => (
+                                    <tr key={"summit_"+summit.id}>
+                                        <td className="summit_name"> {summit.name} </td>
+                                        <td> {formatEpoch(summit.start_date, 'MMMM Do YYYY')} </td>
+                                        <td> {formatEpoch(summit.end_date, 'MMMM Do YYYY')} </td>
+                                        <td className="center_text">
+                                            <a href="" onClick={ (e) => { return this.onSelectedSummit(e, summit) }} className="btn btn-primary btn-sm">
+                                                Control Panel
+                                            </a>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         );

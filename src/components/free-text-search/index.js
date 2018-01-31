@@ -20,15 +20,29 @@ class FreeTextSearch extends React.Component {
         this.onSearchClick  = this.onSearchClick.bind(this);
         this.onClearClick   = this.onClearClick.bind(this);
         this.onKeyPressed   = this.onKeyPressed.bind(this);
+        this.onChange       = this.onChange.bind(this);
+
+        this.state = {
+            value: '',
+        };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        let value = nextProps.value ? nextProps.value : '';
+
+        if( nextProps.hasOwnProperty('value') && this.state.value != value ) {
+            this.setState({
+                value: value
+            });
+        }
     }
 
     onSearchClick(){
-        this.doFiltering(this.searchTxt.value);
+        this.doFiltering(this.state.value);
     }
 
     onClearClick(){
-        this.searchTxt.value = "";
-        this.doFiltering(this.searchTxt.value);
+        this.doFiltering('');
     }
 
     doFiltering(term){
@@ -38,21 +52,29 @@ class FreeTextSearch extends React.Component {
     onKeyPressed(event){
         var code = event.keyCode || event.which;
         if(code === 13) {
-            this.doFiltering(this.searchTxt.value);
+            this.doFiltering(this.state.value);
         }
     }
 
+    onChange(event){
+        this.setState({
+            value: event.target.value
+        });
+    }
+
     render(){
+        let {value} = this.state;
+
         return(
             <div className="row search-container">
                 <div className="col-md-12">
                     <div className="input-group">
                         <input type="text"
-                               defaultValue={this.props.value}
+                               value={value}
                                className="form-control"
-                               ref={(input) => { this.searchTxt = input; }}
                                placeholder={this.props.placeholder}
                                onKeyPress={this.onKeyPressed}
+                               onChange={this.onChange}
                         />
                         <span className="input-group-btn" style={{width: 5 +'%'}}>
                             <button onClick={this.onSearchClick} className="btn btn-default" title={T.translate("general.search")}>

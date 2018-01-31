@@ -54,7 +54,7 @@ export const getAttendees = ( term = null, page = 1, perPage = 10, order = 'id',
         createAction(RECEIVE_ATTENDEES),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/attendees`,
         authErrorHandler,
-        {page, perPage, order, orderDir}
+        {page, perPage, order, orderDir, term}
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
 

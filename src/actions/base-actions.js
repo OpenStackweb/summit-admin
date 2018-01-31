@@ -215,6 +215,7 @@ export const getCSV = (url, params, filename) => (dispatch) => {
             link.href = 'data:text/csv;charset=utf-8,'+ encodeURI(csv);
             document.body.appendChild(link); // Required for FF
             link.click();
+            document.body.removeChild(link);
         })
         .catch(fetchErrorHandler);
 };

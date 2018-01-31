@@ -27,6 +27,8 @@ class NavMenu extends React.Component {
             subMenuOpen: '',
             menuOpen: false
         }
+
+        this.drawMenuItem = this.drawMenuItem.bind(this);
     }
 
     toggleSubMenu(event, submenu) {
@@ -48,20 +50,47 @@ class NavMenu extends React.Component {
 
     }
 
-    render() {
+    drawMenuItem(item) {
         let {subMenuOpen} = this.state;
-        let summit_id = this.props.currentSummit ? this.props.currentSummit.id : null;
+
+        if (item.hasOwnProperty('childs')) {
+            return (
+                <SubMenuItem
+                    key={item.name}
+                    subMenuOpen={subMenuOpen}
+                    {...item}
+                    onClick={(e) => this.toggleSubMenu(e, item.name)}
+                    onItemClick={this.onMenuItemClick.bind(this)}
+                />
+            )
+        } else {
+            return (
+                <MenuItem
+                    key={item.name}
+                    {...item}
+                    onClick={(e) => this.onMenuItemClick(e, item.linkUrl)}
+                />
+            )
+        }
+    }
+
+    render() {
+        let {menuOpen} = this.state;
+        let {currentSummit} = this.props;
+        let summit_id = currentSummit ? currentSummit.id : null;
         let show = summit_id !== null;
 
-        let menu_items = [
+        let global_items = [
             {name: 'directory', iconClass: 'fa-fw fa-list-ul', show: true, linkUrl: 'directory'},
             {name: 'speakers', iconClass: 'fa-users', show: true,
                 childs: [
                     {name:'speaker_list', linkUrl:`speakers`},
-                    {name:'speaker_attendance', linkUrl:`summits/${summit_id}/speakers/attendance`, show: show},
                     {name:'merge_speakers', linkUrl:`speakers/merge`}
                 ]
-            },
+            }
+        ]
+
+        let summit_items = [
             {name: 'dashboard', iconClass: 'fa-dashboard', show: show, linkUrl: `summits/${summit_id}/dashboard`},
             {name: 'events', iconClass: 'fa-calendar', show: show,
                 childs: [
@@ -79,31 +108,27 @@ class NavMenu extends React.Component {
                     {name:'promocode_list', linkUrl:`summits/${summit_id}/promocodes`}
                 ]
             },
+            {name:'speaker_attendance', iconClass: 'fa-users', linkUrl:`summits/${summit_id}/speakers/attendance`, show: show},
         ];
 
 
         return (
-            <Menu isOpen={ this.state.menuOpen }  noOverlay width={ 300 } pageWrapId={ "page-wrap" } >
-                {menu_items.map(it => {
-                    if (it.hasOwnProperty('childs')) {
-                        return (
-                            <SubMenuItem
-                                key={it.name}
-                                subMenuOpen={subMenuOpen}
-                                {...it}
-                                onClick={(e) => this.toggleSubMenu(e, it.name)}
-                                onItemClick={this.onMenuItemClick.bind(this)}
-                            />
-                        )
-                    } else {
-                        return (
-                            <MenuItem
-                                key={it.name}
-                                {...it}
-                                onClick={(e) => this.onMenuItemClick(e, it.linkUrl)}
-                            />
-                        )
-                    }
+            <Menu id="summit-admin-menu" isOpen={ menuOpen } noOverlay width={ 300 } pageWrapId={ "page-wrap" } >
+                <div className="separator">
+                    {T.translate('menu.general')}
+                </div>
+                {global_items.map(it => {
+                    return this.drawMenuItem(it);
+                })}
+
+                {show &&
+                <div className="separator">
+                    {currentSummit.name} {T.translate('general.summit')}
+                </div>
+                }
+
+                {summit_items.map(it => {
+                    return this.drawMenuItem(it);
                 })}
 
             </Menu>

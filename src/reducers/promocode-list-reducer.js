@@ -45,9 +45,9 @@ const promocodeListReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case REQUEST_PROMOCODES: {
-            let {order, orderDir, type} = payload;
+            let {order, orderDir, type, term} = payload;
 
-            return {...state, order, orderDir, type }
+            return {...state, order, orderDir, type, term }
         }
         break;
         case RECEIVE_PROMOCODE_META: {

@@ -41,9 +41,9 @@ const attendeeListReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case REQUEST_ATTENDEES: {
-            let {order, orderDir} = payload;
+            let {order, orderDir, term} = payload;
 
-            return {...state, order, orderDir }
+            return {...state, order, orderDir, term }
         }
         break;
         case RECEIVE_ATTENDEES: {

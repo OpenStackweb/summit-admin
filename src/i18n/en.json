@@ -50,6 +50,7 @@
     "not_logged_in"       : "You are not logged in. Please log in to continue:"
   },
   "menu": {
+    "general"             : "General",
     "directory"           : "Directory",
     "dashboard"           : "Dashboard",
     "events"              : "Events",
@@ -57,7 +58,7 @@
     "new_event"           : "New Event",
     "speakers"            : "Speakers",
     "speaker_list"        : "CRUD List",
-    "speaker_attendance"  : "Summit Attendance",
+    "speaker_attendance"  : "Speaker Attendance",
     "merge_speakers"      : "Merge",
     "attendees"           : "Attendees",
     "attendee_list"       : "CRUD List",
@@ -295,6 +296,7 @@
   },
   "promocode_list": {
     "promocode_list"            : "Promocode List",
+    "no_promocodes"             : "No promocodes found for current search criteria.",
     "add_promocode"             : "Add Promocode",
     "code"                      : "Code",
     "type"                      : "Type",

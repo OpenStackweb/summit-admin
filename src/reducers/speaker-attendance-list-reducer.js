@@ -41,8 +41,8 @@ const speakerAttendanceListReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case REQUEST_ATTENDANCES: {
-            let {order, orderDir} = payload;
-            return {...state, order, orderDir};
+            let {order, orderDir, term} = payload;
+            return {...state, order, orderDir, term};
         }
         break;
         case RECEIVE_ATTENDANCES: {

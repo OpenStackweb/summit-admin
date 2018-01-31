@@ -64,7 +64,7 @@ class PromocodeListPage extends React.Component {
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
             this.props.getPromocodes();
         }
     }
@@ -191,6 +191,10 @@ class PromocodeListPage extends React.Component {
                         </button>
                     </div>
                 </div>
+
+                {promocodes.length == 0 &&
+                <div>{T.translate("promocode_list.no_promocodes")}</div>
+                }
 
                 {promocodes.length > 0 &&
                 <div>

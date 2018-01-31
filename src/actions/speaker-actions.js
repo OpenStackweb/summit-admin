@@ -1,5 +1,5 @@
 import { getRequest, putRequest, postRequest, deleteRequest, createAction, stopLoading, startLoading } from "openstack-uicore-foundation";
-import { authErrorHandler, fetchResponseHandler, fetchErrorHandler, apiBaseUrl, showMessage} from './base-actions';
+import { authErrorHandler, fetchResponseHandler, fetchErrorHandler, apiBaseUrl, showMessage, getCSV} from './base-actions';
 import swal from "sweetalert2";
 import T from "i18n-react/dist/i18n-react";
 
@@ -247,7 +247,8 @@ export const getAttendances = ( term = null, page = 1, perPage = 10, order = 'id
 
     let req_params = {
         order: order,
-        orderDir: parseInt(orderDir)
+        orderDir: parseInt(orderDir),
+        term: term
     }
 
     let params = {
@@ -396,6 +397,35 @@ export const sendAttendanceEmail = (attendanceId) => (dispatch, getState) => {
             dispatch(stopLoading());
             dispatch(showMessage(T.translate("general.done"), T.translate("general.email_sent"), 'success'));
         });
+};
+
+export const exportAttendances = ( term = null, order = 'code', orderDir = 1 ) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+    let filename = currentSummit.name + '-Speaker-Attendance.csv';
+    let filter = [];
+    let params = {
+        access_token : accessToken
+    };
+
+    if(term != null){
+        filter.push(`speaker=@${term},speaker_email=@${term},on_site_phone=@${term}`);
+    }
+
+    if(filter.length > 0){
+        params['filter[]']= filter;
+    }
+
+    // order
+    if(order != null && orderDir != null){
+        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        params['order']= `${orderDirSign}${order}`;
+    }
+
+    dispatch(getCSV(`${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers-assistances/csv`, params, filename));
+
 };
 
 const normalizeAttendance = (entity) => {

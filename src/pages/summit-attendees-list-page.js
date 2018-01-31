@@ -64,7 +64,7 @@ class SummitAttendeeListPage extends React.Component {
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
             this.props.getAttendees();
         }
     }

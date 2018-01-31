@@ -74,7 +74,7 @@ export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'cod
         createAction(RECEIVE_PROMOCODES),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes`,
         authErrorHandler,
-        {page, perPage, order, orderDir, type}
+        {page, perPage, order, orderDir, type, term}
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
 
@@ -200,6 +200,10 @@ export const exportPromocodes = ( term = null, order = 'code', orderDir = 1, typ
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
     let filter = [];
+    let filename = currentSummit.name + '-Promocodes.csv';
+    let params = {
+        access_token : accessToken
+    };
 
     if(term != null){
         filter.push(`code=@${term},creator=@${term},creator_email=@${term},owner=@${term},owner_email=@${term},speaker=@${term},speaker_email=@${term},sponsor=@${term}`);
@@ -208,10 +212,6 @@ export const exportPromocodes = ( term = null, order = 'code', orderDir = 1, typ
     if (type != 'ALL') {
         filter.push(`type==${type}`);
     }
-
-    let params = {
-        access_token : accessToken
-    };
 
     if(filter.length > 0){
         params['filter[]']= filter;
@@ -223,7 +223,7 @@ export const exportPromocodes = ( term = null, order = 'code', orderDir = 1, typ
         params['order']= `${orderDirSign}${order}`;
     }
 
-    dispatch(getCSV(`${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes/csv`, params, 'promocodes.csv'));
+    dispatch(getCSV(`${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes/csv`, params, filename));
 
 };
 
