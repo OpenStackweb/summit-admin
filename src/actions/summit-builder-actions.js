@@ -160,16 +160,19 @@ export const changeCurrentSelectedLocation = (currentSelectedLocation) => (dispa
 export const getPublishedEventsBySummitDayLocation = (currentSummit, currentDay, currentLocation) => (dispatch, getState) => {
     let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
-    currentDay              = moment(currentDay, 'YYYY-MM-DD').tz(currentSummit.time_zone.name);
+    //currentDay            = moment(currentDay, 'YYYY-MM-DD').tz(currentSummit.time_zone.name);
+    currentDay              = moment.tz(currentDay, currentSummit.time_zone.name);
     let startDate           = ( currentDay.clone().hours(0).minutes(0).seconds(0).valueOf()) / 1000;
     let endDate             = ( currentDay.clone().hours(23).minutes(59).seconds(59).valueOf()) /1000;
 
     dispatch(startLoading());
+    let page       = 1
+    let per_page   = 100;
     let locationId = currentLocation.id == 0 ? 'tbd': currentLocation.id;
     return getRequest(
         createAction(REQUEST_SCHEDULE_EVENTS_PAGE),
         createAction(RECEIVE_SCHEDULE_EVENTS_PAGE),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}/events/published?access_token=${accessToken}&filter[]=start_date>=${startDate}&filter[]=end_date<=${endDate}`,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}/events/published?access_token=${accessToken}&filter[]=start_date>=${startDate}&filter[]=end_date<=${endDate}&page=${page}&per_page=${per_page}`,
         authErrorHandler
     )({})(dispatch)
         .then(() =>

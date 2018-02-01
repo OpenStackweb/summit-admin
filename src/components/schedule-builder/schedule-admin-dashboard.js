@@ -577,6 +577,7 @@ class ScheduleAdminDashBoard extends React.Component {
             if(currentLocation != null && location.id == currentLocation.id)
                 currentVenueSelectorItem = option;
             venues.push(option);
+            if(!location.hasOwnProperty('rooms')) continue;
             for(let j = 0; j < location.rooms.length ; j++){
                 let subOption = { value : location.rooms[j] , label: location.rooms[j].name};
                 if(currentLocation != null && location.rooms[j].id == currentLocation.id)

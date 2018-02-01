@@ -123,6 +123,7 @@ class ScheduleAdminEmptySpotsModal extends React.Component {
             if (location.class_name != "SummitVenue") continue;
             let option = { value : location, label: location.name };
             venues.push(option);
+            if(!location.hasOwnProperty('rooms')) continue;
             for(let j = 0; j < location.rooms.length ; j++){
                 let subOption = { value : location.rooms[j] , label: location.rooms[j].name};
                 venues.push(subOption);

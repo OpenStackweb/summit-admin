@@ -165,6 +165,7 @@ class ScheduleEventList extends React.Component
         let eventStartDateTime = moment(event.start_date * 1000).tz(currentSummit.time_zone.name);
         let dayStartDateTime   = moment.tz(currentDay+' '+ startTime, 'YYYY-MM-DD HH:mm', currentSummit.time_zone.name);
         let minutes            = eventStartDateTime.diff(dayStartDateTime, 'minutes');
+        console.log(`start minutes ${minutes}`);
         return minutes * pixelsPerMinute;
     }
 
