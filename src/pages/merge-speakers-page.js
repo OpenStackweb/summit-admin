@@ -120,7 +120,6 @@ class MergeSpeakerPage extends React.Component {
                             id="0"
                             value={speakers[0]}
                             onChange={this.handleChangeSpeaker}
-                            summitId={currentSummit.id}
                             multi={false}
                             clearable={false}
                             history={history}
@@ -134,7 +133,6 @@ class MergeSpeakerPage extends React.Component {
                             id="1"
                             value={speakers[1]}
                             onChange={this.handleChangeSpeaker}
-                            summitId={currentSummit.id}
                             multi={false}
                             clearable={false}
                             history={history}

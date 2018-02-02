@@ -123,9 +123,8 @@ export const resetSpeakerForm = () => (dispatch, getState) => {
 };
 
 export const saveSpeaker = (entity, history) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
+    let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
@@ -142,7 +141,7 @@ export const saveSpeaker = (entity, history) => (dispatch, getState) => {
         putRequest(
             createAction(UPDATE_SPEAKER),
             createAction(SPEAKER_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers/${entity.id}?access_token=${accessToken}`,
+            `${apiBaseUrl}/api/v1/speakers/${entity.id}?access_token=${accessToken}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -161,7 +160,7 @@ export const saveSpeaker = (entity, history) => (dispatch, getState) => {
         postRequest(
             createAction(UPDATE_SPEAKER),
             createAction(SPEAKER_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers?access_token=${accessToken}`,
+            `${apiBaseUrl}/api/v1/speakers?access_token=${accessToken}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -176,9 +175,8 @@ export const saveSpeaker = (entity, history) => (dispatch, getState) => {
 }
 
 export const attachPicture = (entity, file) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
+    let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
 
     //dispatch(startLoading());
 
@@ -188,7 +186,7 @@ export const attachPicture = (entity, file) => (dispatch, getState) => {
         return postRequest(
             null,
             createAction(SPEAKER_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers/${entity.id}?access_token=${accessToken}`,
+            `${apiBaseUrl}/api/v1/speakers/${entity.id}?access_token=${accessToken}`,
             entity,
             authErrorHandler
         )({})(dispatch).then(dispatch(uploadFile(entity, file))).then(dispatch(stopLoading()));
