@@ -18,7 +18,7 @@ import EventForm from '../components/event-form/event-form';
 import { getSummitById }  from '../actions/summit-actions';
 import '../styles/edit-summit-event-page.less';
 import '../components/form-validation/validate.less';
-import { getEvent, resetEventForm, saveEvent, attachFile } from '../actions/edit-summit-event-actions';
+import { getEvent, resetEventForm, saveEvent, attachFile } from '../actions/event-actions';
 import { unPublishEvent } from '../actions/summit-builder-actions';
 
 

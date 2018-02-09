@@ -20,7 +20,7 @@ import
     EVENT_ADDED,
     EVENT_PUBLISHED,
     EVENT_DELETED
-} from '../actions/edit-summit-event-actions';
+} from '../actions/event-actions';
 
 import { LOGOUT_USER } from '../actions/auth-actions';
 import { VALIDATE } from '../actions/base-actions';

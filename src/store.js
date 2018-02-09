@@ -17,6 +17,7 @@ import baseReducer from './reducers/base-reducer'
 import currentSummitReducer from './reducers/current-summit-reducer';
 import directoryReducer from './reducers/directory-reducer';
 import scheduleBuilderReducer from './reducers/schedule-builder-reducer';
+import eventListReducer from './reducers/event-list-reducer';
 import summitEventReducer from './reducers/summit-event-reducer';
 import speakerListReducer from './reducers/speaker-list-reducer';
 import speakerReducer from './reducers/speaker-reducer';
@@ -45,6 +46,7 @@ const reducers = persistCombineReducers(config, {
     currentSummitState: currentSummitReducer,
     currentScheduleBuilderState: scheduleBuilderReducer,
     currentSummitEventState: summitEventReducer,
+    currentEventListState: eventListReducer,
     currentSpeakerListState: speakerListReducer,
     currentSpeakerState: speakerReducer,
     currentSpeakerMergeState: speakerMergeReducer,

@@ -3,6 +3,8 @@ import { authErrorHandler, fetchResponseHandler, fetchErrorHandler, apiBaseUrl, 
 import swal from "sweetalert2";
 import T from "i18n-react/dist/i18n-react";
 
+export const REQUEST_EVENTS                 = 'REQUEST_EVENTS';
+export const RECEIVE_EVENTS                 = 'RECEIVE_EVENTS';
 export const RECEIVE_EVENT                  = 'RECEIVE_EVENT';
 export const RESET_EVENT_FORM               = 'RESET_EVENT_FORM';
 export const UPDATE_EVENT                   = 'UPDATE_EVENT';
@@ -12,6 +14,46 @@ export const EVENT_PUBLISHED                = 'EVENT_PUBLISHED';
 export const EVENT_DELETED                  = 'EVENT_DELETED';
 export const FILE_ATTACHED                  = 'FILE_ATTACHED';
 
+
+export const getEvents = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+    let filter = [];
+
+    dispatch(startLoading());
+
+    if(term != null){
+        filter.push(`title=@${term},abstract=@${term},tags=@${term},speaker=@${term},speaker_email=@${term},id=@${term}`);
+    }
+
+    let params = {
+        expand       : 'speakers, type',
+        page         : page,
+        per_page     : perPage,
+        access_token : accessToken,
+    };
+
+    if(filter.length > 0){
+        params['filter[]']= filter;
+    }
+
+    // order
+    if(order != null && orderDir != null){
+        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        params['order']= `${orderDirSign}${order}`;
+    }
+
+
+    return getRequest(
+        createAction(REQUEST_EVENTS),
+        createAction(RECEIVE_EVENTS),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events`,
+        authErrorHandler,
+        {order, orderDir}
+    )(params)(dispatch).then(dispatch(stopLoading()));
+};
 
 export const getEvent = (eventId) => (dispatch, getState) => {
         let { loggedUserState, currentSummitState } = getState();
@@ -173,3 +215,50 @@ const normalizeEntity = (entity) => {
     return normalizedEntity;
 
 }
+
+export const deleteEvent = (eventId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(EVENT_DELETED)({eventId}),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${eventId}`,
+        authErrorHandler
+    )(params)(dispatch).then(dispatch(stopLoading()));
+};
+
+export const exportEvents = ( term = null, order = 'code', orderDir = 1 ) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+    let filter = [];
+    let filename = currentSummit.name + '-Events.csv';
+    let params = {
+        access_token : accessToken
+    };
+
+    if(term != null){
+        filter.push(`title=@${term},abstract=@${term},tags=@${term},speaker=@${term},speaker_email=@${term},id=@${term}`);
+    }
+
+    if(filter.length > 0){
+        params['filter[]']= filter;
+    }
+
+    // order
+    if(order != null && orderDir != null){
+        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        params['order']= `${orderDirSign}${order}`;
+    }
+
+    dispatch(getCSV(`${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/csv`, params, filename));
+
+};

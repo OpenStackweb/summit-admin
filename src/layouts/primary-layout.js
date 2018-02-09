@@ -4,6 +4,7 @@ import NavMenu from '../components/nav-menu'
 import ScheduleBuilderPage from '../pages/schedule-builder-page';
 import SummitDirectoryPage from '../pages/summit-directory-page';
 import SummitDashboardPage from '../pages/summit-dashboard-page';
+import SummitEventListPage from '../pages/summit-event-list-page';
 import EditSummitEventPage from '../pages/edit-summit-event-page';
 import SummitEventsBulkActionsPage from '../pages/summit-events-bulk-actions-page';
 import SpeakerAttendanceListPage from '../pages/speaker-attendance-list-page';
@@ -40,6 +41,7 @@ class PrimaryLayout extends React.Component {
                         <Route exact path="/app/summits/:summit_id/speakers/attendance/new" component={EditSpeakerAttendancePage}/>
                         <Route exact path="/app/summits/:summit_id/speakers/attendance/:attendance_id" component={EditSpeakerAttendancePage}/>
                         <Route exact path="/app/summits/:summit_id/dashboard" component={SummitDashboardPage}/>
+                        <Route exact path="/app/summits/:summit_id/events" component={SummitEventListPage}/>
                         <Route exact path="/app/summits/:summit_id/events/schedule" component={ScheduleBuilderPage}/>
                         <Route exact path="/app/summits/:summit_id/events/bulk-actions" component={SummitEventsBulkActionsPage}/>
                         <Route exact path="/app/summits/:summit_id/events/new" component={EditSummitEventPage}/>

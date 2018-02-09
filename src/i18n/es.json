@@ -54,6 +54,7 @@
     "directory"           : "Directory",
     "dashboard"           : "Dashboard",
     "events"              : "Events",
+    "all_events"          : "All Events",
     "schedule"            : "Schedule",
     "new_event"           : "New Event",
     "speakers"            : "Speakers",
@@ -344,5 +345,18 @@
     "send_email"          : "Send Email",
     "attendance_saved"    : "Speaker Attendance saved successfully.",
     "attendance_created"  : "Speaker Attendance created successfully."
+  },
+  "event_list": {
+    "event_list"            : "Event List",
+    "no_events"             : "No events found for current search criteria.",
+    "add_event"             : "Add Event",
+    "title"                 : "Title",
+    "type"                  : "Type",
+    "status"                : "Status",
+    "speakers"              : "Speakers",
+    "delete_event_warning"  : "Are you sure you want to delete event",
+    "placeholders": {
+      "search_events"       : "Search by Id, Title, Abstract, Speaker"
+    }
   }
 }
