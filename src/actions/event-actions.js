@@ -25,7 +25,7 @@ export const getEvents = ( term = null, page = 1, perPage = 10, order = 'id', or
     dispatch(startLoading());
 
     if(term != null){
-        filter.push(`title=@${term},abstract=@${term},tags=@${term},speaker=@${term},speaker_email=@${term},id=@${term}`);
+        filter.push(`title=@${term},abstract=@${term},tags=@${term},speaker=@${term},speaker_email=@${term},id==${term}`);
     }
 
     let params = {
@@ -234,7 +234,7 @@ export const deleteEvent = (eventId) => (dispatch, getState) => {
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
 
-export const exportEvents = ( term = null, order = 'code', orderDir = 1 ) => (dispatch, getState) => {
+export const exportEvents = ( term = null, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -246,7 +246,7 @@ export const exportEvents = ( term = null, order = 'code', orderDir = 1 ) => (di
     };
 
     if(term != null){
-        filter.push(`title=@${term},abstract=@${term},tags=@${term},speaker=@${term},speaker_email=@${term},id=@${term}`);
+        filter.push(`title=@${term},abstract=@${term},tags=@${term},speaker=@${term},speaker_email=@${term},id==${term}`);
     }
 
     if(filter.length > 0){

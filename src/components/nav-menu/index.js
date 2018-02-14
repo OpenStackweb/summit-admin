@@ -94,9 +94,8 @@ class NavMenu extends React.Component {
             {name: 'dashboard', iconClass: 'fa-dashboard', show: show, linkUrl: `summits/${summit_id}/dashboard`},
             {name: 'events', iconClass: 'fa-calendar', show: show,
                 childs: [
-                    {name:'all_events', linkUrl:`summits/${summit_id}/events`},
-                    {name:'schedule', linkUrl:`summits/${summit_id}/events/schedule`},
-                    {name:'new_event', linkUrl:`summits/${summit_id}/events/new`}
+                    {name:'event_list', linkUrl:`summits/${summit_id}/events`},
+                    {name:'schedule', linkUrl:`summits/${summit_id}/events/schedule`}
                 ]
             },
             {name: 'attendees', iconClass: 'fa-users', show: show,

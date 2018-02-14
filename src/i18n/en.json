@@ -54,7 +54,7 @@
     "directory"           : "Directory",
     "dashboard"           : "Dashboard",
     "events"              : "Events",
-    "all_events"          : "All Events",
+    "event_list"          : "CRUD List",
     "schedule"            : "Schedule",
     "new_event"           : "New Event",
     "speakers"            : "Speakers",
