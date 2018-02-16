@@ -64,7 +64,8 @@
     "attendees"           : "Attendees",
     "attendee_list"       : "CRUD List",
     "promocodes"          : "Promocodes",
-    "promocode_list"      : "CRUD List"
+    "promocode_list"      : "CRUD List",
+    "event_types"         : "Event Types"
   },
   "schedule": {
     "find_empty_spots"    : "Find empty spots for Day/Location",
@@ -357,6 +358,39 @@
     "delete_event_warning"  : "Are you sure you want to delete event",
     "placeholders": {
       "search_events"       : "Search by Id, Title, Abstract, Speaker"
+    }
+  },
+  "event_type_list": {
+    "event_type_list"      : "Event Type List",
+    "no_items"             : "No event types found.",
+    "add_event_type"       : "Add Event Type",
+    "name"                 : "Name",
+    "class"                : "Class",
+    "remove_warning"       : "Are you sure you want to delete event type "
+  },
+  "edit_event_type": {
+    "event_type"              : "Event Type",
+    "name"                    : "Name",
+    "class"                   : "Class",
+    "color"                   : "Color",
+    "black_out_times"         : "Blackout Times",
+    "use_sponsors"            : "Should use Sponsors?",
+    "are_sponsors_mandatory"  : "Are Sponsors Mandatory?",
+    "available_cfp"           : "Should be available on CFP ?",
+    "allows_attachment"       : "Allows Attachment?",
+    "use_speakers"            : "Should use Speakers?",
+    "are_speakers_mandatory"  : "Are Speakers Mandatory?",
+    "min_speakers"            : "Min Speakers",
+    "max_speakers"            : "Max Speakers",
+    "use_moderator"           : "Should use Moderator?",
+    "moderator_mandatory"     : "Are Moderators Mandatory?",
+    "moderator_label"         : "Moderator Label",
+    "min_moderators"          : "Min Moderators",
+    "max_moderators"          : "Max Moderators",
+    "event_type_saved"   : "Event Type saved successfully.",
+    "event_type_created" : "Event Type created successfully.",
+    "placeholders": {
+      "select_class"     : "Select Class"
     }
   }
 }
