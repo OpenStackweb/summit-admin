@@ -11,6 +11,7 @@
  * limitations under the License.
  **/
 
+import moment from 'moment-timezone';
 import
 {
     RECEIVE_EVENTS,
@@ -28,7 +29,8 @@ const DEFAULT_STATE = {
     currentPage     : 1,
     lastPage        : 1,
     perPage         : 10,
-    totalEvents     : 0
+    totalEvents     : 0,
+    summitTZ        : ''
 };
 
 const eventListReducer = (state = DEFAULT_STATE, action) => {
@@ -39,21 +41,23 @@ const eventListReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case REQUEST_EVENTS: {
-            let {order, orderDir, term} = payload;
+            let {order, orderDir, term, summitTZ} = payload;
 
-            return {...state, order, orderDir, term }
+            return {...state, order, orderDir, term, summitTZ }
         }
         break;
         case RECEIVE_EVENTS: {
             let {current_page, total, last_page} = payload.response;
             let events = payload.response.data.map(e => {
+                let published = (e.is_published ? moment(e.start_date * 1000).tz(state.summitTZ).format('MMMM Do YYYY, h:mm a') : 'No');
 
                 return {
                     id: e.id,
                     type: e.type.name,
                     title: e.title,
                     status: e.status,
-                    speakers: e.speakers.map(s => s.first_name + ' ' + s.last_name).join(',')
+                    published: published,
+                    speakers: (e.speakers) ? e.speakers.map(s => s.first_name + ' ' + s.last_name).join(',') : ''
                 };
             });
 

@@ -21,6 +21,7 @@ export const getEvents = ( term = null, page = 1, perPage = 10, order = 'id', or
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
     let filter = [];
+    let summitTZ = currentSummit.time_zone.name;
 
     dispatch(startLoading());
 
@@ -51,7 +52,7 @@ export const getEvents = ( term = null, page = 1, perPage = 10, order = 'id', or
         createAction(RECEIVE_EVENTS),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events`,
         authErrorHandler,
-        {order, orderDir}
+        {order, orderDir, term, summitTZ}
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
 

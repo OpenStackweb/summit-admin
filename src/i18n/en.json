@@ -354,6 +354,7 @@
     "title"                 : "Title",
     "type"                  : "Type",
     "status"                : "Status",
+    "published"             : "Published",
     "speakers"              : "Speakers",
     "delete_event_warning"  : "Are you sure you want to delete event",
     "placeholders": {
