@@ -18,6 +18,8 @@ import PromocodeListPage from '../pages/promocodes/promocode-list-page';
 import EditPromocodePage from '../pages/promocodes/edit-promocode-page';
 import EventTypeListPage from '../pages/events/event-type-list-page';
 import EditEventTypePage from '../pages/events/edit-event-type-page';
+import EventCategoryListPage from '../pages/events/event-category-list-page';
+import EditEventCategoryPage from '../pages/events/edit-event-category-page';
 
 
 import { withRouter } from 'react-router-dom'
@@ -57,6 +59,9 @@ class PrimaryLayout extends React.Component {
                         <Route exact path="/app/summits/:summit_id/event-types" component={EventTypeListPage}/>
                         <Route exact path="/app/summits/:summit_id/event-types/new" component={EditEventTypePage}/>
                         <Route exact path="/app/summits/:summit_id/event-types/:event_type_id" component={EditEventTypePage}/>
+                        <Route exact path="/app/summits/:summit_id/event-categories" component={EventCategoryListPage}/>
+                        <Route exact path="/app/summits/:summit_id/event-categories/new" component={EditEventCategoryPage}/>
+                        <Route exact path="/app/summits/:summit_id/event-categories/event_category_id" component={EditEventCategoryPage}/>
                         <Route render={props => (<Redirect to="/app/directory"/>)}/>
                     </Switch>
                 </main>

@@ -101,7 +101,7 @@ class EventTypeForm extends React.Component {
                     {entity.class_name == 'PresentationType' &&
                     <div className="col-md-4 checkboxes-div">
                         <div className="form-check abc-checkbox">
-                            <input type="checkbox" id="redeemed" checked={entity.available_cfp}
+                            <input type="checkbox" id="available_cfp" checked={entity.available_cfp}
                                    onChange={this.handleChange} className="form-check-input"/>
                             <label className="form-check-label" htmlFor="available_cfp">
                                 {T.translate("edit_event_type.available_cfp")}

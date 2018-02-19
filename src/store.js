@@ -31,6 +31,9 @@ import speakerAttendanceListReducer from './reducers/speaker_attendance/speaker-
 import speakerAttendanceReducer from './reducers/speaker_attendance/speaker-attendance-reducer';
 import eventTypeListReducer from './reducers/events/event-type-list-reducer';
 import eventTypeReducer from './reducers/events/event-type-reducer';
+import eventCategoryListReducer from './reducers/events/event-category-list-reducer';
+import eventCategoryReducer from './reducers/events/event-category-reducer';
+
 
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
@@ -60,7 +63,9 @@ const reducers = persistCombineReducers(config, {
     currentSpeakerAttendanceListState: speakerAttendanceListReducer,
     currentSpeakerAttendanceState: speakerAttendanceReducer,
     currentEventTypeListState: eventTypeListReducer,
-    currentEventTypeState: eventTypeReducer
+    currentEventTypeState: eventTypeReducer,
+    currentEventCategoryListState: eventCategoryListReducer,
+    currentEventCategoryState: eventCategoryReducer
 })
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

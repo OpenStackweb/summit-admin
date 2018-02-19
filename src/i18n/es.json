@@ -65,7 +65,8 @@
     "attendee_list"       : "CRUD List",
     "promocodes"          : "Promocodes",
     "promocode_list"      : "CRUD List",
-    "event_types"         : "Event Types"
+    "event_types"         : "Event Types",
+    "event_categories"    : "Event Categories"
   },
   "schedule": {
     "find_empty_spots"    : "Find empty spots for Day/Location",
@@ -393,5 +394,26 @@
     "placeholders": {
       "select_class"     : "Select Class"
     }
+  },
+  "event_category_list": {
+    "event_category_list"   : "Event Category List",
+    "copy_categories"       : "Copy Categories",
+    "no_items"              : "No event categories found.",
+    "add_category"          : "Add Event Category",
+    "name"                  : "Name",
+    "remove_warning"        : "Are you sure you want to delete event category "
+  },
+  "edit_event_category": {
+    "event_category"          : "Event Category",
+    "name"                    : "Name",
+    "code"                    : "Code",
+    "description"             : "Description",
+    "number_sessions"         : "Number of Sessions",
+    "number_alternates"       : "Number of Alternates",
+    "visible_voters"          : "This category is visible to voters?",
+    "visible_track_chairs"    : "This category is visible to track chairs?",
+    "tags"                    : "Allowed Tags",
+    "tag"                     : "Tag",
+    "group"                   : "Group"
   }
 }

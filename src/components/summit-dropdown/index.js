@@ -23,7 +23,7 @@ export default class SummitDropdown extends React.Component {
         super(props);
 
         this.state = {
-            summitValue: props.summits.find(s => s.active).id,
+            summitValue: null,
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -57,7 +57,7 @@ export default class SummitDropdown extends React.Component {
                     onChange={this.handleChange}
                     options={summitOptions}
                     placeholder={T.translate("general.select_summit")}
-                    className={"btn-group summit-select " + smallDdl}
+                    className={"btn-group summit-select text-left" + smallDdl}
                     clearable={false}
                 />
                 <button type="button" className="btn btn-primary" onClick={onClick}>
