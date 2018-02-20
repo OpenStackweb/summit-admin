@@ -368,6 +368,7 @@
     "add_event_type"       : "Add Event Type",
     "name"                 : "Name",
     "class"                : "Class",
+    "seed_event_types"     : "Seed Types",
     "remove_warning"       : "Are you sure you want to delete event type "
   },
   "edit_event_type": {

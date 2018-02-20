@@ -28,7 +28,10 @@ export default class SimpleLinkList extends React.Component {
             value: ''
         };
 
+        this.handleChange = this.handleChange.bind(this);
         this.filterOptions = this.filterOptions.bind(this);
+        this.getOptions = this.getOptions.bind(this);
+        this.handleLink = this.handleLink.bind(this);
 
     }
 
@@ -38,7 +41,7 @@ export default class SimpleLinkList extends React.Component {
         } );
     }
 
-    getOptions (input) {
+    getOptions(input) {
         if (!input) {
             return Promise.resolve({ options: [] });
         }
@@ -46,15 +49,24 @@ export default class SimpleLinkList extends React.Component {
         return this.props.queryOptions(input);
     }
 
+    handleChange(value) {
+        this.setState({value});
+    }
+
+    handleLink(ev) {
+        ev.preventDefault();
+        this.props.onLink(this.state.value);
+    }
+
     render() {
 
-        let {title, values, columns, onEdit, onUnLink, onLink} = this.props;
+        let {title, values, columns, valueKey, labelKey, onEdit, onUnLink} = this.props;
 
         let options = {
             className: "table table-striped table-bordered table-hover dataTable",
             actions: {
                 edit: {onClick: onEdit},
-                unlink: { onClick: onUnLink }
+                delete: { onClick: onUnLink }
             }
         }
 
@@ -67,15 +79,19 @@ export default class SimpleLinkList extends React.Component {
                     <Select.Async
                         className="link-select btn-group text-left"
                         value={this.state.value}
+                        valueKey={valueKey}
+                        labelKey={labelKey}
+                        onChange={this.handleChange}
                         loadOptions={this.getOptions}
                         filterOptions={this.filterOptions}
                     />
-                    <button type="button" className="btn btn-default" onClick={onLink}>
+                    <button type="button" className="btn btn-default" onClick={this.handleLink}>
                         {T.translate("general.add")}
                     </button>
                 </div>
                 <div className="col-md-12">
                     <Table
+                        className="dataTable"
                         options={options}
                         data={values}
                         columns={columns}

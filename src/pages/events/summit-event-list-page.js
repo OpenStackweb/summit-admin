@@ -149,12 +149,10 @@ class SummitEventListPage extends React.Component {
                             onSearch={this.handleSearch}
                         />
                     </div>
-                    <div className="col-md-2">
-                        <button className="btn btn-primary" onClick={this.handleNewEvent}>
+                    <div className="col-md-6 text-right">
+                        <button className="btn btn-primary right-space" onClick={this.handleNewEvent}>
                             {T.translate("event_list.add_event")}
                         </button>
-                    </div>
-                    <div className="col-md-2">
                         <button className="btn btn-default" onClick={this.handleExport}>
                             {T.translate("general.export")}
                         </button>

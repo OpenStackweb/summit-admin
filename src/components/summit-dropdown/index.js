@@ -60,7 +60,7 @@ export default class SummitDropdown extends React.Component {
                     className={"btn-group summit-select text-left" + smallDdl}
                     clearable={false}
                 />
-                <button type="button" className="btn btn-primary" onClick={onClick}>
+                <button type="button" className="btn btn-default" onClick={onClick}>
                     {actionLabel}
                 </button>
             </div>

@@ -93,7 +93,7 @@ class SummitSpeakerListPage extends React.Component {
                             onSearch={this.handleSearch}
                         />
                     </div>
-                    <div className="col-md-2">
+                    <div className="col-md-6 text-right">
                         <button className="btn btn-primary" onClick={this.handleNewSpeaker}>
                             {T.translate("speaker_list.add_speaker")}
                         </button>

@@ -182,7 +182,7 @@ class SummitAttendeeListPage extends React.Component {
                             onSearch={this.handleSearch}
                         />
                     </div>
-                    <div className="col-md-2">
+                    <div className="col-md-6 text-right">
                         <button className="btn btn-primary" onClick={this.handleNewAttendee}>
                             {T.translate("attendee_list.add_attendee")}
                         </button>

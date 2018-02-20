@@ -21,6 +21,8 @@ export const getEventTypes = ( ) => (dispatch, getState) => {
 
     let params = {
         access_token : accessToken,
+        per_page     : 100,
+        page         : 1
     };
 
     return getRequest(
@@ -126,9 +128,47 @@ export const deleteEventType = (eventTypeId) => (dispatch, getState) => {
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
 
+export const seedEventTypes = () => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return postRequest(
+        null,
+        createAction(RECEIVE_EVENT_TYPES),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types/seed`,
+        authErrorHandler
+    )(params)(dispatch).then(dispatch(stopLoading()));
+};
+
 const normalizeEntity = (entity) => {
     let normalizedEntity = {...entity};
 
+    //remove # from color hexa
+    normalizedEntity['color'] = normalizedEntity['color'].substr(1);
+
+    delete(normalizedEntity['id']);
+    delete(normalizedEntity['created']);
+    delete(normalizedEntity['last_edited']);
+    delete(normalizedEntity['is_default']);
+
+    if (normalizedEntity.class_name == 'EVENT_TYPE') {
+        delete(normalizedEntity['should_be_available_on_cfp']);
+        delete(normalizedEntity['use_speakers']);
+        delete(normalizedEntity['are_speakers_mandatory']);
+        delete(normalizedEntity['min_speakers']);
+        delete(normalizedEntity['max_speakers']);
+        delete(normalizedEntity['use_moderator']);
+        delete(normalizedEntity['is_moderator_mandatory']);
+        delete(normalizedEntity['min_moderators']);
+        delete(normalizedEntity['max_moderators']);
+        delete(normalizedEntity['moderator_label']);
+    }
 
     return normalizedEntity;
 

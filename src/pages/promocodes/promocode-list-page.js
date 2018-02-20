@@ -171,21 +171,20 @@ class PromocodeListPage extends React.Component {
                             onSearch={this.handleSearch}
                         />
                     </div>
-                    <div className="col-md-2">
-                        <Dropdown
-                            id="ticket_type"
-                            value={type}
-                            placeholder={T.translate("promocode_list.placeholders.select_type")}
-                            options={promocode_types_ddl}
-                            onChange={this.handleTypeChange}
-                        />
-                    </div>
-                    <div className="col-md-2">
-                        <button className="btn btn-primary" onClick={this.handleNewPromocode}>
+                    <div className="col-md-6 text-right">
+                        <div className="col-md-4">
+                            <Dropdown
+                                id="ticket_type"
+                                className="right-space"
+                                value={type}
+                                placeholder={T.translate("promocode_list.placeholders.select_type")}
+                                options={promocode_types_ddl}
+                                onChange={this.handleTypeChange}
+                            />
+                        </div>
+                        <button className="btn btn-primary right-space" onClick={this.handleNewPromocode}>
                             {T.translate("promocode_list.add_promocode")}
                         </button>
-                    </div>
-                    <div className="col-md-2">
                         <button className="btn btn-default" onClick={this.handleExport}>
                             {T.translate("general.export")}
                         </button>

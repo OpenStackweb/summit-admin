@@ -56,6 +56,10 @@ class EventTypeForm extends React.Component {
             value = ev.target.checked;
         }
 
+        if (ev.target.type == 'number') {
+            value = parseInt(ev.target.value);
+        }
+
         errors[id] = '';
         entity[id] = value;
         this.setState({entity: entity, errors: errors});
@@ -80,7 +84,7 @@ class EventTypeForm extends React.Component {
     render() {
         let {entity} = this.state;
         let { currentSummit } = this.props;
-        let event_types_ddl = [{label: 'Presentation', value: 'PresentationType'}, {label: 'Event', value: 'EventType'}];
+        let event_types_ddl = [{label: 'Presentation', value: 'PRESENTATION_TYPE'}, {label: 'Event', value: 'EVENT_TYPE'}];
 
         return (
             <form className="event-type-form">
@@ -98,18 +102,18 @@ class EventTypeForm extends React.Component {
                         />
                     </div>
 
-                    {entity.class_name == 'PresentationType' &&
+                    {entity.class_name == 'PRESENTATION_TYPE' &&
                     <div className="col-md-4 checkboxes-div">
                         <div className="form-check abc-checkbox">
-                            <input type="checkbox" id="available_cfp" checked={entity.available_cfp}
+                            <input type="checkbox" id="should_be_available_on_cfp" checked={entity.should_be_available_on_cfp}
                                    onChange={this.handleChange} className="form-check-input"/>
-                            <label className="form-check-label" htmlFor="available_cfp">
+                            <label className="form-check-label" htmlFor="should_be_available_on_cfp">
                                 {T.translate("edit_event_type.available_cfp")}
                             </label>
                         </div>
                     </div>
                     }
-                    {entity.class_name == 'EventType' &&
+                    {entity.class_name == 'EVENT_TYPE' &&
                     <div className="col-md-4 checkboxes-div">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="allows_attachment" checked={entity.allows_attachment}
@@ -133,9 +137,10 @@ class EventTypeForm extends React.Component {
                         />
                     </div>
                     <div className="col-md-4">
-                        <label> {T.translate("edit_event_type.color")} *</label>
+                        <label> {T.translate("edit_event_type.color")}</label>
                         <Input
                             id="color"
+                            type="color"
                             value={entity.color}
                             onChange={this.handleChange}
                             className="form-control"
@@ -173,7 +178,7 @@ class EventTypeForm extends React.Component {
                     </div>
                 </div>
 
-                {entity.class_name == 'PresentationType' &&
+                {entity.class_name == 'PRESENTATION_TYPE' &&
                 <div>
                     <hr/>
                     <div className="row form-group checkboxes-div">
@@ -202,6 +207,7 @@ class EventTypeForm extends React.Component {
                             <label> {T.translate("edit_event_type.min_speakers")}</label>
                             <Input
                                 id="min_speakers"
+                                type="number"
                                 value={entity.min_speakers}
                                 onChange={this.handleChange}
                                 className="form-control"
@@ -212,6 +218,7 @@ class EventTypeForm extends React.Component {
                             <label> {T.translate("edit_event_type.max_speakers")}</label>
                             <Input
                                 id="max_speakers"
+                                type="number"
                                 value={entity.max_speakers}
                                 onChange={this.handleChange}
                                 className="form-control"
@@ -232,10 +239,10 @@ class EventTypeForm extends React.Component {
                         </div>
                         <div className="col-md-4">
                             <div className="form-check abc-checkbox">
-                                <input type="checkbox" id="moderator_mandatory"
-                                       checked={entity.moderator_mandatory}
+                                <input type="checkbox" id="is_moderator_mandatory"
+                                       checked={entity.is_moderator_mandatory}
                                        onChange={this.handleChange} className="form-check-input"/>
-                                <label className="form-check-label" htmlFor="moderator_mandatory">
+                                <label className="form-check-label" htmlFor="is_moderator_mandatory">
                                     {T.translate("edit_event_type.moderator_mandatory")}
                                 </label>
                             </div>
@@ -245,7 +252,7 @@ class EventTypeForm extends React.Component {
                         <div className="col-md-4">
                             <label> {T.translate("edit_event_type.moderator_label")}</label>
                             <Input
-                                id="min_speakers"
+                                id="moderator_label"
                                 value={entity.moderator_label}
                                 onChange={this.handleChange}
                                 className="form-control"
@@ -256,6 +263,7 @@ class EventTypeForm extends React.Component {
                             <label> {T.translate("edit_event_type.min_moderators")}</label>
                             <Input
                                 id="min_moderators"
+                                type="number"
                                 value={entity.min_moderators}
                                 onChange={this.handleChange}
                                 className="form-control"
@@ -266,6 +274,7 @@ class EventTypeForm extends React.Component {
                             <label> {T.translate("edit_event_type.max_moderators")}</label>
                             <Input
                                 id="max_moderators"
+                                type="number"
                                 value={entity.max_moderators}
                                 onChange={this.handleChange}
                                 className="form-control"

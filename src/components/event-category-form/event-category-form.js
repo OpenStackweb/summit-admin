@@ -18,6 +18,7 @@ import {findElementPos} from '../../utils/methods'
 import Input from '../text-input'
 import TextEditor from '../editor-input'
 import SimpleLinkList from '../simple-link-list'
+import {queryTags} from '../../actions/base-actions'
 
 
 class EventCategoryForm extends React.Component {
@@ -31,6 +32,9 @@ class EventCategoryForm extends React.Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleTagLink = this.handleTagLink.bind(this);
+        this.handleTagEdit = this.handleTagEdit.bind(this);
+        this.handleTagUnLink = this.handleTagUnLink.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -76,6 +80,28 @@ class EventCategoryForm extends React.Component {
         }
 
         return '';
+    }
+
+    handleTagLink(value) {
+        let tags = [...this.state.entity.tags];
+        tags.push(value);
+
+        let entity = {...this.state.entity, tags: tags};
+        this.setState({entity: entity});
+    }
+
+    handleTagUnLink(value, ev) {
+        ev.preventDefault();
+
+        let tags = this.state.entity.tags.filter(t => t.id != value);
+
+        let entity = {...this.state.entity, tags: tags};
+        this.setState({entity: entity});
+    }
+
+    handleTagEdit() {
+        let {currentSummit, history} = this.props;
+        history.push(`/app/summits/${currentSummit.id}/event-categories/new`);
     }
 
     render() {
@@ -172,9 +198,12 @@ class EventCategoryForm extends React.Component {
                     title={T.translate("edit_event_category.tags")}
                     values={entity.tags}
                     columns={tagsColumns}
-                    onEdit={this.onTagEdit}
-                    onLink={this.onTagLink}
-                    onUnLink={this.onTagUnLink}
+                    valueKey="tag"
+                    labelKey="tag"
+                    onEdit={this.handleTagEdit}
+                    onLink={this.handleTagLink}
+                    onUnLink={this.handleTagUnLink}
+                    queryOptions={queryTags}
                 />
 
                 <div className="row">

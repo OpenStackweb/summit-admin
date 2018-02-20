@@ -17,7 +17,7 @@ import T from 'i18n-react/dist/i18n-react';
 import swal from "sweetalert2";
 import Table from "../../components/table/Table";
 import { getSummitById }  from '../../actions/summit-actions';
-import { getEventTypes, deleteEventType } from "../../actions/event-type-actions";
+import { getEventTypes, deleteEventType, seedEventTypes } from "../../actions/event-type-actions";
 
 class EventTypeListPage extends React.Component {
 
@@ -68,14 +68,14 @@ class EventTypeListPage extends React.Component {
     }
 
     handleDelete(eventTypeId, ev) {
-        let {deleteEvent, eventTypes} = this.props;
+        let {deleteEventType, eventTypes} = this.props;
         let eventType = eventTypes.find(e => e.id == eventTypeId);
 
         ev.preventDefault();
 
         swal({
             title: T.translate("general.are_you_sure"),
-            text: T.translate("event_type_list.delete_warning") + ' ' + eventType.type,
+            text: T.translate("event_type_list.remove_warning") + ' ' + eventType.name,
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
@@ -106,8 +106,11 @@ class EventTypeListPage extends React.Component {
         return(
             <div className="container">
                 <h3> {T.translate("event_type_list.event_type_list")} </h3>
-                <div className={'row'}>
-                    <div className="col-md-2">
+                <div className="row">
+                    <div className="col-md-6 col-md-offset-6 text-right">
+                        <button className="btn btn-default right-space" onClick={this.props.seedEventTypes}>
+                            {T.translate("event_type_list.seed_event_types")}
+                        </button>
                         <button className="btn btn-primary" onClick={this.handleNew}>
                             {T.translate("event_type_list.add_event_type")}
                         </button>
@@ -144,6 +147,7 @@ export default connect (
     {
         getSummitById,
         getEventTypes,
-        deleteEventType
+        deleteEventType,
+        seedEventTypes
     }
 )(EventTypeListPage);

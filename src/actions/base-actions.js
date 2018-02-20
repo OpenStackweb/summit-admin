@@ -140,14 +140,14 @@ export const querySpeakers = (summitId, input) => {
         .catch(fetchErrorHandler);
 };
 
-export const queryTags = (input) => {
+export const queryTags = (input, summitId = null) => {
 
     let accessToken = window.accessToken;
 
     return fetch(`${apiBaseUrl}/api/v1/tags?filter=tag=@${input}&order=tag&access_token=${accessToken}`)
         .then(fetchResponseHandler)
         .then((json) => {
-            let options = json.data.map((t) => ({tag: t.tag}) );
+            let options = json.data.map((t) => ({tag: t.tag, id: t.id}) );
 
             return {
                 options: options

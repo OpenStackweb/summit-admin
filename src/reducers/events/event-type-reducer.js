@@ -24,24 +24,24 @@ import { VALIDATE } from '../../actions/base-actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 export const DEFAULT_ENTITY = {
-    id                     : 0,
-    name                   : '',
-    class_name             : '',
-    color                  : '',
-    black_out_times        : false,
-    use_sponsors           : false,
-    are_sponsors_mandatory : false,
-    available_cfp          : false,
-    use_speakers           : false,
-    are_speakers_mandatory : false,
-    min_speakers           : 0,
-    max_speakers           : 0,
-    use_moderator          : false,
-    moderator_mandatory    : false,
-    moderator_label        : '',
-    min_moderators         : 0,
-    max_moderators         : 0,
-    allows_attachment      : false,
+    id                          : 0,
+    name                        : '',
+    class_name                  : '',
+    color                       : '',
+    black_out_times             : false,
+    use_sponsors                : false,
+    are_sponsors_mandatory      : false,
+    should_be_available_on_cfp  : false,
+    use_speakers                : false,
+    are_speakers_mandatory      : false,
+    min_speakers                : 0,
+    max_speakers                : 0,
+    use_moderator               : false,
+    is_moderator_mandatory      : false,
+    moderator_label             : '',
+    min_moderators              : 0,
+    max_moderators              : 0,
+    allows_attachment           : false,
 }
 
 const DEFAULT_STATE = {
@@ -77,6 +77,15 @@ const eventTypeReducer = (state = DEFAULT_STATE, action) => {
                 if(entity.hasOwnProperty(key)) {
                     entity[key] = (entity[key] == null) ? '' : entity[key] ;
                 }
+            }
+
+            switch (entity.class_name) {
+                case 'SummitEventType':
+                    entity.class_name = 'EVENT_TYPE';
+                    break;
+                case 'PresentationType':
+                    entity.class_name = 'PRESENTATION_TYPE';
+                    break;
             }
 
             return {...state, entity: {...DEFAULT_ENTITY, ...entity} };

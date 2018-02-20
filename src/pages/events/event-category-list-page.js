@@ -109,12 +109,10 @@ class EventCategoryListPage extends React.Component {
             <div className="container">
                 <h3> {T.translate("event_category_list.event_category_list")} </h3>
                 <div className={'row'}>
-                    <div className="col-md-4">
-                        <button className="btn btn-primary" onClick={this.handleNew}>
+                    <div className="col-md-6 col-md-offset-6 text-right">
+                        <button className="btn btn-primary right-space" onClick={this.handleNew}>
                             {T.translate("event_category_list.add_category")}
                         </button>
-                    </div>
-                    <div className="col-md-4 pull-right text-right">
                         <SummitDropdown
                             summits={summits}
                             onClick={this.handleNew}
