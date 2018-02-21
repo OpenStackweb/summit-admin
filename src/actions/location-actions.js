@@ -12,19 +12,21 @@
  **/
 
 import { getRequest, putRequest, postRequest, deleteRequest, createAction, stopLoading, startLoading } from "openstack-uicore-foundation";
-import { authErrorHandler, apiBaseUrl, showMessage, getCSV} from './base-actions';
+import { authErrorHandler, fetchResponseHandler, fetchErrorHandler, apiBaseUrl, showMessage, getCSV} from './base-actions';
+import swal from "sweetalert2";
 import T from "i18n-react/dist/i18n-react";
 
-export const REQUEST_EVENT_TYPES       = 'REQUEST_EVENT_TYPES';
-export const RECEIVE_EVENT_TYPES       = 'RECEIVE_EVENT_TYPES';
-export const RECEIVE_EVENT_TYPE        = 'RECEIVE_EVENT_TYPE';
-export const RESET_EVENT_TYPE_FORM     = 'RESET_EVENT_TYPE_FORM';
-export const UPDATE_EVENT_TYPE         = 'UPDATE_EVENT_TYPE';
-export const EVENT_TYPE_UPDATED        = 'EVENT_TYPE_UPDATED';
-export const EVENT_TYPE_ADDED          = 'EVENT_TYPE_ADDED';
-export const EVENT_TYPE_DELETED        = 'EVENT_TYPE_DELETED';
+export const REQUEST_LOCATIONS       = 'REQUEST_LOCATIONS';
+export const RECEIVE_LOCATIONS       = 'RECEIVE_LOCATIONS';
+export const RECEIVE_LOCATION        = 'RECEIVE_LOCATION';
+export const RESET_LOCATION_FORM     = 'RESET_LOCATION_FORM';
+export const UPDATE_LOCATION         = 'UPDATE_LOCATION';
+export const LOCATION_UPDATED        = 'LOCATION_UPDATED';
+export const LOCATION_ADDED          = 'LOCATION_ADDED';
+export const LOCATION_DELETED        = 'LOCATION_DELETED';
 
-export const getEventTypes = ( ) => (dispatch, getState) => {
+
+export const getLocations = ( ) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -33,64 +35,68 @@ export const getEventTypes = ( ) => (dispatch, getState) => {
     dispatch(startLoading());
 
     let params = {
-        access_token : accessToken,
+        expand       : '',
+        page         : 1,
         per_page     : 100,
-        page         : 1
+        access_token : accessToken,
     };
 
     return getRequest(
-        createAction(REQUEST_EVENT_TYPES),
-        createAction(RECEIVE_EVENT_TYPES),
+        createAction(REQUEST_LOCATIONS),
+        createAction(RECEIVE_LOCATIONS),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types`,
         authErrorHandler
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
 
-export const getEventType = (eventTypeId) => (dispatch, getState) => {
+export const getLocation = (locationId) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
     let params = {
-        expand       : '',
+        expand       : 'rooms,floors',
         access_token : accessToken,
     };
 
     return getRequest(
         null,
-        createAction(RECEIVE_EVENT_TYPE),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types/${eventTypeId}`,
+        createAction(RECEIVE_LOCATION),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}`,
         authErrorHandler
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
 
-export const resetEventTypeForm = () => (dispatch, getState) => {
-    dispatch(createAction(RESET_EVENT_TYPE_FORM)({}));
+export const resetLocationForm = () => (dispatch, getState) => {
+    dispatch(createAction(RESET_LOCATION_FORM)({}));
 };
 
-export const saveEventType = (entity, history) => (dispatch, getState) => {
+export const saveLocation = (entity, history) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
+    let params = {
+        access_token : accessToken,
+    };
+
     let normalizedEntity = normalizeEntity(entity);
-    let params = { access_token : accessToken };
 
     if (entity.id) {
 
         let success_message = [
             T.translate("general.done"),
-            T.translate("edit_event_type.event_type_saved"),
+            T.translate("edit_location.location_saved"),
             'success'
         ];
 
         putRequest(
-            createAction(UPDATE_EVENT_TYPE),
-            createAction(EVENT_TYPE_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types/${entity.id}`,
+            createAction(UPDATE_LOCATION),
+            createAction(LOCATION_UPDATED),
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -102,14 +108,14 @@ export const saveEventType = (entity, history) => (dispatch, getState) => {
     } else {
         let success_message = [
             T.translate("general.done"),
-            T.translate("edit_event_type.event_type_created"),
+            T.translate("edit_location.location_created"),
             'success'
         ];
 
         postRequest(
-            createAction(UPDATE_EVENT_TYPE),
-            createAction(EVENT_TYPE_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types`,
+            createAction(UPDATE_LOCATION),
+            createAction(LOCATION_ADDED),
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -117,13 +123,13 @@ export const saveEventType = (entity, history) => (dispatch, getState) => {
             .then((payload) => {
                 dispatch(showMessage(
                     ...success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/event-types/${payload.response.id}`) }
+                    () => { history.push(`/app/summits/${currentSummit.id}/locations/${payload.response.id}`) }
                 ));
             });
     }
 }
 
-export const deleteEventType = (eventTypeId) => (dispatch, getState) => {
+export const deleteLocation = (locationId) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -135,13 +141,27 @@ export const deleteEventType = (eventTypeId) => (dispatch, getState) => {
 
     return deleteRequest(
         null,
-        createAction(EVENT_TYPE_DELETED)({eventTypeId}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types/${eventTypeId}`,
+        createAction(LOCATION_DELETED)({locationId}),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}`,
         authErrorHandler
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
 
-export const seedEventTypes = () => (dispatch, getState) => {
+export const exportLocations = ( ) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+    let filename = currentSummit.name + '-Locations.csv';
+    let params = {
+        access_token : accessToken
+    };
+
+    dispatch(getCSV(`${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/csv`, params, filename));
+
+};
+
+export const updateLocationOrder = (locationId, newOrder) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -151,37 +171,20 @@ export const seedEventTypes = () => (dispatch, getState) => {
         access_token : accessToken
     };
 
-    return postRequest(
+    putRequest(
         null,
-        createAction(RECEIVE_EVENT_TYPES),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types/seed`,
+        createAction(LOCATION_UPDATED),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}`,
+        {order: newOrder},
         authErrorHandler
     )(params)(dispatch).then(dispatch(stopLoading()));
-};
+
+}
+
 
 const normalizeEntity = (entity) => {
     let normalizedEntity = {...entity};
 
-    //remove # from color hexa
-    normalizedEntity['color'] = normalizedEntity['color'].substr(1);
-
-    delete(normalizedEntity['id']);
-    delete(normalizedEntity['created']);
-    delete(normalizedEntity['last_edited']);
-    delete(normalizedEntity['is_default']);
-
-    if (normalizedEntity.class_name == 'EVENT_TYPE') {
-        delete(normalizedEntity['should_be_available_on_cfp']);
-        delete(normalizedEntity['use_speakers']);
-        delete(normalizedEntity['are_speakers_mandatory']);
-        delete(normalizedEntity['min_speakers']);
-        delete(normalizedEntity['max_speakers']);
-        delete(normalizedEntity['use_moderator']);
-        delete(normalizedEntity['is_moderator_mandatory']);
-        delete(normalizedEntity['min_moderators']);
-        delete(normalizedEntity['max_moderators']);
-        delete(normalizedEntity['moderator_label']);
-    }
 
     return normalizedEntity;
 

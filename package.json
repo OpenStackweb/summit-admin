@@ -53,6 +53,7 @@
     "history": "^4.7.2",
     "i18n-react": "^0.6.3",
     "idtoken-verifier": "^1.1.0",
+    "immutability-helper": "^2.6.5",
     "lodash": "^4.17.4",
     "moment-timezone": "^0.5.14",
     "react": "^16.2.0",

@@ -39,6 +39,7 @@
     "attention"           : "Attention!",
     "done"                : "Done!",
     "email_sent"          : "Email sent successfully.",
+    "drag_and_drop"       : "Drag and Drop to sort items.",
     "placeholders": {
       "search_speakers"     : "Search Speakers by Name or Email"
     }
@@ -66,7 +67,8 @@
     "promocodes"          : "Promocodes",
     "promocode_list"      : "CRUD List",
     "event_types"         : "Event Types",
-    "event_categories"    : "Event Categories"
+    "event_categories"    : "Event Categories",
+    "locations"           : "Locations"
   },
   "schedule": {
     "find_empty_spots"    : "Find empty spots for Day/Location",
@@ -416,5 +418,13 @@
     "tags"                    : "Allowed Tags",
     "tag"                     : "Tag",
     "group"                   : "Group"
+  },
+  "location_list": {
+    "location_list"         : "Location List",
+    "no_items"              : "No locations found.",
+    "add_location"          : "Add Location",
+    "name"                  : "Name",
+    "class_name"            : "Class",
+    "remove_warning"        : "Are you sure you want to delete location "
   }
 }

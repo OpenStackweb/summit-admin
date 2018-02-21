@@ -1,3 +1,16 @@
+/**
+ * Copyright 2017 OpenStack Foundation
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ **/
+
 import React from 'react'
 import { Link, Switch, Route, Redirect } from 'react-router-dom';
 import NavMenu from '../components/nav-menu'
@@ -20,6 +33,7 @@ import EventTypeListPage from '../pages/events/event-type-list-page';
 import EditEventTypePage from '../pages/events/edit-event-type-page';
 import EventCategoryListPage from '../pages/events/event-category-list-page';
 import EditEventCategoryPage from '../pages/events/edit-event-category-page';
+import LocationListPage from '../pages/locations/location-list-page';
 
 
 import { withRouter } from 'react-router-dom'
@@ -62,6 +76,7 @@ class PrimaryLayout extends React.Component {
                         <Route exact path="/app/summits/:summit_id/event-categories" component={EventCategoryListPage}/>
                         <Route exact path="/app/summits/:summit_id/event-categories/new" component={EditEventCategoryPage}/>
                         <Route exact path="/app/summits/:summit_id/event-categories/event_category_id" component={EditEventCategoryPage}/>
+                        <Route exact path="/app/summits/:summit_id/locations" component={LocationListPage}/>
                         <Route render={props => (<Redirect to="/app/directory"/>)}/>
                     </Switch>
                 </main>

@@ -10,6 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
+
 import {createAction, getRequest, putRequest, startLoading, stopLoading, deleteRequest } from "openstack-uicore-foundation";
 import moment from "moment-timezone";
 import SummitEvent from "../models/summit-event";
