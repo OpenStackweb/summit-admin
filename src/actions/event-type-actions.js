@@ -23,6 +23,7 @@ export const UPDATE_EVENT_TYPE         = 'UPDATE_EVENT_TYPE';
 export const EVENT_TYPE_UPDATED        = 'EVENT_TYPE_UPDATED';
 export const EVENT_TYPE_ADDED          = 'EVENT_TYPE_ADDED';
 export const EVENT_TYPE_DELETED        = 'EVENT_TYPE_DELETED';
+export const EVENT_TYPES_SEEDED        = 'EVENT_TYPES_SEEDED';
 
 export const getEventTypes = ( ) => (dispatch, getState) => {
 
@@ -153,8 +154,8 @@ export const seedEventTypes = () => (dispatch, getState) => {
 
     return postRequest(
         null,
-        createAction(RECEIVE_EVENT_TYPES),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types/seed`,
+        createAction(EVENT_TYPES_SEEDED),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types/seed-defaults`,
         authErrorHandler
     )(params)(dispatch).then(dispatch(stopLoading()));
 };

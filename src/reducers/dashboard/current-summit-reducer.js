@@ -1,7 +1,7 @@
 import{ LOGOUT_USER } from '../../actions/auth-actions';
 import { SET_CURRENT_SUMMIT, RECEIVE_SUMMIT } from '../../actions/summit-actions';
 import { EVENT_CATEGORY_UPDATED, EVENT_CATEGORY_ADDED, EVENT_CATEGORY_DELETED } from '../../actions/event-category-actions';
-import { EVENT_TYPE_UPDATED, EVENT_TYPE_ADDED, EVENT_TYPE_DELETED } from '../../actions/event-type-actions';
+import { EVENT_TYPE_UPDATED, EVENT_TYPE_ADDED, EVENT_TYPE_DELETED, EVENT_TYPES_SEEDED } from '../../actions/event-type-actions';
 import { LOCATION_UPDATED, LOCATION_ADDED, LOCATION_DELETED } from '../../actions/location-actions';
 
 const DEFAULT_STATE = {
@@ -38,6 +38,12 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
             let {eventTypeId} = payload;
             let eventTypes = state.currentSummit.event_types.filter(e => e.id != eventTypeId);
             return {...state, currentSummit: {...state.currentSummit, event_types: eventTypes}};
+        }
+        break;
+        case EVENT_TYPES_SEEDED: {
+            let eventTypesAdded = [...payload.response.data];
+
+            return {...state, currentSummit: {...state.currentSummit, event_types: [...state.currentSummit.event_types, eventTypesAdded]}};
         }
         break;
         case EVENT_CATEGORY_UPDATED: {

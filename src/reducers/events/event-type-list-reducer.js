@@ -16,7 +16,7 @@ import
     RECEIVE_EVENT_TYPES,
     REQUEST_EVENT_TYPES,
     EVENT_TYPE_DELETED,
-    EVENT_TYPE_EXPORTED
+    EVENT_TYPES_SEEDED
 } from '../../actions/event-type-actions';
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
@@ -39,13 +39,7 @@ const eventTypeListReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case RECEIVE_EVENT_TYPES: {
-            let eventTypes = payload.response.data.map(e => {
-                return {
-                    id: e.id,
-                    name: e.name,
-                    class_name: e.class_name
-                };
-            })
+            let eventTypes = [...payload.response.data];
 
             return {...state, eventTypes };
         }
@@ -53,6 +47,12 @@ const eventTypeListReducer = (state = DEFAULT_STATE, action) => {
         case EVENT_TYPE_DELETED: {
             let {eventTypeId} = payload;
             return {...state, eventTypes: state.eventTypes.filter(e => e.id != eventTypeId)};
+        }
+        break;
+        case EVENT_TYPES_SEEDED: {
+            let eventTypesAdded = [...payload.response.data];
+
+            return {...state, eventTypes: [...state.eventTypes, eventTypesAdded]};
         }
         break;
         default:

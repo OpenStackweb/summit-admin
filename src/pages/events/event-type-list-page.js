@@ -27,6 +27,7 @@ class EventTypeListPage extends React.Component {
         this.handleEdit = this.handleEdit.bind(this);
         this.handleNew = this.handleNew.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
+        this.isNotDefault = this.isNotDefault.bind(this);
 
         this.state = {
         }
@@ -85,6 +86,14 @@ class EventTypeListPage extends React.Component {
         }).catch(swal.noop);
     }
 
+    isNotDefault(eventTypeId) {
+
+        let {eventTypes} = this.props;
+        let eventType = eventTypes.find(e => e.id == eventTypeId);
+
+        return !eventType.is_default;
+    }
+
     render(){
         let {currentSummit, eventTypes} = this.props;
 
@@ -97,7 +106,7 @@ class EventTypeListPage extends React.Component {
             className: "table table-striped table-bordered table-hover dataTable",
             actions: {
                 edit: {onClick: this.handleEdit},
-                delete: { onClick: this.handleDelete }
+                delete: { onClick: this.handleDelete, display: this.isNotDefault }
             }
         }
 
