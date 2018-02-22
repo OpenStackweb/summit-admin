@@ -158,6 +158,14 @@ class EventForm extends React.Component {
         return '';
     }
 
+    shouldShowField(flag){
+        let {entity} = this.state;
+        if (!entity.type_id) return false;
+        let entity_type = this.props.typeOpts.find(t => t.id == entity.type_id);
+
+        return entity_type[flag];
+    }
+
     render() {
         let {entity} = this.state;
         let { currentSummit, levelOpts, typeOpts, trackOpts, locationOpts, history } = this.props;
@@ -354,7 +362,7 @@ class EventForm extends React.Component {
                         />
                     </div>
                 </div>
-                {this.isEventType('Presentation') &&
+                {this.shouldShowField('use_sponsors') &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_event.sponsors")} </label>
@@ -368,7 +376,7 @@ class EventForm extends React.Component {
                     </div>
                 </div>
                 }
-                {this.isEventType('PresentationType') &&
+                {this.shouldShowField('use_speakers') &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("general.speakers")} </label>
@@ -383,7 +391,7 @@ class EventForm extends React.Component {
                     </div>
                 </div>
                 }
-                {this.isEventType(['Keynotes', 'Panel']) &&
+                {this.shouldShowField('use_moderator') &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_event.moderator")} </label>
@@ -428,7 +436,7 @@ class EventForm extends React.Component {
                 </div>
                 }
 
-                {this.isEventType('SummitEventType') &&
+                {this.shouldShowField('allows_attachment') &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_event.attachment")} </label>

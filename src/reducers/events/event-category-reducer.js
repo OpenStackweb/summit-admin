@@ -15,8 +15,7 @@ import
 {
     RECEIVE_EVENT_CATEGORY,
     RESET_EVENT_CATEGORY_FORM,
-    UPDATE_EVENT_CATEGORY,
-    EVENT_CATEGORY_UPDATED
+    UPDATE_EVENT_CATEGORY
 } from '../../actions/event-category-actions';
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
@@ -71,10 +70,6 @@ const eventCategoryReducer = (state = DEFAULT_STATE, action) => {
             }
 
             return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
-        }
-        break;
-        case EVENT_CATEGORY_UPDATED: {
-            return state;
         }
         break;
         case VALIDATE: {

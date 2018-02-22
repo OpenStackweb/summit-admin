@@ -15,8 +15,7 @@ import
 {
     RECEIVE_EVENT_TYPE,
     RESET_EVENT_TYPE_FORM,
-    UPDATE_EVENT_TYPE,
-    EVENT_TYPE_UPDATED
+    UPDATE_EVENT_TYPE
 } from '../../actions/event-type-actions';
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
@@ -89,10 +88,6 @@ const eventTypeReducer = (state = DEFAULT_STATE, action) => {
             }
 
             return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
-        }
-        break;
-        case EVENT_TYPE_UPDATED: {
-            return state;
         }
         break;
         case VALIDATE: {
