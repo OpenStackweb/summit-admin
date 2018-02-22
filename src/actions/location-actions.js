@@ -19,12 +19,32 @@ import T from "i18n-react/dist/i18n-react";
 export const REQUEST_LOCATIONS       = 'REQUEST_LOCATIONS';
 export const RECEIVE_LOCATIONS       = 'RECEIVE_LOCATIONS';
 export const RECEIVE_LOCATION        = 'RECEIVE_LOCATION';
+export const RECEIVE_LOCATION_META   = 'RECEIVE_LOCATION_META';
 export const RESET_LOCATION_FORM     = 'RESET_LOCATION_FORM';
 export const UPDATE_LOCATION         = 'UPDATE_LOCATION';
 export const LOCATION_UPDATED        = 'LOCATION_UPDATED';
 export const LOCATION_ADDED          = 'LOCATION_ADDED';
 export const LOCATION_DELETED        = 'LOCATION_DELETED';
 
+
+
+export const getLocationMeta = () => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_LOCATION_META),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/metadata`,
+        authErrorHandler
+    )(params)(dispatch).then(dispatch(stopLoading()));
+};
 
 export const getLocations = ( ) => (dispatch, getState) => {
 

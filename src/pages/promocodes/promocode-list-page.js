@@ -17,7 +17,7 @@ import T from 'i18n-react/dist/i18n-react';
 import swal from "sweetalert2";
 import { Pagination } from 'react-bootstrap';
 import FreeTextSearch from "../../components/free-text-search/index";
-import Dropdown from '../../components/dropdown/index';
+import Dropdown from '../../components/inputs/dropdown';
 import Table from "../../components/table/Table";
 import { getSummitById }  from '../../actions/summit-actions';
 import { getPromocodes, getPromocodeMeta, deletePromocode, exportPromocodes } from "../../actions/promocode-actions";
@@ -172,7 +172,7 @@ class PromocodeListPage extends React.Component {
                         />
                     </div>
                     <div className="col-md-6 text-right">
-                        <div className="col-md-4">
+                        <div className="col-md-4 text-left">
                             <Dropdown
                                 id="ticket_type"
                                 className="right-space"

@@ -7,30 +7,36 @@ export default class SortableActionsTableCell extends React.Component {
 
     }
 
-    onDelete(id, ev) {
-        ev.preventDefault();
-        this.props.actions.delete(id);
-    }
+    shouldDisplayAction(action) {
+        let {id} = this.props;
 
-    onEdit(id, ev) {
-        ev.preventDefault();
-        this.props.actions.edit(id);
+        if (!action.hasOwnProperty('display')) {
+            return true;
+        } else {
+            return action.display(id);
+        }
     }
 
     render() {
         let {actions, id} = this.props;
         return (
-            <td key='actions'>
-                {'edit' in actions &&
-                    <a href="" onClick={this.onEdit.bind(this,id)} >
-                        <i className="fa fa-pencil-square-o"></i>
-                    </a>
+            <td className="actions" key="actions">
+                {actions.hasOwnProperty('edit') && this.shouldDisplayAction(actions.edit) &&
+                <a href="" onClick={actions.edit.onClick.bind(this, id)} >
+                    <i className="fa fa-pencil-square-o"></i>
+                </a>
                 }
-                {'delete' in actions &&
-                    <a href="" onClick={this.onDelete.bind(this,id)} >
-                        <i className="fa fa-trash-o"></i>
-                    </a>
+                {actions.hasOwnProperty('delete') && this.shouldDisplayAction(actions.delete)  &&
+                <a href="" onClick={actions.delete.onClick.bind(this, id)} >
+                    <i className="fa fa-trash-o"></i>
+                </a>
                 }
+                {'custom' in actions && actions.custom.map(a =>
+                    this.shouldDisplayAction(a, id) &&
+                    <a href="" key={'custom_' + a.name} onClick={a.onClick.bind(this, id)}>
+                        {a.icon}
+                    </a>
+                )}
             </td>
         );
     }

@@ -34,6 +34,7 @@ import EditEventTypePage from '../pages/events/edit-event-type-page';
 import EventCategoryListPage from '../pages/events/event-category-list-page';
 import EditEventCategoryPage from '../pages/events/edit-event-category-page';
 import LocationListPage from '../pages/locations/location-list-page';
+import EditLocationPage from '../pages/locations/edit-location-page';
 
 
 import { withRouter } from 'react-router-dom'
@@ -75,8 +76,10 @@ class PrimaryLayout extends React.Component {
                         <Route exact path="/app/summits/:summit_id/event-types/:event_type_id" component={EditEventTypePage}/>
                         <Route exact path="/app/summits/:summit_id/event-categories" component={EventCategoryListPage}/>
                         <Route exact path="/app/summits/:summit_id/event-categories/new" component={EditEventCategoryPage}/>
-                        <Route exact path="/app/summits/:summit_id/event-categories/event_category_id" component={EditEventCategoryPage}/>
+                        <Route exact path="/app/summits/:summit_id/event-categories/:event_category_id" component={EditEventCategoryPage}/>
                         <Route exact path="/app/summits/:summit_id/locations" component={LocationListPage}/>
+                        <Route exact path="/app/summits/:summit_id/locations/new" component={EditLocationPage}/>
+                        <Route exact path="/app/summits/:summit_id/locations/:location_id" component={EditLocationPage}/>
                         <Route render={props => (<Redirect to="/app/directory"/>)}/>
                     </Switch>
                 </main>

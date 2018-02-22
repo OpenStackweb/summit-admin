@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 OpenStack Foundation
+ * Copyright 2017 OpenStack Foundation
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,36 +13,31 @@
 
 import
 {
-    RECEIVE_EVENT_CATEGORY,
-    RESET_EVENT_CATEGORY_FORM,
-    UPDATE_EVENT_CATEGORY
-} from '../../actions/event-category-actions';
+    RECEIVE_LOCATION,
+    RECEIVE_LOCATION_META,
+    RESET_LOCATION_FORM,
+    UPDATE_LOCATION,
+    LOCATION_UPDATED
+} from '../../actions/location-actions';
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
 import { VALIDATE } from '../../actions/base-actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 export const DEFAULT_ENTITY = {
-    id                          : 0,
-    name                        : '',
-    code                        : '',
-    description                 : '',
-    sessions_count              : 0,
-    alternate_count             : 0,
-    lightning_count             : 0,
-    lightning_alternate_count   : 0,
-    voting_visible              : false,
-    chair_visible               : false,
-    tags                        : [],
-    track_groups                : []
+    id              : 0,
+    type            : '',
+    class_name      : '',
 }
 
 const DEFAULT_STATE = {
     entity      : DEFAULT_ENTITY,
-    errors      : {}
+    errors      : {},
+    allTypes    : [],
+    allClasses  : []
 };
 
-const eventCategoryReducer = (state = DEFAULT_STATE, action) => {
+const locationReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
         case LOGOUT_USER: {
@@ -55,15 +50,28 @@ const eventCategoryReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case SET_CURRENT_SUMMIT:
-        case RESET_EVENT_CATEGORY_FORM: {
+        case RESET_LOCATION_FORM: {
             return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
         }
         break;
-        case UPDATE_EVENT_CATEGORY: {
+        case RECEIVE_LOCATION_META: {
+            let types = [...DEFAULT_STATE.allTypes];
+            let allClasses = [...payload.response];
+
+            allClasses.map(t => {
+                types = types.concat(t.type)
+            });
+
+            let unique_types = [...new Set( types )];
+
+            return {...state, allTypes: unique_types, allClasses: allClasses }
+        }
+        break;
+        case UPDATE_LOCATION: {
             return {...state,  entity: {...payload}, errors: {} };
         }
         break;
-        case RECEIVE_EVENT_CATEGORY: {
+        case RECEIVE_LOCATION: {
             let entity = {...payload.response};
 
             for(var key in entity) {
@@ -75,6 +83,10 @@ const eventCategoryReducer = (state = DEFAULT_STATE, action) => {
             return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
         }
         break;
+        case LOCATION_UPDATED: {
+            return state;
+        }
+        break;
         case VALIDATE: {
             return {...state,  errors: payload.errors };
         }
@@ -84,4 +96,4 @@ const eventCategoryReducer = (state = DEFAULT_STATE, action) => {
     }
 };
 
-export default eventCategoryReducer;
+export default locationReducer;

@@ -15,8 +15,8 @@ import React from 'react'
 import { connect } from 'react-redux';
 import swal from "sweetalert2";
 import T from "i18n-react/dist/i18n-react";
-import MergeSpeakerForm from '../../components/merge-speaker-form/merge-speaker-form';
-import SpeakerInput from '../../components/speaker-input/index'
+import MergeSpeakerForm from '../../components/forms/merge-speaker-form/merge-speaker-form';
+import SpeakerInput from '../../components/inputs/speaker-input'
 import { getSummitById }  from '../../actions/summit-actions';
 import { getSpeakerForMerge, mergeSpeakers } from "../../actions/speaker-actions";
 import '../../styles/merge-speakers-page.less';

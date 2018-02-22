@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
-import EventCategoryForm from '../../components/event-category-form/event-category-form';
+import EventCategoryForm from '../../components/forms/event-category-form';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getEventCategory, resetEventCategoryForm, saveEventCategory } from "../../actions/event-category-actions";
 //import '../../styles/edit-summit-attendee-page.less';

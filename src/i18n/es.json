@@ -407,17 +407,19 @@
     "remove_warning"        : "Are you sure you want to delete event category "
   },
   "edit_event_category": {
-    "event_category"          : "Event Category",
-    "name"                    : "Name",
-    "code"                    : "Code",
-    "description"             : "Description",
-    "number_sessions"         : "Number of Sessions",
-    "number_alternates"       : "Number of Alternates",
-    "visible_voters"          : "This category is visible to voters?",
-    "visible_track_chairs"    : "This category is visible to track chairs?",
-    "tags"                    : "Allowed Tags",
-    "tag"                     : "Tag",
-    "group"                   : "Group"
+    "event_category"              : "Event Category",
+    "name"                        : "Name",
+    "code"                        : "Code",
+    "description"                 : "Description",
+    "number_sessions"             : "# of Sessions",
+    "number_alternates"           : "# of Alternates",
+    "number_lightning"            : "# of Lightning",
+    "number_lightning_alternates" : "# of Lightning Alt",
+    "visible_voters"              : "This category is visible to voters?",
+    "visible_track_chairs"        : "This category is visible to track chairs?",
+    "tags"                        : "Allowed Tags",
+    "tag"                         : "Tag",
+    "group"                       : "Group"
   },
   "location_list": {
     "location_list"         : "Location List",

@@ -14,10 +14,10 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import TextEditor from '../editor-input'
-import MemberInput from '../member-input'
-import UploadInput from '../upload-input'
-import Input from '../text-input'
+import TextEditor from '../inputs/editor-input'
+import MemberInput from '../inputs/member-input'
+import UploadInput from '../inputs/upload-input/index'
+import Input from '../inputs/text-input'
 import {findElementPos} from '../../utils/methods'
 
 

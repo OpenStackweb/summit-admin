@@ -15,8 +15,8 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import {findElementPos} from '../../utils/methods'
-import Input from '../text-input'
-import SpeakerInput from '../speaker-input'
+import Input from '../inputs/text-input'
+import SpeakerInput from '../inputs/speaker-input'
 
 
 class SpeakerAttendanceForm extends React.Component {

@@ -34,6 +34,7 @@ import eventTypeReducer from './reducers/events/event-type-reducer';
 import eventCategoryListReducer from './reducers/events/event-category-list-reducer';
 import eventCategoryReducer from './reducers/events/event-category-reducer';
 import locationListReducer from './reducers/locations/location-list-reducer';
+import locationReducer from './reducers/locations/location-reducer';
 
 
 import thunk from 'redux-thunk';
@@ -67,7 +68,8 @@ const reducers = persistCombineReducers(config, {
     currentEventTypeState: eventTypeReducer,
     currentEventCategoryListState: eventCategoryListReducer,
     currentEventCategoryState: eventCategoryReducer,
-    currentLocationListState: locationListReducer
+    currentLocationListState: locationListReducer,
+    currentLocationState: locationReducer
 })
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

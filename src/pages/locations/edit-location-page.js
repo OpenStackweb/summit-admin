@@ -14,34 +14,34 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
-import PromocodeForm from '../../components/forms/promocode-form';
+import LocationForm from '../../components/forms/location-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getPromocode, getPromocodeMeta, resetPromocodeForm, sendEmail, savePromocode } from "../../actions/promocode-actions";
-import '../../styles/edit-promocode-page.less';
+import { getLocation, getLocationMeta, resetLocationForm, saveLocation } from "../../actions/location-actions";
+//import '../../styles/edit-location-page.less';
 
-class EditPromocodePage extends React.Component {
+class EditLocationPage extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-            promocodeId: props.match.params.promocode_id
+            locationId: props.match.params.location_id
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        let {promocodeId} = this.state;
+        let {locationId} = this.state;
 
-        let new_promocode_id = nextProps.match.params.promocode_id;
+        let new_location_id = nextProps.match.params.location_id;
 
-        if(promocodeId != new_promocode_id) {
+        if(locationId != new_location_id) {
 
-            this.setState({promocodeId: new_promocode_id});
+            this.setState({locationId: new_location_id});
 
-            if(new_promocode_id) {
-                this.props.getPromocode(new_promocode_id);
+            if(new_location_id) {
+                this.props.getLocation(new_location_id);
             } else {
-                this.props.resetPromocodeForm();
+                this.props.resetLocationForm();
             }
         }
     }
@@ -57,17 +57,17 @@ class EditPromocodePage extends React.Component {
 
     componentDidMount () {
         let {currentSummit, allTypes, errors} = this.props;
-        let promocodeId = this.props.match.params.promocode_id;
+        let locationId = this.props.match.params.location_id;
 
         if(currentSummit != null) {
-            if (promocodeId != null) {
-                this.props.getPromocode(promocodeId);
+            if (locationId != null) {
+                this.props.getLocation(locationId);
             } else {
-                this.props.resetPromocodeForm();
+                this.props.resetLocationForm();
             }
 
             if(allTypes.length == 0){
-                this.props.getPromocodeMeta();
+                this.props.getLocationMeta();
             }
         }
     }
@@ -78,10 +78,10 @@ class EditPromocodePage extends React.Component {
 
         return(
             <div className="container">
-                <h3>{title} {T.translate("edit_promocode.promocode")}</h3>
+                <h3>{title} {T.translate("edit_location.location")}</h3>
                 <hr/>
                 {currentSummit &&
-                <PromocodeForm
+                <LocationForm
                     history={this.props.history}
                     currentSummit={currentSummit}
                     allTypes={allTypes}
@@ -89,7 +89,7 @@ class EditPromocodePage extends React.Component {
                     entity={entity}
                     errors={errors}
                     onSendEmail={this.props.sendEmail}
-                    onSubmit={this.props.savePromocode}
+                    onSubmit={this.props.saveLocation}
                 />
                 }
             </div>
@@ -97,19 +97,18 @@ class EditPromocodePage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentPromocodeState }) => ({
+const mapStateToProps = ({ currentSummitState, currentLocationState }) => ({
     currentSummit : currentSummitState.currentSummit,
-    ...currentPromocodeState
+    ...currentLocationState
 })
 
 export default connect (
     mapStateToProps,
     {
         getSummitById,
-        getPromocode,
-        getPromocodeMeta,
-        resetPromocodeForm,
-        sendEmail,
-        savePromocode,
+        getLocation,
+        getLocationMeta,
+        resetLocationForm,
+        saveLocation,
     }
-)(EditPromocodePage);
+)(EditLocationPage);

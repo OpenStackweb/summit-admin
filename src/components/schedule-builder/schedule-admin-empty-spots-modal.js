@@ -12,7 +12,7 @@
  **/
 import { Modal, Button, FormGroup, FormControl } from 'react-bootstrap';
 import React from 'react';
-import DateTimePicker from '../datetimepicker'
+import DateTimePicker from '../inputs/datetimepicker'
 import ScheduleAdminVenueSelector from './schedule-admin-venue-selector';
 import moment from "moment-timezone";
 import T from "i18n-react/dist/i18n-react";

@@ -15,9 +15,9 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import {findElementPos} from '../../utils/methods'
-import Input from '../text-input'
-import TextEditor from '../editor-input'
-import SimpleLinkList from '../simple-link-list'
+import Input from '../inputs/text-input'
+import TextEditor from '../inputs/editor-input'
+import SimpleLinkList from '../simple-link-list/index'
 import {queryTags} from '../../actions/base-actions'
 
 
@@ -150,44 +150,66 @@ class EventCategoryForm extends React.Component {
                     </div>
                 </div>
                 <div className="row form-group">
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <label> {T.translate("edit_event_category.number_sessions")}</label>
                         <Input
                             type="number"
-                            id="number_sessions"
-                            value={entity.number_sessions}
+                            id="session_count"
+                            value={entity.session_count}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('number_sessions')}
+                            error={this.hasErrors('session_count')}
                         />
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <label> {T.translate("edit_event_category.number_alternates")}</label>
                         <Input
                             type="number"
-                            id="number_alternates"
-                            value={entity.number_alternates}
+                            id="alternate_count"
+                            value={entity.alternate_count}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('number_alternates')}
+                            error={this.hasErrors('alternate_count')}
+                        />
+                    </div>
+                    <div className="col-md-3">
+                        <label> {T.translate("edit_event_category.number_lightning")}</label>
+                        <Input
+                            type="number"
+                            id="lightning_count"
+                            value={entity.lightning_count}
+                            onChange={this.handleChange}
+                            className="form-control"
+                            error={this.hasErrors('lightning_count')}
+                        />
+                    </div>
+                    <div className="col-md-3">
+                        <label> {T.translate("edit_event_category.number_lightning_alternates")}</label>
+                        <Input
+                            type="number"
+                            id="lightning_alternate_count"
+                            value={entity.lightning_alternate_count}
+                            onChange={this.handleChange}
+                            className="form-control"
+                            error={this.hasErrors('lightning_alternate_count')}
                         />
                     </div>
                 </div>
                 <div className="row form-group">
                     <div className="col-md-4 checkboxes-div">
                         <div className="form-check abc-checkbox">
-                            <input type="checkbox" id="visible_voters" checked={entity.visible_voters}
+                            <input type="checkbox" id="voting_visible" checked={entity.voting_visible}
                                    onChange={this.handleChange} className="form-check-input"/>
-                            <label className="form-check-label" htmlFor="visible_voters">
+                            <label className="form-check-label" htmlFor="voting_visible">
                                 {T.translate("edit_event_category.visible_voters")}
                             </label>
                         </div>
                     </div>
                     <div className="col-md-4 checkboxes-div">
                         <div className="form-check abc-checkbox">
-                            <input type="checkbox" id="visible_track_chairs" checked={entity.visible_track_chairs}
+                            <input type="checkbox" id="chair_visible" checked={entity.chair_visible}
                                    onChange={this.handleChange} className="form-check-input"/>
-                            <label className="form-check-label" htmlFor="visible_track_chairs">
+                            <label className="form-check-label" htmlFor="chair_visible">
                                 {T.translate("edit_event_category.visible_track_chairs")}
                             </label>
                         </div>

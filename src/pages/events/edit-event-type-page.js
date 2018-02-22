@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
-import EventTypeForm from '../../components/event-type-form/event-type-form';
+import EventTypeForm from '../../components/forms/event-type-form';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getEventType, resetEventTypeForm, saveEventType } from "../../actions/event-type-actions";
 import '../../styles/edit-event-type-page.less';

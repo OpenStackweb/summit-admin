@@ -14,7 +14,7 @@ import React from 'react'
 import SummitEventBulkEditorItem from './summit-event-bulk-editor-item'
 import T from 'i18n-react/dist/i18n-react'
 import swal from "sweetalert2";
-import DateTimePicker from '../datetimepicker'
+import DateTimePicker from '../inputs/datetimepicker'
 import ScheduleAdminVenueSelector from '../schedule-builder/schedule-admin-venue-selector';
 import moment from "moment-timezone";
 import {TBALocation} from "../../constants";

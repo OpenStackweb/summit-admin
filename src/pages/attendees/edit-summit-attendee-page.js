@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
-import AttendeeForm from '../../components/attendee-form/attendee-form';
+import AttendeeForm from '../../components/forms/attendee-form/attendee-form';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getAttendee, resetAttendeeForm, saveAttendee, changeMember, saveTicket, deleteTicket, deleteRsvp } from "../../actions/attendee-actions";
 import '../../styles/edit-summit-attendee-page.less';

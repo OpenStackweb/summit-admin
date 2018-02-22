@@ -15,14 +15,11 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import {findElementPos} from '../../utils/methods'
-import Dropdown from '../dropdown'
-import SpeakerInput from '../speaker-input'
-import MemberInput from '../member-input'
-import CompanyInput from '../company-input'
-import Input from '../text-input'
+import Dropdown from '../inputs/dropdown'
+import Input from '../inputs/text-input'
 
 
-class PromocodeForm extends React.Component {
+class LocationForm extends React.Component {
     constructor(props) {
         super(props);
 
@@ -34,7 +31,6 @@ class PromocodeForm extends React.Component {
         this.shouldShowComponent = this.shouldShowComponent.bind(this);
         this.handleTypeChange = this.handleTypeChange.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        this.handleSendEmail = this.handleSendEmail.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -78,13 +74,6 @@ class PromocodeForm extends React.Component {
         this.setState({entity: entity});
     }
 
-    handleSendEmail(ev) {
-        let {entity} = this.state;
-        ev.preventDefault();
-
-        this.props.onSendEmail(entity.id);
-    }
-
     handleSubmit(ev) {
         let entity = {...this.state.entity};
         ev.preventDefault();
@@ -125,25 +114,25 @@ class PromocodeForm extends React.Component {
     render() {
         let {entity} = this.state;
         let { currentSummit, allTypes } = this.props;
-        let promocode_types_ddl = allTypes.map(t => ({label: t, value: t}));
+        let location_types_ddl = allTypes.map(t => ({label: t, value: t}));
 
         return (
-            <form className="promocode-form">
+            <form className="location-form">
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
                     <div className="col-md-3">
-                        <label> {T.translate("edit_promocode.type")} *</label>
+                        <label> {T.translate("edit_location.type")} *</label>
                         <Dropdown
                             id="type"
                             value={entity.type}
-                            placeholder={T.translate("promocode_list.placeholders.select_type")}
-                            options={promocode_types_ddl}
+                            placeholder={T.translate("location_list.placeholders.select_type")}
+                            options={location_types_ddl}
                             onChange={this.handleTypeChange}
                             disabled={entity.id !== 0}
                         />
                     </div>
                     <div className="col-md-3">
-                        <label> {T.translate("edit_promocode.code")} *</label>
+                        <label> {T.translate("edit_location.code")} *</label>
                         <Input
                             id="code"
                             value={entity.code}
@@ -156,7 +145,7 @@ class PromocodeForm extends React.Component {
                 {this.shouldShowComponent('sponsor') &&
                 <div className="row form-group">
                     <div className="col-md-6">
-                        <label> {T.translate("edit_promocode.sponsor")} </label>
+                        <label> {T.translate("edit_location.sponsor")} </label>
                         <CompanyInput
                             id="sponsor"
                             value={entity.sponsor}
@@ -199,7 +188,7 @@ class PromocodeForm extends React.Component {
                 }
                 {this.shouldShowComponent('name') &&
                 <div className="row form-group">
-                    <div className="or-label col-md-12">{T.translate("edit_promocode.or")}</div>
+                    <div className="or-label col-md-12">{T.translate("edit_location.or")}</div>
                     <br/>
                     <div className="col-md-3">
                         <label> {T.translate("general.first_name")} </label>
@@ -237,7 +226,7 @@ class PromocodeForm extends React.Component {
                             <input disabled type="checkbox" id="email_sent" checked={entity.email_sent}
                                    onChange={this.handleChange} className="form-check-input" />
                             <label className="form-check-label" htmlFor="email_sent">
-                                {T.translate("edit_promocode.email_sent")}
+                                {T.translate("edit_location.email_sent")}
                             </label>
                         </div>
                     </div>
@@ -246,14 +235,14 @@ class PromocodeForm extends React.Component {
                             <input disabled type="checkbox" id="redeemed" checked={entity.redeemed}
                                    onChange={this.handleChange} className="form-check-input" />
                             <label className="form-check-label" htmlFor="redeemed">
-                                {T.translate("edit_promocode.redeemed")}
+                                {T.translate("edit_location.redeemed")}
                             </label>
                         </div>
                     </div>
                     {entity.id !== 0 && entity.email_sent === false &&
                     <div className="col-md-3">
                         <input type="button" onClick={this.handleSendEmail}
-                               className="btn btn-default pull-right" value={T.translate("edit_promocode.send_email")}/>
+                               className="btn btn-default pull-right" value={T.translate("edit_location.send_email")}/>
                     </div>
                     }
                 </div>
@@ -269,4 +258,4 @@ class PromocodeForm extends React.Component {
     }
 }
 
-export default PromocodeForm;
+export default LocationForm;

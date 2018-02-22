@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
-import SpeakerForm from '../../components/speaker-form/speaker-form';
+import SpeakerForm from '../../components/forms/speaker-form';
 import { getSpeaker, resetSpeakerForm, saveSpeaker, attachPicture } from "../../actions/speaker-actions";
 import { loadSummits } from '../../actions/summit-actions';
 import '../../styles/edit-summit-speaker-page.less';

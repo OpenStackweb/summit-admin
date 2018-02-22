@@ -33,13 +33,16 @@ export const getEventCategories = ( ) => (dispatch, getState) => {
     dispatch(startLoading());
 
     let params = {
+        expand       : "track_groups",
         access_token : accessToken,
+        page : 1,
+        per_page: 100,
     };
 
     return getRequest(
         createAction(REQUEST_EVENT_CATEGORIES),
         createAction(RECEIVE_EVENT_CATEGORIES),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types`,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/tracks`,
         authErrorHandler
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
@@ -51,13 +54,14 @@ export const getEventCategory = (eventCategoryId) => (dispatch, getState) => {
     let { currentSummit }   = currentSummitState;
 
     let params = {
+        expand       : "track_groups",
         access_token : accessToken,
     };
 
     return getRequest(
         null,
         createAction(RECEIVE_EVENT_CATEGORY),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types/${eventCategoryId}`,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/tracks/${eventCategoryId}`,
         authErrorHandler
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
@@ -87,7 +91,7 @@ export const saveEventCategory = (entity, history) => (dispatch, getState) => {
         putRequest(
             createAction(UPDATE_EVENT_CATEGORY),
             createAction(EVENT_CATEGORY_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types/${entity.id}`,
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/tracks/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -106,7 +110,7 @@ export const saveEventCategory = (entity, history) => (dispatch, getState) => {
         postRequest(
             createAction(UPDATE_EVENT_CATEGORY),
             createAction(EVENT_CATEGORY_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types`,
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/tracks`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -114,7 +118,7 @@ export const saveEventCategory = (entity, history) => (dispatch, getState) => {
             .then((payload) => {
                 dispatch(showMessage(
                     ...success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/event-types/${payload.response.id}`) }
+                    () => { history.push(`/app/summits/${currentSummit.id}/event-categories/${payload.response.id}`) }
                 ));
             });
     }
@@ -133,7 +137,7 @@ export const deleteEventCategory = (categoryId) => (dispatch, getState) => {
     return deleteRequest(
         null,
         createAction(EVENT_CATEGORY_DELETED)({categoryId}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types/${categoryId}`,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/tracks/${categoryId}`,
         authErrorHandler
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
