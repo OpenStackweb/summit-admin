@@ -25,9 +25,33 @@ import { VALIDATE } from '../../actions/base-actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 export const DEFAULT_ENTITY = {
-    id              : 0,
-    type            : '',
-    class_name      : '',
+    id                  : 0,
+    name                : '',
+    class_name          : '',
+    description         : '',
+    location_type       : '',
+    type                : '',
+    address_1           : '',
+    address_2           : '',
+    zipcode             : '',
+    city                : '',
+    state               : '',
+    country             : '',
+    website             : '',
+    lng                 : '',
+    lat                 : '',
+    display_on_site     : false,
+    details_page        : false,
+    is_main             : false,
+    location_message    : '',
+    maps                : [],
+    images              : [],
+    rooms               : [],
+    floors              : [],
+    capacity            : 0,
+    booking_link        : '',
+    sold_out            : false,
+
 }
 
 const DEFAULT_STATE = {

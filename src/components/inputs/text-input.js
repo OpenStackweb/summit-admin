@@ -41,11 +41,12 @@ export default class Input extends React.Component {
 
         let {onChange, value, className, error, ...rest} = this.props;
         let has_error = ( this.props.hasOwnProperty('error') && error != '' );
+        let class_name = this.props.hasOwnProperty('className') ? className : 'form-control';
 
         return (
             <div>
                 <input
-                    className={className + ' ' + (has_error ? 'error' : '')}
+                    className={class_name + ' ' + (has_error ? 'error' : '')}
                     value={this.state.value}
                     onChange={this.handleChange}
                     {...rest}

@@ -17,6 +17,9 @@ import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import {findElementPos} from '../../utils/methods'
 import Dropdown from '../inputs/dropdown'
 import Input from '../inputs/text-input'
+import TextEditor from '../inputs/editor-input'
+import SimpleLinkList from '../simple-link-list/index'
+import {queryTags} from '../../actions/base-actions'
 
 
 class LocationForm extends React.Component {
@@ -120,132 +123,132 @@ class LocationForm extends React.Component {
             <form className="location-form">
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
-                    <div className="col-md-3">
+                    <div className="col-md-4">
                         <label> {T.translate("edit_location.type")} *</label>
-                        <Dropdown
-                            id="type"
-                            value={entity.type}
+                        <Dropdown id="type" value={entity.type} disabled={entity.id !== 0}
                             placeholder={T.translate("location_list.placeholders.select_type")}
-                            options={location_types_ddl}
-                            onChange={this.handleTypeChange}
-                            disabled={entity.id !== 0}
+                            options={location_types_ddl} onChange={this.handleTypeChange}
                         />
                     </div>
-                    <div className="col-md-3">
-                        <label> {T.translate("edit_location.code")} *</label>
-                        <Input
-                            id="code"
-                            value={entity.code}
-                            onChange={this.handleChange}
-                            className="form-control"
-                            error={this.hasErrors('code')}
-                        />
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_location.name")} *</label>
+                        <Input id="name" value={entity.name} onChange={this.handleChange} error={this.hasErrors('name')} />
+                    </div>
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_location.website")}</label>
+                        <Input id="website" value={entity.website} onChange={this.handleChange} error={this.hasErrors('website')} />
                     </div>
                 </div>
-                {this.shouldShowComponent('sponsor') &&
                 <div className="row form-group">
-                    <div className="col-md-6">
-                        <label> {T.translate("edit_location.sponsor")} </label>
-                        <CompanyInput
-                            id="sponsor"
-                            value={entity.sponsor}
-                            onChange={this.handleChange}
-                            summitId={currentSummit.id}
-                            multi={false}
-                            error={this.hasErrors('sponsor_id')}
-                        />
+                    <div className="col-md-12">
+                        <label> {T.translate("edit_location.description")} </label>
+                        <TextEditor id="description" value={entity.description} onChange={this.handleChange} error={this.hasErrors('description')} />
                     </div>
                 </div>
-                }
-                {this.shouldShowComponent('member') &&
                 <div className="row form-group">
-                    <div className="col-md-6">
-                        <label> {T.translate("general.member")} </label>
-                        <MemberInput
-                            id="owner"
-                            value={entity.owner}
-                            onChange={this.handleChange}
-                            multi={false}
-                            error={this.hasErrors('owner_id')}
-                        />
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_location.address_1")}</label>
+                        <Input id="address_1" value={entity.address_1} onChange={this.handleChange} error={this.hasErrors('address_1')} />
+                    </div>
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_location.address_2")}</label>
+                        <Input id="address_2" value={entity.address_2} onChange={this.handleChange} error={this.hasErrors('address_2')} />
+                    </div>
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_location.zipcode")}</label>
+                        <Input id="zipcode" value={entity.zipcode} onChange={this.handleChange} error={this.hasErrors('zipcode')} />
                     </div>
                 </div>
-                }
-                {this.shouldShowComponent('speaker') &&
                 <div className="row form-group">
-                    <div className="col-md-6">
-                        <label> {T.translate("general.speaker")} </label>
-                        <SpeakerInput
-                            id="speaker"
-                            value={entity.speaker}
-                            onChange={this.handleChange}
-                            summitId={currentSummit.id}
-                            multi={false}
-                            error={this.hasErrors('speaker_id')}
-                        />
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_location.city")}</label>
+                        <Input id="city" value={entity.city} onChange={this.handleChange} error={this.hasErrors('city')} />
+                    </div>
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_location.state")}</label>
+                        <Input id="state" value={entity.state} onChange={this.handleChange} error={this.hasErrors('state')} />
+                    </div>
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_location.country")}</label>
+                        <Input id="country" value={entity.country} onChange={this.handleChange} error={this.hasErrors('country')} />
                     </div>
                 </div>
-                }
-                {this.shouldShowComponent('name') &&
                 <div className="row form-group">
-                    <div className="or-label col-md-12">{T.translate("edit_location.or")}</div>
-                    <br/>
-                    <div className="col-md-3">
-                        <label> {T.translate("general.first_name")} </label>
-                        <Input
-                            id="first_name"
-                            value={entity.first_name}
-                            onChange={this.handleChange}
-                            className="form-control"
-                            error={this.hasErrors('first_name')}
-                        />
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_location.lat")}</label>
+                        <Input id="lat" value={entity.lat} onChange={this.handleChange} error={this.hasErrors('lat')} />
                     </div>
-                    <div className="col-md-3">
-                        <label> {T.translate("general.last_name")} </label>
-                        <Input
-                            id="last_name"
-                            value={entity.last_name}
-                            onChange={this.handleChange}
-                            className="form-control"
-                        />
-                    </div>
-                    <div className="col-md-3">
-                        <label> {T.translate("general.email")} </label>
-                        <Input
-                            id="email"
-                            value={entity.email}
-                            onChange={this.handleChange}
-                            className="form-control"
-                        />
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_location.lng")}</label>
+                        <Input id="lng" value={entity.lng} onChange={this.handleChange} error={this.hasErrors('lng')} />
                     </div>
                 </div>
-                }
                 <div className="row form-group checkboxes-div">
-                    <div className="col-md-3">
+                    <div className="col-md-4">
                         <div className="form-check abc-checkbox">
-                            <input disabled type="checkbox" id="email_sent" checked={entity.email_sent}
+                            <input type="checkbox" id="display_on_site" checked={entity.display_on_site}
                                    onChange={this.handleChange} className="form-check-input" />
-                            <label className="form-check-label" htmlFor="email_sent">
-                                {T.translate("edit_location.email_sent")}
+                            <label className="form-check-label" htmlFor="display_on_site">
+                                {T.translate("edit_location.display_on_site")}
                             </label>
                         </div>
                     </div>
-                    <div className="col-md-3">
+                    <div className="col-md-4">
                         <div className="form-check abc-checkbox">
-                            <input disabled type="checkbox" id="redeemed" checked={entity.redeemed}
+                            <input type="checkbox" id="details_page" checked={entity.details_page}
                                    onChange={this.handleChange} className="form-check-input" />
-                            <label className="form-check-label" htmlFor="redeemed">
-                                {T.translate("edit_location.redeemed")}
+                            <label className="form-check-label" htmlFor="details_page">
+                                {T.translate("edit_location.details_page")}
                             </label>
                         </div>
                     </div>
-                    {entity.id !== 0 && entity.email_sent === false &&
-                    <div className="col-md-3">
-                        <input type="button" onClick={this.handleSendEmail}
-                               className="btn btn-default pull-right" value={T.translate("edit_location.send_email")}/>
+                    <div className="col-md-4">
+                        <div className="form-check abc-checkbox">
+                            <input type="checkbox" id="is_main" checked={entity.is_main}
+                                   onChange={this.handleChange} className="form-check-input" />
+                            <label className="form-check-label" htmlFor="is_main">
+                                {T.translate("edit_location.is_main")}
+                            </label>
+                        </div>
                     </div>
-                    }
                 </div>
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <label> {T.translate("edit_location.location_message")}</label>
+                        <TextEditor id="location_message" value={entity.location_message} onChange={this.handleChange} error={this.hasErrors('location_message')} />
+                    </div>
+                </div>
+                <div className="row form-group">
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_location.capacity")}</label>
+                        <Input type="number" id="capacity" value={entity.capacity} onChange={this.handleChange} error={this.hasErrors('capacity')} />
+                    </div>
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_location.booking_link")}</label>
+                        <Input id="booking_link" value={entity.booking_link} onChange={this.handleChange} error={this.hasErrors('booking_link')} />
+                    </div>
+                    <div className="col-md-4">
+                        <div className="form-check abc-checkbox">
+                            <input type="checkbox" id="sold_out" checked={entity.sold_out}
+                                   onChange={this.handleChange} className="form-check-input" />
+                            <label className="form-check-label" htmlFor="sold_out">
+                                {T.translate("edit_location.sold_out")}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                {/*<SimpleLinkList
+                    title={T.translate("edit_location.maps")}
+                    values={entity.maps}
+                    columns={mapsColumns}
+                    valueKey="name"
+                    labelKey="name"
+                    onEdit={this.handleMapEdit}
+                    onLink={this.handleMapLink}
+                    onUnLink={this.handleMapUnLink}
+                    queryOptions={queryMaps}
+                />*/}
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">
