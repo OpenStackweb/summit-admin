@@ -18,6 +18,7 @@ import TextEditor from '../inputs/editor-input'
 import MemberInput from '../inputs/member-input'
 import UploadInput from '../inputs/upload-input/index'
 import Input from '../inputs/text-input'
+import Panel from "../sections/panel"
 import {findElementPos} from '../../utils/methods'
 
 
@@ -275,26 +276,11 @@ class SpeakerForm extends React.Component {
                 <br/>
                 <hr/>
                 { lastSummits.map(s =>
-                    <div key={'last-summits-' + s.id} className="panel-group summit-data">
-                        <div className="panel panel-default">
-                            <div className="panel-heading">
-                                <h4 className="panel-title">
-                                    <a className={showSummit == s.id ? 'collapsed' : ''} onClick={this.toggleSummit.bind(this, s.id)}>
-                                        {s.name}
-                                    </a>
-                                </h4>
-                            </div>
-                            <div className="panel-collapse collapse in">
-                                {showSummit === s.id &&
-                                <div className="panel-body">
-                                    {this.getPresentations(s.id)}
-                                    {this.getAttendance(s.id)}
-                                    {this.getPromocodes(s.id)}
-                                </div>
-                                }
-                            </div>
-                        </div>
-                    </div>
+                    <Panel key={'last-summits-' + s.id} className="summit-data" showSection={showSummit} name={s.id} title={s.name} handleClick={this.toggleSummit.bind(this, s.id)} >
+                        {this.getPresentations(s.id)}
+                        {this.getAttendance(s.id)}
+                        {this.getPromocodes(s.id)}
+                    </Panel>
                 )}
 
                 <div className="row">

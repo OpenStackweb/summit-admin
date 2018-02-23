@@ -123,7 +123,7 @@ class LocationListPage extends React.Component {
                 </div>
 
                 {locations.length == 0 &&
-                <div>{T.translate("location_list.no_locations")}</div>
+                <div>{T.translate("location_list.no_items")}</div>
                 }
 
                 {locations.length > 0 &&

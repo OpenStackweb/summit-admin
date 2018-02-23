@@ -18,8 +18,8 @@ import {findElementPos} from '../../utils/methods'
 import Dropdown from '../inputs/dropdown'
 import Input from '../inputs/text-input'
 import TextEditor from '../inputs/editor-input'
-import SimpleLinkList from '../simple-link-list/index'
-import {queryTags} from '../../actions/base-actions'
+import Table from "../table/Table";
+import Panel from "../sections/panel";
 
 
 class LocationForm extends React.Component {
@@ -28,7 +28,8 @@ class LocationForm extends React.Component {
 
         this.state = {
             entity: {...props.entity},
-            errors: props.errors
+            errors: props.errors,
+            showSection: 'main'
         };
 
         this.shouldShowComponent = this.shouldShowComponent.bind(this);
@@ -114,10 +115,47 @@ class LocationForm extends React.Component {
         }
     }
 
+    toggleSection(section, ev) {
+        let {showSection} = this.state;
+        let newShowSection = (showSection === section) ? 'main' : section;
+        ev.preventDefault();
+
+        this.setState({showSection: newShowSection});
+    }
+
     render() {
-        let {entity} = this.state;
+        let {entity, showSection} = this.state;
         let { currentSummit, allTypes } = this.props;
         let location_types_ddl = allTypes.map(t => ({label: t, value: t}));
+
+        let floor_columns = [
+            { columnKey: 'id', value: T.translate("general.id") },
+            { columnKey: 'name', value: T.translate("general.name") },
+            { columnKey: 'number', value: T.translate("edit_location.number") }
+        ];
+
+        let floor_options = {
+            className: "table table-striped table-bordered table-hover dataTable",
+            actions: {
+                edit: {onClick: this.handleFloorEdit},
+                delete: { onClick: this.handleFloorDelete }
+            }
+        }
+
+        let room_columns = [
+            { columnKey: 'id', value: T.translate("general.id") },
+            { columnKey: 'name', value: T.translate("general.name") },
+            { columnKey: 'capacity', value: T.translate("edit_location.capacity") },
+            { columnKey: 'floor', value: T.translate("edit_location.floor") }
+        ];
+
+        let room_options = {
+            className: "table table-striped table-bordered table-hover dataTable",
+            actions: {
+                edit: {onClick: this.handleRoomEdit},
+                delete: { onClick: this.handleRoomDelete }
+            }
+        }
 
         return (
             <form className="location-form">
@@ -238,17 +276,29 @@ class LocationForm extends React.Component {
                     </div>
                 </div>
 
-                {/*<SimpleLinkList
-                    title={T.translate("edit_location.maps")}
-                    values={entity.maps}
-                    columns={mapsColumns}
-                    valueKey="name"
-                    labelKey="name"
-                    onEdit={this.handleMapEdit}
-                    onLink={this.handleMapLink}
-                    onUnLink={this.handleMapUnLink}
-                    queryOptions={queryMaps}
-                />*/}
+                <Panel showSection={showSection} name="floors" title={T.translate("edit_location.floors")} handleClick={this.toggleSection.bind(this, 'floors')} >
+                    <button className="btn btn-primary right-space" onClick={this.handleNewFloor}>
+                        {T.translate("edit_location.add_floor")}
+                    </button>
+                    <Table
+                        options={floor_options}
+                        data={entity.floors}
+                        columns={floor_columns}
+                        className="dataTable"
+                    />
+                </Panel>
+
+                <Panel showSection={showSection} name="rooms" title={T.translate("edit_location.rooms")} handleClick={this.toggleSection.bind(this, 'rooms')} >
+                    <button className="btn btn-primary right-space" onClick={this.handleNewRoom}>
+                        {T.translate("edit_location.add_room")}
+                    </button>
+                    <Table
+                        options={room_options}
+                        data={entity.rooms}
+                        columns={room_columns}
+                        className="dataTable"
+                    />
+                </Panel>
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">
