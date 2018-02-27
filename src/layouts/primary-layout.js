@@ -35,6 +35,8 @@ import EventCategoryListPage from '../pages/events/event-category-list-page';
 import EditEventCategoryPage from '../pages/events/edit-event-category-page';
 import LocationListPage from '../pages/locations/location-list-page';
 import EditLocationPage from '../pages/locations/edit-location-page';
+import EditFloorPage from '../pages/locations/edit-floor-page';
+import EditRoomPage from '../pages/locations/edit-room-page';
 
 
 import { withRouter } from 'react-router-dom'
@@ -80,6 +82,10 @@ class PrimaryLayout extends React.Component {
                         <Route exact path="/app/summits/:summit_id/locations" component={LocationListPage}/>
                         <Route exact path="/app/summits/:summit_id/locations/new" component={EditLocationPage}/>
                         <Route exact path="/app/summits/:summit_id/locations/:location_id" component={EditLocationPage}/>
+                        <Route exact path="/app/summits/:summit_id/locations/:location_id/floors/new" component={EditFloorPage}/>
+                        <Route exact path="/app/summits/:summit_id/locations/:location_id/floors/:floor_id" component={EditFloorPage}/>
+                        <Route exact path="/app/summits/:summit_id/locations/:location_id/rooms/new" component={EditRoomPage}/>
+                        <Route exact path="/app/summits/:summit_id/locations/:location_id/rooms/:room_id" component={EditRoomPage}/>
                         <Route render={props => (<Redirect to="/app/directory"/>)}/>
                     </Switch>
                 </main>

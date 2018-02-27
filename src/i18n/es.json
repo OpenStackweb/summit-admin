@@ -428,5 +428,37 @@
     "name"                  : "Name",
     "class_name"            : "Class",
     "remove_warning"        : "Are you sure you want to delete location "
+  },
+  "edit_location": {
+    "location"          : "Location",
+    "number"            : "Number",
+    "capacity"          : "Capacity",
+    "floor"             : "Floor",
+    "type"              : "Type",
+    "name"              : "Name",
+    "website"           : "Website",
+    "description"       : "Description",
+    "display_on_site"   : "Display on site",
+    "details_page"      : "Show details page",
+    "is_main"           : "Is main",
+    "location_message"  : "Location Message",
+    "booking_link"      : "Booking Link",
+    "sold_out"          : "Sold Out",
+    "address"           : "Address",
+    "address_1"         : "Address 1",
+    "address_2"         : "Address 2",
+    "zipcode"           : "ZipCode",
+    "city"              : "City",
+    "state"             : "State",
+    "country"           : "Country",
+    "lat"               : "Latitude",
+    "lng"               : "Longitude",
+    "floors"            : "Floors",
+    "add_floor"         : "Add Floor",
+    "rooms"             : "Rooms",
+    "add_room"          : "Add Room",
+    "placeholders": {
+      "select_type"     : "Select Type"
+    }
   }
 }

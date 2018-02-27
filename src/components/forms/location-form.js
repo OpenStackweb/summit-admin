@@ -18,8 +18,9 @@ import {findElementPos} from '../../utils/methods'
 import Dropdown from '../inputs/dropdown'
 import Input from '../inputs/text-input'
 import TextEditor from '../inputs/editor-input'
-import Table from "../table/Table";
-import Panel from "../sections/panel";
+import Table from '../table/Table';
+import Panel from '../sections/panel';
+import GMap from '../google-map'
 
 
 class LocationForm extends React.Component {
@@ -36,6 +37,8 @@ class LocationForm extends React.Component {
         this.handleTypeChange = this.handleTypeChange.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleNewFloor = this.handleNewFloor.bind(this);
+        this.handleNewRoom = this.handleNewRoom.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -123,6 +126,16 @@ class LocationForm extends React.Component {
         this.setState({showSection: newShowSection});
     }
 
+    handleNewFloor(ev) {
+        let {currentSummit, history, entity} = this.props;
+        history.push(`/app/summits/${currentSummit.id}/locations/${entity.id}/floors/new`);
+    }
+
+    handleNewRoom(ev) {
+        let {currentSummit, history, entity} = this.props;
+        history.push(`/app/summits/${currentSummit.id}/locations/${entity.id}/rooms/new`);
+    }
+
     render() {
         let {entity, showSection} = this.state;
         let { currentSummit, allTypes } = this.props;
@@ -157,6 +170,34 @@ class LocationForm extends React.Component {
             }
         }
 
+        let image_columns = [
+            { columnKey: 'id', value: T.translate("general.id") },
+            { columnKey: 'name', value: T.translate("general.name") }
+        ];
+
+        let image_options = {
+            className: "table table-striped table-bordered table-hover dataTable",
+            actions: {
+                edit: {onClick: this.handleImageEdit},
+                delete: { onClick: this.handleImageDelete }
+            }
+        }
+
+        let map_columns = [
+            { columnKey: 'id', value: T.translate("general.id") },
+            { columnKey: 'name', value: T.translate("general.name") },
+        ];
+
+        let map_options = {
+            className: "table table-striped table-bordered table-hover dataTable",
+            actions: {
+                edit: {onClick: this.handleMapEdit},
+                delete: { onClick: this.handleMapDelete }
+            }
+        }
+
+        let mapPin = [{id: entity.id, lat: -31.413219, lng: -64.492229}];
+
         return (
             <form className="location-form">
                 <input type="hidden" id="id" value={entity.id} />
@@ -164,7 +205,7 @@ class LocationForm extends React.Component {
                     <div className="col-md-4">
                         <label> {T.translate("edit_location.type")} *</label>
                         <Dropdown id="type" value={entity.type} disabled={entity.id !== 0}
-                            placeholder={T.translate("location_list.placeholders.select_type")}
+                            placeholder={T.translate("edit_location.placeholders.select_type")}
                             options={location_types_ddl} onChange={this.handleTypeChange}
                         />
                     </div>
@@ -183,44 +224,7 @@ class LocationForm extends React.Component {
                         <TextEditor id="description" value={entity.description} onChange={this.handleChange} error={this.hasErrors('description')} />
                     </div>
                 </div>
-                <div className="row form-group">
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_location.address_1")}</label>
-                        <Input id="address_1" value={entity.address_1} onChange={this.handleChange} error={this.hasErrors('address_1')} />
-                    </div>
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_location.address_2")}</label>
-                        <Input id="address_2" value={entity.address_2} onChange={this.handleChange} error={this.hasErrors('address_2')} />
-                    </div>
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_location.zipcode")}</label>
-                        <Input id="zipcode" value={entity.zipcode} onChange={this.handleChange} error={this.hasErrors('zipcode')} />
-                    </div>
-                </div>
-                <div className="row form-group">
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_location.city")}</label>
-                        <Input id="city" value={entity.city} onChange={this.handleChange} error={this.hasErrors('city')} />
-                    </div>
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_location.state")}</label>
-                        <Input id="state" value={entity.state} onChange={this.handleChange} error={this.hasErrors('state')} />
-                    </div>
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_location.country")}</label>
-                        <Input id="country" value={entity.country} onChange={this.handleChange} error={this.hasErrors('country')} />
-                    </div>
-                </div>
-                <div className="row form-group">
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_location.lat")}</label>
-                        <Input id="lat" value={entity.lat} onChange={this.handleChange} error={this.hasErrors('lat')} />
-                    </div>
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_location.lng")}</label>
-                        <Input id="lng" value={entity.lng} onChange={this.handleChange} error={this.hasErrors('lng')} />
-                    </div>
-                </div>
+
                 <div className="row form-group checkboxes-div">
                     <div className="col-md-4">
                         <div className="form-check abc-checkbox">
@@ -265,7 +269,7 @@ class LocationForm extends React.Component {
                         <label> {T.translate("edit_location.booking_link")}</label>
                         <Input id="booking_link" value={entity.booking_link} onChange={this.handleChange} error={this.hasErrors('booking_link')} />
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-4 checkboxes-div">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="sold_out" checked={entity.sold_out}
                                    onChange={this.handleChange} className="form-check-input" />
@@ -276,8 +280,50 @@ class LocationForm extends React.Component {
                     </div>
                 </div>
 
+                <Panel showSection={showSection} name="address" title={T.translate("edit_location.address")} handleClick={this.toggleSection.bind(this, 'address')} >
+                    <div className="row form-group">
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_location.address_1")}</label>
+                            <Input id="address_1" value={entity.address_1} onChange={this.handleChange} error={this.hasErrors('address_1')} />
+                        </div>
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_location.address_2")}</label>
+                            <Input id="address_2" value={entity.address_2} onChange={this.handleChange} error={this.hasErrors('address_2')} />
+                        </div>
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_location.zipcode")}</label>
+                            <Input id="zipcode" value={entity.zipcode} onChange={this.handleChange} error={this.hasErrors('zipcode')} />
+                        </div>
+                    </div>
+                    <div className="row form-group">
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_location.city")}</label>
+                            <Input id="city" value={entity.city} onChange={this.handleChange} error={this.hasErrors('city')} />
+                        </div>
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_location.state")}</label>
+                            <Input id="state" value={entity.state} onChange={this.handleChange} error={this.hasErrors('state')} />
+                        </div>
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_location.country")}</label>
+                            <Input id="country" value={entity.country} onChange={this.handleChange} error={this.hasErrors('country')} />
+                        </div>
+                    </div>
+                    <div className="row form-group">
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_location.lat")}</label>
+                            <Input id="lat" value={entity.lat} onChange={this.handleChange} error={this.hasErrors('lat')} />
+                        </div>
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_location.lng")}</label>
+                            <Input id="lng" value={entity.lng} onChange={this.handleChange} error={this.hasErrors('lng')} />
+                        </div>
+                    </div>
+                    <GMap markers={mapPin} zoom-in />
+                </Panel>
+
                 <Panel showSection={showSection} name="floors" title={T.translate("edit_location.floors")} handleClick={this.toggleSection.bind(this, 'floors')} >
-                    <button className="btn btn-primary right-space" onClick={this.handleNewFloor}>
+                    <button className="btn btn-primary pull-right" onClick={this.handleNewFloor}>
                         {T.translate("edit_location.add_floor")}
                     </button>
                     <Table
@@ -289,7 +335,7 @@ class LocationForm extends React.Component {
                 </Panel>
 
                 <Panel showSection={showSection} name="rooms" title={T.translate("edit_location.rooms")} handleClick={this.toggleSection.bind(this, 'rooms')} >
-                    <button className="btn btn-primary right-space" onClick={this.handleNewRoom}>
+                    <button className="btn btn-primary pull-right" onClick={this.handleNewRoom}>
                         {T.translate("edit_location.add_room")}
                     </button>
                     <Table
@@ -298,6 +344,31 @@ class LocationForm extends React.Component {
                         columns={room_columns}
                         className="dataTable"
                     />
+                </Panel>
+
+                <Panel showSection={showSection} name="images" title={T.translate("edit_location.images")} handleClick={this.toggleSection.bind(this, 'images')} >
+                    <div className="col-md-12">
+                        <button className="btn btn-primary pull-right" onClick={this.handleNewImage}>
+                            {T.translate("edit_location.add_image")}
+                        </button>
+                        <Table
+                            options={image_options}
+                            data={entity.images}
+                            columns={image_columns}
+                            className="dataTable"
+                        />
+                    </div>
+                    <div className="col-md-12">
+                        <button className="btn btn-primary pull-right" onClick={this.handleNewMap}>
+                            {T.translate("edit_location.add_map")}
+                        </button>
+                        <Table
+                            options={map_options}
+                            data={entity.maps}
+                            columns={map_columns}
+                            className="dataTable"
+                        />
+                    </div>
                 </Panel>
 
                 <div className="row">

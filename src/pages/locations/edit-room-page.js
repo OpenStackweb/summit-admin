@@ -14,34 +14,33 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
-import LocationForm from '../../components/forms/location-form';
+import RoomForm from '../../components/forms/room-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getLocation, getLocationMeta, resetLocationForm, saveLocation } from "../../actions/location-actions";
-//import '../../styles/edit-location-page.less';
+import { getRoom, resetRoomForm, saveRoom } from "../../actions/location-actions";
 
-class EditLocationPage extends React.Component {
+class EditRoomPage extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-            locationId: props.match.params.location_id
+            roomId: props.match.params.room_id
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        let {locationId} = this.state;
+        let {roomId} = this.state;
 
-        let new_location_id = nextProps.match.params.location_id;
+        let new_room_id = nextProps.match.params.room_id;
 
-        if(locationId != new_location_id) {
+        if(roomId != new_room_id) {
 
-            this.setState({locationId: new_location_id});
+            this.setState({roomId: new_room_id});
 
-            if(new_location_id) {
-                this.props.getLocation(new_location_id);
+            if(new_room_id) {
+                this.props.getRoom(new_room_id);
             } else {
-                this.props.resetLocationForm();
+                this.props.resetRoomForm();
             }
         }
     }
@@ -57,38 +56,32 @@ class EditLocationPage extends React.Component {
 
     componentDidMount () {
         let {currentSummit, allTypes, errors} = this.props;
-        let locationId = this.props.match.params.location_id;
+        let roomId = this.props.match.params.room_id;
 
         if(currentSummit != null) {
-            if (locationId != null) {
-                this.props.getLocation(locationId);
+            if (roomId != null) {
+                this.props.getRoom(roomId);
             } else {
-                this.props.resetLocationForm();
-            }
-
-            if(allTypes.length == 0){
-                //this.props.getLocationMeta();
+                this.props.resetRoomForm();
             }
         }
     }
 
     render(){
-        let {currentSummit, allTypes, allClasses, entity, errors} = this.props;
+        let {currentSummit, entity, errors} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
 
         return(
             <div className="container">
-                <h3>{title} {T.translate("edit_location.location")}</h3>
+                <h3>{title} {T.translate("edit_room.room")}</h3>
                 <hr/>
                 {currentSummit &&
-                <LocationForm
+                <RoomForm
                     history={this.props.history}
                     currentSummit={currentSummit}
-                    allTypes={allTypes}
-                    allClasses={allClasses}
                     entity={entity}
                     errors={errors}
-                    onSubmit={this.props.saveLocation}
+                    onSubmit={this.props.saveRoom}
                 />
                 }
             </div>
@@ -96,18 +89,17 @@ class EditLocationPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentLocationState }) => ({
+const mapStateToProps = ({ currentSummitState, currentRoomState }) => ({
     currentSummit : currentSummitState.currentSummit,
-    ...currentLocationState
+    ...currentRoomState
 })
 
 export default connect (
     mapStateToProps,
     {
         getSummitById,
-        getLocation,
-        getLocationMeta,
-        resetLocationForm,
-        saveLocation,
+        getRoom,
+        resetRoomForm,
+        saveRoom,
     }
-)(EditLocationPage);
+)(EditRoomPage);
