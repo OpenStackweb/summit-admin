@@ -276,7 +276,7 @@ class SpeakerForm extends React.Component {
                 <br/>
                 <hr/>
                 { lastSummits.map(s =>
-                    <Panel key={'last-summits-' + s.id} className="summit-data" showSection={showSummit} name={s.id} title={s.name} handleClick={this.toggleSummit.bind(this, s.id)} >
+                    <Panel key={'last-summits-' + s.id} className="summit-data" show={showSummit == s.id} title={s.name} handleClick={this.toggleSummit.bind(this, s.id)} >
                         {this.getPresentations(s.id)}
                         {this.getAttendance(s.id)}
                         {this.getPromocodes(s.id)}

@@ -72,7 +72,7 @@ export default class SimpleLinkList extends React.Component {
 
         return (
             <div className="row simple-link-list">
-                <div className="col-md-4">
+                <div className="col-md-4 simple-link-list-title">
                     <h4>{title}</h4>
                 </div>
                 <div className="col-md pull-right btn-group">

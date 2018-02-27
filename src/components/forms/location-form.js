@@ -39,6 +39,8 @@ class LocationForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleNewFloor = this.handleNewFloor.bind(this);
         this.handleNewRoom = this.handleNewRoom.bind(this);
+        this.handleNewImage = this.handleNewImage.bind(this);
+        this.handleNewMap = this.handleNewMap.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -134,6 +136,16 @@ class LocationForm extends React.Component {
     handleNewRoom(ev) {
         let {currentSummit, history, entity} = this.props;
         history.push(`/app/summits/${currentSummit.id}/locations/${entity.id}/rooms/new`);
+    }
+
+    handleNewImage(ev) {
+        let {currentSummit, history, entity} = this.props;
+        history.push(`/app/summits/${currentSummit.id}/locations/${entity.id}/images/new`);
+    }
+
+    handleNewMap(ev) {
+        let {currentSummit, history, entity} = this.props;
+        history.push(`/app/summits/${currentSummit.id}/locations/${entity.id}/maps/new`);
     }
 
     render() {
@@ -280,7 +292,7 @@ class LocationForm extends React.Component {
                     </div>
                 </div>
 
-                <Panel showSection={showSection} name="address" title={T.translate("edit_location.address")} handleClick={this.toggleSection.bind(this, 'address')} >
+                <Panel show={showSection == 'address'} title={T.translate("edit_location.address")} handleClick={this.toggleSection.bind(this, 'address')} >
                     <div className="row form-group">
                         <div className="col-md-4">
                             <label> {T.translate("edit_location.address_1")}</label>
@@ -322,7 +334,7 @@ class LocationForm extends React.Component {
                     <GMap markers={mapPin} zoom-in />
                 </Panel>
 
-                <Panel showSection={showSection} name="floors" title={T.translate("edit_location.floors")} handleClick={this.toggleSection.bind(this, 'floors')} >
+                <Panel show={showSection == 'floors'} title={T.translate("edit_location.floors")} handleClick={this.toggleSection.bind(this, 'floors')} >
                     <button className="btn btn-primary pull-right" onClick={this.handleNewFloor}>
                         {T.translate("edit_location.add_floor")}
                     </button>
@@ -334,7 +346,7 @@ class LocationForm extends React.Component {
                     />
                 </Panel>
 
-                <Panel showSection={showSection} name="rooms" title={T.translate("edit_location.rooms")} handleClick={this.toggleSection.bind(this, 'rooms')} >
+                <Panel show={showSection == 'rooms'} title={T.translate("edit_location.rooms")} handleClick={this.toggleSection.bind(this, 'rooms')} >
                     <button className="btn btn-primary pull-right" onClick={this.handleNewRoom}>
                         {T.translate("edit_location.add_room")}
                     </button>
@@ -346,7 +358,7 @@ class LocationForm extends React.Component {
                     />
                 </Panel>
 
-                <Panel showSection={showSection} name="images" title={T.translate("edit_location.images")} handleClick={this.toggleSection.bind(this, 'images')} >
+                <Panel show={showSection == 'images'} title={T.translate("edit_location.images")} handleClick={this.toggleSection.bind(this, 'images')} >
                     <div className="col-md-12">
                         <button className="btn btn-primary pull-right" onClick={this.handleNewImage}>
                             {T.translate("edit_location.add_image")}

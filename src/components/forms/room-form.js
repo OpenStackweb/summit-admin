@@ -95,19 +95,28 @@ class RoomForm extends React.Component {
                         />
                     </div>
                     <div className="col-md-4">
-                        <label> {T.translate("edit_room.number")}</label>
+                        <label> {T.translate("edit_room.capacity")}</label>
                         <Input
-                            id="number"
+                            id="capacity"
                             type="number"
-                            value={entity.number}
+                            value={entity.capacity}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('number')}
+                            error={this.hasErrors('capacity')}
                         />
+                    </div>
+                    <div className="col-md-4 checkboxes-div">
+                        <div className="form-check abc-checkbox">
+                            <input type="checkbox" id="overrides_blackouts" checked={entity.overrides_blackouts}
+                                   onChange={this.handleChange} className="form-check-input" />
+                            <label className="form-check-label" htmlFor="overrides_blackouts">
+                                {T.translate("edit_room.overrides_blackouts")}
+                            </label>
+                        </div>
                     </div>
                 </div>
                 <div className="row form-group">
-                    <div className="col-md-4">
+                    <div className="col-md-12">
                         <label> {T.translate("edit_room.description")} </label>
                         <TextEditor
                             id="description"

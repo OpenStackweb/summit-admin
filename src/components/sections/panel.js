@@ -18,20 +18,20 @@ export default class Panel extends React.Component {
 
     render() {
 
-        let {children, showSection, name, title, handleClick, className} = this.props;
+        let {children, show, title, handleClick, className} = this.props;
 
         return (
             <div className={"panel-group " + className}>
                 <div className="panel panel-default">
-                    <div className="panel-heading">
-                        <h4 className="panel-title">
-                            <a className={showSection == name ? 'collapsed' : ''} onClick={handleClick}>
+                    <a className={show ? 'collapsed' : ''} onClick={handleClick}>
+                        <div className="panel-heading">
+                            <h4 className="panel-title">
                                 {title}
-                            </a>
-                        </h4>
-                    </div>
+                            </h4>
+                        </div>
+                    </a>
                     <div className="panel-collapse collapse in">
-                        {showSection === name &&
+                        {show &&
                         <div className="panel-body">
                             {children}
                         </div>

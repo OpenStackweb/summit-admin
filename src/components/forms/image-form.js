@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 OpenStack Foundation
+ * Copyright 2018 OpenStack Foundation
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,26 +17,22 @@ import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import {findElementPos} from '../../utils/methods'
 import Input from '../inputs/text-input'
 import TextEditor from '../inputs/editor-input'
-import SimpleLinkList from '../simple-link-list/index'
-import Panel from '../sections/panel'
-import {queryRooms} from '../../actions/location-actions'
+import UploadInput from '../inputs/upload-input/index'
 
 
-class FloorForm extends React.Component {
+class ImageForm extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             entity: {...props.entity},
-            errors: props.errors,
-            showRooms: false,
+            errors: props.errors
         };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleRoomLink = this.handleRoomLink.bind(this);
-        this.handleRoomEdit = this.handleRoomEdit.bind(this);
-        this.handleRoomUnLink = this.handleRoomUnLink.bind(this);
+        this.handleUploadFile = this.handleUploadFile.bind(this);
+        this.handleRemoveFile = this.handleRemoveFile.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -59,10 +55,6 @@ class FloorForm extends React.Component {
         let errors = {...this.state.errors};
         let {value, id} = ev.target;
 
-        if (ev.target.type == 'number') {
-            value = parseInt(ev.target.value);
-        }
-
         errors[id] = '';
         entity[id] = value;
         this.setState({entity: entity, errors: errors});
@@ -84,50 +76,29 @@ class FloorForm extends React.Component {
         return '';
     }
 
-    toggleRooms(ev) {
-        ev.preventDefault();
-
-        this.setState({showRooms: !this.state.showRooms});
+    handleUploadFile(file) {
+        console.log('file uploaded');
+        let formData = new FormData();
+        formData.append('file', file);
+        this.props.onAttach(this.state.entity, formData)
     }
 
-    handleRoomLink(value) {
-        let rooms = [...this.state.entity.rooms];
-        rooms.push(value);
+    handleRemoveFile(ev) {
+        let entity = {...this.state.entity};
 
-        let entity = {...this.state.entity, rooms: rooms};
-        this.setState({entity: entity});
-    }
-
-    handleRoomUnLink(value, ev) {
-        ev.preventDefault();
-
-        let rooms = this.state.entity.rooms.filter(r => r.id != value);
-
-        let entity = {...this.state.entity, rooms: rooms};
-        this.setState({entity: entity});
-    }
-
-    handleRoomEdit(roomId) {
-        let {currentSummit, history} = this.props;
-        history.push(`/app/summits/${currentSummit.id}/locations/1/rooms/${roomId}`);
+        entity.attachment = '';
+        this.setState({entity:entity});
     }
 
     render() {
-        let {entity, showRooms} = this.state;
-
-        let room_columns = [
-            { columnKey: 'id', value: T.translate("general.id") },
-            { columnKey: 'name', value: T.translate("general.name") },
-            { columnKey: 'capacity', value: T.translate("edit_location.capacity") },
-            { columnKey: 'floor', value: T.translate("edit_location.floor") }
-        ];
+        let {entity} = this.state;
 
         return (
-            <form className="floor-form">
+            <form className="image-form">
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
                     <div className="col-md-4">
-                        <label> {T.translate("edit_floor.name")} *</label>
+                        <label> {T.translate("general.name")} *</label>
                         <Input
                             id="name"
                             value={entity.name}
@@ -136,21 +107,10 @@ class FloorForm extends React.Component {
                             error={this.hasErrors('name')}
                         />
                     </div>
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_floor.number")}</label>
-                        <Input
-                            id="number"
-                            type="number"
-                            value={entity.number}
-                            onChange={this.handleChange}
-                            className="form-control"
-                            error={this.hasErrors('number')}
-                        />
-                    </div>
                 </div>
                 <div className="row form-group">
                     <div className="col-md-12">
-                        <label> {T.translate("edit_floor.description")} </label>
+                        <label> {T.translate("general.description")} </label>
                         <TextEditor
                             id="description"
                             value={entity.description}
@@ -159,23 +119,19 @@ class FloorForm extends React.Component {
                         />
                     </div>
                 </div>
-
-                <Panel show={showRooms} title={T.translate("edit_location.rooms")} handleClick={this.toggleRooms.bind(this)} >
-                    <button className="btn btn-primary pull-right left-space" onClick={this.handleNewRoom}>
-                        {T.translate("edit_location.add_room")}
-                    </button>
-                    <SimpleLinkList
-                        title={T.translate("edit_location.rooms")}
-                        values={entity.rooms}
-                        columns={room_columns}
-                        valueKey="room"
-                        labelKey="room"
-                        onEdit={this.handleRoomEdit}
-                        onLink={this.handleRoomLink}
-                        onUnLink={this.handleRoomUnLink}
-                        queryOptions={queryRooms}
-                    />
-                </Panel>
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <label> {T.translate("general.file")} </label>
+                        <UploadInput
+                            value={entity.image}
+                            handleUpload={this.handleUploadFile}
+                            handleRemove={this.handleRemoveFile}
+                            className="dropzone col-md-6"
+                            multiple={false}
+                            accept="image/*"
+                        />
+                    </div>
+                </div>
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">
@@ -188,4 +144,4 @@ class FloorForm extends React.Component {
     }
 }
 
-export default FloorForm;
+export default ImageForm;

@@ -40,6 +40,21 @@ export const ROOM_UPDATED        = 'ROOM_UPDATED';
 export const ROOM_ADDED          = 'ROOM_ADDED';
 export const ROOM_DELETED        = 'ROOM_DELETED';
 
+export const RECEIVE_LOCATION_IMAGE        = 'RECEIVE_LOCATION_IMAGE';
+export const RESET_LOCATION_IMAGE_FORM     = 'RESET_LOCATION_IMAGE_FORM';
+export const UPDATE_LOCATION_IMAGE         = 'UPDATE_LOCATION_IMAGE';
+export const LOCATION_IMAGE_UPDATED        = 'LOCATION_IMAGE_UPDATED';
+export const LOCATION_IMAGE_ADDED          = 'LOCATION_IMAGE_ADDED';
+export const LOCATION_IMAGE_DELETED        = 'LOCATION_IMAGE_DELETED';
+export const LOCATION_IMAGE_ATTACHED       = 'LOCATION_IMAGE_ATTACHED';
+
+export const RECEIVE_LOCATION_MAP        = 'RECEIVE_LOCATION_MAP';
+export const RESET_LOCATION_MAP_FORM     = 'RESET_LOCATION_MAP_FORM';
+export const UPDATE_LOCATION_MAP         = 'UPDATE_LOCATION_MAP';
+export const LOCATION_MAP_UPDATED        = 'LOCATION_MAP_UPDATED';
+export const LOCATION_MAP_ADDED          = 'LOCATION_MAP_ADDED';
+export const LOCATION_MAP_DELETED        = 'LOCATION_MAP_DELETED';
+export const LOCATION_MAP_ATTACHED       = 'LOCATION_MAP_ATTACHED';
 
 
 
@@ -460,3 +475,283 @@ export const queryRooms = (input, summitId = null) => {
         })
         .catch(fetchErrorHandler);
 };
+
+
+/**************************************** IMAGES *********************************************/
+
+
+export const getLocationImage = (imageId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_LOCATION_IMAGE),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}/images/${imageId}`,
+        authErrorHandler
+    )(params)(dispatch).then(dispatch(stopLoading()));
+};
+
+export const resetLocationImageForm = () => (dispatch, getState) => {
+    dispatch(createAction(RESET_LOCATION_IMAGE_FORM)({}));
+};
+
+export const saveLocationImage = (entity, history) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    if (entity.id) {
+
+        let success_message = [
+            T.translate("general.done"),
+            T.translate("edit_location.image_saved"),
+            'success'
+        ];
+
+        putRequest(
+            createAction(UPDATE_LOCATION_IMAGE),
+            createAction(LOCATION_IMAGE_UPDATED),
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${entity.id}`,
+            entity,
+            authErrorHandler,
+            entity
+        )(params)(dispatch)
+            .then((payload) => {
+                dispatch(showMessage(...success_message));
+            });
+
+    } else {
+        let success_message = [
+            T.translate("general.done"),
+            T.translate("edit_location.image_created"),
+            'success'
+        ];
+
+        postRequest(
+            createAction(UPDATE_LOCATION_IMAGE),
+            createAction(LOCATION_IMAGE_ADDED),
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations`,
+            entity,
+            authErrorHandler,
+            entity
+        )(params)(dispatch)
+            .then((payload) => {
+                dispatch(showMessage(
+                    ...success_message,
+                    () => { history.push(`/app/summits/${currentSummit.id}/locations/${payload.response.id}`) }
+                ));
+            });
+    }
+}
+
+export const deleteLocationImage = (imageId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(LOCATION_IMAGE_DELETED)({imageId}),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${imageId}`,
+        authErrorHandler
+    )(params)(dispatch).then(dispatch(stopLoading()));
+};
+
+export const attachLocationImage = (entity, file) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    if (entity.id) {
+        return dispatch(uploadLocationImage(entity, file));
+    } else {
+        return postRequest(
+            null,
+            createAction(LOCATION_IMAGE_UPDATED),
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations`,
+            entity,
+            authErrorHandler
+        )(params)(dispatch).then(dispatch(uploadLocationImage(entity, file))).then(dispatch(stopLoading()));
+    }
+}
+
+const uploadLocationImage = (entity, file) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    postRequest(
+        null,
+        createAction(LOCATION_IMAGE_ATTACHED),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${entity.location_id}/images`,
+        file,
+        authErrorHandler,
+        {file: entity.file}
+    )(params)(dispatch)
+}
+
+
+/**************************************** MAPS *********************************************/
+
+
+export const getLocationMap = (mapId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_LOCATION_MAP),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}/maps/${mapId}`,
+        authErrorHandler
+    )(params)(dispatch).then(dispatch(stopLoading()));
+};
+
+export const resetLocationMapForm = () => (dispatch, getState) => {
+    dispatch(createAction(RESET_LOCATION_MAP_FORM)({}));
+};
+
+export const saveLocationMap = (entity, history) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    if (entity.id) {
+
+        let success_message = [
+            T.translate("general.done"),
+            T.translate("edit_location.map_saved"),
+            'success'
+        ];
+
+        putRequest(
+            createAction(UPDATE_LOCATION_MAP),
+            createAction(LOCATION_MAP_UPDATED),
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${entity.id}`,
+            entity,
+            authErrorHandler,
+            entity
+        )(params)(dispatch)
+            .then((payload) => {
+                dispatch(showMessage(...success_message));
+            });
+
+    } else {
+        let success_message = [
+            T.translate("general.done"),
+            T.translate("edit_location.map_created"),
+            'success'
+        ];
+
+        postRequest(
+            createAction(UPDATE_LOCATION_MAP),
+            createAction(LOCATION_MAP_ADDED),
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations`,
+            entity,
+            authErrorHandler,
+            entity
+        )(params)(dispatch)
+            .then((payload) => {
+                dispatch(showMessage(
+                    ...success_message,
+                    () => { history.push(`/app/summits/${currentSummit.id}/locations/${payload.response.id}`) }
+                ));
+            });
+    }
+}
+
+export const deleteLocationMap = (mapId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(LOCATION_MAP_DELETED)({mapId}),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${mapId}`,
+        authErrorHandler
+    )(params)(dispatch).then(dispatch(stopLoading()));
+};
+
+export const attachLocationMap = (entity, file) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    if (entity.id) {
+        return dispatch(uploadLocationMap(entity, file));
+    } else {
+        return postRequest(
+            null,
+            createAction(LOCATION_MAP_UPDATED),
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations`,
+            entity,
+            authErrorHandler
+        )(params)(dispatch).then(dispatch(uploadLocationMap(entity, file))).then(dispatch(stopLoading()));
+    }
+}
+
+const uploadLocationMap = (entity, file) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    postRequest(
+        null,
+        createAction(LOCATION_MAP_ATTACHED),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${entity.location_id}/maps`,
+        file,
+        authErrorHandler,
+        {file: entity.file}
+    )(params)(dispatch)
+}

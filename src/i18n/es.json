@@ -19,6 +19,8 @@
     "presentations"       : "Presentations",
     "email"               : "Email",
     "name"                : "Name",
+    "description"         : "Description",
+    "file"                : "File",
     "first_name"          : "First Name",
     "last_name"           : "Last Name",
     "member"              : "Member",
@@ -457,8 +459,27 @@
     "add_floor"         : "Add Floor",
     "rooms"             : "Rooms",
     "add_room"          : "Add Room",
+    "images"            : "Images",
+    "image"             : "Image",
+    "map"               : "Map",
+    "add_image"         : "Add Image",
+    "add_map"           : "Add Map",
     "placeholders": {
       "select_type"     : "Select Type"
     }
+  },
+  "edit_floor": {
+    "name"          : "Name",
+    "number"        : "Number",
+    "description"   : "Description",
+    "floor"         : "Floor"
+  },
+  "edit_room": {
+    "name"                : "Name",
+    "capacity"            : "Capacity",
+    "description"         : "Description",
+    "room"                : "Room",
+    "floor"               : "Floor",
+    "overrides_blackouts" : "Overrides Blackouts"
   }
 }

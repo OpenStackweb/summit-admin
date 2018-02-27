@@ -13,10 +13,11 @@
 
 import
 {
-    RECEIVE_ROOM,
-    RESET_ROOM_FORM,
-    UPDATE_ROOM,
-    ROOM_UPDATED
+    RECEIVE_LOCATION_MAP,
+    RESET_LOCATION_MAP_FORM,
+    UPDATE_LOCATION_MAP,
+    LOCATION_MAP_UPDATED,
+    LOCATION_MAP_ATTACHED
 } from '../../actions/location-actions';
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
@@ -27,9 +28,7 @@ export const DEFAULT_ENTITY = {
     id                  : 0,
     name                : '',
     description         : '',
-    capacity            : 0,
-    overrides_blackouts : false,
-    floor               : null
+    file                : '',
 }
 
 const DEFAULT_STATE = {
@@ -37,7 +36,7 @@ const DEFAULT_STATE = {
     errors      : {},
 };
 
-const roomReducer = (state = DEFAULT_STATE, action) => {
+const locationMapReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
         case LOGOUT_USER: {
@@ -50,15 +49,15 @@ const roomReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case SET_CURRENT_SUMMIT:
-        case RESET_ROOM_FORM: {
+        case RESET_LOCATION_MAP_FORM: {
             return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
         }
         break;
-        case UPDATE_ROOM: {
+        case UPDATE_LOCATION_MAP: {
             return {...state,  entity: {...payload}, errors: {} };
         }
         break;
-        case RECEIVE_ROOM: {
+        case RECEIVE_LOCATION_MAP: {
             let entity = {...payload.response};
 
             for(var key in entity) {
@@ -70,8 +69,13 @@ const roomReducer = (state = DEFAULT_STATE, action) => {
             return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
         }
         break;
-        case ROOM_UPDATED: {
+        case LOCATION_MAP_UPDATED: {
             return state;
+        }
+        break;
+        case LOCATION_MAP_ATTACHED: {
+            let file = state.entity.file + '?' + new Date().getTime();
+            return {...state, entity: {...state.entity, file: file} };
         }
         break;
         case VALIDATE: {
@@ -83,4 +87,4 @@ const roomReducer = (state = DEFAULT_STATE, action) => {
     }
 };
 
-export default roomReducer;
+export default locationMapReducer;
