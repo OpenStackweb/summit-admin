@@ -21,7 +21,7 @@ class TableHeading extends React.Component {
 
 	handleSort(e) {
 		e.preventDefault();
-		if(!this.props.onSort && this.props.sortable) return;
+		if(!this.props.hasOwnProperty('onSort') || !this.props.sortable) return;
 
 		this.props.onSort(
 			this.props.columnIndex,

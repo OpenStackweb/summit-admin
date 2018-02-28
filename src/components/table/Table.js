@@ -18,14 +18,14 @@ const createRow = (row, columns, actions) => {
     var action_buttons = '';
     var cells = columns.map((col,i) => {
         return (
-            <TableCell key={i}>
+            <TableCell key={'cell_'+i}>
                 {row[col.columnKey]}
             </TableCell>
         );
     });
 
     if (actions) {
-        cells.push(<ActionsTableCell key='actions' id={row['id']} actions={actions}/>);
+        cells.push(<ActionsTableCell key='actions_cell' id={row['id']} actions={actions}/>);
     }
 
     return cells;
@@ -65,14 +65,14 @@ const Table = (props) => {
                             columnIndex={i}
                             columnKey={col.columnKey}
                             width={colWidth}
-                            key={i}
+                            key={'heading_'+i}
                         >
                             {col.value}
                         </TableHeading>
                     );
                 })}
                 {options.actions &&
-                    <TableHeading key='actions' >
+                    <TableHeading key='actions_heading' >
                         &nbsp;
                     </TableHeading>
                 }
@@ -82,11 +82,11 @@ const Table = (props) => {
                 {columns.length > 0 && props.data.map((row,i) => {
                     if(Array.isArray(row) && row.length !== columns.length) {
                         console.warn(`Data at row ${i} is ${row.length}. It should be ${columns.length}.`);
-                        return <tr />
+                        return <tr key={'row_'+i} />
                     }
 
                     return (
-                        <TableRow even={i%2 === 0} key={i}>
+                        <TableRow even={i%2 === 0} key={'row_'+i}>
                             {createRow(row, columns, options.actions)}
                         </TableRow>
                     );

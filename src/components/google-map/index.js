@@ -27,8 +27,8 @@ const MAP = {
 const GoogleMapWrapper = withGoogleMap((props) => {
         return  <GoogleMap
             ref={props.onMapLoad}
-            defaultZoom={ props.defaultZoom }
-            defaultCenter={ props.defaultCenter }
+            zoom={ props.zoom }
+            center={ props.center }
             onBoundsChanged={props.onMapChange}
         >
             {props.showMarkers &&
@@ -42,6 +42,8 @@ const GoogleMapWrapper = withGoogleMap((props) => {
                         key={marker.id}
                         position={{ lat: marker.lat, lng: marker.lng }}
                         onClick={() => props.onToggleInfoWindow(marker.id)}
+                        onDragEnd={props.onMarkerDrag}
+                        draggable={props.draggable}
                     >
                         {marker.isInfoWindowOpen &&
                         <InfoWindow onCloseClick={() => props.onToggleInfoWindow(marker.id)}>
@@ -62,11 +64,12 @@ export class GMap extends React.Component {
         super(props);
 
         this.state = {
-            markers: props.markers,
+            markers: props.markers
         };
 
         this.handleMapLoad = this.handleMapLoad.bind(this);
         this.handleMapChange = this.handleMapChange.bind(this);
+        this.handleMarkerDrag = this.handleMarkerDrag.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -85,6 +88,8 @@ export class GMap extends React.Component {
             }
             this._mapComponent.fitBounds(markerBounds);
         }
+
+
     }
 
     handleMapLoad(map) {
@@ -96,18 +101,6 @@ export class GMap extends React.Component {
             let marker_loc = new google.maps.LatLng(m.lat, m.lng);
             return (this._mapComponent.getBounds().contains(marker_loc)) ;
         });
-
-        if (this.props.hasOwnProperty('zoom-in') && this._mapComponent) {
-            let bounds = new google.maps.LatLngBounds();
-
-            for (var i in this.props.markers) {
-                let m = this.props.markers[i];
-                let marker_loc = new google.maps.LatLng(m.lat, m.lng);
-                bounds.extend(marker_loc);
-            }
-
-            this._mapComponent.fitBounds(bounds);
-        }
 
         if (this.props.hasOwnProperty('onChangeCallback'))
             this.props.onChangeCallback(visible_markers);
@@ -121,20 +114,30 @@ export class GMap extends React.Component {
         this.setState({ markers: markers });
     };
 
+    handleMarkerDrag(ev) {
+        this.props.onMarkerDragged(ev.latLng.lat(), ev.latLng.lng());
+    };
+
 
     render() {
+        let {markers} = this.state;
+        let {zoom, center} = this.props;
+        let draggable = this.props.hasOwnProperty('draggable');
+
         return (
             <GoogleMapWrapper
-                showMarkers={this.state.markers.length > 0}
-                markers={this.state.markers}
-                defaultZoom={ this.props.zoom ? this.props.zoom : MAP.defaultZoom }
-                defaultCenter={ this.props.center ? this.props.center : MAP.defaultCenter }
+                showMarkers={markers.length > 0}
+                markers={markers}
+                zoom={ zoom ? zoom : MAP.defaultZoom }
+                center={ center ? center : MAP.defaultCenter }
                 loadingElement={<div style={{ height: `100%` }} />}
                 containerElement={<div style={{ height: `400px` }} />}
                 mapElement={<div style={{ height: `100%` }} />}
                 onMapLoad={this.handleMapLoad}
                 onMapChange={this.handleMapChange}
                 onToggleInfoWindow={this.handleMarkerClick}
+                onMarkerDrag={this.handleMarkerDrag}
+                draggable={draggable}
             />
         );
     }

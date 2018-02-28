@@ -28,7 +28,7 @@ export const authErrorHandler = (err, res) => (dispatch) => {
 
     switch (code) {
         case 403:
-            swal("ERROR", T.translate("errors.user_not_authz"), "warning ");
+            swal("ERROR", T.translate("errors.user_not_authz"), "warning");
             break;
         case 401:
             swal("ERROR", T.translate("errors.session_expired"), "error");
@@ -218,4 +218,43 @@ export const getCSV = (url, params, filename) => (dispatch) => {
             document.body.removeChild(link);
         })
         .catch(fetchErrorHandler);
+};
+
+var geocoder;
+
+export const geoCodeAddress = (address) => {
+
+    if (!geocoder) geocoder = new google.maps.Geocoder();
+
+    // return a Promise
+    return new Promise(function(resolve,reject) {
+        geocoder.geocode( { 'address': address}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                // resolve results upon a successful status
+                resolve(results);
+            } else {
+                // reject status upon un-successful status
+                reject(status);
+            }
+        });
+    });
+};
+
+export const geoCodeLatLng = (lat, lng) => {
+
+    if (!geocoder) geocoder = new google.maps.Geocoder();
+
+    var latlng = {lat: parseFloat(lat), lng: parseFloat(lng)};
+    // return a Promise
+    return new Promise(function(resolve,reject) {
+        geocoder.geocode( { 'location': latlng}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                // resolve results upon a successful status
+                resolve(results);
+            } else {
+                // reject status upon un-successful status
+                reject(status);
+            }
+        });
+    });
 };

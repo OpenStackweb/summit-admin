@@ -17,7 +17,9 @@ import
     RECEIVE_LOCATION_META,
     RESET_LOCATION_FORM,
     UPDATE_LOCATION,
-    LOCATION_UPDATED
+    LOCATION_UPDATED,
+    LOCATION_GMAP_UPDATED,
+    LOCATION_ADDRESS_UPDATED
 } from '../../actions/location-actions';
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
@@ -57,7 +59,6 @@ export const DEFAULT_ENTITY = {
 const DEFAULT_STATE = {
     entity      : DEFAULT_ENTITY,
     errors      : {},
-    allTypes    : [],
     allClasses  : []
 };
 
@@ -79,16 +80,9 @@ const locationReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case RECEIVE_LOCATION_META: {
-            let types = [...DEFAULT_STATE.allTypes];
             let allClasses = [...payload.response];
 
-            allClasses.map(t => {
-                types = types.concat(t.type)
-            });
-
-            let unique_types = [...new Set( types )];
-
-            return {...state, allTypes: unique_types, allClasses: allClasses }
+            return {...state, allClasses: allClasses }
         }
         break;
         case UPDATE_LOCATION: {
@@ -109,6 +103,26 @@ const locationReducer = (state = DEFAULT_STATE, action) => {
         break;
         case LOCATION_UPDATED: {
             return state;
+        }
+        break;
+        case LOCATION_GMAP_UPDATED: {
+            let {location} = payload[0].geometry;
+            return {...state, entity: {...state.entity, lat: location.lat(), lng: location.lng()}};
+        }
+        break;
+        case LOCATION_ADDRESS_UPDATED: {
+            let address = payload[0].address_components;
+            let {location} = payload[0].geometry;
+
+            return {...state, entity: {
+                ...state.entity,
+                address_1: address[0].short_name + ' ' + address[1].short_name,
+                city: address[3].short_name,
+                state: address[4].short_name,
+                country: address[5].short_name,
+                lat: location.lat(),
+                lng: location.lng()
+            }};
         }
         break;
         case VALIDATE: {

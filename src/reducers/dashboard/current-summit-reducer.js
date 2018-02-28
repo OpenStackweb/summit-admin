@@ -43,7 +43,11 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
         case EVENT_TYPES_SEEDED: {
             let eventTypesAdded = [...payload.response.data];
 
-            return {...state, currentSummit: {...state.currentSummit, event_types: [...state.currentSummit.event_types, eventTypesAdded]}};
+            if (eventTypesAdded.length > 0) {
+                return {...state, currentSummit: {...state.currentSummit, event_types: [...state.currentSummit.event_types, eventTypesAdded]}};
+            } else {
+                return state;
+            }
         }
         break;
         case EVENT_CATEGORY_UPDATED: {

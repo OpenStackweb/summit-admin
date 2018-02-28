@@ -12,19 +12,21 @@
  **/
 
 import { getRequest, putRequest, postRequest, deleteRequest, createAction, stopLoading, startLoading } from "openstack-uicore-foundation";
-import { authErrorHandler, fetchResponseHandler, fetchErrorHandler, apiBaseUrl, showMessage, getCSV} from './base-actions';
+import { authErrorHandler, fetchResponseHandler, fetchErrorHandler, apiBaseUrl, showMessage, getCSV, geoCodeAddress, geoCodeLatLng} from './base-actions';
 import swal from "sweetalert2";
 import T from "i18n-react/dist/i18n-react";
 
-export const REQUEST_LOCATIONS       = 'REQUEST_LOCATIONS';
-export const RECEIVE_LOCATIONS       = 'RECEIVE_LOCATIONS';
-export const RECEIVE_LOCATION        = 'RECEIVE_LOCATION';
-export const RECEIVE_LOCATION_META   = 'RECEIVE_LOCATION_META';
-export const RESET_LOCATION_FORM     = 'RESET_LOCATION_FORM';
-export const UPDATE_LOCATION         = 'UPDATE_LOCATION';
-export const LOCATION_UPDATED        = 'LOCATION_UPDATED';
-export const LOCATION_ADDED          = 'LOCATION_ADDED';
-export const LOCATION_DELETED        = 'LOCATION_DELETED';
+export const REQUEST_LOCATIONS          = 'REQUEST_LOCATIONS';
+export const RECEIVE_LOCATIONS          = 'RECEIVE_LOCATIONS';
+export const RECEIVE_LOCATION           = 'RECEIVE_LOCATION';
+export const RECEIVE_LOCATION_META      = 'RECEIVE_LOCATION_META';
+export const RESET_LOCATION_FORM        = 'RESET_LOCATION_FORM';
+export const UPDATE_LOCATION            = 'UPDATE_LOCATION';
+export const LOCATION_UPDATED           = 'LOCATION_UPDATED';
+export const LOCATION_ADDED             = 'LOCATION_ADDED';
+export const LOCATION_DELETED           = 'LOCATION_DELETED';
+export const LOCATION_GMAP_UPDATED      = 'LOCATION_GMAP_UPDATED';
+export const LOCATION_ADDRESS_UPDATED   = 'LOCATION_ADDRESS_UPDATED';
 
 export const RECEIVE_FLOOR        = 'RECEIVE_FLOOR';
 export const RESET_FLOOR_FORM     = 'RESET_FLOOR_FORM';
@@ -94,7 +96,7 @@ export const getLocations = ( ) => (dispatch, getState) => {
     return getRequest(
         createAction(REQUEST_LOCATIONS),
         createAction(RECEIVE_LOCATIONS),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types`,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations`,
         authErrorHandler
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
@@ -229,6 +231,30 @@ export const updateLocationOrder = (locationId, newOrder) => (dispatch, getState
         authErrorHandler
     )(params)(dispatch).then(dispatch(stopLoading()));
 
+}
+
+export const updateLocationMap = (location) => (dispatch) => {
+
+    let address = location.address_1 + ',' + location.city + ',' + location.state + ',' + location.country ;
+
+    geoCodeAddress(address)
+        .then(function(results) {
+            dispatch(createAction(LOCATION_GMAP_UPDATED)(results));
+        })
+        .catch(function(status) {
+            swal(T.translate("edit_location.no_address_title"), T.translate("edit_location.no_address_body"), "warning");
+        });
+}
+
+export const updateAddress = (lat, lng) => (dispatch) => {
+
+    geoCodeLatLng(lat, lng)
+        .then(function(results) {
+            dispatch(createAction(LOCATION_ADDRESS_UPDATED)(results));
+        })
+        .catch(function(status) {
+            swal(T.translate("edit_location.no_address_title"), T.translate("edit_location.no_address_body"), "warning");
+        });
 }
 
 

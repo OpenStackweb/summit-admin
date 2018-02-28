@@ -215,7 +215,7 @@ class EventCategoryForm extends React.Component {
                         </div>
                     </div>
                 </div>
-
+                <hr />
                 <SimpleLinkList
                     title={T.translate("edit_event_category.tags")}
                     values={entity.tags}

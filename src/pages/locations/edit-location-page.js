@@ -16,8 +16,8 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import LocationForm from '../../components/forms/location-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getLocation, getLocationMeta, resetLocationForm, saveLocation } from "../../actions/location-actions";
-//import '../../styles/edit-location-page.less';
+import { getLocation, getLocationMeta, resetLocationForm, saveLocation, updateLocationMap, updateAddress } from "../../actions/location-actions";
+import '../../styles/edit-location-page.less';
 
 class EditLocationPage extends React.Component {
 
@@ -56,7 +56,7 @@ class EditLocationPage extends React.Component {
     }
 
     componentDidMount () {
-        let {currentSummit, allTypes, errors} = this.props;
+        let {currentSummit, allClasses, errors} = this.props;
         let locationId = this.props.match.params.location_id;
 
         if(currentSummit != null) {
@@ -66,14 +66,14 @@ class EditLocationPage extends React.Component {
                 this.props.resetLocationForm();
             }
 
-            if(allTypes.length == 0){
-                //this.props.getLocationMeta();
+            if(allClasses.length == 0){
+                this.props.getLocationMeta();
             }
         }
     }
 
     render(){
-        let {currentSummit, allTypes, allClasses, entity, errors} = this.props;
+        let {currentSummit, allClasses, entity, errors, history} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
 
         return(
@@ -82,13 +82,14 @@ class EditLocationPage extends React.Component {
                 <hr/>
                 {currentSummit &&
                 <LocationForm
-                    history={this.props.history}
+                    history={history}
                     currentSummit={currentSummit}
-                    allTypes={allTypes}
                     allClasses={allClasses}
                     entity={entity}
                     errors={errors}
                     onSubmit={this.props.saveLocation}
+                    onMapUpdate={this.props.updateLocationMap}
+                    onMarkerDragged={this.props.updateAddress}
                 />
                 }
             </div>
@@ -109,5 +110,7 @@ export default connect (
         getLocationMeta,
         resetLocationForm,
         saveLocation,
+        updateLocationMap,
+        updateAddress
     }
 )(EditLocationPage);

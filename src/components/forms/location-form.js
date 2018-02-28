@@ -41,6 +41,8 @@ class LocationForm extends React.Component {
         this.handleNewRoom = this.handleNewRoom.bind(this);
         this.handleNewImage = this.handleNewImage.bind(this);
         this.handleNewMap = this.handleNewMap.bind(this);
+        this.handleMarkerDragged = this.handleMarkerDragged.bind(this);
+        this.handleMapUpdate = this.handleMapUpdate.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -87,7 +89,7 @@ class LocationForm extends React.Component {
         let entity = {...this.state.entity};
         ev.preventDefault();
 
-        this.props.onSubmit(this.state.entity, this.props.history);
+        this.props.onSubmit(entity, this.props.history);
     }
 
     hasErrors(field) {
@@ -148,10 +150,23 @@ class LocationForm extends React.Component {
         history.push(`/app/summits/${currentSummit.id}/locations/${entity.id}/maps/new`);
     }
 
+    handleMarkerDragged(lat, lng) {
+        let entity = {...this.state.entity};
+
+        this.props.onMarkerDragged(lat, lng);
+    }
+
+    handleMapUpdate(ev) {
+        let entity = {...this.state.entity};
+        ev.preventDefault();
+
+        this.props.onMapUpdate(entity);
+    }
+
     render() {
         let {entity, showSection} = this.state;
-        let { currentSummit, allTypes } = this.props;
-        let location_types_ddl = allTypes.map(t => ({label: t, value: t}));
+        let { currentSummit, allClasses } = this.props;
+        let location_types_ddl = allClasses.map(l => ({label: l.class_name, value: l.class_name}));
 
         let floor_columns = [
             { columnKey: 'id', value: T.translate("general.id") },
@@ -208,7 +223,8 @@ class LocationForm extends React.Component {
             }
         }
 
-        let mapPin = [{id: entity.id, lat: -31.413219, lng: -64.492229}];
+        let mapPin = [{id: entity.id, lat: parseFloat(entity.lat), lng: parseFloat(entity.lng)}];
+        let mapCenter = {lat: parseFloat(entity.lat), lng: parseFloat(entity.lng)};
 
         return (
             <form className="location-form">
@@ -216,7 +232,7 @@ class LocationForm extends React.Component {
                 <div className="row form-group">
                     <div className="col-md-4">
                         <label> {T.translate("edit_location.type")} *</label>
-                        <Dropdown id="type" value={entity.type} disabled={entity.id !== 0}
+                        <Dropdown id="type" value={entity.class_name} disabled={entity.id !== 0}
                             placeholder={T.translate("edit_location.placeholders.select_type")}
                             options={location_types_ddl} onChange={this.handleTypeChange}
                         />
@@ -330,8 +346,19 @@ class LocationForm extends React.Component {
                             <label> {T.translate("edit_location.lng")}</label>
                             <Input id="lng" value={entity.lng} onChange={this.handleChange} error={this.hasErrors('lng')} />
                         </div>
+                        <div className="col-md-4">
+                            <button className="btn btn-default update_map" onClick={this.handleMapUpdate}>
+                                {T.translate("edit_location.update_map")}
+                            </button>
+                        </div>
                     </div>
-                    <GMap markers={mapPin} zoom-in />
+                    <GMap
+                        markers={mapPin}
+                        center={mapCenter}
+                        zoom={16}
+                        draggable
+                        onMarkerDragged={this.handleMarkerDragged}
+                    />
                 </Panel>
 
                 <Panel show={showSection == 'floors'} title={T.translate("edit_location.floors")} handleClick={this.toggleSection.bind(this, 'floors')} >
