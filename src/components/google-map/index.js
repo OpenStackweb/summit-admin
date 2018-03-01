@@ -17,7 +17,7 @@ import MarkerClusterer from "react-google-maps/lib/components/addons/MarkerClust
 
 const MAP = {
     defaultZoom: 2,
-    defaultCenter: { lat: 11, lng: 39 },
+    defaultCenter: { lat: 30.270166, lng: -97.731271 },
     options: {
         minZoom: 1,
         maxZoom: 19
@@ -30,6 +30,7 @@ const GoogleMapWrapper = withGoogleMap((props) => {
             zoom={ props.zoom }
             center={ props.center }
             onBoundsChanged={props.onMapChange}
+            onClick={props.onMapClick}
         >
             {props.showMarkers &&
             <MarkerClusterer
@@ -70,6 +71,7 @@ export class GMap extends React.Component {
         this.handleMapLoad = this.handleMapLoad.bind(this);
         this.handleMapChange = this.handleMapChange.bind(this);
         this.handleMarkerDrag = this.handleMarkerDrag.bind(this);
+        this.handleMapClick = this.handleMapClick.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -80,7 +82,7 @@ export class GMap extends React.Component {
         let old_markers_str = this.props.markers.map( m => m.id ).sort().join();
         let new_markers_str = new_markers.map( m => m.id ).sort().join();
 
-        if (new_markers.length > 0 && old_markers_str != new_markers_str) {
+        if (new_markers.length > 1 && old_markers_str != new_markers_str) {
             let markerBounds = new google.maps.LatLngBounds();
             for (let marker of new_markers) {
                 let marker_loc = new google.maps.LatLng(marker.lat, marker.lng);
@@ -118,6 +120,9 @@ export class GMap extends React.Component {
         this.props.onMarkerDragged(ev.latLng.lat(), ev.latLng.lng());
     };
 
+    handleMapClick(ev) {
+        this.props.onMapClick(ev.latLng.lat(), ev.latLng.lng());
+    };
 
     render() {
         let {markers} = this.state;
@@ -129,7 +134,7 @@ export class GMap extends React.Component {
                 showMarkers={markers.length > 0}
                 markers={markers}
                 zoom={ zoom ? zoom : MAP.defaultZoom }
-                center={ center ? center : MAP.defaultCenter }
+                center={ center.lat ? center : MAP.defaultCenter }
                 loadingElement={<div style={{ height: `100%` }} />}
                 containerElement={<div style={{ height: `400px` }} />}
                 mapElement={<div style={{ height: `100%` }} />}
@@ -138,6 +143,7 @@ export class GMap extends React.Component {
                 onToggleInfoWindow={this.handleMarkerClick}
                 onMarkerDrag={this.handleMarkerDrag}
                 draggable={draggable}
+                onMapClick={this.handleMapClick}
             />
         );
     }

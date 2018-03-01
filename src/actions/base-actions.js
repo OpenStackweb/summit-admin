@@ -12,13 +12,14 @@
  **/
 
 import T from "i18n-react/dist/i18n-react";
-import {stopLoading, startLoading} from "openstack-uicore-foundation";
+import {stopLoading, startLoading, createAction} from "openstack-uicore-foundation";
 import {objectToQueryString} from '../utils/methods';
 import swal from "sweetalert2";
 
-export const apiBaseUrl  = process.env['API_BASE_URL'];
-export const VALIDATE    = 'VALIDATE';
-const LOGOUT_USER        = 'LOGOUT_USER';
+export const apiBaseUrl         = process.env['API_BASE_URL'];
+export const RECEIVE_COUNTRIES  = 'RECEIVE_COUNTRIES';
+export const VALIDATE           = 'VALIDATE';
+const LOGOUT_USER               = 'LOGOUT_USER';
 
 export const authErrorHandler = (err, res) => (dispatch) => {
     let code = err.status;
@@ -216,6 +217,18 @@ export const getCSV = (url, params, filename) => (dispatch) => {
             document.body.appendChild(link); // Required for FF
             link.click();
             document.body.removeChild(link);
+        })
+        .catch(fetchErrorHandler);
+};
+
+export const getCountryList = () => (dispatch) => {
+
+    let apiUrl = 'https://restcountries.eu/rest/v2/all?fields=name;alpha2Code';
+
+    return fetch(apiUrl)
+        .then(fetchResponseHandler)
+        .then((json) => {
+            dispatch(createAction(RECEIVE_COUNTRIES)(json));
         })
         .catch(fetchErrorHandler);
 };

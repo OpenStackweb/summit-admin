@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 OpenStack Foundation
+ * Copyright 2018 OpenStack Foundation
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,6 +16,7 @@ import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import {findElementPos} from '../../utils/methods'
 import Dropdown from '../inputs/dropdown'
+import CountryDropdown from '../inputs/country-dropdown'
 import Input from '../inputs/text-input'
 import TextEditor from '../inputs/editor-input'
 import Table from '../table/Table';
@@ -33,16 +34,16 @@ class LocationForm extends React.Component {
             showSection: 'main'
         };
 
-        this.shouldShowComponent = this.shouldShowComponent.bind(this);
-        this.handleTypeChange = this.handleTypeChange.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleNewFloor = this.handleNewFloor.bind(this);
-        this.handleNewRoom = this.handleNewRoom.bind(this);
-        this.handleNewImage = this.handleNewImage.bind(this);
-        this.handleNewMap = this.handleNewMap.bind(this);
-        this.handleMarkerDragged = this.handleMarkerDragged.bind(this);
-        this.handleMapUpdate = this.handleMapUpdate.bind(this);
+        this.display                = this.display.bind(this);
+        this.handleChange           = this.handleChange.bind(this);
+        this.handleSubmit           = this.handleSubmit.bind(this);
+        this.handleNewFloor         = this.handleNewFloor.bind(this);
+        this.handleNewRoom          = this.handleNewRoom.bind(this);
+        this.handleNewImage         = this.handleNewImage.bind(this);
+        this.handleNewMap           = this.handleNewMap.bind(this);
+        this.handleMarkerDragged    = this.handleMarkerDragged.bind(this);
+        this.handleMapUpdate        = this.handleMapUpdate.bind(this);
+        this.handleMapClick         = this.handleMapClick.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -74,22 +75,12 @@ class LocationForm extends React.Component {
         this.setState({entity: entity, errors: errors});
     }
 
-    handleTypeChange(ev) {
-        let entity = {...this.state.entity};
-        let {allClasses} = this.props;
-        let {value, id} = ev.target;
-
-        entity.type = value;
-        entity.class_name = allClasses.find(c => c.type.indexOf(value) !== -1).class_name;
-
-        this.setState({entity: entity});
-    }
-
     handleSubmit(ev) {
         let entity = {...this.state.entity};
+        let {allClasses, history} = this.props;
         ev.preventDefault();
 
-        this.props.onSubmit(entity, this.props.history);
+        this.props.onSubmit(entity, allClasses, history);
     }
 
     hasErrors(field) {
@@ -101,25 +92,13 @@ class LocationForm extends React.Component {
         return '';
     }
 
-    shouldShowComponent(component) {
+    display(component) {
         let {class_name} = this.state.entity;
-
         if (!class_name) return false;
 
-        switch(component) {
-            case 'speaker':
-                return (class_name == 'SPEAKER_PROMO_CODE');
-                break;
-            case 'member':
-                return (class_name == 'MEMBER_PROMO_CODE' || class_name == 'SPONSOR_PROMO_CODE');
-                break;
-            case 'sponsor':
-                return (class_name == 'SPONSOR_PROMO_CODE');
-                break;
-            case 'name':
-                return (class_name == 'MEMBER_PROMO_CODE' || class_name == 'SPONSOR_PROMO_CODE');
-                break;
-        }
+        let location_class = this.props.allClasses.find(c => c.class_name == class_name);
+
+        return location_class.hasOwnProperty(component);
     }
 
     toggleSection(section, ev) {
@@ -152,8 +131,10 @@ class LocationForm extends React.Component {
 
     handleMarkerDragged(lat, lng) {
         let entity = {...this.state.entity};
+        entity.lat = lat;
+        entity.lng = lng;
 
-        this.props.onMarkerDragged(lat, lng);
+        this.props.onMarkerDragged(entity);
     }
 
     handleMapUpdate(ev) {
@@ -163,10 +144,27 @@ class LocationForm extends React.Component {
         this.props.onMapUpdate(entity);
     }
 
+    handleMapClick(lat, lng) {
+        let entity = {...this.state.entity};
+        entity.lat = lat;
+        entity.lng = lng;
+
+        this.props.onMarkerDragged(entity);
+    }
+
     render() {
         let {entity, showSection} = this.state;
         let { currentSummit, allClasses } = this.props;
-        let location_types_ddl = allClasses.map(l => ({label: l.class_name, value: l.class_name}));
+        let location_class_ddl = allClasses.map(l => ({label: l.class_name, value: l.class_name}));
+        let airport_type_ddl = [ {label: 'International', value: 'International'}, {label: 'Domestic', value: 'Domestic'} ];
+        let hotel_type_ddl = [ {label: 'Primary', value: 'Primary'}, {label: 'Alternate', value: 'Alternate'} ];
+        let mapPin      = [];
+        let mapCenter   = {lat: parseFloat(entity.lat), lng: parseFloat(entity.lng)};
+
+        if (entity.lat && entity.lng) {
+            mapPin.push({id: entity.id, lat: parseFloat(entity.lat), lng: parseFloat(entity.lng)});
+        }
+
 
         let floor_columns = [
             { columnKey: 'id', value: T.translate("general.id") },
@@ -223,28 +221,28 @@ class LocationForm extends React.Component {
             }
         }
 
-        let mapPin = [{id: entity.id, lat: parseFloat(entity.lat), lng: parseFloat(entity.lng)}];
-        let mapCenter = {lat: parseFloat(entity.lat), lng: parseFloat(entity.lng)};
-
         return (
             <form className="location-form">
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
                     <div className="col-md-4">
                         <label> {T.translate("edit_location.type")} *</label>
-                        <Dropdown id="type" value={entity.class_name} disabled={entity.id !== 0}
+                        <Dropdown id="class_name" value={entity.class_name} disabled={entity.id !== 0}
                             placeholder={T.translate("edit_location.placeholders.select_type")}
-                            options={location_types_ddl} onChange={this.handleTypeChange}
+                            options={location_class_ddl} onChange={this.handleChange}
                         />
                     </div>
                     <div className="col-md-4">
                         <label> {T.translate("edit_location.name")} *</label>
                         <Input id="name" value={entity.name} onChange={this.handleChange} error={this.hasErrors('name')} />
                     </div>
+                    {this.display('website_url') &&
                     <div className="col-md-4">
                         <label> {T.translate("edit_location.website")}</label>
-                        <Input id="website" value={entity.website} onChange={this.handleChange} error={this.hasErrors('website')} />
+                        <Input id="website_url" value={entity.website_url} onChange={this.handleChange}
+                               error={this.hasErrors('website_url')}/>
                     </div>
+                    }
                 </div>
                 <div className="row form-group">
                     <div className="col-md-12">
@@ -254,97 +252,144 @@ class LocationForm extends React.Component {
                 </div>
 
                 <div className="row form-group checkboxes-div">
+                    {this.display('display_on_site') &&
                     <div className="col-md-4">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="display_on_site" checked={entity.display_on_site}
-                                   onChange={this.handleChange} className="form-check-input" />
+                                   onChange={this.handleChange} className="form-check-input"/>
                             <label className="form-check-label" htmlFor="display_on_site">
                                 {T.translate("edit_location.display_on_site")}
                             </label>
                         </div>
                     </div>
+                    }
+                    {this.display('details_page') &&
                     <div className="col-md-4">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="details_page" checked={entity.details_page}
-                                   onChange={this.handleChange} className="form-check-input" />
+                                   onChange={this.handleChange} className="form-check-input"/>
                             <label className="form-check-label" htmlFor="details_page">
                                 {T.translate("edit_location.details_page")}
                             </label>
                         </div>
                     </div>
+                    }
+                    {this.display('is_main') &&
                     <div className="col-md-4">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="is_main" checked={entity.is_main}
-                                   onChange={this.handleChange} className="form-check-input" />
+                                   onChange={this.handleChange} className="form-check-input"/>
                             <label className="form-check-label" htmlFor="is_main">
                                 {T.translate("edit_location.is_main")}
                             </label>
                         </div>
                     </div>
+                    }
                 </div>
                 <div className="row form-group">
+                    {this.display('location_message') &&
                     <div className="col-md-12">
                         <label> {T.translate("edit_location.location_message")}</label>
-                        <TextEditor id="location_message" value={entity.location_message} onChange={this.handleChange} error={this.hasErrors('location_message')} />
+                        <TextEditor id="location_message" value={entity.location_message} onChange={this.handleChange}
+                                    error={this.hasErrors('location_message')}/>
                     </div>
+                    }
                 </div>
                 <div className="row form-group">
+                    {this.display('capacity') &&
                     <div className="col-md-4">
                         <label> {T.translate("edit_location.capacity")}</label>
-                        <Input type="number" id="capacity" value={entity.capacity} onChange={this.handleChange} error={this.hasErrors('capacity')} />
+                        <Input type="number" id="capacity" value={entity.capacity} onChange={this.handleChange}
+                               error={this.hasErrors('capacity')}/>
                     </div>
+                    }
+                    {this.display('booking_link') &&
                     <div className="col-md-4">
                         <label> {T.translate("edit_location.booking_link")}</label>
-                        <Input id="booking_link" value={entity.booking_link} onChange={this.handleChange} error={this.hasErrors('booking_link')} />
+                        <Input id="booking_link" value={entity.booking_link} onChange={this.handleChange}
+                               error={this.hasErrors('booking_link')}/>
                     </div>
+                    }
+                    {this.display('sold_out') &&
                     <div className="col-md-4 checkboxes-div">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="sold_out" checked={entity.sold_out}
-                                   onChange={this.handleChange} className="form-check-input" />
+                                   onChange={this.handleChange} className="form-check-input"/>
                             <label className="form-check-label" htmlFor="sold_out">
                                 {T.translate("edit_location.sold_out")}
                             </label>
                         </div>
                     </div>
+                    }
+                    {this.display('hotel_type') &&
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_location.type")} *</label>
+                        <Dropdown id="hotel_type" value={entity.hotel_type} placeholder={T.translate("edit_location.placeholders.select_type")}
+                                  options={hotel_type_ddl} onChange={this.handleChange}
+                        />
+                    </div>
+                    }
+                    {this.display('airport_type') &&
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_location.type")} *</label>
+                        <Dropdown id="airport_type" value={entity.airport_type} placeholder={T.translate("edit_location.placeholders.select_type")}
+                                  options={airport_type_ddl} onChange={this.handleChange}
+                        />
+                    </div>
+                    }
                 </div>
 
-                <Panel show={showSection == 'address'} title={T.translate("edit_location.address")} handleClick={this.toggleSection.bind(this, 'address')} >
+                {this.display('address1') &&
+                <Panel show={showSection == 'address'} title={T.translate("edit_location.address")}
+                       handleClick={this.toggleSection.bind(this, 'address')}>
                     <div className="row form-group">
                         <div className="col-md-4">
                             <label> {T.translate("edit_location.address_1")}</label>
-                            <Input id="address_1" value={entity.address_1} onChange={this.handleChange} error={this.hasErrors('address_1')} />
+                            <Input id="address1" value={entity.address1} onChange={this.handleChange}
+                                   error={this.hasErrors('address1')}/>
                         </div>
                         <div className="col-md-4">
                             <label> {T.translate("edit_location.address_2")}</label>
-                            <Input id="address_2" value={entity.address_2} onChange={this.handleChange} error={this.hasErrors('address_2')} />
+                            <Input id="address2" value={entity.address2} onChange={this.handleChange}
+                                   error={this.hasErrors('address2')}/>
                         </div>
                         <div className="col-md-4">
                             <label> {T.translate("edit_location.zipcode")}</label>
-                            <Input id="zipcode" value={entity.zipcode} onChange={this.handleChange} error={this.hasErrors('zipcode')} />
+                            <Input id="zip_code" value={entity.zip_code} onChange={this.handleChange}
+                                   error={this.hasErrors('zip_code')}/>
                         </div>
                     </div>
                     <div className="row form-group">
                         <div className="col-md-4">
                             <label> {T.translate("edit_location.city")}</label>
-                            <Input id="city" value={entity.city} onChange={this.handleChange} error={this.hasErrors('city')} />
+                            <Input id="city" value={entity.city} onChange={this.handleChange}
+                                   error={this.hasErrors('city')}/>
                         </div>
                         <div className="col-md-4">
                             <label> {T.translate("edit_location.state")}</label>
-                            <Input id="state" value={entity.state} onChange={this.handleChange} error={this.hasErrors('state')} />
+                            <Input id="state" value={entity.state} onChange={this.handleChange}
+                                   error={this.hasErrors('state')}/>
                         </div>
                         <div className="col-md-4">
                             <label> {T.translate("edit_location.country")}</label>
-                            <Input id="country" value={entity.country} onChange={this.handleChange} error={this.hasErrors('country')} />
+                            <CountryDropdown
+                                id="country"
+                                value={entity.country}
+                                onChange={this.handleChange}
+                                placeholder={T.translate("edit_location.placeholders.select_country")}
+                            />
                         </div>
                     </div>
                     <div className="row form-group">
                         <div className="col-md-4">
                             <label> {T.translate("edit_location.lat")}</label>
-                            <Input id="lat" value={entity.lat} onChange={this.handleChange} error={this.hasErrors('lat')} />
+                            <Input id="lat" value={entity.lat} onChange={this.handleChange}
+                                   error={this.hasErrors('lat')}/>
                         </div>
                         <div className="col-md-4">
                             <label> {T.translate("edit_location.lng")}</label>
-                            <Input id="lng" value={entity.lng} onChange={this.handleChange} error={this.hasErrors('lng')} />
+                            <Input id="lng" value={entity.lng} onChange={this.handleChange}
+                                   error={this.hasErrors('lng')}/>
                         </div>
                         <div className="col-md-4">
                             <button className="btn btn-default update_map" onClick={this.handleMapUpdate}>
@@ -358,10 +403,14 @@ class LocationForm extends React.Component {
                         zoom={16}
                         draggable
                         onMarkerDragged={this.handleMarkerDragged}
+                        onMapClick={this.handleMapClick}
                     />
                 </Panel>
+                }
 
-                <Panel show={showSection == 'floors'} title={T.translate("edit_location.floors")} handleClick={this.toggleSection.bind(this, 'floors')} >
+                {this.display('floors') &&
+                <Panel show={showSection == 'floors'} title={T.translate("edit_location.floors")}
+                       handleClick={this.toggleSection.bind(this, 'floors')}>
                     <button className="btn btn-primary pull-right" onClick={this.handleNewFloor}>
                         {T.translate("edit_location.add_floor")}
                     </button>
@@ -372,8 +421,11 @@ class LocationForm extends React.Component {
                         className="dataTable"
                     />
                 </Panel>
+                }
 
-                <Panel show={showSection == 'rooms'} title={T.translate("edit_location.rooms")} handleClick={this.toggleSection.bind(this, 'rooms')} >
+                {this.display('rooms') &&
+                <Panel show={showSection == 'rooms'} title={T.translate("edit_location.rooms")}
+                       handleClick={this.toggleSection.bind(this, 'rooms')}>
                     <button className="btn btn-primary pull-right" onClick={this.handleNewRoom}>
                         {T.translate("edit_location.add_room")}
                     </button>
@@ -384,31 +436,40 @@ class LocationForm extends React.Component {
                         className="dataTable"
                     />
                 </Panel>
+                }
 
-                <Panel show={showSection == 'images'} title={T.translate("edit_location.images")} handleClick={this.toggleSection.bind(this, 'images')} >
-                    <div className="col-md-12">
-                        <button className="btn btn-primary pull-right" onClick={this.handleNewImage}>
-                            {T.translate("edit_location.add_image")}
-                        </button>
-                        <Table
-                            options={image_options}
-                            data={entity.images}
-                            columns={image_columns}
-                            className="dataTable"
-                        />
+                {this.display('images') &&
+                <Panel show={showSection == 'images'} title={T.translate("edit_location.images")}
+                       handleClick={this.toggleSection.bind(this, 'images')}>
+                    <div className="row form-group">
+                        <div className="col-md-12">
+                            <button className="btn btn-primary pull-right" onClick={this.handleNewImage}>
+                                {T.translate("edit_location.add_image")}
+                            </button>
+                            <Table
+                                options={image_options}
+                                data={entity.images}
+                                columns={image_columns}
+                                className="dataTable"
+                            />
+                        </div>
                     </div>
-                    <div className="col-md-12">
-                        <button className="btn btn-primary pull-right" onClick={this.handleNewMap}>
-                            {T.translate("edit_location.add_map")}
-                        </button>
-                        <Table
-                            options={map_options}
-                            data={entity.maps}
-                            columns={map_columns}
-                            className="dataTable"
-                        />
+                    <hr />
+                    <div className="row form-group">
+                        <div className="col-md-12">
+                            <button className="btn btn-primary pull-right" onClick={this.handleNewMap}>
+                                {T.translate("edit_location.add_map")}
+                            </button>
+                            <Table
+                                options={map_options}
+                                data={entity.maps}
+                                columns={map_columns}
+                                className="dataTable"
+                            />
+                        </div>
                     </div>
                 </Panel>
+                }
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">

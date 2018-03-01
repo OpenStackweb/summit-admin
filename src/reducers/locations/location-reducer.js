@@ -32,16 +32,15 @@ export const DEFAULT_ENTITY = {
     class_name          : '',
     description         : '',
     location_type       : '',
-    type                : '',
-    address_1           : '',
-    address_2           : '',
-    zipcode             : '',
+    address1            : '',
+    address2            : '',
+    zip_code            : '',
     city                : '',
     state               : '',
     country             : '',
-    website             : '',
-    lng                 : '',
-    lat                 : '',
+    website_url         : '',
+    lng                 : 0,
+    lat                 : 0,
     display_on_site     : false,
     details_page        : false,
     is_main             : false,
@@ -53,7 +52,8 @@ export const DEFAULT_ENTITY = {
     capacity            : 0,
     booking_link        : '',
     sold_out            : false,
-
+    airport_type        : '',
+    hotel_type          : '',
 }
 
 const DEFAULT_STATE = {
@@ -113,13 +113,17 @@ const locationReducer = (state = DEFAULT_STATE, action) => {
         case LOCATION_ADDRESS_UPDATED: {
             let address = payload[0].address_components;
             let {location} = payload[0].geometry;
+            let st_nmbr = address.find(l => l.types.indexOf('street_number') !== -1).short_name;
+            let street = address.find(l => l.types.indexOf('route') !== -1).short_name;
+            let city = address.find(l => l.types.indexOf('locality') !== -1).short_name;
+            let loc_state = address.find(l => l.types.indexOf('administrative_area_level_1') !== -1).short_name;
+            let country = address.find(l => l.types.indexOf('country') !== -1).short_name;
 
-            return {...state, entity: {
-                ...state.entity,
-                address_1: address[0].short_name + ' ' + address[1].short_name,
-                city: address[3].short_name,
-                state: address[4].short_name,
-                country: address[5].short_name,
+            return {...state, entity: {...state.entity,
+                address1: st_nmbr + ' ' + street,
+                city: city,
+                state: loc_state,
+                country: country,
                 lat: location.lat(),
                 lng: location.lng()
             }};

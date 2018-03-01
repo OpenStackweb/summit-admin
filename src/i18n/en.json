@@ -442,8 +442,8 @@
     "name"                  : "Name",
     "website"               : "Website",
     "description"           : "Description",
-    "display_on_site"       : "Display on site",
-    "details_page"          : "Show details page",
+    "display_on_site"       : "Should Display On Site",
+    "details_page"          : "Send people to a details page first?",
     "is_main"               : "Is main",
     "location_message"      : "Location Message",
     "booking_link"          : "Booking Link",
@@ -472,7 +472,8 @@
     "no_address_title"      : "No Address Found",
     "no_address_body"       : "Please type another address or choose one by dragging the marker in the map.",
     "placeholders": {
-      "select_type"     : "Select Type"
+      "select_type"     : "Select Type",
+      "select_country"  : "Select Country"
     }
   },
   "edit_floor": {

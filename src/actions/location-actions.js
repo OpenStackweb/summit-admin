@@ -12,7 +12,17 @@
  **/
 
 import { getRequest, putRequest, postRequest, deleteRequest, createAction, stopLoading, startLoading } from "openstack-uicore-foundation";
-import { authErrorHandler, fetchResponseHandler, fetchErrorHandler, apiBaseUrl, showMessage, getCSV, geoCodeAddress, geoCodeLatLng} from './base-actions';
+import {
+    authErrorHandler,
+    fetchResponseHandler,
+    fetchErrorHandler,
+    apiBaseUrl,
+    showMessage,
+    getCSV,
+    geoCodeAddress,
+    geoCodeLatLng,
+    getCountryList
+} from './base-actions';
 import swal from "sweetalert2";
 import T from "i18n-react/dist/i18n-react";
 
@@ -124,7 +134,7 @@ export const resetLocationForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_LOCATION_FORM)({}));
 };
 
-export const saveLocation = (entity, history) => (dispatch, getState) => {
+export const saveLocation = (entity, allClasses, history) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
@@ -135,7 +145,7 @@ export const saveLocation = (entity, history) => (dispatch, getState) => {
         access_token : accessToken,
     };
 
-    let normalizedEntity = normalizeEntity(entity);
+    let normalizedEntity = normalizeEntity(entity, allClasses);
 
     if (entity.id) {
 
@@ -235,7 +245,9 @@ export const updateLocationOrder = (locationId, newOrder) => (dispatch, getState
 
 export const updateLocationMap = (location) => (dispatch) => {
 
-    let address = location.address_1 + ',' + location.city + ',' + location.state + ',' + location.country ;
+    let address = location.address1 + ',' + location.address2 + ',' + location.city + ',' + location.state + ',' + location.country ;
+
+    dispatch(createAction(UPDATE_LOCATION)(location));
 
     geoCodeAddress(address)
         .then(function(results) {
@@ -246,9 +258,11 @@ export const updateLocationMap = (location) => (dispatch) => {
         });
 }
 
-export const updateAddress = (lat, lng) => (dispatch) => {
+export const updateAddress = (location) => (dispatch) => {
 
-    geoCodeLatLng(lat, lng)
+    dispatch(createAction(UPDATE_LOCATION)(location));
+
+    geoCodeLatLng(location.lat, location.lng)
         .then(function(results) {
             dispatch(createAction(LOCATION_ADDRESS_UPDATED)(results));
         })
@@ -258,9 +272,13 @@ export const updateAddress = (lat, lng) => (dispatch) => {
 }
 
 
-const normalizeEntity = (entity) => {
-    let normalizedEntity = {...entity};
+const normalizeEntity = (entity, allClasses) => {
+    let normalizedEntity = {};
+    let locationClass = allClasses.find(c => c.class_name == entity.class_name);
 
+    for(var field in locationClass) {
+        normalizedEntity[field] = entity[field];
+    }
 
     return normalizedEntity;
 
