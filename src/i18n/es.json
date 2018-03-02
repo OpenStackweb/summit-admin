@@ -70,7 +70,9 @@
     "promocode_list"      : "CRUD List",
     "event_types"         : "Event Types",
     "event_categories"    : "Event Categories",
-    "locations"           : "Locations"
+    "locations"           : "Locations",
+    "rsvps"               : "RSVPs",
+    "rsvp_template_list"  : "CRUD Templates"
   },
   "schedule": {
     "find_empty_spots"    : "Find empty spots for Day/Location",
@@ -493,5 +495,13 @@
     "overrides_blackouts" : "Overrides Blackouts",
     "room_saved"          : "Room saved successfully.",
     "room_created"        : "Room created successfully."
+  },
+  "rsvp_template_list": {
+    "rsvp_template_list"      : "RSVP Templates",
+    "add_rsvp_template"       : "Add Template",
+    "no_items"                : "No templates found",
+    "placeholders": {
+      "search_rsvp_templates" : "Search by template name."
+    }
   }
 }
