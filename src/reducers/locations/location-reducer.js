@@ -32,8 +32,8 @@ export const DEFAULT_ENTITY = {
     class_name          : '',
     description         : '',
     location_type       : '',
-    address1            : '',
-    address2            : '',
+    address_1            : '',
+    address_2            : '',
     zip_code            : '',
     city                : '',
     state               : '',
@@ -120,7 +120,7 @@ const locationReducer = (state = DEFAULT_STATE, action) => {
             let country = address.find(l => l.types.indexOf('country') !== -1).short_name;
 
             return {...state, entity: {...state.entity,
-                address1: st_nmbr + ' ' + street,
+                address_1: st_nmbr + ' ' + street,
                 city: city,
                 state: loc_state,
                 country: country,

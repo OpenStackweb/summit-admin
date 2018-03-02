@@ -33,6 +33,7 @@ export const RECEIVE_LOCATION_META      = 'RECEIVE_LOCATION_META';
 export const RESET_LOCATION_FORM        = 'RESET_LOCATION_FORM';
 export const UPDATE_LOCATION            = 'UPDATE_LOCATION';
 export const LOCATION_UPDATED           = 'LOCATION_UPDATED';
+export const LOCATION_ORDER_UPDATED     = 'LOCATION_ORDER_UPDATED';
 export const LOCATION_ADDED             = 'LOCATION_ADDED';
 export const LOCATION_DELETED           = 'LOCATION_DELETED';
 export const LOCATION_GMAP_UPDATED      = 'LOCATION_GMAP_UPDATED';
@@ -146,6 +147,7 @@ export const saveLocation = (entity, allClasses, history) => (dispatch, getState
     };
 
     let normalizedEntity = normalizeEntity(entity, allClasses);
+    let class_name = entity.class_name.toLowerCase();
 
     if (entity.id) {
 
@@ -158,7 +160,7 @@ export const saveLocation = (entity, allClasses, history) => (dispatch, getState
         putRequest(
             createAction(UPDATE_LOCATION),
             createAction(LOCATION_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${entity.id}`,
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${class_name}/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -177,7 +179,7 @@ export const saveLocation = (entity, allClasses, history) => (dispatch, getState
         postRequest(
             createAction(UPDATE_LOCATION),
             createAction(LOCATION_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations`,
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${class_name}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -223,7 +225,7 @@ export const exportLocations = ( ) => (dispatch, getState) => {
 
 };
 
-export const updateLocationOrder = (locationId, newOrder) => (dispatch, getState) => {
+export const updateLocationOrder = (locations, locationId, newOrder) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -233,11 +235,13 @@ export const updateLocationOrder = (locationId, newOrder) => (dispatch, getState
         access_token : accessToken
     };
 
+    let location = locations.find(l => l.id == locationId);
+
     putRequest(
         null,
-        createAction(LOCATION_UPDATED),
+        createAction(LOCATION_ORDER_UPDATED)(locations),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}`,
-        {order: newOrder},
+        location,
         authErrorHandler
     )(params)(dispatch).then(dispatch(stopLoading()));
 
@@ -245,7 +249,7 @@ export const updateLocationOrder = (locationId, newOrder) => (dispatch, getState
 
 export const updateLocationMap = (location) => (dispatch) => {
 
-    let address = location.address1 + ',' + location.address2 + ',' + location.city + ',' + location.state + ',' + location.country ;
+    let address = location.address_1 + ',' + location.address_2 + ',' + location.city + ',' + location.state + ',' + location.country ;
 
     dispatch(createAction(UPDATE_LOCATION)(location));
 

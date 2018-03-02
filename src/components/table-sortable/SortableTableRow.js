@@ -20,7 +20,7 @@ const rowSource = {
     },
     endDrag(props, monitor) {
         if (monitor.didDrop()) {
-            props.dropCard();
+            props.dropCard(props.id, props.index);
         }
     }
 };

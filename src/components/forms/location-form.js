@@ -339,19 +339,19 @@ class LocationForm extends React.Component {
                     }
                 </div>
 
-                {this.display('address1') &&
+                {this.display('address_1') &&
                 <Panel show={showSection == 'address'} title={T.translate("edit_location.address")}
                        handleClick={this.toggleSection.bind(this, 'address')}>
                     <div className="row form-group">
                         <div className="col-md-4">
                             <label> {T.translate("edit_location.address_1")}</label>
-                            <Input id="address1" value={entity.address1} onChange={this.handleChange}
-                                   error={this.hasErrors('address1')}/>
+                            <Input id="address_1" value={entity.address_1} onChange={this.handleChange}
+                                   error={this.hasErrors('address_1')}/>
                         </div>
                         <div className="col-md-4">
                             <label> {T.translate("edit_location.address_2")}</label>
-                            <Input id="address2" value={entity.address2} onChange={this.handleChange}
-                                   error={this.hasErrors('address2')}/>
+                            <Input id="address_2" value={entity.address_2} onChange={this.handleChange}
+                                   error={this.hasErrors('address_2')}/>
                         </div>
                         <div className="col-md-4">
                             <label> {T.translate("edit_location.zipcode")}</label>

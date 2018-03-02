@@ -65,8 +65,18 @@ class SortableTable extends React.Component {
         }));
     }
 
-    dropRow() {
-        this.props.dropCallback(this.state.rows);
+    dropRow(id, index) {
+        let {orderField} = this.props;
+        let newOrder = index + 1;
+        let rows = [...this.state.rows];
+
+        for(var i in rows) {
+            rows[i][orderField] = parseInt(i) + 1;
+        }
+
+        this.setState(update(this.state, {rows: {$set: rows}}));
+
+        this.props.dropCallback(rows, id, newOrder);
     }
 
     render() {

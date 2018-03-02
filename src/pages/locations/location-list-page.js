@@ -108,6 +108,10 @@ class LocationListPage extends React.Component {
 
         if(currentSummit == null) return null;
 
+        locations = locations.sort(
+            (a, b) => (a.order > b.order ? 1 : (a.order < b.order ? -1 : 0))
+        );
+
         return(
             <div className="container">
                 <h3> {T.translate("location_list.location_list")} ({totalLocations})</h3>
@@ -133,6 +137,7 @@ class LocationListPage extends React.Component {
                         data={locations}
                         columns={columns}
                         dropCallback={this.props.updateLocationOrder}
+                        orderField="order"
                     />
                 </div>
                 }

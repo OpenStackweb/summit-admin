@@ -14,6 +14,7 @@
 import
 {
     RECEIVE_LOCATIONS,
+    LOCATION_ORDER_UPDATED,
     REQUEST_LOCATIONS,
     LOCATION_DELETED
 } from '../../actions/location-actions';
@@ -51,6 +52,20 @@ const locationListReducer = (state = DEFAULT_STATE, action) => {
             })
 
             return {...state, locations: locations, totalLocations: total };
+        }
+        break;
+        case LOCATION_ORDER_UPDATED: {
+            let locations = payload.map(l => {
+
+                return {
+                    id: l.id,
+                    name: l.name,
+                    class_name: l.class_name,
+                    order: parseInt(l.order)
+                };
+            })
+
+            return {...state, locations: locations };
         }
         break;
         case LOCATION_DELETED: {
