@@ -187,7 +187,14 @@
   padding: 0;
   height: @event_initial_height !important;
   .border-bottom;
-  .border-right
+  .border-right;
+  .col-md-12 {
+    .no-margin();
+    .no-padding();
+    .minute-container{
+      .border-bottom;
+    }
+  }
 }
 
 .base-time-slot-overlay(){
@@ -239,6 +246,9 @@
 
 .outer-schedule-events-container{
   border-top: 1px solid @schedule_border_color;
+  max-height: 800px;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .empty-list-message{
