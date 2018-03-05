@@ -19,7 +19,7 @@ import { Pagination } from 'react-bootstrap';
 import FreeTextSearch from "../../components/free-text-search/index";
 import Table from "../../components/table/Table";
 import { getSummitById }  from '../../actions/summit-actions';
-import { getRsvpTemplates, deleteRsvpTemplate, exportRsvpTemplates } from "../../actions/rsvp-template-actions";
+import { getRsvpTemplates, deleteRsvpTemplate } from "../../actions/rsvp-template-actions";
 
 class RsvpTemplateListPage extends React.Component {
 
@@ -64,13 +64,6 @@ class RsvpTemplateListPage extends React.Component {
     handleEdit(rsvpTemplateId) {
         let {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}`);
-    }
-
-    handleExport(ev) {
-        let {term, order, orderDir, type} = this.props;
-        ev.preventDefault();
-
-        this.props.exportRsvpTemplates(term, order, orderDir, type);
     }
 
     handleDelete(rsvpTemplateId, ev) {

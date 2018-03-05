@@ -17,7 +17,7 @@ import T from 'i18n-react/dist/i18n-react';
 import swal from "sweetalert2";
 import SortableTable from "../../components/table-sortable/SortableTable";
 import { getSummitById }  from '../../actions/summit-actions';
-import { getLocations, getLocationMeta, deleteLocation, exportLocations, updateLocationOrder } from "../../actions/location-actions";
+import { getLocations, deleteLocation, exportLocations, updateLocationOrder } from "../../actions/location-actions";
 
 class LocationListPage extends React.Component {
 
