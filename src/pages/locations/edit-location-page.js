@@ -16,7 +16,19 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import LocationForm from '../../components/forms/location-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getLocation, getLocationMeta, resetLocationForm, saveLocation, updateLocationMap, updateAddress } from "../../actions/location-actions";
+import {
+    getLocation,
+    getLocationMeta,
+    resetLocationForm,
+    saveLocation,
+    updateLocationMap,
+    updateAddress,
+    deleteFloor,
+    deleteRoom,
+    deleteLocationImage,
+    deleteLocationMap
+} from "../../actions/location-actions";
+
 import '../../styles/edit-location-page.less';
 
 class EditLocationPage extends React.Component {
@@ -27,6 +39,11 @@ class EditLocationPage extends React.Component {
         this.state = {
             locationId: props.match.params.location_id
         }
+
+        this.handleFloorDelete = this.handleFloorDelete.bind(this);
+        this.handleRoomDelete = this.handleRoomDelete.bind(this);
+        this.handleImageDelete = this.handleImageDelete.bind(this);
+        this.handleMapDelete = this.handleMapDelete.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -72,6 +89,78 @@ class EditLocationPage extends React.Component {
         }
     }
 
+    handleFloorDelete(floorId, ev) {
+        let {deleteFloor, entity} = this.props;
+        let floor = entity.floors.find(f => f.id == floorId);
+
+        ev.preventDefault();
+
+        swal({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("edit_location.remove_floor_warning") + ' ' + floor.name,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: T.translate("general.yes_delete")
+        }).then(function(){
+            deleteFloor(entity.id, floorId);
+        }).catch(swal.noop);
+    }
+
+    handleRoomDelete(roomId, ev) {
+        let {deleteRoom, entity} = this.props;
+        let room = entity.rooms.find(r => r.id == roomId);
+
+        ev.preventDefault();
+
+        swal({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("edit_location.remove_room_warning") + ' ' + room.name,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: T.translate("general.yes_delete")
+        }).then(function(){
+            deleteRoom(entity.id, roomId);
+        }).catch(swal.noop);
+    }
+
+    handleImageDelete(imageId, ev) {
+        let {deleteLocationImage, entity} = this.props;
+        let image = entity.images.find(i => i.id == imageId);
+
+        ev.preventDefault();
+
+        swal({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("edit_location.remove_image_warning") + ' ' + image.name,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: T.translate("general.yes_delete")
+        }).then(function(){
+            deleteLocationImage(entity.id, imageId);
+        }).catch(swal.noop);
+    }
+
+    handleMapDelete(mapId, ev) {
+        let {deleteLocationMap, entity} = this.props;
+        let map = entity.maps.find(m => m.id == mapId);
+
+        ev.preventDefault();
+
+        swal({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("edit_location.remove_map_warning") + ' ' + map.name,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: T.translate("general.yes_delete")
+        }).then(function(){
+            deleteLocationMap(entity.id, mapId);
+        }).catch(swal.noop);
+    }
+
     render(){
         let {currentSummit, allClasses, entity, errors, history} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
@@ -90,6 +179,10 @@ class EditLocationPage extends React.Component {
                     onSubmit={this.props.saveLocation}
                     onMapUpdate={this.props.updateLocationMap}
                     onMarkerDragged={this.props.updateAddress}
+                    onFloorDelete={this.handleFloorDelete}
+                    onRoomDelete={this.handleRoomDelete}
+                    onImageDelete={this.handleImageDelete}
+                    onMapDelete={this.handleMapDelete}
                 />
                 }
             </div>
@@ -111,6 +204,10 @@ export default connect (
         resetLocationForm,
         saveLocation,
         updateLocationMap,
-        updateAddress
+        updateAddress,
+        deleteFloor,
+        deleteRoom,
+        deleteLocationImage,
+        deleteLocationMap
     }
 )(EditLocationPage);

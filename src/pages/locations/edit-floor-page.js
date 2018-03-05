@@ -24,21 +24,26 @@ class EditFloorPage extends React.Component {
         super(props);
 
         this.state = {
-            floorId: props.match.params.floor_id
+            floorId: props.match.params.floor_id,
+            locationId: props.match.params.location_id
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        let {floorId} = this.state;
+        let {floorId, locationId} = this.state;
 
         let new_floor_id = nextProps.match.params.floor_id;
+        let new_location_id = this.props.match.params.location_id;
 
-        if(floorId != new_floor_id) {
+        if(floorId != new_floor_id || locationId != new_location_id) {
 
-            this.setState({floorId: new_floor_id});
+            this.setState({
+                floorId: new_floor_id,
+                locationId: new_location_id
+            });
 
-            if(new_floor_id) {
-                this.props.getFloor(new_floor_id);
+            if(new_floor_id && new_location_id) {
+                this.props.getFloor(new_location_id, new_floor_id);
             } else {
                 this.props.resetFloorForm();
             }
@@ -55,12 +60,13 @@ class EditFloorPage extends React.Component {
     }
 
     componentDidMount () {
-        let {currentSummit, allTypes, errors} = this.props;
+        let {currentSummit, errors} = this.props;
+        let locationId = this.props.match.params.location_id;
         let floorId = this.props.match.params.floor_id;
 
         if(currentSummit != null) {
-            if (floorId != null) {
-                this.props.getFloor(floorId);
+            if (floorId != null && locationId != null) {
+                this.props.getFloor(locationId, floorId);
             } else {
                 this.props.resetFloorForm();
             }

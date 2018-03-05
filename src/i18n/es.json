@@ -473,6 +473,10 @@
     "location_created"      : "Location created successfully.",
     "no_address_title"      : "No Address Found",
     "no_address_body"       : "Please type another address or choose one by dragging the marker in the map.",
+    "remove_floor_warning"  : "Are you sure you want to delete floor ",
+    "remove_room_warning"   : "Are you sure you want to delete room ",
+    "remove_image_warning"  : "Are you sure you want to delete image ",
+    "remove_map_warning"    : "Are you sure you want to delete map ",
     "placeholders": {
       "select_type"     : "Select Type",
       "select_country"  : "Select Country"

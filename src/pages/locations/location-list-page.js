@@ -75,7 +75,7 @@ class LocationListPage extends React.Component {
 
         swal({
             title: T.translate("general.are_you_sure"),
-            text: T.translate("location_list.remove_location_warning") + ' ' + location.owner,
+            text: T.translate("location_list.remove_warning") + ' ' + location.name,
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",

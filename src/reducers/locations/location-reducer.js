@@ -70,7 +70,7 @@ const locationReducer = (state = DEFAULT_STATE, action) => {
             if (payload.hasOwnProperty('persistStore')) {
                 return state;
             } else {
-                return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
+                return DEFAULT_STATE;
             }
         }
         break;
@@ -97,6 +97,9 @@ const locationReducer = (state = DEFAULT_STATE, action) => {
                     entity[key] = (entity[key] == null) ? '' : entity[key] ;
                 }
             }
+
+            entity.floors = entity.floors.sort((a,b) => {return parseInt(a.number)-parseInt(b.number)});
+            entity.rooms = entity.rooms.map(r => ({...r, floor_name: entity.floors.find(f => f.id == r.floor_id).name}));
 
             return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
         }

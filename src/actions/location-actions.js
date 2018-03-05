@@ -160,7 +160,7 @@ export const saveLocation = (entity, allClasses, history) => (dispatch, getState
         putRequest(
             createAction(UPDATE_LOCATION),
             createAction(LOCATION_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${class_name}/${entity.id}`,
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -179,7 +179,7 @@ export const saveLocation = (entity, allClasses, history) => (dispatch, getState
         postRequest(
             createAction(UPDATE_LOCATION),
             createAction(LOCATION_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${class_name}`,
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -293,7 +293,7 @@ const normalizeEntity = (entity, allClasses) => {
 /**************************************** FLOORS *********************************************/
 
 
-export const getFloor = (floorId) => (dispatch, getState) => {
+export const getFloor = (locationId, floorId) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -373,7 +373,7 @@ export const saveFLoor = (entity, history) => (dispatch, getState) => {
     }
 }
 
-export const deleteFLoor = (floorId) => (dispatch, getState) => {
+export const deleteFloor = (locationId, floorId) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -403,7 +403,7 @@ const normalizeFloorEntity = (entity) => {
 /**************************************** ROOMS *********************************************/
 
 
-export const getRoom = (roomId) => (dispatch, getState) => {
+export const getRoom = (locationId, roomId) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -416,7 +416,7 @@ export const getRoom = (roomId) => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_FLOOR),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}/rooms/${floorId}`,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}/rooms/${roomId}`,
         authErrorHandler
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
@@ -482,7 +482,7 @@ export const saveRoom = (entity, history) => (dispatch, getState) => {
     }
 }
 
-export const deleteRoom = (roomId) => (dispatch, getState) => {
+export const deleteRoom = (locationId, roomId) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -495,7 +495,7 @@ export const deleteRoom = (roomId) => (dispatch, getState) => {
     return deleteRequest(
         null,
         createAction(ROOM_DELETED)({roomId}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${roomId}`,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}/rooms/${roomId}`,
         authErrorHandler
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
@@ -528,7 +528,7 @@ export const queryRooms = (input, summitId = null) => {
 /**************************************** IMAGES *********************************************/
 
 
-export const getLocationImage = (imageId) => (dispatch, getState) => {
+export const getLocationImage = (locationId, imageId) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -605,7 +605,7 @@ export const saveLocationImage = (entity, history) => (dispatch, getState) => {
     }
 }
 
-export const deleteLocationImage = (imageId) => (dispatch, getState) => {
+export const deleteLocationImage = (locationId, imageId) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -618,7 +618,7 @@ export const deleteLocationImage = (imageId) => (dispatch, getState) => {
     return deleteRequest(
         null,
         createAction(LOCATION_IMAGE_DELETED)({imageId}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${imageId}`,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}/images/${imageId}`,
         authErrorHandler
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
@@ -668,7 +668,7 @@ const uploadLocationImage = (entity, file) => (dispatch, getState) => {
 /**************************************** MAPS *********************************************/
 
 
-export const getLocationMap = (mapId) => (dispatch, getState) => {
+export const getLocationMap = (locationId, mapId) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -745,7 +745,7 @@ export const saveLocationMap = (entity, history) => (dispatch, getState) => {
     }
 }
 
-export const deleteLocationMap = (mapId) => (dispatch, getState) => {
+export const deleteLocationMap = (locationId, mapId) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -758,7 +758,7 @@ export const deleteLocationMap = (mapId) => (dispatch, getState) => {
     return deleteRequest(
         null,
         createAction(LOCATION_MAP_DELETED)({mapId}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${mapId}`,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}/maps/${mapId}`,
         authErrorHandler
     )(params)(dispatch).then(dispatch(stopLoading()));
 };

@@ -38,9 +38,13 @@ class LocationForm extends React.Component {
         this.handleChange           = this.handleChange.bind(this);
         this.handleSubmit           = this.handleSubmit.bind(this);
         this.handleNewFloor         = this.handleNewFloor.bind(this);
+        this.handleFloorEdit        = this.handleFloorEdit.bind(this);
         this.handleNewRoom          = this.handleNewRoom.bind(this);
+        this.handleRoomEdit         = this.handleRoomEdit.bind(this);
         this.handleNewImage         = this.handleNewImage.bind(this);
+        this.handleImageEdit        = this.handleImageEdit.bind(this);
         this.handleNewMap           = this.handleNewMap.bind(this);
+        this.handleMapEdit          = this.handleMapEdit.bind(this);
         this.handleMarkerDragged    = this.handleMarkerDragged.bind(this);
         this.handleMapUpdate        = this.handleMapUpdate.bind(this);
         this.handleMapClick         = this.handleMapClick.bind(this);
@@ -114,9 +118,19 @@ class LocationForm extends React.Component {
         history.push(`/app/summits/${currentSummit.id}/locations/${entity.id}/floors/new`);
     }
 
+    handleFloorEdit(floorId) {
+        let {currentSummit, history, entity} = this.props;
+        history.push(`/app/summits/${currentSummit.id}/locations/${entity.id}/floors/${floorId}`);
+    }
+
     handleNewRoom(ev) {
         let {currentSummit, history, entity} = this.props;
         history.push(`/app/summits/${currentSummit.id}/locations/${entity.id}/rooms/new`);
+    }
+
+    handleRoomEdit(roomId) {
+        let {currentSummit, history, entity} = this.props;
+        history.push(`/app/summits/${currentSummit.id}/locations/${entity.id}/rooms/${roomId}`);
     }
 
     handleNewImage(ev) {
@@ -124,9 +138,19 @@ class LocationForm extends React.Component {
         history.push(`/app/summits/${currentSummit.id}/locations/${entity.id}/images/new`);
     }
 
+    handleImageEdit(imageId) {
+        let {currentSummit, history, entity} = this.props;
+        history.push(`/app/summits/${currentSummit.id}/locations/${entity.id}/images/${imageId}`);
+    }
+
     handleNewMap(ev) {
         let {currentSummit, history, entity} = this.props;
         history.push(`/app/summits/${currentSummit.id}/locations/${entity.id}/maps/new`);
+    }
+
+    handleMapEdit(mapId) {
+        let {currentSummit, history, entity} = this.props;
+        history.push(`/app/summits/${currentSummit.id}/locations/${entity.id}/maps/${mapId}`);
     }
 
     handleMarkerDragged(lat, lng) {
@@ -176,7 +200,7 @@ class LocationForm extends React.Component {
             className: "table table-striped table-bordered table-hover dataTable",
             actions: {
                 edit: {onClick: this.handleFloorEdit},
-                delete: { onClick: this.handleFloorDelete }
+                delete: { onClick: this.props.onFloorDelete }
             }
         }
 
@@ -184,14 +208,14 @@ class LocationForm extends React.Component {
             { columnKey: 'id', value: T.translate("general.id") },
             { columnKey: 'name', value: T.translate("general.name") },
             { columnKey: 'capacity', value: T.translate("edit_location.capacity") },
-            { columnKey: 'floor', value: T.translate("edit_location.floor") }
+            { columnKey: 'floor_name', value: T.translate("edit_location.floor") }
         ];
 
         let room_options = {
             className: "table table-striped table-bordered table-hover dataTable",
             actions: {
                 edit: {onClick: this.handleRoomEdit},
-                delete: { onClick: this.handleRoomDelete }
+                delete: { onClick: this.props.onRoomDelete }
             }
         }
 
@@ -204,7 +228,7 @@ class LocationForm extends React.Component {
             className: "table table-striped table-bordered table-hover dataTable",
             actions: {
                 edit: {onClick: this.handleImageEdit},
-                delete: { onClick: this.handleImageDelete }
+                delete: { onClick: this.props.onImageDelete }
             }
         }
 
@@ -217,7 +241,7 @@ class LocationForm extends React.Component {
             className: "table table-striped table-bordered table-hover dataTable",
             actions: {
                 edit: {onClick: this.handleMapEdit},
-                delete: { onClick: this.handleMapDelete }
+                delete: { onClick: this.props.onMapDelete }
             }
         }
 
