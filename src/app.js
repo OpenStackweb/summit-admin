@@ -56,15 +56,16 @@ class App extends React.PureComponent {
     }
 
     render() {
-        let { isLoggedUser, onUserAuth, doLogout, getUserInfo, currentSummit} = this.props;
+        let { isLoggedUser, onUserAuth, doLogout, getUserInfo, currentSummit, member} = this.props;
+        let profile_pic = member ? member.pic : '';
         return (
             <BrowserRouter>
                 <div>
                     <AjaxLoader show={ this.props.loading } size={ 120 }/>
                     <div className="header">
-                        <div className="text-center">
-                            <h1>{T.translate("landing.os_summit_admin")}</h1>
-                            <AuthButton isLoggedUser={isLoggedUser} doLogin={this.onClickLogin.bind(this)} doLogout={doLogout}/>
+                        <div className={"header-title " + (isLoggedUser ? '' : 'center')}>
+                            {T.translate("landing.os_summit_admin")}
+                            <AuthButton isLoggedUser={isLoggedUser} picture={profile_pic} doLogin={this.onClickLogin.bind(this)} doLogout={doLogout}/>
                         </div>
                     </div>
                     <Switch>
@@ -81,6 +82,7 @@ class App extends React.PureComponent {
 
 const mapStateToProps = ({ loggedUserState, baseState, currentSummitState }) => ({
     isLoggedUser: loggedUserState.isLoggedUser,
+    member: loggedUserState.member,
     loading : baseState.loading,
     currentSummit: currentSummitState.currentSummit,
 })

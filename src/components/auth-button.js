@@ -13,24 +13,52 @@
 
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
-import { withRouter } from 'react-router-dom'
 
-const AuthButton = withRouter(({ history, isLoggedUser, doLogin, doLogout }) => (
-    isLoggedUser ? (
-        <div className="logout">
-            <button className="btn btn-default" onClick={() => { doLogout(); }}>
-                {T.translate("landing.sign_out")}
-            </button>
-        </div>
-    ) : (
-        <div className="login">
-            {T.translate("landing.not_logged_in")}
-            <br/><br/>
-            <button className="btn btn-primary btn-lg" onClick={() => { doLogin(); }}>
-                {T.translate("landing.log_in")}
-            </button>
-        </div>
-    )
-))
 
-export default AuthButton;
+export default class AuthButton extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            showLogOut: false,
+        };
+
+        this.toggleLogOut = this.toggleLogOut.bind(this);
+    }
+
+    toggleLogOut(ev) {
+        this.setState({showLogOut: !this.state.showLogOut});
+    }
+
+    render() {
+        let {history, isLoggedUser, doLogin, doLogout, picture} = this.props;
+        let {showLogOut} = this.state;
+
+        if (isLoggedUser) {
+            return (
+                <div className="user-menu" onMouseEnter={this.toggleLogOut} onMouseLeave={this.toggleLogOut}>
+                    <div className="profile-pic">
+                        <img src={picture} />
+                    </div>
+                    {showLogOut &&
+                    <button className="btn btn-default logout" onClick={() => { doLogout(); }}>
+                        {T.translate("landing.sign_out")}
+                    </button>
+                    }
+                </div>
+            );
+        } else {
+            return (
+                <div className="login">
+                    {T.translate("landing.not_logged_in")}
+                    <br/><br/>
+                    <button className="btn btn-primary btn-lg" onClick={() => { doLogin(); }}>
+                        {T.translate("landing.log_in")}
+                    </button>
+                </div>
+            );
+        }
+
+    }
+}
