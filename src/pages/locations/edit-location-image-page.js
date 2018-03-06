@@ -24,21 +24,26 @@ class EditLocationImagePage extends React.Component {
         super(props);
 
         this.state = {
-            imageId: props.match.params.image_id
+            imageId: props.match.params.image_id,
+            locationId: props.match.params.location_id
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        let {imageId} = this.state;
+        let {imageId, locationId} = this.state;
 
         let new_image_id = nextProps.match.params.image_id;
+        let new_location_id = this.props.match.params.location_id;
 
-        if(imageId != new_image_id) {
+        if(imageId != new_image_id || locationId != new_location_id) {
 
-            this.setState({imageId: new_image_id});
+            this.setState({
+                imageId: new_image_id,
+                locationId: new_location_id
+            });
 
-            if(new_image_id) {
-                this.props.getLocationImage(new_image_id);
+            if(new_image_id && new_location_id) {
+                this.props.getLocationImage(new_location_id, new_image_id);
             } else {
                 this.props.resetLocationImageForm();
             }
@@ -57,10 +62,11 @@ class EditLocationImagePage extends React.Component {
     componentDidMount () {
         let {currentSummit, allTypes, errors} = this.props;
         let imageId = this.props.match.params.image_id;
+        let locationId = this.props.match.params.location_id;
 
         if(currentSummit != null) {
-            if (imageId != null) {
-                this.props.getLocationImage(imageId);
+            if (imageId != null && locationId != null) {
+                this.props.getLocationImage(locationId, imageId);
             } else {
                 this.props.resetLocationImageForm();
             }
@@ -79,6 +85,7 @@ class EditLocationImagePage extends React.Component {
                 <ImageForm
                     history={this.props.history}
                     currentSummit={currentSummit}
+                    locationId={this.state.locationId}
                     entity={entity}
                     errors={errors}
                     onSubmit={this.props.saveLocationImage}

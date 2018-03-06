@@ -27,6 +27,7 @@ class EditFloorPage extends React.Component {
             floorId: props.match.params.floor_id,
             locationId: props.match.params.location_id
         }
+
     }
 
     componentWillReceiveProps(nextProps) {
@@ -85,6 +86,7 @@ class EditFloorPage extends React.Component {
                 <FloorForm
                     history={this.props.history}
                     currentSummit={currentSummit}
+                    locationId={this.state.locationId}
                     entity={entity}
                     errors={errors}
                     onSubmit={this.props.saveFloor}

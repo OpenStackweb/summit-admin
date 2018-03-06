@@ -19,7 +19,11 @@ import
     UPDATE_LOCATION,
     LOCATION_UPDATED,
     LOCATION_GMAP_UPDATED,
-    LOCATION_ADDRESS_UPDATED
+    LOCATION_ADDRESS_UPDATED,
+    FLOOR_DELETED,
+    ROOM_DELETED,
+    LOCATION_IMAGE_DELETED,
+    LOCATION_MAP_DELETED
 } from '../../actions/location-actions';
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
@@ -99,7 +103,12 @@ const locationReducer = (state = DEFAULT_STATE, action) => {
             }
 
             entity.floors = entity.floors.sort((a,b) => {return parseInt(a.number)-parseInt(b.number)});
-            entity.rooms = entity.rooms.map(r => ({...r, floor_name: entity.floors.find(f => f.id == r.floor_id).name}));
+            entity.rooms = entity.rooms.map(r => {
+                let floor = entity.floors.find(f => f.id == r.floor_id);
+                let floor_name = floor ? floor.name : 'N/A';
+
+                return {...r, floor_name: floor_name}
+            });
 
             return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
         }
@@ -130,6 +139,26 @@ const locationReducer = (state = DEFAULT_STATE, action) => {
                 lat: location.lat(),
                 lng: location.lng()
             }};
+        }
+        break;
+        case FLOOR_DELETED: {
+            let {floorId} = payload;
+            return {...state, entity: {...state.entity, floors: state.entity.floors.filter(f => f.id != floorId)}};
+        }
+        break;
+        case ROOM_DELETED: {
+            let {roomId} = payload;
+            return {...state, entity: {...state.entity, rooms: state.entity.rooms.filter(r => r.id != roomId)}};
+        }
+        break;
+        case LOCATION_IMAGE_DELETED: {
+            let {imageId} = payload;
+            return {...state, entity: {...state.entity, images: state.entity.images.filter(i => i.id != imageId)}};
+        }
+        break;
+        case LOCATION_MAP_DELETED: {
+            let {mapId} = payload;
+            return {...state, entity: {...state.entity, maps: state.entity.maps.filter(m => m.id != mapId)}};
         }
         break;
         case VALIDATE: {

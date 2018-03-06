@@ -35,9 +35,10 @@ export default class Dropdown extends React.Component {
 
     handleChange(selection) {
 
+        let value = selection ? selection.value : null;
         let ev = {target: {
             id: this.props.id,
-            value: selection.value,
+            value: value,
             type: 'dropdown'
         }};
 

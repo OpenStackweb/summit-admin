@@ -70,9 +70,11 @@ class FloorForm extends React.Component {
 
     handleSubmit(ev) {
         let entity = {...this.state.entity};
+        let {locationId} = this.props;
+
         ev.preventDefault();
 
-        this.props.onSubmit(this.state.entity, this.props.history);
+        this.props.onSubmit(locationId, entity, this.props.history);
     }
 
     hasErrors(field) {
@@ -160,7 +162,9 @@ class FloorForm extends React.Component {
                     </div>
                 </div>
 
-                <Panel show={showRooms} title={T.translate("edit_location.rooms")} handleClick={this.toggleRooms.bind(this)} >
+                {entity.id != 0 &&
+                <Panel show={showRooms} title={T.translate("edit_location.rooms")}
+                                     handleClick={this.toggleRooms.bind(this)}>
                     <button className="btn btn-primary pull-right left-space" onClick={this.handleNewRoom}>
                         {T.translate("edit_location.add_room")}
                     </button>
@@ -176,6 +180,7 @@ class FloorForm extends React.Component {
                         queryOptions={queryRooms}
                     />
                 </Panel>
+                }
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">

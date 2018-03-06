@@ -17,6 +17,7 @@ import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import {findElementPos} from '../../utils/methods'
 import Input from '../inputs/text-input'
 import TextEditor from '../inputs/editor-input'
+import Dropdown from '../inputs/dropdown'
 
 
 class RoomForm extends React.Component {
@@ -63,9 +64,11 @@ class RoomForm extends React.Component {
 
     handleSubmit(ev) {
         let entity = {...this.state.entity};
+        let {locationId} = this.props;
+
         ev.preventDefault();
 
-        this.props.onSubmit(this.state.entity, this.props.history);
+        this.props.onSubmit(locationId, entity, this.props.history);
     }
 
     hasErrors(field) {
@@ -79,12 +82,14 @@ class RoomForm extends React.Component {
 
     render() {
         let {entity} = this.state;
+        let { allFloors } = this.props;
+        let floors_ddl = allFloors.map(f => ({label: f.name, value: f.id}));
 
         return (
             <form className="room-form">
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <label> {T.translate("edit_room.name")} *</label>
                         <Input
                             id="name"
@@ -94,7 +99,7 @@ class RoomForm extends React.Component {
                             error={this.hasErrors('name')}
                         />
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <label> {T.translate("edit_room.capacity")}</label>
                         <Input
                             id="capacity"
@@ -105,7 +110,17 @@ class RoomForm extends React.Component {
                             error={this.hasErrors('capacity')}
                         />
                     </div>
-                    <div className="col-md-4 checkboxes-div">
+                    <div className="col-md-3">
+                        <label> {T.translate("edit_room.floor")}</label>
+                        <Dropdown
+                            id="floor_id"
+                            value={entity.floor_id}
+                            placeholder={T.translate("edit_room.placeholders.select_floor")}
+                            options={floors_ddl}
+                            onChange={this.handleChange}
+                        />
+                    </div>
+                    <div className="col-md-3 checkboxes-div">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="overrides_blackouts" checked={entity.overrides_blackouts}
                                    onChange={this.handleChange} className="form-check-input" />

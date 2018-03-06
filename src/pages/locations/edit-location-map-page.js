@@ -24,21 +24,26 @@ class EditLocationMapPage extends React.Component {
         super(props);
 
         this.state = {
-            mapId: props.match.params.map_id
+            mapId: props.match.params.map_id,
+            locationId: props.match.params.location_id
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        let {mapId} = this.state;
+        let {mapId, locationId} = this.state;
 
         let new_map_id = nextProps.match.params.map_id;
+        let new_location_id = this.props.match.params.location_id;
 
-        if(mapId != new_map_id) {
+        if(mapId != new_map_id || locationId != new_location_id) {
 
-            this.setState({mapId: new_map_id});
+            this.setState({
+                mapId: new_map_id,
+                locationId: new_location_id
+            });
 
-            if(new_map_id) {
-                this.props.getLocationMap(new_map_id);
+            if(new_map_id && new_location_id) {
+                this.props.getLocationMap(new_location_id, new_map_id);
             } else {
                 this.props.resetLocationMapForm();
             }
@@ -57,10 +62,11 @@ class EditLocationMapPage extends React.Component {
     componentDidMount () {
         let {currentSummit, allTypes, errors} = this.props;
         let mapId = this.props.match.params.map_id;
+        let locationId = this.props.match.params.location_id;
 
         if(currentSummit != null) {
-            if (mapId != null) {
-                this.props.getLocationMap(mapId);
+            if (mapId != null  && locationId != null) {
+                this.props.getLocationMap(locationId, mapId);
             } else {
                 this.props.resetLocationMapForm();
             }
@@ -79,6 +85,7 @@ class EditLocationMapPage extends React.Component {
                 <ImageForm
                     history={this.props.history}
                     currentSummit={currentSummit}
+                    locationId={this.state.locationId}
                     entity={entity}
                     errors={errors}
                     onSubmit={this.props.saveLocationMap}

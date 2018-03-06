@@ -432,7 +432,7 @@ class LocationForm extends React.Component {
                 </Panel>
                 }
 
-                {this.display('floors') &&
+                {this.display('floors') && entity.id != 0 &&
                 <Panel show={showSection == 'floors'} title={T.translate("edit_location.floors")}
                        handleClick={this.toggleSection.bind(this, 'floors')}>
                     <button className="btn btn-primary pull-right" onClick={this.handleNewFloor}>
@@ -447,7 +447,7 @@ class LocationForm extends React.Component {
                 </Panel>
                 }
 
-                {this.display('rooms') &&
+                {this.display('rooms') && entity.id != 0 &&
                 <Panel show={showSection == 'rooms'} title={T.translate("edit_location.rooms")}
                        handleClick={this.toggleSection.bind(this, 'rooms')}>
                     <button className="btn btn-primary pull-right" onClick={this.handleNewRoom}>
@@ -462,7 +462,7 @@ class LocationForm extends React.Component {
                 </Panel>
                 }
 
-                {this.display('images') &&
+                {this.display('images') && entity.id != 0 &&
                 <Panel show={showSection == 'images'} title={T.translate("edit_location.images")}
                        handleClick={this.toggleSection.bind(this, 'images')}>
                     <div className="row form-group">

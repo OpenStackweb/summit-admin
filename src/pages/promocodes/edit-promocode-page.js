@@ -48,15 +48,19 @@ class EditPromocodePage extends React.Component {
 
     componentWillMount () {
         let summitId = this.props.match.params.summit_id;
-        let {currentSummit} = this.props;
+        let {currentSummit, allTypes} = this.props;
 
         if(currentSummit == null){
             this.props.getSummitById(summitId);
+        } else {
+            if(allTypes.length == 0){
+                this.props.getPromocodeMeta();
+            }
         }
     }
 
     componentDidMount () {
-        let {currentSummit, allTypes, errors} = this.props;
+        let {currentSummit, errors} = this.props;
         let promocodeId = this.props.match.params.promocode_id;
 
         if(currentSummit != null) {
@@ -64,10 +68,6 @@ class EditPromocodePage extends React.Component {
                 this.props.getPromocode(promocodeId);
             } else {
                 this.props.resetPromocodeForm();
-            }
-
-            if(allTypes.length == 0){
-                this.props.getPromocodeMeta();
             }
         }
     }

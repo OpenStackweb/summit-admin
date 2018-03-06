@@ -14,6 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
+import swal from "sweetalert2";
 import LocationForm from '../../components/forms/location-form';
 import { getSummitById }  from '../../actions/summit-actions';
 import {
@@ -65,15 +66,19 @@ class EditLocationPage extends React.Component {
 
     componentWillMount () {
         let summitId = this.props.match.params.summit_id;
-        let {currentSummit} = this.props;
+        let {currentSummit, allClasses} = this.props;
 
         if(currentSummit == null){
             this.props.getSummitById(summitId);
+        } else {
+            if(allClasses.length == 0){
+                this.props.getLocationMeta();
+            }
         }
     }
 
     componentDidMount () {
-        let {currentSummit, allClasses, errors} = this.props;
+        let {currentSummit, errors} = this.props;
         let locationId = this.props.match.params.location_id;
 
         if(currentSummit != null) {
@@ -81,10 +86,6 @@ class EditLocationPage extends React.Component {
                 this.props.getLocation(locationId);
             } else {
                 this.props.resetLocationForm();
-            }
-
-            if(allClasses.length == 0){
-                this.props.getLocationMeta();
             }
         }
     }

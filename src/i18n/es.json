@@ -498,7 +498,18 @@
     "floor"               : "Floor",
     "overrides_blackouts" : "Overrides Blackouts",
     "room_saved"          : "Room saved successfully.",
-    "room_created"        : "Room created successfully."
+    "room_created"        : "Room created successfully.",
+    "placeholders": {
+      "select_floor"  : "Select Floor"
+    }
+  },
+  "edit_location_image": {
+    "image_saved"          : "Image saved successfully.",
+    "image_created"        : "Image created successfully."
+  },
+  "edit_location_map": {
+    "map_saved"          : "Map saved successfully.",
+    "map_created"        : "Map created successfully."
   },
   "rsvp_template_list": {
     "rsvp_template_list"      : "RSVP Templates",

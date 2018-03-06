@@ -24,21 +24,26 @@ class EditRoomPage extends React.Component {
         super(props);
 
         this.state = {
+            locationId: props.match.params.location_id,
             roomId: props.match.params.room_id
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        let {roomId} = this.state;
+        let {roomId, locationId} = this.state;
 
         let new_room_id = nextProps.match.params.room_id;
+        let new_location_id = this.props.match.params.location_id;
 
-        if(roomId != new_room_id) {
+        if(roomId != new_room_id || locationId != new_location_id) {
 
-            this.setState({roomId: new_room_id});
+            this.setState({
+                locationId: new_location_id,
+                roomId: new_room_id
+            });
 
-            if(new_room_id) {
-                this.props.getRoom(new_room_id);
+            if(new_room_id && new_location_id) {
+                this.props.getRoom(new_location_id, new_room_id);
             } else {
                 this.props.resetRoomForm();
             }
@@ -47,20 +52,26 @@ class EditRoomPage extends React.Component {
 
     componentWillMount () {
         let summitId = this.props.match.params.summit_id;
-        let {currentSummit} = this.props;
+        let locationId = this.props.match.params.location_id;
+        let {currentSummit, allFloors} = this.props;
 
         if(currentSummit == null){
             this.props.getSummitById(summitId);
+        } else {
+            if(allFloors.length == 0){
+                this.props.getLocation(locationId);
+            }
         }
     }
 
     componentDidMount () {
-        let {currentSummit, allTypes, errors} = this.props;
+        let {currentSummit, errors} = this.props;
+        let locationId = this.props.match.params.location_id;
         let roomId = this.props.match.params.room_id;
 
         if(currentSummit != null) {
-            if (roomId != null) {
-                this.props.getRoom(roomId);
+            if (roomId != null && locationId != null) {
+                this.props.getRoom(locationId, roomId);
             } else {
                 this.props.resetRoomForm();
             }
@@ -68,7 +79,7 @@ class EditRoomPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors} = this.props;
+        let {currentSummit, entity, errors, allFloors} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
 
         return(
@@ -79,6 +90,8 @@ class EditRoomPage extends React.Component {
                 <RoomForm
                     history={this.props.history}
                     currentSummit={currentSummit}
+                    locationId={this.state.locationId}
+                    allFloors={allFloors}
                     entity={entity}
                     errors={errors}
                     onSubmit={this.props.saveRoom}
@@ -89,8 +102,9 @@ class EditRoomPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentRoomState }) => ({
+const mapStateToProps = ({ currentSummitState, currentRoomState, currentLocationState }) => ({
     currentSummit : currentSummitState.currentSummit,
+    allFloors: currentLocationState.entity.floors,
     ...currentRoomState
 })
 

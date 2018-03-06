@@ -43,21 +43,21 @@ class PromocodeListPage extends React.Component {
 
     componentWillMount () {
         let summitId = this.props.match.params.summit_id;
-        let {currentSummit} = this.props;
+        let {currentSummit, allTypes} = this.props;
 
         if(currentSummit == null || currentSummit.id != summitId){
             this.props.getSummitById(summitId);
+        } else {
+            if(allTypes.length == 1){
+                this.props.getPromocodeMeta();
+            }
         }
     }
 
     componentDidMount() {
-        let {currentSummit, allTypes} = this.props;
+        let {currentSummit} = this.props;
         if(currentSummit !== null) {
             this.props.getPromocodes();
-
-            if(allTypes.length == 1){
-                this.props.getPromocodeMeta();
-            }
         }
     }
 
