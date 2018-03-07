@@ -29,7 +29,6 @@ class RsvpTemplateForm extends React.Component {
         };
 
         this.handleEditQuestion = this.handleEditQuestion.bind(this);
-        this.handleDeleteQuestion = this.handleDeleteQuestion.bind(this);
         this.handleAddQuestion = this.handleAddQuestion.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -85,24 +84,6 @@ class RsvpTemplateForm extends React.Component {
         history.push(`/app/summits/${currentSummit.id}/rsvp-templates/${entity.id}/questions/${rsvpQuestionId}`);
     }
 
-    handleDeleteQuestion(rsvpQuestionId, ev) {
-        let {deleteRsvpQuestion, questions} = this.props;
-        let question = questions.find(q => q.id == rsvpQuestionId);
-
-        ev.preventDefault();
-
-        swal({
-            title: T.translate("general.are_you_sure"),
-            text: T.translate("edit_rsvp_template.remove_question_warning") + ' ' + question.name,
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: T.translate("general.yes_delete")
-        }).then(function(){
-            deleteRsvpQuestion(rsvpQuestionId);
-        }).catch(swal.noop);
-    }
-
     handleAddQuestion(ev) {
         let {currentSummit, history, entity} = this.props;
         history.push(`/app/summits/${currentSummit.id}/rsvp-templates/${entity.id}/questions/new`);
@@ -113,15 +94,16 @@ class RsvpTemplateForm extends React.Component {
         let { currentSummit } = this.props;
 
         let columns = [
-            { columnKey: 'type', value: T.translate("edit_rsvp_template.type") },
-            { columnKey: 'name', value: T.translate("edit_rsvp_template.name") }
+            { columnKey: 'id', value: T.translate("general.id") },
+            { columnKey: 'name', value: T.translate("edit_rsvp_template.name") },
+            { columnKey: 'class_name', value: T.translate("edit_rsvp_template.class_name") }
         ];
 
         let table_options = {
             className: "table table-striped table-bordered table-hover dataTable",
             actions: {
                 edit: { onClick: this.handleEditQuestion },
-                delete: { onClick: this.handleDeleteQuestion }
+                delete: { onClick: this.props.onQuestionDelete }
             }
         }
 
@@ -152,13 +134,13 @@ class RsvpTemplateForm extends React.Component {
                 <div className="row form-group">
                     <div className="col-md-12">
                         <button className="btn btn-primary pull-right" onClick={this.handleAddQuestion}>
-                            {T.translate("edit_rsvp_template.add_question   ")}
+                            {T.translate("edit_rsvp_template.add_question")}
                         </button>
                         <SortableTable
                             options={table_options}
-                            data={locations}
+                            data={entity.questions}
                             columns={columns}
-                            dropCallback={this.props.updateLocationOrder}
+                            dropCallback={this.props.onQuestionReorder}
                             orderField="order"
                         />
                     </div>

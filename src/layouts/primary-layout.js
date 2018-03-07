@@ -40,6 +40,9 @@ import EditRoomPage from '../pages/locations/edit-room-page';
 import EditLocationImagePage from '../pages/locations/edit-location-image-page';
 import EditLocationMapPage from '../pages/locations/edit-location-map-page';
 import RsvpTemplateListPage from '../pages/rsvps/rsvp-template-list-page';
+import EditRsvpTemplatePage from '../pages/rsvps/edit-rsvp-template-page';
+import EditRsvpQuestionPage from '../pages/rsvps/edit-rsvp-question-page';
+import EditRsvpQuestionValuePage from '../pages/rsvps/edit-rsvp-question-value-page';
 
 
 import { withRouter } from 'react-router-dom'
@@ -94,6 +97,12 @@ class PrimaryLayout extends React.Component {
                         <Route exact path="/app/summits/:summit_id/locations/:location_id/maps/new" component={EditLocationMapPage}/>
                         <Route exact path="/app/summits/:summit_id/locations/:location_id/maps/:map_id" component={EditLocationMapPage}/>
                         <Route exact path="/app/summits/:summit_id/rsvp-templates" component={RsvpTemplateListPage}/>
+                        <Route exact path="/app/summits/:summit_id/rsvp-templates/new" component={EditRsvpTemplatePage}/>
+                        <Route exact path="/app/summits/:summit_id/rsvp-templates/:rsvp_template_id" component={EditRsvpTemplatePage}/>
+                        <Route exact path="/app/summits/:summit_id/rsvp-templates/:rsvp_template_id/questions/new" component={EditRsvpQuestionPage}/>
+                        <Route exact path="/app/summits/:summit_id/rsvp-templates/:rsvp_template_id/questions/:rsvp_question_id" component={EditRsvpQuestionPage}/>
+                        <Route exact path="/app/summits/:summit_id/rsvp-templates/:rsvp_template_id/questions/:rsvp_question_id/values/new" component={EditRsvpQuestionValuePage}/>
+                        <Route exact path="/app/summits/:summit_id/rsvp-templates/:rsvp_template_id/questions/:rsvp_question_id/values/:rsvp_question_value_id" component={EditRsvpQuestionValuePage}/>
                         <Route render={props => (<Redirect to="/app/directory"/>)}/>
                     </Switch>
                 </main>

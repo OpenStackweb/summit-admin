@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 OpenStack Foundation
+ * Copyright 2018 OpenStack Foundation
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,13 +13,12 @@
 
 import
 {
-    RECEIVE_PROMOCODE,
-    RECEIVE_PROMOCODE_META,
-    RESET_PROMOCODE_FORM,
-    UPDATE_PROMOCODE,
-    PROMOCODE_UPDATED,
-    EMAIL_SENT
-} from '../../actions/promocode-actions';
+    RECEIVE_RSVP_TEMPLATE,
+    RESET_RSVP_TEMPLATE_FORM,
+    UPDATE_RSVP_TEMPLATE,
+    RSVP_TEMPLATE_UPDATED,
+    QUESTION_ORDER_UPDATED
+} from '../../actions/rsvp-template-actions';
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
 import { VALIDATE } from '../../actions/base-actions';
@@ -27,27 +26,17 @@ import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 export const DEFAULT_ENTITY = {
     id              : 0,
-    owner           : null,
-    speaker         : null,
-    sponsor         : null,
-    first_name      : '',
-    last_name       : '',
-    email           : '',
-    type            : '',
-    class_name      : '',
-    code            : '',
-    email_sent      : false,
-    redeemed        : false
+    name            : '',
+    is_enabled      : false,
+    questions       : []
 }
 
 const DEFAULT_STATE = {
     entity      : DEFAULT_ENTITY,
     errors      : {},
-    allTypes    : [],
-    allClasses  : []
 };
 
-const promocodeReducer = (state = DEFAULT_STATE, action) => {
+const rsvpTemplateReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
         case LOGOUT_USER: {
@@ -60,28 +49,15 @@ const promocodeReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case SET_CURRENT_SUMMIT:
-        case RESET_PROMOCODE_FORM: {
+        case RESET_RSVP_TEMPLATE_FORM: {
             return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
         }
         break;
-        case RECEIVE_PROMOCODE_META: {
-            let types = [...DEFAULT_STATE.allTypes];
-            let allClasses = [...payload.response];
-
-            allClasses.map(t => {
-                types = types.concat(t.type)
-            });
-
-            let unique_types = [...new Set( types )];
-
-            return {...state, allTypes: unique_types, allClasses: allClasses }
-        }
-        break;
-        case UPDATE_PROMOCODE: {
+        case UPDATE_RSVP_TEMPLATE: {
             return {...state,  entity: {...payload}, errors: {} };
         }
         break;
-        case RECEIVE_PROMOCODE: {
+        case RECEIVE_RSVP_TEMPLATE: {
             let entity = {...payload.response};
 
             for(var key in entity) {
@@ -93,12 +69,22 @@ const promocodeReducer = (state = DEFAULT_STATE, action) => {
             return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
         }
         break;
-        case PROMOCODE_UPDATED: {
+        case RSVP_TEMPLATE_UPDATED: {
             return state;
         }
         break;
-        case EMAIL_SENT: {
-            return {...state, entity: {...state.entity, email_sent: true}};
+        case QUESTION_ORDER_UPDATED: {
+            let questions = payload.map(q => {
+
+                return {
+                    id: q.id,
+                    name: q.name,
+                    class_name: q.class_name,
+                    order: parseInt(q.order)
+                };
+            })
+
+            return {...state, questions: questions };
         }
         break;
         case VALIDATE: {
@@ -110,4 +96,4 @@ const promocodeReducer = (state = DEFAULT_STATE, action) => {
     }
 };
 
-export default promocodeReducer;
+export default rsvpTemplateReducer;

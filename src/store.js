@@ -40,6 +40,9 @@ import roomReducer from './reducers/locations/room-reducer';
 import locationImageReducer from './reducers/locations/location-image-reducer';
 import locationMapReducer from './reducers/locations/location-map-reducer';
 import rsvpTemplateListReducer from './reducers/rsvps/rsvp-template-list-reducer';
+import rsvpTemplateReducer from './reducers/rsvps/rsvp-template-reducer';
+import rsvpQuestionReducer from './reducers/rsvps/rsvp-question-reducer';
+import rsvpQuestionValueReducer from './reducers/rsvps/rsvp-question-value-reducer';
 
 
 import thunk from 'redux-thunk';
@@ -79,7 +82,10 @@ const reducers = persistCombineReducers(config, {
     currentRoomState: roomReducer,
     currentLocationImageState: locationImageReducer,
     currentLocationMapState: locationMapReducer,
-    currentRsvpTemplateListState: rsvpTemplateListReducer
+    currentRsvpTemplateListState: rsvpTemplateListReducer,
+    currentRsvpTemplateState: rsvpTemplateReducer,
+    currentRsvpQuestionState: rsvpQuestionReducer,
+    currentRsvpQuestionValueState: rsvpQuestionValueReducer
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

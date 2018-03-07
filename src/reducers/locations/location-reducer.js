@@ -102,13 +102,17 @@ const locationReducer = (state = DEFAULT_STATE, action) => {
                 }
             }
 
-            entity.floors = entity.floors.sort((a,b) => {return parseInt(a.number)-parseInt(b.number)});
-            entity.rooms = entity.rooms.map(r => {
-                let floor = entity.floors.find(f => f.id == r.floor_id);
-                let floor_name = floor ? floor.name : 'N/A';
+            if (entity.hasOwnProperty('floors') && entity.hasOwnProperty('rooms')) {
+                entity.floors = entity.floors.sort((a, b) => {
+                    return parseInt(a.number) - parseInt(b.number)
+                });
+                entity.rooms = entity.rooms.map(r => {
+                    let floor = entity.floors.find(f => f.id == r.floor_id);
+                    let floor_name = floor ? floor.name : 'N/A';
 
-                return {...r, floor_name: floor_name}
-            });
+                    return {...r, floor_name: floor_name}
+                });
+            }
 
             return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
         }

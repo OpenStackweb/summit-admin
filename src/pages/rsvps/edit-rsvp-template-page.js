@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import RsvpTemplateForm from '../../components/forms/rsvp-template-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getRsvpTemplate, resetRsvpTemplateForm, saveRsvpTemplate } from "../../actions/rsvp-template-actions";
+import { getRsvpTemplate, resetRsvpTemplateForm, saveRsvpTemplate, updateQuestionsOrder, deleteRsvpQuestion } from "../../actions/rsvp-template-actions";
 //import '../../styles/edit-rsvp-template-page.less';
 
 class EditRsvpTemplatePage extends React.Component {
@@ -27,6 +27,9 @@ class EditRsvpTemplatePage extends React.Component {
         this.state = {
             rsvpTemplateId: props.match.params.rsvp_template_id
         }
+
+        this.handleDeleteQuestion = this.handleDeleteQuestion.bind(this);
+
     }
 
     componentWillReceiveProps(nextProps) {
@@ -68,6 +71,25 @@ class EditRsvpTemplatePage extends React.Component {
         }
     }
 
+    handleDeleteQuestion(rsvpQuestionId, ev) {
+        let {deleteRsvpQuestion, entity} = this.props;
+        let {rsvpTemplateId} = this.state;
+        let question = entity.questions.find(q => q.id == rsvpQuestionId);
+
+        ev.preventDefault();
+
+        swal({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("edit_rsvp_template.remove_question_warning") + ' ' + question.name,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: T.translate("general.yes_delete")
+        }).then(function(){
+            deleteRsvpQuestion(rsvpTemplateId, rsvpQuestionId);
+        }).catch(swal.noop);
+    }
+
     render(){
         let {currentSummit, entity, errors} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
@@ -82,6 +104,8 @@ class EditRsvpTemplatePage extends React.Component {
                     currentSummit={currentSummit}
                     entity={entity}
                     errors={errors}
+                    onQuestionReorder={this.props.updateQuestionsOrder}
+                    onDeleteQuestion={this.handleDeleteQuestion}
                     onSubmit={this.props.saveRsvpTemplate}
                 />
                 }
@@ -102,5 +126,7 @@ export default connect (
         getRsvpTemplate,
         resetRsvpTemplateForm,
         saveRsvpTemplate,
+        updateQuestionsOrder,
+        deleteRsvpQuestion
     }
 )(EditRsvpTemplatePage);
