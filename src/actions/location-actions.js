@@ -11,7 +11,7 @@
  * limitations under the License.
  **/
 
-import { getRequest, putRequest, postRequest, deleteRequest, createAction, stopLoading, startLoading } from "openstack-uicore-foundation";
+import { getRequest, putRequest, postRequest, postFile, deleteRequest, createAction, stopLoading, startLoading } from "openstack-uicore-foundation";
 import {
     authErrorHandler,
     fetchResponseHandler,
