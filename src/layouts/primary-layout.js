@@ -43,6 +43,8 @@ import RsvpTemplateListPage from '../pages/rsvps/rsvp-template-list-page';
 import EditRsvpTemplatePage from '../pages/rsvps/edit-rsvp-template-page';
 import EditRsvpQuestionPage from '../pages/rsvps/edit-rsvp-question-page';
 import EditRsvpQuestionValuePage from '../pages/rsvps/edit-rsvp-question-value-page';
+import TicketTypeListPage from '../pages/tickets/ticket-type-list-page';
+import EditTicketTypePage from '../pages/tickets/edit-ticket-type-page';
 
 
 import { withRouter } from 'react-router-dom'
@@ -103,6 +105,9 @@ class PrimaryLayout extends React.Component {
                         <Route exact path="/app/summits/:summit_id/rsvp-templates/:rsvp_template_id/questions/:rsvp_question_id" component={EditRsvpQuestionPage}/>
                         <Route exact path="/app/summits/:summit_id/rsvp-templates/:rsvp_template_id/questions/:rsvp_question_id/values/new" component={EditRsvpQuestionValuePage}/>
                         <Route exact path="/app/summits/:summit_id/rsvp-templates/:rsvp_template_id/questions/:rsvp_question_id/values/:rsvp_question_value_id" component={EditRsvpQuestionValuePage}/>
+                        <Route exact path="/app/summits/:summit_id/ticket-types" component={TicketTypeListPage}/>
+                        <Route exact path="/app/summits/:summit_id/ticket-types/new" component={EditTicketTypePage}/>
+                        <Route exact path="/app/summits/:summit_id/ticket-types/:ticket_type_id" component={EditTicketTypePage}/>
                         <Route render={props => (<Redirect to="/app/directory"/>)}/>
                     </Switch>
                 </main>

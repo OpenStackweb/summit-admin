@@ -83,7 +83,7 @@ class EditRsvpQuestionValuePage extends React.Component {
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         let fields = [
             {type: 'text', name: 'value', label: T.translate("edit_rsvp_question_value.value")},
-            {type: 'text', name: 'label', label: T.translate("edit_rsvp_question_value.value")}
+            {type: 'text', name: 'label', label: T.translate("edit_rsvp_question_value.label")}
         ];
 
         return(

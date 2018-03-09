@@ -43,6 +43,8 @@ import rsvpTemplateListReducer from './reducers/rsvps/rsvp-template-list-reducer
 import rsvpTemplateReducer from './reducers/rsvps/rsvp-template-reducer';
 import rsvpQuestionReducer from './reducers/rsvps/rsvp-question-reducer';
 import rsvpQuestionValueReducer from './reducers/rsvps/rsvp-question-value-reducer';
+import ticketTypeListReducer from './reducers/tickets/ticket-type-list-reducer';
+import ticketTypeReducer from './reducers/tickets/ticket-type-reducer';
 
 
 import thunk from 'redux-thunk';
@@ -85,7 +87,9 @@ const reducers = persistCombineReducers(config, {
     currentRsvpTemplateListState: rsvpTemplateListReducer,
     currentRsvpTemplateState: rsvpTemplateReducer,
     currentRsvpQuestionState: rsvpQuestionReducer,
-    currentRsvpQuestionValueState: rsvpQuestionValueReducer
+    currentRsvpQuestionValueState: rsvpQuestionValueReducer,
+    currentTicketTypeListState: ticketTypeListReducer,
+    currentTicketTypeState: ticketTypeReducer
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

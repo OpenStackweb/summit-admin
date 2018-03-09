@@ -17,8 +17,7 @@ import
     RECEIVE_PROMOCODES,
     RECEIVE_PROMOCODE_META,
     REQUEST_PROMOCODES,
-    PROMOCODE_DELETED,
-    PROMOCODE_EXPORTED
+    PROMOCODE_DELETED
 } from '../../actions/promocode-actions';
 
 import { LOGOUT_USER } from '../../actions/auth-actions';

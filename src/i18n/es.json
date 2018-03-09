@@ -72,7 +72,9 @@
     "event_categories"    : "Event Categories",
     "locations"           : "Locations",
     "rsvps"               : "RSVPs",
-    "rsvp_template_list"  : "CRUD Templates"
+    "rsvp_template_list"  : "CRUD Templates",
+    "tickets"             : "Tickets",
+    "ticket_type_list"    : "CRUD Ticket Types"
   },
   "schedule": {
     "find_empty_spots"    : "Find empty spots for Day/Location",
@@ -547,5 +549,23 @@
       "select_class" : "Select a Class",
       "select_default" : "Select Default Value"
     }
+  },
+  "edit_rsvp_question_value": {
+    "rsvp_question_value"       : "RSVP Question Value",
+    "value"                     : "Value",
+    "label"                     : "Label"
+  },
+  "ticket_type_list": {
+    "ticket_type_list"  : "Ticket Type List",
+    "no_ticket_types"   : "No ticket types found for current search criteria.",
+    "add_ticket_type"   : "Add Ticket Type",
+    "name"              : "Name",
+    "external_id"       : "External Id",
+    "remove_warning"    : "Are you sure you want to delete ticket type "
+  },
+  "edit_ticket_type": {
+    "ticket_type"       : "Ticket Type",
+    "name"              : "Name",
+    "external_id"       : "External Id"
   }
 }

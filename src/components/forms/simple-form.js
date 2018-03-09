@@ -75,10 +75,10 @@ class SimpleForm extends React.Component {
     createField(field) {
         let {entity} = this.state;
 
-        switch (type) {
+        switch (field.type) {
             case 'text':
                 return (
-                    <div className="row form-group">
+                    <div key={"field_"+field.name} className="row form-group">
                         <div className="col-md-6">
                             <label> {field.label} </label>
                             <Input
@@ -105,7 +105,7 @@ class SimpleForm extends React.Component {
                 <input type="hidden" id="id" value={entity.id} />
 
                 {fields.map(f => {
-                    this.createField(f)
+                    return this.createField(f);
                 })}
 
                 <div className="row">
