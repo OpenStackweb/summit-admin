@@ -107,7 +107,7 @@ class TicketTypeListPage extends React.Component {
         ];
 
         let table_options = {
-            className: "table table-striped table-bordered table-hover dataTable",
+            className: "dataTable",
             sortCol: order,
             sortDir: orderDir,
             actions: {

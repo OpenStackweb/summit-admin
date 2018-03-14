@@ -25,10 +25,10 @@
     "html-webpack-plugin": "^2.30.1",
     "json-loader": "^0.5.7",
     "less": "^2.7.3",
-    "less-loader": "^4.0.6",
+    "less-loader": "^4.1.0",
     "moment": "^2.21.0",
-    "node-sass": "^4.7.2",
-    "openstack-uicore-foundation": "^1.0.14",
+    "node-sass": "^4.8.2",
+    "openstack-uicore-foundation": "^1.0.17",
     "postcss-loader": "^2.1.1",
     "react-dnd": "^2.5.4",
     "react-dnd-html5-backend": "^2.5.4",
@@ -52,7 +52,7 @@
     "dotenv": "^4.0.0",
     "history": "^4.7.2",
     "i18n-react": "^0.6.3",
-    "idtoken-verifier": "^1.1.1",
+    "idtoken-verifier": "^1.1.2",
     "immutability-helper": "^2.6.6",
     "lodash": "^4.17.5",
     "moment-timezone": "^0.5.14",
@@ -68,7 +68,7 @@
     "react-rte": "^0.15.0",
     "react-scroll": "^1.7.7",
     "redux-persist": "^5.9.1",
-    "uglifyjs-webpack-plugin": "^1.2.2",
+    "uglifyjs-webpack-plugin": "^1.2.3",
     "validator": "^9.4.1"
   }
 }

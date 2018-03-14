@@ -102,7 +102,7 @@ class RsvpQuestionForm extends React.Component {
         ];
 
         let table_options = {
-            className: "table table-striped table-bordered table-hover dataTable",
+            className: "dataTable",
             actions: {
                 edit: { onClick: this.handleEditValue },
                 delete: { onClick: this.props.onValueDelete }

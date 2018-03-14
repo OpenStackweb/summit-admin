@@ -63,7 +63,7 @@ export default class SimpleLinkList extends React.Component {
         let {title, values, columns, valueKey, labelKey, onEdit, onUnLink} = this.props;
 
         let options = {
-            className: "table table-striped table-bordered table-hover dataTable",
+            className: "dataTable",
             actions: {
                 edit: {onClick: onEdit},
                 delete: { onClick: onUnLink }

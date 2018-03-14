@@ -57,6 +57,10 @@ class RoomForm extends React.Component {
             value = parseInt(ev.target.value);
         }
 
+        if (ev.target.type == 'checkbox') {
+            value = ev.target.checked;
+        }
+
         errors[id] = '';
         entity[id] = value;
         this.setState({entity: entity, errors: errors});
@@ -122,10 +126,10 @@ class RoomForm extends React.Component {
                     </div>
                     <div className="col-md-3 checkboxes-div">
                         <div className="form-check abc-checkbox">
-                            <input type="checkbox" id="overrides_blackouts" checked={entity.overrides_blackouts}
+                            <input type="checkbox" id="override_blackouts" checked={entity.override_blackouts}
                                    onChange={this.handleChange} className="form-check-input" />
-                            <label className="form-check-label" htmlFor="overrides_blackouts">
-                                {T.translate("edit_room.overrides_blackouts")}
+                            <label className="form-check-label" htmlFor="override_blackouts">
+                                {T.translate("edit_room.override_blackouts")}
                             </label>
                         </div>
                     </div>

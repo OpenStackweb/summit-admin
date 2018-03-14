@@ -84,7 +84,7 @@ class SortableTable extends React.Component {
         return (
             <div className="sortable-table-box">
                 <i>{T.translate("general.drag_and_drop")}</i>
-                <table className={options.className}>
+                <table className={"table table-striped table-hover " + options.className}>
                     <thead>
                     <tr>
                         {columns.map((col,i) => {

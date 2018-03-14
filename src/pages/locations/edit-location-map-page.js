@@ -87,6 +87,7 @@ class EditLocationMapPage extends React.Component {
                     currentSummit={currentSummit}
                     locationId={this.state.locationId}
                     entity={entity}
+                    valueField="image_url"
                     errors={errors}
                     onSubmit={this.props.saveLocationMap}
                     onAttach={attachLocationMap}

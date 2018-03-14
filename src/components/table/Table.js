@@ -45,7 +45,7 @@ const Table = (props) => {
     let {options, columns} = props;
 
     return (
-        <table className={"table table-striped " + props.className}>
+        <table className={"table table-striped table-hover " + options.className}>
             <thead>
                 <tr>
 			    {columns.map((col,i) => {

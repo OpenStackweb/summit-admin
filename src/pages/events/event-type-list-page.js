@@ -103,7 +103,7 @@ class EventTypeListPage extends React.Component {
         ];
 
         let table_options = {
-            className: "table table-striped table-bordered table-hover dataTable",
+            className: "dataTable",
             actions: {
                 edit: {onClick: this.handleEdit},
                 delete: { onClick: this.handleDelete, display: this.isNotDefault }

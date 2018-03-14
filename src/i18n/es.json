@@ -498,7 +498,7 @@
     "description"         : "Description",
     "room"                : "Room",
     "floor"               : "Floor",
-    "overrides_blackouts" : "Overrides Blackouts",
+    "override_blackouts"  : "Overrides Blackouts",
     "room_saved"          : "Room saved successfully.",
     "room_created"        : "Room created successfully.",
     "placeholders": {

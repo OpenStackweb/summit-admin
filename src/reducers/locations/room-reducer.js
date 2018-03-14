@@ -28,7 +28,7 @@ export const DEFAULT_ENTITY = {
     name                : '',
     description         : '',
     capacity            : 0,
-    overrides_blackouts : false,
+    override_blackouts  : false,
     floor               : null
 }
 

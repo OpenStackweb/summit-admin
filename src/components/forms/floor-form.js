@@ -17,9 +17,9 @@ import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import {findElementPos} from '../../utils/methods'
 import Input from '../inputs/text-input'
 import TextEditor from '../inputs/editor-input'
-import SimpleLinkList from '../simple-link-list/index'
 import Panel from '../sections/panel'
 import {queryRooms} from '../../actions/location-actions'
+import Table from "../table/Table";
 
 
 class FloorForm extends React.Component {
@@ -37,6 +37,8 @@ class FloorForm extends React.Component {
         this.handleRoomLink = this.handleRoomLink.bind(this);
         this.handleRoomEdit = this.handleRoomEdit.bind(this);
         this.handleRoomUnLink = this.handleRoomUnLink.bind(this);
+        this.handleQueryRooms = this.handleQueryRooms.bind(this);
+        this.handleNewRoom = this.handleNewRoom.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -110,8 +112,22 @@ class FloorForm extends React.Component {
     }
 
     handleRoomEdit(roomId) {
-        let {currentSummit, history} = this.props;
-        history.push(`/app/summits/${currentSummit.id}/locations/1/rooms/${roomId}`);
+        let {currentSummit, locationId, history} = this.props;
+        history.push(`/app/summits/${currentSummit.id}/locations/${locationId}/rooms/${roomId}`);
+    }
+
+    handleNewRoom(ev) {
+        ev.preventDefault();
+
+        let {currentSummit, locationId, history} = this.props;
+        history.push(`/app/summits/${currentSummit.id}/locations/${locationId}/rooms/new`);
+    }
+
+
+    handleQueryRooms(input) {
+        let {currentSummit, locationId} = this.props;
+
+        queryRooms(input, currentSummit.id, locationId);
     }
 
     render() {
@@ -121,8 +137,16 @@ class FloorForm extends React.Component {
             { columnKey: 'id', value: T.translate("general.id") },
             { columnKey: 'name', value: T.translate("general.name") },
             { columnKey: 'capacity', value: T.translate("edit_location.capacity") },
-            { columnKey: 'floor', value: T.translate("edit_location.floor") }
+            { columnKey: 'floor_name', value: T.translate("edit_location.floor") }
         ];
+
+        let room_options = {
+            className: "dataTable",
+            actions: {
+                edit: {onClick: this.handleRoomEdit},
+                delete: { onClick: this.props.onRoomDelete }
+            }
+        }
 
         return (
             <form className="floor-form">
@@ -168,16 +192,10 @@ class FloorForm extends React.Component {
                     <button className="btn btn-primary pull-right left-space" onClick={this.handleNewRoom}>
                         {T.translate("edit_location.add_room")}
                     </button>
-                    <SimpleLinkList
-                        title={T.translate("edit_location.rooms")}
-                        values={entity.rooms}
+                    <Table
+                        options={room_options}
+                        data={entity.rooms}
                         columns={room_columns}
-                        valueKey="room"
-                        labelKey="room"
-                        onEdit={this.handleRoomEdit}
-                        onLink={this.handleRoomLink}
-                        onUnLink={this.handleRoomUnLink}
-                        queryOptions={queryRooms}
                     />
                 </Panel>
                 }

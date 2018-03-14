@@ -11,7 +11,18 @@
  * limitations under the License.
  **/
 
-import { getRequest, putRequest, postRequest, postFile, deleteRequest, createAction, stopLoading, startLoading } from "openstack-uicore-foundation";
+import {
+    getRequest,
+    putRequest,
+    postRequest,
+    deleteRequest,
+    createAction,
+    stopLoading,
+    startLoading,
+    postFile,
+    putFile
+} from "openstack-uicore-foundation";
+
 import {
     authErrorHandler,
     fetchResponseHandler,
@@ -20,9 +31,9 @@ import {
     showMessage,
     getCSV,
     geoCodeAddress,
-    geoCodeLatLng,
-    getCountryList
+    geoCodeLatLng
 } from './base-actions';
+
 import swal from "sweetalert2";
 import T from "i18n-react/dist/i18n-react";
 
@@ -415,7 +426,7 @@ export const getRoom = (locationId, roomId) => (dispatch, getState) => {
 
     return getRequest(
         null,
-        createAction(RECEIVE_FLOOR),
+        createAction(RECEIVE_ROOM),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/rooms/${roomId}`,
         authErrorHandler
     )(params)(dispatch).then(dispatch(stopLoading()));
@@ -503,16 +514,19 @@ export const deleteRoom = (locationId, roomId) => (dispatch, getState) => {
 const normalizeRoomEntity = (entity) => {
     let normalizedEntity = {...entity};
 
+    if (normalizedEntity.order == 0) {
+        delete(normalizedEntity['order']);
+    }
 
     return normalizedEntity;
 
 }
 
-export const queryRooms = (input, summitId = null) => {
+export const queryRooms = (input, summitId, locationId) => {
 
     let accessToken = window.accessToken;
 
-    return fetch(`${apiBaseUrl}/api/v1/rooms?filter=tag=@${input}&order=tag&access_token=${accessToken}`)
+    return fetch(`${apiBaseUrl}/api/v1/summits/${summitId}/locations/venues/${locationId}/rooms&access_token=${accessToken}`)
         .then(fetchResponseHandler)
         .then((json) => {
             let options = json.data.map((r) => ({room: r.name, id: r.id}) );
@@ -550,7 +564,7 @@ export const resetLocationImageForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_LOCATION_IMAGE_FORM)({}));
 };
 
-export const saveLocationImage = (locationId, entity, history) => (dispatch, getState) => {
+export const saveLocationImage = (locationId, entity, file, history) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
@@ -588,13 +602,13 @@ export const saveLocationImage = (locationId, entity, history) => (dispatch, get
             'success'
         ];
 
-        postRequest(
-            createAction(UPDATE_LOCATION_IMAGE),
+        postFile(
+            null,
             createAction(LOCATION_IMAGE_ADDED),
             `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}/images`,
+            file,
             entity,
-            authErrorHandler,
-            entity
+            authErrorHandler
         )(params)(dispatch)
             .then((payload) => {
                 dispatch(showMessage(
@@ -690,7 +704,7 @@ export const resetLocationMapForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_LOCATION_MAP_FORM)({}));
 };
 
-export const saveLocationMap = (locationId, entity, history) => (dispatch, getState) => {
+export const saveLocationMap = (locationId, entity, file, history) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
@@ -709,13 +723,13 @@ export const saveLocationMap = (locationId, entity, history) => (dispatch, getSt
             'success'
         ];
 
-        putRequest(
-            createAction(UPDATE_LOCATION_MAP),
+        putFile(
+            null,
             createAction(LOCATION_MAP_UPDATED),
             `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}/maps/${entity.id}`,
+            file,
             entity,
-            authErrorHandler,
-            entity
+            authErrorHandler
         )(params)(dispatch)
             .then((payload) => {
                 dispatch(showMessage(...success_message));
@@ -728,13 +742,13 @@ export const saveLocationMap = (locationId, entity, history) => (dispatch, getSt
             'success'
         ];
 
-        postRequest(
-            createAction(UPDATE_LOCATION_MAP),
+        postFile(
+            null,
             createAction(LOCATION_MAP_ADDED),
             `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}/maps`,
+            file,
             entity,
-            authErrorHandler,
-            entity
+            authErrorHandler
         )(params)(dispatch)
             .then((payload) => {
                 dispatch(showMessage(

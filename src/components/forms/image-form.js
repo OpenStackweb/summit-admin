@@ -26,6 +26,7 @@ class ImageForm extends React.Component {
 
         this.state = {
             entity: {...props.entity},
+            file: null,
             errors: props.errors
         };
 
@@ -61,10 +62,12 @@ class ImageForm extends React.Component {
     }
 
     handleSubmit(ev) {
-        let entity = {...this.state.entity};
+        let {entity, file} = this.state;
+        let {locationId, history} = this.props;
+
         ev.preventDefault();
 
-        this.props.onSubmit(this.state.entity, this.props.history);
+        this.props.onSubmit(locationId, entity, file, history);
     }
 
     hasErrors(field) {
@@ -77,21 +80,25 @@ class ImageForm extends React.Component {
     }
 
     handleUploadFile(file) {
-        console.log('file uploaded');
-        let formData = new FormData();
-        formData.append('file', file);
-        this.props.onAttach(this.state.entity, formData)
+        let entity = {...this.state.entity};
+        let {valueField} = this.props;
+
+        entity[valueField] = file.preview;
+
+        this.setState({file: file, entity:entity});
     }
 
     handleRemoveFile(ev) {
         let entity = {...this.state.entity};
+        let {valueField} = this.props;
 
-        entity.attachment = '';
+        entity[valueField] = '';
         this.setState({entity:entity});
     }
 
     render() {
         let {entity} = this.state;
+        let {valueField} = this.props;
 
         return (
             <form className="image-form">
@@ -123,7 +130,7 @@ class ImageForm extends React.Component {
                     <div className="col-md-12">
                         <label> {T.translate("general.file")} </label>
                         <UploadInput
-                            value={entity.image}
+                            value={entity[valueField]}
                             handleUpload={this.handleUploadFile}
                             handleRemove={this.handleRemoveFile}
                             className="dropzone col-md-6"

@@ -28,7 +28,7 @@ export const DEFAULT_ENTITY = {
     id                  : 0,
     name                : '',
     description         : '',
-    file                : 0,
+    image_url           : '',
 }
 
 const DEFAULT_STATE = {

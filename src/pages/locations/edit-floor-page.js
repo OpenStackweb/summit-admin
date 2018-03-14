@@ -14,9 +14,10 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
+import swal from "sweetalert2";
 import FloorForm from '../../components/forms/floor-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getFloor, resetFloorForm, saveFloor } from "../../actions/location-actions";
+import { getFloor, resetFloorForm, saveFloor, deleteRoom } from "../../actions/location-actions";
 
 class EditFloorPage extends React.Component {
 
@@ -27,6 +28,8 @@ class EditFloorPage extends React.Component {
             floorId: props.match.params.floor_id,
             locationId: props.match.params.location_id
         }
+
+        this.handleRoomDelete = this.handleRoomDelete.bind(this);
 
     }
 
@@ -74,6 +77,25 @@ class EditFloorPage extends React.Component {
         }
     }
 
+    handleRoomDelete(roomId, ev) {
+        let {deleteRoom, entity} = this.props;
+        let {locationId} = this.state;
+        let room = entity.rooms.find(r => r.id == roomId);
+
+        ev.preventDefault();
+
+        swal({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("edit_location.remove_room_warning") + ' ' + room.name,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: T.translate("general.yes_delete")
+        }).then(function(){
+            deleteRoom(locationId, roomId);
+        }).catch(swal.noop);
+    }
+
     render(){
         let {currentSummit, entity, errors} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
@@ -90,6 +112,7 @@ class EditFloorPage extends React.Component {
                     entity={entity}
                     errors={errors}
                     onSubmit={this.props.saveFloor}
+                    onRoomDelete={this.handleRoomDelete}
                 />
                 }
             </div>
@@ -109,5 +132,6 @@ export default connect (
         getFloor,
         resetFloorForm,
         saveFloor,
+        deleteRoom
     }
 )(EditFloorPage);

@@ -16,7 +16,8 @@ import
     RECEIVE_FLOOR,
     RESET_FLOOR_FORM,
     UPDATE_FLOOR,
-    FLOOR_UPDATED
+    FLOOR_UPDATED,
+    ROOM_DELETED
 } from '../../actions/location-actions';
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
@@ -71,6 +72,11 @@ const floorReducer = (state = DEFAULT_STATE, action) => {
         break;
         case FLOOR_UPDATED: {
             return state;
+        }
+        break;
+        case ROOM_DELETED: {
+            let {roomId} = payload;
+            return {...state, entity: {...state.entity, rooms: state.entity.rooms.filter(r => r.id != roomId)}};
         }
         break;
         case VALIDATE: {

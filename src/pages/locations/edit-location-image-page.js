@@ -86,6 +86,7 @@ class EditLocationImagePage extends React.Component {
                     history={this.props.history}
                     currentSummit={currentSummit}
                     locationId={this.state.locationId}
+                    valueField="image_url"
                     entity={entity}
                     errors={errors}
                     onSubmit={this.props.saveLocationImage}

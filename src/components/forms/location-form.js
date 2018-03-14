@@ -197,7 +197,7 @@ class LocationForm extends React.Component {
         ];
 
         let floor_options = {
-            className: "table table-striped table-bordered table-hover dataTable",
+            className: "dataTable",
             actions: {
                 edit: {onClick: this.handleFloorEdit},
                 delete: { onClick: this.props.onFloorDelete }
@@ -212,7 +212,7 @@ class LocationForm extends React.Component {
         ];
 
         let room_options = {
-            className: "table table-striped table-bordered table-hover dataTable",
+            className: "dataTable",
             actions: {
                 edit: {onClick: this.handleRoomEdit},
                 delete: { onClick: this.props.onRoomDelete }
@@ -225,7 +225,7 @@ class LocationForm extends React.Component {
         ];
 
         let image_options = {
-            className: "table table-striped table-bordered table-hover dataTable",
+            className: "dataTable",
             actions: {
                 edit: {onClick: this.handleImageEdit},
                 delete: { onClick: this.props.onImageDelete }
@@ -238,7 +238,7 @@ class LocationForm extends React.Component {
         ];
 
         let map_options = {
-            className: "table table-striped table-bordered table-hover dataTable",
+            className: "dataTable",
             actions: {
                 edit: {onClick: this.handleMapEdit},
                 delete: { onClick: this.props.onMapDelete }

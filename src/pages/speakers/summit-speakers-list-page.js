@@ -74,7 +74,7 @@ class SummitSpeakerListPage extends React.Component {
         ];
 
         let table_options = {
-            className: "table table-striped table-bordered table-hover dataTable",
+            className: "dataTable",
             sortCol: (order == 'last_name') ? 'name' : order,
             sortDir: orderDir,
             actions: {
