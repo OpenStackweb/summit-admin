@@ -522,22 +522,6 @@ const normalizeRoomEntity = (entity) => {
 
 }
 
-export const queryRooms = (input, summitId, locationId) => {
-
-    let accessToken = window.accessToken;
-
-    return fetch(`${apiBaseUrl}/api/v1/summits/${summitId}/locations/venues/${locationId}/rooms&access_token=${accessToken}`)
-        .then(fetchResponseHandler)
-        .then((json) => {
-            let options = json.data.map((r) => ({room: r.name, id: r.id}) );
-
-            return {
-                options: options
-            };
-        })
-        .catch(fetchErrorHandler);
-};
-
 
 /**************************************** IMAGES *********************************************/
 
@@ -575,6 +559,8 @@ export const saveLocationImage = (locationId, entity, file, history) => (dispatc
         access_token : accessToken,
     };
 
+    let normalizedEntity = normalizeImageEntity(entity);
+
     if (entity.id) {
 
         let success_message = [
@@ -583,11 +569,12 @@ export const saveLocationImage = (locationId, entity, file, history) => (dispatc
             'success'
         ];
 
-        putRequest(
+        putFile(
             createAction(UPDATE_LOCATION_IMAGE),
             createAction(LOCATION_IMAGE_UPDATED),
             `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}/images/${entity.id}`,
-            entity,
+            file,
+            normalizedEntity,
             authErrorHandler,
             entity
         )(params)(dispatch)
@@ -603,12 +590,13 @@ export const saveLocationImage = (locationId, entity, file, history) => (dispatc
         ];
 
         postFile(
-            null,
+            createAction(UPDATE_LOCATION_IMAGE),
             createAction(LOCATION_IMAGE_ADDED),
             `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}/images`,
             file,
-            entity,
-            authErrorHandler
+            normalizedEntity,
+            authErrorHandler,
+            entity
         )(params)(dispatch)
             .then((payload) => {
                 dispatch(showMessage(
@@ -637,47 +625,21 @@ export const deleteLocationImage = (locationId, imageId) => (dispatch, getState)
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
 
-export const attachLocationImage = (locationId, entity, file) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+const normalizeImageEntity = (entity) => {
+    let normalizedEntity = {...entity};
 
-    let params = {
-        access_token : accessToken
-    };
+    delete(normalizedEntity['location_id']);
+    delete(normalizedEntity['image_url']);
+    delete(normalizedEntity['last_edited']);
+    delete(normalizedEntity['created']);
+    delete(normalizedEntity['class_name']);
+    delete(normalizedEntity['order']);
+    delete(normalizedEntity['id']);
+    delete(normalizedEntity['file']);
 
-    if (entity.id) {
-        return dispatch(uploadLocationImage(locationId, entity, file));
-    } else {
-        return postRequest(
-            null,
-            createAction(LOCATION_IMAGE_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}/images`,
-            entity,
-            authErrorHandler
-        )(params)(dispatch).then(dispatch(uploadLocationImage(locationId, entity, file))).then(dispatch(stopLoading()));
-    }
+    return normalizedEntity;
+
 }
-
-const uploadLocationImage = (locationId, entity, file) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-
-    let params = {
-        access_token : accessToken
-    };
-
-    postRequest(
-        null,
-        createAction(LOCATION_IMAGE_ATTACHED),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}/images/${entity.id}/file`,
-        file,
-        authErrorHandler,
-        {file: entity.file}
-    )(params)(dispatch)
-}
-
 
 /**************************************** MAPS *********************************************/
 
@@ -715,6 +677,8 @@ export const saveLocationMap = (locationId, entity, file, history) => (dispatch,
         access_token : accessToken,
     };
 
+    let normalizedEntity = normalizeMapEntity(entity);
+
     if (entity.id) {
 
         let success_message = [
@@ -724,12 +688,13 @@ export const saveLocationMap = (locationId, entity, file, history) => (dispatch,
         ];
 
         putFile(
-            null,
+            createAction(UPDATE_LOCATION_MAP),
             createAction(LOCATION_MAP_UPDATED),
             `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}/maps/${entity.id}`,
             file,
-            entity,
-            authErrorHandler
+            normalizedEntity,
+            authErrorHandler,
+            entity
         )(params)(dispatch)
             .then((payload) => {
                 dispatch(showMessage(...success_message));
@@ -743,12 +708,13 @@ export const saveLocationMap = (locationId, entity, file, history) => (dispatch,
         ];
 
         postFile(
-            null,
+            createAction(UPDATE_LOCATION_MAP),
             createAction(LOCATION_MAP_ADDED),
             `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}/maps`,
             file,
-            entity,
-            authErrorHandler
+            normalizedEntity,
+            authErrorHandler,
+            entity
         )(params)(dispatch)
             .then((payload) => {
                 dispatch(showMessage(
@@ -777,43 +743,18 @@ export const deleteLocationMap = (locationId, mapId) => (dispatch, getState) => 
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
 
-export const attachLocationMap = (locationId, entity, file) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+const normalizeMapEntity = (entity) => {
+    let normalizedEntity = {...entity};
 
-    let params = {
-        access_token : accessToken
-    };
+    delete(normalizedEntity['location_id']);
+    delete(normalizedEntity['image_url']);
+    delete(normalizedEntity['last_edited']);
+    delete(normalizedEntity['created']);
+    delete(normalizedEntity['class_name']);
+    delete(normalizedEntity['order']);
+    delete(normalizedEntity['id']);
+    delete(normalizedEntity['file']);
 
-    if (entity.id) {
-        return dispatch(uploadLocationMap(locationId, entity, file));
-    } else {
-        return postRequest(
-            null,
-            createAction(LOCATION_MAP_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}/maps`,
-            entity,
-            authErrorHandler
-        )(params)(dispatch).then(dispatch(uploadLocationMap(locationId, entity, file))).then(dispatch(stopLoading()));
-    }
-}
+    return normalizedEntity;
 
-const uploadLocationMap = (locationId, entity, file) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-
-    let params = {
-        access_token : accessToken
-    };
-
-    postRequest(
-        null,
-        createAction(LOCATION_MAP_ATTACHED),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}/maps/${entity.id}/file`,
-        file,
-        authErrorHandler,
-        {file: entity.file}
-    )(params)(dispatch)
 }

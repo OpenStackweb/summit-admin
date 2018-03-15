@@ -114,7 +114,7 @@ const locationReducer = (state = DEFAULT_STATE, action) => {
                 });
             }
 
-            return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
+            return {...state, entity: {...DEFAULT_ENTITY, ...entity}, errors:{} };
         }
         break;
         case LOCATION_UPDATED: {

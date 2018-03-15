@@ -18,7 +18,6 @@ import {findElementPos} from '../../utils/methods'
 import Input from '../inputs/text-input'
 import TextEditor from '../inputs/editor-input'
 import Panel from '../sections/panel'
-import {queryRooms} from '../../actions/location-actions'
 import Table from "../table/Table";
 
 
@@ -37,7 +36,6 @@ class FloorForm extends React.Component {
         this.handleRoomLink = this.handleRoomLink.bind(this);
         this.handleRoomEdit = this.handleRoomEdit.bind(this);
         this.handleRoomUnLink = this.handleRoomUnLink.bind(this);
-        this.handleQueryRooms = this.handleQueryRooms.bind(this);
         this.handleNewRoom = this.handleNewRoom.bind(this);
     }
 
@@ -121,13 +119,6 @@ class FloorForm extends React.Component {
 
         let {currentSummit, locationId, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/locations/${locationId}/rooms/new`);
-    }
-
-
-    handleQueryRooms(input) {
-        let {currentSummit, locationId} = this.props;
-
-        queryRooms(input, currentSummit.id, locationId);
     }
 
     render() {
