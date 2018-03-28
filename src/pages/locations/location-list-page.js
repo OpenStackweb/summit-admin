@@ -120,9 +120,9 @@ class LocationListPage extends React.Component {
                         <button className="btn btn-primary right-space" onClick={this.handleNewLocation}>
                             {T.translate("location_list.add_location")}
                         </button>
-                        <button className="btn btn-default" onClick={this.handleExport}>
+                        {/*<button className="btn btn-default" onClick={this.handleExport}>
                             {T.translate("general.export")}
-                        </button>
+                        </button>*/}
                     </div>
                 </div>
 

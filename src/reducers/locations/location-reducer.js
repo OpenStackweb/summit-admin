@@ -21,6 +21,8 @@ import
     LOCATION_GMAP_UPDATED,
     LOCATION_ADDRESS_UPDATED,
     FLOOR_DELETED,
+    FLOOR_ADDED,
+    FLOOR_UPDATED,
     ROOM_DELETED,
     LOCATION_IMAGE_DELETED,
     LOCATION_MAP_DELETED
@@ -143,6 +145,17 @@ const locationReducer = (state = DEFAULT_STATE, action) => {
                 lat: location.lat(),
                 lng: location.lng()
             }};
+        }
+        break;
+        case FLOOR_ADDED: {
+            let { response } = payload;
+            return {...state, entity: {...state.entity, floors: [...state.entity.floors, response] }};
+        }
+        break;
+        case FLOOR_UPDATED: {
+            let { response } = payload;
+            let floors = state.entity.floors.filter(f => f.id != response.id);
+            return {...state, entity: {...state.entity, floors: [...floors, response] }};
         }
         break;
         case FLOOR_DELETED: {

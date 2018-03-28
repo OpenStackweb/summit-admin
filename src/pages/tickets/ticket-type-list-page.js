@@ -17,7 +17,7 @@ import T from 'i18n-react/dist/i18n-react';
 import swal from "sweetalert2";
 import Table from "../../components/table/Table";
 import { getSummitById }  from '../../actions/summit-actions';
-import { getTicketTypes, deleteTicketType, exportTicketTypes } from "../../actions/ticket-actions";
+import { getTicketTypes, deleteTicketType, seedTicketTypes } from "../../actions/ticket-actions";
 
 class TicketTypeListPage extends React.Component {
 
@@ -28,7 +28,7 @@ class TicketTypeListPage extends React.Component {
         this.handleDelete = this.handleDelete.bind(this);
         this.handleSort = this.handleSort.bind(this);
         this.handleNewTicketType = this.handleNewTicketType.bind(this);
-        this.handleExport = this.handleExport.bind(this);
+        this.handleSeedTickets = this.handleSeedTickets.bind(this);
 
         this.state = {}
 
@@ -63,11 +63,10 @@ class TicketTypeListPage extends React.Component {
         history.push(`/app/summits/${currentSummit.id}/ticket-types/${ticket_type_id}`);
     }
 
-    handleExport(ev) {
-        let {order, orderDir} = this.props;
+    handleSeedTickets(ev) {
         ev.preventDefault();
 
-        this.props.exportTicketTypes(order, orderDir);
+        this.props.seedTicketTypes();
     }
 
     handleDelete(ticketTypeId, ev) {
@@ -126,8 +125,8 @@ class TicketTypeListPage extends React.Component {
                         <button className="btn btn-primary right-space" onClick={this.handleNewTicketType}>
                             {T.translate("ticket_type_list.add_ticket_type")}
                         </button>
-                        <button className="btn btn-default" onClick={this.handleExport}>
-                            {T.translate("general.export")}
+                        <button className="btn btn-default" onClick={this.handleSeedTickets}>
+                            {T.translate("ticket_type_list.seed_tickets")}
                         </button>
                     </div>
                 </div>
@@ -162,6 +161,6 @@ export default connect (
         getSummitById,
         getTicketTypes,
         deleteTicketType,
-        exportTicketTypes
+        seedTicketTypes
     }
 )(TicketTypeListPage);

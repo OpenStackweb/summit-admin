@@ -109,7 +109,7 @@ class RsvpTemplateListPage extends React.Component {
 
         let columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
-            { columnKey: 'name', value: T.translate("general.name") }
+            { columnKey: 'title', value: T.translate("rsvp_template_list.title") }
         ];
 
         let table_options = {

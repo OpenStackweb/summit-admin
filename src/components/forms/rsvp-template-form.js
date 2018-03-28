@@ -91,7 +91,7 @@ class RsvpTemplateForm extends React.Component {
 
     render() {
         let {entity} = this.state;
-        let { currentSummit } = this.props;
+        let { currentSummit, onQuestionDelete } = this.props;
 
         let columns = [
             { columnKey: 'id', value: T.translate("general.id") },
@@ -103,7 +103,7 @@ class RsvpTemplateForm extends React.Component {
             className: "dataTable",
             actions: {
                 edit: { onClick: this.handleEditQuestion },
-                delete: { onClick: this.props.onQuestionDelete }
+                delete: { onClick: onQuestionDelete }
             }
         }
 
@@ -123,7 +123,7 @@ class RsvpTemplateForm extends React.Component {
                     </div>
                     <div className="col-md-4 checkboxes-div">
                         <div className="form-check abc-checkbox">
-                            <input disabled type="checkbox" id="is_enabled" checked={entity.is_enabled}
+                            <input type="checkbox" id="is_enabled" checked={entity.is_enabled}
                                    onChange={this.handleChange} className="form-check-input" />
                             <label className="form-check-label" htmlFor="is_enabled">
                                 {T.translate("edit_rsvp_template.is_enabled")}
@@ -131,6 +131,7 @@ class RsvpTemplateForm extends React.Component {
                         </div>
                     </div>
                 </div>
+                {entity.id != 0 &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <button className="btn btn-primary pull-right" onClick={this.handleAddQuestion}>
@@ -145,6 +146,7 @@ class RsvpTemplateForm extends React.Component {
                         />
                     </div>
                 </div>
+                }
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">

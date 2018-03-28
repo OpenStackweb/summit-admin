@@ -92,6 +92,21 @@ class SimpleForm extends React.Component {
                     </div>
                 );
             break;
+            case 'textarea':
+                return (
+                    <div key={"field_"+field.name} className="row form-group">
+                        <div className="col-md-6">
+                            <label> {field.label} </label>
+                            <textarea
+                                id={field.name}
+                                value={entity[field.name]}
+                                onChange={this.handleChange}
+                                className="form-control"
+                            />
+                        </div>
+                    </div>
+                );
+            break;
 
         }
     }

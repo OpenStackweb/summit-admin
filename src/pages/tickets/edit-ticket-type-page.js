@@ -75,7 +75,8 @@ class EditTicketTypePage extends React.Component {
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         let fields = [
             {type: 'text', name: 'name', label: T.translate("edit_ticket_type.name")},
-            {type: 'text', name: 'external_id', label: T.translate("edit_ticket_type.external_id")}
+            {type: 'text', name: 'external_id', label: T.translate("edit_ticket_type.external_id")},
+            {type: 'textarea', name: 'description', label: T.translate("edit_ticket_type.description")}
         ];
 
         return(

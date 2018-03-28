@@ -24,7 +24,7 @@ import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 const DEFAULT_STATE = {
     rsvpTemplates       : [],
     term                : null,
-    order               : 'code',
+    order               : 'id',
     orderDir            : 1,
     currentPage         : 1,
     lastPage            : 1,
@@ -50,7 +50,7 @@ const rsvpTemplateListReducer = (state = DEFAULT_STATE, action) => {
             let rsvpTemplates = payload.response.data.map(r => {
                 return {
                     id: r.id,
-                    name: r.name
+                    title: r.title
                 };
             });
 

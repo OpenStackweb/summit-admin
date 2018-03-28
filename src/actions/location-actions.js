@@ -448,6 +448,11 @@ export const saveRoom = (locationId, entity, history) => (dispatch, getState) =>
     };
 
     let normalizedEntity = normalizeRoomEntity(entity);
+    let url = `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}`;
+    if (entity.floor_id) {
+        url += `/floors/${entity.floor_id}`;
+    }
+    url += `/rooms`;
 
     if (entity.id) {
 
@@ -460,7 +465,7 @@ export const saveRoom = (locationId, entity, history) => (dispatch, getState) =>
         putRequest(
             createAction(UPDATE_ROOM),
             createAction(ROOM_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/rooms/${entity.id}`,
+            `${url}/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -479,7 +484,7 @@ export const saveRoom = (locationId, entity, history) => (dispatch, getState) =>
         postRequest(
             createAction(UPDATE_ROOM),
             createAction(ROOM_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/rooms`,
+            url,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -517,6 +522,7 @@ const normalizeRoomEntity = (entity) => {
     if (normalizedEntity.order == 0) {
         delete(normalizedEntity['order']);
     }
+    
 
     return normalizedEntity;
 

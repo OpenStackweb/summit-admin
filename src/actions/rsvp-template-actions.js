@@ -42,7 +42,7 @@ export const RSVP_QUESTION_VALUE_UPDATED    = 'RSVP_QUESTION_VALUE_UPDATED';
 
 
 
-export const getRsvpTemplates = ( term = null, page = 1, perPage = 10, order = 'code', orderDir = 1 ) => (dispatch, getState) => {
+export const getRsvpTemplates = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -52,7 +52,7 @@ export const getRsvpTemplates = ( term = null, page = 1, perPage = 10, order = '
     dispatch(startLoading());
 
     if(term != null){
-        filter.push(`name=@${term}`);
+        filter.push(`title=@${term}`);
     }
 
     let params = {

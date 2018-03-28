@@ -153,23 +153,22 @@ export const deleteTicketType = (ticketTypeId) => (dispatch, getState) => {
 };
 
 
-export const exportTicketTypes = ( order = 'code', orderDir = 1) => (dispatch, getState) => {
+export const seedTicketTypes = ( ) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
-    let filename = currentSummit.name + '-TicketTypes.csv';
     let params = {
         access_token : accessToken
     };
 
-    // order
-    if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
-        params['order']= `${orderDirSign}${order}`;
-    }
-
-    dispatch(getCSV(`${apiBaseUrl}/api/v1/summits/${currentSummit.id}/ticket-types/csv`, params, filename));
+    postRequest(
+        null,
+        createAction(RECEIVE_TICKET_TYPES),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/ticket-types/seed-defaults`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(dispatch(stopLoading()));
 
 };
 

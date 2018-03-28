@@ -517,6 +517,7 @@
     "rsvp_template_list"      : "RSVP Templates",
     "add_rsvp_template"       : "Add Template",
     "no_items"                : "No templates found",
+    "title"                   : "Title",
     "placeholders": {
       "search_rsvp_templates" : "Search by template name."
     }
@@ -561,11 +562,13 @@
     "add_ticket_type"   : "Add Ticket Type",
     "name"              : "Name",
     "external_id"       : "External Id",
+    "seed_tickets"      : "Seed Tickets from Eventbrite",
     "remove_warning"    : "Are you sure you want to delete ticket type "
   },
   "edit_ticket_type": {
     "ticket_type"       : "Ticket Type",
     "name"              : "Name",
-    "external_id"       : "External Id"
+    "external_id"       : "External Id",
+    "description"       : "Description"
   }
 }

@@ -105,7 +105,7 @@ class EditRsvpTemplatePage extends React.Component {
                     entity={entity}
                     errors={errors}
                     onQuestionReorder={this.props.updateQuestionsOrder}
-                    onDeleteQuestion={this.handleDeleteQuestion}
+                    onQuestionDelete={this.handleDeleteQuestion}
                     onSubmit={this.props.saveRsvpTemplate}
                 />
                 }
