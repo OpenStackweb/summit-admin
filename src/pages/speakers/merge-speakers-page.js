@@ -97,8 +97,10 @@ class MergeSpeakerPage extends React.Component {
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
             confirmButtonText: T.translate("merge_speakers.merge_and_delete")
-        }).then(function(){
-            props.mergeSpeakers(speakers, selectedFields, changedFields, history);
+        }).then(function(result){
+            if (result.value) {
+                props.mergeSpeakers(speakers, selectedFields, changedFields, history);
+            }
         }).catch(swal.noop);
 
     }

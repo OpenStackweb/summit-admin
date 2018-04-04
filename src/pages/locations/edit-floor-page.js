@@ -91,8 +91,10 @@ class EditFloorPage extends React.Component {
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
             confirmButtonText: T.translate("general.yes_delete")
-        }).then(function(){
-            deleteRoom(locationId, roomId);
+        }).then(function(result){
+            if (result.value) {
+                deleteRoom(locationId, roomId);
+            }
         }).catch(swal.noop);
     }
 

@@ -94,8 +94,10 @@ class PromocodeListPage extends React.Component {
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
             confirmButtonText: T.translate("general.yes_delete")
-        }).then(function(){
-            deletePromocode(promocodeId);
+        }).then(function(result){
+            if (result.value) {
+                deletePromocode(promocodeId);
+            }
         }).catch(swal.noop);
     }
 

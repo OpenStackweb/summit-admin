@@ -77,13 +77,15 @@ class TicketTypeListPage extends React.Component {
 
         swal({
             title: T.translate("general.are_you_sure"),
-            text: T.translate("ticket_type_list.remove_warning") + ' ' + ticketType.owner,
+            text: T.translate("ticket_type_list.remove_warning") + ' ' + ticketType.name,
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
             confirmButtonText: T.translate("general.yes_delete")
-        }).then(function(){
-            deleteTicketType(ticketTypeId);
+        }).then(function(result){
+            if (result.value) {
+                deleteTicketType(ticketTypeId);
+            }
         }).catch(swal.noop);
     }
 

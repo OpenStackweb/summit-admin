@@ -109,8 +109,10 @@ class SummitEventListPage extends React.Component {
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
             confirmButtonText: T.translate("general.yes_delete")
-        }).then(function(){
-            deleteEvent(eventId);
+        }).then(function(result){
+            if (result.value) {
+                deleteEvent(eventId);
+            }
         }).catch(swal.noop);
     }
 

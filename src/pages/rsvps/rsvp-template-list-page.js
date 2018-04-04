@@ -79,8 +79,10 @@ class RsvpTemplateListPage extends React.Component {
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
             confirmButtonText: T.translate("general.yes_delete")
-        }).then(function(){
-            deleteRsvpTemplate(rsvpTemplateId);
+        }).then(function(result){
+            if (result.value) {
+                deleteRsvpTemplate(rsvpTemplateId);
+            }
         }).catch(swal.noop);
     }
 

@@ -80,8 +80,10 @@ class LocationListPage extends React.Component {
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
             confirmButtonText: T.translate("general.yes_delete")
-        }).then(function(){
-            deleteLocation(locationId);
+        }).then(function(result){
+            if (result.value) {
+                deleteLocation(locationId);
+            }
         }).catch(swal.noop);
     }
 

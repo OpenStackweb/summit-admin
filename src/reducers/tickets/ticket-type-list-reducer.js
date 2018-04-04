@@ -23,7 +23,7 @@ import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 const DEFAULT_STATE = {
     ticketTypes         : [],
-    order               : 'code',
+    order               : 'name',
     orderDir            : 1,
     totalticketTypes    : 0
 };

@@ -80,8 +80,10 @@ class EventCategoryListPage extends React.Component {
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
             confirmButtonText: T.translate("general.yes_delete")
-        }).then(function(){
-            deleteEventCategory(categoryId);
+        }).then(function(result){
+            if (result.value) {
+                deleteEventCategory(categoryId);
+            }
         }).catch(swal.noop);
     }
 

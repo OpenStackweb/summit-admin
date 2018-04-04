@@ -103,8 +103,10 @@ class EditLocationPage extends React.Component {
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
             confirmButtonText: T.translate("general.yes_delete")
-        }).then(function(){
-            deleteFloor(entity.id, floorId);
+        }).then(function(result){
+            if (result.value) {
+                deleteFloor(entity.id, floorId);
+            }
         }).catch(swal.noop);
     }
 
@@ -121,8 +123,10 @@ class EditLocationPage extends React.Component {
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
             confirmButtonText: T.translate("general.yes_delete")
-        }).then(function(){
-            deleteRoom(entity.id, roomId);
+        }).then(function(result){
+            if (result.value) {
+                deleteRoom(entity.id, roomId);
+            }
         }).catch(swal.noop);
     }
 
@@ -139,8 +143,10 @@ class EditLocationPage extends React.Component {
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
             confirmButtonText: T.translate("general.yes_delete")
-        }).then(function(){
-            deleteLocationImage(entity.id, imageId);
+        }).then(function(result){
+            if (result.value) {
+                deleteLocationImage(entity.id, imageId);
+            }
         }).catch(swal.noop);
     }
 
@@ -157,8 +163,10 @@ class EditLocationPage extends React.Component {
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
             confirmButtonText: T.translate("general.yes_delete")
-        }).then(function(){
-            deleteLocationMap(entity.id, mapId);
+        }).then(function(result){
+            if (result.value) {
+                deleteLocationMap(entity.id, mapId);
+            }
         }).catch(swal.noop);
     }
 

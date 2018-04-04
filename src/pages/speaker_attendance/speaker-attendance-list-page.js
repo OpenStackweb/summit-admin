@@ -95,8 +95,10 @@ class SpeakerAttendanceListPage extends React.Component {
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
             confirmButtonText: T.translate("general.yes_delete")
-        }).then(function(){
-            deleteAttendance(attendanceId);
+        }).then(function(result){
+            if (result.value) {
+                deleteAttendance(attendanceId);
+            }
         }).catch(swal.noop);
     }
 
