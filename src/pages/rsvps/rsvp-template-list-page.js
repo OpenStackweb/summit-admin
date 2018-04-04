@@ -47,7 +47,7 @@ class RsvpTemplateListPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit, allTypes} = this.props;
+        let {currentSummit} = this.props;
         if(currentSummit !== null) {
             this.props.getRsvpTemplates();
         }

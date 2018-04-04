@@ -531,7 +531,7 @@
     "add_question"              : "Add Question",
     "remove_question_warning"   : "Are you sure you want to remove question ",
     "rsvp_template_saved"       : "Rsvp Template saved successfully.",
-    "rsvp_template_created"     : "Rsvp Template successfully."
+    "rsvp_template_created"     : "Rsvp Template created successfully."
   },
   "edit_rsvp_question": {
     "rsvp_question"             : "RSVP Question",
@@ -545,7 +545,7 @@
     "add_value"                 : "Add Value",
     "remove_value_warning"      : "Are you sure you want to remove value ",
     "rsvp_question_saved"       : "Rsvp Question saved successfully.",
-    "rsvp_question_created"     : "Rsvp Question successfully.",
+    "rsvp_question_created"     : "Rsvp Question created successfully.",
     "placeholders": {
       "select_class" : "Select a Class",
       "select_default" : "Select Default Value"

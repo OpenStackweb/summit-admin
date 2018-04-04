@@ -23,6 +23,7 @@ export const UPDATE_TICKET_TYPE         = 'UPDATE_TICKET_TYPE';
 export const TICKET_TYPE_UPDATED        = 'TICKET_TYPE_UPDATED';
 export const TICKET_TYPE_ADDED          = 'TICKET_TYPE_ADDED';
 export const TICKET_TYPE_DELETED        = 'TICKET_TYPE_DELETED';
+export const TICKET_TYPES_SEEDED        = 'TICKET_TYPES_SEEDED';
 
 
 export const getTicketTypes = ( order = 'name', orderDir = 1 ) => (dispatch, getState) => {
@@ -164,9 +165,9 @@ export const seedTicketTypes = ( ) => (dispatch, getState) => {
 
     postRequest(
         null,
-        createAction(RECEIVE_TICKET_TYPES),
+        createAction(TICKET_TYPES_SEEDED),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/ticket-types/seed-defaults`,
-        null,
+        {},
         authErrorHandler
     )(params)(dispatch).then(dispatch(stopLoading()));
 

@@ -20,6 +20,7 @@ import '../../styles/edit-summit-event-page.less';
 import '../../components/form-validation/validate.less';
 import { getEvent, resetEventForm, saveEvent, attachFile } from '../../actions/event-actions';
 import { unPublishEvent } from '../../actions/summit-builder-actions';
+import { getRsvpTemplates } from '../../actions/rsvp-template-actions';
 
 
 class EditSummitEventPage extends React.Component {
@@ -53,27 +54,30 @@ class EditSummitEventPage extends React.Component {
         let summitId = this.props.match.params.summit_id;
         let {currentSummit} = this.props;
 
-        if(currentSummit == null){
+        if(currentSummit == null || currentSummit.id != summitId){
             this.props.getSummitById(summitId);
         }
-
     }
 
     componentDidMount() {
         let {eventId} = this.state;
-        let {currentSummit, trackOptions, locationOptions, typeOptions} = this.props;
+        let {currentSummit, rsvpTemplateOptions} = this.props;
 
-        if (this.props.currentSummit) {
+        if (currentSummit !== null) {
             if(eventId) {
                 this.props.getEvent(eventId);
             } else {
                 this.props.resetEventForm();
             }
+
+            if (rsvpTemplateOptions.length == 0) {
+                this.props.getRsvpTemplates();
+            }
         }
     }
 
     render(){
-        let {currentSummit, entity, errors} = this.props;
+        let {currentSummit, entity, errors, levelOptions, rsvpTemplateOptions} = this.props;
 
         if(currentSummit == null) return null;
 
@@ -85,10 +89,11 @@ class EditSummitEventPage extends React.Component {
                 <EventForm
                     history={this.props.history}
                     currentSummit={currentSummit}
-                    levelOpts={this.props.levelOptions}
+                    levelOpts={levelOptions}
                     trackOpts={currentSummit.tracks}
                     typeOpts={currentSummit.event_types}
                     locationOpts={currentSummit.locations}
+                    rsvpTemplateOpts={rsvpTemplateOptions}
                     entity={entity}
                     errors={errors}
                     onSubmit={this.props.saveEvent}
@@ -101,12 +106,10 @@ class EditSummitEventPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentSummitEventState }) => ({
+const mapStateToProps = ({ currentSummitState, currentSummitEventState, currentRsvpTemplateListState }) => ({
     currentSummit: currentSummitState.currentSummit,
     levelOptions: currentSummitEventState.levelOptions,
-    typeOptions: currentSummitEventState.typeOptions,
-    trackOptions: currentSummitEventState.trackOptions,
-    locationOptions: currentSummitEventState.locationOptions,
+    rsvpTemplateOptions: currentRsvpTemplateListState.rsvpTemplates,
     entity: currentSummitEventState.entity,
     errors: currentSummitEventState.errors
 })
@@ -119,6 +122,7 @@ export default connect (
         resetEventForm,
         saveEvent,
         attachFile,
-        unPublishEvent
+        unPublishEvent,
+        getRsvpTemplates
     }
 )(EditSummitEventPage);

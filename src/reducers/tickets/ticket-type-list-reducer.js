@@ -15,7 +15,8 @@ import
 {
     RECEIVE_TICKET_TYPES,
     REQUEST_TICKET_TYPES,
-    TICKET_TYPE_DELETED
+    TICKET_TYPE_DELETED,
+    TICKET_TYPES_SEEDED
 } from '../../actions/ticket-actions';
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
@@ -55,6 +56,20 @@ const ticketTypeListReducer = (state = DEFAULT_STATE, action) => {
             return {...state, ticketTypes: ticketTypes, totalTicketTypes: total };
         }
         break;
+        case TICKET_TYPES_SEEDED: {
+            let { total } = payload.response;
+            let ticketTypes = payload.response.data.map(t => {
+
+                return {
+                    id: t.id,
+                    name: t.name,
+                    external_id: t.external_id
+                };
+            })
+
+            return {...state, ticketTypes: [...state.ticketTypes, ticketTypes], totalTicketTypes: total };
+        }
+            break;
         case TICKET_TYPE_DELETED: {
             let {ticketTypeId} = payload;
             return {...state, ticketTypes: state.ticketTypes.filter(t => t.id != ticketTypeId)};

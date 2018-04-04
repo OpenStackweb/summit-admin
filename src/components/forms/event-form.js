@@ -25,6 +25,7 @@ import CompanyInput from '../inputs/company-input'
 import GroupInput from '../inputs/group-input'
 import UploadInput from '../inputs/upload-input/index'
 import Input from '../inputs/text-input'
+import Panel from '../sections/panel';
 import {findElementPos} from '../../utils/methods'
 
 
@@ -34,6 +35,7 @@ class EventForm extends React.Component {
 
         this.state = {
             entity: {...props.entity},
+            showSection: 'main',
             errors: props.errors
         };
 
@@ -166,9 +168,17 @@ class EventForm extends React.Component {
         return entity_type[flag];
     }
 
+    toggleSection(section, ev) {
+        let {showSection} = this.state;
+        let newShowSection = (showSection === section) ? 'main' : section;
+        ev.preventDefault();
+
+        this.setState({showSection: newShowSection});
+    }
+
     render() {
-        let {entity} = this.state;
-        let { currentSummit, levelOpts, typeOpts, trackOpts, locationOpts, history } = this.props;
+        let {entity, showSection} = this.state;
+        let { currentSummit, levelOpts, typeOpts, trackOpts, locationOpts, rsvpTemplateOpts, history } = this.props;
 
         let event_types_ddl = typeOpts.map(
             t => {
@@ -193,6 +203,12 @@ class EventForm extends React.Component {
         ];
 
         let levels_ddl = levelOpts.map(l => ({label: l, value: l}));
+
+        let rsvp_templates_ddl = rsvpTemplateOpts.map(
+            t => {
+                return {label: t.title, value: t.id}
+            }
+        );
 
         return (
             <form>
@@ -238,16 +254,6 @@ class EventForm extends React.Component {
                     </div>
                 </div>
                 }
-                <div className="row form-group">
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_event.head_count")} </label>
-                        <input className="form-control" type="number" id="head_count" value={entity.head_count} onChange={this.handleChange} />
-                    </div>
-                    <div className="col-md-8">
-                        <label> {T.translate("edit_event.rsvp_link")} </label>
-                        <input className="form-control" id="rsvp_link" value={entity.rsvp_link} onChange={this.handleChange} />
-                    </div>
-                </div>
                 <div className="row form-group">
                     <div className="col-md-4">
                         <label> {T.translate("edit_event.location")} </label>
@@ -451,6 +457,40 @@ class EventForm extends React.Component {
                     </div>
                 </div>
                 }
+
+                <Panel show={showSection == 'rsvp'} title={T.translate("edit_event.rsvp")}
+                       handleClick={this.toggleSection.bind(this, 'rsvp')}>
+                    <div className="row form-group">
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_event.head_count")} </label>
+                            <input className="form-control" type="number" id="head_count" value={entity.head_count} onChange={this.handleChange} />
+                        </div>
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_event.head_count")} </label>
+                            <input className="form-control" type="number" id="head_count" value={entity.head_count} onChange={this.handleChange} />
+                        </div>
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_event.head_count")} </label>
+                            <input className="form-control" type="number" id="head_count" value={entity.head_count} onChange={this.handleChange} />
+                        </div>
+                    </div>
+                    <div className="row form-group">
+                        <div className="col-md-6">
+                            <label> {T.translate("edit_event.rsvp_link")} </label>
+                            <input className="form-control" id="rsvp_link" value={entity.rsvp_link} onChange={this.handleChange} />
+                        </div>
+                        <div className="col-md-6">
+                            <label> {T.translate("edit_event.rsvp_template")} </label>
+                            <Dropdown
+                                id="rsvp_template_id"
+                                value={entity.rsvp_template_id}
+                                onChange={this.handleChange}
+                                placeholder={T.translate("edit_event.placeholders.select_rsvp_template")}
+                                options={rsvp_templates_ddl}
+                            />
+                        </div>
+                    </div>
+                </Panel>
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">
