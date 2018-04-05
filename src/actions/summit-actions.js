@@ -41,14 +41,35 @@ export const getSummitById = (summitId) => (dispatch, getState) => {
     );
 }
 
-export const setCurrentSummit = (summit, history) => (dispatch) =>
+export const setCurrentSummit = (summit, history) => (dispatch, getState) =>
 {
-    dispatch({
-        type: SET_CURRENT_SUMMIT,
-        payload: summit
-    });
-    if(summit)
-        history.push(`/app/summits/${summit.id}/dashboard`);
+    let { loggedUserState } = getState();
+    let { accessToken }     = loggedUserState;
+
+    if (summit) {
+        dispatch(startLoading());
+
+        let params = {
+            access_token : accessToken,
+            expand: 'event_types,tracks'
+        };
+
+        return getRequest(
+            null,
+            createAction(SET_CURRENT_SUMMIT),
+            `${apiBaseUrl}/api/v1/summits/${summit.id}`,
+            authErrorHandler
+        )(params)(dispatch).then(() => {
+                dispatch(stopLoading());
+
+                if(summit)
+                    history.push(`/app/summits/${summit.id}/dashboard`);
+            }
+        );
+    } else {
+        dispatch({type: SET_CURRENT_SUMMIT, payload: {response: null} });
+    }
+
 }
 
 export const loadSummits = () => (dispatch, getState) => {
@@ -57,10 +78,11 @@ export const loadSummits = () => (dispatch, getState) => {
     let { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
+
     getRequest(
         createAction(REQUEST_SUMMITS),
         createAction(RECEIVE_SUMMITS),
-        `${apiBaseUrl}/api/v1/summits/all?access_token=${accessToken}&expand=event_types,tracks`,
+        `${apiBaseUrl}/api/v1/summits/all?expand=none&relations=none&access_token=${accessToken}`,
         authErrorHandler
     )({})(dispatch, getState).then(() => {
             dispatch(stopLoading());
