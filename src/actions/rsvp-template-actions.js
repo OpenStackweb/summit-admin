@@ -288,7 +288,7 @@ export const saveRsvpQuestion = (rsvpTemplateId, entity, history) => (dispatch, 
     } else {
         let success_message = [
             T.translate("general.done"),
-            T.translate("edit_rsvp_question.rsvp_template_created"),
+            T.translate("edit_rsvp_question.rsvp_question_created"),
             'success'
         ];
 
@@ -296,7 +296,7 @@ export const saveRsvpQuestion = (rsvpTemplateId, entity, history) => (dispatch, 
             createAction(UPDATE_RSVP_QUESTION),
             createAction(RSVP_QUESTION_ADDED),
             `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions`,
-            normalizedEntity,
+            entity,
             authErrorHandler,
             entity
         )(params)(dispatch)
@@ -321,7 +321,7 @@ export const deleteRsvpQuestion = (rsvpTemplateId, rsvpQuestionId) => (dispatch,
 
     return deleteRequest(
         null,
-        createAction(RSVP_QUESTION_DELETED)({rsvpTemplateId}),
+        createAction(RSVP_QUESTION_DELETED)({rsvpQuestionId}),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${rsvpQuestionId}`,
         authErrorHandler
     )(params)(dispatch).then(dispatch(stopLoading()));
@@ -417,7 +417,7 @@ export const saveRsvpQuestionValue = (rsvpTemplateId, rsvpQuestionId, entity, hi
             createAction(UPDATE_RSVP_QUESTION_VALUE),
             createAction(RSVP_QUESTION_VALUE_ADDED),
             `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${rsvpQuestionId}/values`,
-            normalizedEntity,
+            entity,
             authErrorHandler,
             entity
         )(params)(dispatch)

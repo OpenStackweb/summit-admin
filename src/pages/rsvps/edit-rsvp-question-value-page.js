@@ -28,12 +28,14 @@ class EditRsvpQuestionValuePage extends React.Component {
             rsvpQuestionId: props.match.params.rsvp_question_id,
             rsvpQuestionValueId: props.match.params.rsvp_question_value_id
         }
+
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
         let {rsvpQuestionId, rsvpTemplateId, rsvpQuestionValueId} = this.state;
 
-        let new_template_id = this.props.match.params.rsvp_template_id;
+        let new_template_id = nextProps.match.params.rsvp_template_id;
         let new_question_id = nextProps.match.params.rsvp_question_id;
         let new_question_value_id = nextProps.match.params.rsvp_question_value_id;
 
@@ -70,12 +72,17 @@ class EditRsvpQuestionValuePage extends React.Component {
         let rsvpQuestionValueId = this.props.match.params.rsvp_question_value_id;
 
         if(currentSummit != null) {
-            if (rsvpQuestionId != null && rsvpTemplateId != null) {
+            if (rsvpQuestionId != null && rsvpTemplateId != null && rsvpQuestionValueId != null) {
                 this.props.getRsvpQuestionValue(rsvpTemplateId, rsvpQuestionId, rsvpQuestionValueId);
             } else {
                 this.props.resetRsvpQuestionValueForm();
             }
         }
+    }
+
+    handleSubmit(entity, history) {
+        let {rsvpQuestionId, rsvpTemplateId} = this.state;
+        this.props.saveRsvpQuestionValue(rsvpTemplateId, rsvpQuestionId, entity, history);
     }
 
     render(){
@@ -96,7 +103,7 @@ class EditRsvpQuestionValuePage extends React.Component {
                     entity={entity}
                     errors={errors}
                     fields={fields}
-                    onSubmit={this.props.saveRsvpQuestionValue}
+                    onSubmit={this.handleSubmit}
                 />
                 }
             </div>

@@ -17,7 +17,8 @@ import
     RESET_RSVP_TEMPLATE_FORM,
     UPDATE_RSVP_TEMPLATE,
     RSVP_TEMPLATE_UPDATED,
-    QUESTION_ORDER_UPDATED
+    QUESTION_ORDER_UPDATED,
+    RSVP_QUESTION_DELETED
 } from '../../actions/rsvp-template-actions';
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
@@ -85,6 +86,11 @@ const rsvpTemplateReducer = (state = DEFAULT_STATE, action) => {
             })
 
             return {...state, questions: questions };
+        }
+        break;
+        case RSVP_QUESTION_DELETED: {
+            let {rsvpQuestionId} = payload;
+            return {...state, entity: {...state.entity, questions: state.entity.questions.filter(q => q.id != rsvpQuestionId)}};
         }
         break;
         case VALIDATE: {

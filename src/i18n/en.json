@@ -544,8 +544,14 @@
     "name"                      : "Name",
     "label"                     : "Label",
     "is_mandatory"              : "Mandatory ?",
-    "read_only"                 : "Read Only ?",
-    "default_value"             : "Default Value",
+    "is_read_only"              : "Read Only ?",
+    "is_country_selector"       : "Country Selector ?",
+    "is_multi_select"           : "Multi Select ?",
+    "use_chosen_plugin"         : "Use Chosen Plugin ?",
+    "initial_value"             : "Initial Value",
+    "default_value_id"          : "Default Value",
+    "empty_string"              : "Empty String",
+    "content"                   : "Content",
     "value"                     : "Value",
     "add_value"                 : "Add Value",
     "remove_value_warning"      : "Are you sure you want to remove value ",
@@ -557,9 +563,11 @@
     }
   },
   "edit_rsvp_question_value": {
-    "rsvp_question_value"       : "RSVP Question Value",
-    "value"                     : "Value",
-    "label"                     : "Label"
+    "rsvp_question_value"         : "RSVP Question Value",
+    "value"                       : "Value",
+    "label"                       : "Label",
+    "rsvp_question_value_saved"   : "Rsvp Question Value saved successfully.",
+    "rsvp_question_value_created" : "Rsvp Question Value created successfully."
   },
   "ticket_type_list": {
     "ticket_type_list"  : "Ticket Type List",

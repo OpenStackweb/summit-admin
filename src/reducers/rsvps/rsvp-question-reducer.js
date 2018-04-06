@@ -17,7 +17,8 @@ import
     RESET_RSVP_QUESTION_FORM,
     UPDATE_RSVP_QUESTION,
     RSVP_QUESTION_UPDATED,
-    RECEIVE_RSVP_QUESTION_META
+    RECEIVE_RSVP_QUESTION_META,
+    RSVP_QUESTION_VALUE_DELETED
 } from '../../actions/rsvp-template-actions';
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
@@ -25,14 +26,20 @@ import { VALIDATE } from '../../actions/base-actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 export const DEFAULT_ENTITY = {
-    id              : 0,
-    name            : '',
-    label           : '',
-    class_name      : '',
-    is_mandatory    : false,
-    read_only       : false,
-    values          : [],
-    default_value   : ''
+    id                  : 0,
+    name                : '',
+    label               : '',
+    class_name          : '',
+    is_mandatory        : false,
+    is_read_only        : false,
+    is_multi_select     : false,
+    use_chosen_plugin   : false,
+    is_country_selector : false,
+    content             : '',
+    empty_string        : '',
+    default_value_id    : 0,
+    initial_value       : '',
+    values              : []
 }
 
 const DEFAULT_STATE = {
@@ -82,6 +89,11 @@ const rsvpQuestionReducer = (state = DEFAULT_STATE, action) => {
         break;
         case RSVP_QUESTION_UPDATED: {
             return state;
+        }
+        break;
+        case RSVP_QUESTION_VALUE_DELETED: {
+            let {rsvpQuestionValueId} = payload;
+            return {...state, entity: {...state.entity, values: state.entity.values.filter(v => v.id != rsvpQuestionValueId)}};
         }
         break;
         case VALIDATE: {

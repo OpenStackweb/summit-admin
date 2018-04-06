@@ -14,6 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
+import swal from "sweetalert2";
 import RsvpTemplateForm from '../../components/forms/rsvp-template-form';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getRsvpTemplate, resetRsvpTemplateForm, saveRsvpTemplate, updateQuestionsOrder, deleteRsvpQuestion } from "../../actions/rsvp-template-actions";

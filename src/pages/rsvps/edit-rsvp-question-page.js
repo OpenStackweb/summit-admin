@@ -14,9 +14,10 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
+import swal from "sweetalert2";
 import RsvpQuestionForm from '../../components/forms/rsvp-question-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getRsvpQuestion, resetRsvpQuestionForm, saveRsvpQuestion, getRsvpQuestionMeta } from "../../actions/rsvp-template-actions";
+import { getRsvpQuestion, resetRsvpQuestionForm, saveRsvpQuestion, getRsvpQuestionMeta, deleteRsvpQuestionValue } from "../../actions/rsvp-template-actions";
 
 class EditRsvpQuestionPage extends React.Component {
 
@@ -27,6 +28,9 @@ class EditRsvpQuestionPage extends React.Component {
             rsvpTemplateId: props.match.params.rsvp_template_id,
             rsvpQuestionId: props.match.params.rsvp_question_id
         }
+
+        this.handleValueDelete = this.handleValueDelete.bind(this);
+
     }
 
     componentWillReceiveProps(nextProps) {
@@ -77,6 +81,27 @@ class EditRsvpQuestionPage extends React.Component {
         }
     }
 
+    handleValueDelete(valueId, ev) {
+        let {rsvpQuestionId, rsvpTemplateId} = this.state;
+        let {deleteRsvpQuestionValue, entity} = this.props;
+        let value = entity.values.find(v => v.id == valueId);
+
+        ev.preventDefault();
+
+        swal({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("edit_rsvp_question.remove_value_warning") + ' ' + value.value,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: T.translate("general.yes_delete")
+        }).then(function(result){
+            if (result.value) {
+                deleteRsvpQuestionValue(rsvpTemplateId, rsvpQuestionId, valueId);
+            }
+        }).catch(swal.noop);
+    }
+
     render(){
         let {currentSummit, entity, errors, allClasses} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
@@ -93,6 +118,7 @@ class EditRsvpQuestionPage extends React.Component {
                     allClasses={allClasses}
                     entity={entity}
                     errors={errors}
+                    onValueDelete={this.handleValueDelete}
                     onSubmit={this.props.saveRsvpQuestion}
                 />
                 }
@@ -113,6 +139,7 @@ export default connect (
         getRsvpQuestion,
         resetRsvpQuestionForm,
         saveRsvpQuestion,
-        getRsvpQuestionMeta
+        getRsvpQuestionMeta,
+        deleteRsvpQuestionValue
     }
 )(EditRsvpQuestionPage);
