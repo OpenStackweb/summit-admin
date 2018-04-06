@@ -466,12 +466,12 @@ class EventForm extends React.Component {
                             <input className="form-control" type="number" id="head_count" value={entity.head_count} onChange={this.handleChange} />
                         </div>
                         <div className="col-md-4">
-                            <label> {T.translate("edit_event.head_count")} </label>
-                            <input className="form-control" type="number" id="head_count" value={entity.head_count} onChange={this.handleChange} />
+                            <label> {T.translate("edit_event.rsvp_max_user_number")} </label>
+                            <input className="form-control" type="number" id="rsvp_max_user_number" value={entity.rsvp_max_user_number} onChange={this.handleChange} />
                         </div>
                         <div className="col-md-4">
-                            <label> {T.translate("edit_event.head_count")} </label>
-                            <input className="form-control" type="number" id="head_count" value={entity.head_count} onChange={this.handleChange} />
+                            <label> {T.translate("edit_event.rsvp_max_user_wait_list_number")} </label>
+                            <input className="form-control" type="number" id="rsvp_max_user_wait_list_number" value={entity.rsvp_max_user_wait_list_number} onChange={this.handleChange} />
                         </div>
                     </div>
                     <div className="row form-group">

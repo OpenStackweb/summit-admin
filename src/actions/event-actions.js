@@ -215,6 +215,8 @@ const normalizeEntity = (entity) => {
     let normalizedEntity = {...entity};
     if (!normalizedEntity.start_date) delete normalizedEntity['start_date'];
     if (!normalizedEntity.end_date) delete normalizedEntity['end_date'];
+    //if (!normalizedEntity.rsvp_link) delete normalizedEntity['rsvp_link'];
+    //if (!normalizedEntity.rsvp_template_id) delete normalizedEntity['rsvp_template_id'];
 
     normalizedEntity.tags = normalizedEntity.tags.map((t) => {
         if (typeof t == 'string') return t;

@@ -155,7 +155,11 @@
     "expect_to_learn"     : "What can attendees expect to learn?",
     "head_count"          : "Head Count",
     "rsvp_link"           : "RSVP Link",
-    "location"            : "Location",
+    "rsvp"                            : "RSVP",
+    "rsvp_max_user_number"            : "RSVP Max",
+    "rsvp_max_user_wait_list_number"  : "RSVP Wait Max",
+    "rsvp_template"  : "RSVP Template",
+    "location"                        : "Location",
     "event_type"          : "Event Type",
     "track"               : "Track",
     "level"               : "Level",
@@ -182,7 +186,8 @@
       "end_date"            : "End Date",
       "select_event_type"   : "Select an Event Type ...",
       "select_track"        : "Select a Track ...",
-      "select_level"        : "Select a Level ..."
+      "select_level"        : "Select a Level ...",
+      "select_rsvp_template": "Select a Template ..."
     }
   },
   "speaker_list": {
