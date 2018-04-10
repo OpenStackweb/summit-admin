@@ -116,6 +116,7 @@ class EventTypeListPage extends React.Component {
 
         return(
             <div className="container">
+
                 <h3> {T.translate("event_type_list.event_type_list")} </h3>
                 <div className="row">
                     <div className="col-md-6 col-md-offset-6 text-right">

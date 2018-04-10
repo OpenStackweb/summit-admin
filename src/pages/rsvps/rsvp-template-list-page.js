@@ -37,15 +37,6 @@ class RsvpTemplateListPage extends React.Component {
 
     }
 
-    componentWillMount () {
-        let summitId = this.props.match.params.summit_id;
-        let {currentSummit} = this.props;
-
-        if(currentSummit == null || currentSummit.id != summitId){
-            this.props.getSummitById(summitId);
-        }
-    }
-
     componentDidMount() {
         let {currentSummit} = this.props;
         if(currentSummit !== null) {

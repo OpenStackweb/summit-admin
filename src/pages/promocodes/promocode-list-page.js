@@ -42,15 +42,10 @@ class PromocodeListPage extends React.Component {
     }
 
     componentWillMount () {
-        let summitId = this.props.match.params.summit_id;
-        let {currentSummit, allTypes} = this.props;
+        let {allTypes} = this.props;
 
-        if(currentSummit == null || currentSummit.id != summitId){
-            this.props.getSummitById(summitId);
-        } else {
-            if(allTypes.length == 1){
-                this.props.getPromocodeMeta();
-            }
+        if(allTypes.length == 1){
+            this.props.getPromocodeMeta();
         }
     }
 

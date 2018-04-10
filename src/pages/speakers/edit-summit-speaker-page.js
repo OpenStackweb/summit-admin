@@ -14,6 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
+import { Breadcrumb } from 'react-breadcrumbs';
 import SpeakerForm from '../../components/forms/speaker-form';
 import { getSpeaker, resetSpeakerForm, saveSpeaker, attachPicture } from "../../actions/speaker-actions";
 import { loadSummits } from '../../actions/summit-actions';
@@ -30,7 +31,10 @@ class EditSummitSpeakerPage extends React.Component {
     }
 
     componentWillMount () {
-        this.props.loadSummits();
+        let {summits} = this.props;
+        if (summits.length == 0) {
+            this.props.loadSummits();
+        }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -64,13 +68,15 @@ class EditSummitSpeakerPage extends React.Component {
     }
 
     render(){
-        let {entity, errors, summits, history, saveSpeaker, attachPicture} = this.props;
+        let {entity, errors, summits, history, saveSpeaker, attachPicture, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        let breadcrumb = (entity.id) ? entity.first_name+' '+entity.last_name : T.translate("general.new");
 
         if (summits.lenght === 0) return (<div> Hold on...</div>);
 
         return(
             <div className="container">
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
                 <h3>{title} {T.translate("general.speaker")}</h3>
                 <hr/>
                 <SpeakerForm
@@ -86,7 +92,8 @@ class EditSummitSpeakerPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSpeakerState }) => ({
+const mapStateToProps = ({ currentSpeakerState, directoryState }) => ({
+    summits: directoryState.items,
     ...currentSpeakerState
 })
 

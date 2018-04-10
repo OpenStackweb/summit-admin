@@ -11,6 +11,7 @@
  * limitations under the License.
  **/
 import React from 'react'
+import { Breadcrumb } from 'react-breadcrumbs';
 import ScheduleAdminDashBoard from '../../components/schedule-builder/schedule-admin-dashboard';
 import { connect } from 'react-redux';
 import '../../styles/schedule-builder-page.less';
@@ -18,19 +19,13 @@ import { getSummitById}  from '../../actions/summit-actions';
 
 class ScheduleBuilderPage extends React.Component {
 
-    componentWillMount () {
-        let summitId = this.props.match.params.summit_id;
-        let {currentSummit } = this.props;
-        if(currentSummit == null){
-            this.props.getSummitById(summitId);
-        }
-    }
 
     render(){
-        let {currentSummit} = this.props;
+        let {currentSummit, match} = this.props;
         if(currentSummit == null) return null;
         return(
             <div>
+                <Breadcrumb data={{ title: 'Schedule', pathname: match.url }} ></Breadcrumb>
                 <ScheduleAdminDashBoard history={this.props.history} summit={currentSummit} pixelsPerMinute={16}/>
             </div>
         )

@@ -448,7 +448,7 @@ class LocationForm extends React.Component {
                 }
 
                 {this.display('rooms') && entity.id != 0 &&
-                <Panel show={showSection == 'rooms'} title={T.translate("edit_location.rooms")}
+                <Panel show={showSection == 'rooms'} id="rooms" title={T.translate("edit_location.rooms")}
                        handleClick={this.toggleSection.bind(this, 'rooms')}>
                     <button className="btn btn-primary pull-right" onClick={this.handleNewRoom}>
                         {T.translate("edit_location.add_room")}

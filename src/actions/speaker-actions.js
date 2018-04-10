@@ -81,6 +81,8 @@ export const getSpeaker = (speakerId) => (dispatch, getState) => {
     let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
 
+    dispatch(startLoading());
+
     return getRequest(
         null,
         createAction(RECEIVE_SPEAKER),
@@ -93,6 +95,8 @@ export const getSpeakerForMerge = (speakerId, speakerCol) => (dispatch, getState
 
     let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
+
+    dispatch(startLoading());
 
     let params = {
         access_token : accessToken,
@@ -112,6 +116,8 @@ export const mergeSpeakers = (speakers, selectedFields, changedFields, history) 
     let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
 
+    dispatch(startLoading());
+
     let success_message = [
         T.translate("merge_speakers.merge_success"),
         T.translate("merge_speakers.merge_changes") + changedFields.join(', ') ,
@@ -127,6 +133,7 @@ export const mergeSpeakers = (speakers, selectedFields, changedFields, history) 
         authErrorHandler
     )({})(dispatch)
     .then((payload) => {
+        dispatch(stopLoading());
         dispatch(showMessage(...success_message));
     });
 };
@@ -313,6 +320,8 @@ export const getAttendance = (attendanceId) => (dispatch, getState) => {
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
+    dispatch(startLoading());
+
     let params = {
         expand       : 'speaker',
         access_token : accessToken,
@@ -382,7 +391,7 @@ export const saveAttendance = (entity, history) => (dispatch, getState) => {
             .then((payload) => {
                 dispatch(showMessage(
                     ...success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/speakers/attendance/${payload.response.id}`) }
+                    () => { history.push(`/app/summits/${currentSummit.id}/speaker-attendances/${payload.response.id}`) }
                 ));
             });
     }
@@ -393,6 +402,8 @@ export const sendAttendanceEmail = (attendanceId) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
 
     let params = {
         access_token : accessToken

@@ -50,15 +50,6 @@ class EditRsvpTemplatePage extends React.Component {
         }
     }
 
-    componentWillMount () {
-        let summitId = this.props.match.params.summit_id;
-        let {currentSummit} = this.props;
-
-        if(currentSummit == null){
-            this.props.getSummitById(summitId);
-        }
-    }
-
     componentDidMount () {
         let {currentSummit, errors} = this.props;
         let rsvpTemplateId = this.props.match.params.rsvp_template_id;

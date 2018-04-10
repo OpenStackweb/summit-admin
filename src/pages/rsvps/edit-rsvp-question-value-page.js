@@ -14,6 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
+import { Breadcrumb } from 'react-breadcrumbs';
 import SimpleForm from '../../components/forms/simple-form';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getRsvpQuestionValue, resetRsvpQuestionValueForm, saveRsvpQuestionValue } from "../../actions/rsvp-template-actions";
@@ -56,15 +57,6 @@ class EditRsvpQuestionValuePage extends React.Component {
         }
     }
 
-    componentWillMount () {
-        let summitId = this.props.match.params.summit_id;
-        let {currentSummit, allClasses} = this.props;
-
-        if(currentSummit == null){
-            this.props.getSummitById(summitId);
-        }
-    }
-
     componentDidMount () {
         let {currentSummit, errors} = this.props;
         let rsvpTemplateId = this.props.match.params.rsvp_template_id;
@@ -92,9 +84,11 @@ class EditRsvpQuestionValuePage extends React.Component {
             {type: 'text', name: 'value', label: T.translate("edit_rsvp_question_value.value")},
             {type: 'text', name: 'label', label: T.translate("edit_rsvp_question_value.label")}
         ];
+        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
         return(
             <div className="container">
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
                 <h3>{title} {T.translate("edit_rsvp_question_value.rsvp_question_value")}</h3>
                 <hr/>
                 {currentSummit &&

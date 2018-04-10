@@ -13,6 +13,7 @@
 
 import React from 'react'
 import { connect } from 'react-redux';
+import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
 import ImageForm from '../../components/forms/image-form';
 import { getSummitById }  from '../../actions/summit-actions';
@@ -25,48 +26,36 @@ class EditLocationMapPage extends React.Component {
 
         this.state = {
             mapId: props.match.params.map_id,
-            locationId: props.match.params.location_id
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        let {mapId, locationId} = this.state;
+        let {mapId} = this.state;
+        let {currentLocation} = nextProps;
 
         let new_map_id = nextProps.match.params.map_id;
-        let new_location_id = this.props.match.params.location_id;
 
-        if(mapId != new_map_id || locationId != new_location_id) {
+        if(mapId != new_map_id) {
 
             this.setState({
-                mapId: new_map_id,
-                locationId: new_location_id
+                mapId: new_map_id
             });
 
-            if(new_map_id && new_location_id) {
-                this.props.getLocationMap(new_location_id, new_map_id);
+            if(new_map_id) {
+                this.props.getLocationMap(currentLocation.id, new_map_id);
             } else {
                 this.props.resetLocationMapForm();
             }
         }
     }
 
-    componentWillMount () {
-        let summitId = this.props.match.params.summit_id;
-        let {currentSummit} = this.props;
-
-        if(currentSummit == null){
-            this.props.getSummitById(summitId);
-        }
-    }
-
     componentDidMount () {
-        let {currentSummit, allTypes, errors} = this.props;
+        let {currentSummit, currentLocation, errors} = this.props;
         let mapId = this.props.match.params.map_id;
-        let locationId = this.props.match.params.location_id;
 
         if(currentSummit != null) {
-            if (mapId != null  && locationId != null) {
-                this.props.getLocationMap(locationId, mapId);
+            if (mapId != null  && currentLocation != null) {
+                this.props.getLocationMap(currentLocation.id, mapId);
             } else {
                 this.props.resetLocationMapForm();
             }
@@ -74,18 +63,20 @@ class EditLocationMapPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors} = this.props;
+        let {currentSummit, currentLocation, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
         return(
             <div className="container">
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
                 <h3>{title} {T.translate("edit_location.map")}</h3>
                 <hr/>
                 {currentSummit &&
                 <ImageForm
                     history={this.props.history}
                     currentSummit={currentSummit}
-                    locationId={this.state.locationId}
+                    locationId={currentLocation.id}
                     entity={entity}
                     valueField="image_url"
                     errors={errors}
@@ -98,8 +89,9 @@ class EditLocationMapPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentLocationMapState }) => ({
+const mapStateToProps = ({ currentSummitState, currentLocationState, currentLocationMapState }) => ({
     currentSummit : currentSummitState.currentSummit,
+    currentLocation : currentLocationState.entity,
     ...currentLocationMapState
 })
 

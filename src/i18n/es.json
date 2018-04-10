@@ -30,6 +30,7 @@
     "add"                 : "Add",
     "clear"               : "Clear",
     "remove"              : "Remove",
+    "new"                 : "New",
     "drop_files"          : "Drop images or click to select files to upload.",
     "search"              : "Search",
     "save"                : "Save",

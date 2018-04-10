@@ -110,7 +110,7 @@ class NavMenu extends React.Component {
                     {name:'promocode_list', linkUrl:`summits/${summit_id}/promocodes`}
                 ]
             },
-            {name:'speaker_attendance', iconClass: 'fa-users', linkUrl:`summits/${summit_id}/speakers/attendance`, show: show},
+            {name:'speaker_attendance', iconClass: 'fa-users', linkUrl:`summits/${summit_id}/speaker-attendances`, show: show},
             {name:'locations', iconClass: 'fa-map-marker', linkUrl:`summits/${summit_id}/locations`, show: show},
             {name: 'rsvps', iconClass: 'fa-user-plus', show: show,
                 childs: [

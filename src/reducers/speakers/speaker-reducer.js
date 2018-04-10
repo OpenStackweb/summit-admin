@@ -22,7 +22,6 @@ import
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
 import { VALIDATE } from '../../actions/base-actions';
-import { SET_CURRENT_SUMMIT, RECEIVE_SUMMITS } from '../../actions/summit-actions';
 
 export const DEFAULT_ENTITY = {
     id: 0,
@@ -41,7 +40,6 @@ export const DEFAULT_ENTITY = {
 }
 
 const DEFAULT_STATE = {
-    summits: [],
     entity: DEFAULT_ENTITY,
     errors: {}
 };
@@ -58,13 +56,8 @@ const speakerReducer = (state = DEFAULT_STATE, action) => {
             }
         }
         break;
-        case SET_CURRENT_SUMMIT:
         case RESET_SPEAKER_FORM: {
             return DEFAULT_STATE;
-        }
-        break;
-        case RECEIVE_SUMMITS: {
-            return {...state,  summits: action.payload.response.data };
         }
         break;
         case UPDATE_SPEAKER: {

@@ -18,7 +18,6 @@ import swal from "sweetalert2";
 import { Pagination } from 'react-bootstrap';
 import FreeTextSearch from "../../components/free-text-search/index";
 import Table from "../../components/table/Table";
-import { getSummitById }  from '../../actions/summit-actions';
 import { getAttendances, deleteAttendance, exportAttendances } from "../../actions/speaker-actions";
 
 class SpeakerAttendanceListPage extends React.Component {
@@ -35,16 +34,6 @@ class SpeakerAttendanceListPage extends React.Component {
         this.handleExport = this.handleExport.bind(this);
 
         this.state = {};
-    }
-
-    componentWillMount() {
-        let summitId = this.props.match.params.summit_id;
-        let {currentSummit} = this.props;
-
-        if(currentSummit == null || currentSummit.id != summitId){
-            this.props.getSummitById(summitId);
-        }
-
     }
 
     componentDidMount() {
@@ -64,7 +53,7 @@ class SpeakerAttendanceListPage extends React.Component {
 
     handleEdit(attendanceId) {
         let {currentSummit, history} = this.props;
-        history.push(`/app/summits/${currentSummit.id}/speakers/attendance/${attendanceId}`);
+        history.push(`/app/summits/${currentSummit.id}/speaker-attendances/${attendanceId}`);
     }
 
     handlePageChange(page) {
@@ -202,7 +191,6 @@ const mapStateToProps = ({ currentSummitState, currentSpeakerAttendanceListState
 export default connect (
     mapStateToProps,
     {
-        getSummitById,
         getAttendances,
         deleteAttendance,
         exportAttendances

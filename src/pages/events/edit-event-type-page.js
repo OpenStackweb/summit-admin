@@ -14,6 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
+import { Breadcrumb } from 'react-breadcrumbs';
 import EventTypeForm from '../../components/forms/event-type-form';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getEventType, resetEventTypeForm, saveEventType } from "../../actions/event-type-actions";
@@ -69,11 +70,13 @@ class EditEventTypePage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors} = this.props;
+        let {currentSummit, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
         return(
             <div className="container">
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
                 <h3>{title} {T.translate("edit_event_type.event_type")}</h3>
                 <hr/>
                 {currentSummit &&
@@ -86,6 +89,7 @@ class EditEventTypePage extends React.Component {
                 />
                 }
             </div>
+
         )
     }
 }

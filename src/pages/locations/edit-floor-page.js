@@ -13,6 +13,7 @@
 
 import React from 'react'
 import { connect } from 'react-redux';
+import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
 import swal from "sweetalert2";
 import FloorForm from '../../components/forms/floor-form';
@@ -26,7 +27,6 @@ class EditFloorPage extends React.Component {
 
         this.state = {
             floorId: props.match.params.floor_id,
-            locationId: props.match.params.location_id
         }
 
         this.handleRoomDelete = this.handleRoomDelete.bind(this);
@@ -34,43 +34,32 @@ class EditFloorPage extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        let {floorId, locationId} = this.state;
+        let {floorId} = this.state;
+        let {currentLocation} = nextProps;
 
         let new_floor_id = nextProps.match.params.floor_id;
-        let new_location_id = this.props.match.params.location_id;
 
-        if(floorId != new_floor_id || locationId != new_location_id) {
+        if(floorId != new_floor_id) {
 
             this.setState({
                 floorId: new_floor_id,
-                locationId: new_location_id
             });
 
-            if(new_floor_id && new_location_id) {
-                this.props.getFloor(new_location_id, new_floor_id);
+            if(new_floor_id) {
+                this.props.getFloor(currentLocation.id, new_floor_id);
             } else {
                 this.props.resetFloorForm();
             }
         }
     }
 
-    componentWillMount () {
-        let summitId = this.props.match.params.summit_id;
-        let {currentSummit} = this.props;
-
-        if(currentSummit == null){
-            this.props.getSummitById(summitId);
-        }
-    }
-
     componentDidMount () {
-        let {currentSummit, errors} = this.props;
-        let locationId = this.props.match.params.location_id;
+        let {currentSummit, currentLocation, errors} = this.props;
         let floorId = this.props.match.params.floor_id;
 
         if(currentSummit != null) {
-            if (floorId != null && locationId != null) {
-                this.props.getFloor(locationId, floorId);
+            if (floorId != null && currentLocation != null) {
+                this.props.getFloor(currentLocation.id, floorId);
             } else {
                 this.props.resetFloorForm();
             }
@@ -78,8 +67,7 @@ class EditFloorPage extends React.Component {
     }
 
     handleRoomDelete(roomId, ev) {
-        let {deleteRoom, entity} = this.props;
-        let {locationId} = this.state;
+        let {deleteRoom, entity, currentLocation} = this.props;
         let room = entity.rooms.find(r => r.id == roomId);
 
         ev.preventDefault();
@@ -93,24 +81,26 @@ class EditFloorPage extends React.Component {
             confirmButtonText: T.translate("general.yes_delete")
         }).then(function(result){
             if (result.value) {
-                deleteRoom(locationId, roomId);
+                deleteRoom(currentLocation.id, roomId);
             }
         }).catch(swal.noop);
     }
 
     render(){
-        let {currentSummit, entity, errors} = this.props;
+        let {currentSummit, currentLocation, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
         return(
             <div className="container">
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
                 <h3>{title} {T.translate("edit_floor.floor")}</h3>
                 <hr/>
                 {currentSummit &&
                 <FloorForm
                     history={this.props.history}
                     currentSummit={currentSummit}
-                    locationId={this.state.locationId}
+                    locationId={currentLocation.id}
                     entity={entity}
                     errors={errors}
                     onSubmit={this.props.saveFloor}
@@ -122,8 +112,9 @@ class EditFloorPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentFloorState }) => ({
+const mapStateToProps = ({ currentSummitState, currentLocationState, currentFloorState }) => ({
     currentSummit : currentSummitState.currentSummit,
+    currentLocation : currentLocationState.entity,
     ...currentFloorState
 })
 

@@ -13,6 +13,7 @@
 
 import React from 'react'
 import { connect } from 'react-redux';
+import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
 import ImageForm from '../../components/forms/image-form';
 import { getSummitById }  from '../../actions/summit-actions';
@@ -25,48 +26,36 @@ class EditLocationImagePage extends React.Component {
 
         this.state = {
             imageId: props.match.params.image_id,
-            locationId: props.match.params.location_id
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        let {imageId, locationId} = this.state;
+        let {imageId} = this.state;
+        let {currentLocation} = nextProps;
 
         let new_image_id = nextProps.match.params.image_id;
-        let new_location_id = this.props.match.params.location_id;
 
-        if(imageId != new_image_id || locationId != new_location_id) {
+        if(imageId != new_image_id) {
 
             this.setState({
-                imageId: new_image_id,
-                locationId: new_location_id
+                imageId: new_image_id
             });
 
-            if(new_image_id && new_location_id) {
-                this.props.getLocationImage(new_location_id, new_image_id);
+            if(new_image_id) {
+                this.props.getLocationImage(currentLocation.id, new_image_id);
             } else {
                 this.props.resetLocationImageForm();
             }
         }
     }
 
-    componentWillMount () {
-        let summitId = this.props.match.params.summit_id;
-        let {currentSummit} = this.props;
-
-        if(currentSummit == null){
-            this.props.getSummitById(summitId);
-        }
-    }
-
     componentDidMount () {
-        let {currentSummit, allTypes, errors} = this.props;
+        let {currentSummit, currentLocation, allTypes, errors} = this.props;
         let imageId = this.props.match.params.image_id;
-        let locationId = this.props.match.params.location_id;
 
         if(currentSummit != null) {
-            if (imageId != null && locationId != null) {
-                this.props.getLocationImage(locationId, imageId);
+            if (imageId != null && currentLocation != null) {
+                this.props.getLocationImage(currentLocation.id, imageId);
             } else {
                 this.props.resetLocationImageForm();
             }
@@ -74,18 +63,20 @@ class EditLocationImagePage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors} = this.props;
+        let {currentSummit, currentLocation, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
         return(
             <div className="container">
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
                 <h3>{title} {T.translate("edit_location.image")}</h3>
                 <hr/>
                 {currentSummit &&
                 <ImageForm
                     history={this.props.history}
                     currentSummit={currentSummit}
-                    locationId={this.state.locationId}
+                    locationId={currentLocation.id}
                     valueField="image_url"
                     entity={entity}
                     errors={errors}
@@ -98,8 +89,9 @@ class EditLocationImagePage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentLocationImageState }) => ({
+const mapStateToProps = ({ currentSummitState, currentLocationState, currentLocationImageState }) => ({
     currentSummit : currentSummitState.currentSummit,
+    currentLocation : currentLocationState.entity,
     ...currentLocationImageState
 })
 

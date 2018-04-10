@@ -146,7 +146,7 @@ class SpeakerForm extends React.Component {
                 Attendance:
                 {assistances.map(a =>
                 <li key={'ass' + a.id}>
-                    <a href="" onClick={() => {history.push(`/app/summits/${summitId}/speakers/attendance/${a.id}`)}} >
+                    <a href="" onClick={() => {history.push(`/app/summits/${summitId}/speaker-attendances/${a.id}`)}} >
                         Ph:{a.on_site_phone ? a.on_site_phone : '-'}
                         {a.registered ? <i> - Registered </i> : ''}
                         {a.checked_in ? <i> - Checked in </i> :''}
@@ -155,7 +155,7 @@ class SpeakerForm extends React.Component {
                 </li>
                 )}
                 <li>
-                    <a href="" onClick={() => {history.push(`/app/summits/${summitId}/speakers/attendance/new`)}} >
+                    <a href="" onClick={() => {history.push(`/app/summits/${summitId}/speaker-attendances/new`)}} >
                         Add new
                     </a>
                 </li>

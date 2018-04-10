@@ -14,6 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
+import { Breadcrumb } from 'react-breadcrumbs';
 import SpeakerAttendanceForm from '../../components/forms/speaker-attendance-form';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getAttendance, resetAttendanceForm, sendAttendanceEmail, saveAttendance } from "../../actions/speaker-actions";
@@ -46,15 +47,6 @@ class EditSpeakerAttendancePage extends React.Component {
         }
     }
 
-    componentWillMount () {
-        let summitId = this.props.match.params.summit_id;
-        let {currentSummit} = this.props;
-
-        if(currentSummit == null){
-            this.props.getSummitById(summitId);
-        }
-    }
-
     componentDidMount () {
         let {currentSummit, allTypes, errors} = this.props;
         let attendanceId = this.props.match.params.attendance_id;
@@ -69,11 +61,13 @@ class EditSpeakerAttendancePage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors} = this.props;
+        let {currentSummit, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
         return(
             <div className="container">
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
                 <h3>{title} {T.translate("edit_speaker_attendance.speaker_attendance")}</h3>
                 <hr/>
                 {currentSummit &&

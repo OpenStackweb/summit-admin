@@ -14,6 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
+import { Breadcrumb } from 'react-breadcrumbs';
 import PromocodeForm from '../../components/forms/promocode-form';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getPromocode, getPromocodeMeta, resetPromocodeForm, sendEmail, savePromocode } from "../../actions/promocode-actions";
@@ -47,15 +48,10 @@ class EditPromocodePage extends React.Component {
     }
 
     componentWillMount () {
-        let summitId = this.props.match.params.summit_id;
-        let {currentSummit, allTypes} = this.props;
+        let {allTypes} = this.props;
 
-        if(currentSummit == null){
-            this.props.getSummitById(summitId);
-        } else {
-            if(allTypes.length == 0){
-                this.props.getPromocodeMeta();
-            }
+        if(allTypes.length == 1){
+            this.props.getPromocodeMeta();
         }
     }
 
@@ -73,11 +69,13 @@ class EditPromocodePage extends React.Component {
     }
 
     render(){
-        let {currentSummit, allTypes, allClasses, entity, errors} = this.props;
+        let {currentSummit, allTypes, allClasses, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
         return(
             <div className="container">
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
                 <h3>{title} {T.translate("edit_promocode.promocode")}</h3>
                 <hr/>
                 {currentSummit &&

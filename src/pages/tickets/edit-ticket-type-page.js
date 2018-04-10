@@ -13,6 +13,7 @@
 
 import React from 'react'
 import { connect } from 'react-redux';
+import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
 import SimpleForm from '../../components/forms/simple-form';
 import { getSummitById }  from '../../actions/summit-actions';
@@ -48,15 +49,6 @@ class EditTicketTypePage extends React.Component {
         }
     }
 
-    componentWillMount () {
-        let summitId = this.props.match.params.summit_id;
-        let {currentSummit, allClasses} = this.props;
-
-        if(currentSummit == null){
-            this.props.getSummitById(summitId);
-        }
-    }
-
     componentDidMount () {
         let {currentSummit, errors} = this.props;
         let ticketTypeId = this.props.match.params.rsvp_question_id;
@@ -71,16 +63,19 @@ class EditTicketTypePage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors} = this.props;
+        let {currentSummit, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         let fields = [
             {type: 'text', name: 'name', label: T.translate("edit_ticket_type.name")},
             {type: 'text', name: 'external_id', label: T.translate("edit_ticket_type.external_id")},
             {type: 'textarea', name: 'description', label: T.translate("edit_ticket_type.description")}
         ];
+        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+
 
         return(
             <div className="container">
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
                 <h3>{title} {T.translate("edit_ticket_type.ticket_type")}</h3>
                 <hr/>
                 {currentSummit &&

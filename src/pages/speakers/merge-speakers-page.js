@@ -15,6 +15,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import swal from "sweetalert2";
 import T from "i18n-react/dist/i18n-react";
+import { Breadcrumb } from 'react-breadcrumbs';
 import MergeSpeakerForm from '../../components/forms/merge-speaker-form/merge-speaker-form';
 import SpeakerInput from '../../components/inputs/speaker-input'
 import { getSummitById }  from '../../actions/summit-actions';
@@ -106,13 +107,14 @@ class MergeSpeakerPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, history, speakers} = this.props;
+        let {currentSummit, history, speakers, match} = this.props;
         let {selectedFields, canMerge} = this.state;
 
         if(currentSummit == null) return (<div></div>);
 
         return(
             <div className="container">
+                <Breadcrumb data={{ title: T.translate("merge_speakers.merge"), pathname: match.url }} ></Breadcrumb>
                 <h3>{T.translate("merge_speakers.merge_speakers")}</h3>
                 <hr/>
                 <div className="row">

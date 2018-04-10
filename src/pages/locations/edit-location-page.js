@@ -171,7 +171,7 @@ class EditLocationPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, allClasses, entity, errors, history} = this.props;
+        let {currentSummit, allClasses, entity, errors, history, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
 
         return(
