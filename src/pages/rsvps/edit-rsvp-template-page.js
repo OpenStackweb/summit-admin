@@ -25,47 +25,11 @@ class EditRsvpTemplatePage extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            rsvpTemplateId: props.match.params.rsvp_template_id
-        }
-
         this.handleDeleteQuestion = this.handleDeleteQuestion.bind(this);
-
-    }
-
-    componentWillReceiveProps(nextProps) {
-        let {rsvpTemplateId} = this.state;
-
-        let new_rsvp_template_id = nextProps.match.params.rsvp_template_id;
-
-        if(rsvpTemplateId != new_rsvp_template_id) {
-
-            this.setState({rsvpTemplateId: new_rsvp_template_id});
-
-            if(new_rsvp_template_id) {
-                this.props.getRsvpTemplate(new_rsvp_template_id);
-            } else {
-                this.props.resetRsvpTemplateForm();
-            }
-        }
-    }
-
-    componentDidMount () {
-        let {currentSummit, errors} = this.props;
-        let rsvpTemplateId = this.props.match.params.rsvp_template_id;
-
-        if(currentSummit != null) {
-            if (rsvpTemplateId != null) {
-                this.props.getRsvpTemplate(rsvpTemplateId);
-            } else {
-                this.props.resetRsvpTemplateForm();
-            }
-        }
     }
 
     handleDeleteQuestion(rsvpQuestionId, ev) {
         let {deleteRsvpQuestion, entity} = this.props;
-        let {rsvpTemplateId} = this.state;
         let question = entity.questions.find(q => q.id == rsvpQuestionId);
 
         ev.preventDefault();
@@ -79,7 +43,7 @@ class EditRsvpTemplatePage extends React.Component {
             confirmButtonText: T.translate("general.yes_delete")
         }).then(function(result){
             if (result.value) {
-                deleteRsvpQuestion(rsvpTemplateId, rsvpQuestionId);
+                deleteRsvpQuestion(entity.id, rsvpQuestionId);
             }
         }).catch(swal.noop);
     }

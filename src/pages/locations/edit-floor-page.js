@@ -25,26 +25,16 @@ class EditFloorPage extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            floorId: props.match.params.floor_id,
-        }
-
         this.handleRoomDelete = this.handleRoomDelete.bind(this);
-
     }
 
     componentWillReceiveProps(nextProps) {
-        let {floorId} = this.state;
+        let {entity} = this.props;
         let {currentLocation} = nextProps;
 
         let new_floor_id = nextProps.match.params.floor_id;
 
-        if(floorId != new_floor_id) {
-
-            this.setState({
-                floorId: new_floor_id,
-            });
-
+        if(entity.id != new_floor_id) {
             if(new_floor_id) {
                 this.props.getFloor(currentLocation.id, new_floor_id);
             } else {
@@ -53,7 +43,7 @@ class EditFloorPage extends React.Component {
         }
     }
 
-    componentDidMount () {
+    componentWillMount () {
         let {currentSummit, currentLocation, errors} = this.props;
         let floorId = this.props.match.params.floor_id;
 

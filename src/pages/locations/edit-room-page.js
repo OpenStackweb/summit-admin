@@ -17,30 +17,21 @@ import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import RoomForm from '../../components/forms/room-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getRoom, resetRoomForm, saveRoom } from "../../actions/location-actions";
+import { getLocation, getRoom, resetRoomForm, saveRoom } from "../../actions/location-actions";
 
 class EditRoomPage extends React.Component {
 
     constructor(props) {
         super(props);
-
-        this.state = {
-            roomId: props.match.params.room_id
-        }
     }
 
     componentWillReceiveProps(nextProps) {
-        let {roomId} = this.state;
+        let {entity} = this.props;
         let {currentLocation} = nextProps;
 
         let new_room_id = nextProps.match.params.room_id;
 
-        if(roomId != new_room_id) {
-
-            this.setState({
-                roomId: new_room_id
-            });
-
+        if(entity.id != new_room_id) {
             if(new_room_id) {
                 this.props.getRoom(currentLocation.id, new_room_id);
             } else {
@@ -50,15 +41,7 @@ class EditRoomPage extends React.Component {
     }
 
     componentWillMount () {
-        let {currentLocation, allFloors} = this.props;
-
-        if(allFloors.length == 0){
-            this.props.getLocation(currentLocation.id);
-        }
-    }
-
-    componentDidMount () {
-        let {currentSummit, currentLocation, errors} = this.props;
+        let {currentSummit, currentLocation, allFloors, errors} = this.props;
         let roomId = this.props.match.params.room_id;
 
         if(currentSummit != null) {
@@ -66,6 +49,10 @@ class EditRoomPage extends React.Component {
                 this.props.getRoom(currentLocation.id, roomId);
             } else {
                 this.props.resetRoomForm();
+            }
+
+            if(allFloors.length == 0){
+                this.props.getLocation(currentLocation.id);
             }
         }
     }
@@ -107,6 +94,7 @@ export default connect (
     mapStateToProps,
     {
         getSummitById,
+        getLocation,
         getRoom,
         resetRoomForm,
         saveRoom,

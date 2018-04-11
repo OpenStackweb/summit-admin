@@ -11,6 +11,7 @@
  * limitations under the License.
  **/
 import React from 'react'
+import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import ScheduleAdminDashBoard from '../../components/schedule-builder/schedule-admin-dashboard';
 import { connect } from 'react-redux';
@@ -25,7 +26,7 @@ class ScheduleBuilderPage extends React.Component {
         if(currentSummit == null) return null;
         return(
             <div>
-                <Breadcrumb data={{ title: 'Schedule', pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("schedule.schedule"), pathname: match.url }} ></Breadcrumb>
                 <ScheduleAdminDashBoard history={this.props.history} summit={currentSummit} pixelsPerMinute={16}/>
             </div>
         )

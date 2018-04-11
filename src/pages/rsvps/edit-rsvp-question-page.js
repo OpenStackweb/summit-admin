@@ -14,7 +14,6 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
-import { Breadcrumb } from 'react-breadcrumbs';
 import swal from "sweetalert2";
 import RsvpQuestionForm from '../../components/forms/rsvp-question-form';
 import { getSummitById }  from '../../actions/summit-actions';
@@ -25,34 +24,7 @@ class EditRsvpQuestionPage extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            rsvpTemplateId: props.match.params.rsvp_template_id,
-            rsvpQuestionId: props.match.params.rsvp_question_id
-        }
-
         this.handleValueDelete = this.handleValueDelete.bind(this);
-
-    }
-
-    componentWillReceiveProps(nextProps) {
-        let {rsvpQuestionId, rsvpTemplateId} = this.state;
-
-        let new_question_id = nextProps.match.params.rsvp_question_id;
-        let new_template_id = this.props.match.params.rsvp_template_id;
-
-        if(rsvpQuestionId != new_question_id || rsvpTemplateId != new_template_id) {
-
-            this.setState({
-                rsvpTemplateId: new_template_id,
-                rsvpQuestionId: new_question_id
-            });
-
-            if(new_question_id && new_template_id) {
-                this.props.getRsvpQuestion(new_template_id, new_question_id);
-            } else {
-                this.props.resetRsvpQuestionForm();
-            }
-        }
     }
 
     componentWillMount () {
@@ -60,20 +32,6 @@ class EditRsvpQuestionPage extends React.Component {
 
         if(allClasses.length == 0){
             this.props.getRsvpQuestionMeta();
-        }
-    }
-
-    componentDidMount () {
-        let {currentSummit, errors} = this.props;
-        let rsvpTemplateId = this.props.match.params.rsvp_template_id;
-        let rsvpQuestionId = this.props.match.params.rsvp_question_id;
-
-        if(currentSummit != null) {
-            if (rsvpQuestionId != null && rsvpTemplateId != null) {
-                this.props.getRsvpQuestion(rsvpTemplateId, rsvpQuestionId);
-            } else {
-                this.props.resetRsvpQuestionForm();
-            }
         }
     }
 
@@ -99,20 +57,18 @@ class EditRsvpQuestionPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors, allClasses, match} = this.props;
+        let {currentSummit, currentTemplate, entity, errors, allClasses} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
                 <h3>{title} {T.translate("edit_rsvp_question.rsvp_question")}</h3>
                 <hr/>
                 {currentSummit &&
                 <RsvpQuestionForm
                     history={this.props.history}
                     currentSummit={currentSummit}
-                    rsvpTemplateId={this.state.rsvpTemplateId}
+                    rsvpTemplateId={currentTemplate.id}
                     allClasses={allClasses}
                     entity={entity}
                     errors={errors}
@@ -125,8 +81,9 @@ class EditRsvpQuestionPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentRsvpQuestionState }) => ({
+const mapStateToProps = ({ currentSummitState, currentRsvpTemplateState, currentRsvpQuestionState }) => ({
     currentSummit : currentSummitState.currentSummit,
+    currentTemplate : currentRsvpTemplateState.entity,
     ...currentRsvpQuestionState
 })
 

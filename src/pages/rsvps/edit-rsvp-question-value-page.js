@@ -24,67 +24,35 @@ class EditRsvpQuestionValuePage extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            rsvpTemplateId: props.match.params.rsvp_template_id,
-            rsvpQuestionId: props.match.params.rsvp_question_id,
-            rsvpQuestionValueId: props.match.params.rsvp_question_value_id
-        }
-
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
-        let {rsvpQuestionId, rsvpTemplateId, rsvpQuestionValueId} = this.state;
-
-        let new_template_id = nextProps.match.params.rsvp_template_id;
-        let new_question_id = nextProps.match.params.rsvp_question_id;
-        let new_question_value_id = nextProps.match.params.rsvp_question_value_id;
-
-
-        if(rsvpQuestionId != new_question_id || rsvpTemplateId != new_template_id || rsvpQuestionValueId != new_question_value_id) {
-
-            this.setState({
-                rsvpTemplateId: new_template_id,
-                rsvpQuestionId: new_question_id,
-                rsvpQuestionValueId: new_question_value_id
-            });
-
-            if(new_question_id && new_template_id && new_question_value_id) {
-                this.props.getRsvpQuestionValue(new_template_id, new_question_id, new_question_value_id);
-            } else {
-                this.props.resetRsvpQuestionValueForm();
-            }
-        }
-    }
-
-    componentDidMount () {
-        let {currentSummit, errors} = this.props;
-        let rsvpTemplateId = this.props.match.params.rsvp_template_id;
-        let rsvpQuestionId = this.props.match.params.rsvp_question_id;
+    componentWillMount () {
+        let {currentTemplate, currentQuestion, entity} = this.props;
         let rsvpQuestionValueId = this.props.match.params.rsvp_question_value_id;
 
-        if(currentSummit != null) {
-            if (rsvpQuestionId != null && rsvpTemplateId != null && rsvpQuestionValueId != null) {
-                this.props.getRsvpQuestionValue(rsvpTemplateId, rsvpQuestionId, rsvpQuestionValueId);
-            } else {
-                this.props.resetRsvpQuestionValueForm();
+        if (rsvpQuestionValueId) {
+            if (entity.id != rsvpQuestionValueId) {
+                this.props.getRsvpQuestionValue(currentTemplate.id, currentQuestion.id, rsvpQuestionValueId);
             }
+        } else {
+            this.props.resetRsvpQuestionValueForm();
         }
     }
 
     handleSubmit(entity, history) {
-        let {rsvpQuestionId, rsvpTemplateId} = this.state;
-        this.props.saveRsvpQuestionValue(rsvpTemplateId, rsvpQuestionId, entity, history);
+        let {currentTemplate, currentQuestion} = this.props;
+        this.props.saveRsvpQuestionValue(currentTemplate.id, currentQuestion.id, entity, history);
     }
 
     render(){
-        let {currentSummit, entity, errors} = this.props;
+        let {currentSummit, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         let fields = [
             {type: 'text', name: 'value', label: T.translate("edit_rsvp_question_value.value")},
             {type: 'text', name: 'label', label: T.translate("edit_rsvp_question_value.label")}
         ];
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+        let breadcrumb = (entity.id) ? entity.label : T.translate("general.new");
 
         return(
             <div className="container">
@@ -105,8 +73,10 @@ class EditRsvpQuestionValuePage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentRsvpQuestionValueState }) => ({
+const mapStateToProps = ({ currentSummitState, currentRsvpTemplateState, currentRsvpQuestionState, currentRsvpQuestionValueState }) => ({
     currentSummit : currentSummitState.currentSummit,
+    currentTemplate : currentRsvpTemplateState.entity,
+    currentQuestion : currentRsvpQuestionState.entity,
     ...currentRsvpQuestionValueState
 })
 

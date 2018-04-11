@@ -367,7 +367,7 @@ export const getRsvpQuestionValue = (rsvpTemplateId, rsvpQuestionId, rsvpQuestio
         null,
         createAction(RECEIVE_RSVP_QUESTION_VALUE),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${rsvpQuestionId}/values/${rsvpQuestionValueId}`,
-        authErrorHandler
+        authErrorHandler('snana')
     )(params)(dispatch).then(dispatch(stopLoading()));
 };
 

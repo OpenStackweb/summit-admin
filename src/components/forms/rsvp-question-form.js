@@ -96,7 +96,7 @@ class RsvpQuestionForm extends React.Component {
     }
 
     handleValueEdit(valueId) {
-        let {currentSummit, history, entity} = this.props;
+        let {currentSummit, rsvpTemplateId, history, entity} = this.props;
         history.push(`/app/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${entity.id}/values/${valueId}`);
     }
 

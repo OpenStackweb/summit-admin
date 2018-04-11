@@ -13,6 +13,7 @@
 
 import React from 'react'
 import { Switch, Route } from 'react-router-dom';
+import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 
 import EditEventTypePage from '../pages/events/edit-event-type-page'
@@ -27,7 +28,7 @@ class EventTypeLayout extends React.Component {
         let { match } = this.props;
         return(
             <div>
-                <Breadcrumb data={{ title: 'Event Types', pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("event_type_list.event_types"), pathname: match.url }} ></Breadcrumb>
 
                 <Switch>
                     <Route exact path={`${match.url}/new`} component={EditEventTypePage}/>

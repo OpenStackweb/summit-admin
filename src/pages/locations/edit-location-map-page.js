@@ -21,26 +21,13 @@ import { getLocationMap, resetLocationMapForm, saveLocationMap, attachLocationMa
 
 class EditLocationMapPage extends React.Component {
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            mapId: props.match.params.map_id,
-        }
-    }
-
     componentWillReceiveProps(nextProps) {
-        let {mapId} = this.state;
+        let {entity} = this.props;
         let {currentLocation} = nextProps;
 
         let new_map_id = nextProps.match.params.map_id;
 
-        if(mapId != new_map_id) {
-
-            this.setState({
-                mapId: new_map_id
-            });
-
+        if(entity.id != new_map_id) {
             if(new_map_id) {
                 this.props.getLocationMap(currentLocation.id, new_map_id);
             } else {
@@ -49,7 +36,7 @@ class EditLocationMapPage extends React.Component {
         }
     }
 
-    componentDidMount () {
+    componentWillMount () {
         let {currentSummit, currentLocation, errors} = this.props;
         let mapId = this.props.match.params.map_id;
 

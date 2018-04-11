@@ -13,6 +13,7 @@
 
 import React from 'react'
 import { Switch, Route } from 'react-router-dom';
+import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 
 import EditSpeakerPage from '../pages/speakers/edit-summit-speaker-page'
@@ -28,7 +29,7 @@ class SpeakerLayout extends React.Component {
         let { match } = this.props;
         return(
             <div>
-                <Breadcrumb data={{ title: 'Speakers', pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("speaker_list.speakers"), pathname: match.url }} ></Breadcrumb>
 
                 <Switch>
                     <Route exact path={`${match.url}/new`} component={EditSpeakerPage}/>

@@ -21,26 +21,13 @@ import { getLocationImage, resetLocationImageForm, saveLocationImage, attachLoca
 
 class EditLocationImagePage extends React.Component {
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            imageId: props.match.params.image_id,
-        }
-    }
-
     componentWillReceiveProps(nextProps) {
-        let {imageId} = this.state;
+        let {entity} = this.props;
         let {currentLocation} = nextProps;
 
         let new_image_id = nextProps.match.params.image_id;
 
-        if(imageId != new_image_id) {
-
-            this.setState({
-                imageId: new_image_id
-            });
-
+        if(entity.id != new_image_id) {
             if(new_image_id) {
                 this.props.getLocationImage(currentLocation.id, new_image_id);
             } else {
@@ -49,7 +36,7 @@ class EditLocationImagePage extends React.Component {
         }
     }
 
-    componentDidMount () {
+    componentWillMount () {
         let {currentSummit, currentLocation, allTypes, errors} = this.props;
         let imageId = this.props.match.params.image_id;
 

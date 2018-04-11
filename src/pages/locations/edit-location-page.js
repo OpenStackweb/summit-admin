@@ -37,56 +37,17 @@ class EditLocationPage extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            locationId: props.match.params.location_id
-        }
-
         this.handleFloorDelete = this.handleFloorDelete.bind(this);
         this.handleRoomDelete = this.handleRoomDelete.bind(this);
         this.handleImageDelete = this.handleImageDelete.bind(this);
         this.handleMapDelete = this.handleMapDelete.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
-        let {locationId} = this.state;
-
-        let new_location_id = nextProps.match.params.location_id;
-
-        if(locationId != new_location_id) {
-
-            this.setState({locationId: new_location_id});
-
-            if(new_location_id) {
-                this.props.getLocation(new_location_id);
-            } else {
-                this.props.resetLocationForm();
-            }
-        }
-    }
-
     componentWillMount () {
-        let summitId = this.props.match.params.summit_id;
-        let {currentSummit, allClasses} = this.props;
+        let {allClasses} = this.props;
 
-        if(currentSummit == null){
-            this.props.getSummitById(summitId);
-        } else {
-            if(allClasses.length == 0){
-                this.props.getLocationMeta();
-            }
-        }
-    }
-
-    componentDidMount () {
-        let {currentSummit, errors} = this.props;
-        let locationId = this.props.match.params.location_id;
-
-        if(currentSummit != null) {
-            if (locationId != null) {
-                this.props.getLocation(locationId);
-            } else {
-                this.props.resetLocationForm();
-            }
+        if(allClasses.length == 0){
+            this.props.getLocationMeta();
         }
     }
 
