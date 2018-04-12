@@ -50,9 +50,9 @@ const eventTypeListReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case EVENT_TYPES_SEEDED: {
-            let eventTypesAdded = [...payload.response.data];
+            let eventTypesAdded = payload.response.data;
             if (eventTypesAdded.length > 0) {
-                return {...state, eventTypes: [...state.eventTypes, eventTypesAdded]};
+                return {...state, eventTypes: [...state.eventTypes, ...eventTypesAdded]};
             } else {
                 return state;
             }

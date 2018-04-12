@@ -1,6 +1,6 @@
 import{ LOGOUT_USER } from '../../actions/auth-actions';
 import { SET_CURRENT_SUMMIT, RECEIVE_SUMMIT } from '../../actions/summit-actions';
-import { EVENT_CATEGORY_UPDATED, EVENT_CATEGORY_ADDED, EVENT_CATEGORY_DELETED } from '../../actions/event-category-actions';
+import { EVENT_CATEGORY_UPDATED, EVENT_CATEGORY_ADDED, EVENT_CATEGORY_DELETED, EVENT_CATEGORIES_SEEDED } from '../../actions/event-category-actions';
 import { EVENT_TYPE_UPDATED, EVENT_TYPE_ADDED, EVENT_TYPE_DELETED, EVENT_TYPES_SEEDED } from '../../actions/event-type-actions';
 import { LOCATION_UPDATED, LOCATION_ADDED, LOCATION_DELETED } from '../../actions/location-actions';
 
@@ -41,10 +41,10 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case EVENT_TYPES_SEEDED: {
-            let eventTypesAdded = [...payload.response.data];
+            let eventTypesAdded = payload.response.data;
 
             if (eventTypesAdded.length > 0) {
-                return {...state, currentSummit: {...state.currentSummit, event_types: [...state.currentSummit.event_types, eventTypesAdded]}};
+                return {...state, currentSummit: {...state.currentSummit, event_types: [...state.currentSummit.event_types, ...eventTypesAdded]}};
             } else {
                 return state;
             }
@@ -59,6 +59,16 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
         case EVENT_CATEGORY_ADDED: {
             let { response } = payload;
             return {...state, currentSummit: {...state.currentSummit, tracks: [...state.currentSummit.tracks, response]}};
+        }
+        break;
+        case EVENT_CATEGORIES_SEEDED: {
+            let eventCategoriesAdded = payload.response.data;
+
+            if (eventCategoriesAdded.length > 0) {
+                return {...state, tracks: [...state.currentSummit.tracks, ...eventCategoriesAdded] };
+            } else {
+                return state;
+            }
         }
         break;
         case EVENT_CATEGORY_DELETED: {

@@ -15,14 +15,15 @@ import { getRequest, putRequest, postRequest, deleteRequest, createAction, stopL
 import { authErrorHandler, apiBaseUrl, showMessage, getCSV} from './base-actions';
 import T from "i18n-react/dist/i18n-react";
 
-export const REQUEST_EVENT_CATEGORIES       = 'REQUEST_EVENT_CATEGORIES';
-export const RECEIVE_EVENT_CATEGORIES       = 'RECEIVE_EVENT_CATEGORIES';
+export const REQUEST_EVENT_CATEGORIES      = 'REQUEST_EVENT_CATEGORIES';
+export const RECEIVE_EVENT_CATEGORIES      = 'RECEIVE_EVENT_CATEGORIES';
 export const RECEIVE_EVENT_CATEGORY        = 'RECEIVE_EVENT_CATEGORY';
 export const RESET_EVENT_CATEGORY_FORM     = 'RESET_EVENT_CATEGORY_FORM';
 export const UPDATE_EVENT_CATEGORY         = 'UPDATE_EVENT_CATEGORY';
 export const EVENT_CATEGORY_UPDATED        = 'EVENT_CATEGORY_UPDATED';
 export const EVENT_CATEGORY_ADDED          = 'EVENT_CATEGORY_ADDED';
 export const EVENT_CATEGORY_DELETED        = 'EVENT_CATEGORY_DELETED';
+export const EVENT_CATEGORIES_SEEDED       = 'EVENT_CATEGORIES_SEEDED';
 
 export const getEventCategories = ( ) => (dispatch, getState) => {
 
@@ -128,6 +129,27 @@ export const saveEventCategory = (entity, history) => (dispatch, getState) => {
                 ));
             });
     }
+}
+
+export const copyEventCategories = (fromSummitId) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let params = { access_token : accessToken };
+
+    postRequest(
+        null,
+        createAction(EVENT_CATEGORIES_SEEDED),
+        `${apiBaseUrl}/api/v1/summits/${fromSummitId}/tracks/copy/${currentSummit.id}`,
+        {},
+        authErrorHandler
+    )(params)(dispatch)
+        .then(() => {
+            dispatch(stopLoading());
+        });
 }
 
 export const deleteEventCategory = (categoryId) => (dispatch, getState) => {

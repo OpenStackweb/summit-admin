@@ -34,13 +34,14 @@ export default class SummitDropdown extends React.Component {
         this.setState({summitValue: summit});
     }
 
-    handleClick() {
-        this.props.action.onClick(this.state.summitValue);
+    handleClick(ev) {
+        ev.preventDefault();
+        this.props.onClick(this.state.summitValue.value);
     }
 
     render() {
 
-        let {summits, actionLabel, onClick, ...rest} = this.props;
+        let {summits, actionLabel, ...rest} = this.props;
         let summitOptions = summits
             .sort(
                 (a, b) => (a.start_date < b.start_date ? 1 : (a.start_date > b.start_date ? -1 : 0))
@@ -60,7 +61,7 @@ export default class SummitDropdown extends React.Component {
                     className={"btn-group summit-select text-left" + smallDdl}
                     clearable={false}
                 />
-                <button type="button" className="btn btn-default" onClick={onClick}>
+                <button type="button" className="btn btn-default" onClick={this.handleClick}>
                     {actionLabel}
                 </button>
             </div>

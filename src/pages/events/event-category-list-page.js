@@ -17,7 +17,7 @@ import T from 'i18n-react/dist/i18n-react';
 import swal from "sweetalert2";
 import Table from "../../components/table/Table";
 import { getSummitById }  from '../../actions/summit-actions';
-import { getEventCategories, deleteEventCategory } from "../../actions/event-category-actions";
+import { getEventCategories, deleteEventCategory, copyEventCategories } from "../../actions/event-category-actions";
 import SummitDropdown from '../../components/summit-dropdown';
 
 class EventCategoryListPage extends React.Component {
@@ -26,6 +26,7 @@ class EventCategoryListPage extends React.Component {
         super(props);
 
         this.handleEdit = this.handleEdit.bind(this);
+        this.handleCopyCategories = this.handleCopyCategories.bind(this);
         this.handleNew = this.handleNew.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
 
@@ -50,6 +51,10 @@ class EventCategoryListPage extends React.Component {
     handleEdit(categoryId) {
         let {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/event-categories/${categoryId}`);
+    }
+
+    handleCopyCategories(fromSummitId) {
+        this.props.copyEventCategories(fromSummitId);
     }
 
     handleNew(ev) {
@@ -107,7 +112,7 @@ class EventCategoryListPage extends React.Component {
                         </button>
                         <SummitDropdown
                             summits={summits}
-                            onClick={this.handleNew}
+                            onClick={this.handleCopyCategories}
                             actionLabel={T.translate("event_category_list.copy_categories")}
                         />
                     </div>
@@ -144,6 +149,7 @@ export default connect (
     {
         getSummitById,
         getEventCategories,
-        deleteEventCategory
+        deleteEventCategory,
+        copyEventCategories
     }
 )(EventCategoryListPage);

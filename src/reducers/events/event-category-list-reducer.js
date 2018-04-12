@@ -15,7 +15,8 @@ import
 {
     RECEIVE_EVENT_CATEGORIES,
     REQUEST_EVENT_CATEGORIES,
-    EVENT_CATEGORY_DELETED
+    EVENT_CATEGORY_DELETED,
+    EVENT_CATEGORIES_SEEDED
 } from '../../actions/event-category-actions';
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
@@ -48,9 +49,24 @@ const eventCategoryListReducer = (state = DEFAULT_STATE, action) => {
             return {...state, eventCategories };
         }
         break;
+        case EVENT_CATEGORIES_SEEDED: {
+            let eventCategoriesAdded = payload.response.data.map(e => {
+                return {
+                    id: e.id,
+                    name: e.name
+                };
+            })
+
+            if (eventCategoriesAdded.length > 0) {
+                return {...state, eventCategories: [...state.eventCategories, ...eventCategoriesAdded] };
+            } else {
+                return state;
+            }
+        }
+        break;
         case EVENT_CATEGORY_DELETED: {
-            let {eventCategoryId} = payload;
-            return {...state, eventCategories: state.eventCategories.filter(c => c.id != eventCategoryId)};
+            let {categoryId} = payload;
+            return {...state, eventCategories: state.eventCategories.filter(c => c.id != categoryId)};
         }
         break;
         default:
