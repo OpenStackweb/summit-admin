@@ -16,7 +16,6 @@ import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import swal from "sweetalert2";
 import Table from "../../components/table/Table";
-import { getSummitById }  from '../../actions/summit-actions';
 import { getEventTypes, deleteEventType, seedEventTypes } from "../../actions/event-type-actions";
 
 class EventTypeListPage extends React.Component {
@@ -31,16 +30,6 @@ class EventTypeListPage extends React.Component {
 
         this.state = {
         }
-    }
-
-    componentWillMount () {
-        let summitId = this.props.match.params.summit_id;
-        let {currentSummit} = this.props;
-
-        if(currentSummit == null || currentSummit.id != summitId){
-            this.props.getSummitById(summitId);
-        }
-
     }
 
     componentDidMount() {
@@ -157,7 +146,6 @@ const mapStateToProps = ({ currentSummitState, currentEventTypeListState }) => (
 export default connect (
     mapStateToProps,
     {
-        getSummitById,
         getEventTypes,
         deleteEventType,
         seedEventTypes

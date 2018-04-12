@@ -97,7 +97,10 @@ export const getLocationMeta = () => (dispatch, getState) => {
         createAction(RECEIVE_LOCATION_META),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/metadata`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const getLocations = ( ) => (dispatch, getState) => {
@@ -120,7 +123,10 @@ export const getLocations = ( ) => (dispatch, getState) => {
         createAction(RECEIVE_LOCATIONS),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const getLocation = (locationId) => (dispatch, getState) => {
@@ -139,7 +145,10 @@ export const getLocation = (locationId) => (dispatch, getState) => {
         createAction(RECEIVE_LOCATION),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const resetLocationForm = () => (dispatch, getState) => {
@@ -219,7 +228,10 @@ export const deleteLocation = (locationId) => (dispatch, getState) => {
         createAction(LOCATION_DELETED)({locationId}),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const exportLocations = ( ) => (dispatch, getState) => {
@@ -254,7 +266,10 @@ export const updateLocationOrder = (locations, locationId, newOrder) => (dispatc
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}`,
         location,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 
 }
 
@@ -320,7 +335,10 @@ export const getFloor = (locationId, floorId) => (dispatch, getState) => {
         createAction(RECEIVE_FLOOR),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/floors/${floorId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const resetFloorForm = () => (dispatch, getState) => {
@@ -399,7 +417,10 @@ export const deleteFloor = (locationId, floorId) => (dispatch, getState) => {
         createAction(FLOOR_DELETED)({floorId}),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/floors/${floorId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 const normalizeFloorEntity = (entity) => {
@@ -429,7 +450,10 @@ export const getRoom = (locationId, roomId) => (dispatch, getState) => {
         createAction(RECEIVE_ROOM),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/rooms/${roomId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const resetRoomForm = () => (dispatch, getState) => {
@@ -513,7 +537,10 @@ export const deleteRoom = (locationId, roomId) => (dispatch, getState) => {
         createAction(ROOM_DELETED)({roomId}),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/rooms/${roomId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 const normalizeRoomEntity = (entity) => {
@@ -547,7 +574,10 @@ export const getLocationImage = (locationId, imageId) => (dispatch, getState) =>
         createAction(RECEIVE_LOCATION_IMAGE),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}/images/${imageId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const resetLocationImageForm = () => (dispatch, getState) => {
@@ -628,7 +658,10 @@ export const deleteLocationImage = (locationId, imageId) => (dispatch, getState)
         createAction(LOCATION_IMAGE_DELETED)({imageId}),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}/images/${imageId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 const normalizeImageEntity = (entity) => {
@@ -665,7 +698,10 @@ export const getLocationMap = (locationId, mapId) => (dispatch, getState) => {
         createAction(RECEIVE_LOCATION_MAP),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}/maps/${mapId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const resetLocationMapForm = () => (dispatch, getState) => {
@@ -746,7 +782,10 @@ export const deleteLocationMap = (locationId, mapId) => (dispatch, getState) => 
         createAction(LOCATION_MAP_DELETED)({mapId}),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}/maps/${mapId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 const normalizeMapEntity = (entity) => {

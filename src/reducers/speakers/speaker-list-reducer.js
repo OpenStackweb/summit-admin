@@ -39,8 +39,8 @@ const speakerListReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case REQUEST_SPEAKERS: {
-            let {order, orderDir} = payload;
-            return {...state, order, orderDir};
+            let {order, orderDir, term, page} = payload;
+            return {...state, order, orderDir, term, currentPage: page};
         }
         break;
         case RECEIVE_SPEAKERS: {

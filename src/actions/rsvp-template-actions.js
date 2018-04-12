@@ -78,7 +78,10 @@ export const getRsvpTemplates = ( term = null, page = 1, perPage = 10, order = '
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates`,
         authErrorHandler,
         {page, perPage, order, orderDir, term}
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const getRsvpTemplate = (rsvpTemplateId) => (dispatch, getState) => {
@@ -96,7 +99,10 @@ export const getRsvpTemplate = (rsvpTemplateId) => (dispatch, getState) => {
         createAction(RECEIVE_RSVP_TEMPLATE),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const resetRsvpTemplateForm = () => (dispatch, getState) => {
@@ -175,7 +181,10 @@ export const deleteRsvpTemplate = (rsvpTemplateId) => (dispatch, getState) => {
         createAction(RSVP_TEMPLATE_DELETED)({rsvpTemplateId}),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 
@@ -210,7 +219,10 @@ export const updateQuestionsOrder = (questions, questionId, newOrder) => (dispat
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/questions/${questionId}`,
         question,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 
 }
 
@@ -229,7 +241,10 @@ export const getRsvpQuestionMeta = () => (dispatch, getState) => {
         createAction(RECEIVE_RSVP_QUESTION_META),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/questions/metadata`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const getRsvpQuestion = (rsvpTemplateId, rsvpQuestionId) => (dispatch, getState) => {
@@ -247,7 +262,10 @@ export const getRsvpQuestion = (rsvpTemplateId, rsvpQuestionId) => (dispatch, ge
         createAction(RECEIVE_RSVP_QUESTION),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${rsvpQuestionId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const resetRsvpQuestionForm = () => (dispatch, getState) => {
@@ -324,7 +342,10 @@ export const deleteRsvpQuestion = (rsvpTemplateId, rsvpQuestionId) => (dispatch,
         createAction(RSVP_QUESTION_DELETED)({rsvpQuestionId}),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${rsvpQuestionId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 
@@ -349,7 +370,10 @@ export const updateQuestionValuesOrder = (values, questionId, valueId, newOrder)
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/questions/${questionId}/values/${valueId}`,
         question,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 
 }
 
@@ -368,7 +392,10 @@ export const getRsvpQuestionValue = (rsvpTemplateId, rsvpQuestionId, rsvpQuestio
         createAction(RECEIVE_RSVP_QUESTION_VALUE),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${rsvpQuestionId}/values/${rsvpQuestionValueId}`,
         authErrorHandler('snana')
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const resetRsvpQuestionValueForm = () => (dispatch, getState) => {
@@ -445,7 +472,10 @@ export const deleteRsvpQuestionValue = (rsvpTemplateId, rsvpQuestionId, rsvpQues
         createAction(RSVP_QUESTION_VALUE_DELETED)({rsvpQuestionValueId}),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${rsvpQuestionId}/values/${rsvpQuestionValueId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 

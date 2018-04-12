@@ -72,8 +72,11 @@ export const getSpeakers = ( term = null, page = 1, perPage = 10, order = 'id', 
         createAction(RECEIVE_SPEAKERS),
         `${apiBaseUrl}/api/v1/speakers`,
         authErrorHandler,
-        {order, orderDir}
-    )(params)(dispatch).then(dispatch(stopLoading()));
+        {order, orderDir, page, term}
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const getSpeaker = (speakerId) => (dispatch, getState) => {
@@ -88,7 +91,10 @@ export const getSpeaker = (speakerId) => (dispatch, getState) => {
         createAction(RECEIVE_SPEAKER),
         `${apiBaseUrl}/api/v1/speakers/${speakerId}?access_token=${accessToken}&expand=member,presentations`,
         authErrorHandler
-    )({})(dispatch).then(dispatch(stopLoading()));
+    )({})(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const getSpeakerForMerge = (speakerId, speakerCol) => (dispatch, getState) => {
@@ -109,7 +115,10 @@ export const getSpeakerForMerge = (speakerId, speakerCol) => (dispatch, getState
         `${apiBaseUrl}/api/v1/speakers/${speakerId}`,
         authErrorHandler,
         {speakerCol}
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const mergeSpeakers = (speakers, selectedFields, changedFields, history) => (dispatch, getState) => {
@@ -209,7 +218,14 @@ export const attachPicture = (entity, file) => (dispatch, getState) => {
             `${apiBaseUrl}/api/v1/speakers/${entity.id}?access_token=${accessToken}`,
             entity,
             authErrorHandler
-        )({})(dispatch).then(dispatch(uploadFile(entity, file))).then(dispatch(stopLoading()));
+        )({})(dispatch)
+            .then(() => {
+                dispatch(uploadFile(entity, file));
+            })
+            .then(() => {
+                dispatch(stopLoading());
+            }
+        );
     }
 }
 
@@ -293,7 +309,10 @@ export const getAttendances = ( term = null, page = 1, perPage = 10, order = 'id
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers-assistances`,
         authErrorHandler,
         req_params
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const deleteAttendance = (attendanceId) => (dispatch, getState) => {
@@ -311,7 +330,10 @@ export const deleteAttendance = (attendanceId) => (dispatch, getState) => {
         createAction(ATTENDANCE_DELETED)({attendanceId}),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers-assistances/${attendanceId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const getAttendance = (attendanceId) => (dispatch, getState) => {
@@ -332,7 +354,10 @@ export const getAttendance = (attendanceId) => (dispatch, getState) => {
         createAction(RECEIVE_ATTENDANCE),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers-assistances/${attendanceId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const resetAttendanceForm = () => (dispatch, getState) => {

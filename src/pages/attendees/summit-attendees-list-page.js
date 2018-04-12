@@ -19,7 +19,6 @@ import { Pagination } from 'react-bootstrap';
 import FreeTextSearch from "../../components/free-text-search/index";
 import ScheduleModal from "../../components/schedule-modal/index";
 import Table from "../../components/table/Table";
-import { getSummitById }  from '../../actions/summit-actions';
 import { getAttendees, deleteAttendee } from "../../actions/attendee-actions";
 
 class SummitAttendeeListPage extends React.Component {
@@ -42,16 +41,6 @@ class SummitAttendeeListPage extends React.Component {
             modalTitle: '',
             modalSchedule: []
         }
-    }
-
-    componentWillMount () {
-        let summitId = this.props.match.params.summit_id;
-        let {currentSummit} = this.props;
-
-        if(currentSummit == null || currentSummit.id != summitId){
-            this.props.getSummitById(summitId);
-        }
-
     }
 
     componentDidMount() {
@@ -240,7 +229,6 @@ const mapStateToProps = ({ currentSummitState, currentAttendeeListState }) => ({
 export default connect (
     mapStateToProps,
     {
-        getSummitById,
         getAttendees,
         deleteAttendee
     }

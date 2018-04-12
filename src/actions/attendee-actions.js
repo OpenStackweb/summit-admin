@@ -68,7 +68,10 @@ export const getAttendees = ( term = null, page = 1, perPage = 10, order = 'id',
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/attendees`,
         authErrorHandler,
         {page, perPage, order, orderDir, term}
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const getAttendee = (attendeeId) => (dispatch, getState) => {
@@ -87,7 +90,10 @@ export const getAttendee = (attendeeId) => (dispatch, getState) => {
         createAction(RECEIVE_ATTENDEE),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const resetAttendeeForm = () => (dispatch, getState) => {
@@ -202,7 +208,10 @@ export const deleteAttendee = (attendeeId) => (dispatch, getState) => {
         createAction(ATTENDEE_DELETED)({attendeeId}),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const deleteTicket = (attendeeId, ticketId) => (dispatch, getState) => {
@@ -220,7 +229,10 @@ export const deleteTicket = (attendeeId, ticketId) => (dispatch, getState) => {
         createAction(TICKET_DELETED)({ticketId}),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}/tickets/${ticketId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const saveTicket = (attendeeId, newTicket) => (dispatch, getState) => {
@@ -239,7 +251,10 @@ export const saveTicket = (attendeeId, newTicket) => (dispatch, getState) => {
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}/tickets`,
         newTicket,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const deleteRsvp = (memberId, rsvpId) => (dispatch, getState) => {
@@ -256,7 +271,10 @@ export const deleteRsvp = (memberId, rsvpId) => (dispatch, getState) => {
         createAction(RSVP_DELETED)({rsvpId}),
         `${apiBaseUrl}/api/v1/members/${memberId}/rsvp/${rsvpId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 const normalizeEntity = (entity) => {

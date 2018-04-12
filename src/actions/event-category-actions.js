@@ -44,7 +44,10 @@ export const getEventCategories = ( ) => (dispatch, getState) => {
         createAction(RECEIVE_EVENT_CATEGORIES),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/tracks`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const getEventCategory = (eventCategoryId) => (dispatch, getState) => {
@@ -63,7 +66,10 @@ export const getEventCategory = (eventCategoryId) => (dispatch, getState) => {
         createAction(RECEIVE_EVENT_CATEGORY),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/tracks/${eventCategoryId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const resetEventCategoryForm = () => (dispatch, getState) => {
@@ -139,7 +145,10 @@ export const deleteEventCategory = (categoryId) => (dispatch, getState) => {
         createAction(EVENT_CATEGORY_DELETED)({categoryId}),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/tracks/${categoryId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 const normalizeEntity = (entity) => {

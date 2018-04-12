@@ -44,7 +44,10 @@ export const getEventTypes = ( ) => (dispatch, getState) => {
         createAction(RECEIVE_EVENT_TYPES),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const getEventType = (eventTypeId) => (dispatch, getState) => {
@@ -63,7 +66,10 @@ export const getEventType = (eventTypeId) => (dispatch, getState) => {
         createAction(RECEIVE_EVENT_TYPE),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types/${eventTypeId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const resetEventTypeForm = () => (dispatch, getState) => {
@@ -139,7 +145,10 @@ export const deleteEventType = (eventTypeId) => (dispatch, getState) => {
         createAction(EVENT_TYPE_DELETED)({eventTypeId}),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types/${eventTypeId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const seedEventTypes = () => (dispatch, getState) => {
@@ -157,7 +166,10 @@ export const seedEventTypes = () => (dispatch, getState) => {
         createAction(EVENT_TYPES_SEEDED),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types/seed-defaults`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 const normalizeEntity = (entity) => {

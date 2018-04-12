@@ -43,7 +43,10 @@ export const getPromocodeMeta = () => (dispatch, getState) => {
         createAction(RECEIVE_PROMOCODE_META),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes/metadata`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 
@@ -88,7 +91,10 @@ export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'cod
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes`,
         authErrorHandler,
         {page, perPage, order, orderDir, type, term}
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const getPromocode = (promocodeId) => (dispatch, getState) => {
@@ -107,7 +113,10 @@ export const getPromocode = (promocodeId) => (dispatch, getState) => {
         createAction(RECEIVE_PROMOCODE),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes/${promocodeId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const resetPromocodeForm = () => (dispatch, getState) => {
@@ -182,7 +191,10 @@ export const deletePromocode = (promocodeId) => (dispatch, getState) => {
         createAction(PROMOCODE_DELETED)({promocodeId}),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes/${promocodeId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const sendEmail = (promocodeId) => (dispatch, getState) => {

@@ -33,7 +33,7 @@ class SummitSpeakerListPage extends React.Component {
         this.state = {}
     }
 
-    componentDidMount () {
+    componentWillMount () {
         this.props.getSpeakers();
     }
 

@@ -100,16 +100,7 @@ class NavMenu extends React.Component {
                     {name:'event_categories', linkUrl:`summits/${summit_id}/event-categories`}
                 ]
             },
-            {name: 'attendees', iconClass: 'fa-users', show: show,
-                childs: [
-                    {name:'attendee_list', linkUrl:`summits/${summit_id}/attendees`}
-                ]
-            },
-            {name: 'promocodes', iconClass: 'fa-ticket', show: show,
-                childs: [
-                    {name:'promocode_list', linkUrl:`summits/${summit_id}/promocodes`}
-                ]
-            },
+            {name: 'attendees', iconClass: 'fa-users', show: show, linkUrl:`summits/${summit_id}/attendees` },
             {name:'speaker_attendance', iconClass: 'fa-users', linkUrl:`summits/${summit_id}/speaker-attendances`, show: show},
             {name:'locations', iconClass: 'fa-map-marker', linkUrl:`summits/${summit_id}/locations`, show: show},
             {name: 'rsvps', iconClass: 'fa-user-plus', show: show,
@@ -119,7 +110,8 @@ class NavMenu extends React.Component {
             },
             {name: 'tickets', iconClass: 'fa-ticket', show: show,
                 childs: [
-                    {name:'ticket_type_list', linkUrl:`summits/${summit_id}/ticket-types`}
+                    {name:'ticket_type_list', linkUrl:`summits/${summit_id}/ticket-types`},
+                    {name:'promocode_list', linkUrl:`summits/${summit_id}/promocodes`}
                 ]
             },
         ];

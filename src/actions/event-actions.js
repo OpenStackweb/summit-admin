@@ -66,7 +66,10 @@ export const getEvents = ( term = null, page = 1, perPage = 10, order = 'id', or
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events`,
         authErrorHandler,
         {order, orderDir, term, summitTZ}
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const getEvent = (eventId) => (dispatch, getState) => {
@@ -80,7 +83,10 @@ export const getEvent = (eventId) => (dispatch, getState) => {
             createAction(RECEIVE_EVENT),
             `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${eventId}?access_token=${accessToken}&expand=speakers,sponsors,groups`,
             authErrorHandler
-        )({})(dispatch).then(dispatch(stopLoading()));
+        )({})(dispatch).then(() => {
+                dispatch(stopLoading());
+            }
+        );
 };
 
 export const resetEventForm = () => (dispatch, getState) => {
@@ -193,7 +199,14 @@ export const attachFile = (entity, file) => (dispatch, getState) => {
             `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}?access_token=${accessToken}`,
             entity,
             authErrorHandler
-        )({})(dispatch).then(dispatch(uploadFile(entity, file))).then(dispatch(stopLoading()));
+        )({})(dispatch)
+            .then(() => {
+                dispatch(uploadFile(entity, file));
+            })
+            .then(() => {
+                dispatch(stopLoading());
+            }
+        );
     }
 }
 
@@ -247,7 +260,10 @@ export const deleteEvent = (eventId) => (dispatch, getState) => {
         createAction(EVENT_DELETED)({eventId}),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${eventId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const exportEvents = ( term = null, order = 'id', orderDir = 1 ) => (dispatch, getState) => {

@@ -53,7 +53,10 @@ export const getTicketTypes = ( order = 'name', orderDir = 1 ) => (dispatch, get
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/ticket-types`,
         authErrorHandler,
         {order, orderDir}
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const getTicketType = (ticketTypeId) => (dispatch, getState) => {
@@ -71,7 +74,10 @@ export const getTicketType = (ticketTypeId) => (dispatch, getState) => {
         createAction(RECEIVE_TICKET_TYPE),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/ticket-types/${ticketTypeId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const resetTicketTypeForm = () => (dispatch, getState) => {
@@ -150,7 +156,10 @@ export const deleteTicketType = (ticketTypeId) => (dispatch, getState) => {
         createAction(TICKET_TYPE_DELETED)({ticketTypeId}),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/ticket-types/${ticketTypeId}`,
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 
@@ -169,7 +178,10 @@ export const seedTicketTypes = ( ) => (dispatch, getState) => {
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/ticket-types/seed-defaults`,
         {},
         authErrorHandler
-    )(params)(dispatch).then(dispatch(stopLoading()));
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 
 };
 
