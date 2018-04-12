@@ -124,6 +124,13 @@ class RsvpQuestionForm extends React.Component {
             question_values_ddl = entity.values.map(v => ({label: v.value, value: v.id}));
         }
 
+        let values = [];
+        if (this.shouldShowField('values')) {
+            values = entity.values.sort(
+                (a, b) => (a.order > b.order ? 1 : (a.order < b.order ? -1 : 0))
+            );
+        }
+
         return (
             <form className="rsvp-question-form">
                 <input type="hidden" id="id" value={entity.id} />
@@ -238,7 +245,7 @@ class RsvpQuestionForm extends React.Component {
                         </button>
                         <SortableTable
                             options={table_options}
-                            data={entity.values}
+                            data={values}
                             columns={columns}
                             dropCallback={this.props.onValueReorder}
                             orderField="order"

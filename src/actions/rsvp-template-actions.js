@@ -90,6 +90,8 @@ export const getRsvpTemplate = (rsvpTemplateId) => (dispatch, getState) => {
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
+    dispatch(startLoading());
+
     let params = {
         access_token : accessToken,
     };
@@ -201,7 +203,7 @@ const normalizeEntity = (entity) => {
 /************************************* QUESTIONS ******************************************/
 
 
-export const updateQuestionsOrder = (questions, questionId, newOrder) => (dispatch, getState) => {
+export const updateQuestionsOrder = (questions, templateId, questionId, newOrder) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -216,7 +218,7 @@ export const updateQuestionsOrder = (questions, questionId, newOrder) => (dispat
     putRequest(
         null,
         createAction(QUESTION_ORDER_UPDATED)(questions),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/questions/${questionId}`,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/${templateId}/questions/${questionId}`,
         question,
         authErrorHandler
     )(params)(dispatch).then(() => {
@@ -252,6 +254,8 @@ export const getRsvpQuestion = (rsvpTemplateId, rsvpQuestionId) => (dispatch, ge
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
 
     let params = {
         access_token : accessToken,
@@ -352,7 +356,7 @@ export const deleteRsvpQuestion = (rsvpTemplateId, rsvpQuestionId) => (dispatch,
 /************************************* QUESTIONS ******************************************/
 
 
-export const updateQuestionValuesOrder = (values, questionId, valueId, newOrder) => (dispatch, getState) => {
+export const updateQuestionValuesOrder = (values, templateId, questionId, valueId, newOrder) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -367,8 +371,8 @@ export const updateQuestionValuesOrder = (values, questionId, valueId, newOrder)
     putRequest(
         null,
         createAction(QUESTION_VALUE_ORDER_UPDATED)(values),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/questions/${questionId}/values/${valueId}`,
-        question,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/${templateId}/questions/${questionId}/values/${valueId}`,
+        value,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -382,6 +386,8 @@ export const getRsvpQuestionValue = (rsvpTemplateId, rsvpQuestionId, rsvpQuestio
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
 
     let params = {
         access_token : accessToken,

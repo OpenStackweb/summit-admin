@@ -26,6 +26,7 @@ class EditRsvpTemplatePage extends React.Component {
         super(props);
 
         this.handleDeleteQuestion = this.handleDeleteQuestion.bind(this);
+        this.handleReorderQuestion = this.handleReorderQuestion.bind(this);
     }
 
     handleDeleteQuestion(rsvpQuestionId, ev) {
@@ -48,6 +49,15 @@ class EditRsvpTemplatePage extends React.Component {
         }).catch(swal.noop);
     }
 
+    handleReorderQuestion(questions, questionId, newOrder) {
+        let {updateQuestionsOrder, entity} = this.props;
+
+        entity.questions = [...questions];
+
+        this.setState({entity});
+        updateQuestionsOrder(questions, entity.id, questionId, newOrder);
+    }
+
     render(){
         let {currentSummit, entity, errors} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
@@ -62,7 +72,7 @@ class EditRsvpTemplatePage extends React.Component {
                     currentSummit={currentSummit}
                     entity={entity}
                     errors={errors}
-                    onQuestionReorder={this.props.updateQuestionsOrder}
+                    onQuestionReorder={this.handleReorderQuestion}
                     onQuestionDelete={this.handleDeleteQuestion}
                     onSubmit={this.props.saveRsvpTemplate}
                 />

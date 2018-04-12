@@ -17,7 +17,7 @@ import T from "i18n-react/dist/i18n-react";
 import swal from "sweetalert2";
 import RsvpQuestionForm from '../../components/forms/rsvp-question-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getRsvpQuestion, resetRsvpQuestionForm, saveRsvpQuestion, getRsvpQuestionMeta, deleteRsvpQuestionValue } from "../../actions/rsvp-template-actions";
+import { getRsvpQuestion, resetRsvpQuestionForm, saveRsvpQuestion, getRsvpQuestionMeta, deleteRsvpQuestionValue, updateQuestionValuesOrder } from "../../actions/rsvp-template-actions";
 
 class EditRsvpQuestionPage extends React.Component {
 
@@ -25,6 +25,7 @@ class EditRsvpQuestionPage extends React.Component {
         super(props);
 
         this.handleValueDelete = this.handleValueDelete.bind(this);
+        this.handleValueReorder = this.handleValueReorder.bind(this);
     }
 
     componentWillMount () {
@@ -56,6 +57,11 @@ class EditRsvpQuestionPage extends React.Component {
         }).catch(swal.noop);
     }
 
+    handleValueReorder(values, valueId, newOrder) {
+        let {updateQuestionValuesOrder, currentTemplate, entity} = this.props;
+        updateQuestionValuesOrder(values, currentTemplate.id, entity.id, valueId, newOrder);
+    }
+
     render(){
         let {currentSummit, currentTemplate, entity, errors, allClasses} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
@@ -73,6 +79,7 @@ class EditRsvpQuestionPage extends React.Component {
                     entity={entity}
                     errors={errors}
                     onValueDelete={this.handleValueDelete}
+                    onValueReorder={this.handleValueReorder}
                     onSubmit={this.props.saveRsvpQuestion}
                 />
                 }
@@ -95,6 +102,7 @@ export default connect (
         resetRsvpQuestionForm,
         saveRsvpQuestion,
         getRsvpQuestionMeta,
-        deleteRsvpQuestionValue
+        deleteRsvpQuestionValue,
+        updateQuestionValuesOrder
     }
 )(EditRsvpQuestionPage);

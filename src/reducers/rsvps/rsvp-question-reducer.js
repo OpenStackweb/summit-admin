@@ -18,7 +18,8 @@ import
     UPDATE_RSVP_QUESTION,
     RSVP_QUESTION_UPDATED,
     RECEIVE_RSVP_QUESTION_META,
-    RSVP_QUESTION_VALUE_DELETED
+    RSVP_QUESTION_VALUE_DELETED,
+    QUESTION_VALUE_ORDER_UPDATED
 } from '../../actions/rsvp-template-actions';
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
@@ -90,6 +91,11 @@ const rsvpQuestionReducer = (state = DEFAULT_STATE, action) => {
         case RSVP_QUESTION_UPDATED: {
             return state;
         }
+        break;
+        case QUESTION_VALUE_ORDER_UPDATED: {
+            let values = [...payload];
+            return {...state, entity: {...state.entity, values: values}}
+            }
         break;
         case RSVP_QUESTION_VALUE_DELETED: {
             let {rsvpQuestionValueId} = payload;

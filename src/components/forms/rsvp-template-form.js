@@ -91,7 +91,7 @@ class RsvpTemplateForm extends React.Component {
 
     render() {
         let {entity} = this.state;
-        let { currentSummit, onQuestionDelete } = this.props;
+        let { currentSummit, onQuestionDelete, onQuestionReorder } = this.props;
 
         let columns = [
             { columnKey: 'id', value: T.translate("general.id") },
@@ -106,6 +106,10 @@ class RsvpTemplateForm extends React.Component {
                 delete: { onClick: onQuestionDelete }
             }
         }
+
+        let questions = entity.questions.sort(
+            (a, b) => (a.order > b.order ? 1 : (a.order < b.order ? -1 : 0))
+        );
 
         return (
             <form className="rsvp-template-form">
@@ -139,9 +143,9 @@ class RsvpTemplateForm extends React.Component {
                         </button>
                         <SortableTable
                             options={table_options}
-                            data={entity.questions}
+                            data={questions}
                             columns={columns}
-                            dropCallback={this.props.onQuestionReorder}
+                            dropCallback={onQuestionReorder}
                             orderField="order"
                         />
                     </div>
