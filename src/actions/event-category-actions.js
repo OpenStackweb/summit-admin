@@ -144,7 +144,7 @@ export const copyEventCategories = (fromSummitId) => (dispatch, getState) => {
         null,
         createAction(EVENT_CATEGORIES_SEEDED),
         `${apiBaseUrl}/api/v1/summits/${fromSummitId}/tracks/copy/${currentSummit.id}`,
-        {},
+        null,
         authErrorHandler
     )(params)(dispatch)
         .then(() => {
