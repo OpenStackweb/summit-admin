@@ -64,7 +64,14 @@ class RsvpTemplateIdLayout extends React.Component {
                             <div>
                                 <Breadcrumb data={{ title: T.translate("edit_rsvp_template.questions"), pathname: match.url }} ></Breadcrumb>
                                 <Switch>
-                                    <Route exact path={`${q_props.match.url}/new`} component={EditRsvpQuestionPage} />
+                                    <Route exact path={`${q_props.match.url}/new`} render={
+                                        props => (
+                                            <div>
+                                                <Breadcrumb data={{ title: T.translate("general.new"), pathname: props.match.url }} ></Breadcrumb>
+                                                <EditRsvpQuestionPage {...props} />
+                                            </div>
+                                        )}
+                                    />
                                     <Route path={`${q_props.match.url}/:rsvp_question_id`} component={EditRsvpQuestionLayout} />
                                     <Route component={EditRsvpTemplatePage}/>
                                 </Switch>

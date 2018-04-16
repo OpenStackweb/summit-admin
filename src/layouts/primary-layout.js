@@ -12,16 +12,16 @@
  **/
 
 import React from 'react'
+import { connect } from 'react-redux';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { Breadcrumbs, Breadcrumb } from 'react-breadcrumbs'
 import NavMenu from '../components/nav-menu'
 
 import SummitLayout from './summit-layout';
-import SummitDirectoryPage from '../pages/directory/summit-directory-page';
+import EditSummitPage from '../pages/summits/edit-summit-page';
+import SummitDirectoryPage from '../pages/summits/summit-directory-page';
 import SpeakerLayout from './speaker-layout';
 
-
-import { withRouter } from 'react-router-dom'
 
 class PrimaryLayout extends React.Component {
 
@@ -38,11 +38,7 @@ class PrimaryLayout extends React.Component {
                     <Switch>
                         <Route exact path="/app/directory" component={SummitDirectoryPage}/>
                         <Route path="/app/speakers" component={SpeakerLayout}/>
-                        <Route path="/app/summits/:summit_id" render={
-                            props => (
-                                <SummitLayout {...props} currentSummit={currentSummit} />
-                            )}
-                        />
+                        <Route path="/app/summits" component={SummitLayout} />
                         <Route render={props => (<Redirect to="/app/directory"/>)}/>
                     </Switch>
                 </main>
@@ -52,6 +48,10 @@ class PrimaryLayout extends React.Component {
 
 }
 
-export default withRouter(PrimaryLayout)
+const mapStateToProps = ({ currentSummitState }) => ({
+    currentSummit: currentSummitState.currentSummit,
+})
+
+export default connect(mapStateToProps, {})(PrimaryLayout)
 
 

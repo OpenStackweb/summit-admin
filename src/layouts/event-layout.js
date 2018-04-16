@@ -35,7 +35,14 @@ class EventLayout extends React.Component {
                 <Switch>
                     <Route exact path={`${match.url}/schedule`} component={ScheduleBuilderPage}/>
                     <Route exact path={`${match.url}/bulk-actions`} component={SummitEventsBulkActionsPage}/>
-                    <Route exact path={`${match.url}/new`} component={EditSummitEventPage}/>
+                    <Route exact path={`${match.url}/new`} render={
+                        props => (
+                            <div>
+                                <Breadcrumb data={{ title: T.translate("general.new"), pathname: props.match.url }} ></Breadcrumb>
+                                <EditSummitEventPage {...props} />
+                            </div>
+                        )}
+                    />
                     <Route exact path={`${match.url}/:summit_event_id`} component={EditSummitEventPage}/>
                     <Route component={SummitEventListPage}/>
                 </Switch>

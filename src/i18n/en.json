@@ -30,6 +30,7 @@
     "add"                 : "Add",
     "clear"               : "Clear",
     "remove"              : "Remove",
+    "delete"              : "Delete",
     "new"                 : "New",
     "drop_files"          : "Drop images or click to select files to upload.",
     "search"              : "Search",
@@ -127,7 +128,14 @@
       "go": "Apply Bulk Action"
     }
   },
+  "directory": {
+    "control_panel"       : "Control Panel",
+    "summits"             : "Summits",
+    "add_summit"          : "Add Summit",
+    "remove_warning"      : "Are you sure you want to delete summit"
+  },
   "dashboard": {
+    "dashboard"           : "Dashboard",
     "dates"               : "Dates & Times",
     "submission"          : "Submission",
     "voting"              : "Voting",
@@ -147,6 +155,32 @@
     "accepted_alternate"  : "Accepted Alternate",
     "accepted_rejected"   : "Accepted Rejected",
     "alternate_rejected"  : "Alternate Rejected"
+  },
+  "edit_summit": {
+    "name"                            : "Name",
+    "eventbrite_id"                   : "Eventbrite Id",
+    "max_submission_allowed_per_user" : "Max. Submissions per User",
+    "link"                            : "Summit Page Link",
+    "registration_link"               : "Registration Link",
+    "secondary_registration_link"     : "Sec. Registration Link",
+    "dates_label"                     : "Date Label",
+    "secondary_registration_label"    : "Sec. Registration Label",
+    "active"                          : "This is the active summit?",
+    "available_on_api"                : "Is this Summit available through API? (If True this Summit will be available to Mobile Apps)",
+    "dates"                           : "Dates",
+    "time_zone"                       : "Time Zone",
+    "start_date"                      : "Summit Start",
+    "end_date"                        : "Summit End",
+    "submission_begin_date"           : "Submissions Start",
+    "submission_end_date"             : "Submissions End",
+    "voting_begin_date"               : "Voting Start",
+    "voting_end_date"                 : "Voting End",
+    "selection_begin_date"            : "TC Selections Start",
+    "selection_end_date"              : "TC Selections End",
+    "registration_begin_date"         : "Registration Start",
+    "registration_end_date"           : "Registration End",
+    "schedule_start_date"             : "Default date to show on schedule page?",
+    "start_showing_venues_date"       : "When do you begin showing venues?"
   },
   "edit_event": {
     "title"               : "Title",

@@ -14,8 +14,8 @@
 import { createStore, applyMiddleware, compose} from 'redux';
 import loggedUserReducer from './reducers/auth-reducer'
 import baseReducer from './reducers/base-reducer'
-import currentSummitReducer from './reducers/dashboard/current-summit-reducer';
-import directoryReducer from './reducers/directory/directory-reducer';
+import currentSummitReducer from './reducers/summits/current-summit-reducer';
+import directoryReducer from './reducers/summits/directory-reducer';
 import scheduleBuilderReducer from './reducers/events/schedule-builder-reducer';
 import eventListReducer from './reducers/events/event-list-reducer';
 import summitEventReducer from './reducers/events/summit-event-reducer';

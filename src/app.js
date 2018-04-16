@@ -56,7 +56,7 @@ class App extends React.PureComponent {
     }
 
     render() {
-        let { isLoggedUser, onUserAuth, doLogout, getUserInfo, currentSummit, member} = this.props;
+        let { isLoggedUser, onUserAuth, doLogout, getUserInfo, member} = this.props;
         let profile_pic = member ? member.pic : '';
         return (
             <BrowserRouter>
@@ -69,7 +69,7 @@ class App extends React.PureComponent {
                         </div>
                     </div>
                     <Switch>
-                        <AuthorizedRoute currentSummit={currentSummit} isLoggedUser={isLoggedUser} path="/app" component={PrimaryLayout} />
+                        <AuthorizedRoute isLoggedUser={isLoggedUser} path="/app" component={PrimaryLayout} />
                         <AuthorizationCallbackRoute onUserAuth={onUserAuth} path='/auth/callback' getUserInfo={getUserInfo} />
                         <Route path="/404" render={props => (<p>404 - Not Found</p>)}/>
                         <DefaultRoute isLoggedUser={isLoggedUser} />
@@ -80,11 +80,10 @@ class App extends React.PureComponent {
     }
 }
 
-const mapStateToProps = ({ loggedUserState, baseState, currentSummitState }) => ({
+const mapStateToProps = ({ loggedUserState, baseState }) => ({
     isLoggedUser: loggedUserState.isLoggedUser,
     member: loggedUserState.member,
     loading : baseState.loading,
-    currentSummit: currentSummitState.currentSummit,
 })
 
 export default connect(mapStateToProps, {

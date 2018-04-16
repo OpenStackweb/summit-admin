@@ -31,7 +31,14 @@ export default class RsvpTemplateLayout extends React.Component {
                 <Breadcrumb data={{ title: T.translate("rsvp_template_list.rsvp_template_list"), pathname: match.url }} ></Breadcrumb>
 
                 <Switch>
-                    <Route exact path={`${match.url}/new`} component={EditRsvpTemplatePage} />
+                    <Route exact path={`${match.url}/new`} render={
+                        props => (
+                            <div>
+                                <Breadcrumb data={{ title: T.translate("general.new"), pathname: props.match.url }} ></Breadcrumb>
+                                <EditRsvpTemplatePage {...props} />
+                            </div>
+                        )}
+                    />
                     <Route path={`${match.url}/:rsvp_template_id`} component={RsvpTemplateIdLayout} />
                     <Route component={RsvpTemplateListPage} />
                 </Switch>

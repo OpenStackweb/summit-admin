@@ -12,59 +12,31 @@
  **/
 
 import React from 'react'
-import { connect } from 'react-redux';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { Breadcrumb } from 'react-breadcrumbs';
 
-import { getSummitById }  from '../actions/summit-actions';
-
-import SummitDashboardPage from '../pages/dashboard/summit-dashboard-page'
-import EventTypeLayout from './event-type-layout'
-import SpeakerAttendanceLayout from './speaker-attendance-layout'
-import EventLayout from './event-layout'
-import AttendeeLayout from './attendee-layout'
-import PromocodeLayout from './promocode-layout'
-import EventCategoryLayout from './event-category-layout'
-import LocationLayout from './location-layout'
-import RsvpTemplateLayout from './rsvp-template-layout'
-import TicketTypeLayout from './ticket-type-layout'
+import EditSummitPage from '../pages/summits/edit-summit-page';
+import SummitIdLayout from './summit-id-layout'
 
 
 class SummitLayout extends React.Component {
 
-    componentWillMount() {
-        let summitId = this.props.match.params.summit_id;
-        let {currentSummit} = this.props;
-
-        if(currentSummit == null || currentSummit.id != summitId){
-            this.props.getSummitById(summitId);
-        }
-
-    }
-
     render(){
-        let { match, currentSummit } = this.props;
-
-        if (!currentSummit) {
-            return (<Route render={props => (<Redirect to="/app/directory"/>)}/>);
-        }
+        let { match } = this.props;
 
         return(
             <div>
-                <Breadcrumb data={{ title: currentSummit.name, pathname: match.url }} ></Breadcrumb>
-
                 <Switch>
-                    <Route path={`${match.url}/speaker-attendances`} {...this.props} component={SpeakerAttendanceLayout}/>
-                    <Route exact path={`${match.url}/dashboard`} component={SummitDashboardPage}/>
-                    <Route path={`${match.url}/events`} component={EventLayout}/>
-                    <Route path={`${match.url}/event-types`} component={EventTypeLayout}/>
-                    <Route path={`${match.url}/attendees`} component={AttendeeLayout}/>
-                    <Route path={`${match.url}/promocodes`} component={PromocodeLayout}/>
-                    <Route path={`${match.url}/event-categories`} component={EventCategoryLayout}/>
-                    <Route path={`${match.url}/locations`} component={LocationLayout}/>
-                    <Route path={`${match.url}/rsvp-templates`} component={RsvpTemplateLayout}/>
-                    <Route path={`${match.url}/ticket-types`} component={TicketTypeLayout}/>
-                    <Route component={SummitDashboardPage}/>
+                    <Route exact path={`${match.url}/new`}  render={
+                        props => (
+                            <div>
+                                <Breadcrumb data={{ title: "New Summit", pathname: props.match.url }} ></Breadcrumb>
+                                <EditSummitPage {...props} />
+                            </div>
+                        )}
+                    />
+                    <Route path={`${match.url}/:summit_id`} component={SummitIdLayout}/>
+                    <Route render={props => (<Redirect to="/app/directory"/>)}/>
                 </Switch>
             </div>
         );
@@ -72,15 +44,6 @@ class SummitLayout extends React.Component {
 
 }
 
-const mapStateToProps = ({ currentSummitState }) => ({
-    currentSummit   : currentSummitState.currentSummit
-})
-
-export default connect (
-    mapStateToProps,
-    {
-        getSummitById
-    }
-)(SummitLayout);
+export default withRouter(SummitLayout);
 
 

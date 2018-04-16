@@ -31,7 +31,14 @@ export default class LocationLayout extends React.Component {
                 <Breadcrumb data={{ title: T.translate("location_list.locations"), pathname: match.url }} ></Breadcrumb>
 
                 <Switch>
-                    <Route exact path={`${match.url}/new`} component={EditLocationPage}/>
+                    <Route exact path={`${match.url}/new`} render={
+                        props => (
+                            <div>
+                                <Breadcrumb data={{ title: T.translate("general.new"), pathname: props.match.url }} ></Breadcrumb>
+                                <EditLocationPage {...props} />
+                            </div>
+                        )}
+                    />
                     <Route path={`${match.url}/:location_id`} component={LocationIdLayout} />
                     <Route component={LocationListPage}/>
                 </Switch>

@@ -13,11 +13,18 @@
 
 import {createAction, getRequest, putRequest, startLoading, stopLoading} from "openstack-uicore-foundation";
 import {apiBaseUrl, authErrorHandler} from "./base-actions";
+import T from "i18n-react/dist/i18n-react";
 
-export const RECEIVE_SUMMIT                 = 'RECEIVE_SUMMIT';
-export const REQUEST_SUMMITS                = 'REQUEST_SUMMITS';
-export const RECEIVE_SUMMITS                = 'RECEIVE_SUMMITS';
-export const SET_CURRENT_SUMMIT             = 'SET_CURRENT_SUMMIT';
+
+export const RECEIVE_SUMMIT           = 'RECEIVE_SUMMIT';
+export const REQUEST_SUMMITS          = 'REQUEST_SUMMITS';
+export const RECEIVE_SUMMITS          = 'RECEIVE_SUMMITS';
+export const SET_CURRENT_SUMMIT       = 'SET_CURRENT_SUMMIT';
+export const RESET_SUMMIT_FORM        = 'RESET_SUMMIT_FORM';
+export const UPDATE_SUMMIT            = 'UPDATE_SUMMIT';
+export const SUMMIT_UPDATED           = 'SUMMIT_UPDATED';
+export const SUMMIT_ADDED             = 'SUMMIT_ADDED';
+export const SUMMIT_DELETED           = 'SUMMIT_DELETED';
 
 export const getSummitById = (summitId) => (dispatch, getState) => {
 
@@ -89,3 +96,80 @@ export const loadSummits = () => (dispatch, getState) => {
         }
     );
 }
+
+export const resetSummitForm = () => (dispatch, getState) => {
+    dispatch(createAction(RESET_SUMMIT_FORM)({}));
+};
+
+export const saveSummit = (entity, history) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let normalizedEntity = normalizeEntity(entity);
+
+    if (entity.id) {
+
+        let success_message = [
+            T.translate("general.done"),
+            T.translate("edit_promocode.promocode_saved"),
+            'success'
+        ];
+
+        putRequest(
+            createAction(UPDATE_SUMMIT),
+            createAction(SUMMIT_UPDATED),
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes/${entity.id}?access_token=${accessToken}`,
+            normalizedEntity,
+            authErrorHandler,
+            entity
+        )({})(dispatch)
+            .then((payload) => {
+                dispatch(showMessage(...success_message));
+            });
+
+    } else {
+        let success_message = [
+            T.translate("general.done"),
+            T.translate("edit_promocode.promocode_created"),
+            'success'
+        ];
+
+        postRequest(
+            createAction(UPDATE_SUMMIT),
+            createAction(SUMMIT_ADDED),
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes?access_token=${accessToken}`,
+            normalizedEntity,
+            authErrorHandler,
+            entity
+        )({})(dispatch)
+            .then((payload) => {
+                dispatch(showMessage(
+                    ...success_message,
+                    () => { history.push(`/app/summits/${currentSummit.id}/promocodes/${payload.response.id}`) }
+                ));
+            });
+    }
+}
+
+export const deleteSummit = (summitId) => (dispatch, getState) => {
+
+    let { loggedUserState } = getState();
+    let { accessToken }     = loggedUserState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(SUMMIT_DELETED)({summitId}),
+        `${apiBaseUrl}/api/v1/summits/${summitId}`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};

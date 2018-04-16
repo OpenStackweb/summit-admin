@@ -5,7 +5,8 @@ import { EVENT_TYPE_UPDATED, EVENT_TYPE_ADDED, EVENT_TYPE_DELETED, EVENT_TYPES_S
 import { LOCATION_UPDATED, LOCATION_ADDED, LOCATION_DELETED } from '../../actions/location-actions';
 
 const DEFAULT_STATE = {
-    currentSummit: null
+    currentSummit: null,
+    errors: {}
 }
 
 const currentSummitReducer = (state = DEFAULT_STATE, action) => {

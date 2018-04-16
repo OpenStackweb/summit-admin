@@ -31,7 +31,14 @@ class EventTypeLayout extends React.Component {
                 <Breadcrumb data={{ title: T.translate("event_type_list.event_types"), pathname: match.url }} ></Breadcrumb>
 
                 <Switch>
-                    <Route exact path={`${match.url}/new`} component={EditEventTypePage}/>
+                    <Route exact path={`${match.url}/new`} render={
+                        props => (
+                            <div>
+                                <Breadcrumb data={{ title: T.translate("general.new"), pathname: props.match.url }} ></Breadcrumb>
+                                <EditEventTypePage {...props} />
+                            </div>
+                        )}
+                    />
                     <Route exact path={`${match.url}/:event_type_id`} component={EditEventTypePage}/>
                     <Route component={EventTypeListPage}/>
                 </Switch>
