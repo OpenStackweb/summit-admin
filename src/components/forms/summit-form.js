@@ -21,7 +21,7 @@ import Input from '../inputs/text-input'
 import Panel from '../sections/panel';
 import Dropdown from '../inputs/dropdown'
 
-import {epochToMoment} from '../../utils/methods'
+import {epochToMoment, findElementPos} from '../../utils/methods'
 
 
 class SummitForm extends React.Component {
@@ -85,9 +85,10 @@ class SummitForm extends React.Component {
     }
 
     getFormattedTime(atime) {
+        let {time_zone_name} = this.state.entity;
         if(!atime) return atime;
         atime = atime * 1000;
-        return moment(atime).tz(this.props.currentSummit.time_zone.name);
+        return moment(atime).tz(time_zone_name);
     }
 
     hasErrors(field) {
@@ -125,7 +126,6 @@ class SummitForm extends React.Component {
     render() {
         let {entity, showSection} = this.state;
         let time_zones_ddl = moment.tz.names().map(tz => ({label: tz, value: tz}));
-        let time_zone_name = entity.time_zone.name;
 
         return (
             <form>
@@ -258,7 +258,7 @@ class SummitForm extends React.Component {
                             <label> {T.translate("edit_summit.time_zone")} *</label>
                             <Dropdown
                                 id="time_zone_name"
-                                value={time_zone_name}
+                                value={entity.time_zone_name}
                                 onChange={this.handleChange}
                                 options={time_zones_ddl}
                             />
@@ -273,7 +273,7 @@ class SummitForm extends React.Component {
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                                 timezone={entity.time_zone.name}
                                 timeConstraints={{ hours: { min: 7, max: 22}}}
-                                value={epochToMoment(entity.start_date)}
+                                value={this.getFormattedTime(entity.start_date)}
                             />
                         </div>
                         <div className="col-md-6">
@@ -284,7 +284,7 @@ class SummitForm extends React.Component {
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                                 timezone={entity.time_zone.name}
                                 timeConstraints={{ hours: { min: 7, max: 22}}}
-                                value={epochToMoment(entity.end_date)}
+                                value={this.getFormattedTime(entity.end_date)}
                             />
                         </div>
                     </div>
@@ -296,7 +296,7 @@ class SummitForm extends React.Component {
                                 onChange={this.handleChange}
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                                 timezone={entity.time_zone.name}
-                                value={epochToMoment(entity.submission_begin_date)}
+                                value={this.getFormattedTime(entity.submission_begin_date)}
                             />
                         </div>
                         <div className="col-md-6">
@@ -306,7 +306,7 @@ class SummitForm extends React.Component {
                                 onChange={this.handleChange}
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                                 timezone={entity.time_zone.name}
-                                value={epochToMoment(entity.submission_end_date)}
+                                value={this.getFormattedTime(entity.submission_end_date)}
                             />
                         </div>
                     </div>
@@ -318,7 +318,7 @@ class SummitForm extends React.Component {
                                 onChange={this.handleChange}
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                                 timezone={entity.time_zone.name}
-                                value={epochToMoment(entity.voting_begin_date)}
+                                value={this.getFormattedTime(entity.voting_begin_date)}
                             />
                         </div>
                         <div className="col-md-6">
@@ -328,7 +328,7 @@ class SummitForm extends React.Component {
                                 onChange={this.handleChange}
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                                 timezone={entity.time_zone.name}
-                                value={epochToMoment(entity.voting_end_date)}
+                                value={this.getFormattedTime(entity.voting_end_date)}
                             />
                         </div>
                     </div>
@@ -340,7 +340,7 @@ class SummitForm extends React.Component {
                                 onChange={this.handleChange}
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                                 timezone={entity.time_zone.name}
-                                value={epochToMoment(entity.selection_begin_date)}
+                                value={this.getFormattedTime(entity.selection_begin_date)}
                             />
                         </div>
                         <div className="col-md-6">
@@ -350,7 +350,7 @@ class SummitForm extends React.Component {
                                 onChange={this.handleChange}
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                                 timezone={entity.time_zone.name}
-                                value={epochToMoment(entity.selection_end_date)}
+                                value={this.getFormattedTime(entity.selection_end_date)}
                             />
                         </div>
                     </div>
@@ -362,7 +362,7 @@ class SummitForm extends React.Component {
                                 onChange={this.handleChange}
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                                 timezone={entity.time_zone.name}
-                                value={epochToMoment(entity.registration_begin_date)}
+                                value={this.getFormattedTime(entity.registration_begin_date)}
                             />
                         </div>
                         <div className="col-md-6">
@@ -372,7 +372,7 @@ class SummitForm extends React.Component {
                                 onChange={this.handleChange}
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                                 timezone={entity.time_zone.name}
-                                value={epochToMoment(entity.registration_end_date)}
+                                value={this.getFormattedTime(entity.registration_end_date)}
                             />
                         </div>
                     </div>
@@ -384,7 +384,7 @@ class SummitForm extends React.Component {
                                 onChange={this.handleChange}
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                                 timezone={entity.time_zone.name}
-                                value={epochToMoment(entity.schedule_start_date)}
+                                value={this.getFormattedTime(entity.schedule_start_date)}
                             />
                         </div>
                         <div className="col-md-6">
@@ -394,7 +394,33 @@ class SummitForm extends React.Component {
                                 onChange={this.handleChange}
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                                 timezone={entity.time_zone.name}
-                                value={epochToMoment(entity.start_showing_venues_date)}
+                                value={this.getFormattedTime(entity.start_showing_venues_date)}
+                            />
+                        </div>
+                    </div>
+                </Panel>
+
+                <Panel show={showSection == 'calendar'} title={T.translate("edit_summit.calendar_sync")}
+                       handleClick={this.toggleSection.bind(this, 'calendar')}>
+                    <div className="row form-group">
+                        <div className="col-md-6">
+                            <label> {T.translate("edit_summit.calendar_sync_name")}</label>
+                            <Input
+                                className="form-control"
+                                error={this.hasErrors('calendar_sync_name')}
+                                id="calendar_sync_name"
+                                value={entity.calendar_sync_name}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                        <div className="col-md-6">
+                            <label> {T.translate("edit_summit.calendar_sync_desc")}</label>
+                            <Input
+                                className="form-control"
+                                error={this.hasErrors('calendar_sync_desc')}
+                                id="calendar_sync_desc"
+                                value={entity.calendar_sync_desc}
+                                onChange={this.handleChange}
                             />
                         </div>
                     </div>

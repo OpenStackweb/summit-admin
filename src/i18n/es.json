@@ -180,7 +180,12 @@
     "registration_begin_date"         : "Registration Start",
     "registration_end_date"           : "Registration End",
     "schedule_start_date"             : "Default date to show on schedule page?",
-    "start_showing_venues_date"       : "When do you begin showing venues?"
+    "start_showing_venues_date"       : "When do you begin showing venues?",
+    "calendar_sync"                   : "Calendar Sync",
+    "calendar_sync_name"              : "Calendar Sync Name",
+    "calendar_sync_desc"              : "Calendar Sync Description",
+    "summit_saved"                    : "Summit saved successfully.",
+    "summit_created"                  : "Summit created successfully."
   },
   "edit_event": {
     "title"               : "Title",

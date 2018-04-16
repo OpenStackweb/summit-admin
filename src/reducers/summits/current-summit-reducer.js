@@ -21,8 +21,16 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case RECEIVE_SUMMIT: {
-            let { response } = payload;
-            return {...state, currentSummit: response};
+            let entity = {...payload.response};
+
+            for(var key in entity) {
+                if(entity.hasOwnProperty(key)) {
+                    entity[key] = (entity[key] == null) ? '' : entity[key] ;
+                }
+            }
+
+            entity.time_zone_name = entity.time_zone ? entity.time_zone.name : '';
+            return {...state, currentSummit: entity};
         }
         break;
         case EVENT_TYPE_UPDATED: {

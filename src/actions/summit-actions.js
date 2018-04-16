@@ -104,28 +104,31 @@ export const resetSummitForm = () => (dispatch, getState) => {
 export const saveSummit = (entity, history) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
     let normalizedEntity = normalizeEntity(entity);
 
+    let params = {
+        access_token : accessToken
+    };
+
     if (entity.id) {
 
         let success_message = [
             T.translate("general.done"),
-            T.translate("edit_promocode.promocode_saved"),
+            T.translate("edit_summit.summit_saved"),
             'success'
         ];
 
         putRequest(
             createAction(UPDATE_SUMMIT),
             createAction(SUMMIT_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes/${entity.id}?access_token=${accessToken}`,
+            `${apiBaseUrl}/api/v1/summits/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
-        )({})(dispatch)
+        )(params)(dispatch)
             .then((payload) => {
                 dispatch(showMessage(...success_message));
             });
@@ -133,22 +136,22 @@ export const saveSummit = (entity, history) => (dispatch, getState) => {
     } else {
         let success_message = [
             T.translate("general.done"),
-            T.translate("edit_promocode.promocode_created"),
+            T.translate("edit_summit.summit_created"),
             'success'
         ];
 
         postRequest(
             createAction(UPDATE_SUMMIT),
             createAction(SUMMIT_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes?access_token=${accessToken}`,
+            `${apiBaseUrl}/api/v1/summits/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
-        )({})(dispatch)
+        )(params)(dispatch)
             .then((payload) => {
                 dispatch(showMessage(
                     ...success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/promocodes/${payload.response.id}`) }
+                    () => { history.push(`/app/summits/${payload.response.id}`) }
                 ));
             });
     }
@@ -173,3 +176,14 @@ export const deleteSummit = (summitId) => (dispatch, getState) => {
         }
     );
 };
+
+const normalizeEntity = (entity) => {
+    let normalizedEntity = {...entity};
+
+    delete(normalizedEntity['id']);
+    delete(normalizedEntity['created']);
+    delete(normalizedEntity['last_edited']);
+
+    return normalizedEntity;
+
+}
