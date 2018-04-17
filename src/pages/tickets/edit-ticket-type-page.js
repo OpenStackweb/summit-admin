@@ -21,44 +21,14 @@ import { getTicketType, resetTicketTypeForm, saveTicketType } from "../../action
 
 class EditTicketTypePage extends React.Component {
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            ticketTypeId: props.match.params.rsvp_template_id
-        }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        let {ticketTypeId} = this.state;
-
-        let new_ticket_type_id = this.props.match.params.ticket_type_id;
-
-
-        if(ticketTypeId != new_ticket_type_id) {
-
-            this.setState({
-                ticketTypeId: new_ticket_type_id
-            });
-
-            if(new_ticket_type_id) {
-                this.props.getTicketType(new_ticket_type_id);
-            } else {
-                this.props.resetTicketTypeForm();
-            }
-        }
-    }
-
-    componentDidMount () {
-        let {currentSummit, errors} = this.props;
+    componentWillMount () {
+        let {entity} = this.props;
         let ticketTypeId = this.props.match.params.rsvp_question_id;
 
-        if(currentSummit != null) {
-            if (ticketTypeId != null) {
-                this.props.getTicketType(ticketTypeId);
-            } else {
-                this.props.resetTicketTypeForm();
-            }
+        if (!ticketTypeId) {
+            this.props.resetTicketTypeForm();
+        } else if (ticketTypeId != entity.id){
+            this.props.getTicketType(ticketTypeId);
         }
     }
 

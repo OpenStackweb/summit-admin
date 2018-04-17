@@ -22,49 +22,18 @@ import '../../styles/edit-promocode-page.less';
 
 class EditPromocodePage extends React.Component {
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            promocodeId: props.match.params.promocode_id
-        }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        let {promocodeId} = this.state;
-
-        let new_promocode_id = nextProps.match.params.promocode_id;
-
-        if(promocodeId != new_promocode_id) {
-
-            this.setState({promocodeId: new_promocode_id});
-
-            if(new_promocode_id) {
-                this.props.getPromocode(new_promocode_id);
-            } else {
-                this.props.resetPromocodeForm();
-            }
-        }
-    }
-
     componentWillMount () {
-        let {allTypes} = this.props;
+        let {entity, allTypes} = this.props;
+        let promocodeId = this.props.match.params.promocode_id;
+
+        if (!promocodeId) {
+            this.props.resetPromocodeForm();
+        } else if (entity.id != promocodeId) {
+            this.props.getPromocode(promocodeId);
+        }
 
         if(allTypes.length == 1){
             this.props.getPromocodeMeta();
-        }
-    }
-
-    componentDidMount () {
-        let {currentSummit, errors} = this.props;
-        let promocodeId = this.props.match.params.promocode_id;
-
-        if(currentSummit != null) {
-            if (promocodeId != null) {
-                this.props.getPromocode(promocodeId);
-            } else {
-                this.props.resetPromocodeForm();
-            }
         }
     }
 

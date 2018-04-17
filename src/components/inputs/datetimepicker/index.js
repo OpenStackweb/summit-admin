@@ -64,9 +64,10 @@ export default class DateTimePicker extends React.Component {
 
     render() {
         let validate = (typeof this.props.validation != 'undefined');
-        let {onChange, id, value, format, error, inputProps, ...rest} = this.props;
+        let {onChange, id, value, format, error, inputProps, disabled, ...rest} = this.props;
         let has_error = ( this.props.hasOwnProperty('error') && error != '' );
         let className = 'form-control ' + (has_error ? 'error' : '');
+        let inputDisabled = (this.props.hasOwnProperty('disabled')) ? disabled : false;
 
         return (
             <div>
@@ -77,7 +78,7 @@ export default class DateTimePicker extends React.Component {
                         dateFormat={format.date}
                         timeFormat={format.time}
                         value={this.state.value}
-                        inputProps={{...inputProps, id: id, className: className}}
+                        inputProps={{...inputProps, id: id, className: className, disabled: inputDisabled}}
                         {...rest}
                     />
                 ) : (
@@ -86,7 +87,7 @@ export default class DateTimePicker extends React.Component {
                         dateFormat={format.date}
                         timeFormat={format.time}
                         value={this.state.value}
-                        inputProps={{...inputProps, id: id, className: className}}
+                        inputProps={{...inputProps, id: id, className: className, disabled: inputDisabled}}
                         {...rest}
                     />
                 )}

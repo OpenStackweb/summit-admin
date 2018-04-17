@@ -37,19 +37,6 @@ class EditRsvpQuestionLayout extends React.Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
-        let {currentRsvpTemplate, currentRsvpQuestion} = this.props;
-        let rsvpQuestionId = nextProps.match.params.rsvp_question_id;
-
-        if(currentRsvpQuestion.id != rsvpQuestionId) {
-            if(rsvpQuestionId) {
-                this.props.getRsvpQuestion(currentRsvpTemplate.id, rsvpQuestionId);
-            } else {
-                this.props.resetRsvpQuestionForm();
-            }
-        }
-    }
-
     render() {
         let {match, currentRsvpQuestion} = this.props;
         let breadcrumb = currentRsvpQuestion.id ? currentRsvpQuestion.name : T.translate("general.new");

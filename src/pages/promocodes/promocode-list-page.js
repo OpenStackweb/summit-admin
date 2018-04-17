@@ -153,7 +153,7 @@ class PromocodeListPage extends React.Component {
             }
         }
 
-        if(currentSummit == null) return null;
+        if(!currentSummit.id) return(<div></div>);
 
         let promocode_types_ddl = allTypes.map(t => ({label: t, value: t}));
 

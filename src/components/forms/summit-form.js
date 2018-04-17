@@ -34,8 +34,6 @@ class SummitForm extends React.Component {
             errors: props.errors
         };
 
-        this.handleUploadFile = this.handleUploadFile.bind(this);
-        this.handleRemoveFile = this.handleRemoveFile.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -75,7 +73,7 @@ class SummitForm extends React.Component {
 
         errors[id] = '';
         entity[id] = value;
-        this.setState({entity: entity});
+        this.setState({entity: entity, errors: errors});
     }
 
     handleSubmit(ev) {
@@ -85,10 +83,10 @@ class SummitForm extends React.Component {
     }
 
     getFormattedTime(atime) {
-        let {time_zone_name} = this.state.entity;
+        let {time_zone_id} = this.state.entity;
         if(!atime) return atime;
         atime = atime * 1000;
-        return moment(atime).tz(time_zone_name);
+        return moment(atime).tz(time_zone_id);
     }
 
     hasErrors(field) {
@@ -98,20 +96,6 @@ class SummitForm extends React.Component {
         }
 
         return '';
-    }
-
-    handleUploadFile(file) {
-        let entity = {...this.state.entity};
-        entity.logo = file.preview;
-
-        this.setState({file: file, entity:entity});
-    }
-
-    handleRemoveFile(ev) {
-        let entity = {...this.state.entity};
-
-        entity.logo = '';
-        this.setState({entity:entity});
     }
 
     toggleSection(section, ev) {
@@ -126,6 +110,7 @@ class SummitForm extends React.Component {
     render() {
         let {entity, showSection} = this.state;
         let time_zones_ddl = moment.tz.names().map(tz => ({label: tz, value: tz}));
+        let dates_enabled = (entity.hasOwnProperty('time_zone_id') && entity.time_zone_id != '');
 
         return (
             <form>
@@ -145,9 +130,9 @@ class SummitForm extends React.Component {
                         <label> {T.translate("edit_summit.eventbrite_id")} *</label>
                         <Input
                             className="form-control"
-                            error={this.hasErrors('eventbrite_id')}
-                            id="eventbrite_id"
-                            value={entity.eventbrite_id}
+                            error={this.hasErrors('external_summit_id')}
+                            id="external_summit_id"
+                            value={entity.external_summit_id}
                             onChange={this.handleChange}
                         />
                     </div>
@@ -237,19 +222,6 @@ class SummitForm extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div className="row form-group">
-                    <div className="col-md-12">
-                        <label> {T.translate("general.file")} </label>
-                        <UploadInput
-                            value={entity.logo}
-                            handleUpload={this.handleUploadFile}
-                            handleRemove={this.handleRemoveFile}
-                            className="dropzone col-md-6"
-                            multiple={false}
-                            accept="image/*"
-                        />
-                    </div>
-                </div>
 
                 <Panel show={showSection == 'dates'} title={T.translate("edit_summit.dates")}
                        handleClick={this.toggleSection.bind(this, 'dates')}>
@@ -257,8 +229,8 @@ class SummitForm extends React.Component {
                         <div className="col-md-6">
                             <label> {T.translate("edit_summit.time_zone")} *</label>
                             <Dropdown
-                                id="time_zone_name"
-                                value={entity.time_zone_name}
+                                id="time_zone_id"
+                                value={entity.time_zone_id}
                                 onChange={this.handleChange}
                                 options={time_zones_ddl}
                             />
@@ -269,9 +241,10 @@ class SummitForm extends React.Component {
                             <label> {T.translate("edit_summit.start_date")} </label>
                             <DateTimePicker
                                 id="start_date"
+                                disabled={!dates_enabled}
                                 onChange={this.handleChange}
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                                timezone={entity.time_zone.name}
+                                timezone={entity.time_zone_id}
                                 timeConstraints={{ hours: { min: 7, max: 22}}}
                                 value={this.getFormattedTime(entity.start_date)}
                             />
@@ -280,9 +253,10 @@ class SummitForm extends React.Component {
                             <label> {T.translate("edit_summit.end_date")} </label>
                             <DateTimePicker
                                 id="end_date"
+                                disabled={!dates_enabled}
                                 onChange={this.handleChange}
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                                timezone={entity.time_zone.name}
+                                timezone={entity.time_zone_id}
                                 timeConstraints={{ hours: { min: 7, max: 22}}}
                                 value={this.getFormattedTime(entity.end_date)}
                             />
@@ -293,9 +267,10 @@ class SummitForm extends React.Component {
                             <label> {T.translate("edit_summit.submission_begin_date")} </label>
                             <DateTimePicker
                                 id="submission_begin_date"
+                                disabled={!dates_enabled}
                                 onChange={this.handleChange}
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                                timezone={entity.time_zone.name}
+                                timezone={entity.time_zone_id}
                                 value={this.getFormattedTime(entity.submission_begin_date)}
                             />
                         </div>
@@ -303,9 +278,10 @@ class SummitForm extends React.Component {
                             <label> {T.translate("edit_summit.submission_end_date")} </label>
                             <DateTimePicker
                                 id="submission_end_date"
+                                disabled={!dates_enabled}
                                 onChange={this.handleChange}
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                                timezone={entity.time_zone.name}
+                                timezone={entity.time_zone_id}
                                 value={this.getFormattedTime(entity.submission_end_date)}
                             />
                         </div>
@@ -315,9 +291,10 @@ class SummitForm extends React.Component {
                             <label> {T.translate("edit_summit.voting_begin_date")} </label>
                             <DateTimePicker
                                 id="voting_begin_date"
+                                disabled={!dates_enabled}
                                 onChange={this.handleChange}
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                                timezone={entity.time_zone.name}
+                                timezone={entity.time_zone_id}
                                 value={this.getFormattedTime(entity.voting_begin_date)}
                             />
                         </div>
@@ -325,9 +302,10 @@ class SummitForm extends React.Component {
                             <label> {T.translate("edit_summit.voting_end_date")} </label>
                             <DateTimePicker
                                 id="voting_end_date"
+                                disabled={!dates_enabled}
                                 onChange={this.handleChange}
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                                timezone={entity.time_zone.name}
+                                timezone={entity.time_zone_id}
                                 value={this.getFormattedTime(entity.voting_end_date)}
                             />
                         </div>
@@ -337,9 +315,10 @@ class SummitForm extends React.Component {
                             <label> {T.translate("edit_summit.selection_begin_date")} </label>
                             <DateTimePicker
                                 id="selection_begin_date"
+                                disabled={!dates_enabled}
                                 onChange={this.handleChange}
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                                timezone={entity.time_zone.name}
+                                timezone={entity.time_zone_id}
                                 value={this.getFormattedTime(entity.selection_begin_date)}
                             />
                         </div>
@@ -347,9 +326,10 @@ class SummitForm extends React.Component {
                             <label> {T.translate("edit_summit.selection_end_date")} </label>
                             <DateTimePicker
                                 id="selection_end_date"
+                                disabled={!dates_enabled}
                                 onChange={this.handleChange}
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                                timezone={entity.time_zone.name}
+                                timezone={entity.time_zone_id}
                                 value={this.getFormattedTime(entity.selection_end_date)}
                             />
                         </div>
@@ -359,9 +339,10 @@ class SummitForm extends React.Component {
                             <label> {T.translate("edit_summit.registration_begin_date")} </label>
                             <DateTimePicker
                                 id="registration_begin_date"
+                                disabled={!dates_enabled}
                                 onChange={this.handleChange}
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                                timezone={entity.time_zone.name}
+                                timezone={entity.time_zone_id}
                                 value={this.getFormattedTime(entity.registration_begin_date)}
                             />
                         </div>
@@ -369,9 +350,10 @@ class SummitForm extends React.Component {
                             <label> {T.translate("edit_summit.registration_end_date")} </label>
                             <DateTimePicker
                                 id="registration_end_date"
+                                disabled={!dates_enabled}
                                 onChange={this.handleChange}
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                                timezone={entity.time_zone.name}
+                                timezone={entity.time_zone_id}
                                 value={this.getFormattedTime(entity.registration_end_date)}
                             />
                         </div>
@@ -381,9 +363,10 @@ class SummitForm extends React.Component {
                             <label> {T.translate("edit_summit.schedule_start_date")} </label>
                             <DateTimePicker
                                 id="schedule_start_date"
+                                disabled={!dates_enabled}
                                 onChange={this.handleChange}
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                                timezone={entity.time_zone.name}
+                                timezone={entity.time_zone_id}
                                 value={this.getFormattedTime(entity.schedule_start_date)}
                             />
                         </div>
@@ -391,9 +374,10 @@ class SummitForm extends React.Component {
                             <label> {T.translate("edit_summit.start_showing_venues_date")} </label>
                             <DateTimePicker
                                 id="start_showing_venues_date"
+                                disabled={!dates_enabled}
                                 onChange={this.handleChange}
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                                timezone={entity.time_zone.name}
+                                timezone={entity.time_zone_id}
                                 value={this.getFormattedTime(entity.start_showing_venues_date)}
                             />
                         </div>

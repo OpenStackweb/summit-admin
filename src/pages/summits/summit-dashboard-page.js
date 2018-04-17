@@ -31,15 +31,6 @@ class SummitDashboardPage extends React.Component {
         }
     }
 
-    componentWillMount () {
-        let summitId = this.props.match.params.summit_id;
-        let {currentSummit} = this.props;
-
-        if(currentSummit == null){
-            this.props.getSummitById(summitId);
-        }
-    }
-
     componentDidMount() {
         this.interval = setInterval(this.localTimer.bind(this), 1000);
     }
@@ -80,7 +71,7 @@ class SummitDashboardPage extends React.Component {
         let { currentSummit, match } = this.props;
         let currentSummitTime = (new Date).getTime();
 
-        if(currentSummit == null) return (<div></div>);
+        if(!currentSummit.id) return(<div></div>);
 
         return (
             <div>

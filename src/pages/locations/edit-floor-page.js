@@ -28,31 +28,14 @@ class EditFloorPage extends React.Component {
         this.handleRoomDelete = this.handleRoomDelete.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
-        let {entity} = this.props;
-        let {currentLocation} = nextProps;
-
-        let new_floor_id = nextProps.match.params.floor_id;
-
-        if(entity.id != new_floor_id) {
-            if(new_floor_id) {
-                this.props.getFloor(currentLocation.id, new_floor_id);
-            } else {
-                this.props.resetFloorForm();
-            }
-        }
-    }
-
     componentWillMount () {
-        let {currentSummit, currentLocation, errors} = this.props;
+        let {currentLocation, entity} = this.props;
         let floorId = this.props.match.params.floor_id;
 
-        if(currentSummit != null) {
-            if (floorId != null && currentLocation != null) {
-                this.props.getFloor(currentLocation.id, floorId);
-            } else {
-                this.props.resetFloorForm();
-            }
+        if(!floorId) {
+            this.props.resetFloorForm();
+        } else if (floorId != null && entity.id != floorId) {
+            this.props.getFloor(currentLocation.id, floorId);
         }
     }
 

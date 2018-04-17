@@ -24,48 +24,16 @@ class EditEventTypePage extends React.Component {
 
     constructor(props) {
         super(props);
-
-        this.state = {
-            eventTypeId: props.match.params.event_type_id
-        }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        let {eventTypeId} = this.state;
-
-        let new_event_type_id = nextProps.match.params.event_type_id;
-
-        if(eventTypeId != new_event_type_id) {
-
-            this.setState({eventTypeId: new_event_type_id});
-
-            if(new_event_type_id) {
-                this.props.getEventType(new_event_type_id);
-            } else {
-                this.props.resetEventTypeForm();
-            }
-        }
     }
 
     componentWillMount () {
-        let summitId = this.props.match.params.summit_id;
-        let {currentSummit} = this.props;
-
-        if(currentSummit == null){
-            this.props.getSummitById(summitId);
-        }
-    }
-
-    componentDidMount () {
-        let {currentSummit, allTypes, errors} = this.props;
+        let {entity} = this.props;
         let eventTypeId = this.props.match.params.event_type_id;
 
-        if(currentSummit != null) {
-            if (eventTypeId != null) {
-                this.props.getEventType(eventTypeId);
-            } else {
-                this.props.resetEventTypeForm();
-            }
+        if (!eventTypeId) {
+            this.props.resetEventTypeForm();
+        } else if (entity.id != eventTypeId) {
+            this.props.getEventType(eventTypeId);
         }
     }
 

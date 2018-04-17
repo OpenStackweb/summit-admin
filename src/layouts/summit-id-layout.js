@@ -37,7 +37,7 @@ class SummitIdLayout extends React.Component {
         let summitId = this.props.match.params.summit_id;
         let {currentSummit} = this.props;
 
-        if(currentSummit == null || currentSummit.id != summitId){
+        if(!currentSummit.id || currentSummit.id != summitId){
             this.props.getSummitById(summitId);
         }
     }
@@ -45,9 +45,7 @@ class SummitIdLayout extends React.Component {
     render(){
         let { match, currentSummit } = this.props;
 
-        if (!currentSummit) {
-            return null;
-        }
+        if (!currentSummit.id) return(<div></div>);
 
         return(
             <div>

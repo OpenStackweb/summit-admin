@@ -38,12 +38,7 @@ class MergeSpeakerPage extends React.Component {
     }
 
     componentWillMount () {
-        let summitId = this.props.match.params.summit_id;
-        let {currentSummit, speakers} = this.props;
-
-        if(currentSummit == null){
-            this.props.getSummitById(summitId);
-        }
+        let {speakers} = this.props;
 
         if(speakers[0] && speakers[1]) {
             this.setState({
@@ -107,10 +102,8 @@ class MergeSpeakerPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, history, speakers, match} = this.props;
+        let {allSummits, history, speakers, match} = this.props;
         let {selectedFields, canMerge} = this.state;
-
-        if(currentSummit == null) return (<div></div>);
 
         return(
             <div className="container">
@@ -147,7 +140,7 @@ class MergeSpeakerPage extends React.Component {
                 <div className="row">
                     <MergeSpeakerForm
                         onSelect={this.handleSelect}
-                        currentSummit={currentSummit}
+                        allSummits={allSummits}
                         speakers={speakers}
                         selectedFields={selectedFields}
                     />
@@ -163,8 +156,8 @@ class MergeSpeakerPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentSpeakerMergeState }) => ({
-    currentSummit : currentSummitState.currentSummit,
+const mapStateToProps = ({ directoryReducer, currentSpeakerMergeState }) => ({
+    allSummits : directoryReducer.items,
     ...currentSpeakerMergeState
 })
 

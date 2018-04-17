@@ -24,47 +24,16 @@ class EditEventCategoryPage extends React.Component {
 
     constructor(props) {
         super(props);
-
-        this.state = {
-            eventCategoryId: props.match.params.event_category_id
-        }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        let {eventCategoryId} = this.state;
-        let new_event_category_id = nextProps.match.params.event_category_id;
-
-        if(eventCategoryId != new_event_category_id) {
-
-            this.setState({eventCategoryId: new_event_category_id});
-
-            if(new_event_category_id) {
-                this.props.getEventCategory(new_event_category_id);
-            } else {
-                this.props.resetEventCategoryForm();
-            }
-        }
     }
 
     componentWillMount () {
-        let summitId = this.props.match.params.summit_id;
-        let {currentSummit} = this.props;
-
-        if(currentSummit == null){
-            this.props.getSummitById(summitId);
-        }
-    }
-
-    componentDidMount () {
-        let {currentSummit, entity, errors} = this.props;
+        let {entity} = this.props;
         let eventCategoryId = this.props.match.params.event_category_id;
 
-        if(currentSummit != null) {
-            if (eventCategoryId != null) {
-                this.props.getEventCategory(eventCategoryId);
-            } else {
-                this.props.resetEventCategoryForm();
-            }
+        if (!eventCategoryId) {
+            this.props.resetEventCategoryForm();
+        } else if (entity.id != eventCategoryId) {
+            this.props.getEventCategory(eventCategoryId);
         }
     }
 

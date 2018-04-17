@@ -23,7 +23,8 @@ class ScheduleBuilderPage extends React.Component {
 
     render(){
         let {currentSummit, match} = this.props;
-        if(currentSummit == null) return null;
+        if(!currentSummit.id) return(<div></div>);
+
         return(
             <div>
                 <Breadcrumb data={{ title: T.translate("schedule.schedule"), pathname: match.url }} ></Breadcrumb>

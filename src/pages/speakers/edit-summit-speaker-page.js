@@ -22,48 +22,18 @@ import '../../styles/edit-summit-speaker-page.less';
 
 class EditSummitSpeakerPage extends React.Component {
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            speakerId: props.match.params.speaker_id
-        }
-    }
-
     componentWillMount () {
-        let {summits} = this.props;
-        if (summits.length == 0) {
-            this.props.loadSummits();
-        }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        let {speakerId} = this.state;
-        let {summits}   = this.props;
-        let new_speaker_id = nextProps.match.params.speaker_id;
-
-        if (summits.length == 0) {
-            this.props.loadSummits();
-        }
-
-        if(speakerId != new_speaker_id) {
-            this.setState({speakerId: new_speaker_id});
-
-            if(new_speaker_id) {
-                this.props.getSpeaker(new_speaker_id);
-            } else {
-                this.props.resetSpeakerForm();
-            }
-        }
-    }
-
-    componentDidMount () {
         let speakerId = this.props.match.params.speaker_id;
+        let {summits, entity}   = this.props;
 
-        if (speakerId != null) {
-            this.props.getSpeaker(speakerId);
-        } else {
+        if (!speakerId) {
             this.props.resetSpeakerForm();
+        } else if (speakerId != entity.id){
+            this.props.getSpeaker(speakerId);
+        }
+
+        if (summits.length == 0) {
+            this.props.loadSummits();
         }
     }
 

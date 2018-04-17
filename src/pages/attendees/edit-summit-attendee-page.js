@@ -23,47 +23,16 @@ class EditSummitAttendeePage extends React.Component {
 
     constructor(props) {
         super(props);
-
-        this.state = {
-            attendeeId: props.match.params.attendee_id
-        }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        let {attendeeId} = this.state;
-        let new_attendee_id = nextProps.match.params.attendee_id;
-
-        if(attendeeId != new_attendee_id) {
-
-            this.setState({attendeeId: new_attendee_id});
-
-            if(new_attendee_id) {
-                this.props.getAttendee(new_attendee_id);
-            } else {
-                this.props.resetAttendeeForm();
-            }
-        }
     }
 
     componentWillMount () {
-        let summitId = this.props.match.params.summit_id;
-        let {currentSummit} = this.props;
+        let new_attendee_id = this.props.match.params.attendee_id;
+        let {entity} = this.props;
 
-        if(currentSummit == null){
-            this.props.getSummitById(summitId);
-        }
-    }
-
-    componentDidMount () {
-        let {currentSummit, entity, errors} = this.props;
-        let attendeeId = this.props.match.params.attendee_id;
-
-        if(currentSummit != null) {
-            if (attendeeId != null) {
-                this.props.getAttendee(attendeeId);
-            } else {
-                this.props.resetAttendeeForm();
-            }
+        if(!new_attendee_id) {
+            this.props.resetAttendeeForm();
+        } else if (entity.id != new_attendee_id) {
+            this.props.getAttendee(new_attendee_id);
         }
     }
 

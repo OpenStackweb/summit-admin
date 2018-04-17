@@ -26,45 +26,18 @@ import { getRsvpTemplates } from '../../actions/rsvp-template-actions';
 
 class EditSummitEventPage extends React.Component {
 
-    constructor(props) {
-        super(props);
+    componentWillMount () {
+        let {entity, rsvpTemplateOptions} = this.props;
+        let eventId = this.props.match.params.summit_event_id;
 
-        this.state = {
-            eventId: props.match.params.summit_event_id
-        };
-
-    }
-
-    componentWillReceiveProps(nextProps) {
-        let {eventId} = this.state;
-        let new_event_id = nextProps.match.params.summit_event_id;
-
-        if(eventId != new_event_id) {
-
-            this.setState({eventId: new_event_id});
-
-            if(new_event_id) {
-                this.props.getEvent(new_event_id);
-            } else {
-                this.props.resetEventForm();
-            }
+        if (!eventId) {
+            this.props.resetEventForm();
+        } else if (eventId != entity.id){
+            this.props.getEvent(eventId);
         }
-    }
 
-    componentDidMount() {
-        let {eventId} = this.state;
-        let {currentSummit, rsvpTemplateOptions} = this.props;
-
-        if (currentSummit !== null) {
-            if(eventId) {
-                this.props.getEvent(eventId);
-            } else {
-                this.props.resetEventForm();
-            }
-
-            if (rsvpTemplateOptions.length == 0) {
-                this.props.getRsvpTemplates();
-            }
+        if (rsvpTemplateOptions.length == 0) {
+            this.props.getRsvpTemplates();
         }
     }
 
@@ -72,7 +45,7 @@ class EditSummitEventPage extends React.Component {
         let {currentSummit, entity, errors, levelOptions, rsvpTemplateOptions, match} = this.props;
         let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
-        if(currentSummit == null) return null;
+        if(!currentSummit.id) return(<div></div>);
 
         return(
             <div className="container">

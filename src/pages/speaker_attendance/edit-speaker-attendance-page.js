@@ -22,41 +22,14 @@ import '../../styles/edit-speaker-attendance-page.less';
 
 class EditSpeakerAttendancePage extends React.Component {
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            attendanceId: props.match.params.attendance_id
-        }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        let {attendanceId} = this.state;
-
-        let new_attendance_id = nextProps.match.params.attendance_id;
-
-        if(attendanceId != new_attendance_id) {
-
-            this.setState({attendanceId: new_attendance_id});
-
-            if(new_attendance_id) {
-                this.props.getAttendance(new_attendance_id);
-            } else {
-                this.props.resetAttendanceForm();
-            }
-        }
-    }
-
-    componentDidMount () {
-        let {currentSummit, allTypes, errors} = this.props;
+    componentWillMount () {
+        let {entity} = this.props;
         let attendanceId = this.props.match.params.attendance_id;
 
-        if(currentSummit != null) {
-            if (attendanceId != null) {
-                this.props.getAttendance(attendanceId);
-            } else {
-                this.props.resetAttendanceForm();
-            }
+        if (!attendanceId) {
+            this.props.resetAttendanceForm();
+        } else if (entity.id != attendanceId) {
+            this.props.getAttendance(attendanceId);
         }
     }
 

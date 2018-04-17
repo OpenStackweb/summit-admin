@@ -1,11 +1,64 @@
 import{ LOGOUT_USER } from '../../actions/auth-actions';
-import { SET_CURRENT_SUMMIT, RECEIVE_SUMMIT } from '../../actions/summit-actions';
+import { SET_CURRENT_SUMMIT, RECEIVE_SUMMIT, SUMMIT_UPDATED, RESET_SUMMIT_FORM } from '../../actions/summit-actions';
 import { EVENT_CATEGORY_UPDATED, EVENT_CATEGORY_ADDED, EVENT_CATEGORY_DELETED, EVENT_CATEGORIES_SEEDED } from '../../actions/event-category-actions';
 import { EVENT_TYPE_UPDATED, EVENT_TYPE_ADDED, EVENT_TYPE_DELETED, EVENT_TYPES_SEEDED } from '../../actions/event-type-actions';
 import { LOCATION_UPDATED, LOCATION_ADDED, LOCATION_DELETED } from '../../actions/location-actions';
 
+export const DEFAULT_ENTITY = {
+    id: 0,
+    name: '',
+    active: false,
+    attendees_count: 0,
+    available_on_api: false,
+    calendar_sync_desc: '',
+    calendar_sync_name: '',
+    dates_label: '',
+    end_date: 0,
+    event_types: [],
+    external_summit_id: '',
+    link: '',
+    locations: [],
+    logo: null,
+    max_submission_allowed_per_user: 0,
+    page_url: '',
+    presentation_voters_count: 0,
+    presentation_votes_count: 0,
+    presentations_submitted_count: 0,
+    published_events_count: 0,
+    registration_begin_date: 0,
+    registration_end_date: 0,
+    registration_link: '',
+    schedule_event_detail_url: '',
+    schedule_page_url: '',
+    schedule_start_date: 0,
+    secondary_registration_label: '',
+    secondary_registration_link: '',
+    selection_begin_date: 0,
+    selection_end_date: 0,
+    speaker_announcement_email_accepted_alternate_count: 0,
+    speaker_announcement_email_accepted_count: 0,
+    speaker_announcement_email_accepted_rejected_count: 0,
+    speaker_announcement_email_alternate_count: 0,
+    speaker_announcement_email_alternate_rejected_count: 0,
+    speaker_announcement_email_rejected_count: 0,
+    speakers_count: 0,
+    start_date: 0,
+    start_showing_venues_date: 0,
+    submission_begin_date: 0,
+    submission_end_date: 0,
+    ticket_types: [],
+    time_zone: {},
+    time_zone_id: '',
+    timestamp: 0,
+    tracks: [],
+    type_id: 0,
+    voting_begin_date: 0,
+    voting_end_date: 0,
+    wifi_connections: []
+}
+
 const DEFAULT_STATE = {
-    currentSummit: null,
+    currentSummit: DEFAULT_ENTITY,
     errors: {}
 }
 
@@ -20,6 +73,10 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
             return DEFAULT_STATE
         }
         break;
+        case RESET_SUMMIT_FORM: {
+            return DEFAULT_STATE
+        }
+        break;
         case RECEIVE_SUMMIT: {
             let entity = {...payload.response};
 
@@ -29,8 +86,11 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
                 }
             }
 
-            entity.time_zone_name = entity.time_zone ? entity.time_zone.name : '';
             return {...state, currentSummit: entity};
+        }
+        break;
+        case SUMMIT_UPDATED: {
+            return state;
         }
         break;
         case EVENT_TYPE_UPDATED: {

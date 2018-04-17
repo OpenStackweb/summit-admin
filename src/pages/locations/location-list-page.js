@@ -99,7 +99,7 @@ class LocationListPage extends React.Component {
             }
         }
 
-        if(currentSummit == null) return null;
+        if(!currentSummit.id) return(<div></div>);
 
         locations = locations.sort(
             (a, b) => (a.order > b.order ? 1 : (a.order < b.order ? -1 : 0))

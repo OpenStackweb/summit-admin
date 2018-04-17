@@ -75,10 +75,13 @@ class MergeSpeakerForm extends React.Component {
         this.props.onSelect(field, column);
     }
 
-    handlePresentationLink(event_id, ev) {
-        let {currentSummit} = this.props;
+    handlePresentationLink(summitId, event_id, ev) {
+        let {allSummits} = this.props;
+        let summit = allSummits.find(s => s.id == summitId);
+
+        let event_detail_url = summit.schedule_event_detail_url.replace(':event_id',event_id).replace(':event_title','');
+
         ev.preventDefault();
-        let event_detail_url = currentSummit.schedule_event_detail_url.replace(':event_id',event_id).replace(':event_title','');
         window.open(event_detail_url, '_blank');
     }
 
@@ -120,7 +123,7 @@ class MergeSpeakerForm extends React.Component {
                                     {pres.map(p =>
                                         <div key={p.id + '_pres'}>
                                             -
-                                            <a href="" onClick={this.handlePresentationLink.bind(this, p.id)} >
+                                            <a href="" onClick={this.handlePresentationLink.bind(this, summitId, p.id)} >
                                                 {p.title}
                                             </a>
                                         </div>

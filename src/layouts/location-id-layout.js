@@ -40,19 +40,6 @@ class LocationIdLayout extends React.Component {
             this.props.resetLocationForm();
         }
     }
-
-    componentWillReceiveProps(nextProps) {
-        let {currentLocation} = this.props;
-        let locationId = nextProps.match.params.location_id;
-
-        if(currentLocation.id != locationId) {
-            if(locationId) {
-                this.props.getLocation(locationId);
-            } else {
-                this.props.resetLocationForm();
-            }
-        }
-    }
     
     render(){
         let { match, currentLocation } = this.props;
@@ -87,7 +74,7 @@ class LocationIdLayout extends React.Component {
                     <Route path={`${match.url}/images`} render={
                         props => (
                             <div>
-                                <Breadcrumb data={{ title: T.translate("edit_location_images.images"), pathname: match.url }} ></Breadcrumb>
+                                <Breadcrumb data={{ title: T.translate("edit_location_image.images"), pathname: match.url }} ></Breadcrumb>
                                 <Switch>
                                     <Route exact path={`${props.match.url}/new`} component={EditLocationImagePage} />
                                     <Route exact path={`${props.match.url}/:image_id`} component={EditLocationImagePage} />

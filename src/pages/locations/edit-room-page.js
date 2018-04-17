@@ -25,35 +25,18 @@ class EditRoomPage extends React.Component {
         super(props);
     }
 
-    componentWillReceiveProps(nextProps) {
-        let {entity} = this.props;
-        let {currentLocation} = nextProps;
-
-        let new_room_id = nextProps.match.params.room_id;
-
-        if(entity.id != new_room_id) {
-            if(new_room_id) {
-                this.props.getRoom(currentLocation.id, new_room_id);
-            } else {
-                this.props.resetRoomForm();
-            }
-        }
-    }
-
     componentWillMount () {
-        let {currentSummit, currentLocation, allFloors, errors} = this.props;
+        let {entity, currentLocation, allFloors} = this.props;
         let roomId = this.props.match.params.room_id;
 
-        if(currentSummit != null) {
-            if (roomId != null && currentLocation != null) {
-                this.props.getRoom(currentLocation.id, roomId);
-            } else {
-                this.props.resetRoomForm();
-            }
+        if (!roomId) {
+            this.props.resetRoomForm();
+        } else if (entity.id != roomId) {
+            this.props.getRoom(currentLocation.id, roomId);
+        }
 
-            if(allFloors.length == 0){
-                this.props.getLocation(currentLocation.id);
-            }
+        if(allFloors.length == 0){
+            this.props.getLocation(currentLocation.id);
         }
     }
 

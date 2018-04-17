@@ -48,16 +48,10 @@ class SummitEventsBulkActionsPage extends React.Component {
     }
 
     componentDidMount(){
-        let summitId           = this.props.match.params.summit_id;
         let { currentSummit }  = this.props;
         if(this.state == null || !this.state.hasOwnProperty('eventIds')) return;
-        if(currentSummit == null){
-            this.props.getSummitById(summitId).then(() => {
-                this.props.getSummitEventsById(summitId, this.state.eventIds);
-            });
-            return;
-        }
-        this.props.getSummitEventsById(summitId, this.state.eventIds);
+
+        this.props.getSummitEventsById(currentSummit.id, this.state.eventIds);
     }
 
     render(){
@@ -74,7 +68,7 @@ class SummitEventsBulkActionsPage extends React.Component {
             updateEventsStartDateLocal,
             updateEventsEndDateLocal,
         } = this.props;
-        if(currentSummit == null) return null;
+        if(!currentSummit.id) return(<div></div>);
 
         return (
             <div className="bulk-actions-editor-container">

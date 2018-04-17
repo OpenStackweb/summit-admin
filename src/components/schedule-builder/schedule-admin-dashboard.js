@@ -102,7 +102,7 @@ class ScheduleAdminDashBoard extends React.Component {
     parseFilterFromFragment(){
         // read url hash and redirect to event
         let { currentSummit } = this.props;
-        if(currentSummit == null) return;
+        if(!currentSummit.id) return;
         var hash    = this.fragmentParser.getParams();
         var filters = {};
         for(let key in hash) {
@@ -137,7 +137,7 @@ class ScheduleAdminDashBoard extends React.Component {
     componentDidMount(){
 
         let { currentSummit, currentEventType, currentTrack, currentPresentationSelectionStatus, currentDay, currentLocation, scheduleEventsCurrentSearchTerm } = this.props;
-        if(currentSummit == null) return;
+        if(!currentSummit.id) return;
 
         let eventTypeId = currentEventType == null ? null : currentEventType.id;
         let trackId     = currentTrack == null ? null : currentTrack.id;
@@ -530,7 +530,7 @@ class ScheduleAdminDashBoard extends React.Component {
             selectedUnPublishedEvents,
         } = this.props;
 
-        if(currentSummit == null ) return null;
+        if(!currentSummit.id) return(<div></div>);
 
 
         // parse summits dates

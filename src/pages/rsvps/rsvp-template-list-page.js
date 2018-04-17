@@ -115,7 +115,7 @@ class RsvpTemplateListPage extends React.Component {
             }
         }
 
-        if(currentSummit == null) return null;
+        if(!currentSummit.id) return (<div></div>);
 
         return(
             <div className="container">

@@ -31,12 +31,10 @@ class EditRsvpQuestionValuePage extends React.Component {
         let {currentTemplate, currentQuestion, entity} = this.props;
         let rsvpQuestionValueId = this.props.match.params.rsvp_question_value_id;
 
-        if (rsvpQuestionValueId) {
-            if (entity.id != rsvpQuestionValueId) {
-                this.props.getRsvpQuestionValue(currentTemplate.id, currentQuestion.id, rsvpQuestionValueId);
-            }
-        } else {
+        if (!rsvpQuestionValueId) {
             this.props.resetRsvpQuestionValueForm();
+        } else if (entity.id != rsvpQuestionValueId) {
+            this.props.getRsvpQuestionValue(currentTemplate.id, currentQuestion.id, rsvpQuestionValueId);
         }
     }
 

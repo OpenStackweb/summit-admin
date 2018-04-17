@@ -11,8 +11,17 @@
  * limitations under the License.
  **/
 
-import {createAction, getRequest, putRequest, startLoading, stopLoading} from "openstack-uicore-foundation";
-import {apiBaseUrl, authErrorHandler} from "./base-actions";
+import {
+    createAction,
+    getRequest,
+    putRequest,
+    postRequest,
+    startLoading,
+    stopLoading,
+    postFile,
+    putFile
+} from "openstack-uicore-foundation";
+import {apiBaseUrl, authErrorHandler, showMessage} from "./base-actions";
 import T from "i18n-react/dist/i18n-react";
 
 
@@ -74,7 +83,7 @@ export const setCurrentSummit = (summit, history) => (dispatch, getState) =>
             }
         );
     } else {
-        dispatch({type: SET_CURRENT_SUMMIT, payload: {response: null} });
+        dispatch(createAction(RESET_SUMMIT_FORM)({}));
     }
 
 }
@@ -143,7 +152,7 @@ export const saveSummit = (entity, history) => (dispatch, getState) => {
         postRequest(
             createAction(UPDATE_SUMMIT),
             createAction(SUMMIT_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${entity.id}`,
+            `${apiBaseUrl}/api/v1/summits`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -183,6 +192,30 @@ const normalizeEntity = (entity) => {
     delete(normalizedEntity['id']);
     delete(normalizedEntity['created']);
     delete(normalizedEntity['last_edited']);
+    delete(normalizedEntity['logo']);
+    delete(normalizedEntity['attendees_count']);
+    delete(normalizedEntity['event_types']);
+    delete(normalizedEntity['locations']);
+    delete(normalizedEntity['max_submission_allowed_per_user']);
+    delete(normalizedEntity['page_url']);
+    delete(normalizedEntity['presentation_voters_count']);
+    delete(normalizedEntity['presentation_votes_count']);
+    delete(normalizedEntity['presentations_submitted_count']);
+    delete(normalizedEntity['published_events_count']);
+    delete(normalizedEntity['schedule_event_detail_url']);
+    delete(normalizedEntity['schedule_page_url']);
+    delete(normalizedEntity['speaker_announcement_email_accepted_alternate_count']);
+    delete(normalizedEntity['speaker_announcement_email_accepted_count']);
+    delete(normalizedEntity['speaker_announcement_email_accepted_rejected_count']);
+    delete(normalizedEntity['speaker_announcement_email_alternate_count']);
+    delete(normalizedEntity['speaker_announcement_email_alternate_rejected_count']);
+    delete(normalizedEntity['speaker_announcement_email_rejected_count']);
+    delete(normalizedEntity['speakers_count']);
+    delete(normalizedEntity['ticket_types']);
+    delete(normalizedEntity['time_zone']);
+    delete(normalizedEntity['timestamp']);
+    delete(normalizedEntity['tracks']);
+    delete(normalizedEntity['wifi_connections']);
 
     return normalizedEntity;
 
