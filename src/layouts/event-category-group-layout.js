@@ -16,28 +16,24 @@ import { Switch, Route } from 'react-router-dom';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 
-import ScheduleBuilderPage from '../pages/events/schedule-builder-page';
-import SummitEventListPage from '../pages/events/summit-event-list-page';
-import EditSummitEventPage from '../pages/events/edit-summit-event-page';
-import SummitEventsBulkActionsPage from '../pages/events/summit-events-bulk-actions-page';
+import EditEventCategoryGroupPage from '../pages/events/edit-event-category-group-page'
+import EventCategoryGroupListPage from '../pages/events/event-category-group-list-page'
 
 
 import { withRouter } from 'react-router-dom'
 
-class EventLayout extends React.Component {
+class EventCategoryGroupLayout extends React.Component {
 
     render(){
         let { match } = this.props;
         return(
             <div>
-                <Breadcrumb data={{ title: T.translate("event_list.events"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("event_category_group_list.event_category_groups"), pathname: match.url }} ></Breadcrumb>
 
                 <Switch>
-                    <Route exact path={`${match.url}/schedule`} component={ScheduleBuilderPage}/>
-                    <Route exact path={`${match.url}/bulk-actions`} component={SummitEventsBulkActionsPage}/>
-                    <Route exact path={`${match.url}/new`} component={EditSummitEventPage}/>
-                    <Route exact path={`${match.url}/:summit_event_id`} component={EditSummitEventPage}/>
-                    <Route component={SummitEventListPage}/>
+                    <Route exact path={`${match.url}/new`} component={EditEventCategoryGroupPage} />
+                    <Route exact path={`${match.url}/:group_id`} component={EditEventCategoryGroupPage} />
+                    <Route component={EventCategoryGroupListPage}/>
                 </Switch>
             </div>
         );
@@ -45,6 +41,6 @@ class EventLayout extends React.Component {
 
 }
 
-export default withRouter(EventLayout)
+export default withRouter(EventCategoryGroupLayout)
 
 

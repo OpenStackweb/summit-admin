@@ -25,6 +25,15 @@ export const EVENT_CATEGORY_ADDED          = 'EVENT_CATEGORY_ADDED';
 export const EVENT_CATEGORY_DELETED        = 'EVENT_CATEGORY_DELETED';
 export const EVENT_CATEGORIES_SEEDED       = 'EVENT_CATEGORIES_SEEDED';
 
+export const REQUEST_EVENT_CATEGORY_GROUPS       = 'REQUEST_EVENT_CATEGORY_GROUPS';
+export const RECEIVE_EVENT_CATEGORY_GROUPS       = 'RECEIVE_EVENT_CATEGORY_GROUPS';
+export const RECEIVE_EVENT_CATEGORY_GROUP        = 'RECEIVE_EVENT_CATEGORY_GROUP';
+export const RESET_EVENT_CATEGORY_GROUP_FORM     = 'RESET_EVENT_CATEGORY_GROUP_FORM';
+export const UPDATE_EVENT_CATEGORY_GROUP         = 'UPDATE_EVENT_CATEGORY_GROUP';
+export const EVENT_CATEGORY_GROUP_UPDATED        = 'EVENT_CATEGORY_GROUP_UPDATED';
+export const EVENT_CATEGORY_GROUP_ADDED          = 'EVENT_CATEGORY_GROUP_ADDED';
+export const EVENT_CATEGORY_GROUP_DELETED        = 'EVENT_CATEGORY_GROUP_DELETED';
+
 export const getEventCategories = ( ) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
@@ -174,6 +183,143 @@ export const deleteEventCategory = (categoryId) => (dispatch, getState) => {
 };
 
 const normalizeEntity = (entity) => {
+    let normalizedEntity = {...entity};
+
+
+    return normalizedEntity;
+
+}
+
+
+/***********************************  CATEGORY GROUPS ***************************************************/
+
+
+export const getEventCategoryGroups = ( ) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let params = {
+        access_token : accessToken,
+        page : 1,
+        per_page: 100,
+    };
+
+    return getRequest(
+        createAction(REQUEST_EVENT_CATEGORY_GROUPS),
+        createAction(RECEIVE_EVENT_CATEGORY_GROUPS),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-groups`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const getEventCategoryGroup = (groupId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_EVENT_CATEGORY_GROUP),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-groups/${groupId}`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const resetEventCategoryGroupForm = () => (dispatch, getState) => {
+    dispatch(createAction(RESET_EVENT_CATEGORY_GROUP_FORM)({}));
+};
+
+export const saveEventCategoryGroup = (entity, history) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let normalizedEntity = normalizeGroupEntity(entity);
+    let params = { access_token : accessToken };
+
+    if (entity.id) {
+
+        let success_message = [
+            T.translate("general.done"),
+            T.translate("edit_event_category_group.category_saved"),
+            'success'
+        ];
+
+        putRequest(
+            createAction(UPDATE_EVENT_CATEGORY_GROUP),
+            createAction(EVENT_CATEGORY_GROUP_UPDATED),
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-groups/${entity.id}`,
+            normalizedEntity,
+            authErrorHandler,
+            entity
+        )(params)(dispatch)
+            .then((payload) => {
+                dispatch(showMessage(...success_message));
+            });
+
+    } else {
+        let success_message = [
+            T.translate("general.done"),
+            T.translate("edit_event_category.event_category_group_created"),
+            'success'
+        ];
+
+        postRequest(
+            createAction(UPDATE_EVENT_CATEGORY_GROUP),
+            createAction(EVENT_CATEGORY_GROUP_ADDED),
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-groups`,
+            normalizedEntity,
+            authErrorHandler,
+            entity
+        )(params)(dispatch)
+            .then((payload) => {
+                dispatch(showMessage(
+                    ...success_message,
+                    () => { history.push(`/app/summits/${currentSummit.id}/event-category-groups/${payload.response.id}`) }
+                ));
+            });
+    }
+}
+
+export const deleteEventCategoryGroup = (groupId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(EVENT_CATEGORY_GROUP_DELETED)({groupId}),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-groups/${groupId}`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+const normalizeGroupEntity = (entity) => {
     let normalizedEntity = {...entity};
 
 
