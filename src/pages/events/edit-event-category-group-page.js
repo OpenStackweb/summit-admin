@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import EventCategoryGroupForm from '../../components/forms/event-category-group-form';
-import { getEventCategoryGroup, resetEventCategoryGroupForm, saveEventCategoryGroup } from "../../actions/event-category-actions";
+import { getEventCategoryGroup, resetEventCategoryGroupForm, saveEventCategoryGroup, addCategoryToGroup, removeCategoryFromGroup } from "../../actions/event-category-actions";
 //import '../../styles/edit-summit-attendee-page.less';
 
 class EditEventCategoryGroupPage extends React.Component {
@@ -52,6 +52,8 @@ class EditEventCategoryGroupPage extends React.Component {
                     currentSummit={currentSummit}
                     entity={entity}
                     errors={errors}
+                    onTrackLink={this.props.addCategoryToGroup}
+                    onTrackUnLink={this.props.removeCategoryFromGroup}
                     onSubmit={this.props.saveEventCategoryGroup}
                 />
                 }
@@ -60,9 +62,9 @@ class EditEventCategoryGroupPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentEventCategoryState }) => ({
+const mapStateToProps = ({ currentSummitState, currentEventCategoryGroupState }) => ({
     currentSummit : currentSummitState.currentSummit,
-    ...currentEventCategoryState
+    ...currentEventCategoryGroupState
 })
 
 export default connect (
@@ -70,6 +72,8 @@ export default connect (
     {
         getEventCategoryGroup,
         resetEventCategoryGroupForm,
-        saveEventCategoryGroup
+        saveEventCategoryGroup,
+        addCategoryToGroup,
+        removeCategoryFromGroup
     }
 )(EditEventCategoryGroupPage);

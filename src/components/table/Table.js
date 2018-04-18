@@ -3,6 +3,7 @@ import TableHeading from './TableHeading';
 import TableCell from './TableCell';
 import TableRow from './TableRow';
 import ActionsTableCell from './ActionsTableCell';
+
 import './datatables.css';
 
 const defaults = {

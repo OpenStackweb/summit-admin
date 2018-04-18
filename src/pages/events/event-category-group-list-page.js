@@ -78,7 +78,10 @@ class EventCategoryGroupListPage extends React.Component {
 
         let columns = [
             { columnKey: 'id', value: T.translate("general.id") },
-            { columnKey: 'name', value: T.translate("event_category_group_list.name") }
+            { columnKey: 'name', value: T.translate("event_category_group_list.name") },
+            { columnKey: 'type', value: T.translate("event_category_group_list.type") },
+            { columnKey: 'categories', value: T.translate("event_category_group_list.categories") },
+            { columnKey: 'color', value: T.translate("event_category_group_list.color") }
         ];
 
         let table_options = {

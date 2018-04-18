@@ -217,6 +217,19 @@ const normalizeEntity = (entity) => {
     delete(normalizedEntity['tracks']);
     delete(normalizedEntity['wifi_connections']);
 
+    if (!normalizedEntity['registration_begin_date']) normalizedEntity['registration_begin_date'] = null;
+    if (!normalizedEntity['registration_end_date']) normalizedEntity['registration_end_date'] = null;
+    if (!normalizedEntity['schedule_start_date']) normalizedEntity['schedule_start_date'] = null;
+    if (!normalizedEntity['start_showing_venues_date']) normalizedEntity['start_showing_venues_date'] = null;
+    if (!normalizedEntity['selection_begin_date']) normalizedEntity['selection_begin_date'] = null;
+    if (!normalizedEntity['selection_end_date']) normalizedEntity['selection_end_date'] = null;
+    if (!normalizedEntity['submission_begin_date']) normalizedEntity['submission_begin_date'] = null;
+    if (!normalizedEntity['submission_end_date']) normalizedEntity['submission_end_date'] = null;
+    if (!normalizedEntity['voting_begin_date']) normalizedEntity['voting_begin_date'] = null;
+    if (!normalizedEntity['voting_end_date']) normalizedEntity['voting_end_date'] = null;
+    if (!normalizedEntity['start_date']) normalizedEntity['start_date'] = null;
+    if (!normalizedEntity['end_date']) normalizedEntity['end_date'] = null;
+
     return normalizedEntity;
 
 }

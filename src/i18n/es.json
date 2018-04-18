@@ -488,24 +488,23 @@
     "no_items"                    : "No event category groups found.",
     "add_category_group"          : "Add Group",
     "name"                        : "Name",
+    "type"                        : "Type",
+    "categories"                  : "Categories",
+    "color"                       : "Color",
     "delete_warning"              : "Are you sure you want to delete event category group "
   },
   "edit_event_category_group": {
-    "event_category_group"              : "Event Category Group",
-    "name"                              : "Name",
-    "code"                              : "Code",
-    "description"                       : "Description",
-    "number_sessions"                   : "# of Sessions",
-    "number_alternates"                 : "# of Alternates",
-    "number_lightning"                  : "# of Lightning",
-    "number_lightning_alternates"       : "# of Lightning Alt",
-    "visible_voters"                    : "This category is visible to voters?",
-    "visible_track_chairs"              : "This category is visible to track chairs?",
-    "tags"                              : "Allowed Tags",
-    "tag"                               : "Tag",
-    "group"                             : "Group",
-    "event_category_group_saved"        : "Event Category Group saved successfully.",
-    "event_category_group_created"      : "Event Category Group created successfully."
+    "event_category_group"        : "Event Category Group",
+    "name"                        : "Name",
+    "color"                       : "Color",
+    "description"                 : "Description",
+    "class"                       : "Class",
+    "tracks"                      : "Tracks",
+    "group_saved"                 : "Event Category Group saved successfully.",
+    "group_created"               : "Event Category Group created successfully.",
+    "placeholders": {
+      "select_class"     : "Select Class"
+    }
   },
   "location_list": {
     "location_list"         : "Location List",

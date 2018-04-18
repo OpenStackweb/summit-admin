@@ -41,7 +41,10 @@ const eventCategoryGroupListReducer = (state = DEFAULT_STATE, action) => {
             let eventCategoryGroups = payload.response.data.map(e => {
                 return {
                     id: e.id,
-                    name: e.name
+                    name: e.name,
+                    color: `<div style="background-color: ${e.color}">&nbsp;</div>`,
+                    type: (e.class_name == 'PresentationCategoryGroup') ? 'Public' : 'Private',
+                    categories: e.tracks.map(c => c.name).join(', ')
                 };
             })
 

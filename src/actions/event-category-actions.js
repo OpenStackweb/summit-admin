@@ -203,6 +203,7 @@ export const getEventCategoryGroups = ( ) => (dispatch, getState) => {
     dispatch(startLoading());
 
     let params = {
+        expand: 'tracks',
         access_token : accessToken,
         page : 1,
         per_page: 100,
@@ -226,6 +227,7 @@ export const getEventCategoryGroup = (groupId) => (dispatch, getState) => {
     let { currentSummit }   = currentSummitState;
 
     let params = {
+        expand: 'tracks',
         access_token : accessToken,
     };
 
@@ -258,7 +260,7 @@ export const saveEventCategoryGroup = (entity, history) => (dispatch, getState) 
 
         let success_message = [
             T.translate("general.done"),
-            T.translate("edit_event_category_group.category_saved"),
+            T.translate("edit_event_category_group.group_saved"),
             'success'
         ];
 
@@ -277,7 +279,7 @@ export const saveEventCategoryGroup = (entity, history) => (dispatch, getState) 
     } else {
         let success_message = [
             T.translate("general.done"),
-            T.translate("edit_event_category.event_category_group_created"),
+            T.translate("edit_event_category.group_created"),
             'success'
         ];
 
@@ -319,10 +321,52 @@ export const deleteEventCategoryGroup = (groupId) => (dispatch, getState) => {
     );
 };
 
+export const addCategoryToGroup = (groupId, categoryId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return putRequest(
+        null,
+        null,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-groups/${groupId}/tracks/${categoryId}`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const removeCategoryFromGroup = (groupId, categoryId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        null,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-groups/${groupId}/tracks/${categoryId}`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
 const normalizeGroupEntity = (entity) => {
     let normalizedEntity = {...entity};
-
+    normalizedEntity['color'] = normalizedEntity['color'].substr(1);
 
     return normalizedEntity;
-
 }

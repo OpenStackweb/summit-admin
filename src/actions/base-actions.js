@@ -157,6 +157,22 @@ export const queryTags = (input, summitId = null) => {
         .catch(fetchErrorHandler);
 };
 
+export const queryTracks = (summitId, input) => {
+
+    let accessToken = window.accessToken;
+
+    return fetch(`${apiBaseUrl}/api/v1/summits/${summitId}/tracks?filter=title=@${input}&order=title&access_token=${accessToken}`)
+        .then(fetchResponseHandler)
+        .then((json) => {
+            let options = [...json.data];
+
+            return {
+                options: options
+            };
+        })
+        .catch(fetchErrorHandler);
+};
+
 export const queryGroups = (input) => {
 
     let accessToken = window.accessToken;

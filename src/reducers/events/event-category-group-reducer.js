@@ -23,18 +23,15 @@ import { VALIDATE } from '../../actions/base-actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 export const DEFAULT_ENTITY = {
-    id                          : 0,
-    name                        : '',
-    code                        : '',
-    description                 : '',
-    sessions_count              : 0,
-    alternate_count             : 0,
-    lightning_count             : 0,
-    lightning_alternate_count   : 0,
-    voting_visible              : false,
-    chair_visible               : false,
-    tags                        : [],
-    track_groups                : []
+    id                              : 0,
+    class_name                      : '',
+    name                            : '',
+    color                           : '',
+    description                     : '',
+    submission_begin_date           : 0,
+    submission_end_date             : 0,
+    max_submission_allowed_per_user : 0,
+    tracks                          : [],
 }
 
 const DEFAULT_STATE = {

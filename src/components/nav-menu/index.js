@@ -77,8 +77,8 @@ class NavMenu extends React.Component {
     render() {
         let {menuOpen} = this.state;
         let {currentSummit} = this.props;
-        let summit_id = currentSummit ? currentSummit.id : null;
-        let show = summit_id !== null;
+        let summit_id = currentSummit.id;
+        let show = (summit_id !== 0);
 
         let global_items = [
             {name: 'directory', iconClass: 'fa-fw fa-list-ul', show: true, linkUrl: 'directory'},
