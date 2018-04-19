@@ -494,12 +494,16 @@
     "delete_warning"              : "Are you sure you want to delete event category group "
   },
   "edit_event_category_group": {
-    "event_category_group"        : "Event Category Group",
-    "name"                        : "Name",
-    "color"                       : "Color",
-    "description"                 : "Description",
-    "class"                       : "Class",
-    "tracks"                      : "Tracks",
+    "event_category_group"            : "Event Category Group",
+    "name"                            : "Name",
+    "color"                           : "Color",
+    "description"                     : "Description",
+    "class"                           : "Class",
+    "tracks"                          : "Tracks",
+    "submission_begin_date"           : "Submission Start",
+    "submission_end_date"             : "Submission End",
+    "max_submission_allowed_per_user" : "Max Submissions",
+    "allowed_groups"                  : "Allowed Groups",
     "group_saved"                 : "Event Category Group saved successfully.",
     "group_created"               : "Event Category Group created successfully.",
     "placeholders": {

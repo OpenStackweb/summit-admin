@@ -14,12 +14,13 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import {findElementPos, epochToMoment} from '../../utils/methods'
+import {findElementPos, epochToMomentTimeZone} from '../../utils/methods'
 import Input from '../inputs/text-input'
 import TextEditor from '../inputs/editor-input'
 import SimpleLinkList from '../simple-link-list/index'
 import Dropdown from '../inputs/dropdown'
-import {queryTracks} from '../../actions/base-actions'
+import DateTimePicker from '../inputs/datetimepicker/index'
+import {queryTracks, queryGroups} from '../../actions/base-actions'
 
 
 class EventCategoryGroupForm extends React.Component {
@@ -34,9 +35,10 @@ class EventCategoryGroupForm extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleTrackLink = this.handleTrackLink.bind(this);
-        this.handleTrackEdit = this.handleTrackEdit.bind(this);
         this.handleTrackUnLink = this.handleTrackUnLink.bind(this);
         this.getTracks = this.getTracks.bind(this);
+        this.handleAllowedGroupLink = this.handleAllowedGroupLink.bind(this);
+        this.handleAllowedGroupUnLink = this.handleAllowedGroupUnLink.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -58,6 +60,10 @@ class EventCategoryGroupForm extends React.Component {
         let entity = {...this.state.entity};
         let errors = {...this.state.errors};
         let {value, id} = ev.target;
+
+        if (ev.target.type == 'datetime') {
+            value = value.unix();
+        }
 
         errors[id] = '';
         entity[id] = value;
@@ -81,29 +87,13 @@ class EventCategoryGroupForm extends React.Component {
     }
 
     handleTrackLink(value) {
-        let tracks = [...this.state.entity.tracks];
-        tracks.push(value);
-
-        let entity = {...this.state.entity, tracks: tracks};
-        this.setState({entity: entity});
-
-        this.props.onTrackLink(entity.id, value.id);
+        let {entity} = this.state;
+        this.props.onTrackLink(entity.id, value);
     }
 
-    handleTrackUnLink(value, ev) {
-        ev.preventDefault();
-
-        let tracks = this.state.entity.tracks.filter(t => t.id != value);
-
-        let entity = {...this.state.entity, tracks: tracks};
-        this.setState({entity: entity});
-
-        this.props.onTrackUnLink(entity.id, value);
-    }
-
-    handleTrackEdit() {
-        let {currentSummit, history} = this.props;
-        history.push(`/app/summits/${currentSummit.id}/event-categories/new`);
+    handleTrackUnLink(valueId) {
+        let {entity} = this.state;
+        this.props.onTrackUnLink(entity.id, valueId);
     }
 
     getTracks (input) {
@@ -116,16 +106,39 @@ class EventCategoryGroupForm extends React.Component {
         return queryTracks(currentSummit.id, input);
     }
 
+    handleAllowedGroupLink(value) {
+        let {entity} = this.state;
+        this.props.onAllowedGroupLink(entity.id, value);
+    }
+
+    handleAllowedGroupUnLink(valueId) {
+        let {entity} = this.state;
+        this.props.onAllowedGroupUnLink(entity.id, valueId);
+    }
+
+    shouldShowField(flag){
+        let {entity} = this.state;
+        if (!entity.class_name) return false;
+        let class_name = this.props.allClasses.find(c => c.class_name == entity.class_name);
+
+        return class_name[flag];
+    }
+
     render() {
         let {entity} = this.state;
-        let { currentSummit } = this.props;
+        let { currentSummit, allClasses } = this.props;
 
         let tracksColumns = [
             { columnKey: 'name', value: T.translate("edit_event_category.name") },
             { columnKey: 'code', value: T.translate("edit_event_category.code") }
         ];
 
-        let class_name_ddl = ['PrivatePresentationCategoryGroup', 'PresentationCategoryGroup'].map(i => ({label:i, value:i}));
+        let allowedGroupsColumns = [
+            { columnKey: 'name', value: T.translate("edit_event_category.name") },
+            { columnKey: 'description', value: T.translate("edit_event_category.description") }
+        ];
+
+        let class_name_ddl = allClasses.map(i => ({label:i.class_name, value:i.class_name}));
 
         return (
             <form className="event-type-form">
@@ -135,6 +148,7 @@ class EventCategoryGroupForm extends React.Component {
                         <label> {T.translate("edit_event_category_group.class")} *</label>
                         <Dropdown
                             id="class_name"
+                            disabled={entity.id != 0}
                             value={entity.class_name}
                             onChange={this.handleChange}
                             placeholder={T.translate("edit_event_category_group.placeholders.select_class")}
@@ -163,7 +177,7 @@ class EventCategoryGroupForm extends React.Component {
                         />
                     </div>
                 </div>
-                {entity.class_name == 'PrivatePresentationCategoryGroup' &&
+                {this.shouldShowField('submission_begin_date') &&
                 <div className="row form-group">
                     <div className="col-md-4">
                         <label> {T.translate("edit_event_category_group.submission_begin_date")}</label>
@@ -171,7 +185,8 @@ class EventCategoryGroupForm extends React.Component {
                             id="submission_begin_date"
                             onChange={this.handleChange}
                             format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                            value={epochToMoment(entity.submission_begin_date)}
+                            timezone={currentSummit.time_zone_id}
+                            value={epochToMomentTimeZone(entity.submission_begin_date, currentSummit.time_zone_id)}
                         />
                     </div>
                     <div className="col-md-4">
@@ -180,7 +195,8 @@ class EventCategoryGroupForm extends React.Component {
                             id="submission_end_date"
                             onChange={this.handleChange}
                             format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                            value={epochToMoment(entity.submission_end_date)}
+                            timezone={currentSummit.time_zone_id}
+                            value={epochToMomentTimeZone(entity.submission_end_date, currentSummit.time_zone_id)}
                         />
                     </div>
                     <div className="col-md-4">
@@ -215,10 +231,23 @@ class EventCategoryGroupForm extends React.Component {
                     columns={tracksColumns}
                     valueKey="name"
                     labelKey="name"
-                    onEdit={this.handleTrackEdit}
                     onLink={this.handleTrackLink}
                     onUnLink={this.handleTrackUnLink}
                     queryOptions={this.getTracks}
+                />
+                }
+                <br />
+                <br />
+                {entity.id != 0 && this.shouldShowField('allowed_groups') &&
+                <SimpleLinkList
+                    title={T.translate("edit_event_category_group.allowed_groups")}
+                    values={entity.allowed_groups}
+                    columns={allowedGroupsColumns}
+                    valueKey="name"
+                    labelKey="name"
+                    onLink={this.handleAllowedGroupLink}
+                    onUnLink={this.handleAllowedGroupUnLink}
+                    queryOptions={queryGroups}
                 />
                 }
 

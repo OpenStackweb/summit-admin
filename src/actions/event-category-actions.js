@@ -33,6 +33,11 @@ export const UPDATE_EVENT_CATEGORY_GROUP         = 'UPDATE_EVENT_CATEGORY_GROUP'
 export const EVENT_CATEGORY_GROUP_UPDATED        = 'EVENT_CATEGORY_GROUP_UPDATED';
 export const EVENT_CATEGORY_GROUP_ADDED          = 'EVENT_CATEGORY_GROUP_ADDED';
 export const EVENT_CATEGORY_GROUP_DELETED        = 'EVENT_CATEGORY_GROUP_DELETED';
+export const RECEIVE_EVENT_CATEGORY_GROUP_META   = 'RECEIVE_EVENT_CATEGORY_GROUP_META';
+export const CATEGORY_ADDED_TO_GROUP             = 'CATEGORY_ADDED_TO_GROUP';
+export const CATEGORY_REMOVED_FROM_GROUP         = 'CATEGORY_REMOVED_FROM_GROUP';
+export const GROUP_ADDED_TO_GROUP                = 'GROUP_ADDED_TO_GROUP';
+export const GROUP_REMOVED_FROM_GROUP            = 'GROUP_REMOVED_FROM_GROUP';
 
 export const getEventCategories = ( ) => (dispatch, getState) => {
 
@@ -242,6 +247,27 @@ export const getEventCategoryGroup = (groupId) => (dispatch, getState) => {
     );
 };
 
+export const getEventCategoryGroupMeta = () => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_EVENT_CATEGORY_GROUP_META),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-groups/metadata`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
 export const resetEventCategoryGroupForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_EVENT_CATEGORY_GROUP_FORM)({}));
 };
@@ -279,7 +305,7 @@ export const saveEventCategoryGroup = (entity, history) => (dispatch, getState) 
     } else {
         let success_message = [
             T.translate("general.done"),
-            T.translate("edit_event_category.group_created"),
+            T.translate("edit_event_category_group.group_created"),
             'success'
         ];
 
@@ -294,7 +320,9 @@ export const saveEventCategoryGroup = (entity, history) => (dispatch, getState) 
             .then((payload) => {
                 dispatch(showMessage(
                     ...success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/event-category-groups/${payload.response.id}`) }
+                    () => {
+                        history.replace(`/app/summits/${currentSummit.id}/event-category-groups/${payload.response.id}`)
+                    }
                 ));
             });
     }
@@ -321,11 +349,13 @@ export const deleteEventCategoryGroup = (groupId) => (dispatch, getState) => {
     );
 };
 
-export const addCategoryToGroup = (groupId, categoryId) => (dispatch, getState) => {
+export const addCategoryToGroup = (groupId, category) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
 
     let params = {
         access_token : accessToken
@@ -333,9 +363,9 @@ export const addCategoryToGroup = (groupId, categoryId) => (dispatch, getState) 
 
     return putRequest(
         null,
-        null,
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-groups/${groupId}/tracks/${categoryId}`,
-        null,
+        createAction(CATEGORY_ADDED_TO_GROUP)({category}),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-groups/${groupId}/tracks/${category.id}`,
+        {},
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -349,14 +379,63 @@ export const removeCategoryFromGroup = (groupId, categoryId) => (dispatch, getSt
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
+    dispatch(startLoading());
+
     let params = {
         access_token : accessToken
     };
 
     return deleteRequest(
         null,
-        null,
+        createAction(CATEGORY_REMOVED_FROM_GROUP)({categoryId}),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-groups/${groupId}/tracks/${categoryId}`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const addAllowedGroupToGroup = (groupId, allowedGroup) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return putRequest(
+        null,
+        createAction(GROUP_ADDED_TO_GROUP)({allowedGroup}),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-groups/${groupId}/allowed-groups/${allowedGroup.id}`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const removeAllowedGroupFromGroup = (groupId, allowedGroupId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(GROUP_REMOVED_FROM_GROUP)({allowedGroupId}),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-groups/${groupId}/allowed-groups/${allowedGroupId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

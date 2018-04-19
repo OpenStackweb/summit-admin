@@ -90,9 +90,7 @@ class EventCategoryForm extends React.Component {
         this.setState({entity: entity});
     }
 
-    handleTagUnLink(value, ev) {
-        ev.preventDefault();
-
+    handleTagUnLink(value) {
         let tags = this.state.entity.tags.filter(t => t.id != value);
 
         let entity = {...this.state.entity, tags: tags};

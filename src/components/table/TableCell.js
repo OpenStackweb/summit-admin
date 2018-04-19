@@ -1,10 +1,15 @@
 import React from 'react';
 import RawHTML from '../raw-html';
 
-const TableCell = (props) => (
-	<td {...props}>
-		<RawHTML>{props.children.toString()}</RawHTML>
-	</td>
-);
+const TableCell = (props) => {
+
+	let value = (props.children) ? props.children.toString() : '';
+
+	return (
+		<td {...props}>
+			<RawHTML>{value}</RawHTML>
+		</td>
+	);
+};
 
 export default TableCell;

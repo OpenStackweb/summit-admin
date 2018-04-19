@@ -16,7 +16,17 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import EventCategoryGroupForm from '../../components/forms/event-category-group-form';
-import { getEventCategoryGroup, resetEventCategoryGroupForm, saveEventCategoryGroup, addCategoryToGroup, removeCategoryFromGroup } from "../../actions/event-category-actions";
+import {
+    getEventCategoryGroup,
+    resetEventCategoryGroupForm,
+    saveEventCategoryGroup,
+    addCategoryToGroup,
+    removeCategoryFromGroup,
+    addAllowedGroupToGroup,
+    removeAllowedGroupFromGroup,
+    getEventCategoryGroupMeta
+} from "../../actions/event-category-actions";
+
 //import '../../styles/edit-summit-attendee-page.less';
 
 class EditEventCategoryGroupPage extends React.Component {
@@ -25,8 +35,8 @@ class EditEventCategoryGroupPage extends React.Component {
         super(props);
     }
 
-    componentWillMount () {
-        let {entity} = this.props;
+    componentDidMount () {
+        let {entity, allClasses} = this.props;
         let groupId = this.props.match.params.group_id;
 
         if (!groupId) {
@@ -34,10 +44,14 @@ class EditEventCategoryGroupPage extends React.Component {
         } else if (entity.id != groupId) {
             this.props.getEventCategoryGroup(groupId);
         }
+
+        if(allClasses.length == 0){
+            this.props.getEventCategoryGroupMeta();
+        }
     }
 
     render(){
-        let {currentSummit, entity, errors, match} = this.props;
+        let {currentSummit, entity, allClasses, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
@@ -50,10 +64,13 @@ class EditEventCategoryGroupPage extends React.Component {
                 <EventCategoryGroupForm
                     history={this.props.history}
                     currentSummit={currentSummit}
+                    allClasses={allClasses}
                     entity={entity}
                     errors={errors}
                     onTrackLink={this.props.addCategoryToGroup}
                     onTrackUnLink={this.props.removeCategoryFromGroup}
+                    onAllowedGroupLink={this.props.addAllowedGroupToGroup}
+                    onAllowedGroupUnLink={this.props.removeAllowedGroupFromGroup}
                     onSubmit={this.props.saveEventCategoryGroup}
                 />
                 }
@@ -74,6 +91,9 @@ export default connect (
         resetEventCategoryGroupForm,
         saveEventCategoryGroup,
         addCategoryToGroup,
-        removeCategoryFromGroup
+        removeCategoryFromGroup,
+        addAllowedGroupToGroup,
+        removeAllowedGroupFromGroup,
+        getEventCategoryGroupMeta
     }
 )(EditEventCategoryGroupPage);

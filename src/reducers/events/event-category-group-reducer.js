@@ -15,7 +15,13 @@ import
 {
     RECEIVE_EVENT_CATEGORY_GROUP,
     RESET_EVENT_CATEGORY_GROUP_FORM,
-    UPDATE_EVENT_CATEGORY_GROUP
+    UPDATE_EVENT_CATEGORY_GROUP,
+    RECEIVE_EVENT_CATEGORY_GROUP_META,
+    EVENT_CATEGORY_GROUP_ADDED,
+    CATEGORY_ADDED_TO_GROUP,
+    CATEGORY_REMOVED_FROM_GROUP,
+    GROUP_ADDED_TO_GROUP,
+    GROUP_REMOVED_FROM_GROUP
 } from '../../actions/event-category-actions';
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
@@ -32,10 +38,12 @@ export const DEFAULT_ENTITY = {
     submission_end_date             : 0,
     max_submission_allowed_per_user : 0,
     tracks                          : [],
+    allowed_groups                  : []
 }
 
 const DEFAULT_STATE = {
     entity      : DEFAULT_ENTITY,
+    allClasses  : [],
     errors      : {}
 };
 
@@ -56,10 +64,17 @@ const eventCategoryGroupReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
         }
         break;
+        case RECEIVE_EVENT_CATEGORY_GROUP_META: {
+            let allClasses = [...payload.response];
+
+            return {...state, allClasses: allClasses }
+        }
+        break;
         case UPDATE_EVENT_CATEGORY_GROUP: {
             return {...state,  entity: {...payload}, errors: {} };
         }
         break;
+        case EVENT_CATEGORY_GROUP_ADDED:
         case RECEIVE_EVENT_CATEGORY_GROUP: {
             let entity = {...payload.response};
 
@@ -70,6 +85,28 @@ const eventCategoryGroupReducer = (state = DEFAULT_STATE, action) => {
             }
 
             return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
+        }
+        break;
+        case CATEGORY_ADDED_TO_GROUP: {
+            let category = {...payload.category};
+            return {...state, entity: {...state.entity, tracks: [...state.entity.tracks, category]} };
+        }
+        break;
+        case CATEGORY_REMOVED_FROM_GROUP: {
+            let {categoryId} = payload;
+            let tracks = state.entity.tracks.filter(t => t.id != categoryId);
+            return {...state, entity: {...state.entity, tracks: tracks} };
+        }
+        break;
+        case GROUP_ADDED_TO_GROUP: {
+            let allowedGroup = {...payload.allowedGroup};
+            return {...state, entity: {...state.entity, allowed_groups: [...state.entity.allowed_groups, allowedGroup]} };
+        }
+        break;
+        case GROUP_REMOVED_FROM_GROUP: {
+            let {allowedGroupId} = payload;
+            let allowed_groups = state.entity.allowed_groups.filter(g => g.id != allowedGroupId);
+            return {...state, entity: {...state.entity, allowed_groups: allowed_groups} };
         }
         break;
         case VALIDATE: {

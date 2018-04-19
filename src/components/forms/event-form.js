@@ -26,7 +26,7 @@ import GroupInput from '../inputs/group-input'
 import UploadInput from '../inputs/upload-input/index'
 import Input from '../inputs/text-input'
 import Panel from '../sections/panel';
-import {findElementPos} from '../../utils/methods'
+import {findElementPos, epochToMomentTimeZone} from '../../utils/methods'
 
 
 class EventForm extends React.Component {
@@ -115,7 +115,7 @@ class EventForm extends React.Component {
 
         ev.preventDefault();
 
-        let start_date = this.getFormattedTime(entity.start_date).format('YYYY-MM-DD');
+        let start_date = this.epochToMomentTimeZone(entity.start_date, currentSummit.time_zone_id).format('YYYY-MM-DD');
         let location_id = entity.location_id;
         let event_id = entity.id;
 
@@ -143,12 +143,6 @@ class EventForm extends React.Component {
 
         return ( types.indexOf(entity_type.class_name) != -1 || types.indexOf(entity_type.name) != -1 );
 
-    }
-
-    getFormattedTime(atime) {
-        if(!atime) return atime;
-        atime = atime * 1000;
-        return moment(atime).tz(this.props.currentSummit.time_zone.name);
     }
 
     hasErrors(field) {
@@ -272,7 +266,7 @@ class EventForm extends React.Component {
                             onChange={this.handleChange}
                             validation={{after: currentSummit.start_date, before: currentSummit.end_date}}
                             format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                            value={this.getFormattedTime(entity.start_date)}
+                            value={this.epochToMomentTimeZone(entity.start_date, currentSummit.time_zone_id)}
                             inputProps={{placeholder: T.translate("edit_event.placeholders.start_date")}}
                             timezone={currentSummit.time_zone.name}
                             error={this.hasErrors('start_date')}
@@ -284,7 +278,7 @@ class EventForm extends React.Component {
                             onChange={this.handleChange}
                             validation={{after: currentSummit.start_date, before: currentSummit.end_date}}
                             format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                            value={this.getFormattedTime(entity.end_date)}
+                            value={this.epochToMomentTimeZone(entity.end_date, currentSummit.time_zone_id)}
                             inputProps={{placeholder: T.translate("edit_event.placeholders.end_date")}}
                             timezone={currentSummit.time_zone.name}
                             error={this.hasErrors('end_date')}

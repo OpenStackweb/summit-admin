@@ -32,7 +32,7 @@ export default class SimpleLinkList extends React.Component {
         this.filterOptions = this.filterOptions.bind(this);
         this.getOptions = this.getOptions.bind(this);
         this.handleLink = this.handleLink.bind(this);
-
+        this.handleUnLink = this.handleUnLink.bind(this);
     }
 
     filterOptions(options, filterString, values) {
@@ -58,16 +58,24 @@ export default class SimpleLinkList extends React.Component {
         this.props.onLink(this.state.value);
     }
 
+    handleUnLink(value, ev) {
+        ev.preventDefault();
+        this.props.onUnLink(value);
+    }
+
     render() {
 
-        let {title, values, columns, valueKey, labelKey, onEdit, onUnLink} = this.props;
+        let {title, values, columns, valueKey, labelKey, onEdit} = this.props;
 
         let options = {
             className: "dataTable",
             actions: {
-                edit: {onClick: onEdit},
-                delete: { onClick: onUnLink }
+                delete: { onClick: this.handleUnLink }
             }
+        };
+
+        if (this.props.hasOwnProperty('onEdit')) {
+            options.actions.edit = { onClick: onEdit };
         }
 
         return (
