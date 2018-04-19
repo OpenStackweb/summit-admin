@@ -30,6 +30,7 @@ import EventCategoryGroupLayout from './event-category-group-layout'
 import LocationLayout from './location-layout'
 import RsvpTemplateLayout from './rsvp-template-layout'
 import TicketTypeLayout from './ticket-type-layout'
+import PushNotificationLayout from './push-notification-layout'
 
 
 class SummitIdLayout extends React.Component {
@@ -63,6 +64,7 @@ class SummitIdLayout extends React.Component {
                     <Route path={`${match.url}/locations`} component={LocationLayout}/>
                     <Route path={`${match.url}/rsvp-templates`} component={RsvpTemplateLayout}/>
                     <Route path={`${match.url}/ticket-types`} component={TicketTypeLayout}/>
+                    <Route path={`${match.url}/push-notifications`} component={PushNotificationLayout}/>
                     <Route exact path={`${match.url}/dashboard`} component={SummitDashboardPage}/>
                     <Route exact path={`${match.url}`} component={EditSummitPage}/>
                     <Route render={props => (<Redirect to={`${match.url}/dashboard`}/>)}/>

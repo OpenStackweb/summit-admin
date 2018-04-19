@@ -76,7 +76,8 @@
     "rsvps"                   : "RSVPs",
     "rsvp_template_list"      : "Templates",
     "tickets"                 : "Tickets",
-    "ticket_type_list"        : "Ticket Types"
+    "ticket_type_list"        : "Ticket Types",
+    "push_notifications"      : "Push Notifications"
   },
   "schedule": {
     "schedule"                              : "Schedule",
@@ -670,5 +671,30 @@
     "description"         : "Description",
     "ticket_type_saved"   : "Ticket Type saved successfully",
     "ticket_type_created" : "Ticket Type created successfully"
+  },
+  "push_notification_list": {
+    "push_notifications"      : "Push Notifications",
+    "push_notification_list"  : "Push Notification List",
+    "no_push_notifications"   : "No push notifications found for current search criteria.",
+    "add_push_notification"   : "Add Push Notification",
+    "created"                 : "Created",
+    "message"                 : "Message",
+    "approved"                : "Approved",
+    "is_sent"                 : "Is Sent",
+    "sent_date"               : "Sent Date",
+    "priority"                : "Priority",
+    "channel"                 : "Channel",
+    "remove_warning"          : "Are you sure you want to delete push notification ",
+    "placeholders": {
+      "select_channel" : "Select Channel"
+    }
+  },
+  "edit_push_notification": {
+    "push_notification"         : "Push Notification",
+    "name"                      : "Name",
+    "external_id"               : "External Id",
+    "description"               : "Description",
+    "push_notification_saved"   : "Push Notification saved successfully",
+    "push_notification_created" : "Push Notification created successfully"
   }
 }

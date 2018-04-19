@@ -78,7 +78,6 @@ class EventTypeListPage extends React.Component {
     }
 
     isNotDefault(eventTypeId) {
-
         let {eventTypes} = this.props;
         let eventType = eventTypes.find(e => e.id == eventTypeId);
 

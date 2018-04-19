@@ -17,18 +17,18 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
 import SimpleForm from '../../components/forms/simple-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getTicketType, resetTicketTypeForm, saveTicketType } from "../../actions/ticket-actions";
+import { getPushNotification, resetPushNotificationForm, savePushNotification } from "../../actions/push-notification-actions";
 
-class EditTicketTypePage extends React.Component {
+class EditPushNotificationPage extends React.Component {
 
     componentWillMount () {
         let {entity} = this.props;
-        let ticketTypeId = this.props.match.params.ticket_type_id;
+        let pushNotificationId = this.props.match.params.push_notification_id;
 
-        if (!ticketTypeId) {
-            this.props.resetTicketTypeForm();
-        } else if (ticketTypeId != entity.id){
-            this.props.getTicketType(ticketTypeId);
+        if (!pushNotificationId) {
+            this.props.resetPushNotificationForm();
+        } else if (pushNotificationId != entity.id){
+            this.props.getPushNotification(pushNotificationId);
         }
     }
 
@@ -36,9 +36,9 @@ class EditTicketTypePage extends React.Component {
         let {currentSummit, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         let fields = [
-            {type: 'text', name: 'name', label: T.translate("edit_ticket_type.name")},
-            {type: 'text', name: 'external_id', label: T.translate("edit_ticket_type.external_id")},
-            {type: 'textarea', name: 'description', label: T.translate("edit_ticket_type.description")}
+            {type: 'text', name: 'name', label: T.translate("edit_push_notification.name")},
+            {type: 'text', name: 'external_id', label: T.translate("edit_push_notification.external_id")},
+            {type: 'textarea', name: 'description', label: T.translate("edit_push_notification.description")}
         ];
         let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
@@ -46,7 +46,7 @@ class EditTicketTypePage extends React.Component {
         return(
             <div className="container">
                 <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
-                <h3>{title} {T.translate("edit_ticket_type.ticket_type")}</h3>
+                <h3>{title} {T.translate("edit_push_notification.push_notification")}</h3>
                 <hr/>
                 {currentSummit &&
                 <SimpleForm
@@ -54,7 +54,7 @@ class EditTicketTypePage extends React.Component {
                     entity={entity}
                     errors={errors}
                     fields={fields}
-                    onSubmit={this.props.saveTicketType}
+                    onSubmit={this.props.savePushNotification}
                 />
                 }
             </div>
@@ -62,17 +62,17 @@ class EditTicketTypePage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentTicketTypeState }) => ({
+const mapStateToProps = ({ currentSummitState, currentPushNotificationState }) => ({
     currentSummit : currentSummitState.currentSummit,
-    ...currentTicketTypeState
+    ...currentPushNotificationState
 })
 
 export default connect (
     mapStateToProps,
     {
         getSummitById,
-        getTicketType,
-        resetTicketTypeForm,
-        saveTicketType
+        getPushNotification,
+        resetPushNotificationForm,
+        savePushNotification
     }
-)(EditTicketTypePage);
+)(EditPushNotificationPage);

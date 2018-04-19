@@ -115,6 +115,7 @@ class NavMenu extends React.Component {
                     {name:'promocode_list', linkUrl:`summits/${summit_id}/promocodes`}
                 ]
             },
+            {name: 'push_notifications', iconClass: 'fa-paper-plane', show: show, linkUrl:`summits/${summit_id}/push-notifications` },
         ];
 
 

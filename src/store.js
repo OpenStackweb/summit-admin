@@ -47,6 +47,8 @@ import rsvpQuestionReducer from './reducers/rsvps/rsvp-question-reducer';
 import rsvpQuestionValueReducer from './reducers/rsvps/rsvp-question-value-reducer';
 import ticketTypeListReducer from './reducers/tickets/ticket-type-list-reducer';
 import ticketTypeReducer from './reducers/tickets/ticket-type-reducer';
+import pushNotificationListReducer from './reducers/push_notifications/push-notification-list-reducer';
+import pushNotificationReducer from './reducers/push_notifications/push-notification-reducer';
 
 
 import thunk from 'redux-thunk';
@@ -93,7 +95,9 @@ const reducers = persistCombineReducers(config, {
     currentRsvpQuestionState: rsvpQuestionReducer,
     currentRsvpQuestionValueState: rsvpQuestionValueReducer,
     currentTicketTypeListState: ticketTypeListReducer,
-    currentTicketTypeState: ticketTypeReducer
+    currentTicketTypeState: ticketTypeReducer,
+    currentPushNotificationListState: pushNotificationListReducer,
+    currentPushNotificationState: pushNotificationReducer
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
