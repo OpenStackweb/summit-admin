@@ -18,6 +18,7 @@ import
     RESET_PROMOCODE_FORM,
     UPDATE_PROMOCODE,
     PROMOCODE_UPDATED,
+    PROMOCODE_ADDED,
     EMAIL_SENT
 } from '../../actions/promocode-actions';
 
@@ -81,6 +82,7 @@ const promocodeReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  entity: {...payload}, errors: {} };
         }
         break;
+        case PROMOCODE_ADDED:
         case RECEIVE_PROMOCODE: {
             let entity = {...payload.response};
 

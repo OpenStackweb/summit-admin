@@ -15,6 +15,7 @@ import
 {
     RECEIVE_EVENT_CATEGORY,
     RESET_EVENT_CATEGORY_FORM,
+    EVENT_CATEGORY_ADDED,
     UPDATE_EVENT_CATEGORY
 } from '../../actions/event-category-actions';
 
@@ -63,6 +64,7 @@ const eventCategoryReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  entity: {...payload}, errors: {} };
         }
         break;
+        case EVENT_CATEGORY_ADDED:
         case RECEIVE_EVENT_CATEGORY: {
             let entity = {...payload.response};
 

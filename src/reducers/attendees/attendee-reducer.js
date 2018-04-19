@@ -18,6 +18,7 @@ import
     RESET_ATTENDEE_FORM,
     UPDATE_ATTENDEE,
     ATTENDEE_UPDATED,
+    ATTENDEE_ADDED,
     TICKET_ADDED,
     TICKET_DELETED,
     RSVP_DELETED,
@@ -72,6 +73,7 @@ const attendeeReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  entity: {...payload}, errors: {} };
         }
         break;
+        case ATTENDEE_ADDED:
         case RECEIVE_ATTENDEE: {
             let entity = {...payload.response};
 

@@ -17,6 +17,7 @@ import
     RESET_ATTENDANCE_FORM,
     UPDATE_ATTENDANCE,
     ATTENDANCE_UPDATED,
+    ATTENDANCE_ADDED,
     EMAIL_SENT
 } from '../../actions/speaker-actions';
 
@@ -61,6 +62,7 @@ const speakerAttendanceReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  entity: {...payload}, errors: {} };
         }
         break;
+        case ATTENDANCE_ADDED:
         case RECEIVE_ATTENDANCE: {
             let entity = {...payload.response};
 

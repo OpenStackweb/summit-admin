@@ -16,6 +16,7 @@ import
     RECEIVE_FLOOR,
     RESET_FLOOR_FORM,
     UPDATE_FLOOR,
+    FLOOR_ADDED,
     FLOOR_UPDATED,
     ROOM_DELETED
 } from '../../actions/location-actions';
@@ -58,6 +59,7 @@ const floorReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  entity: {...payload}, errors: {} };
         }
         break;
+        case FLOOR_ADDED:
         case RECEIVE_FLOOR: {
             let entity = {...payload.response};
 

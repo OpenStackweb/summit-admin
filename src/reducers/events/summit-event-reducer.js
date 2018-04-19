@@ -78,6 +78,7 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  entity: {...payload}, errors: {} };
         }
         break;
+        case EVENT_ADDED:
         case RECEIVE_EVENT: {
             let entity = payload.response;
 

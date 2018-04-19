@@ -16,7 +16,8 @@ import
     RECEIVE_TICKET_TYPE,
     RESET_TICKET_TYPE_FORM,
     UPDATE_TICKET_TYPE,
-    TICKET_TYPE_UPDATED
+    TICKET_TYPE_UPDATED,
+    TICKET_TYPE_ADDED
 } from '../../actions/ticket-actions';
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
@@ -56,6 +57,7 @@ const ticketTypeReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  entity: {...payload}, errors: {} };
         }
         break;
+        case TICKET_TYPE_ADDED:
         case RECEIVE_TICKET_TYPE: {
             let entity = {...payload.response};
 

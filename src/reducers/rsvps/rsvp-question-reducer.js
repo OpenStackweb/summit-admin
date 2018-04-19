@@ -17,6 +17,7 @@ import
     RESET_RSVP_QUESTION_FORM,
     UPDATE_RSVP_QUESTION,
     RSVP_QUESTION_UPDATED,
+    RSVP_QUESTION_ADDED,
     RECEIVE_RSVP_QUESTION_META,
     RSVP_QUESTION_VALUE_DELETED,
     QUESTION_VALUE_ORDER_UPDATED
@@ -76,6 +77,7 @@ const rsvpQuestionReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  entity: {...payload}, errors: {} };
         }
         break;
+        case RSVP_QUESTION_ADDED:
         case RECEIVE_RSVP_QUESTION: {
             let entity = {...payload.response};
 

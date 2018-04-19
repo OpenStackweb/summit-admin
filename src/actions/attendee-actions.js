@@ -162,8 +162,6 @@ export const saveAttendee = (entity, history) => (dispatch, getState) => {
                 return payload;
             })
             .then((payload) => {
-                console.log('sna');
-                console.log('nnnn');
                 dispatch(showMessage(
                     ...success_message,
                     () => { history.push(`/app/summits/${currentSummit.id}/attendees/${payload.response.id}`) }

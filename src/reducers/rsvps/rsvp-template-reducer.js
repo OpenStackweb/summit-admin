@@ -14,6 +14,7 @@
 import
 {
     RECEIVE_RSVP_TEMPLATE,
+    RSVP_TEMPLATE_ADDED,
     RESET_RSVP_TEMPLATE_FORM,
     UPDATE_RSVP_TEMPLATE,
     RSVP_TEMPLATE_UPDATED,
@@ -58,6 +59,7 @@ const rsvpTemplateReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  entity: {...payload}, errors: {} };
         }
         break;
+        case RSVP_TEMPLATE_ADDED:
         case RECEIVE_RSVP_TEMPLATE: {
             let entity = {...payload.response};
 

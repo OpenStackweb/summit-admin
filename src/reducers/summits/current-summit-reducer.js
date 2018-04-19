@@ -1,5 +1,5 @@
 import{ LOGOUT_USER } from '../../actions/auth-actions';
-import { SET_CURRENT_SUMMIT, RECEIVE_SUMMIT, SUMMIT_UPDATED, RESET_SUMMIT_FORM } from '../../actions/summit-actions';
+import { SET_CURRENT_SUMMIT, RECEIVE_SUMMIT, SUMMIT_UPDATED, SUMMIT_ADDED, RESET_SUMMIT_FORM } from '../../actions/summit-actions';
 import { EVENT_CATEGORY_UPDATED, EVENT_CATEGORY_ADDED, EVENT_CATEGORY_DELETED, EVENT_CATEGORIES_SEEDED } from '../../actions/event-category-actions';
 import { EVENT_TYPE_UPDATED, EVENT_TYPE_ADDED, EVENT_TYPE_DELETED, EVENT_TYPES_SEEDED } from '../../actions/event-type-actions';
 import { LOCATION_UPDATED, LOCATION_ADDED, LOCATION_DELETED } from '../../actions/location-actions';
@@ -77,6 +77,7 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
             return DEFAULT_STATE
         }
         break;
+        case SUMMIT_ADDED:
         case RECEIVE_SUMMIT: {
             let entity = {...payload.response};
 

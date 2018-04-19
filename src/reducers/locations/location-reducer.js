@@ -18,11 +18,13 @@ import
     RESET_LOCATION_FORM,
     UPDATE_LOCATION,
     LOCATION_UPDATED,
+    LOCATION_ADDED,
     LOCATION_GMAP_UPDATED,
     LOCATION_ADDRESS_UPDATED,
     FLOOR_DELETED,
     FLOOR_ADDED,
     FLOOR_UPDATED,
+    ROOM_ADDED,
     ROOM_DELETED,
     LOCATION_IMAGE_DELETED,
     LOCATION_MAP_DELETED
@@ -95,6 +97,7 @@ const locationReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  entity: {...payload}, errors: {} };
         }
         break;
+        case LOCATION_ADDED:
         case RECEIVE_LOCATION: {
             let entity = {...payload.response};
 
@@ -161,6 +164,11 @@ const locationReducer = (state = DEFAULT_STATE, action) => {
         case FLOOR_DELETED: {
             let {floorId} = payload;
             return {...state, entity: {...state.entity, floors: state.entity.floors.filter(f => f.id != floorId)}};
+        }
+        break;
+        case ROOM_ADDED: {
+            let { response } = payload;
+            return {...state, entity: {...state.entity, rooms: [...state.entity.rooms, response] }};
         }
         break;
         case ROOM_DELETED: {

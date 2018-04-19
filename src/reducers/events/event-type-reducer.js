@@ -15,7 +15,8 @@ import
 {
     RECEIVE_EVENT_TYPE,
     RESET_EVENT_TYPE_FORM,
-    UPDATE_EVENT_TYPE
+    UPDATE_EVENT_TYPE,
+    EVENT_TYPE_ADDED
 } from '../../actions/event-type-actions';
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
@@ -69,6 +70,7 @@ const eventTypeReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  entity: {...payload}, errors: {} };
         }
         break;
+        case EVENT_TYPE_ADDED:
         case RECEIVE_EVENT_TYPE: {
             let entity = {...payload.response};
 

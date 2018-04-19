@@ -17,6 +17,7 @@ import
     RESET_SPEAKER_FORM,
     UPDATE_SPEAKER,
     SPEAKER_UPDATED,
+    SPEAKER_ADDED,
     PIC_ATTACHED
 } from '../../actions/speaker-actions';
 
@@ -64,6 +65,7 @@ const speakerReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  entity: {...payload}, errors: {} };
         }
         break;
+        case SPEAKER_ADDED:
         case RECEIVE_SPEAKER: {
             let entity = {...payload.response};
             let registration_code = '', on_site_phone = '', registered = false, checked_in = false, confirmed = false;

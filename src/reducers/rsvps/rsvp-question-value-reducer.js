@@ -16,7 +16,8 @@ import
     RECEIVE_RSVP_QUESTION_VALUE,
     RESET_RSVP_QUESTION_VALUE_FORM,
     UPDATE_RSVP_QUESTION_VALUE,
-    RSVP_QUESTION_VALUE_UPDATED
+    RSVP_QUESTION_VALUE_UPDATED,
+    RSVP_QUESTION_VALUE_ADDED
 } from '../../actions/rsvp-template-actions';
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
@@ -55,6 +56,7 @@ const rsvpQuestionValueReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  entity: {...payload}, errors: {} };
         }
         break;
+        case RSVP_QUESTION_VALUE_ADDED:
         case RECEIVE_RSVP_QUESTION_VALUE: {
             let entity = {...payload.response};
 

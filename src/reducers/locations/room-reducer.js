@@ -16,6 +16,7 @@ import
     RECEIVE_ROOM,
     RESET_ROOM_FORM,
     UPDATE_ROOM,
+    ROOM_ADDED,
     ROOM_UPDATED
 } from '../../actions/location-actions';
 
@@ -58,6 +59,7 @@ const roomReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  entity: {...payload}, errors: {} };
         }
         break;
+        case ROOM_ADDED:
         case RECEIVE_ROOM: {
             let entity = {...payload.response};
 
