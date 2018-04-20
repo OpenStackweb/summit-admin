@@ -30,7 +30,9 @@ const DEFAULT_STATE = {
     page                      : 1,
     lastPage                  : 1,
     perPage                   : 10,
-    totalpushNotifications    : 0
+    totalpushNotifications    : 0,
+    channels                  : ['ALL', 'EVERYONE', 'SPEAKERS', 'ATTENDEES', 'MEMBERS', 'EVENT', 'GROUP'],
+    platforms                 : ['WEB', 'MOBILE']
 };
 
 const pushNotificationListReducer = (state = DEFAULT_STATE, action) => {

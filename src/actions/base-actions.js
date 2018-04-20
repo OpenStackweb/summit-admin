@@ -173,6 +173,23 @@ export const queryTracks = (summitId, input) => {
         .catch(fetchErrorHandler);
 };
 
+export const queryEvents = (summitId, input) => {
+
+    let accessToken = window.accessToken;
+
+    return fetch(`${apiBaseUrl}/api/v1/summits/${summitId}/events?filter=title=@${input}&order=title&access_token=${accessToken}`)
+        .then(fetchResponseHandler)
+        .then((json) => {
+            let options = [...json.data];
+
+            return {
+                options: options
+            };
+        })
+        .catch(fetchErrorHandler);
+};
+
+
 export const queryGroups = (input) => {
 
     let accessToken = window.accessToken;
@@ -181,7 +198,7 @@ export const queryGroups = (input) => {
     return fetch(`${apiBaseUrl}/api/v1/groups?filter=${filters}&access_token=${accessToken}`)
         .then(fetchResponseHandler)
         .then((json) => {
-            let options = json.data.map((g) => ({value: g.id, label: g.title}) );
+            let options = [...json.data];
 
             return {
                 options: options

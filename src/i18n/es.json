@@ -24,6 +24,9 @@
     "first_name"          : "First Name",
     "last_name"           : "Last Name",
     "member"              : "Member",
+    "members"             : "Members",
+    "event"               : "Event",
+    "group"               : "Group",
     "yes"                 : "Yes",
     "no"                  : "No",
     "edit"                : "Edit",
@@ -691,9 +694,9 @@
   },
   "edit_push_notification": {
     "push_notification"         : "Push Notification",
-    "name"                      : "Name",
-    "external_id"               : "External Id",
-    "description"               : "Description",
+    "message"                      : "Message",
+    "platform"               : "Platform",
+    "channel"               : "Channel",
     "push_notification_saved"   : "Push Notification saved successfully",
     "push_notification_created" : "Push Notification created successfully"
   }

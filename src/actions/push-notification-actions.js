@@ -153,7 +153,7 @@ export const savePushNotification = (entity, history) => (dispatch, getState) =>
             .then((payload) => {
                 dispatch(showMessage(
                     ...success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/push-notifications/${payload.response.id}`) }
+                    () => { history.push(`/app/summits/${currentSummit.id}/push-notifications`) }
                 ));
             });
     }
@@ -183,6 +183,21 @@ export const deletePushNotification = (pushNotificationId) => (dispatch, getStat
 
 const normalizeEntity = (entity) => {
     let normalizedEntity = {...entity};
+
+    if (entity.members.length > 0) {
+        normalizedEntity['recipient_ids'] = entity.members.map(m => m.id);
+        delete(normalizedEntity['members']);
+    }
+
+    if (entity.event) {
+        normalizedEntity['event_id'] = entity.event.id;
+        delete(normalizedEntity['event']);
+    }
+
+    if (entity.group) {
+        normalizedEntity['group_id'] = entity.group.id;
+        delete(normalizedEntity['group']);
+    }
 
     return normalizedEntity;
 

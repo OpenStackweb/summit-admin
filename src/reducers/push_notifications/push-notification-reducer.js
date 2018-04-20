@@ -25,10 +25,13 @@ import { VALIDATE } from '../../actions/base-actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 export const DEFAULT_ENTITY = {
-    id              : 0,
-    name            : '',
-    external_id     : 0,
-    description     : '',
+    id          : 0,
+    platform    : '',
+    channel     : '',
+    message     : '',
+    members     : [],
+    group       : {},
+    event       : {}
 }
 
 const DEFAULT_STATE = {

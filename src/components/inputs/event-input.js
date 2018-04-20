@@ -14,9 +14,9 @@
 import React from 'react';
 import 'react-select/dist/react-select.css';
 import Select from 'react-select';
-import {queryGroups} from '../../actions/base-actions';
+import {queryEvents} from '../../actions/base-actions';
 
-export default class GroupInput extends React.Component {
+export default class EventInput extends React.Component {
 
     constructor(props) {
         super(props);
@@ -26,7 +26,7 @@ export default class GroupInput extends React.Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
-        this.getGroups = this.getGroups.bind(this);
+        this.getEvents = this.getEvents.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -40,18 +40,20 @@ export default class GroupInput extends React.Component {
         let ev = {target: {
             id: this.props.id,
             value: value,
-            type: 'groupinput'
+            type: 'eventinput'
         }};
 
         this.props.onChange(ev);
     }
 
-    getGroups (input) {
+    getEvents (input) {
+        let {summit} = this.props;
+
         if (!input) {
             return Promise.resolve({ options: [] });
         }
 
-        return queryGroups(input);
+        return queryEvents(summit.id, input);
     }
 
     render() {
@@ -61,7 +63,7 @@ export default class GroupInput extends React.Component {
                 multi={this.props.multi}
                 value={this.state.value}
                 onChange={this.handleChange}
-                loadOptions={this.getGroups}
+                loadOptions={this.getEvents}
                 backspaceRemoves={true}
                 valueKey="id"
                 labelKey="title"

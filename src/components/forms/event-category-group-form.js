@@ -134,7 +134,7 @@ class EventCategoryGroupForm extends React.Component {
         ];
 
         let allowedGroupsColumns = [
-            { columnKey: 'name', value: T.translate("edit_event_category.name") },
+            { columnKey: 'title', value: T.translate("edit_event_category.name") },
             { columnKey: 'description', value: T.translate("edit_event_category.description") }
         ];
 
@@ -243,8 +243,8 @@ class EventCategoryGroupForm extends React.Component {
                     title={T.translate("edit_event_category_group.allowed_groups")}
                     values={entity.allowed_groups}
                     columns={allowedGroupsColumns}
-                    valueKey="name"
-                    labelKey="name"
+                    valueKey="id"
+                    labelKey="title"
                     onLink={this.handleAllowedGroupLink}
                     onUnLink={this.handleAllowedGroupUnLink}
                     queryOptions={queryGroups}

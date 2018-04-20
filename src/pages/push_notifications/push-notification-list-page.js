@@ -21,6 +21,9 @@ import { Pagination } from 'react-bootstrap';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getPushNotifications, deletePushNotification } from "../../actions/push-notification-actions";
 
+import '../../styles/push-notification-list-page.less';
+
+
 class PushNotificationListPage extends React.Component {
 
     constructor(props) {
@@ -116,7 +119,7 @@ class PushNotificationListPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, pushNotifications, lastPage, page, order, orderDir, totalPushNotifications} = this.props;
+        let {currentSummit, pushNotifications, lastPage, page, order, orderDir, totalPushNotifications, channels} = this.props;
         let {approved_filter, sent_filter, channel_filter} = this.state.filters;
 
         let columns = [
@@ -138,7 +141,6 @@ class PushNotificationListPage extends React.Component {
             }
         }
 
-        let channels = ['ALL', 'EVERYONE', 'SPEAKERS', 'ATTENDEES', 'MEMBERS', 'SUMMIT', 'EVENT', 'GROUP'];
         let channels_ddl = channels.map(c => ({value: c, label: c}));
 
         let sent_ddl = [{value: 'ALL', label: 'ALL'}, {value: 1, label: 'SENT'}, {value: 0, label: 'NOT SENT'}];
@@ -149,7 +151,7 @@ class PushNotificationListPage extends React.Component {
         return(
             <div className="container">
                 <h3> {T.translate("push_notification_list.push_notification_list")} ({totalPushNotifications})</h3>
-                <div className={'row'}>
+                <div className="row filters">
                     <div className="col-md-2">
                         <label>{T.translate("push_notification_list.approved")}</label>
                         <Dropdown
@@ -177,7 +179,7 @@ class PushNotificationListPage extends React.Component {
                             onChange={this.handleFilter}
                         />
                     </div>
-                    <div className="col-md-6 text-right">
+                    <div className="col-md-6 text-right add-notification-box">
                         <button className="btn btn-primary right-space" onClick={this.handleNewPushNotification}>
                             {T.translate("push_notification_list.add_push_notification")}
                         </button>

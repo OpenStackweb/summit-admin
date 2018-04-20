@@ -15,7 +15,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
-import SimpleForm from '../../components/forms/simple-form';
+import PushNotificationForm from '../../components/forms/push-notification-form';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getPushNotification, resetPushNotificationForm, savePushNotification } from "../../actions/push-notification-actions";
 
@@ -33,15 +33,9 @@ class EditPushNotificationPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors, match} = this.props;
+        let {currentSummit, entity, errors, match, channels, platforms} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let fields = [
-            {type: 'text', name: 'name', label: T.translate("edit_push_notification.name")},
-            {type: 'text', name: 'external_id', label: T.translate("edit_push_notification.external_id")},
-            {type: 'textarea', name: 'description', label: T.translate("edit_push_notification.description")}
-        ];
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
-
+        let breadcrumb = (entity.id) ? entity.id : T.translate("general.new");
 
         return(
             <div className="container">
@@ -49,11 +43,13 @@ class EditPushNotificationPage extends React.Component {
                 <h3>{title} {T.translate("edit_push_notification.push_notification")}</h3>
                 <hr/>
                 {currentSummit &&
-                <SimpleForm
+                <PushNotificationForm
                     history={this.props.history}
+                    currentSummit={currentSummit}
                     entity={entity}
                     errors={errors}
-                    fields={fields}
+                    channels={channels}
+                    platforms={platforms}
                     onSubmit={this.props.savePushNotification}
                 />
                 }
@@ -62,8 +58,10 @@ class EditPushNotificationPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentPushNotificationState }) => ({
+const mapStateToProps = ({ currentSummitState, currentPushNotificationListState, currentPushNotificationState }) => ({
     currentSummit : currentSummitState.currentSummit,
+    channels: currentPushNotificationListState.channels,
+    platforms: currentPushNotificationListState.platforms,
     ...currentPushNotificationState
 })
 
