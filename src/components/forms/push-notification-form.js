@@ -54,6 +54,12 @@ class PushNotificationForm extends React.Component {
         let errors = {...this.state.errors};
         let {value, id} = ev.target;
 
+        if (id == 'channel') {
+            entity.members = [];
+            entity.event = {};
+            entity.group = {};
+        }
+
         errors[id] = '';
         entity[id] = value;
         this.setState({entity: entity, errors: errors});
@@ -64,13 +70,6 @@ class PushNotificationForm extends React.Component {
         ev.preventDefault();
 
         this.props.onSubmit(this.state.entity, this.props.history);
-    }
-
-    handleSpeakerLink(speaker_id, ev) {
-        let {history} = this.props;
-        ev.preventDefault();
-
-        history.push(`/app/speakers/${speaker_id}`);
     }
 
     hasErrors(field) {
@@ -158,6 +157,7 @@ class PushNotificationForm extends React.Component {
                             value={entity.event}
                             onChange={this.handleChange}
                             multi={false}
+                            onlyPublished={true}
                         />
                     </div>
                     }

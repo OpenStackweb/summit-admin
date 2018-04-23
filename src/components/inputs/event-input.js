@@ -47,13 +47,13 @@ export default class EventInput extends React.Component {
     }
 
     getEvents (input) {
-        let {summit} = this.props;
+        let {summit, onlyPublished} = this.props;
 
         if (!input) {
             return Promise.resolve({ options: [] });
         }
 
-        return queryEvents(summit.id, input);
+        return queryEvents(summit.id, input, onlyPublished);
     }
 
     render() {

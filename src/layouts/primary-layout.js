@@ -26,12 +26,19 @@ import SpeakerLayout from './speaker-layout';
 class PrimaryLayout extends React.Component {
 
     render(){
-        let { match, currentSummit } = this.props;
+        let { match, currentSummit, location } = this.props;
+        let extraClass = 'container';
+
+        // full width pages
+        if (location.pathname.includes('schedule') || location.pathname.includes('bulk-actions')) {
+            extraClass = '';
+        }
+
         return(
             <div className="primary-layout">
                 <NavMenu currentSummit={currentSummit}/>
                 <main id="page-wrap">
-                    <Breadcrumbs className="breadcrumbs-wrapper container" separator="/" />
+                    <Breadcrumbs className={"breadcrumbs-wrapper " + extraClass} separator="/" />
 
                     <Breadcrumb data={{ title: <i className="fa fa-home"></i>, pathname: match.url }} ></Breadcrumb>
 

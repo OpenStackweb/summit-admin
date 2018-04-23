@@ -18,6 +18,7 @@ import { RECEIVE_SELECTED_EVENTS,
     UPDATE_EVENT_SELECTED_STATE_BULK,
     UPDATE_VALIDATION_STATE,
     UPDATE_LOCATION_BULK,
+    UPDATE_TYPE_BULK,
     UPDATE_START_DATE_BULK,
     UPDATE_END_DATE_BULK,
 } from '../../actions/summit-event-bulk-actions';
@@ -136,6 +137,15 @@ const summitEventBulkActionReducer = (state = DEFAULT_STATE, action) => {
             let { eventOnBulkEdition } = state;
             eventOnBulkEdition = eventOnBulkEdition.map(event => {
                 return {...event, location_id : location.id}
+            });
+            return { ... state, eventOnBulkEdition}
+        }
+        break;
+        case UPDATE_TYPE_BULK:{
+            let { eventType }      = payload;
+            let { eventOnBulkEdition } = state;
+            eventOnBulkEdition = eventOnBulkEdition.map(event => {
+                return {...event, type_id : eventType.id}
             });
             return { ... state, eventOnBulkEdition}
         }

@@ -25,6 +25,7 @@ export const UPDATE_EVENT_SELECTED_STATE      = 'UPDATE_EVENT_SELECTED_STATE';
 export const UPDATE_EVENT_SELECTED_STATE_BULK = 'UPDATE_EVENT_SELECTED_STATE_BULK';
 export const UPDATE_VALIDATION_STATE          = 'UPDATE_VALIDATION_STATE';
 export const UPDATE_LOCATION_BULK             = 'UPDATE_LOCATION_BULK';
+export const UPDATE_TYPE_BULK                 = 'UPDATE_TYPE_BULK';
 export const UPDATE_START_DATE_BULK           = 'UPDATE_START_DATE_BULK';
 export const UPDATE_END_DATE_BULK             = 'UPDATE_END_DATE_BULK';
 
@@ -101,6 +102,7 @@ export const updateEvents = (summitId, events) =>  (dispatch, getState) => {
                 id:event.id,
                 title:event.title,
                 location_id:event.location_id,
+                type_id:event.type_id,
                 start_date:event.start_date,
                 end_date:event.end_date,
             }))
@@ -127,6 +129,7 @@ export const updateAndPublishEvents = (summitId, events) =>  (dispatch, getState
         id:event.id,
         title:event.title,
         location_id:event.location_id,
+        type_id:event.type_id,
         start_date:event.start_date,
         end_date:event.end_date,
     }))
@@ -213,6 +216,10 @@ export const performBulkAction = (eventsIds, bulkAction, published, history) => 
 
 export const updateEventsLocationLocal = (location) => (dispatch) => {
     dispatch(createAction(UPDATE_LOCATION_BULK)({location}));
+}
+
+export const updateEventsTypeLocal = (eventType) => (dispatch) => {
+    dispatch(createAction(UPDATE_TYPE_BULK)({eventType}));
 }
 
 export const updateEventsStartDateLocal = (startDate) => (dispatch) => {

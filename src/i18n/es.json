@@ -97,6 +97,7 @@
     }
   },
   "bulk_actions_page": {
+    "bulk_actions": "Bulk Actions",
     "title": "Summit Event Bulk Actions",
     "event_id_label" : "Event Id",
     "event_name_label": "Event Title",

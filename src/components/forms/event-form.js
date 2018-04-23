@@ -115,7 +115,7 @@ class EventForm extends React.Component {
 
         ev.preventDefault();
 
-        let start_date = this.epochToMomentTimeZone(entity.start_date, currentSummit.time_zone_id).format('YYYY-MM-DD');
+        let start_date = epochToMomentTimeZone(entity.start_date, currentSummit.time_zone_id).format('YYYY-MM-DD');
         let location_id = entity.location_id;
         let event_id = entity.id;
 
@@ -266,7 +266,7 @@ class EventForm extends React.Component {
                             onChange={this.handleChange}
                             validation={{after: currentSummit.start_date, before: currentSummit.end_date}}
                             format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                            value={this.epochToMomentTimeZone(entity.start_date, currentSummit.time_zone_id)}
+                            value={epochToMomentTimeZone(entity.start_date, currentSummit.time_zone_id)}
                             inputProps={{placeholder: T.translate("edit_event.placeholders.start_date")}}
                             timezone={currentSummit.time_zone.name}
                             error={this.hasErrors('start_date')}
@@ -278,7 +278,7 @@ class EventForm extends React.Component {
                             onChange={this.handleChange}
                             validation={{after: currentSummit.start_date, before: currentSummit.end_date}}
                             format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                            value={this.epochToMomentTimeZone(entity.end_date, currentSummit.time_zone_id)}
+                            value={epochToMomentTimeZone(entity.end_date, currentSummit.time_zone_id)}
                             inputProps={{placeholder: T.translate("edit_event.placeholders.end_date")}}
                             timezone={currentSummit.time_zone.name}
                             error={this.hasErrors('end_date')}

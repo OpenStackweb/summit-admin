@@ -27,7 +27,7 @@ class ScheduleAdminEventTypeSelector extends React.Component {
     }
 
     render(){
-        let { eventTypes, currentValue } = this.props;
+        let { eventTypes, currentValue, clearable } = this.props;
         return (
             <Select
                 placeholder={T.translate("schedule.placeholders.select_event_type")}
@@ -36,6 +36,7 @@ class ScheduleAdminEventTypeSelector extends React.Component {
                 value={currentValue}
                 onChange={this.onChange}
                 options={eventTypes}
+                clearable={clearable}
             />
         )
     }

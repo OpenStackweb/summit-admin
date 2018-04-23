@@ -41,7 +41,7 @@ export const authErrorHandler = (err, res) => (dispatch) => {
             });
             break;
         case 404:
-            msg = err.message;
+            msg = (err.response.body.message) ? err.response.body.message : err.message;
             swal("Not Found", msg, "warning");
             break;
         case 412:
@@ -173,11 +173,12 @@ export const queryTracks = (summitId, input) => {
         .catch(fetchErrorHandler);
 };
 
-export const queryEvents = (summitId, input) => {
+export const queryEvents = (summitId, input, onlyPublished = false) => {
 
     let accessToken = window.accessToken;
+    let baseUrl = `${apiBaseUrl}/api/v1/summits/${summitId}/events` + (onlyPublished ? '/published' : '');
 
-    return fetch(`${apiBaseUrl}/api/v1/summits/${summitId}/events?filter=title=@${input}&order=title&access_token=${accessToken}`)
+    return fetch(`${baseUrl}?filter=title=@${input}&order=title&access_token=${accessToken}`)
         .then(fetchResponseHandler)
         .then((json) => {
             let options = [...json.data];

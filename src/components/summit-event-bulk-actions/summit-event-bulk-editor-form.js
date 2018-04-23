@@ -15,7 +15,9 @@ import SummitEventBulkEditorItem from './summit-event-bulk-editor-item'
 import T from 'i18n-react/dist/i18n-react'
 import swal from "sweetalert2";
 import DateTimePicker from '../inputs/datetimepicker'
+import Dropdown from '../inputs/dropdown'
 import ScheduleAdminVenueSelector from '../schedule-builder/schedule-admin-venue-selector';
+import ScheduleAdminEventTypeSelector from '../schedule-builder/schedule-admin-event-type-selector';
 import moment from "moment-timezone";
 import {TBALocation} from "../../constants";
 
@@ -31,6 +33,7 @@ class SummitEventBulkEditorForm extends React.Component
         this.onEndDateChanged          = this.onEndDateChanged.bind(this);
         this.onSelectedEvent           = this.onSelectedEvent.bind(this);
         this.onBulkLocationChange      = this.onBulkLocationChange.bind(this);
+        this.onBulkTypeChange          = this.onBulkTypeChange.bind(this);
         this.handleChangeBulkStartDate = this.handleChangeBulkStartDate.bind(this);
         this.handleChangeBulkEndDate   = this.handleChangeBulkEndDate.bind(this);
         this.state = {
@@ -103,6 +106,10 @@ class SummitEventBulkEditorForm extends React.Component
         this.props.updateEventsLocationLocal(location)
     }
 
+    onBulkTypeChange(eventType){
+        this.props.updateEventsTypeLocal(eventType)
+    }
+
     handleChangeBulkStartDate(ev){
         let { value } = ev.target;
         this.props.updateEventsStartDateLocal(value.valueOf()/1000)
@@ -137,18 +144,44 @@ class SummitEventBulkEditorForm extends React.Component
         }
 
         let currentBulkLocation = venuesOptions.filter((option) =>  this.state.currentBulkLocation != null && option.value.id == this.state.currentBulkLocation.id).shift();
+        let typesOptions = [];
+        let currentBulkType = null;
+
+        // all events same type
+        let eventsTypeArray = events.map(et => currentSummit.event_types.find(e => e.id == et.type_id));
+        let canEditEventType = ([...new Set(eventsTypeArray.map(et => et.class_name))].length === 1);
+
+        if (canEditEventType) {
+            let eventsType = currentSummit.event_types.find(et => et.id == events[0].type_id);
+
+            typesOptions = currentSummit.event_types
+                .filter(et => eventsType.class_name == et.class_name)
+                .map(et => ({value: et, label: et.name}));
+
+            currentBulkType = typesOptions.find((option) => option.value.id == eventsType.id);
+        }
 
         return (
             <form>
                 <div className="row">
-                    <div className="col-md-4">
+                    {canEditEventType &&
+                    <div className="col-md-3">
+                        <ScheduleAdminEventTypeSelector
+                            currentValue={currentBulkType}
+                            onEventTypeChanged={this.onBulkTypeChange}
+                            eventTypes={typesOptions}
+                            clearable={false}
+                        />
+                    </div>
+                    }
+                    <div className="col-md-3">
                         <ScheduleAdminVenueSelector
                             currentValue={currentBulkLocation}
                             onVenueChanged={this.onBulkLocationChange}
                             venues={venuesOptions}
                         />
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <DateTimePicker
                             id="start_date"
                             format={{date:"YYYY-MM-DD", time: "HH:mm"}}
@@ -159,7 +192,7 @@ class SummitEventBulkEditorForm extends React.Component
                             onChange={this.handleChangeBulkStartDate}
                          />
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <DateTimePicker
                             id="end_date"
                             format={{date:"YYYY-MM-DD", time: "HH:mm"}}

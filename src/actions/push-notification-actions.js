@@ -199,6 +199,8 @@ const normalizeEntity = (entity) => {
         delete(normalizedEntity['group']);
     }
 
+    delete(normalizedEntity['id']);
+
     return normalizedEntity;
 
 }

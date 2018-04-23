@@ -13,6 +13,7 @@
 import React from 'react'
 import {connect} from "react-redux"
 import URI from "urijs"
+import { Breadcrumb } from 'react-breadcrumbs';
 import SummitEventBulkEditorForm from '../../components/summit-event-bulk-actions/summit-event-bulk-editor-form';
 import {
     getSummitEventsById,
@@ -23,6 +24,7 @@ import {
     updateEvents,
     updateAndPublishEvents,
     updateEventsLocationLocal,
+    updateEventsTypeLocal,
     updateEventsStartDateLocal,
     updateEventsEndDateLocal,
 } from '../../actions/summit-event-bulk-actions';
@@ -36,10 +38,12 @@ class SummitEventsBulkActionsPage extends React.Component {
         // get events ids from query string
         let { location, history } = this.props;
         let query      = URI.parseQuery(location.search);
+
         if(!query.hasOwnProperty('id[]')) {
             history.push('/app/directory');
             return;
         }
+
         let eventIds =  query['id[]'];
         if(!Array.isArray(eventIds)) eventIds = [eventIds];
         this.state = {
@@ -57,6 +61,7 @@ class SummitEventsBulkActionsPage extends React.Component {
     render(){
         let {
             events,
+            match,
             currentSummit,
             updateEventLocationLocal,
             updateEventTitleLocal,
@@ -64,29 +69,36 @@ class SummitEventsBulkActionsPage extends React.Component {
             updateEventEndDateLocal,
             updateEvents,
             updateAndPublishEvents,
+            updateEventsTypeLocal,
             updateEventsLocationLocal,
             updateEventsStartDateLocal,
             updateEventsEndDateLocal,
         } = this.props;
+
         if(!currentSummit.id) return(<div></div>);
 
         return (
-            <div className="bulk-actions-editor-container">
-                <h2>{T.translate("bulk_actions_page.title")}</h2>
-                <SummitEventBulkEditorForm
-                    events={events}
-                    currentSummit={currentSummit}
-                    updateEventLocationLocal={updateEventLocationLocal}
-                    updateEventTitleLocal={updateEventTitleLocal}
-                    updateEventStartDateLocal={updateEventStartDateLocal}
-                    updateEventEndDateLocal={updateEventEndDateLocal}
-                    updateEvents={updateEvents}
-                    updateAndPublishEvents={updateAndPublishEvents}
-                    updateEventsLocationLocal={updateEventsLocationLocal}
-                    updateEventsStartDateLocal={updateEventsStartDateLocal}
-                    updateEventsEndDateLocal={updateEventsEndDateLocal}
-                    history={this.props.history}
-                ></SummitEventBulkEditorForm>
+            <div>
+                <Breadcrumb data={{ title: T.translate("bulk_actions_page.bulk_actions"), pathname: match.url }} ></Breadcrumb>
+
+                <div className="bulk-actions-editor-container">
+                    <h2>{T.translate("bulk_actions_page.title")}</h2>
+                    <SummitEventBulkEditorForm
+                        events={events}
+                        currentSummit={currentSummit}
+                        updateEventLocationLocal={updateEventLocationLocal}
+                        updateEventTitleLocal={updateEventTitleLocal}
+                        updateEventStartDateLocal={updateEventStartDateLocal}
+                        updateEventEndDateLocal={updateEventEndDateLocal}
+                        updateEvents={updateEvents}
+                        updateAndPublishEvents={updateAndPublishEvents}
+                        updateEventsTypeLocal={updateEventsTypeLocal}
+                        updateEventsLocationLocal={updateEventsLocationLocal}
+                        updateEventsStartDateLocal={updateEventsStartDateLocal}
+                        updateEventsEndDateLocal={updateEventsEndDateLocal}
+                        history={this.props.history}
+                    ></SummitEventBulkEditorForm>
+                </div>
             </div>
         );
     }
@@ -112,6 +124,7 @@ export default connect (
         updateEvents,
         updateAndPublishEvents,
         updateEventsLocationLocal,
+        updateEventsTypeLocal,
         updateEventsStartDateLocal,
         updateEventsEndDateLocal,
     }
