@@ -43,7 +43,7 @@ class EditSummitEventPage extends React.Component {
 
     render(){
         let {currentSummit, entity, errors, levelOptions, rsvpTemplateOptions, match} = this.props;
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+        let breadcrumb = (entity.id) ? entity.title : T.translate("general.new");
 
         if(!currentSummit.id) return(<div></div>);
 

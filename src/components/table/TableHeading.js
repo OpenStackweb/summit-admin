@@ -9,6 +9,9 @@ class TableHeading extends React.Component {
 	}
 
 	getSortClass() {
+
+		if (!this.props.sortable) return null;
+
 		switch(this.props.sortDir) {
 			case 1:
 				return 'sorting_asc';

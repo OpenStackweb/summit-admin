@@ -156,8 +156,8 @@ class MergeSpeakerPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ directoryReducer, currentSpeakerMergeState }) => ({
-    allSummits : directoryReducer.items,
+const mapStateToProps = ({ directoryState, currentSpeakerMergeState }) => ({
+    allSummits : directoryState.items,
     ...currentSpeakerMergeState
 })
 

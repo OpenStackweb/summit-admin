@@ -81,7 +81,6 @@ class TicketTypeListPage extends React.Component {
     }
 
     handleSort(index, key, dir, func) {
-        key = (key == 'name') ? 'last_name' : key;
         this.props.getTicketTypes(key, dir);
     }
 

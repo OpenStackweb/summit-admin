@@ -44,7 +44,9 @@ const eventCategoryListReducer = (state = DEFAULT_STATE, action) => {
                     id: e.id,
                     name: e.name
                 };
-            })
+            }).sort(
+                (a, b) => (a.name > b.name ? 1 : (a.name < b.name ? -1 : 0))
+            );
 
             return {...state, eventCategories };
         }

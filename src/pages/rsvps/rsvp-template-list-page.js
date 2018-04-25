@@ -101,7 +101,7 @@ class RsvpTemplateListPage extends React.Component {
         let {currentSummit, rsvpTemplates, lastPage, currentPage, term, order, orderDir, totalRsvpTemplates} = this.props;
 
         let columns = [
-            { columnKey: 'id', value: T.translate("general.id"), sortable: true },
+            { columnKey: 'id', value: T.translate("general.id") },
             { columnKey: 'title', value: T.translate("rsvp_template_list.title") }
         ];
 

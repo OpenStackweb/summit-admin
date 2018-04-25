@@ -134,7 +134,7 @@ class SummitAttendeeListPage extends React.Component {
         let {showModal, modalSchedule, modalTitle} = this.state;
 
         let columns = [
-            { columnKey: 'member_id', value: T.translate("attendee_list.member_id"), sortable: true },
+            { columnKey: 'member_id', value: T.translate("attendee_list.member_id")},
             { columnKey: 'name', value: T.translate("general.name"), sortable: true },
             { columnKey: 'email', value: T.translate("general.email") },
             { columnKey: 'eventbrite_id', value: T.translate("attendee_list.eventbrite_id") },
