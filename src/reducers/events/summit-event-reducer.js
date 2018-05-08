@@ -41,7 +41,7 @@ export const DEFAULT_ENTITY = {
     level: 'N/A',
     allow_feedback: false,
     to_record: false,
-    feature_cloud: false,
+    attending_media: false,
     tags: [],
     sponsors: [],
     speakers: [],

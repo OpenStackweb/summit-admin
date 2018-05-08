@@ -338,17 +338,15 @@ class EventForm extends React.Component {
                         </div>
                     </div>
                     }
+                    {this.isEventType('PresentationType') &&
                     <div className="col-md-4">
-                        <label> {T.translate("edit_event.feature_os_cloud")} </label><br/>
-                        <div className="form-check abc-radio radio-inline">
-                            <input checked={entity.feature_cloud} onChange={this.handleChange} name="feature_cloud" id="feature_cloud_1" value={1} className="form-check-input" type="radio" />
-                            <label className="form-check-label" htmlFor="feature_cloud_1"> {T.translate("general.yes")} </label>
-                        </div>
-                        <div className="form-check abc-radio radio-inline" style={{marginLeft: '100px'}}>
-                            <input checked={!entity.feature_cloud} onChange={this.handleChange} name="feature_cloud" id="feature_cloud_2" value={0} className="form-check-input" type="radio" />
-                            <label className="form-check-label" htmlFor="feature_cloud_2"> {T.translate("general.no")} </label>
+                        <label> {T.translate("edit_event.attending_media")} </label>
+                        <div className="form-check abc-checkbox">
+                            <input id="attending_media" onChange={this.handleChange} checked={entity.attending_media} className="form-check-input" type="checkbox" />
+                            <label className="form-check-label" htmlFor="attending_media"> {T.translate("edit_event.attending_media")} </label>
                         </div>
                     </div>
+                    }
                 </div>
                 <div className="row form-group">
                     <div className="col-md-12">

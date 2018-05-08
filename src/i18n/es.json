@@ -213,7 +213,7 @@
     "allow_feedback"      : "Allow feedback ?",
     "recording"           : "Recording",
     "to_record"           : "To record ?",
-    "feature_os_cloud"    : "Does this talk feature an OpenStack cloud?",
+    "attending_media"     : "Allow attending media?",
     "tags"                : "Tags",
     "sponsors"            : "Sponsors",
     "moderator"           : "Moderator",
