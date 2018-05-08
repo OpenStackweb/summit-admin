@@ -22,17 +22,7 @@ export const LOGOUT_USER                    = 'LOGOUT_USER';
 export const REQUEST_USER_INFO              = 'REQUEST_USER_INFO';
 export const RECEIVE_USER_INFO              = 'RECEIVE_USER_INFO';
 
-const createNonce = (length) => {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    for(var i = 0; i < length; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return text;
-}
-
-export const doLogin = (backUrl = null) => {
-
+const getAuthUrl = (backUrl = null) => {
     let oauth2ClientId = process.env['OAUTH2_CLIENT_ID'];
     let baseUrl        = process.env['IDP_BASE_URL'];
     let scopes         = process.env['SCOPES'];
@@ -41,19 +31,40 @@ export const doLogin = (backUrl = null) => {
     if(backUrl != null)
         redirectUri += `?BackUrl=${encodeURI(backUrl)}`;
 
-    let nonce = createNonce(16);
-    console.log(`created nonce ${nonce}`);
-    window.localStorage.setItem('nonce', nonce);
     let url   = URI(`${baseUrl}/oauth2/auth`);
     url       = url.query({
         "response_type"   : encodeURI("token id_token"),
-        "approval_prompt" : "force",
+        "approval_prompt" : "auto",
         "prompt"          : "login+consent",
         "scope"           : encodeURI(scopes),
-        "nonce"           : nonce,
+        "nonce"           : getNonce(),
         "client_id"       : encodeURI(oauth2ClientId),
         "redirect_uri"    : encodeURI(redirectUri)
     });
+
+    return url;
+
+}
+
+const getNonce = () => {
+    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let nonce = window.localStorage.getItem('nonce');
+
+    if (!nonce) {
+        nonce = '';
+        for(let i = 0; i < 16; i++) {
+            nonce += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+
+        console.log(`created nonce ${nonce}`);
+        window.localStorage.setItem('nonce', nonce);
+    }
+
+    return nonce;
+}
+
+export const doLogin = (backUrl = null) => {
+    let url = getAuthUrl(backUrl);
     window.location = url.toString();
 }
 
@@ -70,6 +81,7 @@ export const doLogout = () => (dispatch) => {
         payload: {}
     });
 }
+
 
 export const getUserInfo = (history, backUrl) => (dispatch, getState) => {
 
