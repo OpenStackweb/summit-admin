@@ -25,10 +25,9 @@ import {
 
 import {
     authErrorHandler,
-    fetchResponseHandler,
-    fetchErrorHandler,
     apiBaseUrl,
     showMessage,
+    showSuccessMessage,
     getCSV,
     geoCodeAddress,
     geoCodeLatLng
@@ -171,12 +170,6 @@ export const saveLocation = (entity, allClasses, history) => (dispatch, getState
 
     if (entity.id) {
 
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_location.location_saved"),
-            'success'
-        ];
-
         putRequest(
             createAction(UPDATE_LOCATION),
             createAction(LOCATION_UPDATED),
@@ -186,15 +179,16 @@ export const saveLocation = (entity, allClasses, history) => (dispatch, getState
             entity
         )(params)(dispatch)
             .then((payload) => {
-                dispatch(showMessage(...success_message));
+                dispatch(showSuccessMessage(T.translate("edit_location.location_saved")));
             });
 
     } else {
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_location.location_created"),
-            'success'
-        ];
+
+        let success_message = {
+            title: T.translate("general.done"),
+            html: T.translate("edit_location.location_created"),
+            type: 'success'
+        };
 
         postRequest(
             createAction(UPDATE_LOCATION),
@@ -206,7 +200,7 @@ export const saveLocation = (entity, allClasses, history) => (dispatch, getState
         )(params)(dispatch)
             .then((payload) => {
                 dispatch(showMessage(
-                    ...success_message,
+                    success_message,
                     () => { history.push(`/app/summits/${currentSummit.id}/locations/${payload.response.id}`) }
                 ));
             });
@@ -360,12 +354,6 @@ export const saveFloor = (locationId, entity, history) => (dispatch, getState) =
 
     if (entity.id) {
 
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_floor.floor_saved"),
-            'success'
-        ];
-
         putRequest(
             createAction(UPDATE_FLOOR),
             createAction(FLOOR_UPDATED),
@@ -375,15 +363,16 @@ export const saveFloor = (locationId, entity, history) => (dispatch, getState) =
             entity
         )(params)(dispatch)
             .then((payload) => {
-                dispatch(showMessage(...success_message));
+                dispatch(showSuccessMessage(T.translate("edit_floor.floor_saved")));
             });
 
     } else {
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_floor.floor_created"),
-            'success'
-        ];
+
+        let success_message = {
+            title: T.translate("general.done"),
+            html: T.translate("edit_floor.floor_created"),
+            type: 'success'
+        };
 
         postRequest(
             createAction(UPDATE_FLOOR),
@@ -395,7 +384,7 @@ export const saveFloor = (locationId, entity, history) => (dispatch, getState) =
         )(params)(dispatch)
             .then((payload) => {
                 dispatch(showMessage(
-                    ...success_message,
+                    success_message,
                     () => { history.push(`/app/summits/${currentSummit.id}/locations/${locationId}/floors/${payload.response.id}`) }
                 ));
             });
@@ -480,12 +469,6 @@ export const saveRoom = (locationId, entity, history) => (dispatch, getState) =>
 
     if (entity.id) {
 
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_room.room_saved"),
-            'success'
-        ];
-
         putRequest(
             createAction(UPDATE_ROOM),
             createAction(ROOM_UPDATED),
@@ -495,15 +478,16 @@ export const saveRoom = (locationId, entity, history) => (dispatch, getState) =>
             entity
         )(params)(dispatch)
             .then((payload) => {
-                dispatch(showMessage(...success_message));
+                dispatch(showSuccessMessage(T.translate("edit_room.room_saved")));
             });
 
     } else {
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_room.room_created"),
-            'success'
-        ];
+
+        let success_message = {
+            title: T.translate("general.done"),
+            html: T.translate("edit_room.room_created"),
+            type: 'success'
+        };
 
         postRequest(
             createAction(UPDATE_ROOM),
@@ -515,7 +499,7 @@ export const saveRoom = (locationId, entity, history) => (dispatch, getState) =>
         )(params)(dispatch)
             .then((payload) => {
                 dispatch(showMessage(
-                    ...success_message,
+                    success_message,
                     () => { history.push(`/app/summits/${currentSummit.id}/locations/${locationId}/rooms/${payload.response.id}`) }
                 ));
             });
@@ -599,12 +583,6 @@ export const saveLocationImage = (locationId, entity, file, history) => (dispatc
 
     if (entity.id) {
 
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_location_image.image_saved"),
-            'success'
-        ];
-
         putFile(
             createAction(UPDATE_LOCATION_IMAGE),
             createAction(LOCATION_IMAGE_UPDATED),
@@ -615,15 +593,16 @@ export const saveLocationImage = (locationId, entity, file, history) => (dispatc
             entity
         )(params)(dispatch)
             .then((payload) => {
-                dispatch(showMessage(...success_message));
+                dispatch(showSuccessMessage(T.translate("edit_location_image.image_saved")));
             });
 
     } else {
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_location_image.image_created"),
-            'success'
-        ];
+
+        let success_message = {
+            title: T.translate("general.done"),
+            html: T.translate("edit_location_image.image_created"),
+            type: 'success'
+        };
 
         postFile(
             createAction(UPDATE_LOCATION_IMAGE),
@@ -636,7 +615,7 @@ export const saveLocationImage = (locationId, entity, file, history) => (dispatc
         )(params)(dispatch)
             .then((payload) => {
                 dispatch(showMessage(
-                    ...success_message,
+                    success_message,
                     () => { history.push(`/app/summits/${currentSummit.id}/locations/${locationId}/images/${payload.response.id}`) }
                 ));
             });
@@ -723,12 +702,6 @@ export const saveLocationMap = (locationId, entity, file, history) => (dispatch,
 
     if (entity.id) {
 
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_location_map.map_saved"),
-            'success'
-        ];
-
         putFile(
             createAction(UPDATE_LOCATION_MAP),
             createAction(LOCATION_MAP_UPDATED),
@@ -739,15 +712,16 @@ export const saveLocationMap = (locationId, entity, file, history) => (dispatch,
             entity
         )(params)(dispatch)
             .then((payload) => {
-                dispatch(showMessage(...success_message));
+                dispatch(showSuccessMessage(T.translate("edit_location_map.map_saved")));
             });
 
     } else {
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_location_map.map_created"),
-            'success'
-        ];
+
+        let success_message = {
+            title: T.translate("general.done"),
+            html: T.translate("edit_location_map.map_created"),
+            type: 'success'
+        };
 
         postFile(
             createAction(UPDATE_LOCATION_MAP),
@@ -760,7 +734,7 @@ export const saveLocationMap = (locationId, entity, file, history) => (dispatch,
         )(params)(dispatch)
             .then((payload) => {
                 dispatch(showMessage(
-                    ...success_message,
+                    success_message,
                     () => { history.push(`/app/summits/${currentSummit.id}/locations/${locationId}/maps/${payload.response.id}`) }
                 ));
             });

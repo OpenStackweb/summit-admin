@@ -85,12 +85,22 @@ export const fetchResponseHandler = (response) => {
     }
 }
 
-export const showMessage = (title, text, type, callback = {}) => (dispatch) => {
+export const showMessage = (settings, callback = {}) => (dispatch) => {
     dispatch(stopLoading());
-    swal({title, text, type}).then((result) => {
+
+    swal(settings).then((result) => {
         if (result.value && typeof callback === 'function') {
             callback();
         }
+    });
+}
+
+export const showSuccessMessage = (html) => (dispatch) => {
+    dispatch(stopLoading());
+    swal({
+        title: T.translate("general.done"),
+        html: html,
+        type: 'success'
     });
 }
 

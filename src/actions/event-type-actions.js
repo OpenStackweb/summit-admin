@@ -12,7 +12,7 @@
  **/
 
 import { getRequest, putRequest, postRequest, deleteRequest, createAction, stopLoading, startLoading } from "openstack-uicore-foundation";
-import { authErrorHandler, apiBaseUrl, showMessage, getCSV} from './base-actions';
+import { authErrorHandler, apiBaseUrl, showMessage, showSuccessMessage} from './base-actions';
 import T from "i18n-react/dist/i18n-react";
 
 export const REQUEST_EVENT_TYPES       = 'REQUEST_EVENT_TYPES';
@@ -88,12 +88,6 @@ export const saveEventType = (entity, history) => (dispatch, getState) => {
 
     if (entity.id) {
 
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_event_type.event_type_saved"),
-            'success'
-        ];
-
         putRequest(
             createAction(UPDATE_EVENT_TYPE),
             createAction(EVENT_TYPE_UPDATED),
@@ -103,15 +97,15 @@ export const saveEventType = (entity, history) => (dispatch, getState) => {
             entity
         )(params)(dispatch)
             .then((payload) => {
-                dispatch(showMessage(...success_message));
+                dispatch(showSuccessMessage(T.translate("edit_event_type.event_type_saved")));
             });
 
     } else {
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_event_type.event_type_created"),
-            'success'
-        ];
+        let success_message = {
+            title: T.translate("general.done"),
+            html: T.translate("edit_event_type.event_type_created"),
+            type: 'success'
+        };
 
         postRequest(
             createAction(UPDATE_EVENT_TYPE),
@@ -123,7 +117,7 @@ export const saveEventType = (entity, history) => (dispatch, getState) => {
         )(params)(dispatch)
             .then((payload) => {
                 dispatch(showMessage(
-                    ...success_message,
+                    success_message,
                     () => { history.push(`/app/summits/${currentSummit.id}/event-types/${payload.response.id}`) }
                 ));
             });

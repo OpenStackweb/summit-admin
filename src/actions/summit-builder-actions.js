@@ -16,6 +16,7 @@ import moment from "moment-timezone";
 import SummitEvent from "../models/summit-event";
 import { authErrorHandler, apiBaseUrl } from './base-actions';
 import { ScheduleEventsSearchResultMaxPage } from '../constants';
+import { checkProximityEvents } from './event-actions';
 
 export const REQUEST_UNSCHEDULE_EVENTS_PAGE               = 'REQUEST_UNSCHEDULE_EVENTS_PAGE';
 export const RECEIVE_UNSCHEDULE_EVENTS_PAGE               = 'RECEIVE_UNSCHEDULE_EVENTS_PAGE';
@@ -132,7 +133,7 @@ export const publishEvent = (event, day, startTime, minutes) =>
         )({})(dispatch)
         .then(
             () => {
-                dispatch(stopLoading())
+                dispatch(checkProximityEvents(event));
             }
         )
         .catch(() => {
@@ -216,7 +217,6 @@ export const changeCurrentUnScheduleOrderBy = (orderBy) => (dispatch, getState) 
         }
     ));
 }
-
 
 export const changeCurrentUnscheduleSearchTerm = (term) => (dispatch, getState) => {
 

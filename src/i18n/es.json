@@ -226,6 +226,7 @@
     "event_saved"         : "Event saved successfully.",
     "event_created"       : "Event created successfully.",
     "saved_and_published" : "Event saved & published successfully.",
+    "proximity_alert"     : "Speaker/s have sessions 90min before or after:",
     "placeholders": {
       "select_venue"        : "Select a Summit Venue ...",
       "start_date"          : "Start Date",

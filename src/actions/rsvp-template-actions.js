@@ -12,8 +12,7 @@
  **/
 
 import { getRequest, putRequest, postRequest, deleteRequest, createAction, stopLoading, startLoading } from "openstack-uicore-foundation";
-import { authErrorHandler, fetchResponseHandler, fetchErrorHandler, apiBaseUrl, showMessage } from './base-actions';
-import swal from "sweetalert2";
+import { authErrorHandler, apiBaseUrl, showMessage, showSuccessMessage } from './base-actions';
 import T from "i18n-react/dist/i18n-react";
 
 export const REQUEST_RSVP_TEMPLATES         = 'REQUEST_RSVP_TEMPLATES';
@@ -126,12 +125,6 @@ export const saveRsvpTemplate = (entity, history) => (dispatch, getState) => {
 
     if (entity.id) {
 
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_rsvp_template.rsvp_template_saved"),
-            'success'
-        ];
-
         putRequest(
             createAction(UPDATE_RSVP_TEMPLATE),
             createAction(RSVP_TEMPLATE_UPDATED),
@@ -141,15 +134,15 @@ export const saveRsvpTemplate = (entity, history) => (dispatch, getState) => {
             entity
         )(params)(dispatch)
             .then((payload) => {
-                dispatch(showMessage(...success_message));
+                dispatch(showSuccessMessage(T.translate("edit_rsvp_template.rsvp_template_saved")));
             });
 
     } else {
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_rsvp_template.rsvp_template_created"),
-            'success'
-        ];
+        let success_message = {
+            title: T.translate("general.done"),
+            html: T.translate("edit_rsvp_template.rsvp_template_created"),
+            type: 'success'
+        };
 
         postRequest(
             createAction(UPDATE_RSVP_TEMPLATE),
@@ -161,7 +154,7 @@ export const saveRsvpTemplate = (entity, history) => (dispatch, getState) => {
         )(params)(dispatch)
             .then((payload) => {
                 dispatch(showMessage(
-                    ...success_message,
+                    success_message,
                     () => { history.push(`/app/summits/${currentSummit.id}/rsvp-templates/${payload.response.id}`) }
                 ));
             });
@@ -289,12 +282,6 @@ export const saveRsvpQuestion = (rsvpTemplateId, entity, history) => (dispatch, 
 
     if (entity.id) {
 
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_rsvp_question.rsvp_question_saved"),
-            'success'
-        ];
-
         putRequest(
             createAction(UPDATE_RSVP_QUESTION),
             createAction(RSVP_QUESTION_UPDATED),
@@ -304,15 +291,15 @@ export const saveRsvpQuestion = (rsvpTemplateId, entity, history) => (dispatch, 
             entity
         )(params)(dispatch)
             .then((payload) => {
-                dispatch(showMessage(...success_message));
+                dispatch(showSuccessMessage(T.translate("edit_rsvp_question.rsvp_question_saved")));
             });
 
     } else {
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_rsvp_question.rsvp_question_created"),
-            'success'
-        ];
+        let success_message = {
+            title: T.translate("general.done"),
+            html: T.translate("edit_rsvp_question.rsvp_question_created"),
+            type: 'success'
+        };
 
         postRequest(
             createAction(UPDATE_RSVP_QUESTION),
@@ -324,7 +311,7 @@ export const saveRsvpQuestion = (rsvpTemplateId, entity, history) => (dispatch, 
         )(params)(dispatch)
             .then((payload) => {
                 dispatch(showMessage(
-                    ...success_message,
+                    success_message,
                     () => { history.push(`/app/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${payload.response.id}`) }
                 ));
             });
@@ -421,12 +408,6 @@ export const saveRsvpQuestionValue = (rsvpTemplateId, rsvpQuestionId, entity, hi
 
     if (entity.id) {
 
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_rsvp_question_value.rsvp_question_value_saved"),
-            'success'
-        ];
-
         putRequest(
             createAction(UPDATE_RSVP_QUESTION_VALUE),
             createAction(RSVP_QUESTION_VALUE_UPDATED),
@@ -436,15 +417,16 @@ export const saveRsvpQuestionValue = (rsvpTemplateId, rsvpQuestionId, entity, hi
             entity
         )(params)(dispatch)
             .then((payload) => {
-                dispatch(showMessage(...success_message));
+                dispatch(showSuccessMessage(T.translate("edit_rsvp_question_value.rsvp_question_value_saved")));
             });
 
     } else {
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_rsvp_question_value.rsvp_question_value_created"),
-            'success'
-        ];
+
+        let success_message = {
+            title: T.translate("general.done"),
+            html: T.translate("edit_rsvp_question_value.rsvp_question_value_created"),
+            type: 'success'
+        };
 
         postRequest(
             createAction(UPDATE_RSVP_QUESTION_VALUE),
@@ -456,7 +438,7 @@ export const saveRsvpQuestionValue = (rsvpTemplateId, rsvpQuestionId, entity, hi
         )(params)(dispatch)
             .then((payload) => {
                 dispatch(showMessage(
-                    ...success_message,
+                    success_message,
                     () => { history.push(`/app/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${rsvpQuestionId}/values/${payload.response.id}`) }
                 ));
             });

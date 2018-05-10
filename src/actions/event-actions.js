@@ -12,8 +12,8 @@
  **/
 
 import { getRequest, putRequest, postRequest, deleteRequest, createAction, stopLoading, startLoading } from "openstack-uicore-foundation";
-import { authErrorHandler, fetchResponseHandler, fetchErrorHandler, apiBaseUrl, showMessage} from './base-actions';
-import swal from "sweetalert2";
+import { authErrorHandler, apiBaseUrl, showMessage, showSuccessMessage} from './base-actions';
+import { epochToMomentTimeZone } from '../utils/methods';
 import T from "i18n-react/dist/i18n-react";
 
 export const REQUEST_EVENTS                 = 'REQUEST_EVENTS';
@@ -26,6 +26,7 @@ export const EVENT_ADDED                    = 'EVENT_ADDED';
 export const EVENT_PUBLISHED                = 'EVENT_PUBLISHED';
 export const EVENT_DELETED                  = 'EVENT_DELETED';
 export const FILE_ATTACHED                  = 'FILE_ATTACHED';
+export const RECEIVE_PROXIMITY_EVENTS       = 'RECEIVE_PROXIMITY_EVENTS';
 
 
 export const getEvents = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
@@ -104,14 +105,6 @@ export const saveEvent = (entity, publish, history) => (dispatch, getState) => {
 
     if (entity.id) {
 
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_event.event_saved"),
-            'success'
-        ];
-
-        if (publish) success_message[1] = T.translate("edit_event.saved_and_published");
-
         putRequest(
             createAction(UPDATE_EVENT),
             createAction(EVENT_UPDATED),
@@ -124,15 +117,16 @@ export const saveEvent = (entity, publish, history) => (dispatch, getState) => {
             if (publish)
                 dispatch(publishEvent(normalizedEntity));
             else
-                dispatch(showMessage(...success_message));
+                dispatch(showSuccessMessage(T.translate("edit_event.event_saved")));
         });
 
     } else {
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_event.event_created"),
-            'success'
-        ];
+
+        let success_message = {
+            title: T.translate("general.done"),
+            html: T.translate("edit_event.event_created"),
+            type: 'success'
+        };
 
         postRequest(
             createAction(UPDATE_EVENT),
@@ -149,7 +143,7 @@ export const saveEvent = (entity, publish, history) => (dispatch, getState) => {
             }
             else
                 dispatch(showMessage(
-                    ...success_message,
+                    success_message,
                     () => { history.push(`/app/summits/${currentSummit.id}/events/${payload.response.id}`) }
                 ));
         });
@@ -160,12 +154,6 @@ const publishEvent = (entity) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
-
-    let success_message = [
-        T.translate("general.done"),
-        T.translate("edit_event.saved_and_published"),
-        'success'
-    ];
 
     putRequest(
         null,
@@ -179,8 +167,68 @@ const publishEvent = (entity) => (dispatch, getState) => {
         authErrorHandler
     )({})(dispatch)
     .then((payload) => {
-        dispatch(showMessage(...success_message))
+        dispatch(checkProximityEvents(entity));
     });
+}
+
+export const checkProximityEvents = (event) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+
+    let speaker_ids = event.speakers.map(s => `speaker_id==${s}`);
+    if (event.moderator_speaker_id) {
+        speaker_ids.push(`speaker_id==${event.moderator_speaker_id}`)
+    }
+
+    let from_date = event.start_date - 5400; // minus 1.5hrs
+    let to_date = event.end_date + 5400; // plus 1.5hrs
+
+    let params = {
+        page         : 1,
+        per_page     : 100,
+        access_token : accessToken,
+        expand       : 'location',
+        'filter[]': [
+            speaker_ids.join(','),
+            `end_date>=${from_date}`,
+            `start_date<=${to_date}`,
+        ]
+    };
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_PROXIMITY_EVENTS),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/published`,
+        authErrorHandler
+    )(params)(dispatch)
+        .then((payload) => {
+
+            let success_message = {
+                title: T.translate("general.done"),
+                html: T.translate("edit_event.saved_and_published"),
+                type: 'success'
+            };
+
+            let proximity_events = payload.response.data.filter( e => e.id != event.id );
+
+            if (proximity_events.length > 0) {
+                success_message.width = null;
+                success_message.type = 'warning';
+                success_message.html += `<br/><br/><strong>${T.translate("edit_event.proximity_alert")}</strong><br/>`;
+
+                for(var i in proximity_events) {
+                    let prox_event = proximity_events[i];
+                    let event_date = epochToMomentTimeZone(prox_event.start_date, currentSummit.time_zone_id).format('M/D h:mm a');
+                    success_message.html += `<small><i>"${prox_event.title}"</i> at ${event_date} in ${prox_event.location.name}</small><br/>`;
+                }
+            }
+
+
+            dispatch(showMessage(success_message))
+        }
+    );
 }
 
 export const attachFile = (entity, file) => (dispatch, getState) => {
@@ -228,8 +276,8 @@ const normalizeEntity = (entity) => {
     let normalizedEntity = {...entity};
     if (!normalizedEntity.start_date) delete normalizedEntity['start_date'];
     if (!normalizedEntity.end_date) delete normalizedEntity['end_date'];
-    //if (!normalizedEntity.rsvp_link) delete normalizedEntity['rsvp_link'];
-    //if (!normalizedEntity.rsvp_template_id) delete normalizedEntity['rsvp_template_id'];
+    if (!normalizedEntity.rsvp_link) delete normalizedEntity['rsvp_link'];
+    if (!normalizedEntity.rsvp_template_id) delete normalizedEntity['rsvp_template_id'];
 
     normalizedEntity.tags = normalizedEntity.tags.map((t) => {
         if (typeof t == 'string') return t;
@@ -294,3 +342,4 @@ export const exportEvents = ( term = null, order = 'id', orderDir = 1 ) => (disp
     dispatch(getCSV(`${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/csv`, params, filename));
 
 };
+

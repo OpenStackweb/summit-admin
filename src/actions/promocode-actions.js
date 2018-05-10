@@ -12,8 +12,7 @@
  **/
 
 import { getRequest, putRequest, postRequest, deleteRequest, createAction, stopLoading, startLoading } from "openstack-uicore-foundation";
-import { authErrorHandler, fetchResponseHandler, fetchErrorHandler, apiBaseUrl, showMessage, getCSV} from './base-actions';
-import swal from "sweetalert2";
+import { authErrorHandler, apiBaseUrl, showMessage, showSuccessMessage, getCSV} from './base-actions';
 import T from "i18n-react/dist/i18n-react";
 
 export const REQUEST_PROMOCODES       = 'REQUEST_PROMOCODES';
@@ -134,12 +133,6 @@ export const savePromocode = (entity, history) => (dispatch, getState) => {
 
     if (entity.id) {
 
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_promocode.promocode_saved"),
-            'success'
-        ];
-
         putRequest(
             createAction(UPDATE_PROMOCODE),
             createAction(PROMOCODE_UPDATED),
@@ -149,15 +142,15 @@ export const savePromocode = (entity, history) => (dispatch, getState) => {
             entity
         )({})(dispatch)
             .then((payload) => {
-                dispatch(showMessage(...success_message));
+                dispatch(showSuccessMessage(T.translate("edit_promocode.promocode_saved")));
             });
 
     } else {
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_promocode.promocode_created"),
-            'success'
-        ];
+        let success_message = {
+            title: T.translate("general.done"),
+            html: T.translate("edit_promocode.promocode_created"),
+            type: 'success'
+        };
 
         postRequest(
             createAction(UPDATE_PROMOCODE),
@@ -169,7 +162,7 @@ export const savePromocode = (entity, history) => (dispatch, getState) => {
         )({})(dispatch)
             .then((payload) => {
                 dispatch(showMessage(
-                    ...success_message,
+                    success_message,
                     () => { history.push(`/app/summits/${currentSummit.id}/promocodes/${payload.response.id}`) }
                 ));
             });

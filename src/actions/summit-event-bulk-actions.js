@@ -12,7 +12,7 @@
  **/
 
 import {createAction, getRequest, putRequest, deleteRequest, startLoading, stopLoading} from "openstack-uicore-foundation";
-import {apiBaseUrl, authErrorHandler, showMessage} from "./base-actions";
+import {apiBaseUrl, authErrorHandler, showSuccessMessage} from "./base-actions";
 import T from 'i18n-react/dist/i18n-react'
 import URI from "urijs";
 import {BulkActionEdit, BulkActionUnPublish} from '../constants';
@@ -92,7 +92,7 @@ export const updateEvents = (summitId, events) =>  (dispatch, getState) => {
     let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
     dispatch(startLoading());
-    let success_message = ['Done!', T.translate("bulk_actions_page.messages.update_success") , 'success'];
+
     putRequest(
         null,
         createAction(UPDATED_REMOTE_EVENTS)({}),
@@ -112,7 +112,7 @@ export const updateEvents = (summitId, events) =>  (dispatch, getState) => {
         .then(
             () => {
                 dispatch(stopLoading());
-                dispatch(showMessage(...success_message))
+                dispatch(showSuccessMessage(T.translate("bulk_actions_page.messages.update_success")))
             }
         )
         .catch(()=> {
@@ -124,7 +124,7 @@ export const updateAndPublishEvents = (summitId, events) =>  (dispatch, getState
     let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
     dispatch(startLoading());
-    let success_message = ['Done!', T.translate("bulk_actions_page.messages.update_publish_success") , 'success'];
+
     events = events.map((event) => ({
         id:event.id,
         title:event.title,
@@ -162,7 +162,7 @@ export const updateAndPublishEvents = (summitId, events) =>  (dispatch, getState
                     .then(
                         () => {
                             dispatch(stopLoading());
-                            dispatch(showMessage(...success_message))
+                            dispatch(showSuccessMessage(T.translate("bulk_actions_page.messages.update_publish_success")))
                         }
                     );
             }

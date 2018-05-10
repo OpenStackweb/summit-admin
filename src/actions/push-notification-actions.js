@@ -12,7 +12,7 @@
  **/
 
 import { getRequest, putRequest, postRequest, deleteRequest, createAction, stopLoading, startLoading } from "openstack-uicore-foundation";
-import { authErrorHandler, fetchResponseHandler, fetchErrorHandler, apiBaseUrl, showMessage, getCSV} from './base-actions';
+import { authErrorHandler, apiBaseUrl, showMessage, showSuccessMessage} from './base-actions';
 import T from "i18n-react/dist/i18n-react";
 
 export const REQUEST_PUSH_NOTIFICATIONS       = 'REQUEST_PUSH_NOTIFICATIONS';
@@ -117,12 +117,6 @@ export const savePushNotification = (entity, history) => (dispatch, getState) =>
 
     if (entity.id) {
 
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_push_notification.push_notification_saved"),
-            'success'
-        ];
-
         putRequest(
             createAction(UPDATE_PUSH_NOTIFICATION),
             createAction(PUSH_NOTIFICATION_UPDATED),
@@ -132,15 +126,16 @@ export const savePushNotification = (entity, history) => (dispatch, getState) =>
             entity
         )(params)(dispatch)
             .then((payload) => {
-                dispatch(showMessage(...success_message));
+                dispatch(showSuccessMessage(T.translate("edit_push_notification.push_notification_saved")));
             });
 
     } else {
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_push_notification.push_notification_created"),
-            'success'
-        ];
+
+        let success_message = {
+            title: T.translate("general.done"),
+            html: T.translate("edit_push_notification.push_notification_created"),
+            type: 'success'
+        };
 
         postRequest(
             createAction(UPDATE_PUSH_NOTIFICATION),
@@ -152,7 +147,7 @@ export const savePushNotification = (entity, history) => (dispatch, getState) =>
         )(params)(dispatch)
             .then((payload) => {
                 dispatch(showMessage(
-                    ...success_message,
+                    success_message,
                     () => { history.push(`/app/summits/${currentSummit.id}/push-notifications`) }
                 ));
             });

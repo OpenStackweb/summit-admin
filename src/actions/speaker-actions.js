@@ -12,8 +12,7 @@
  **/
 
 import { getRequest, putRequest, postRequest, deleteRequest, createAction, stopLoading, startLoading } from "openstack-uicore-foundation";
-import { authErrorHandler, fetchResponseHandler, fetchErrorHandler, apiBaseUrl, showMessage, getCSV} from './base-actions';
-import swal from "sweetalert2";
+import { authErrorHandler, apiBaseUrl, showMessage, showSuccessMessage, getCSV} from './base-actions';
 import T from "i18n-react/dist/i18n-react";
 
 export const REQUEST_SPEAKERS       = 'REQUEST_SPEAKERS';
@@ -130,8 +129,7 @@ export const mergeSpeakers = (speakers, selectedFields, changedFields, history) 
     let success_message = [
         T.translate("merge_speakers.merge_success"),
         T.translate("merge_speakers.merge_changes") + changedFields.join(', ') ,
-        'success',
-        () => { history.push(`/app/speakers/${speakers[1].id}`) }
+        'success'
     ];
 
     putRequest(
@@ -143,7 +141,7 @@ export const mergeSpeakers = (speakers, selectedFields, changedFields, history) 
     )({})(dispatch)
     .then((payload) => {
         dispatch(stopLoading());
-        dispatch(showMessage(...success_message));
+        dispatch(showMessage(success_message, () => { history.push(`/app/speakers/${speakers[1].id}`) }));
     });
 };
 
@@ -161,12 +159,6 @@ export const saveSpeaker = (entity, history) => (dispatch, getState) => {
 
     if (entity.id) {
 
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_speaker.speaker_saved"),
-            'success'
-        ];
-
         putRequest(
             createAction(UPDATE_SPEAKER),
             createAction(SPEAKER_UPDATED),
@@ -176,15 +168,15 @@ export const saveSpeaker = (entity, history) => (dispatch, getState) => {
             entity
         )({})(dispatch)
             .then((payload) => {
-                dispatch(showMessage(...success_message));
+                dispatch(showSuccessMessage(T.translate("edit_speaker.speaker_saved")));
             });
 
     } else {
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_speaker.speaker_created"),
-            'success'
-        ];
+        let success_message = {
+            title: T.translate("general.done"),
+            html: T.translate("edit_speaker.speaker_created"),
+            type: 'success'
+        };
 
         postRequest(
             createAction(UPDATE_SPEAKER),
@@ -196,7 +188,7 @@ export const saveSpeaker = (entity, history) => (dispatch, getState) => {
         )({})(dispatch)
             .then((payload) => {
                 dispatch(showMessage(
-                    ...success_message,
+                    success_message,
                     () => { history.push(`/app/summits/${currentSummit.id}/speakers/${payload.response.id}`) }
                 ));
             });
@@ -379,12 +371,6 @@ export const saveAttendance = (entity, history) => (dispatch, getState) => {
 
     if (entity.id) {
 
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_speaker_attendance.attendance_saved"),
-            'success'
-        ];
-
         putRequest(
             createAction(UPDATE_ATTENDANCE),
             createAction(ATTENDANCE_UPDATED),
@@ -394,15 +380,16 @@ export const saveAttendance = (entity, history) => (dispatch, getState) => {
             entity
         )(params)(dispatch)
             .then((payload) => {
-                dispatch(showMessage(...success_message));
+                dispatch(showSuccessMessage(T.translate("edit_speaker_attendance.attendance_saved")));
             });
 
     } else {
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_speaker_attendance.attendance_created"),
-            'success'
-        ];
+
+        let success_message = {
+            title: T.translate("general.done"),
+            html: T.translate("edit_speaker_attendance.attendance_created"),
+            type: 'success'
+        };
 
 
         postRequest(
@@ -415,7 +402,7 @@ export const saveAttendance = (entity, history) => (dispatch, getState) => {
         )(params)(dispatch)
             .then((payload) => {
                 dispatch(showMessage(
-                    ...success_message,
+                    success_message,
                     () => { history.push(`/app/summits/${currentSummit.id}/speaker-attendances/${payload.response.id}`) }
                 ));
             });

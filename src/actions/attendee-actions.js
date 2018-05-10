@@ -12,7 +12,7 @@
  **/
 
 import { getRequest, putRequest, postRequest, deleteRequest, createAction, stopLoading, startLoading } from "openstack-uicore-foundation";
-import { authErrorHandler, fetchResponseHandler, fetchErrorHandler, apiBaseUrl, showMessage} from './base-actions';
+import { authErrorHandler, apiBaseUrl, showMessage, showSuccessMessage} from './base-actions';
 import swal from "sweetalert2";
 import T from "i18n-react/dist/i18n-react";
 
@@ -121,12 +121,6 @@ export const saveAttendee = (entity, history) => (dispatch, getState) => {
 
     if (entity.id) {
 
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_attendee.attendee_saved"),
-            'success'
-        ];
-
         putRequest(
             createAction(UPDATE_ATTENDEE),
             createAction(ATTENDEE_UPDATED),
@@ -139,15 +133,15 @@ export const saveAttendee = (entity, history) => (dispatch, getState) => {
                 dispatch(updateAffiliation(normalizedEntity.affiliation));
             })
             .then((payload) => {
-                dispatch(showMessage(...success_message));
+                dispatch(showSuccessMessage(T.translate("edit_attendee.attendee_saved")));
             });
 
     } else {
-        let success_message = [
-            T.translate("general.done"),
-            T.translate("edit_attendee.attendee_created"),
-            'success'
-        ];
+        let success_message = {
+            title: T.translate("general.done"),
+            html: T.translate("edit_attendee.attendee_created"),
+            type: 'success'
+        };
 
         postRequest(
             createAction(UPDATE_ATTENDEE),
@@ -163,7 +157,7 @@ export const saveAttendee = (entity, history) => (dispatch, getState) => {
             })
             .then((payload) => {
                 dispatch(showMessage(
-                    ...success_message,
+                    success_message,
                     () => { history.push(`/app/summits/${currentSummit.id}/attendees/${payload.response.id}`) }
                 ));
             });
@@ -173,7 +167,6 @@ export const saveAttendee = (entity, history) => (dispatch, getState) => {
 export const updateAffiliation = (affiliation) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
