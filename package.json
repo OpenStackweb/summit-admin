@@ -42,8 +42,10 @@
     "sweetalert2": "7.3.5",
     "urijs": "^1.19.1",
     "url-loader": "^0.6.2",
+    "versioning-webpack-plugin": "^0.1.9",
     "webpack": "^3.11.0",
-    "webpack-dev-server": "^2.11.2"
+    "webpack-dev-server": "^2.11.2",
+    "webpack-md5-hash": "0.0.6"
   },
   "dependencies": {
     "awesome-bootstrap-checkbox": "^1.0.1",

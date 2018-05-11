@@ -4,6 +4,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const UglifyJSPlugin    = require('uglifyjs-webpack-plugin');
 const                 _ = require('lodash');
+const VersioningPlugin = require('versioning-webpack-plugin')
+const WebpackMd5Hash = require('webpack-md5-hash')
 
 var PRODUCTION  = process.env.NODE_ENV === 'production';
 console.log(`FLAVOR ${process.env.FLAVOR}`);
@@ -21,8 +23,7 @@ var plugins = [
     new ExtractTextPlugin({ filename: 'css/[name].css' }),
     new webpack.optimize.CommonsChunkPlugin({
         name: 'common',
-        filename: '__common__.js',
-        //chunks: ["main", "utils"],
+        filename: '__common__[chunkhash].js',
         deepChildren: true
     }),
     new HtmlWebpackPlugin(
@@ -36,7 +37,14 @@ var plugins = [
             .pick(_.keys(dotenvConfig))
             .mapValues((v) => (JSON.stringify(v)))
             .value()
-    })
+    }),
+    // these are the default options
+    new VersioningPlugin({
+        cleanup: true,                      // should it remove old files?
+        basePath: './',                     // manifest.json base path
+        manifestFilename: 'manifest.json'   // name of the manifest file
+    }),
+    new WebpackMd5Hash()
 ];
 
 var productionPlugins = [
@@ -81,7 +89,7 @@ module.exports = {
         historyApiFallback: true
     },
     output: {
-        filename: '[name].js',
+        filename: '[name]_[chunkhash].js',
         path: path.resolve(__dirname, 'dist'),
         publicPath: '/'
     },
