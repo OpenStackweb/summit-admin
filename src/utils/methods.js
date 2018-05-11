@@ -12,6 +12,7 @@
  **/
 
 import moment from 'moment-timezone';
+import URI from "urijs";
 
 export const findElementPos = (obj) => {
     var curtop = -70;
@@ -50,4 +51,15 @@ export const objectToQueryString = (obj) => {
     }
 
     return str;
+}
+
+export const getBackURL = () => {
+    let url      = URI(window.location.href);
+    let query    = url.search(true);
+    let fragment = url.fragment();
+    let backUrl  = query.hasOwnProperty('BackUrl') ? query['BackUrl'] : null;
+    if(fragment != null && fragment != ''){
+        backUrl += `#${fragment}`;
+    }
+    return backUrl;
 }

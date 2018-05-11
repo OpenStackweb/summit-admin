@@ -10,12 +10,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-
 import T from "i18n-react/dist/i18n-react";
 import {stopLoading, startLoading, createAction} from "openstack-uicore-foundation";
-import {objectToQueryString} from '../utils/methods';
+import {getBackURL, objectToQueryString} from '../utils/methods';
 import swal from "sweetalert2";
-
+import {doLogin} from "./auth-actions";
 export const apiBaseUrl         = process.env['API_BASE_URL'];
 export const RECEIVE_COUNTRIES  = 'RECEIVE_COUNTRIES';
 export const VALIDATE           = 'VALIDATE';
@@ -32,13 +31,7 @@ export const authErrorHandler = (err, res) => (dispatch) => {
             swal("ERROR", T.translate("errors.user_not_authz"), "warning");
             break;
         case 401:
-            swal("ERROR", T.translate("errors.session_expired"), "error");
-            dispatch({
-                type: LOGOUT_USER,
-                payload: {
-                    persistStore: true
-                }
-            });
+            doLogin(getBackURL());
             break;
         case 404:
             msg = (err.response.body.message) ? err.response.body.message : err.message;

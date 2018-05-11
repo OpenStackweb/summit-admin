@@ -23,7 +23,8 @@ import { onUserAuth, doLogin, doLogout, getUserInfo } from './actions/auth-actio
 import { BrowserRouter } from 'react-router-dom'
 import { AjaxLoader } from "openstack-uicore-foundation";
 import T from 'i18n-react';
-import URI from "urijs";
+import {getBackURL} from "./utils/methods";
+
 // here is set by default user lang as en
 
 let language = (navigator.languages && navigator.languages[0]) || navigator.language || navigator.userLanguage;
@@ -45,14 +46,7 @@ T.setTexts(require(`./i18n/${language}.json`));
 class App extends React.PureComponent {
 
     onClickLogin(){
-        let url      = URI( window.location.href);
-        let query    = url.search(true);
-        let fragment = url.fragment();
-        let backUrl  = query.hasOwnProperty('BackUrl') ? query['BackUrl'] : null;
-        if(fragment != null && fragment != ''){
-            backUrl += `#${fragment}`;
-        }
-        doLogin(backUrl);
+        doLogin(getBackURL());
     }
 
     render() {

@@ -18,10 +18,11 @@ import {authErrorHandler, apiBaseUrl} from "./base-actions";
 import { AdminGroupCode, SummitAdminGroupCode } from '../constants';
 import URI from "urijs";
 
-export const SET_LOGGED_USER                = 'SET_LOGGED_USER';
-export const LOGOUT_USER                    = 'LOGOUT_USER';
-export const REQUEST_USER_INFO              = 'REQUEST_USER_INFO';
-export const RECEIVE_USER_INFO              = 'RECEIVE_USER_INFO';
+export const SET_LOGGED_USER    = 'SET_LOGGED_USER';
+export const LOGOUT_USER        = 'LOGOUT_USER';
+export const REQUEST_USER_INFO  = 'REQUEST_USER_INFO';
+export const RECEIVE_USER_INFO  = 'RECEIVE_USER_INFO';
+const NONCE_LEN                 = 16;
 
 const getAuthUrl = (backUrl = null) => {
 
@@ -32,14 +33,15 @@ const getAuthUrl = (backUrl = null) => {
 
     if(backUrl != null)
         redirectUri += `?BackUrl=${encodeURI(backUrl)}`;
-    let nonce = createNonce(16);
+
+    let nonce = createNonce(NONCE_LEN);
     console.log(`created nonce ${nonce}`);
+    // store nonce to check it later
     window.localStorage.setItem('nonce', nonce);
     let url   = URI(`${baseUrl}/oauth2/auth`);
-    url       = url.query({
+
+    url = url.query({
         "response_type"   : encodeURI("token id_token"),
-        "approval_prompt" : "auto",
-        "prompt"          : "login+consent",
         "scope"           : encodeURI(scopes),
         "nonce"           : nonce,
         "client_id"       : encodeURI(oauth2ClientId),
