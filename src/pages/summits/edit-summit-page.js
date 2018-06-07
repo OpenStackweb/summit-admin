@@ -17,6 +17,7 @@ import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import SummitForm from '../../components/forms/summit-form';
 import { getSummitById, resetSummitForm, saveSummit }  from '../../actions/summit-actions';
+import { deleteSelectionPlan } from '../../actions/selection-plan-actions';
 import '../../styles/edit-summit-page.less';
 import '../../components/form-validation/validate.less';
 
@@ -25,7 +26,30 @@ class EditSummitPage extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.handleSPlanDelete = this.handleSPlanDelete.bind(this);
     }
+
+    handleSPlanDelete(selectionPlanId, ev) {
+        let {currentSummit} = this.props;
+        let selectionPlan = currentSummit.selection_plans.find(sp => sp.id == selectionPlanId);
+
+        ev.preventDefault();
+
+        swal({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("edit_summit.remove_sp_warning") + ' ' + selectionPlan.name,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: T.translate("general.yes_delete")
+        }).then(function(result){
+            if (result.value) {
+                deleteSelectionPlan(selectionPlanId);
+            }
+        }).catch(swal.noop);
+    }
+
 
     render(){
         let {currentSummit, errors, history} = this.props;
@@ -39,6 +63,7 @@ class EditSummitPage extends React.Component {
                     entity={currentSummit}
                     errors={errors}
                     onSubmit={this.props.saveSummit}
+                    onSPlanDelete={this.handleSPlanDelete}
                 />
             </div>
         )
@@ -55,6 +80,7 @@ export default connect (
     {
         getSummitById,
         saveSummit,
-        resetSummitForm
+        resetSummitForm,
+        deleteSelectionPlan
     }
 )(EditSummitPage);

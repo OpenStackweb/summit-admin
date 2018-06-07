@@ -177,12 +177,6 @@
     "time_zone"                       : "Time Zone",
     "start_date"                      : "Summit Start",
     "end_date"                        : "Summit End",
-    "submission_begin_date"           : "Submissions Start",
-    "submission_end_date"             : "Submissions End",
-    "voting_begin_date"               : "Voting Start",
-    "voting_end_date"                 : "Voting End",
-    "selection_begin_date"            : "TC Selections Start",
-    "selection_end_date"              : "TC Selections End",
     "registration_begin_date"         : "Registration Start",
     "registration_end_date"           : "Registration End",
     "schedule_start_date"             : "Default date to show on schedule page?",
@@ -191,7 +185,24 @@
     "calendar_sync_name"              : "Calendar Sync Name",
     "calendar_sync_desc"              : "Calendar Sync Description",
     "summit_saved"                    : "Summit saved successfully.",
-    "summit_created"                  : "Summit created successfully."
+    "summit_created"                  : "Summit created successfully.",
+    "enabled"                         : "Enabled",
+    "add_splan"                       : "Add Selection Plan",
+    "remove_sp_warning"               : "Are you sure you want to delete selection plan "
+  },
+  "edit_selection_plan": {
+    "selection_plan"                  : "Selection Plan",
+    "selection_plans"                 : "Selection Plans",
+    "name"                            : "Name",
+    "enabled"                         : "Enabled",
+    "submission_begin_date"           : "Submissions Start",
+    "submission_end_date"             : "Submissions End",
+    "voting_begin_date"               : "Voting Start",
+    "voting_end_date"                 : "Voting End",
+    "selection_begin_date"            : "TC Selections Start",
+    "selection_end_date"              : "TC Selections End",
+    "track_groups"                    : "Category Groups",
+    "code"                            : "Code"
   },
   "edit_event": {
     "title"               : "Title",

@@ -34,7 +34,12 @@ export const authErrorHandler = (err, res) => (dispatch) => {
             doLogin(getBackURL());
             break;
         case 404:
-            msg = (err.response.body.message) ? err.response.body.message : err.message;
+            msg = "";
+
+            if (err.response.body && err.response.body.message) msg = err.response.body.message;
+            else if (err.response.error && err.response.error.message) msg = err.response.error.message;
+            else msg = err.message;
+
             swal("Not Found", msg, "warning");
             break;
         case 412:
@@ -165,6 +170,22 @@ export const queryTracks = (summitId, input) => {
     let accessToken = window.accessToken;
 
     return fetch(`${apiBaseUrl}/api/v1/summits/${summitId}/tracks?filter=name=@${input}&order=name&access_token=${accessToken}`)
+        .then(fetchResponseHandler)
+        .then((json) => {
+            let options = [...json.data];
+
+            return {
+                options: options
+            };
+        })
+        .catch(fetchErrorHandler);
+};
+
+export const queryTrackGroups = (summitId, input) => {
+
+    let accessToken = window.accessToken;
+
+    return fetch(`${apiBaseUrl}/api/v1/summits/${summitId}/track-groups?filter=name=@${input}&order=name&access_token=${accessToken}`)
         .then(fetchResponseHandler)
         .then((json) => {
             let options = [...json.data];

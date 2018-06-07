@@ -19,6 +19,8 @@ import DateTimePicker from '../inputs/datetimepicker/index'
 import Input from '../inputs/text-input'
 import Panel from '../sections/panel';
 import Dropdown from '../inputs/dropdown'
+import Table from "../../components/table/Table";
+
 
 import {epochToMomentTimeZone, findElementPos} from '../../utils/methods'
 
@@ -35,6 +37,9 @@ class SummitForm extends React.Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleSPlanEdit = this.handleSPlanEdit.bind(this);
+        this.handleSPlanAdd = this.handleSPlanAdd.bind(this);
+
     }
 
     componentWillReceiveProps(nextProps) {
@@ -97,12 +102,37 @@ class SummitForm extends React.Component {
 
         this.setState({showSection: newShowSection});
     }
-    
+
+    handleSPlanEdit(selectionPlanId, ev) {
+        let {entity, history} = this.props;
+        ev.preventDefault();
+        history.push(`/app/summits/${entity.id}/selection-plans/${selectionPlanId}`);
+    }
+
+    handleSPlanAdd(ev) {
+        let {entity, history} = this.props;
+        ev.preventDefault();
+        history.push(`/app/summits/${entity.id}/selection-plans/new`);
+    }
     
     render() {
         let {entity, showSection} = this.state;
+        let {onSPlanDelete} = this.props;
         let time_zones_ddl = moment.tz.names().map(tz => ({label: tz, value: tz}));
         let dates_enabled = (entity.hasOwnProperty('time_zone_id') && entity.time_zone_id != '');
+
+        let splan_columns = [
+            { columnKey: 'name', value: T.translate("edit_summit.name") },
+            { columnKey: 'enabled', value: T.translate("edit_summit.enabled") }
+        ];
+
+        let splan_table_options = {
+            className: "dataTable",
+            actions: {
+                edit: { onClick: this.handleSPlanEdit },
+                delete: { onClick: onSPlanDelete }
+            }
+        }
 
         return (
             <form>
@@ -256,78 +286,6 @@ class SummitForm extends React.Component {
                     </div>
                     <div className="row form-group">
                         <div className="col-md-6">
-                            <label> {T.translate("edit_summit.submission_begin_date")} </label>
-                            <DateTimePicker
-                                id="submission_begin_date"
-                                disabled={!dates_enabled}
-                                onChange={this.handleChange}
-                                format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                                timezone={entity.time_zone_id}
-                                value={epochToMomentTimeZone(entity.submission_begin_date, entity.time_zone_id)}
-                            />
-                        </div>
-                        <div className="col-md-6">
-                            <label> {T.translate("edit_summit.submission_end_date")} </label>
-                            <DateTimePicker
-                                id="submission_end_date"
-                                disabled={!dates_enabled}
-                                onChange={this.handleChange}
-                                format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                                timezone={entity.time_zone_id}
-                                value={epochToMomentTimeZone(entity.submission_end_date, entity.time_zone_id)}
-                            />
-                        </div>
-                    </div>
-                    <div className="row form-group">
-                        <div className="col-md-6">
-                            <label> {T.translate("edit_summit.voting_begin_date")} </label>
-                            <DateTimePicker
-                                id="voting_begin_date"
-                                disabled={!dates_enabled}
-                                onChange={this.handleChange}
-                                format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                                timezone={entity.time_zone_id}
-                                value={epochToMomentTimeZone(entity.voting_begin_date, entity.time_zone_id)}
-                            />
-                        </div>
-                        <div className="col-md-6">
-                            <label> {T.translate("edit_summit.voting_end_date")} </label>
-                            <DateTimePicker
-                                id="voting_end_date"
-                                disabled={!dates_enabled}
-                                onChange={this.handleChange}
-                                format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                                timezone={entity.time_zone_id}
-                                value={epochToMomentTimeZone(entity.voting_end_date, entity.time_zone_id)}
-                            />
-                        </div>
-                    </div>
-                    <div className="row form-group">
-                        <div className="col-md-6">
-                            <label> {T.translate("edit_summit.selection_begin_date")} </label>
-                            <DateTimePicker
-                                id="selection_begin_date"
-                                disabled={!dates_enabled}
-                                onChange={this.handleChange}
-                                format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                                timezone={entity.time_zone_id}
-                                value={epochToMomentTimeZone(entity.selection_begin_date, entity.time_zone_id)}
-                            />
-                        </div>
-                        <div className="col-md-6">
-                            <label> {T.translate("edit_summit.selection_end_date")} </label>
-                            <DateTimePicker
-                                id="selection_end_date"
-                                disabled={!dates_enabled}
-                                onChange={this.handleChange}
-                                format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                                timezone={entity.time_zone_id}
-                                value={epochToMomentTimeZone(entity.selection_end_date, entity.time_zone_id)}
-                            />
-                        </div>
-                    </div>
-                    <div className="row form-group">
-                        <div className="col-md-6">
                             <label> {T.translate("edit_summit.registration_begin_date")} </label>
                             <DateTimePicker
                                 id="registration_begin_date"
@@ -374,6 +332,20 @@ class SummitForm extends React.Component {
                             />
                         </div>
                     </div>
+
+                    {entity.selection_plans.length > 0 &&
+                    <div>
+                        <input type="button" onClick={this.handleSPlanAdd}
+                               className="btn btn-primary pull-right" value={T.translate("edit_summit.add_splan")}/>
+                        <Table
+                            options={splan_table_options}
+                            data={entity.selection_plans}
+                            columns={splan_columns}
+                            className="dataTable"
+                        />
+                    </div>
+                    }
+
                 </Panel>
 
                 <Panel show={showSection == 'calendar'} title={T.translate("edit_summit.calendar_sync")}

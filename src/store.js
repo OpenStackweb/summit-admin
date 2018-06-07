@@ -49,6 +49,7 @@ import ticketTypeListReducer from './reducers/tickets/ticket-type-list-reducer';
 import ticketTypeReducer from './reducers/tickets/ticket-type-reducer';
 import pushNotificationListReducer from './reducers/push_notifications/push-notification-list-reducer';
 import pushNotificationReducer from './reducers/push_notifications/push-notification-reducer';
+import selectionPlanReducer from './reducers/summits/selection-plan-reducer';
 
 
 import thunk from 'redux-thunk';
@@ -97,7 +98,8 @@ const reducers = persistCombineReducers(config, {
     currentTicketTypeListState: ticketTypeListReducer,
     currentTicketTypeState: ticketTypeReducer,
     currentPushNotificationListState: pushNotificationListReducer,
-    currentPushNotificationState: pushNotificationReducer
+    currentPushNotificationState: pushNotificationReducer,
+    currentSelectionPlanState: selectionPlanReducer
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

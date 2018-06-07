@@ -95,12 +95,20 @@ export const loadSummits = () => (dispatch, getState) => {
 
     dispatch(startLoading());
 
+    let params = {
+        access_token : accessToken,
+        expand: 'none',
+        relations: 'none',
+        page: 1,
+        per_page: 5
+    };
+
     getRequest(
         createAction(REQUEST_SUMMITS),
         createAction(RECEIVE_SUMMITS),
-        `${apiBaseUrl}/api/v1/summits/all?expand=none&relations=none&access_token=${accessToken}`,
+        `${apiBaseUrl}/api/v1/summits?expand=none&relations=none&access_token=${accessToken}`,
         authErrorHandler
-    )({})(dispatch, getState).then(() => {
+    )(params)(dispatch, getState).then(() => {
             dispatch(stopLoading());
         }
     );
@@ -215,12 +223,6 @@ const normalizeEntity = (entity) => {
     if (!normalizedEntity['registration_end_date']) normalizedEntity['registration_end_date'] = null;
     if (!normalizedEntity['schedule_start_date']) normalizedEntity['schedule_start_date'] = null;
     if (!normalizedEntity['start_showing_venues_date']) normalizedEntity['start_showing_venues_date'] = null;
-    if (!normalizedEntity['selection_begin_date']) normalizedEntity['selection_begin_date'] = null;
-    if (!normalizedEntity['selection_end_date']) normalizedEntity['selection_end_date'] = null;
-    if (!normalizedEntity['submission_begin_date']) normalizedEntity['submission_begin_date'] = null;
-    if (!normalizedEntity['submission_end_date']) normalizedEntity['submission_end_date'] = null;
-    if (!normalizedEntity['voting_begin_date']) normalizedEntity['voting_begin_date'] = null;
-    if (!normalizedEntity['voting_end_date']) normalizedEntity['voting_end_date'] = null;
     if (!normalizedEntity['start_date']) normalizedEntity['start_date'] = null;
     if (!normalizedEntity['end_date']) normalizedEntity['end_date'] = null;
 

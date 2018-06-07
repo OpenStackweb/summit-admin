@@ -3,6 +3,7 @@ import { SET_CURRENT_SUMMIT, RECEIVE_SUMMIT, SUMMIT_UPDATED, SUMMIT_ADDED, RESET
 import { EVENT_CATEGORY_UPDATED, EVENT_CATEGORY_ADDED, EVENT_CATEGORY_DELETED, EVENT_CATEGORIES_SEEDED } from '../../actions/event-category-actions';
 import { EVENT_TYPE_UPDATED, EVENT_TYPE_ADDED, EVENT_TYPE_DELETED, EVENT_TYPES_SEEDED } from '../../actions/event-type-actions';
 import { LOCATION_UPDATED, LOCATION_ADDED, LOCATION_DELETED } from '../../actions/location-actions';
+import { SELECTION_PLAN_DELETED } from "../../actions/selection-plan-actions";
 
 export const DEFAULT_ENTITY = {
     id: 0,
@@ -33,8 +34,6 @@ export const DEFAULT_ENTITY = {
     schedule_start_date: 0,
     secondary_registration_label: '',
     secondary_registration_link: '',
-    selection_begin_date: 0,
-    selection_end_date: 0,
     speaker_announcement_email_accepted_alternate_count: 0,
     speaker_announcement_email_accepted_count: 0,
     speaker_announcement_email_accepted_rejected_count: 0,
@@ -44,17 +43,14 @@ export const DEFAULT_ENTITY = {
     speakers_count: 0,
     start_date: 0,
     start_showing_venues_date: 0,
-    submission_begin_date: 0,
-    submission_end_date: 0,
     ticket_types: [],
     time_zone: {},
     time_zone_id: '',
     timestamp: 0,
     tracks: [],
     type_id: 0,
-    voting_begin_date: 0,
-    voting_end_date: 0,
-    wifi_connections: []
+    wifi_connections: [],
+    selection_plans: []
 }
 
 const DEFAULT_STATE = {
@@ -162,6 +158,12 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
             let {locationId} = payload;
             let locations = state.currentSummit.locations.filter(l => l.id != locationId);
             return {...state, currentSummit: {...state.currentSummit, locations: locations}};
+        }
+        break;
+        case SELECTION_PLAN_DELETED: {
+            let {selectionPlanId} = payload;
+            let selection_plans = state.currentSummit.selection_plans.filter(sp => sp.id != selectionPlanId);
+            return {...state, currentSummit: {...state.currentSummit, selection_plans: selection_plans}};
         }
         break;
         default:

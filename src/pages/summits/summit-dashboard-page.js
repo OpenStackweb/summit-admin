@@ -92,29 +92,37 @@ class SummitDashboardPage extends React.Component {
                         <div className="col-md-4"> {this.getFormattedTime(currentSummit.end_date)} </div>
                     </div>
                     <div className={'row ' + this.getTimeClass(currentSummit.start_date, currentSummit.end_date)}>
-                        <div className="col-md-2"> <i className="fa fa-calendar"></i> {T.translate("dashboard.submission")} </div>
-                        <div className="col-md-4"> {this.getFormattedTime(currentSummit.submission_begin_date)} </div>
-                        <div className="col-md-1"> <i className="fa fa-angle-double-right"></i> </div>
-                        <div className="col-md-4"> {this.getFormattedTime(currentSummit.submission_end_date)} </div>
-                    </div>
-                    <div className={'row ' + this.getTimeClass(currentSummit.start_date, currentSummit.end_date)}>
-                        <div className="col-md-2"> <i className="fa fa-calendar"></i> {T.translate("dashboard.voting")} </div>
-                        <div className="col-md-4"> {this.getFormattedTime(currentSummit.voting_begin_date)} </div>
-                        <div className="col-md-1"> <i className="fa fa-angle-double-right"></i> </div>
-                        <div className="col-md-4"> {this.getFormattedTime(currentSummit.voting_end_date)} </div>
-                    </div>
-                    <div className={'row ' + this.getTimeClass(currentSummit.start_date, currentSummit.end_date)}>
-                        <div className="col-md-2"> <i className="fa fa-calendar"></i> {T.translate("dashboard.selection")} </div>
-                        <div className="col-md-4"> {this.getFormattedTime(currentSummit.selection_begin_date)} </div>
-                        <div className="col-md-1"> <i className="fa fa-angle-double-right"></i> </div>
-                        <div className="col-md-4"> {this.getFormattedTime(currentSummit.selection_end_date)} </div>
-                    </div>
-                    <div className={'row ' + this.getTimeClass(currentSummit.start_date, currentSummit.end_date)}>
                         <div className="col-md-2"> <i className="fa fa-calendar"></i> {T.translate("dashboard.registration")} </div>
                         <div className="col-md-4"> {this.getFormattedTime(currentSummit.registration_begin_date)} </div>
                         <div className="col-md-1"> <i className="fa fa-angle-double-right"></i> </div>
                         <div className="col-md-4"> {this.getFormattedTime(currentSummit.registration_end_date)} </div>
                     </div>
+                    {currentSummit.selection_plans.map(sp => (
+                        <div key={'seleplan_'+sp.id} className="selection-plan row">
+                            <div className="col-md-12">{sp.name}</div>
+                            <div className="col-md-12">
+                                <div className={'row ' + this.getTimeClass(currentSummit.start_date, currentSummit.end_date)}>
+                                    <div className="col-md-2"> <i className="fa fa-calendar"></i> {T.translate("dashboard.submission")} </div>
+                                    <div className="col-md-4"> {this.getFormattedTime(sp.submission_begin_date)} </div>
+                                    <div className="col-md-1"> <i className="fa fa-angle-double-right"></i> </div>
+                                    <div className="col-md-4"> {this.getFormattedTime(sp.submission_end_date)} </div>
+                                </div>
+                                <div className={'row ' + this.getTimeClass(currentSummit.start_date, currentSummit.end_date)}>
+                                    <div className="col-md-2"> <i className="fa fa-calendar"></i> {T.translate("dashboard.voting")} </div>
+                                    <div className="col-md-4"> {this.getFormattedTime(sp.voting_begin_date)} </div>
+                                    <div className="col-md-1"> <i className="fa fa-angle-double-right"></i> </div>
+                                    <div className="col-md-4"> {this.getFormattedTime(sp.voting_end_date)} </div>
+                                </div>
+                                <div className={'row ' + this.getTimeClass(currentSummit.start_date, currentSummit.end_date)}>
+                                    <div className="col-md-2"> <i className="fa fa-calendar"></i> {T.translate("dashboard.selection")} </div>
+                                    <div className="col-md-4"> {this.getFormattedTime(sp.selection_begin_date)} </div>
+                                    <div className="col-md-1"> <i className="fa fa-angle-double-right"></i> </div>
+                                    <div className="col-md-4"> {this.getFormattedTime(sp.selection_end_date)} </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+
                     <hr/>
                     <h4>{T.translate("dashboard.events")}</h4>
                     <div className="row">

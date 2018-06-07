@@ -15,11 +15,13 @@ import React from 'react'
 import { connect } from 'react-redux';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { Breadcrumb } from 'react-breadcrumbs';
+import T from "i18n-react/dist/i18n-react";
 
 import { getSummitById }  from '../actions/summit-actions';
 
 import SummitDashboardPage from '../pages/summits/summit-dashboard-page'
 import EditSummitPage from '../pages/summits/edit-summit-page'
+import EditSelectionPlanPage from '../pages/summits/edit-selection-plan-page'
 import EventTypeLayout from './event-type-layout'
 import SpeakerAttendanceLayout from './speaker-attendance-layout'
 import EventLayout from './event-layout'
@@ -65,6 +67,17 @@ class SummitIdLayout extends React.Component {
                     <Route path={`${match.url}/rsvp-templates`} component={RsvpTemplateLayout}/>
                     <Route path={`${match.url}/ticket-types`} component={TicketTypeLayout}/>
                     <Route path={`${match.url}/push-notifications`} component={PushNotificationLayout}/>
+                    <Route path={`${match.url}/selection-plans`} render={
+                        props => (
+                            <div>
+                                <Breadcrumb data={{ title: T.translate("edit_selection_plan.selection_plans"), pathname: match.url }} ></Breadcrumb>
+                                <Switch>
+                                    <Route exact path={`${props.match.url}/new`} component={EditSelectionPlanPage} />
+                                    <Route exact path={`${props.match.url}/:selection_plan_id`} component={EditSelectionPlanPage} />
+                                </Switch>
+                            </div>
+                        )}
+                    />
                     <Route exact path={`${match.url}/dashboard`} component={SummitDashboardPage}/>
                     <Route exact path={`${match.url}`} component={EditSummitPage}/>
                     <Route render={props => (<Redirect to={`${match.url}/dashboard`}/>)}/>
