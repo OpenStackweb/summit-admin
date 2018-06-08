@@ -17,7 +17,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
 import SelectionPlanForm from '../../components/forms/selection-plan-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getSelectionPlan, resetSelectionPlanForm, saveSelectionPlan, addTrackGroupToSelectionPlan, removeTrackGroupToSelectionPlan } from "../../actions/selection-plan-actions";
+import { getSelectionPlan, resetSelectionPlanForm, saveSelectionPlan, addTrackGroupToSelectionPlan, removeTrackGroupFromSelectionPlan } from "../../actions/selection-plan-actions";
 
 class EditSelectionPlanPage extends React.Component {
 

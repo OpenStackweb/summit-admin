@@ -29,6 +29,19 @@ class NavMenu extends React.Component {
         }
 
         this.drawMenuItem = this.drawMenuItem.bind(this);
+        this.closeMenu = this.closeMenu.bind(this);
+    }
+
+    componentDidMount() {
+        document.body.addEventListener('click', this.closeMenu);
+    }
+
+    componentWillUnmount() {
+        document.body.removeEventListener('click', this.closeMenu);
+    }
+
+    closeMenu() {
+        this.setState({menuOpen: false});
     }
 
     toggleSubMenu(event, submenu) {
@@ -131,6 +144,9 @@ class NavMenu extends React.Component {
                 {show &&
                 <div className="separator">
                     {currentSummit.name} {T.translate('general.summit')}
+                    <a href="" className="edit-summit" onClick={(e) => this.onMenuItemClick(e, `summits/${summit_id}`)}>
+                        <i className="fa fa-pencil-square-o"></i>
+                    </a>
                 </div>
                 }
 

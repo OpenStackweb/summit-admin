@@ -110,7 +110,7 @@ class SelectionPlanForm extends React.Component {
 
         let trackGroupsColumns = [
             { columnKey: 'name', value: T.translate("edit_selection_plan.name") },
-            { columnKey: 'code', value: T.translate("edit_selection_plan.code") }
+            { columnKey: 'description', value: T.translate("edit_selection_plan.description") }
         ];
 
         return (

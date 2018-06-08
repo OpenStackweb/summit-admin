@@ -202,7 +202,7 @@
     "selection_begin_date"            : "TC Selections Start",
     "selection_end_date"              : "TC Selections End",
     "track_groups"                    : "Category Groups",
-    "code"                            : "Code"
+    "description"                     : "Description"
   },
   "edit_event": {
     "title"               : "Title",
