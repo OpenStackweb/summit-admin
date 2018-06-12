@@ -202,7 +202,10 @@
     "selection_begin_date"            : "TC Selections Start",
     "selection_end_date"              : "TC Selections End",
     "track_groups"                    : "Category Groups",
-    "description"                     : "Description"
+    "description"                     : "Description",
+    "max_submissions"                 : "Max Submissions Per User",
+    "selection_plan_saved"            : "Selection Plan saved successfully.",
+    "selection_plan_created"          : "Selection Plan created successfully."
   },
   "edit_event": {
     "title"               : "Title",

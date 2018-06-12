@@ -14,6 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
+import swal from "sweetalert2";
 import { Breadcrumb } from 'react-breadcrumbs';
 import SummitForm from '../../components/forms/summit-form';
 import { getSummitById, resetSummitForm, saveSummit }  from '../../actions/summit-actions';
@@ -31,7 +32,7 @@ class EditSummitPage extends React.Component {
     }
 
     handleSPlanDelete(selectionPlanId, ev) {
-        let {currentSummit} = this.props;
+        let {currentSummit, deleteSelectionPlan} = this.props;
         let selectionPlan = currentSummit.selection_plans.find(sp => sp.id == selectionPlanId);
 
         ev.preventDefault();

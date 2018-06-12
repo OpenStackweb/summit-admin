@@ -49,7 +49,7 @@ export const getSummitById = (summitId) => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_SUMMIT),
-        `${apiBaseUrl}/api/v1/summits/${summitId}`,
+        `${apiBaseUrl}/api/v2/summits/${summitId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -106,7 +106,7 @@ export const loadSummits = () => (dispatch, getState) => {
     getRequest(
         createAction(REQUEST_SUMMITS),
         createAction(RECEIVE_SUMMITS),
-        `${apiBaseUrl}/api/v1/summits?expand=none&relations=none&access_token=${accessToken}`,
+        `${apiBaseUrl}/api/v1/summits/all?expand=none&relations=none&access_token=${accessToken}`,
         authErrorHandler
     )(params)(dispatch, getState).then(() => {
             dispatch(stopLoading());

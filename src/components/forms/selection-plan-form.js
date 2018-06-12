@@ -63,6 +63,10 @@ class SelectionPlanForm extends React.Component {
             value = ev.target.checked;
         }
 
+        if (ev.target.type == 'datetime') {
+            value = value.valueOf() / 1000;
+        }
+
         errors[id] = '';
         entity[id] = value;
         this.setState({entity: entity, errors: errors});
@@ -118,13 +122,24 @@ class SelectionPlanForm extends React.Component {
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
                     <div className="col-md-6">
-                        <label> {T.translate("edit_selection_plan.name")} </label>
+                        <label> {T.translate("edit_selection_plan.name")} *</label>
                         <Input
                             id="name"
                             className="form-control"
                             error={this.hasErrors('name')}
                             onChange={this.handleChange}
                             value={entity.name}
+                        />
+                    </div>
+                    <div className="col-md-3">
+                        <label> {T.translate("edit_selection_plan.max_submissions")}</label>
+                        <Input
+                            className="form-control"
+                            type="number"
+                            error={this.hasErrors('max_submission_allowed_per_user')}
+                            id="max_submission_allowed_per_user"
+                            value={entity.max_submission_allowed_per_user}
+                            onChange={this.handleChange}
                         />
                     </div>
                     <div className="col-md-3 checkboxes-div">

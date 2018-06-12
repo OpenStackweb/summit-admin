@@ -71,13 +71,13 @@ export const saveSelectionPlan = (entity, history) => (dispatch, getState) => {
             entity
         )({})(dispatch)
             .then((payload) => {
-                dispatch(showSuccessMessage(T.translate("edit_selection_plan.promocode_saved")));
+                dispatch(showSuccessMessage(T.translate("edit_selection_plan.selection_plan_saved")));
             });
 
     } else {
         let success_message = {
             title: T.translate("general.done"),
-            html: T.translate("edit_selection_plan.promocode_created"),
+            html: T.translate("edit_selection_plan.selection_plan_created"),
             type: 'success'
         };
 
@@ -175,6 +175,12 @@ const normalizeEntity = (entity) => {
     if (!normalizedEntity['submission_end_date']) normalizedEntity['submission_end_date'] = null;
     if (!normalizedEntity['voting_begin_date']) normalizedEntity['voting_begin_date'] = null;
     if (!normalizedEntity['voting_end_date']) normalizedEntity['voting_end_date'] = null;
+
+    delete(normalizedEntity['created']);
+    delete(normalizedEntity['last_edited']);
+    delete(normalizedEntity['id']);
+    delete(normalizedEntity['summit_id']);
+    delete(normalizedEntity['track_groups']);
 
     return normalizedEntity;
 

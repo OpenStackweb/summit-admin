@@ -3,7 +3,7 @@ import { SET_CURRENT_SUMMIT, RECEIVE_SUMMIT, SUMMIT_UPDATED, SUMMIT_ADDED, RESET
 import { EVENT_CATEGORY_UPDATED, EVENT_CATEGORY_ADDED, EVENT_CATEGORY_DELETED, EVENT_CATEGORIES_SEEDED } from '../../actions/event-category-actions';
 import { EVENT_TYPE_UPDATED, EVENT_TYPE_ADDED, EVENT_TYPE_DELETED, EVENT_TYPES_SEEDED } from '../../actions/event-type-actions';
 import { LOCATION_UPDATED, LOCATION_ADDED, LOCATION_DELETED } from '../../actions/location-actions';
-import { SELECTION_PLAN_DELETED } from "../../actions/selection-plan-actions";
+import { SELECTION_PLAN_DELETED, SELECTION_PLAN_ADDED } from "../../actions/selection-plan-actions";
 
 export const DEFAULT_ENTITY = {
     id: 0,
@@ -158,6 +158,11 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
             let {locationId} = payload;
             let locations = state.currentSummit.locations.filter(l => l.id != locationId);
             return {...state, currentSummit: {...state.currentSummit, locations: locations}};
+        }
+        break;
+        case SELECTION_PLAN_ADDED: {
+            let { response } = payload;
+            return {...state, currentSummit: {...state.currentSummit, selection_plans: [...state.currentSummit.selection_plans, response]}};
         }
         break;
         case SELECTION_PLAN_DELETED: {
