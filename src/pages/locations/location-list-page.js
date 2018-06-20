@@ -15,7 +15,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import swal from "sweetalert2";
-import SortableTable from "../../components/table-sortable/SortableTable";
+import { SortableTable } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getLocations, deleteLocation, exportLocations, updateLocationOrder } from "../../actions/location-actions";
 

@@ -11,12 +11,20 @@
  * limitations under the License.
  **/
 
-import {createAction, getRequest, putRequest, startLoading, stopLoading, deleteRequest } from "openstack-uicore-foundation";
 import moment from "moment-timezone";
 import SummitEvent from "../models/summit-event";
 import { authErrorHandler, apiBaseUrl } from './base-actions';
 import { ScheduleEventsSearchResultMaxPage } from '../constants';
 import { checkProximityEvents } from './event-actions';
+import {
+    createAction,
+    getRequest,
+    putRequest,
+    startLoading,
+    stopLoading,
+    deleteRequest
+} from "openstack-uicore-foundation/lib/methods";
+
 
 export const REQUEST_UNSCHEDULE_EVENTS_PAGE               = 'REQUEST_UNSCHEDULE_EVENTS_PAGE';
 export const RECEIVE_UNSCHEDULE_EVENTS_PAGE               = 'RECEIVE_UNSCHEDULE_EVENTS_PAGE';

@@ -11,18 +11,22 @@
  * limitations under the License.
  **/
 
+import {apiBaseUrl, authErrorHandler } from "./base-actions";
+import T from "i18n-react/dist/i18n-react";
 import {
-    createAction,
     getRequest,
     putRequest,
     postRequest,
-    startLoading,
+    deleteRequest,
+    createAction,
     stopLoading,
+    startLoading,
+    showMessage,
+    showSuccessMessage,
     postFile,
     putFile
-} from "openstack-uicore-foundation";
-import {apiBaseUrl, authErrorHandler, showMessage, showSuccessMessage} from "./base-actions";
-import T from "i18n-react/dist/i18n-react";
+} from 'openstack-uicore-foundation/lib/methods';
+
 
 
 export const RECEIVE_SUMMIT           = 'RECEIVE_SUMMIT';

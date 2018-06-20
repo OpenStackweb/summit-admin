@@ -14,14 +14,16 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import {findElementPos} from '../../utils/methods'
-import Dropdown from '../inputs/dropdown'
-import CountryDropdown from '../inputs/country-dropdown'
-import Input from '../inputs/text-input'
-import TextEditor from '../inputs/editor-input'
-import Table from '../table/Table';
-import Panel from '../sections/panel';
-import GMap from '../google-map'
+import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
+import {
+    Dropdown,
+    CountryDropdown,
+    Input,
+    TextEditor,
+    Table,
+    Panel,
+    GMap
+} from 'openstack-uicore-foundation/lib/components'
 
 
 class LocationForm extends React.Component {

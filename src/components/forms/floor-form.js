@@ -14,11 +14,8 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import {findElementPos} from '../../utils/methods'
-import Input from '../inputs/text-input'
-import TextEditor from '../inputs/editor-input'
-import Panel from '../sections/panel'
-import Table from "../table/Table";
+import { Input, TextEditor, Panel, Table } from 'openstack-uicore-foundation/lib/components'
+import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/methods'
 
 
 class FloorForm extends React.Component {

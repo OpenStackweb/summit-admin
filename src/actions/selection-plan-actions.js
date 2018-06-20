@@ -11,9 +11,19 @@
  * limitations under the License.
  **/
 
-import { getRequest, putRequest, postRequest, deleteRequest, createAction, stopLoading, startLoading } from "openstack-uicore-foundation";
-import { authErrorHandler, apiBaseUrl, showMessage, showSuccessMessage} from './base-actions';
+import { authErrorHandler, apiBaseUrl } from './base-actions';
 import T from "i18n-react/dist/i18n-react";
+import {
+    getRequest,
+    putRequest,
+    postRequest,
+    deleteRequest,
+    createAction,
+    stopLoading,
+    startLoading,
+    showMessage,
+    showSuccessMessage
+} from 'openstack-uicore-foundation/lib/methods';
 
 export const RECEIVE_SELECTION_PLAN        = 'RECEIVE_SELECTION_PLAN';
 export const RESET_SELECTION_PLAN_FORM     = 'RESET_SELECTION_PLAN_FORM';

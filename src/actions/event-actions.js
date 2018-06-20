@@ -11,10 +11,21 @@
  * limitations under the License.
  **/
 
-import { getRequest, putRequest, postRequest, deleteRequest, createAction, stopLoading, startLoading } from "openstack-uicore-foundation";
-import { authErrorHandler, apiBaseUrl, showMessage, showSuccessMessage} from './base-actions';
-import { epochToMomentTimeZone } from '../utils/methods';
+import { authErrorHandler, apiBaseUrl } from './base-actions';
 import T from "i18n-react/dist/i18n-react";
+import {
+    getRequest,
+    putRequest,
+    postRequest,
+    deleteRequest,
+    createAction,
+    stopLoading,
+    startLoading,
+    showMessage,
+    showSuccessMessage,
+    epochToMomentTimeZone
+} from "openstack-uicore-foundation/lib/methods";
+
 
 export const REQUEST_EVENTS                 = 'REQUEST_EVENTS';
 export const RECEIVE_EVENTS                 = 'RECEIVE_EVENTS';

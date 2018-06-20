@@ -15,7 +15,7 @@ import PropTypes from 'prop-types';
 import { DraggableItemTypes } from './draggable-items-types';
 import { DragSource } from 'react-dnd';
 import {Popover, OverlayTrigger} from 'react-bootstrap';
-import RawHTML from '../raw-html';
+import { RawHTML } from 'openstack-uicore-foundation/lib/components';
 
 const UnScheduleEventSource = {
     beginDrag(props) {

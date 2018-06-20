@@ -16,9 +16,7 @@ import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import swal from "sweetalert2";
 import { Pagination } from 'react-bootstrap';
-import FreeTextSearch from "../../components/free-text-search/index";
-import Dropdown from '../../components/inputs/dropdown';
-import Table from "../../components/table/Table";
+import { FreeTextSearch, Dropdown, Table } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getPromocodes, getPromocodeMeta, deletePromocode, exportPromocodes } from "../../actions/promocode-actions";
 

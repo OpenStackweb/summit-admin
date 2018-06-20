@@ -14,8 +14,7 @@ import React from 'react'
 import SummitEventBulkEditorItem from './summit-event-bulk-editor-item'
 import T from 'i18n-react/dist/i18n-react'
 import swal from "sweetalert2";
-import DateTimePicker from '../inputs/datetimepicker'
-import Dropdown from '../inputs/dropdown'
+import { DateTimePicker, Dropdown } from 'openstack-uicore-foundation/lib/components'
 import ScheduleAdminVenueSelector from '../schedule-builder/schedule-admin-venue-selector';
 import ScheduleAdminEventTypeSelector from '../schedule-builder/schedule-admin-event-type-selector';
 import moment from "moment-timezone";

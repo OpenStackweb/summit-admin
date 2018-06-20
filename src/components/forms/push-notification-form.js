@@ -14,10 +14,7 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import MemberInput from '../inputs/member-input'
-import GroupInput from '../inputs/group-input'
-import EventInput from '../inputs/event-input'
-import Dropdown from '../inputs/dropdown'
+import { MemberInput, GroupInput, EventInput, Dropdown } from 'openstack-uicore-foundation/lib/components'
 
 
 class PushNotificationForm extends React.Component {

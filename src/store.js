@@ -106,6 +106,8 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(reducers, composeEnhancers(applyMiddleware(thunk)));
 
+window.apiBaseUrl = process.env['API_BASE_URL'];
+
 const onRehydrateComplete = () => {
     // repopulate access token on global access variable
     window.accessToken = store.getState().loggedUserState.accessToken;

@@ -11,6 +11,9 @@
  * limitations under the License.
  **/
 
+import { authErrorHandler, apiBaseUrl } from './base-actions';
+import swal from "sweetalert2";
+import T from "i18n-react/dist/i18n-react";
 import {
     getRequest,
     putRequest,
@@ -20,21 +23,14 @@ import {
     stopLoading,
     startLoading,
     postFile,
-    putFile
-} from "openstack-uicore-foundation";
-
-import {
-    authErrorHandler,
-    apiBaseUrl,
+    putFile,
     showMessage,
     showSuccessMessage,
     getCSV,
     geoCodeAddress,
     geoCodeLatLng
-} from './base-actions';
+} from 'openstack-uicore-foundation/lib/methods';
 
-import swal from "sweetalert2";
-import T from "i18n-react/dist/i18n-react";
 
 export const REQUEST_LOCATIONS          = 'REQUEST_LOCATIONS';
 export const RECEIVE_LOCATIONS          = 'RECEIVE_LOCATIONS';
@@ -533,7 +529,7 @@ const normalizeRoomEntity = (entity) => {
     if (normalizedEntity.order == 0) {
         delete(normalizedEntity['order']);
     }
-    
+
 
     return normalizedEntity;
 

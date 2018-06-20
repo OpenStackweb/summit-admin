@@ -13,20 +13,21 @@
 
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
-import moment from 'moment-timezone'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import TextEditor from '../inputs/editor-input'
-import Dropdown from '../inputs/dropdown'
-import GroupedDropdown from '../inputs/grouped-dropdown/index'
-import DateTimePicker from '../inputs/datetimepicker/index'
-import TagInput from '../inputs/tag-input'
-import SpeakerInput from '../inputs/speaker-input'
-import CompanyInput from '../inputs/company-input'
-import GroupInput from '../inputs/group-input'
-import UploadInput from '../inputs/upload-input/index'
-import Input from '../inputs/text-input'
-import Panel from '../sections/panel';
-import {findElementPos, epochToMomentTimeZone} from '../../utils/methods'
+import { findElementPos, epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/methods'
+import {
+    TextEditor,
+    Dropdown,
+    GroupedDropdown,
+    DateTimePicker,
+    TagInput,
+    SpeakerInput,
+    CompanyInput,
+    GroupInput,
+    UploadInput,
+    Input,
+    Panel
+} from 'openstack-uicore-foundation/lib/components'
 
 
 class EventForm extends React.Component {

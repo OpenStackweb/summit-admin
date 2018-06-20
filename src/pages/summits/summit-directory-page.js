@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import swal from "sweetalert2";
 import { loadSummits, setCurrentSummit } from '../../actions/summit-actions';
-import { formatEpoch } from '../../utils/methods';
+import { formatEpoch } from 'openstack-uicore-foundation/lib/methods';
 
 import '../../styles/summit-directory-page.less';
 

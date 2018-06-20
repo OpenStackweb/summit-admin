@@ -11,9 +11,20 @@
  * limitations under the License.
  **/
 
-import { getRequest, putRequest, postRequest, deleteRequest, createAction, stopLoading, startLoading } from "openstack-uicore-foundation";
-import { authErrorHandler, apiBaseUrl, showMessage, showSuccessMessage, getCSV} from './base-actions';
+import { authErrorHandler, apiBaseUrl } from './base-actions';
 import T from "i18n-react/dist/i18n-react";
+import {
+    getRequest,
+    putRequest,
+    postRequest,
+    deleteRequest,
+    createAction,
+    stopLoading,
+    startLoading,
+    showMessage,
+    showSuccessMessage,
+    getCSV
+} from 'openstack-uicore-foundation/lib/methods';
 
 export const REQUEST_SPEAKERS       = 'REQUEST_SPEAKERS';
 export const RECEIVE_SPEAKERS       = 'RECEIVE_SPEAKERS';

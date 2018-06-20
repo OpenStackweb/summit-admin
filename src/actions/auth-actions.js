@@ -12,7 +12,7 @@
  **/
 
 import T from "i18n-react/dist/i18n-react";
-import {createAction, getRequest, startLoading, stopLoading} from "openstack-uicore-foundation";
+import {createAction, getRequest, startLoading, stopLoading} from "openstack-uicore-foundation/lib/methods";
 import swal from "sweetalert2";
 import {authErrorHandler, apiBaseUrl} from "./base-actions";
 import { AdminGroupCode, SummitAdminGroupCode } from '../constants';

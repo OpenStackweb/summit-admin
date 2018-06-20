@@ -15,8 +15,7 @@ import React from 'react';
 import T from 'i18n-react/dist/i18n-react';
 import swal from "sweetalert2";
 import { Modal } from 'react-bootstrap';
-import MemberInput from '../../inputs/member-input';
-import Dropdown from '../../inputs/dropdown';
+import { MemberInput, Dropdown } from 'openstack-uicore-foundation/lib/components'
 
 export default class TicketComponent extends React.Component {
 

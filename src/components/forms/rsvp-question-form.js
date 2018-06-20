@@ -14,10 +14,8 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import {findElementPos} from '../../utils/methods'
-import Dropdown from '../inputs/dropdown'
-import Input from '../inputs/text-input'
-import SortableTable from "../table-sortable/SortableTable"
+import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
+import { Dropdown, Input, SortableTable } from 'openstack-uicore-foundation/lib/components'
 
 
 class RsvpQuestionForm extends React.Component {

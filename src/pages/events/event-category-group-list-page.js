@@ -15,7 +15,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import swal from "sweetalert2";
-import Table from "../../components/table/Table";
+import { Table } from 'openstack-uicore-foundation/lib/components';
 import { getEventCategoryGroups, deleteEventCategoryGroup } from "../../actions/event-category-actions";
 
 class EventCategoryGroupListPage extends React.Component {

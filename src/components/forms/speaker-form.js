@@ -14,12 +14,8 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import TextEditor from '../inputs/editor-input'
-import MemberInput from '../inputs/member-input'
-import UploadInput from '../inputs/upload-input/index'
-import Input from '../inputs/text-input'
-import Panel from "../sections/panel"
-import {findElementPos} from '../../utils/methods'
+import { TextEditor, MemberInput, UploadInput, Input, Panel } from 'openstack-uicore-foundation/lib/components';
+import { findElementPos } from 'openstack-uicore-foundation/lib/methods';
 
 
 class SpeakerForm extends React.Component {

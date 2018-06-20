@@ -15,7 +15,7 @@ import ReactDOM    from 'react-dom';
 import { DraggableItemTypes } from './draggable-items-types';
 import { DragSource, DropTarget } from 'react-dnd';
 import {Popover, OverlayTrigger} from 'react-bootstrap';
-import RawHTML from '../raw-html';
+import { RawHTML } from 'openstack-uicore-foundation/lib/components';
 
 const RESIZING_DIR_NORTH = 'N';
 const RESIZING_DIR_SOUTH = 'S';

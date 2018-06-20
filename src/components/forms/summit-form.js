@@ -15,14 +15,14 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import moment from 'moment-timezone'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import DateTimePicker from '../inputs/datetimepicker/index'
-import Input from '../inputs/text-input'
-import Panel from '../sections/panel';
-import Dropdown from '../inputs/dropdown'
-import Table from "../../components/table/Table";
-
-
-import {epochToMomentTimeZone, findElementPos} from '../../utils/methods'
+import { findElementPos, epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/methods'
+import {
+    DateTimePicker,
+    Input,
+    Panel,
+    Dropdown,
+    Table
+} from 'openstack-uicore-foundation/lib/components'
 
 
 class SummitForm extends React.Component {
@@ -114,7 +114,7 @@ class SummitForm extends React.Component {
         ev.preventDefault();
         history.push(`/app/summits/${entity.id}/selection-plans/new`);
     }
-    
+
     render() {
         let {entity, showSection} = this.state;
         let {onSPlanDelete} = this.props;
@@ -373,7 +373,7 @@ class SummitForm extends React.Component {
                         </div>
                     </div>
                 </Panel>
-                
+
                 <div className="row">
                     <div className="col-md-12 submit-buttons">
                         <input type="button" onClick={this.handleSubmit}

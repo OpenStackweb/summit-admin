@@ -14,10 +14,8 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import {findElementPos} from '../../utils/methods'
-import Input from '../inputs/text-input'
-import TextEditor from '../inputs/editor-input'
-import UploadInput from '../inputs/upload-input/index'
+import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
+import { Input, TextEditor, UploadInput } from 'openstack-uicore-foundation/lib/components'
 
 
 class ImageForm extends React.Component {

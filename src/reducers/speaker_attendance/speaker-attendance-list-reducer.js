@@ -20,7 +20,7 @@ import
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
-import {formatEpoch} from '../../utils/methods'
+import {formatEpoch} from 'openstack-uicore-foundation/lib/methods'
 
 const DEFAULT_STATE = {
     attendances         : [],

@@ -11,12 +11,20 @@
  * limitations under the License.
  **/
 
-import {createAction, getRequest, putRequest, deleteRequest, startLoading, stopLoading} from "openstack-uicore-foundation";
-import {apiBaseUrl, authErrorHandler, showSuccessMessage} from "./base-actions";
+import {apiBaseUrl, authErrorHandler } from "./base-actions";
 import T from 'i18n-react/dist/i18n-react'
 import URI from "urijs";
 import {BulkActionEdit, BulkActionUnPublish} from '../constants';
 import { getPublishedEventsBySummitDayLocation } from './summit-builder-actions';
+import {
+    getRequest,
+    putRequest,
+    deleteRequest,
+    createAction,
+    stopLoading,
+    startLoading,
+    showSuccessMessage,
+} from 'openstack-uicore-foundation/lib/methods';
 
 export const UPDATE_LOCAL_EVENT               = 'UPDATE_LOCAL_EVENT';
 export const RECEIVE_SELECTED_EVENTS          = 'REQUEST_SELECTED_EVENTS';

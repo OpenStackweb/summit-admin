@@ -14,9 +14,8 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import {findElementPos} from '../../utils/methods'
-import Dropdown from '../inputs/dropdown'
-import Input from '../inputs/text-input'
+import { Dropdown, Input } from 'openstack-uicore-foundation/lib/components'
+import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
 
 
 class EventTypeForm extends React.Component {

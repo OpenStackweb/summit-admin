@@ -15,10 +15,10 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import swal from "sweetalert2";
-import Table from "../../components/table/Table";
+import { Table, SummitDropdown } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getEventCategories, deleteEventCategory, copyEventCategories } from "../../actions/event-category-actions";
-import SummitDropdown from '../../components/summit-dropdown';
+
 
 class EventCategoryListPage extends React.Component {
 

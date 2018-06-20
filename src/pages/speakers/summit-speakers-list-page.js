@@ -15,8 +15,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import { Pagination } from 'react-bootstrap';
-import FreeTextSearch from "../../components/free-text-search/index";
-import Table from "../../components/table/Table";
+import { FreeTextSearch, Table } from 'openstack-uicore-foundation/lib/components';
 import { getSpeakers } from "../../actions/speaker-actions";
 
 class SummitSpeakerListPage extends React.Component {

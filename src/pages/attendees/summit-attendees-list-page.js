@@ -16,10 +16,10 @@ import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import swal from "sweetalert2";
 import { Pagination } from 'react-bootstrap';
-import FreeTextSearch from "../../components/free-text-search/index";
+import { FreeTextSearch, Table } from 'openstack-uicore-foundation/lib/components';
 import ScheduleModal from "../../components/schedule-modal/index";
-import Table from "../../components/table/Table";
 import { getAttendees, deleteAttendee } from "../../actions/attendee-actions";
+
 
 class SummitAttendeeListPage extends React.Component {
 

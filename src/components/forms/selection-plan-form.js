@@ -14,13 +14,8 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import Input from '../inputs/text-input'
-import DateTimePicker from '../inputs/datetimepicker/index'
-import SimpleLinkList from '../simple-link-list/index'
-import moment from 'moment-timezone'
-import {epochToMomentTimeZone, findElementPos} from '../../utils/methods'
-import {queryTrackGroups} from '../../actions/base-actions'
-
+import { findElementPos, epochToMomentTimeZone, queryTrackGroups } from 'openstack-uicore-foundation/lib/methods'
+import { Input, DateTimePicker, SimpleLinkList } from 'openstack-uicore-foundation/lib/components';
 
 
 class SelectionPlanForm extends React.Component {

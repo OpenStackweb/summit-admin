@@ -14,13 +14,10 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import MemberInput from '../../inputs/member-input'
-import CompanyInput from '../../inputs/company-input'
-import DateTimePicker from '../../inputs/datetimepicker/index'
-import Input from '../../inputs/text-input'
+import { epochToMoment } from 'openstack-uicore-foundation/lib/methods'
+import { MemberInput, CompanyInput, DateTimePicker, Input } from 'openstack-uicore-foundation/lib/components'
 import TicketComponent from './ticket-component'
 import RsvpComponent from './rsvp-component'
-import {epochToMoment} from '../../../utils/methods'
 
 
 class AttendeeForm extends React.Component {

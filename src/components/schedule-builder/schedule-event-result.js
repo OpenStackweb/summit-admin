@@ -12,7 +12,7 @@
  **/
 import React from 'react';
 import {Popover, OverlayTrigger} from 'react-bootstrap';
-import RawHTML from '../raw-html';
+import { RawHTML } from 'openstack-uicore-foundation/lib/components';
 
 class ScheduleEventResult extends React.Component {
 
