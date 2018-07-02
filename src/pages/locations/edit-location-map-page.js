@@ -22,12 +22,12 @@ import { getLocationMap, resetLocationMapForm, saveLocationMap, attachLocationMa
 class EditLocationMapPage extends React.Component {
 
     componentWillMount () {
-        let {currentLocation, entity} = this.props;
+        let {currentLocation} = this.props;
         let mapId = this.props.match.params.map_id;
 
-        if (!mapId) {
+        if (!mapId || !currentLocation) {
             this.props.resetLocationMapForm();
-        } else if (mapId != null && entity.id != mapId) {
+        } else {
             this.props.getLocationMap(currentLocation.id, mapId);
         }
     }

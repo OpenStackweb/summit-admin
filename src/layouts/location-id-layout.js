@@ -30,17 +30,14 @@ class LocationIdLayout extends React.Component {
 
     componentWillMount() {
         let locationId = this.props.match.params.location_id;
-        let {currentLocation} = this.props;
 
-        if (locationId) {
-            if(currentLocation == null || currentLocation.id != locationId){
-                this.props.getLocation(locationId);
-            }
-        } else {
+        if (!locationId) {
             this.props.resetLocationForm();
+        } else {
+            this.props.getLocation(locationId);
         }
     }
-    
+
     render(){
         let { match, currentLocation } = this.props;
         let breadcrumb = currentLocation.id ? currentLocation.name : T.translate("general.new");

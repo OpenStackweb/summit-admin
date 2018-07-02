@@ -22,12 +22,11 @@ import { getTicketType, resetTicketTypeForm, saveTicketType } from "../../action
 class EditTicketTypePage extends React.Component {
 
     componentWillMount () {
-        let {entity} = this.props;
         let ticketTypeId = this.props.match.params.ticket_type_id;
 
         if (!ticketTypeId) {
             this.props.resetTicketTypeForm();
-        } else if (ticketTypeId != entity.id){
+        } else {
             this.props.getTicketType(ticketTypeId);
         }
     }

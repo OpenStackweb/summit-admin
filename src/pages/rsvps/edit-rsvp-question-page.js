@@ -29,11 +29,7 @@ class EditRsvpQuestionPage extends React.Component {
     }
 
     componentWillMount () {
-        let {allClasses} = this.props;
-
-        if(allClasses.length == 0){
-            this.props.getRsvpQuestionMeta();
-        }
+        this.props.getRsvpQuestionMeta();
     }
 
     handleValueDelete(valueId, ev) {

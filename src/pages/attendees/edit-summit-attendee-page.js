@@ -28,11 +28,10 @@ class EditSummitAttendeePage extends React.Component {
 
     componentWillMount () {
         let new_attendee_id = this.props.match.params.attendee_id;
-        let {entity} = this.props;
 
         if(!new_attendee_id) {
             this.props.resetAttendeeForm();
-        } else if (entity.id != new_attendee_id) {
+        } else {
             this.props.getAttendee(new_attendee_id);
         }
     }

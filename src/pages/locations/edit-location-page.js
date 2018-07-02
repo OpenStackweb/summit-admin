@@ -44,11 +44,7 @@ class EditLocationPage extends React.Component {
     }
 
     componentWillMount () {
-        let {allClasses} = this.props;
-
-        if(allClasses.length == 0){
-            this.props.getLocationMeta();
-        }
+        this.props.getLocationMeta();
     }
 
     handleFloorDelete(floorId, ev) {

@@ -23,12 +23,11 @@ import '../../styles/edit-speaker-attendance-page.less';
 class EditSpeakerAttendancePage extends React.Component {
 
     componentWillMount () {
-        let {entity} = this.props;
         let attendanceId = this.props.match.params.attendance_id;
 
         if (!attendanceId) {
             this.props.resetAttendanceForm();
-        } else if (entity.id != attendanceId) {
+        } else {
             this.props.getAttendance(attendanceId);
         }
     }

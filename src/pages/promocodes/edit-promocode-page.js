@@ -23,18 +23,15 @@ import '../../styles/edit-promocode-page.less';
 class EditPromocodePage extends React.Component {
 
     componentWillMount () {
-        let {entity, allTypes} = this.props;
         let promocodeId = this.props.match.params.promocode_id;
 
         if (!promocodeId) {
             this.props.resetPromocodeForm();
-        } else if (entity.id != promocodeId) {
+        } else {
             this.props.getPromocode(promocodeId);
         }
 
-        if(allTypes.length == 1){
-            this.props.getPromocodeMeta();
-        }
+        this.props.getPromocodeMeta();
     }
 
     render(){

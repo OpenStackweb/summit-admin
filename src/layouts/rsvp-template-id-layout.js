@@ -27,14 +27,11 @@ class RsvpTemplateIdLayout extends React.Component {
 
     componentWillMount() {
         let rsvpTemplateId = this.props.match.params.rsvp_template_id;
-        let {currentRsvpTemplate} = this.props;
 
-        if (rsvpTemplateId) {
-            if(currentRsvpTemplate == null || currentRsvpTemplate.id != rsvpTemplateId){
-                this.props.getRsvpTemplate(rsvpTemplateId);
-            }
-        } else {
+        if (!rsvpTemplateId) {
             this.props.resetRsvpTemplateForm();
+        } else {
+            this.props.getRsvpTemplate(rsvpTemplateId);
         }
     }
 

@@ -26,14 +26,12 @@ class EditRsvpQuestionLayout extends React.Component {
 
     componentWillMount() {
         let rsvpQuestionId = this.props.match.params.rsvp_question_id;
-        let {currentRsvpQuestion, currentRsvpTemplate} = this.props;
+        let {currentRsvpTemplate} = this.props;
 
-        if (rsvpQuestionId) {
-            if(currentRsvpQuestion == null || currentRsvpQuestion.id != rsvpQuestionId){
-                this.props.getRsvpQuestion(currentRsvpTemplate.id, rsvpQuestionId);
-            }
-        } else {
+        if (!rsvpQuestionId || !currentRsvpTemplate) {
             this.props.resetRsvpQuestionForm();
+        } else {
+            this.props.getRsvpQuestion(currentRsvpTemplate.id, rsvpQuestionId);
         }
     }
 

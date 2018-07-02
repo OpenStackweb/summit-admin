@@ -29,12 +29,12 @@ class EditFloorPage extends React.Component {
     }
 
     componentWillMount () {
-        let {currentLocation, entity} = this.props;
+        let {currentLocation} = this.props;
         let floorId = this.props.match.params.floor_id;
 
-        if(!floorId) {
+        if(!floorId || !currentLocation) {
             this.props.resetFloorForm();
-        } else if (floorId != null && entity.id != floorId) {
+        } else {
             this.props.getFloor(currentLocation.id, floorId);
         }
     }

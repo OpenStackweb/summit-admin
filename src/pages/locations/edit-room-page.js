@@ -26,16 +26,16 @@ class EditRoomPage extends React.Component {
     }
 
     componentWillMount () {
-        let {entity, currentLocation, allFloors} = this.props;
+        let {currentLocation} = this.props;
         let roomId = this.props.match.params.room_id;
 
-        if (!roomId) {
+        if (!roomId || !currentLocation) {
             this.props.resetRoomForm();
-        } else if (entity.id != roomId) {
+        } else {
             this.props.getRoom(currentLocation.id, roomId);
         }
 
-        if(allFloors.length == 0){
+        if (currentLocation) {
             this.props.getLocation(currentLocation.id);
         }
     }

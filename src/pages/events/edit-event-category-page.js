@@ -27,12 +27,11 @@ class EditEventCategoryPage extends React.Component {
     }
 
     componentWillMount () {
-        let {entity} = this.props;
         let eventCategoryId = this.props.match.params.event_category_id;
 
         if (!eventCategoryId) {
             this.props.resetEventCategoryForm();
-        } else if (entity.id != eventCategoryId) {
+        } else {
             this.props.getEventCategory(eventCategoryId);
         }
     }

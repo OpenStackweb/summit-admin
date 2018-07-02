@@ -22,12 +22,11 @@ import { getSelectionPlan, resetSelectionPlanForm, saveSelectionPlan, addTrackGr
 class EditSelectionPlanPage extends React.Component {
 
     componentWillMount () {
-        let {entity} = this.props;
         let selectionPlanId = this.props.match.params.selection_plan_id;
 
         if (!selectionPlanId) {
             this.props.resetSelectionPlanForm();
-        } else if (selectionPlanId != entity.id){
+        } else {
             this.props.getSelectionPlan(selectionPlanId);
         }
     }

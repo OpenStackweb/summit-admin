@@ -22,12 +22,11 @@ import { getPushNotification, resetPushNotificationForm, savePushNotification } 
 class EditPushNotificationPage extends React.Component {
 
     componentWillMount () {
-        let {entity} = this.props;
         let pushNotificationId = this.props.match.params.push_notification_id;
 
         if (!pushNotificationId) {
             this.props.resetPushNotificationForm();
-        } else if (pushNotificationId != entity.id){
+        } else {
             this.props.getPushNotification(pushNotificationId);
         }
     }

@@ -31,6 +31,10 @@ class EditSummitPage extends React.Component {
         this.handleSPlanDelete = this.handleSPlanDelete.bind(this);
     }
 
+    componentWillMount() {
+        this.props.getSummitById(this.props.summitId);
+    }
+
     handleSPlanDelete(selectionPlanId, ev) {
         let {currentSummit, deleteSelectionPlan} = this.props;
         let selectionPlan = currentSummit.selection_plans.find(sp => sp.id == selectionPlanId);

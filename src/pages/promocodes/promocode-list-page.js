@@ -40,11 +40,7 @@ class PromocodeListPage extends React.Component {
     }
 
     componentWillMount () {
-        let {allTypes} = this.props;
-
-        if(allTypes.length == 1){
-            this.props.getPromocodeMeta();
-        }
+        this.props.getPromocodeMeta();
     }
 
     componentDidMount() {

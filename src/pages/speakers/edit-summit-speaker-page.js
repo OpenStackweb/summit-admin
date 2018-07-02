@@ -24,11 +24,11 @@ class EditSummitSpeakerPage extends React.Component {
 
     componentWillMount () {
         let speakerId = this.props.match.params.speaker_id;
-        let {summits, entity}   = this.props;
+        let {summits} = this.props;
 
         if (!speakerId) {
             this.props.resetSpeakerForm();
-        } else if (speakerId != entity.id){
+        } else {
             this.props.getSpeaker(speakerId);
         }
 

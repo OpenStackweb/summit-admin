@@ -27,12 +27,11 @@ class EditEventTypePage extends React.Component {
     }
 
     componentWillMount () {
-        let {entity} = this.props;
         let eventTypeId = this.props.match.params.event_type_id;
 
         if (!eventTypeId) {
             this.props.resetEventTypeForm();
-        } else if (entity.id != eventTypeId) {
+        } else {
             this.props.getEventType(eventTypeId);
         }
     }

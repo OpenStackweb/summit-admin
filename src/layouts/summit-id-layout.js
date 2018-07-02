@@ -39,15 +39,14 @@ class SummitIdLayout extends React.Component {
 
     componentWillMount() {
         let summitId = this.props.match.params.summit_id;
-        let {currentSummit} = this.props;
 
-        if(!currentSummit.id || currentSummit.id != summitId){
-            this.props.getSummitById(summitId);
-        }
+        this.props.getSummitById(summitId);
     }
+
 
     render(){
         let { match, currentSummit } = this.props;
+        let summitId = this.props.match.params.summit_id;
 
         if (!currentSummit.id) return(<div></div>);
 
@@ -78,8 +77,16 @@ class SummitIdLayout extends React.Component {
                             </div>
                         )}
                     />
-                    <Route exact path={`${match.url}/dashboard`} component={SummitDashboardPage}/>
-                    <Route exact path={`${match.url}`} component={EditSummitPage}/>
+                    <Route exact path={`${match.url}/dashboard`} render={
+                        props => (
+                            <SummitDashboardPage {...props} summitId={summitId}/>
+                        )}
+                    />
+                    <Route exact path={`${match.url}`} render={
+                        props => (
+                            <EditSummitPage {...props} summitId={summitId}/>
+                        )}
+                    />
                     <Route render={props => (<Redirect to={`${match.url}/dashboard`}/>)}/>
                 </Switch>
             </div>

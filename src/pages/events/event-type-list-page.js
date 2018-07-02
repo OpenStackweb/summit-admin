@@ -32,11 +32,8 @@ class EventTypeListPage extends React.Component {
         }
     }
 
-    componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            this.props.getEventTypes();
-        }
+    componentWillMount() {
+        this.props.getEventTypes();
     }
 
     componentWillReceiveProps(newProps) {

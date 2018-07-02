@@ -35,7 +35,7 @@ class SummitLayout extends React.Component {
                             </div>
                         )}
                     />
-                    <Route path={`${match.url}/:summit_id`} component={SummitIdLayout}/>
+                    <Route strict path={`${match.url}/:summit_id`} component={SummitIdLayout}/>
                     <Route render={props => (<Redirect to="/app/directory"/>)}/>
                 </Switch>
             </div>

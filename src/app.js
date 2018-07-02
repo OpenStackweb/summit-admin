@@ -38,7 +38,7 @@ if (language.length > 2) {
     language = language.split("_")[0];
 }
 
-console.log(`user language is ${language}`);
+//console.log(`user language is ${language}`);
 
 T.setTexts(require(`./i18n/${language}.json`));
 

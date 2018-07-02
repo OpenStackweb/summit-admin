@@ -27,18 +27,15 @@ import { getRsvpTemplates } from '../../actions/rsvp-template-actions';
 class EditSummitEventPage extends React.Component {
 
     componentWillMount () {
-        let {entity, rsvpTemplateOptions} = this.props;
         let eventId = this.props.match.params.summit_event_id;
 
         if (!eventId) {
             this.props.resetEventForm();
-        } else if (eventId != entity.id){
+        } else {
             this.props.getEvent(eventId);
         }
 
-        if (rsvpTemplateOptions.length == 0) {
-            this.props.getRsvpTemplates();
-        }
+        this.props.getRsvpTemplates();
     }
 
     render(){
