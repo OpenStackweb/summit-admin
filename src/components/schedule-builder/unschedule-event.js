@@ -16,6 +16,8 @@ import { DraggableItemTypes } from './draggable-items-types';
 import { DragSource } from 'react-dnd';
 import {Popover, OverlayTrigger} from 'react-bootstrap';
 import { RawHTML } from 'openstack-uicore-foundation/lib/components';
+import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
+
 
 const UnScheduleEventSource = {
     beginDrag(props) {
@@ -43,10 +45,6 @@ function collect(connect, monitor) {
 
 class UnScheduleEvent extends React.Component {
 
-    get height(){
-        return 80;
-    }
-
     popoverHoverFocus(){
         const { event } = this.props;
         return(
@@ -73,23 +71,25 @@ class UnScheduleEvent extends React.Component {
     render() {
         const { connectDragSource, isDragging, event, selectedUnPublishedEvents } = this.props;
         let isSelected = selectedUnPublishedEvents.includes(event.id);
+
         return connectDragSource(
 
                 <div className='row unschedule-event'
                      style={{
                          opacity: isDragging ? 0.5 : 1,
-                         cursor: 'move'
+                         cursor: isDragging ? 'move' : '-webkit-grab'
                      }}>
                         <div className="row">
                             <div className="col-md-12">
-                                <input className="select-event-btn"
+                                <div className="event-select-wrapper">
+                                    <input className="select-event-btn"
                                        id={`selected_event_${event.id}`}
                                        type="checkbox"
                                        checked={isSelected}
                                        onChange={this.onChanged.bind(this)}
                                        onClick={this.onClickSelected.bind(this)}/>
-                                <i className="fa fa-pencil-square-o edit-unpublished-event-btn" title="edit event" aria-hidden="true" onClick={this.onClickEdit.bind(this)}></i>
-                                <div className="col-md-12 event-container">
+                                </div>
+                                <div className="event-container">
                                     <div className="event-content">
                                         <OverlayTrigger trigger={['hover']} placement="bottom" overlay={this.popoverHoverFocus()}>
                                             <span className="event-title">
@@ -97,6 +97,9 @@ class UnScheduleEvent extends React.Component {
                                             </span>
                                         </OverlayTrigger>
                                     </div>
+                                </div>
+                                <div className="event-actions">
+                                    <i className="fa fa-pencil-square-o edit-unpublished-event-btn" title="edit event" aria-hidden="true" onClick={this.onClickEdit.bind(this)}></i>
                                 </div>
                             </div>
                         </div>

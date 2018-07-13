@@ -12,7 +12,7 @@
 .unschedule-event{
   background-color: @unschedule_event_background_color;
   height: @event_initial_height !important;
-  width: 90%;
+  width: 100%;
   color: @unschedule_event_text_color;
   .no-margin;
   .row{
@@ -22,9 +22,20 @@
     }
   }
   .event-container{
-    height: 100%;
-    .no-margin;
+    float: left;
+    margin: 5px 10px;
+    width: 90%;
+    height: 20px;
+    overflow: hidden;
     .no-padding;
+  }
+  .event-actions {
+    float: right;
+    margin: 0 5px 0 0;
+  }
+  .event-select-wrapper {
+    margin: 5px 0 0 5px;
+    float: left;
   }
 }
 
@@ -41,12 +52,8 @@
   z-index: @event_z_index;
   min-height: @event_initial_height !important;
   width: 100%;
+  position: absolute;
   .no-margin;
-  .event-container{
-    height: 100%;
-    .no-margin;
-    .no-padding;
-  }
   .unselectable-text;
   .row{
     height: 100%;
@@ -55,7 +62,22 @@
       position: relative;
     }
   }
-  position: absolute;
+  .event-container{
+    float: left;
+    margin: 5px 10px;
+    width: 90%;
+    height: 20px;
+    overflow: hidden;
+    .no-padding;
+  }
+  .event-actions {
+    float: right;
+    margin: 0 5px 0 0;
+  }
+  .event-select-wrapper {
+    margin: 5px 0 0 5px;
+    float: left;
+  }
 }
 
 .schedule-sub-event {
@@ -115,7 +137,6 @@
 .event-content{
   height: 100%;
   width: 100%;
-  padding: 2em;
 }
 
 .event-content-half{
@@ -126,8 +147,24 @@
 .unschedule-list, .schedule-list-search-results, .empty-spots-list{
   list-style: none;
   width: 100%;
+  padding-left: 0px;
   li {
     margin-bottom: @event_spacing;
+  }
+}
+
+.schedule-list-search-results {
+  .event-container{
+    float: left;
+    margin: 5px 10px;
+    width: 90%;
+    height: 20px;
+    overflow: hidden;
+    .no-padding;
+  }
+  .event-actions {
+    float: right;
+    margin: 0 5px 0 0;
   }
 }
 
@@ -141,7 +178,7 @@
       position: relative;
       text-align: center;
       vertical-align: middle;
-      padding-top: 2.4em;
+      padding-top: 5px;
       .to {
         padding-right: 10px;
         font-weight: bold;
@@ -268,13 +305,8 @@
 }
 
 .select-event-btn{
-  position: absolute;
-  left:3%;
-  top: 50%;
-  right: 0;
-  bottom: 0;
-  .no-margin();
   z-index: @event_z_index + 1;
+  cursor: pointer;
 }
 
 .unpublish-event-btn{
@@ -295,10 +327,8 @@
 
 .edit-unpublished-event-btn{
   cursor: pointer;
-  padding-top: 10px;
+  padding-top: 8px;
   z-index: @event_z_index + 1;
-  left: 95%;
-  position: absolute;
 }
 
 .schedule-event-result {

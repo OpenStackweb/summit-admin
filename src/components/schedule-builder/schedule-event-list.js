@@ -59,17 +59,21 @@ class TimeSlotContainer extends React.Component {
 
     renderMinutesContainer(interval, pixelsPerMinute) {
         let minutesContainers = [];
-        for(var i=0; i < interval ; i++){
+        let container_count = interval / 5;
+        let container_height = pixelsPerMinute * 5;
+
+        for(var i=0; i < container_count ; i++){
 
             minutesContainers[i] = <div key={i} className="minute-container" style={{
                 position: 'relative',
                 width: '100%',
-                height: `${pixelsPerMinute}px`
+                height: `${container_height}px`
             }}></div>;
         }
 
         return minutesContainers;
     }
+
 
     render(){
         const { connectDropTarget, isOver, canDrop, timeSlot, pixelsPerMinute, interval } = this.props;
@@ -253,7 +257,7 @@ class ScheduleEventList extends React.Component
                                     selectedPublishedEvents={selectedPublishedEvents}
                                     key={event.id}
                                     type={"MAIN"}
-                                    step={pixelsPerMinute}
+                                    step={pixelsPerMinute * 5}
                                     minHeight={(pixelsPerMinute * interval)}
                                     initialTop={this.calculateInitialTop(event)}
                                     initialHeight={this.calculateInitialHeight(event)}

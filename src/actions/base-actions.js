@@ -29,7 +29,7 @@ export const authErrorHandler = (err, res) => (dispatch) => {
             swal("ERROR", T.translate("errors.user_not_authz"), "warning");
             break;
         case 401:
-            doLogin(getBackURL());
+            doLogin(window.location);
             break;
         case 404:
             msg = "";

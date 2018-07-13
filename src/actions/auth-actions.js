@@ -15,7 +15,7 @@ import T from "i18n-react/dist/i18n-react";
 import {createAction, getRequest, startLoading, stopLoading} from "openstack-uicore-foundation/lib/methods";
 import swal from "sweetalert2";
 import {authErrorHandler, apiBaseUrl} from "./base-actions";
-import { AdminGroupCode, SummitAdminGroupCode } from '../constants';
+import { AdminGroupCode, SummitAdminGroupCode } from '../components/schedule-builder/constants';
 import URI from "urijs";
 
 export const SET_LOGGED_USER    = 'SET_LOGGED_USER';

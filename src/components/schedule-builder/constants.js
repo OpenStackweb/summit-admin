@@ -11,8 +11,8 @@
  * limitations under the License.
  **/
 
-export const DefaultEventMinutesDuration       = 5;
-export const PixelsPerMinute                   = 16;
+export const DefaultEventMinutesDuration       = 10;
+export const PixelsPerMinute                   = 3;
 export const AdminGroupCode                    = 'administrators';
 export const SummitAdminGroupCode              = 'summit-front-end-administrators';
 export const ScheduleEventsSearchResultMaxPage = 25;

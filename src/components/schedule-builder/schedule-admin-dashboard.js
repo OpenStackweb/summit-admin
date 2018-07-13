@@ -40,7 +40,7 @@ import SummitEvent from '../../models/summit-event';
 import {
     BulkActionEdit, BulkActionUnPublish, DefaultEventMinutesDuration, PixelsPerMinute,
     TBALocation
-} from '../../constants';
+} from './constants';
 import ScheduleAdminDaySelector from './schedule-admin-day-selector';
 import ScheduleAdminVenueSelector from './schedule-admin-venue-selector';
 import ScheduleAdminEventTypeSelector from './schedule-admin-event-type-selector';
@@ -141,7 +141,7 @@ class ScheduleAdminDashBoard extends React.Component {
 
         let eventTypeId = currentEventType == null ? null : currentEventType.id;
         let trackId     = currentTrack == null ? null : currentTrack.id;
-        this.props.getUnScheduleEventsPage(currentSummit.id, 1, 10, eventTypeId, trackId, currentPresentationSelectionStatus);
+        this.props.getUnScheduleEventsPage(currentSummit.id, 1, 20, eventTypeId, trackId, currentPresentationSelectionStatus);
 
         if(this.filters.hasOwnProperty('currentScheduleEventsSearchTerm')) {
             scheduleEventsCurrentSearchTerm = this.filters['currentScheduleEventsSearchTerm'];
@@ -258,7 +258,7 @@ class ScheduleAdminDashBoard extends React.Component {
         let trackId = currentTrack == null ? null : currentTrack.id;
         let eventTypeId = eventType == null ? null : eventType.id;
         this.props.changeCurrentEventType(eventType);
-        this.props.getUnScheduleEventsPage(currentSummit.id, 1, 10, eventTypeId, trackId, currentPresentationSelectionStatus, unScheduleEventsCurrentSearchTerm);
+        this.props.getUnScheduleEventsPage(currentSummit.id, 1, 20, eventTypeId, trackId, currentPresentationSelectionStatus, unScheduleEventsCurrentSearchTerm);
     }
 
     onTrackChanged(track){
@@ -266,7 +266,7 @@ class ScheduleAdminDashBoard extends React.Component {
         let eventTypeId = currentEventType == null ? null : currentEventType.id;
         let trackId     = track == null ? null : track.id;
         this.props.changeCurrentTrack(track);
-        this.props.getUnScheduleEventsPage(currentSummit.id, 1, 10, eventTypeId, trackId, currentPresentationSelectionStatus, unScheduleEventsCurrentSearchTerm);
+        this.props.getUnScheduleEventsPage(currentSummit.id, 1, 20, eventTypeId, trackId, currentPresentationSelectionStatus, unScheduleEventsCurrentSearchTerm);
     }
 
     onPresentationSelectionStatusChanged(presentationSelectionStatus){
@@ -274,7 +274,7 @@ class ScheduleAdminDashBoard extends React.Component {
         let eventTypeId = currentEventType == null ? null : currentEventType.id;
         let trackId = currentTrack == null ? null : currentTrack.id;
         this.props.changeCurrentPresentationSelectionStatus(presentationSelectionStatus);
-        this.props.getUnScheduleEventsPage(currentSummit.id, 1, 10, eventTypeId, trackId, presentationSelectionStatus, unScheduleEventsCurrentSearchTerm);
+        this.props.getUnScheduleEventsPage(currentSummit.id, 1, 20, eventTypeId, trackId, presentationSelectionStatus, unScheduleEventsCurrentSearchTerm);
     }
 
     onUnscheduledEventsFilterTextChanged(term){
@@ -282,7 +282,7 @@ class ScheduleAdminDashBoard extends React.Component {
         let eventTypeId = currentEventType == null ? null : currentEventType.id;
         let trackId    = currentTrack == null ? null : currentTrack.id;
         this.props.changeCurrentUnscheduleSearchTerm(term)
-        this.props.getUnScheduleEventsPage(currentSummit.id, 1, 10, eventTypeId, trackId, currentPresentationSelectionStatus, term);
+        this.props.getUnScheduleEventsPage(currentSummit.id, 1, 20, eventTypeId, trackId, currentPresentationSelectionStatus, term);
     }
 
     onScheduledEventsFilterTextChanged(term){
@@ -416,7 +416,7 @@ class ScheduleAdminDashBoard extends React.Component {
         (
             currentSummit.id,
             unScheduleEventsCurrentPage,
-            10,
+            20,
             eventTypeId,
             trackId,
             currentPresentationSelectionStatus,
@@ -463,6 +463,7 @@ class ScheduleAdminDashBoard extends React.Component {
         this.fragmentParser.setParam('time', start_date.format('hh_mm'));
         window.location.hash = this.fragmentParser.serialize();
         this.props.clearEmptySpots();
+        this.shouldTestDeepLink = true;
     }
 
     onSelectAllPublished(evt){

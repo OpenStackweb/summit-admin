@@ -14,7 +14,7 @@
 import moment from "moment-timezone";
 import SummitEvent from "../models/summit-event";
 import { authErrorHandler, apiBaseUrl } from './base-actions';
-import { ScheduleEventsSearchResultMaxPage } from '../constants';
+import { ScheduleEventsSearchResultMaxPage } from '../components/schedule-builder/constants';
 import { checkProximityEvents } from './event-actions';
 import {
     createAction,
@@ -50,7 +50,7 @@ export const getUnScheduleEventsPage =
     (
         summitId,
         page             = 1,
-        per_page         = 10,
+        per_page         = 20,
         event_type_id    = null,
         track_id         = null,
         selection_status = null,

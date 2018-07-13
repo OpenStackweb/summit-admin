@@ -28,7 +28,7 @@ class ScheduleBuilderPage extends React.Component {
         return(
             <div>
                 <Breadcrumb data={{ title: T.translate("schedule.schedule"), pathname: match.url }} ></Breadcrumb>
-                <ScheduleAdminDashBoard history={this.props.history} summit={currentSummit} pixelsPerMinute={16}/>
+                <ScheduleAdminDashBoard history={this.props.history} summit={currentSummit} pixelsPerMinute={3}/>
             </div>
         )
     }

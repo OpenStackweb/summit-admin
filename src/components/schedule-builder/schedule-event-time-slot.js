@@ -14,7 +14,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { DraggableItemTypes } from './draggable-items-types';
 import {DropTarget } from 'react-dnd';
-import { PixelsPerMinute, DefaultEventMinutesDuration } from '../../constants';
+import { PixelsPerMinute, DefaultEventMinutesDuration } from './constants';
 import SummitEvent from '../../models/summit-event';
 
 const ScheduleEventTimeSlotTarget = {

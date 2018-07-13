@@ -241,14 +241,14 @@ class ScheduleEvent extends React.Component {
                  style={this.getInlineStyles(isDragging)}>
                     <div className="row">
                         <div className="col-md-12">
-                            <input className="select-event-btn"
+                            <div className="event-select-wrapper">
+                                <input className="select-event-btn"
                                    id={`selected_event_${event.id}`}
                                    type="checkbox"
                                    checked={isSelected}
                                    onChange={this.onChanged.bind(this)}
                                    onClick={this.onClickSelected.bind(this)}/>
-                            <i className="fa fa-minus-circle unpublish-event-btn" aria-hidden="true" title="unpublish event" onClick={this.onClickUnPublish.bind(this)}></i>
-                            <i className="fa fa-pencil-square-o edit-published-event-btn" title="edit event" aria-hidden="true" onClick={this.onClickEdit.bind(this)}></i>
+                            </div>
                             <div className="col-md-12 event-container">
                                 <div className="event-content">
                                         <OverlayTrigger trigger={['hover']} placement="bottom" overlay={this.popoverHoverFocus()}>
@@ -257,6 +257,10 @@ class ScheduleEvent extends React.Component {
                                             </span>
                                          </OverlayTrigger>
                                 </div>
+                            </div>
+                            <div className="event-actions">
+                                <i className="fa fa-minus-circle unpublish-event-btn" aria-hidden="true" title="unpublish event" onClick={this.onClickUnPublish.bind(this)}></i>
+                                <i className="fa fa-pencil-square-o edit-published-event-btn" title="edit event" aria-hidden="true" onClick={this.onClickEdit.bind(this)}></i>
                             </div>
                         </div>
                     </div>

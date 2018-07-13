@@ -33,14 +33,20 @@ class ScheduleEventResult extends React.Component {
     render(){
         const { event } = this.props;
         return (
-                <div className='row schedule-event-result'>
-                    <i className="fa fa-pencil-square-o edit-published-event-btn" title="edit event" aria-hidden="true" onClick={this.onClickEdit.bind(this)}></i>
+                <div className='row'>
                     <div className="col-md-12">
-                        <OverlayTrigger trigger={['hover']} placement="bottom" overlay={this.popoverHoverFocus()}>
-                            <span className="event-title">
-                                { event.title }
-                            </span>
-                        </OverlayTrigger>
+                        <div className="schedule-event-result">
+                            <div className="event-container">
+                                <OverlayTrigger trigger={['hover']} placement="bottom" overlay={this.popoverHoverFocus()}>
+                                    <span className="event-title">
+                                        { event.title }
+                                    </span>
+                                </OverlayTrigger>
+                            </div>
+                            <div className="event-actions">
+                                <i className="fa fa-pencil-square-o edit-published-event-btn" title="edit event" aria-hidden="true" onClick={this.onClickEdit.bind(this)}></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
         )
