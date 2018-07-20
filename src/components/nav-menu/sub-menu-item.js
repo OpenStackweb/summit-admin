@@ -19,9 +19,7 @@ export default class SubMenuItem extends React.Component {
 
 
     render() {
-        let {name, iconClass, show, subMenuOpen, onClick, onItemClick, childs} = this.props;
-
-        if(!show) return null;
+        let {name, iconClass, subMenuOpen, onClick, onItemClick, childs} = this.props;
 
         return (
             <div>
@@ -32,12 +30,10 @@ export default class SubMenuItem extends React.Component {
                 {subMenuOpen === name &&
                 <div className="submenu">
                     {childs.map(ch => {
-                        let show_item = (ch.hasOwnProperty('show') ? ch.show : show);
                         return (
                             <MenuItem
                                 key={ch.name}
                                 {...ch}
-                                show={show_item}
                                 iconClass="fa-chevron-right"
                                 onClick={(e) => onItemClick(e, ch.linkUrl)}
                             />

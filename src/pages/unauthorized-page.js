@@ -11,22 +11,25 @@
  * limitations under the License.
  **/
 
-import React from 'react';
-import T from 'i18n-react/dist/i18n-react';
+import React from 'react'
+import T from "i18n-react/dist/i18n-react"
 
-export default class MenuItem extends React.Component {
+export default class UnAuthorizedPage extends React.Component {
 
+    constructor(props){
+        super(props);
+    }
 
     render() {
-        let {name, iconClass, onClick} = this.props;
 
         return (
-            <a id={name + '-menu'} className="menu-item" onClick={onClick} >
-                <i className={iconClass + ' fa'} />
-                {T.translate('menu.' + name)}
-            </a>
+            <div>
+                <div className="container">
+                    <h1>Sorry... </h1>
+                    <h3>{T.translate("errors.not_allowed")}</h3>
+                </div>
+            </div>
         );
-
     }
 }
 

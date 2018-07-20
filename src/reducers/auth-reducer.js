@@ -19,6 +19,8 @@ const loggedUserReducer = (state = DEFAULT_STATE, action) => {
     }
     if(action.type === RECEIVE_USER_INFO){
         let { response } = action.payload;
+        // hardcode role
+        response.role = 'admin';
         return {...state, member: response};
     }
     return state

@@ -16,9 +16,9 @@ import { connect } from 'react-redux';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { Breadcrumbs, Breadcrumb } from 'react-breadcrumbs'
 import NavMenu from '../components/nav-menu'
+import Restrict from '../routes/restrict'
 
 import SummitLayout from './summit-layout';
-import EditSummitPage from '../pages/summits/edit-summit-page';
 import SummitDirectoryPage from '../pages/summits/summit-directory-page';
 import SpeakerLayout from './speaker-layout';
 
@@ -26,7 +26,7 @@ import SpeakerLayout from './speaker-layout';
 class PrimaryLayout extends React.Component {
 
     render(){
-        let { match, currentSummit, location } = this.props;
+        let { match, currentSummit, location, member } = this.props;
         let extraClass = 'container';
 
         // full width pages
@@ -36,7 +36,7 @@ class PrimaryLayout extends React.Component {
 
         return(
             <div className="primary-layout">
-                <NavMenu currentSummit={currentSummit}/>
+                <NavMenu currentSummit={currentSummit} member={member}/>
                 <main id="page-wrap">
                     <Breadcrumbs className={"breadcrumbs-wrapper " + extraClass} separator="/" />
 
@@ -55,8 +55,9 @@ class PrimaryLayout extends React.Component {
 
 }
 
-const mapStateToProps = ({ currentSummitState }) => ({
+const mapStateToProps = ({ currentSummitState, loggedUserState }) => ({
     currentSummit: currentSummitState.currentSummit,
+    member: loggedUserState.member
 })
 
 export default connect(mapStateToProps, {})(PrimaryLayout)

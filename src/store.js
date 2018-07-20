@@ -50,11 +50,13 @@ import ticketTypeReducer from './reducers/tickets/ticket-type-reducer';
 import pushNotificationListReducer from './reducers/push_notifications/push-notification-list-reducer';
 import pushNotificationReducer from './reducers/push_notifications/push-notification-reducer';
 import selectionPlanReducer from './reducers/summits/selection-plan-reducer';
+import roomOccupancyReducer from "./reducers/events/room-occupancy-reducer";
 
 
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
-import storage from 'redux-persist/es/storage' // default: localStorage if web, AsyncStorage if react-native
+import storage from 'redux-persist/es/storage'
+ // default: localStorage if web, AsyncStorage if react-native
 
 const config = {
     key: 'root',
@@ -99,7 +101,8 @@ const reducers = persistCombineReducers(config, {
     currentTicketTypeState: ticketTypeReducer,
     currentPushNotificationListState: pushNotificationListReducer,
     currentPushNotificationState: pushNotificationReducer,
-    currentSelectionPlanState: selectionPlanReducer
+    currentSelectionPlanState: selectionPlanReducer,
+    currentRoomOccupancyState: roomOccupancyReducer
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

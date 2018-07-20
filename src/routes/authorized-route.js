@@ -12,19 +12,17 @@
  **/
 
 import React from 'react'
-import { Route, Redirect, withRouter } from 'react-router-dom'
+import { Route, Redirect } from 'react-router-dom'
 
 class AuthorizedRoute extends React.Component {
 
-    componentWillMount() {
-    }
-
     render() {
-        const { component: Component, isLoggedUser,currentSummit, ...rest } = this.props;
+        const { component: Component, isLoggedUser, currentSummit, ...rest } = this.props;
         return (
             <Route {...rest} render={props => {
                 let { location } = this.props;
                 let backUrl = location.pathname;
+
                 if(location.search != null && location.search != null){
                     backUrl += location.search
                 }
@@ -32,14 +30,12 @@ class AuthorizedRoute extends React.Component {
                     backUrl += location.hash
                 }
 
-                return isLoggedUser
-                    ? <Component currentSummit={currentSummit} {...props} />
-                    : <Redirect
-                        to={{
-                            pathname: `/?BackUrl=${encodeURIComponent(backUrl)}`,
-                            state: { from: location }
-                        }}
-                      />
+                if (isLoggedUser) {
+                    return (<Component currentSummit={currentSummit} {...props} />);
+                } else {
+                    return (<Redirect to={{pathname: `/?BackUrl=${encodeURIComponent(backUrl)}`, state: { from: location }}} />);
+                }
+
             }} />
         )
     }

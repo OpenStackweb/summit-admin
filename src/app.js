@@ -25,8 +25,8 @@ import { AjaxLoader } from "openstack-uicore-foundation/lib/components";
 import { getBackURL } from "openstack-uicore-foundation/lib/methods";
 import T from 'i18n-react';
 
-// here is set by default user lang as en
 
+// here is set by default user lang as en
 let language = (navigator.languages && navigator.languages[0]) || navigator.language || navigator.userLanguage;
 
 // language would be something like es-ES or es_ES
@@ -63,7 +63,7 @@ class App extends React.PureComponent {
                         </div>
                     </div>
                     <Switch>
-                        <AuthorizedRoute isLoggedUser={isLoggedUser} path="/app" component={PrimaryLayout} />
+                        <AuthorizedRoute isLoggedUser={isLoggedUser} member={member} path="/app" component={PrimaryLayout} />
                         <AuthorizationCallbackRoute onUserAuth={onUserAuth} path='/auth/callback' getUserInfo={getUserInfo} />
                         <Route path="/404" render={props => (<p>404 - Not Found</p>)}/>
                         <DefaultRoute isLoggedUser={isLoggedUser} />

@@ -130,6 +130,10 @@ module.exports = {
             {
                 test: /\.json/,
                 use: "json-loader"
+            },
+            {
+                test: /\.yaml$/,
+                use: 'js-yaml-loader',
             }
         ]
     },

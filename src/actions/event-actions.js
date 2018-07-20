@@ -29,6 +29,8 @@ import {
 
 export const REQUEST_EVENTS                 = 'REQUEST_EVENTS';
 export const RECEIVE_EVENTS                 = 'RECEIVE_EVENTS';
+export const REQUEST_EVENTS_FOR_OCCUPANCY   = 'REQUEST_EVENTS_FOR_OCCUPANCY';
+export const RECEIVE_EVENTS_FOR_OCCUPANCY   = 'RECEIVE_EVENTS_FOR_OCCUPANCY';
 export const RECEIVE_EVENT                  = 'RECEIVE_EVENT';
 export const RESET_EVENT_FORM               = 'RESET_EVENT_FORM';
 export const UPDATE_EVENT                   = 'UPDATE_EVENT';
@@ -78,6 +80,50 @@ export const getEvents = ( term = null, page = 1, perPage = 10, order = 'id', or
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events`,
         authErrorHandler,
         {order, orderDir, term, summitTZ}
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const getEventsForOccupancy = ( term = null, room = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+    let filter = [];
+    let summitTZ = currentSummit.time_zone.name;
+
+    dispatch(startLoading());
+
+    if(term != null){
+        filter.push(`title=@${term},abstract=@${term},tags=@${term},speaker=@${term},speaker_email=@${term},id==${term}`);
+    }
+
+    let params = {
+        expand       : 'speakers, location',
+        page         : page,
+        per_page     : perPage,
+        access_token : accessToken,
+    };
+
+    if(filter.length > 0){
+        params['filter[]']= filter;
+    }
+
+    // order
+    if(order != null && orderDir != null){
+        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        params['order']= `${orderDirSign}${order}`;
+    }
+
+
+    return getRequest(
+        createAction(REQUEST_EVENTS_FOR_OCCUPANCY),
+        createAction(RECEIVE_EVENTS_FOR_OCCUPANCY),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/published`,
+        authErrorHandler,
+        {order, orderDir, term, room, summitTZ}
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }

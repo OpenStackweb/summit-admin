@@ -1,0 +1,33 @@
+
+summit:
+  edit:
+    -admin
+
+speakers:
+  - admin
+
+dashboard:
+  - admin
+
+attendees:
+  - admin
+
+events:
+  - admin
+
+speaker-attendances:
+  - admin
+
+locations:
+  - admin
+
+rsvps:
+  - admin
+
+push-notifications:
+  - admin
+
+tickets:
+  - admin
+
+

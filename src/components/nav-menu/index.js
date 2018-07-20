@@ -17,6 +17,7 @@ import { slide as Menu } from 'react-burger-menu'
 import { withRouter } from 'react-router-dom'
 import SubMenuItem from './sub-menu-item'
 import MenuItem from './menu-item'
+import access from 'js-yaml-loader!../../routes/access.yml';
 
 class NavMenu extends React.Component {
 
@@ -63,39 +64,44 @@ class NavMenu extends React.Component {
 
     }
 
-    drawMenuItem(item) {
+    drawMenuItem(item, show, member, access) {
         let {subMenuOpen} = this.state;
+        let page = item.hasOwnProperty('linkUrl') ? item.linkUrl.substr(item.linkUrl.lastIndexOf('/') + 1) : item.name;
+        let hasAccess = !access.hasOwnProperty(page) || access[page].includes(member.role);
 
-        if (item.hasOwnProperty('childs')) {
-            return (
-                <SubMenuItem
-                    key={item.name}
-                    subMenuOpen={subMenuOpen}
-                    {...item}
-                    onClick={(e) => this.toggleSubMenu(e, item.name)}
-                    onItemClick={this.onMenuItemClick.bind(this)}
-                />
-            )
-        } else {
-            return (
-                <MenuItem
-                    key={item.name}
-                    {...item}
-                    onClick={(e) => this.onMenuItemClick(e, item.linkUrl)}
-                />
-            )
+        if (show && hasAccess) {
+            if (item.hasOwnProperty('childs')) {
+                return (
+                    <SubMenuItem
+                        key={item.name}
+                        subMenuOpen={subMenuOpen}
+                        {...item}
+                        onClick={(e) => this.toggleSubMenu(e, item.name)}
+                        onItemClick={this.onMenuItemClick.bind(this)}
+                    />
+                )
+            } else {
+                return (
+                    <MenuItem
+                        key={item.name}
+                        {...item}
+                        onClick={(e) => this.onMenuItemClick(e, item.linkUrl)}
+                    />
+                )
+            }
         }
     }
 
     render() {
         let {menuOpen} = this.state;
-        let {currentSummit} = this.props;
+        let {currentSummit, member} = this.props;
         let summit_id = currentSummit.id;
         let show = (summit_id !== 0);
+        let canEditSummit = access.summit.edit.includes(member.role);
 
-        let global_items = [
-            {name: 'directory', iconClass: 'fa-fw fa-list-ul', show: true, linkUrl: 'directory'},
-            {name: 'speakers', iconClass: 'fa-users', show: true,
+        const globalItems = [
+            {name: 'directory', iconClass: 'fa-fw fa-list-ul', linkUrl: 'directory'},
+            {name: 'speakers', iconClass: 'fa-users',
                 childs: [
                     {name:'speaker_list', linkUrl:`speakers`},
                     {name:'merge_speakers', linkUrl:`speakers/merge`}
@@ -103,9 +109,9 @@ class NavMenu extends React.Component {
             }
         ]
 
-        let summit_items = [
-            {name: 'dashboard', iconClass: 'fa-dashboard', show: show, linkUrl: `summits/${summit_id}/dashboard`},
-            {name: 'events', iconClass: 'fa-calendar', show: show,
+        const summitItems = [
+            {name: 'dashboard', iconClass: 'fa-dashboard', linkUrl: `summits/${summit_id}/dashboard`},
+            {name: 'events', iconClass: 'fa-calendar',
                 childs: [
                     {name:'event_list', linkUrl:`summits/${summit_id}/events`},
                     {name:'schedule', linkUrl:`summits/${summit_id}/events/schedule`},
@@ -114,44 +120,46 @@ class NavMenu extends React.Component {
                     {name:'event_category_groups', linkUrl:`summits/${summit_id}/event-category-groups`}
                 ]
             },
-            {name: 'attendees', iconClass: 'fa-users', show: show, linkUrl:`summits/${summit_id}/attendees` },
-            {name:'speaker_attendance', iconClass: 'fa-users', linkUrl:`summits/${summit_id}/speaker-attendances`, show: show},
-            {name:'locations', iconClass: 'fa-map-marker', linkUrl:`summits/${summit_id}/locations`, show: show},
-            {name: 'rsvps', iconClass: 'fa-user-plus', show: show,
+            {name: 'attendees', iconClass: 'fa-users', linkUrl:`summits/${summit_id}/attendees` },
+            {name:'speaker_attendance', iconClass: 'fa-users', linkUrl:`summits/${summit_id}/speaker-attendances`},
+            {name:'locations', iconClass: 'fa-map-marker', linkUrl:`summits/${summit_id}/locations`},
+            {name: 'rsvps', iconClass: 'fa-user-plus',
                 childs: [
                     {name:'rsvp_template_list', linkUrl:`summits/${summit_id}/rsvp-templates`}
                 ]
             },
-            {name: 'tickets', iconClass: 'fa-ticket', show: show,
+            {name: 'tickets', iconClass: 'fa-ticket',
                 childs: [
                     {name:'ticket_type_list', linkUrl:`summits/${summit_id}/ticket-types`},
                     {name:'promocode_list', linkUrl:`summits/${summit_id}/promocodes`}
                 ]
             },
-            {name: 'push_notifications', iconClass: 'fa-paper-plane', show: show, linkUrl:`summits/${summit_id}/push-notifications` },
+            {name: 'push_notifications', iconClass: 'fa-paper-plane', linkUrl:`summits/${summit_id}/push-notifications` },
+            {name: 'room_occupancy', iconClass: 'fa-male', linkUrl:`summits/${summit_id}/room-occupancy` },
         ];
-
 
         return (
             <Menu id="summit-admin-menu" isOpen={ menuOpen } noOverlay width={ 300 } pageWrapId={ "page-wrap" } >
                 <div className="separator">
                     {T.translate('menu.general')}
                 </div>
-                {global_items.map(it => {
-                    return this.drawMenuItem(it);
+                {globalItems.map(it => {
+                    return this.drawMenuItem(it, true, member, access);
                 })}
 
                 {show &&
                 <div className="separator">
                     {currentSummit.name} {T.translate('general.summit')}
+                    {canEditSummit &&
                     <a href="" className="edit-summit" onClick={(e) => this.onMenuItemClick(e, `summits/${summit_id}`)}>
                         <i className="fa fa-pencil-square-o"></i>
                     </a>
+                    }
                 </div>
                 }
 
-                {summit_items.map(it => {
-                    return this.drawMenuItem(it);
+                {summitItems.map(it => {
+                    return this.drawMenuItem(it, show, member, access);
                 })}
 
             </Menu>

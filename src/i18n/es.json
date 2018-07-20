@@ -5,7 +5,8 @@
     "session_expired"           : "Hold on. Your session expired!.",
     "empty_list"                : "there not are any item that match your criteria.",
     "server_error"              : "There was a problem with our server, please contact admin.",
-    "empty_list_schedule_events": "Please select a Day and a Location ..."
+    "empty_list_schedule_events": "Please select a Day and a Location ...",
+    "not_allowed"               : "You are not allowed here, please login with another user to access this page."
   },
   "general": {
     "summit"              : "Summit",
@@ -80,7 +81,8 @@
     "rsvp_template_list"      : "Templates",
     "tickets"                 : "Tickets",
     "ticket_type_list"        : "Ticket Types",
-    "push_notifications"      : "Push Notifications"
+    "push_notifications"      : "Push Notifications",
+    "room_occupancy"          : "Room Occupancy"
   },
   "schedule": {
     "schedule"                              : "Schedule",
@@ -715,5 +717,18 @@
     "channel"               : "Channel",
     "push_notification_saved"   : "Push Notification saved successfully",
     "push_notification_created" : "Push Notification created successfully"
+  },
+  "room_occupancy": {
+  "room_occupancy"        : "Room Occupancy",
+  "events"                : "Events",
+  "no_events"             : "No events found for current search criteria.",
+  "title"                 : "Title",
+  "room"                  : "Room",
+  "start"                 : "Start",
+  "speakers"              : "Speakers",
+    "placeholders": {
+      "search_events"       : "Search by Id, Title, Abstract, Speaker",
+      "select_room"         : "Select a Room"
+    }
   }
 }

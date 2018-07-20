@@ -5,7 +5,8 @@
     "session_expired"           : "Hold on. Your session expired!.",
     "empty_list"                : "there not are any item that match your criteria.",
     "server_error"              : "There was a problem with our server, please contact admin.",
-    "empty_list_schedule_events": "Please select a Day and a Location ..."
+    "empty_list_schedule_events": "Please select a Day and a Location ...",
+    "not_allowed"               : "You are not allowed here, please login with another user to access this page."
   },
   "general": {
     "summit"              : "Summit",
