@@ -12,16 +12,17 @@
  **/
 
 import React from 'react'
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
+import Restrict from '../routes/restrict'
+
 
 import EditSpeakerPage from '../pages/speakers/edit-summit-speaker-page'
 import SpeakerListPage from '../pages/speakers/summit-speakers-list-page'
 import SpeakerMergePage from '../pages/speakers/merge-speakers-page'
 
 
-import { withRouter } from 'react-router-dom'
 
 class SpeakerLayout extends React.Component {
 
@@ -43,6 +44,6 @@ class SpeakerLayout extends React.Component {
 
 }
 
-export default withRouter(SpeakerLayout)
+export default Restrict(withRouter(SpeakerLayout), 'speakers');
 
 

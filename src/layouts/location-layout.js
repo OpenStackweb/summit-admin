@@ -15,13 +15,14 @@ import React from 'react'
 import T from "i18n-react/dist/i18n-react";
 import { Switch, Route } from 'react-router-dom';
 import { Breadcrumb } from 'react-breadcrumbs';
+import Restrict from '../routes/restrict';
 
 import EditLocationPage from '../pages/locations/edit-location-page'
 import LocationListPage from '../pages/locations/location-list-page'
 import LocationIdLayout from './location-id-layout'
 
 
-export default class LocationLayout extends React.Component {
+class LocationLayout extends React.Component {
 
     render(){
         let { match } = this.props;
@@ -47,5 +48,7 @@ export default class LocationLayout extends React.Component {
     }
 
 }
+
+export default Restrict(LocationLayout, 'locations');
 
 

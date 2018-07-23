@@ -63,7 +63,7 @@ class App extends React.PureComponent {
                         </div>
                     </div>
                     <Switch>
-                        <AuthorizedRoute isLoggedUser={isLoggedUser} member={member} path="/app" component={PrimaryLayout} />
+                        <AuthorizedRoute isLoggedUser={isLoggedUser} path="/app" component={PrimaryLayout} />
                         <AuthorizationCallbackRoute onUserAuth={onUserAuth} path='/auth/callback' getUserInfo={getUserInfo} />
                         <Route path="/404" render={props => (<p>404 - Not Found</p>)}/>
                         <DefaultRoute isLoggedUser={isLoggedUser} />

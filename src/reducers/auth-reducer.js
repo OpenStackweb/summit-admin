@@ -7,23 +7,28 @@ const DEFAULT_STATE = {
 }
 
 const loggedUserReducer = (state = DEFAULT_STATE, action) => {
+    const { type, payload } = action
 
-    if (action.type === SET_LOGGED_USER) {
-        let {accessToken } = action.payload;
-        window.accessToken = accessToken;
-        return {...state, isLoggedUser:true, accessToken };
+    switch(type) {
+        case SET_LOGGED_USER: {
+            let {accessToken } = action.payload;
+            window.accessToken = accessToken;
+            return {...state, isLoggedUser:true, accessToken };
+        }
+        case LOGOUT_USER : {
+            window.accessToken = null;
+            return DEFAULT_STATE
+        }
+        case RECEIVE_USER_INFO: {
+            let { response } = action.payload;
+            // hardcode role
+            response.role = 'summit-room-administrators';
+            return {...state, member: response};
+        }
+        default:
+            return state;
     }
-    if(action.type === LOGOUT_USER){
-        window.accessToken = null;
-        return DEFAULT_STATE
-    }
-    if(action.type === RECEIVE_USER_INFO){
-        let { response } = action.payload;
-        // hardcode role
-        response.role = 'admin';
-        return {...state, member: response};
-    }
-    return state
+
 }
 
 export default loggedUserReducer

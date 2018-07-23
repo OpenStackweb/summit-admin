@@ -12,15 +12,15 @@
  **/
 
 import React from 'react'
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
+import Restrict from '../routes/restrict';
+
 
 import EditSummitAttendeePage from '../pages/attendees/edit-summit-attendee-page'
 import SummitAttendeeListPage from '../pages/attendees/summit-attendees-list-page'
 
-
-import { withRouter } from 'react-router-dom'
 
 class AttendeeLayout extends React.Component {
 
@@ -41,6 +41,6 @@ class AttendeeLayout extends React.Component {
 
 }
 
-export default withRouter(AttendeeLayout)
+export default Restrict(withRouter(AttendeeLayout), 'attendees');
 
 

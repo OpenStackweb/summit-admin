@@ -14,20 +14,21 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import UnAuthorizedPage from '../pages/unauthorized-page'
-import access from 'js-yaml-loader!./access.yml';
+import Member from '../models/member'
 
-
-const Restrict = (WrappedComponent) => {
+const Restrict = (WrappedComponent, route) => {
 
     const mapStateToProps = ({ loggedUserState }) => ({
         member: loggedUserState.member
     })
 
     class WithAuthorization extends React.Component {
+
+
         render() {
-            let {member, match} = this.props;
-            let page = match.url.substr(match.url.lastIndexOf('/') + 1);
-            let hasAccess = !access.hasOwnProperty(page) || access[page].includes(member.role);
+            let {member} = this.props;
+            let memberObj = new Member(member);
+            let hasAccess = memberObj.hasAccess(route);
 
             if (hasAccess) {
                 return <WrappedComponent {...this.props} />

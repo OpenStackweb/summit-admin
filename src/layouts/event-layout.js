@@ -12,17 +12,17 @@
  **/
 
 import React from 'react'
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
+import Restrict from '../routes/restrict';
+
 
 import ScheduleBuilderPage from '../pages/events/schedule-builder-page';
 import SummitEventListPage from '../pages/events/summit-event-list-page';
 import EditSummitEventPage from '../pages/events/edit-summit-event-page';
 import SummitEventsBulkActionsPage from '../pages/events/summit-events-bulk-actions-page';
 
-
-import { withRouter } from 'react-router-dom'
 
 class EventLayout extends React.Component {
 
@@ -45,6 +45,6 @@ class EventLayout extends React.Component {
 
 }
 
-export default withRouter(EventLayout)
+export default Restrict(withRouter(EventLayout), 'events');
 
 

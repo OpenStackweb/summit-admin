@@ -137,7 +137,7 @@
     }
   },
   "directory": {
-    "control_panel"       : "Control Panel",
+    "select"              : "Select",
     "summits"             : "Summits",
     "add_summit"          : "Add Summit",
     "remove_warning"      : "Are you sure you want to delete summit"

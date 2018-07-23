@@ -12,15 +12,14 @@
  **/
 
 import React from 'react'
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
+import Restrict from '../routes/restrict';
 
 import EditPromocodePage from '../pages/promocodes/edit-promocode-page'
 import PromocodeListPage from '../pages/promocodes/promocode-list-page'
 
-
-import { withRouter } from 'react-router-dom'
 
 class PromocodeLayout extends React.Component {
 
@@ -41,6 +40,6 @@ class PromocodeLayout extends React.Component {
 
 }
 
-export default withRouter(PromocodeLayout)
+export default Restrict(withRouter(PromocodeLayout), 'tickets');
 
 

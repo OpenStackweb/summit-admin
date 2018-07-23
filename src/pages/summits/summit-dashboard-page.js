@@ -17,6 +17,8 @@ import moment from 'moment-timezone'
 import { getSummitById }  from '../../actions/summit-actions'
 import T from "i18n-react/dist/i18n-react"
 import { Breadcrumb } from 'react-breadcrumbs';
+import Member from '../../models/member';
+
 import '../../styles/summit-dashboard-page.less'
 
 class SummitDashboardPage extends React.Component {
@@ -72,8 +74,10 @@ class SummitDashboardPage extends React.Component {
     }
 
     render() {
-        let { currentSummit, match } = this.props;
+        let { currentSummit, match, member } = this.props;
+        let memberObj = new Member(member);
         let currentSummitTime = (new Date).getTime();
+        let canEditSummit = memberObj.canEditSummit();
 
         if(!currentSummit.id) return(<div></div>);
 
@@ -101,7 +105,7 @@ class SummitDashboardPage extends React.Component {
                         <div className="col-md-1"> <i className="fa fa-angle-double-right"></i> </div>
                         <div className="col-md-4"> {this.getFormattedTime(currentSummit.registration_end_date)} </div>
                     </div>
-                    {currentSummit.selection_plans.map(sp => (
+                    {canEditSummit && currentSummit.selection_plans.map(sp => (
                         <div key={'seleplan_'+sp.id} className="selection-plan row">
                             <div className="col-md-12">{sp.name}</div>
                             <div className="col-md-12">
@@ -127,84 +131,89 @@ class SummitDashboardPage extends React.Component {
                         </div>
                     ))}
 
-                    <hr/>
-                    <h4>{T.translate("dashboard.events")}</h4>
-                    <div className="row">
-                        <div className="col-md-6">
-                            <i className="fa fa-users"></i>&nbsp;{T.translate("dashboard.attendees")}&nbsp;
-                            <strong>{currentSummit.attendees_count}</strong>
+                    {canEditSummit &&
+                    <div>
+                        <hr/>
+                        <h4>{T.translate("dashboard.events")}</h4>
+                        <div className="row">
+                            <div className="col-md-6">
+                                <i className="fa fa-users"></i>&nbsp;{T.translate("dashboard.attendees")}&nbsp;
+                                <strong>{currentSummit.attendees_count}</strong>
+                            </div>
+                            <div className="col-md-6">
+                                <i className="fa fa-users"></i>&nbsp;{T.translate("general.speakers")}&nbsp;
+                                <strong>{currentSummit.speakers_count}</strong>
+                            </div>
                         </div>
-                        <div className="col-md-6">
-                            <i className="fa fa-users"></i>&nbsp;{T.translate("general.speakers")}&nbsp;
-                            <strong>{currentSummit.speakers_count}</strong>
+                        <div className="row">
+                            <div className="col-md-6">
+                                <i className="fa fa-calendar-plus-o"></i>&nbsp;{T.translate("dashboard.submitted_events")}&nbsp;
+                                <strong>{currentSummit.presentations_submitted_count}</strong>
+                            </div>
+                            <div className="col-md-6">
+                                <i className="fa fa-calendar-check-o"></i>&nbsp;{T.translate("dashboard.published_events")}&nbsp;
+                                <strong>{currentSummit.published_events_count}</strong>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-md-6">
+                                <i className="fa fa-building"></i>&nbsp;{T.translate("dashboard.venues")}&nbsp;
+                                <strong>{currentSummit.locations.filter(l => l.class_name == 'SummitVenue').length}</strong>
+                            </div>
+                        </div>
+                        <hr/>
+                        <h4>{T.translate("dashboard.voting")}</h4>
+                        <div className="row">
+                            <div className="col-md-6">
+                                <i className="fa fa-users"></i>&nbsp;{T.translate("dashboard.voters")}&nbsp;
+                                <strong>{currentSummit.presentation_voters_count}</strong>
+                            </div>
+                            <div className="col-md-6">
+                                <i className="fa fa fa-thumbs-o-up"></i>&nbsp;{T.translate("dashboard.votes")}&nbsp;
+                                <strong>{currentSummit.presentation_votes_count}</strong>
+                            </div>
+                        </div>
+                        <hr/>
+                        <h4>{T.translate("dashboard.emails")}</h4>
+                        <div className="row">
+                            <div className="col-md-4">
+                                <i className="fa fa-paper-plane"></i>&nbsp;{T.translate("dashboard.accepted")}&nbsp;
+                                <strong>{currentSummit.speaker_announcement_email_accepted_count}</strong>
+                            </div>
+                            <div className="col-md-4">
+                                <i className="fa fa-paper-plane"></i>&nbsp;{T.translate("dashboard.rejected")}&nbsp;
+                                <strong>{currentSummit.speaker_announcement_email_rejected_count}</strong>
+                            </div>
+                            <div className="col-md-4">
+                                <i className="fa fa-paper-plane"></i>&nbsp;{T.translate("dashboard.alternate")}&nbsp;
+                                <strong>{currentSummit.speaker_announcement_email_alternate_count}</strong>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-md-4">
+                                <i className="fa fa-paper-plane"></i>&nbsp;{T.translate("dashboard.accepted_alternate")}&nbsp;
+                                <strong>{currentSummit.speaker_announcement_email_accepted_alternate_count}</strong>
+                            </div>
+                            <div className="col-md-4">
+                                <i className="fa fa-paper-plane"></i>&nbsp;{T.translate("dashboard.accepted_rejected")}&nbsp;
+                                <strong>{currentSummit.speaker_announcement_email_accepted_rejected_count}</strong>
+                            </div>
+                            <div className="col-md-4">
+                                <i className="fa fa-paper-plane"></i>&nbsp;{T.translate("dashboard.alternate_rejected")}&nbsp;
+                                <strong>{currentSummit.speaker_announcement_email_alternate_rejected_count}</strong>
+                            </div>
                         </div>
                     </div>
-                    <div className="row">
-                        <div className="col-md-6">
-                            <i className="fa fa-calendar-plus-o"></i>&nbsp;{T.translate("dashboard.submitted_events")}&nbsp;
-                            <strong>{currentSummit.presentations_submitted_count}</strong>
-                        </div>
-                        <div className="col-md-6">
-                            <i className="fa fa-calendar-check-o"></i>&nbsp;{T.translate("dashboard.published_events")}&nbsp;
-                            <strong>{currentSummit.published_events_count}</strong>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-md-6">
-                            <i className="fa fa-building"></i>&nbsp;{T.translate("dashboard.venues")}&nbsp;
-                            <strong>{currentSummit.locations.filter(l => l.class_name == 'SummitVenue').length}</strong>
-                        </div>
-                    </div>
-                    <hr/>
-                    <h4>{T.translate("dashboard.voting")}</h4>
-                    <div className="row">
-                        <div className="col-md-6">
-                            <i className="fa fa-users"></i>&nbsp;{T.translate("dashboard.voters")}&nbsp;
-                            <strong>{currentSummit.presentation_voters_count}</strong>
-                        </div>
-                        <div className="col-md-6">
-                            <i className="fa fa fa-thumbs-o-up"></i>&nbsp;{T.translate("dashboard.votes")}&nbsp;
-                            <strong>{currentSummit.presentation_votes_count}</strong>
-                        </div>
-                    </div>
-                    <hr/>
-                    <h4>{T.translate("dashboard.emails")}</h4>
-                    <div className="row">
-                        <div className="col-md-4">
-                            <i className="fa fa-paper-plane"></i>&nbsp;{T.translate("dashboard.accepted")}&nbsp;
-                            <strong>{currentSummit.speaker_announcement_email_accepted_count}</strong>
-                        </div>
-                        <div className="col-md-4">
-                            <i className="fa fa-paper-plane"></i>&nbsp;{T.translate("dashboard.rejected")}&nbsp;
-                            <strong>{currentSummit.speaker_announcement_email_rejected_count}</strong>
-                        </div>
-                        <div className="col-md-4">
-                            <i className="fa fa-paper-plane"></i>&nbsp;{T.translate("dashboard.alternate")}&nbsp;
-                            <strong>{currentSummit.speaker_announcement_email_alternate_count}</strong>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-md-4">
-                            <i className="fa fa-paper-plane"></i>&nbsp;{T.translate("dashboard.accepted_alternate")}&nbsp;
-                            <strong>{currentSummit.speaker_announcement_email_accepted_alternate_count}</strong>
-                        </div>
-                        <div className="col-md-4">
-                            <i className="fa fa-paper-plane"></i>&nbsp;{T.translate("dashboard.accepted_rejected")}&nbsp;
-                            <strong>{currentSummit.speaker_announcement_email_accepted_rejected_count}</strong>
-                        </div>
-                        <div className="col-md-4">
-                            <i className="fa fa-paper-plane"></i>&nbsp;{T.translate("dashboard.alternate_rejected")}&nbsp;
-                            <strong>{currentSummit.speaker_announcement_email_alternate_rejected_count}</strong>
-                        </div>
-                    </div>
+                    }
                 </div>
             </div>
         );
     }
 }
 
-const mapStateToProps = ({ currentSummitState }) => ({
+const mapStateToProps = ({ currentSummitState, loggedUserState }) => ({
     currentSummit : currentSummitState.currentSummit,
+    member: loggedUserState.member
 })
 
 export default connect (

@@ -81,7 +81,8 @@
     "rsvp_template_list"      : "Templates",
     "tickets"                 : "Tickets",
     "ticket_type_list"        : "Ticket Types",
-    "push_notifications"      : "Push Notifications"
+    "push_notifications"      : "Push Notifications",
+    "room_occupancy"          : "Room Occupancy"
   },
   "schedule": {
     "schedule"                              : "Schedule",
@@ -136,7 +137,7 @@
     }
   },
   "directory": {
-    "control_panel"       : "Control Panel",
+    "select"              : "Select",
     "summits"             : "Summits",
     "add_summit"          : "Add Summit",
     "remove_warning"      : "Are you sure you want to delete summit"
@@ -716,5 +717,18 @@
     "channel"               : "Channel",
     "push_notification_saved"   : "Push Notification saved successfully",
     "push_notification_created" : "Push Notification created successfully"
+  },
+  "room_occupancy": {
+    "room_occupancy"        : "Room Occupancy",
+    "events"                : "Events",
+    "no_events"             : "No events found for current search criteria.",
+    "title"                 : "Title",
+    "room"                  : "Room",
+    "start"                 : "Start",
+    "speakers"              : "Speakers",
+    "placeholders": {
+      "search_events"       : "Search by Id, Title, Abstract, Speaker",
+      "select_room"         : "Select a Room"
+    }
   }
 }

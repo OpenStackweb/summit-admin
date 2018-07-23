@@ -12,14 +12,14 @@
  **/
 
 import React from 'react'
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
+import Restrict from '../routes/restrict';
 
 import SpeakerAttendanceListPage from '../pages/speaker_attendance/speaker-attendance-list-page';
 import EditSpeakerAttendancePage from '../pages/speaker_attendance/edit-speaker-attendance-page';
 
-import { withRouter } from 'react-router-dom'
 
 class SpeakerAttendanceLayout extends React.Component {
 
@@ -40,6 +40,6 @@ class SpeakerAttendanceLayout extends React.Component {
 
 }
 
-export default withRouter(SpeakerAttendanceLayout)
+export default Restrict(withRouter(SpeakerAttendanceLayout), 'speakers');
 
 

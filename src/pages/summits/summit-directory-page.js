@@ -17,6 +17,7 @@ import T from 'i18n-react/dist/i18n-react';
 import swal from "sweetalert2";
 import { loadSummits, setCurrentSummit } from '../../actions/summit-actions';
 import { formatEpoch } from 'openstack-uicore-foundation/lib/methods';
+import Member from '../../models/member'
 
 import '../../styles/summit-directory-page.less';
 
@@ -71,14 +72,17 @@ class SummitDirectoryPage extends React.Component {
     }
 
     render() {
-        let { summits } = this.props;
+        let { summits, member } = this.props;
+        let memberObj = new Member(member);
         let orderedSummits = summits.sort(
             (a, b) => (a.start_date < b.start_date ? 1 : (a.start_date > b.start_date ? -1 : 0))
         );
+        let canEditSummit =  memberObj.canEditSummit();
 
         return (
             <div className="container">
                 <h3> {T.translate("directory.summits")}</h3>
+                {canEditSummit &&
                 <div className={'row'}>
                     <div className="col-md-6 col-md-offset-6 text-right">
                         <button className="btn btn-primary right-space" onClick={this.onNewSummit.bind(this)}>
@@ -86,6 +90,7 @@ class SummitDirectoryPage extends React.Component {
                         </button>
                     </div>
                 </div>
+                }
                 <div>
                     <table className="table" id="summit_table">
                         <tbody>
@@ -96,14 +101,20 @@ class SummitDirectoryPage extends React.Component {
                                 <td> {formatEpoch(summit.end_date, 'MMMM Do YYYY')} </td>
                                 <td className="center_text actions">
                                     <a href="" onClick={ (e) => { return this.onSelectedSummit(e, summit) }} className="btn btn-default btn-sm">
-                                        {T.translate("directory.control_panel")}
+                                        {T.translate("directory.select")}
                                     </a>
-                                    <a href="" onClick={this.onEditSummit.bind(this, summit)} className="btn btn-default btn-sm">
+                                    {canEditSummit &&
+                                    <a href="" onClick={this.onEditSummit.bind(this, summit)}
+                                       className="btn btn-default btn-sm">
                                         {T.translate("general.edit")}
                                     </a>
-                                    <a href="" onClick={this.onDeleteSummit.bind(this, summit)} className="btn btn-danger btn-sm">
+                                    }
+                                    {canEditSummit &&
+                                    <a href="" onClick={this.onDeleteSummit.bind(this, summit)}
+                                       className="btn btn-danger btn-sm">
                                         {T.translate("general.delete")}
                                     </a>
+                                    }
                                 </td>
                             </tr>
                         ))}
@@ -115,8 +126,9 @@ class SummitDirectoryPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ directoryState }) => ({
+const mapStateToProps = ({ directoryState, loggedUserState }) => ({
     summits : directoryState.items,
+    member: loggedUserState.member
 })
 
 export default connect (

@@ -12,15 +12,14 @@
  **/
 
 import React from 'react'
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
+import Restrict from '../routes/restrict';
 
 import PushNotificationListPage from '../pages/push_notifications/push-notification-list-page'
 import EditPushNotificationPage from '../pages/push_notifications/edit-push-notification-page'
 
-
-import { withRouter } from 'react-router-dom'
 
 class PushNotificationLayout extends React.Component {
 
@@ -41,6 +40,6 @@ class PushNotificationLayout extends React.Component {
 
 }
 
-export default withRouter(PushNotificationLayout)
+export default Restrict(withRouter(PushNotificationLayout), 'push-notifictations');
 
 

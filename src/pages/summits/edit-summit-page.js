@@ -16,6 +16,7 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import swal from "sweetalert2";
 import { Breadcrumb } from 'react-breadcrumbs';
+import Restrict from '../../routes/restrict'
 import SummitForm from '../../components/forms/summit-form';
 import { getSummitById, resetSummitForm, saveSummit }  from '../../actions/summit-actions';
 import { deleteSelectionPlan } from '../../actions/selection-plan-actions';
@@ -80,7 +81,7 @@ const mapStateToProps = ({ currentSummitState }) => ({
     errors: currentSummitState.errors
 })
 
-export default connect (
+export default Restrict(connect (
     mapStateToProps,
     {
         getSummitById,
@@ -88,4 +89,4 @@ export default connect (
         resetSummitForm,
         deleteSelectionPlan
     }
-)(EditSummitPage);
+)(EditSummitPage), 'summit-edit');

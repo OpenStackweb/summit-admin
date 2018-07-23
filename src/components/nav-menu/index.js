@@ -17,7 +17,7 @@ import { slide as Menu } from 'react-burger-menu'
 import { withRouter } from 'react-router-dom'
 import SubMenuItem from './sub-menu-item'
 import MenuItem from './menu-item'
-import access from 'js-yaml-loader!../../routes/access.yml';
+import Member from '../../models/member'
 
 class NavMenu extends React.Component {
 
@@ -64,10 +64,9 @@ class NavMenu extends React.Component {
 
     }
 
-    drawMenuItem(item, show, member, access) {
+    drawMenuItem(item, show, memberObj) {
         let {subMenuOpen} = this.state;
-        let page = item.hasOwnProperty('linkUrl') ? item.linkUrl.substr(item.linkUrl.lastIndexOf('/') + 1) : item.name;
-        let hasAccess = !access.hasOwnProperty(page) || access[page].includes(member.role);
+        let hasAccess = !item.hasOwnProperty('accessRoute') || memberObj.hasAccess(item.accessRoute);
 
         if (show && hasAccess) {
             if (item.hasOwnProperty('childs')) {
@@ -95,13 +94,14 @@ class NavMenu extends React.Component {
     render() {
         let {menuOpen} = this.state;
         let {currentSummit, member} = this.props;
+        let memberObj = new Member(member);
         let summit_id = currentSummit.id;
         let show = (summit_id !== 0);
-        let canEditSummit = access.summit.edit.includes(member.role);
+        let canEditSummit = memberObj.canEditSummit();
 
         const globalItems = [
             {name: 'directory', iconClass: 'fa-fw fa-list-ul', linkUrl: 'directory'},
-            {name: 'speakers', iconClass: 'fa-users',
+            {name: 'speakers', iconClass: 'fa-users', accessRoute: 'speakers',
                 childs: [
                     {name:'speaker_list', linkUrl:`speakers`},
                     {name:'merge_speakers', linkUrl:`speakers/merge`}
@@ -110,8 +110,8 @@ class NavMenu extends React.Component {
         ]
 
         const summitItems = [
-            {name: 'dashboard', iconClass: 'fa-dashboard', linkUrl: `summits/${summit_id}/dashboard`},
-            {name: 'events', iconClass: 'fa-calendar',
+            {name: 'dashboard', iconClass: 'fa-dashboard', linkUrl: `summits/${summit_id}/dashboard`, accessRoute: 'summit-edit'},
+            {name: 'events', iconClass: 'fa-calendar', accessRoute: 'events',
                 childs: [
                     {name:'event_list', linkUrl:`summits/${summit_id}/events`},
                     {name:'schedule', linkUrl:`summits/${summit_id}/events/schedule`},
@@ -120,22 +120,22 @@ class NavMenu extends React.Component {
                     {name:'event_category_groups', linkUrl:`summits/${summit_id}/event-category-groups`}
                 ]
             },
-            {name: 'attendees', iconClass: 'fa-users', linkUrl:`summits/${summit_id}/attendees` },
-            {name:'speaker_attendance', iconClass: 'fa-users', linkUrl:`summits/${summit_id}/speaker-attendances`},
-            {name:'locations', iconClass: 'fa-map-marker', linkUrl:`summits/${summit_id}/locations`},
-            {name: 'rsvps', iconClass: 'fa-user-plus',
+            {name: 'attendees', iconClass: 'fa-users', linkUrl:`summits/${summit_id}/attendees`, accessRoute: 'attendees' },
+            {name:'speaker_attendance', iconClass: 'fa-users', linkUrl:`summits/${summit_id}/speaker-attendances`, accessRoute: 'speakers'},
+            {name:'locations', iconClass: 'fa-map-marker', linkUrl:`summits/${summit_id}/locations`, accessRoute: 'locations'},
+            {name: 'rsvps', iconClass: 'fa-user-plus', accessRoute: 'rsvp',
                 childs: [
                     {name:'rsvp_template_list', linkUrl:`summits/${summit_id}/rsvp-templates`}
                 ]
             },
-            {name: 'tickets', iconClass: 'fa-ticket',
+            {name: 'tickets', iconClass: 'fa-ticket', accessRoute: 'tickets',
                 childs: [
                     {name:'ticket_type_list', linkUrl:`summits/${summit_id}/ticket-types`},
                     {name:'promocode_list', linkUrl:`summits/${summit_id}/promocodes`}
                 ]
             },
-            {name: 'push_notifications', iconClass: 'fa-paper-plane', linkUrl:`summits/${summit_id}/push-notifications` },
-            {name: 'room_occupancy', iconClass: 'fa-male', linkUrl:`summits/${summit_id}/room-occupancy` },
+            {name: 'push_notifications', iconClass: 'fa-paper-plane', linkUrl:`summits/${summit_id}/push-notifications`, accessRoute: 'push-notifications' },
+            {name: 'room_occupancy', iconClass: 'fa-male', linkUrl:`summits/${summit_id}/room-occupancy`, accessRoute: 'room-occupancy' },
         ];
 
         return (
@@ -144,7 +144,7 @@ class NavMenu extends React.Component {
                     {T.translate('menu.general')}
                 </div>
                 {globalItems.map(it => {
-                    return this.drawMenuItem(it, true, member, access);
+                    return this.drawMenuItem(it, true, memberObj);
                 })}
 
                 {show &&
@@ -159,7 +159,7 @@ class NavMenu extends React.Component {
                 }
 
                 {summitItems.map(it => {
-                    return this.drawMenuItem(it, show, member, access);
+                    return this.drawMenuItem(it, show, memberObj);
                 })}
 
             </Menu>

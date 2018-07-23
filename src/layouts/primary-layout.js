@@ -16,7 +16,6 @@ import { connect } from 'react-redux';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { Breadcrumbs, Breadcrumb } from 'react-breadcrumbs'
 import NavMenu from '../components/nav-menu'
-import Restrict from '../routes/restrict'
 
 import SummitLayout from './summit-layout';
 import SummitDirectoryPage from '../pages/summits/summit-directory-page';

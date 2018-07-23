@@ -18,6 +18,7 @@ import { Pagination } from 'react-bootstrap';
 import { FreeTextSearch, Table } from 'openstack-uicore-foundation/lib/components';
 import { getSpeakers } from "../../actions/speaker-actions";
 
+
 class SummitSpeakerListPage extends React.Component {
 
     constructor(props) {

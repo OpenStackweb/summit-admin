@@ -12,15 +12,14 @@
  **/
 
 import React from 'react'
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
+import Restrict from '../routes/restrict';
 
 import EditEventTypePage from '../pages/events/edit-event-type-page'
 import EventTypeListPage from '../pages/events/event-type-list-page'
 
-
-import { withRouter } from 'react-router-dom'
 
 class EventTypeLayout extends React.Component {
 
@@ -41,6 +40,6 @@ class EventTypeLayout extends React.Component {
 
 }
 
-export default withRouter(EventTypeLayout)
+export default Restrict(withRouter(EventTypeLayout), 'events');
 
 

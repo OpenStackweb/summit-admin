@@ -15,13 +15,14 @@ import React from 'react'
 import T from "i18n-react/dist/i18n-react";
 import { Switch, Route } from 'react-router-dom';
 import { Breadcrumb } from 'react-breadcrumbs';
+import Restrict from '../routes/restrict';
 
 import RsvpTemplateListPage from '../pages/rsvps/rsvp-template-list-page';
 import EditRsvpTemplatePage from '../pages/rsvps/edit-rsvp-template-page';
 import RsvpTemplateIdLayout from './rsvp-template-id-layout';
 
 
-export default class RsvpTemplateLayout extends React.Component {
+class RsvpTemplateLayout extends React.Component {
 
     render(){
         let { match } = this.props;
@@ -47,3 +48,5 @@ export default class RsvpTemplateLayout extends React.Component {
     }
 
 }
+
+export default Restrict(RsvpTemplateLayout, 'rsvp');

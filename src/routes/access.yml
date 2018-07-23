@@ -1,33 +1,39 @@
 
-summit:
-  edit:
-    -admin
+summit-edit:
+  - administrators
+  - summit-front-end-administrators
 
 speakers:
-  - admin
-
-dashboard:
-  - admin
+  - administrators
+  - summit-front-end-administrators
 
 attendees:
-  - admin
+  - administrators
+  - summit-front-end-administrators
 
 events:
-  - admin
-
-speaker-attendances:
-  - admin
+  - administrators
+  - summit-front-end-administrators
 
 locations:
-  - admin
+  - administrators
+  - summit-front-end-administrators
 
-rsvps:
-  - admin
+rsvp:
+  - administrators
+  - summit-front-end-administrators
 
 push-notifications:
-  - admin
+  - administrators
+  - summit-front-end-administrators
 
 tickets:
-  - admin
+  - administrators
+  - summit-front-end-administrators
+
+room-occupancy:
+  - administrators
+  - summit-front-end-administrators
+  - summit-room-administrators
 
 

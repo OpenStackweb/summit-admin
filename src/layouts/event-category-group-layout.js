@@ -12,15 +12,15 @@
  **/
 
 import React from 'react'
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
+import Restrict from '../routes/restrict';
+
 
 import EditEventCategoryGroupPage from '../pages/events/edit-event-category-group-page'
 import EventCategoryGroupListPage from '../pages/events/event-category-group-list-page'
 
-
-import { withRouter } from 'react-router-dom'
 
 class EventCategoryGroupLayout extends React.Component {
 
@@ -41,6 +41,6 @@ class EventCategoryGroupLayout extends React.Component {
 
 }
 
-export default withRouter(EventCategoryGroupLayout)
+export default Restrict(withRouter(EventCategoryGroupLayout), 'events');
 
 

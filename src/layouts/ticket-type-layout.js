@@ -12,15 +12,14 @@
  **/
 
 import React from 'react'
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
+import Restrict from '../routes/restrict';
 
 import TicketTypeListPage from '../pages/tickets/ticket-type-list-page'
 import EditTicketTypePage from '../pages/tickets/edit-ticket-type-page'
 
-
-import { withRouter } from 'react-router-dom'
 
 class TicketTypeLayout extends React.Component {
 
@@ -41,6 +40,6 @@ class TicketTypeLayout extends React.Component {
 
 }
 
-export default withRouter(TicketTypeLayout)
+export default Restrict(withRouter(TicketTypeLayout), 'tickets');
 
 
