@@ -15,13 +15,14 @@ import moment from 'moment-timezone';
 import
 {
     RECEIVE_EVENTS_FOR_OCCUPANCY,
-    REQUEST_EVENTS_FOR_OCCUPANCY
+    REQUEST_EVENTS_FOR_OCCUPANCY,
+    UPDATE_EVENT
 } from '../../actions/event-actions';
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
 
 const DEFAULT_STATE = {
-    events          : {},
+    events          : [],
     term            : null,
     room            : null,
     order           : 'id',
@@ -37,7 +38,7 @@ const roomOccupancyReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
         case LOGOUT_USER: {
-            return state;
+            return DEFAULT_STATE;
         }
         break;
         case REQUEST_EVENTS_FOR_OCCUPANCY: {
@@ -55,7 +56,7 @@ const roomOccupancyReducer = (state = DEFAULT_STATE, action) => {
                     title: e.title,
                     start: moment(e.start_date * 1000).tz(state.summitTZ).format('ddd h:mm a'),
                     room: e.location.name,
-                    value: 20,
+                    occupancy: e.occupancy,
                     speakers: (e.speakers) ? e.speakers.map(s => s.first_name + ' ' + s.last_name).join(',') : ''
                 };
             });
@@ -63,6 +64,10 @@ const roomOccupancyReducer = (state = DEFAULT_STATE, action) => {
             return {...state, events: events, currentPage: current_page, totalEvents: total, lastPage: last_page };
         }
         break;
+        case UPDATE_EVENT: {
+            return {...state,  events: [...state.events, {...payload}]};
+        }
+            break;
         default:
             return state;
     }

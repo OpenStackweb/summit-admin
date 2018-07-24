@@ -18,7 +18,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { Pagination } from 'react-bootstrap';
 import { FreeTextSearch, Dropdown } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../actions/summit-actions';
-import { getEventsForOccupancy } from "../actions/event-actions";
+import { getEventsForOccupancy, saveOccupancy } from "../actions/event-actions";
 import OccupancyTable from "../components/tables/room-occupancy-table/OccupancyTable"
 
 class RoomOccupancyPage extends React.Component {
@@ -31,8 +31,6 @@ class RoomOccupancyPage extends React.Component {
         this.handleSearch = this.handleSearch.bind(this);
         this.handleRoomFilter = this.handleRoomFilter.bind(this);
 
-        this.state = {
-        }
     }
 
     componentDidMount() {
@@ -73,8 +71,30 @@ class RoomOccupancyPage extends React.Component {
         this.props.getEventsForOccupancy(term, room, page, perPage, order, orderDir);
     }
 
+    changeOccupancy(eventId, add, ev) {
+        let values = ['EMPTY', '25%', '50%', '75%', 'FULL'];
+        let {events} = this.props;
+        let event =  events.find(e => e.id == eventId);
+
+        let key = values.indexOf(event.occupancy);
+
+        ev.preventDefault();
+
+        if (add) {
+            if (event.occupancy == 'FULL') return;
+            event.occupancy = values[key + 1];
+        } else {
+            if (event.occupancy == 'EMPTY') return;
+            event.occupancy = values[key - 1];
+        }
+
+        this.props.saveOccupancy(event);
+
+    }
+
     render(){
         let {currentSummit, events, lastPage, currentPage, term, order, orderDir, match, room} = this.props;
+        let that = this;
 
         let columns = [
             { columnKey: 'room', value: T.translate("room_occupancy.room"), sortable: true },
@@ -88,8 +108,9 @@ class RoomOccupancyPage extends React.Component {
             sortCol: (order == 'last_name') ? 'name' : order,
             sortDir: orderDir,
             actions: {
-                onMore: function(id, ev) { alert(id)},
-                onLess: function(id, ev) { alert(id)}
+                valueRow: 'occupancy',
+                onMore: function(eventId, ev) { that.changeOccupancy(eventId, true, ev); },
+                onLess: function(eventId, ev) { that.changeOccupancy(eventId, false, ev); }
             }
         }
 
@@ -166,5 +187,6 @@ export default connect (
     {
         getSummitById,
         getEventsForOccupancy,
+        saveOccupancy
     }
 )(RoomOccupancyPage);

@@ -86,7 +86,7 @@ export const getEvents = ( term = null, page = 1, perPage = 10, order = 'id', or
     );
 };
 
-export const getEventsForOccupancy = ( term = null, room = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
+export const getEventsForOccupancy = ( term = null, roomId = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -98,6 +98,10 @@ export const getEventsForOccupancy = ( term = null, room = null, page = 1, perPa
 
     if(term != null){
         filter.push(`title=@${term},abstract=@${term},tags=@${term},speaker=@${term},speaker_email=@${term},id==${term}`);
+    }
+
+    if(roomId != null){
+        filter.push(`room_id==${roomId}`);
     }
 
     let params = {
@@ -123,7 +127,7 @@ export const getEventsForOccupancy = ( term = null, room = null, page = 1, perPa
         createAction(RECEIVE_EVENTS_FOR_OCCUPANCY),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/published`,
         authErrorHandler,
-        {order, orderDir, term, room, summitTZ}
+        {order, orderDir, term, roomId, summitTZ}
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
@@ -160,16 +164,20 @@ export const saveEvent = (entity, publish, history) => (dispatch, getState) => {
 
     let normalizedEntity = normalizeEntity(entity);
 
+    let params = {
+        access_token : accessToken
+    };
+
     if (entity.id) {
 
         putRequest(
             createAction(UPDATE_EVENT),
             createAction(EVENT_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}?access_token=${accessToken}`,
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
-        )({})(dispatch)
+        )(params)(dispatch)
         .then((payload) => {
             if (publish)
                 dispatch(publishEvent(normalizedEntity));
@@ -188,11 +196,11 @@ export const saveEvent = (entity, publish, history) => (dispatch, getState) => {
         postRequest(
             createAction(UPDATE_EVENT),
             createAction(EVENT_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events?access_token=${accessToken}`,
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events`,
             normalizedEntity,
             authErrorHandler,
             entity
-        )({})(dispatch)
+        )(params)(dispatch)
         .then((payload) => {
             if (publish) {
                 normalizedEntity.id = payload.response.id;
@@ -207,22 +215,46 @@ export const saveEvent = (entity, publish, history) => (dispatch, getState) => {
     }
 }
 
+export const saveOccupancy = (entity) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    putRequest(
+        createAction(UPDATE_EVENT),
+        createAction(EVENT_UPDATED),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}`,
+        {id: entity.id, occupancy: entity.occupancy},
+        authErrorHandler,
+        entity
+    )(params)(dispatch);
+
+}
+
 const publishEvent = (entity) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
+    let params = {
+        access_token : accessToken
+    };
+
     putRequest(
         null,
         createAction(EVENT_PUBLISHED),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}/publish?access_token=${accessToken}`,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}/publish`,
         {
             location_id : entity.location_id,
             start_date  : entity.start_date,
             end_date    : entity.end_date,
         },
         authErrorHandler
-    )({})(dispatch)
+    )(params)(dispatch)
     .then((payload) => {
         dispatch(checkProximityEvents(entity));
     });
@@ -295,16 +327,20 @@ export const attachFile = (entity, file) => (dispatch, getState) => {
 
     //dispatch(startLoading());
 
+    let params = {
+        access_token : accessToken
+    };
+
     if (entity.id) {
         return dispatch(uploadFile(entity, file));
     } else {
         return postRequest(
             null,
             createAction(EVENT_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}?access_token=${accessToken}`,
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}`,
             entity,
             authErrorHandler
-        )({})(dispatch)
+        )(params)(dispatch)
             .then(() => {
                 dispatch(uploadFile(entity, file));
             })
@@ -320,13 +356,17 @@ const uploadFile = (entity, file) => (dispatch, getState) => {
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
+    let params = {
+        access_token : accessToken
+    };
+
     postRequest(
         null,
         createAction(FILE_ATTACHED),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}/attachment?access_token=${accessToken}`,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}/attachment`,
         file,
         authErrorHandler
-    )({})(dispatch)
+    )(params)(dispatch)
 }
 
 const normalizeEntity = (entity) => {

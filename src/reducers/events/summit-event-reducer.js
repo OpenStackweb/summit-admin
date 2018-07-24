@@ -48,7 +48,8 @@ export const DEFAULT_ENTITY = {
     moderator: {},
     discussion_leader: 0,
     groups: [],
-    attachment: ''
+    attachment: '',
+    occupancy: 'EMPTY'
 }
 
 const DEFAULT_STATE = {

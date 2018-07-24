@@ -12,7 +12,7 @@ export default class OccupancyActionsTableCell extends React.Component {
         return (
             <td className="actions" key="actions" style={{width: "140px"}}>
                 <button className="btn btn-default" onClick={actions.onMore.bind(this, id)}>+</button>
-                <span style={{marginLeft: "10px", marginRight: "10px"}}>{value}%</span>
+                <span style={{marginLeft: "10px", marginRight: "10px"}}>{value}</span>
                 <button className="btn btn-default" onClick={actions.onLess.bind(this, id)}>-</button>
             </td>
         );

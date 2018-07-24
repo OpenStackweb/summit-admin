@@ -26,7 +26,7 @@ const createRow = (row, columns, actions) => {
     });
 
     if (actions) {
-        cells.push(<OccupancyActionsTableCell key='actions_cell' id={row['id']} value={row['value']} actions={actions}/>);
+        cells.push(<OccupancyActionsTableCell key='actions_cell' id={row['id']} value={row[actions.valueRow]} actions={actions}/>);
     }
 
     return cells;
