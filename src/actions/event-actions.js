@@ -110,11 +110,11 @@ export const getEventsForOccupancy = ( term = null, roomId = null, currentEvents
 
     // only current events
     if (currentEvents) {
-        let now = moment().tz(summitTZ);
-        //let now = 1527025200;
+        //let now = moment().tz(summitTZ);
+        let now = 1527025200;
         let from_date = now - 900; // minus 15min
         let to_date = now + 900; // plus 15min
-        filter.push(`start_date>=${from_date}`);
+        filter.push(`start_date<=${to_date}`);
         filter.push(`end_date>=${from_date}`);
     }
 
