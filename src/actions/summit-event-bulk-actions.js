@@ -14,7 +14,7 @@
 import {apiBaseUrl, authErrorHandler } from "./base-actions";
 import T from 'i18n-react/dist/i18n-react'
 import URI from "urijs";
-import {BulkActionEdit, BulkActionUnPublish} from '../components/schedule-builder/constants';
+import {BulkActionEdit, BulkActionUnPublish} from '../utils/constants';
 import { getPublishedEventsBySummitDayLocation } from './summit-builder-actions';
 import {
     getRequest,

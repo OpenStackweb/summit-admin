@@ -19,56 +19,81 @@ import { Pagination } from 'react-bootstrap';
 import { FreeTextSearch, Dropdown } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../actions/summit-actions';
 import { getEventsForOccupancy, saveOccupancy } from "../actions/event-actions";
-import OccupancyTable from "../components/tables/room-occupancy-table/OccupancyTable"
+import OccupancyTable from "../components/tables/room-occupancy-table/OccupancyTable";
+import FragmentParser from '../utils/fragmen-parser';
+
+import '../styles/room-occupancy-page.less';
 
 class RoomOccupancyPage extends React.Component {
 
     constructor(props) {
         super(props);
 
-        this.handlePageChange = this.handlePageChange.bind(this);
-        this.handleSort = this.handleSort.bind(this);
-        this.handleSearch = this.handleSearch.bind(this);
-        this.handleRoomFilter = this.handleRoomFilter.bind(this);
+        this.handlePageChange           = this.handlePageChange.bind(this);
+        this.handleSort                 = this.handleSort.bind(this);
+        this.handleSearch               = this.handleSearch.bind(this);
+        this.handleRoomFilter           = this.handleRoomFilter.bind(this);
+        this.handleChangeCurrentEvents  = this.handleChangeCurrentEvents.bind(this);
+        this.fragmentParser             = new FragmentParser();
 
     }
 
     componentDidMount() {
         let {currentSummit} = this.props;
+        let roomIdHash = this.fragmentParser.getParam('room');
+        let currentHash = (this.fragmentParser.getParam('current') === 'true');
+
         if(currentSummit !== null) {
-            this.props.getEventsForOccupancy();
+            this.props.getEventsForOccupancy(null, roomIdHash, currentHash);
         }
     }
 
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
+        let roomIdHash = this.fragmentParser.getParam('room');
+        let currentHash = (this.fragmentParser.getParam('current') === 'true');
 
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
-            this.props.getEventsForOccupancy();
+        if (currentSummit !== null) {
+            if (currentSummit.id !== newProps.currentSummit.id || roomIdHash !== newProps.roomId || currentHash !== newProps.currentEvents) {
+                this.props.getEventsForOccupancy(null, roomIdHash, currentHash);
+            }
         }
     }
 
     handlePageChange(page) {
-        let {term, order, orderDir, perPage, room} = this.props;
-        this.props.getEventsForOccupancy(term, room, page, perPage, order, orderDir);
+        let {term, order, orderDir, perPage, roomId, currentEvents} = this.props;
+        this.props.getEventsForOccupancy(term, roomId, currentEvents, page, perPage, order, orderDir);
     }
 
     handleSort(index, key, dir, func) {
-        let {term, page, perPage, room} = this.props;
+        let {term, page, perPage, roomId, currentEvents} = this.props;
         key = (key == 'name') ? 'last_name' : key;
-        this.props.getEventsForOccupancy(term, room, page, perPage, key, dir);
+        this.props.getEventsForOccupancy(term, roomId, currentEvents, page, perPage, key, dir);
     }
 
     handleSearch(term) {
-        let {order, orderDir, page, perPage, room} = this.props;
-        this.props.getEventsForOccupancy(term, room, page, perPage, order, orderDir);
+        let {order, orderDir, page, perPage, roomId, currentEvents} = this.props;
+        this.props.getEventsForOccupancy(term, roomId, currentEvents, page, perPage, order, orderDir);
     }
 
     handleRoomFilter(ev) {
-        let {term, order, orderDir, page, perPage} = this.props;
-        let room = ev.target.value;
+        let {term, order, orderDir, page, perPage, currentEvents} = this.props;
+        let roomId = ev.target.value;
 
-        this.props.getEventsForOccupancy(term, room, page, perPage, order, orderDir);
+        this.fragmentParser.setParam('room', roomId);
+        window.location.hash   = this.fragmentParser.serialize();
+
+        this.props.getEventsForOccupancy(term, roomId, currentEvents, page, perPage, order, orderDir);
+    }
+
+    handleChangeCurrentEvents(ev) {
+        let {term, roomId, order, orderDir, page, perPage} = this.props;
+        let value = ev.target.checked;
+
+        this.fragmentParser.setParam('current', value);
+        window.location.hash   = this.fragmentParser.serialize();
+
+        this.props.getEventsForOccupancy(term, roomId, value, page, perPage, order, orderDir);
     }
 
     changeOccupancy(eventId, add, ev) {
@@ -93,7 +118,7 @@ class RoomOccupancyPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, events, lastPage, currentPage, term, order, orderDir, match, room} = this.props;
+        let {currentSummit, events, lastPage, currentPage, term, order, orderDir, match, roomId, currentEvents} = this.props;
         let that = this;
 
         let columns = [
@@ -127,18 +152,27 @@ class RoomOccupancyPage extends React.Component {
 
                 <div className="container">
                     <h3> {T.translate("room_occupancy.room_occupancy")}</h3>
-                    <div className={'row'}>
-                        <div className={'col-md-6'}>
+                    <div className="row filters">
+                        <div className="col-md-6">
                             <FreeTextSearch
                                 value={term}
                                 placeholder={T.translate("room_occupancy.placeholders.search_events")}
                                 onSearch={this.handleSearch}
                             />
                         </div>
-                        <div className={'col-md-6'}>
-                            <Dropdown id="room" value={room} placeholder={T.translate("room_occupancy.placeholders.select_room")}
+                        <div className="col-md-3">
+                            <Dropdown id="roomId" value={roomId} placeholder={T.translate("room_occupancy.placeholders.select_room")}
                                       options={room_ddl} onChange={this.handleRoomFilter}
                             />
+                        </div>
+                        <div className="col-md-3 checkboxes-div currentEvents">
+                            <div className="form-check abc-checkbox">
+                                <input type="checkbox" id="currentEvents" checked={currentEvents}
+                                       onChange={this.handleChangeCurrentEvents} className="form-check-input" />
+                                <label className="form-check-label" htmlFor="currentEvents">
+                                    {T.translate("room_occupancy.currentEvents")}
+                                </label>
+                            </div>
                         </div>
                     </div>
 

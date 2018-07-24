@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-import { PixelsPerMinute, DefaultEventMinutesDuration } from '../components/schedule-builder/constants';
+import { PixelsPerMinute, DefaultEventMinutesDuration } from '../utils/constants';
 import moment from 'moment-timezone'
 
 class SummitEvent {

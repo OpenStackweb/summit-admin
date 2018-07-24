@@ -18,7 +18,7 @@ import { DateTimePicker, Dropdown } from 'openstack-uicore-foundation/lib/compon
 import ScheduleAdminVenueSelector from '../schedule-builder/schedule-admin-venue-selector';
 import ScheduleAdminEventTypeSelector from '../schedule-builder/schedule-admin-event-type-selector';
 import moment from "moment-timezone";
-import {TBALocation} from "../schedule-builder/constants";
+import {TBALocation} from "../../utils/constants";
 
 class SummitEventBulkEditorForm extends React.Component
 {

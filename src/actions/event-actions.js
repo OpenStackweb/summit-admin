@@ -11,6 +11,7 @@
  * limitations under the License.
  **/
 
+import moment from 'moment-timezone';
 import { authErrorHandler, apiBaseUrl } from './base-actions';
 import T from "i18n-react/dist/i18n-react";
 import {
@@ -86,22 +87,35 @@ export const getEvents = ( term = null, page = 1, perPage = 10, order = 'id', or
     );
 };
 
-export const getEventsForOccupancy = ( term = null, roomId = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
+export const getEventsForOccupancy = ( term = null, roomId = null, currentEvents = false, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
     let filter = [];
     let summitTZ = currentSummit.time_zone.name;
+    let endPoint = 'events/published';
 
     dispatch(startLoading());
 
+    // search
     if(term != null){
-        filter.push(`title=@${term},abstract=@${term},tags=@${term},speaker=@${term},speaker_email=@${term},id==${term}`);
+        filter.push(`title=@${term},speaker=@${term}`);
     }
 
+    // room filter
     if(roomId != null){
-        filter.push(`room_id==${roomId}`);
+        endPoint = `locations/${roomId}/${endPoint}`;
+    }
+
+    // only current events
+    if (currentEvents) {
+        let now = moment().tz(summitTZ);
+        //let now = 1527025200;
+        let from_date = now - 900; // minus 15min
+        let to_date = now + 900; // plus 15min
+        filter.push(`start_date>=${from_date}`);
+        filter.push(`end_date>=${from_date}`);
     }
 
     let params = {
@@ -125,9 +139,9 @@ export const getEventsForOccupancy = ( term = null, roomId = null, page = 1, per
     return getRequest(
         createAction(REQUEST_EVENTS_FOR_OCCUPANCY),
         createAction(RECEIVE_EVENTS_FOR_OCCUPANCY),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/published`,
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/${endPoint}`,
         authErrorHandler,
-        {order, orderDir, term, roomId, summitTZ}
+        {order, orderDir, term, roomId, currentEvents, summitTZ}
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }

@@ -14,7 +14,7 @@
 import moment from "moment-timezone";
 import SummitEvent from "../models/summit-event";
 import { authErrorHandler, apiBaseUrl } from './base-actions';
-import { ScheduleEventsSearchResultMaxPage } from '../components/schedule-builder/constants';
+import { ScheduleEventsSearchResultMaxPage } from '../utils/constants';
 import { checkProximityEvents } from './event-actions';
 import {
     createAction,

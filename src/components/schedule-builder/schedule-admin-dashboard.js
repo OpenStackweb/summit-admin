@@ -40,7 +40,7 @@ import SummitEvent from '../../models/summit-event';
 import {
     BulkActionEdit, BulkActionUnPublish, DefaultEventMinutesDuration, PixelsPerMinute,
     TBALocation
-} from './constants';
+} from '../../utils/constants';
 import ScheduleAdminDaySelector from './schedule-admin-day-selector';
 import ScheduleAdminVenueSelector from './schedule-admin-venue-selector';
 import ScheduleAdminEventTypeSelector from './schedule-admin-event-type-selector';

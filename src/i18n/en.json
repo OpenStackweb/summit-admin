@@ -726,8 +726,9 @@
     "room"                  : "Room",
     "start"                 : "Start",
     "speakers"              : "Speakers",
+    "currentEvents"         : "Show only current events",
     "placeholders": {
-      "search_events"       : "Search by Id, Title, Abstract, Speaker",
+      "search_events"       : "Search by Event Title or Speaker Name",
       "select_room"         : "Select a Room"
     }
   }

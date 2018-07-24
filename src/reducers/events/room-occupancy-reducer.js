@@ -24,7 +24,8 @@ import { LOGOUT_USER } from '../../actions/auth-actions';
 const DEFAULT_STATE = {
     events          : [],
     term            : null,
-    room            : null,
+    roomId          : null,
+    currentEvents   : false,
     order           : 'id',
     orderDir        : 1,
     currentPage     : 1,
@@ -42,9 +43,9 @@ const roomOccupancyReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case REQUEST_EVENTS_FOR_OCCUPANCY: {
-            let {order, orderDir, term, room, summitTZ} = payload;
+            let {order, orderDir, term, roomId, currentEvents, summitTZ} = payload;
 
-            return {...state, order, orderDir, term, room, summitTZ }
+            return {...state, order, orderDir, term, roomId, currentEvents, summitTZ }
         }
         break;
         case RECEIVE_EVENTS_FOR_OCCUPANCY: {

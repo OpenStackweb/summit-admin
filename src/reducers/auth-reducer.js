@@ -21,8 +21,6 @@ const loggedUserReducer = (state = DEFAULT_STATE, action) => {
         }
         case RECEIVE_USER_INFO: {
             let { response } = action.payload;
-            // hardcode role
-            response.role = 'summit-room-administrators';
             return {...state, member: response};
         }
         default:

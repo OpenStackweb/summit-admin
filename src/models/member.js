@@ -20,11 +20,21 @@ class Member {
     }
 
     hasAccess(accessRoute) {
-        return !access.hasOwnProperty(accessRoute) || access[accessRoute].includes(this._member.role)
+        if (!access.hasOwnProperty(accessRoute)) return true;
+
+        for (var i in this._member.groups) {
+            if (access[accessRoute].includes(this._member.groups[i].code)) return true;
+        }
+
+        return false;
     }
 
     canEditSummit() {
-        return access['summit-edit'].includes(this._member.role)
+        for (var i in this._member.groups) {
+            if (access['summit-edit'].includes(this._member.groups[i].code)) return true;
+        }
+
+        return false;
     }
 
 }

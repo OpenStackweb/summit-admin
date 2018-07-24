@@ -15,7 +15,7 @@ import T from "i18n-react/dist/i18n-react";
 import {createAction, getRequest, startLoading, stopLoading} from "openstack-uicore-foundation/lib/methods";
 import swal from "sweetalert2";
 import {authErrorHandler, apiBaseUrl} from "./base-actions";
-import { AdminGroupCode, SummitAdminGroupCode } from '../components/schedule-builder/constants';
+import { AllowedUserGroups } from '../utils/constants';
 import URI from "urijs";
 
 export const SET_LOGGED_USER    = 'SET_LOGGED_USER';
@@ -110,7 +110,7 @@ export const getUserInfo = (history, backUrl) => (dispatch, getState) => {
             }
 
             let allowedGroups = member.groups.filter((group, idx) => {
-                return group.code === AdminGroupCode || group.code == SummitAdminGroupCode;
+                return AllowedUserGroups.includes(group.code);
             })
 
             if(allowedGroups.length == 0){
