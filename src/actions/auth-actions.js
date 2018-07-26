@@ -52,6 +52,23 @@ const getAuthUrl = (backUrl = null) => {
 
 }
 
+const getLogoutUrl = (accessToken) => {
+
+    let oauth2ClientId = process.env['OAUTH2_CLIENT_ID'];
+    let baseUrl        = process.env['IDP_BASE_URL'];
+    let redirectUri    = window.location.origin + '/app';
+
+    let url   = URI(`${baseUrl}/accounts/user/logout`);
+
+    url = url.query({
+        "id_token_hint"             : encodeURI(accessToken),
+        "post_logout_redirect_uri"  : encodeURI(redirectUri)
+    });
+
+    return url;
+
+}
+
 const createNonce = (len) => {
     let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     let nonce = '';
@@ -73,11 +90,23 @@ export const onUserAuth = (accessToken, idToken) => (dispatch) => {
     });
 }
 
-export const doLogout = () => (dispatch) => {
-    dispatch({
-        type: LOGOUT_USER,
-        payload: {}
+export const doLogout = () => (dispatch, getState) => {
+    let { loggedUserState } = getState();
+    let { accessToken }     = loggedUserState;
+    let url                 = getLogoutUrl(accessToken);
+
+    let logout = new Promise(function(resolve, reject){
+        var img = new Image()
+        img.onload = () => { resolve() }
+        img.onerror = () => { reject() }
+        img.src = url
     });
+
+    logout
+        .catch(function(){})
+        .finally(function(data){
+            dispatch({ type: LOGOUT_USER, payload: {} });
+        });
 }
 
 
