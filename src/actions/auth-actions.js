@@ -52,17 +52,22 @@ const getAuthUrl = (backUrl = null) => {
 
 }
 
-const getLogoutUrl = (accessToken) => {
+const getLogoutUrl = (idToken) => {
     let baseUrl     = process.env['IDP_BASE_URL'];
     let url         = URI(`${baseUrl}/oauth2/end-session`);
-    let nonce       = createNonce(NONCE_LEN);
-    let redirectUri = window.location.origin + '/app';
-
+    let state       = createNonce(NONCE_LEN);
+    let postLogOutUri = window.location.origin + '/auth/logout';
+    // store nonce to check it later
+    window.localStorage.setItem('post_logout_state', state);
+    /**
+     * post_logout_redirect_uri should be listed on oauth2 client settings
+     * on IDP
+     * "Security Settings" Tab -> Logout Options -> Post Logout Uris
+     */
     return url.query({
-        "id_token_hint"             : encodeURI(accessToken),
-        "post_logout_redirect_uri"  : encodeURI(redirectUri),
-        "state"                     : nonce,
-        "redirect_uri"              : encodeURI(redirectUri)
+        "id_token_hint"             : idToken,
+        "post_logout_redirect_uri"  : encodeURI(postLogOutUri),
+        "state"                     : state,
     });
 }
 
@@ -87,30 +92,17 @@ export const onUserAuth = (accessToken, idToken) => (dispatch) => {
     });
 }
 
-export const doLogout = () => (dispatch, getState) => {
+export const initLogOut = () => (dispatch, getState) => {
     let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
-    let url                 = getLogoutUrl(accessToken);
-
-    window.location = url.toString();
-
-    /*let logout = new Promise(function(resolve, reject){
-        var img = new Image()
-        img.onload = () => { resolve() }
-        img.onerror = () => { reject() }
-        img.src = url
-    });
-
-    logout
-        .then(function(){console.log('then')})
-        .catch(function(){console.log('catch')})
-        .finally(function(data){
-            console.log('finally')
-            //dispatch({ type: LOGOUT_USER, payload: {} });
-        });*/
-
+    window.location = getLogoutUrl(loggedUserState.idToken).toString();
 }
 
+export const doLogout = () => (dispatch, getState) => {
+    dispatch({
+        type: LOGOUT_USER,
+        payload: {}
+    });
+}
 
 export const getUserInfo = (history, backUrl) => (dispatch, getState) => {
 

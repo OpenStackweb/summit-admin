@@ -114,6 +114,7 @@ window.apiBaseUrl = process.env['API_BASE_URL'];
 const onRehydrateComplete = () => {
     // repopulate access token on global access variable
     window.accessToken = store.getState().loggedUserState.accessToken;
+    window.idToken = store.getState().loggedUserState.idToken;
 }
 
 export const persistor = persistStore(store, null, onRehydrateComplete);

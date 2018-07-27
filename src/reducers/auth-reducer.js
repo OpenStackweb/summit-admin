@@ -4,6 +4,7 @@ const DEFAULT_STATE = {
     isLoggedUser: false,
     accessToken: null,
     member: null,
+    idToken: null,
 }
 
 const loggedUserReducer = (state = DEFAULT_STATE, action) => {
@@ -11,12 +12,14 @@ const loggedUserReducer = (state = DEFAULT_STATE, action) => {
 
     switch(type) {
         case SET_LOGGED_USER: {
-            let {accessToken } = action.payload;
+            let { accessToken, idToken } = action.payload;
             window.accessToken = accessToken;
-            return {...state, isLoggedUser:true, accessToken };
+            window.idToken = idToken;
+            return {...state, isLoggedUser:true, accessToken, idToken };
         }
         case LOGOUT_USER : {
             window.accessToken = null;
+            window.idToken = null;
             return DEFAULT_STATE
         }
         case RECEIVE_USER_INFO: {

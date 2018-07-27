@@ -32,7 +32,7 @@ export default class AuthButton extends React.Component {
     }
 
     render() {
-        let {history, isLoggedUser, doLogin, doLogout, picture} = this.props;
+        let {history, isLoggedUser, doLogin, initLogOut, picture} = this.props;
         let {showLogOut} = this.state;
 
         if (isLoggedUser) {
@@ -42,7 +42,7 @@ export default class AuthButton extends React.Component {
                         <img src={picture} />
                     </div>
                     {showLogOut &&
-                    <button className="btn btn-default logout" onClick={() => { doLogout(); }}>
+                    <button className="btn btn-default logout" onClick={() => { initLogOut(); }}>
                         {T.translate("landing.sign_out")}
                     </button>
                     }
