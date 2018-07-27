@@ -53,20 +53,17 @@ const getAuthUrl = (backUrl = null) => {
 }
 
 const getLogoutUrl = (accessToken) => {
+    let baseUrl     = process.env['IDP_BASE_URL'];
+    let url         = URI(`${baseUrl}/oauth2/end-session`);
+    let nonce       = createNonce(NONCE_LEN);
+    let redirectUri = window.location.origin + '/app';
 
-    let oauth2ClientId = process.env['OAUTH2_CLIENT_ID'];
-    let baseUrl        = process.env['IDP_BASE_URL'];
-    let redirectUri    = window.location.origin + '/app';
-
-    let url   = URI(`${baseUrl}/accounts/user/logout`);
-
-    url = url.query({
+    return url.query({
         "id_token_hint"             : encodeURI(accessToken),
-        "post_logout_redirect_uri"  : encodeURI(redirectUri)
+        "post_logout_redirect_uri"  : encodeURI(redirectUri),
+        "state"                     : nonce,
+        "redirect_uri"              : encodeURI(redirectUri)
     });
-
-    return url;
-
 }
 
 const createNonce = (len) => {
@@ -95,7 +92,9 @@ export const doLogout = () => (dispatch, getState) => {
     let { accessToken }     = loggedUserState;
     let url                 = getLogoutUrl(accessToken);
 
-    let logout = new Promise(function(resolve, reject){
+    window.location = url.toString();
+
+    /*let logout = new Promise(function(resolve, reject){
         var img = new Image()
         img.onload = () => { resolve() }
         img.onerror = () => { reject() }
@@ -103,10 +102,13 @@ export const doLogout = () => (dispatch, getState) => {
     });
 
     logout
-        .catch(function(){})
+        .then(function(){console.log('then')})
+        .catch(function(){console.log('catch')})
         .finally(function(data){
-            dispatch({ type: LOGOUT_USER, payload: {} });
-        });
+            console.log('finally')
+            //dispatch({ type: LOGOUT_USER, payload: {} });
+        });*/
+
 }
 
 
