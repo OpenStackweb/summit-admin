@@ -11,22 +11,36 @@
  * limitations under the License.
  **/
 import T from "i18n-react/dist/i18n-react";
-import { stopLoading, startLoading, createAction, getBackURL, objectToQueryString } from "openstack-uicore-foundation/lib/methods";
+import {
+    stopLoading,
+    startLoading,
+    createAction,
+    getBackURL,
+    objectToQueryString,
+    showMessage
+} from "openstack-uicore-foundation/lib/methods";
 import swal from "sweetalert2";
-import {doLogin} from "./auth-actions";
+import {doLogin, initLogOut } from "./auth-actions";
+
 export const apiBaseUrl         = process.env['API_BASE_URL'];
 export const VALIDATE           = 'VALIDATE';
 const LOGOUT_USER               = 'LOGOUT_USER';
 
 export const authErrorHandler = (err, res) => (dispatch) => {
     let code = err.status;
-    dispatch(stopLoading());
-
     let msg = '';
+
+    dispatch(stopLoading());
 
     switch (code) {
         case 403:
-            swal("ERROR", T.translate("errors.user_not_authz"), "warning");
+            let error_message = {
+                title: 'ERROR',
+                html: T.translate("errors.user_not_authz"),
+                type: 'error'
+            };
+
+            dispatch(showMessage( error_message, initLogOut ));
             break;
         case 401:
             doLogin(window.location.pathname);

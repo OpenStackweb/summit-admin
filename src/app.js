@@ -51,7 +51,7 @@ class App extends React.PureComponent {
     }
 
     render() {
-        let { isLoggedUser, onUserAuth, doLogout, initLogOut, getUserInfo, member} = this.props;
+        let { isLoggedUser, onUserAuth, doLogout, getUserInfo, member} = this.props;
         let profile_pic = member ? member.pic : '';
         return (
             <BrowserRouter>
@@ -87,5 +87,4 @@ export default connect(mapStateToProps, {
     onUserAuth,
     doLogout,
     getUserInfo,
-    initLogOut,
 })(App)

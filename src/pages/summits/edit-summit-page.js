@@ -33,7 +33,11 @@ class EditSummitPage extends React.Component {
     }
 
     componentWillMount() {
-        this.props.getSummitById(this.props.summitId);
+        let {summitId} = this.props;
+
+        if (summitId) {
+            this.props.getSummitById(summitId);
+        }
     }
 
     handleSPlanDelete(selectionPlanId, ev) {

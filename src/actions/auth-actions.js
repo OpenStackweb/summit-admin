@@ -12,8 +12,7 @@
  **/
 
 import T from "i18n-react/dist/i18n-react";
-import {createAction, getRequest, startLoading, stopLoading} from "openstack-uicore-foundation/lib/methods";
-import swal from "sweetalert2";
+import {createAction, getRequest, startLoading, stopLoading, showMessage} from "openstack-uicore-foundation/lib/methods";
 import {authErrorHandler, apiBaseUrl} from "./base-actions";
 import { AllowedUserGroups } from '../utils/constants';
 import URI from "urijs";
@@ -92,9 +91,8 @@ export const onUserAuth = (accessToken, idToken) => (dispatch) => {
     });
 }
 
-export const initLogOut = () => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    window.location = getLogoutUrl(loggedUserState.idToken).toString();
+export const initLogOut = () => {
+    window.location = getLogoutUrl(window.idToken).toString();
 }
 
 export const doLogout = () => (dispatch, getState) => {
@@ -125,11 +123,14 @@ export const getUserInfo = (history, backUrl) => (dispatch, getState) => {
 
             let { member } = getState().loggedUserState;
             if( member == null || member == undefined){
-                swal("ERROR", T.translate("errors.user_not_set"), "error");
-                dispatch({
-                    type: LOGOUT_USER,
-                    payload: {}
-                });
+                let error_message = {
+                    title: 'ERROR',
+                    html: T.translate("errors.user_not_set"),
+                    type: 'error'
+                };
+
+                dispatch(showMessage( error_message, initLogOut ));
+
             }
 
             let allowedGroups = member.groups.filter((group, idx) => {
@@ -137,11 +138,14 @@ export const getUserInfo = (history, backUrl) => (dispatch, getState) => {
             })
 
             if(allowedGroups.length == 0){
-                swal("ERROR", T.translate("errors.user_not_authz") , "error");
-                dispatch({
-                    type: LOGOUT_USER,
-                    payload: {}
-                });
+                let error_message = {
+                    title: 'ERROR',
+                    html: T.translate("errors.user_not_authz"),
+                    type: 'error'
+                };
+
+                dispatch(showMessage( error_message, initLogOut ));
+
             }
             console.log(`redirecting to ${backUrl}`)
             history.push(backUrl);
