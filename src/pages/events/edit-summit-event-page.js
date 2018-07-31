@@ -38,6 +38,19 @@ class EditSummitEventPage extends React.Component {
         this.props.getRsvpTemplates();
     }
 
+    componentWillReceiveProps(newProps) {
+        let eventId = this.props.match.params.summit_event_id;
+        let newEventId = newProps.match.params.summit_event_id;
+
+        if (eventId != newEventId) {
+            if (!newEventId) {
+                this.props.resetEventForm();
+            } else {
+                this.props.getEvent(newEventId);
+            }
+        }
+    }
+
     render(){
         let {currentSummit, entity, errors, levelOptions, rsvpTemplateOptions, match} = this.props;
         let breadcrumb = (entity.id) ? entity.title : T.translate("general.new");

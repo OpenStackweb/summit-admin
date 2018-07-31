@@ -37,6 +37,19 @@ class EditSummitSpeakerPage extends React.Component {
         }
     }
 
+    componentWillReceiveProps(newProps) {
+        let speakerId = this.props.match.params.speaker_id;
+        let newSpeakerId = newProps.match.params.speaker_id;
+
+        if (speakerId != newSpeakerId) {
+            if (!newSpeakerId) {
+                this.props.resetSpeakerForm();
+            } else {
+                this.props.getSpeaker(newSpeakerId);
+            }
+        }
+    }
+
     render(){
         let {entity, errors, summits, history, saveSpeaker, attachPicture, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");

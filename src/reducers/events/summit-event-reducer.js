@@ -103,10 +103,6 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
             return state;
         }
         break;
-        case EVENT_ADDED: {
-            return state;
-        }
-        break;
         case VALIDATE: {
             return {...state,  errors: payload.errors };
         }

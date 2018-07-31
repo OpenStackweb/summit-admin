@@ -85,10 +85,15 @@ class EventForm extends React.Component {
     }
 
     handleUploadFile(file) {
-        console.log('file uploaded');
+        let entity = {...this.state.entity};
+
+        entity.attachment = file.preview;
+        this.setState({entity:entity});
+
         let formData = new FormData();
         formData.append('file', file);
-        this.props.onAttach(this.state.entity, formData)
+
+        this.props.onAttach(entity, formData, this.props.history);
     }
 
     handleRemoveFile(ev) {

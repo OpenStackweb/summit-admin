@@ -206,36 +206,36 @@ export const saveSpeaker = (entity, history) => (dispatch, getState) => {
     }
 }
 
-export const attachPicture = (entity, file) => (dispatch, getState) => {
+export const attachPicture = (entity, file, history) => (dispatch, getState) => {
     let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
 
-    //dispatch(startLoading());
+    dispatch(startLoading());
+
+    let normalizedEntity = normalizeEntity(entity);
+    console.log(normalizedEntity);
 
     if (entity.id) {
-        return dispatch(uploadFile(entity, file));
+        dispatch(uploadFile(entity, file, history));
     } else {
         return postRequest(
-            null,
-            createAction(SPEAKER_UPDATED),
-            `${apiBaseUrl}/api/v1/speakers/${entity.id}?access_token=${accessToken}`,
-            entity,
-            authErrorHandler
+            createAction(UPDATE_SPEAKER),
+            createAction(SPEAKER_ADDED),
+            `${apiBaseUrl}/api/v1/speakers?access_token=${accessToken}`,
+            normalizedEntity,
+            authErrorHandler,
+            entity
         )({})(dispatch)
-            .then(() => {
-                dispatch(uploadFile(entity, file));
-            })
-            .then(() => {
-                dispatch(stopLoading());
+            .then((payload) => {
+                dispatch(uploadFile(payload.response, file, history));
             }
         );
     }
 }
 
-const uploadFile = (entity, file) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
+const uploadFile = (entity, file, history) => (dispatch, getState) => {
+    let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
 
     postRequest(
         null,
@@ -245,6 +245,10 @@ const uploadFile = (entity, file) => (dispatch, getState) => {
         authErrorHandler,
         {pic: entity.pic}
     )({})(dispatch)
+        .then(() => {
+            dispatch(stopLoading());
+            history.push(`/app/speakers/${entity.id}`)
+        });
 }
 
 const normalizeEntity = (entity) => {

@@ -333,38 +333,35 @@ export const checkProximityEvents = (event) => (dispatch, getState) => {
     );
 }
 
-export const attachFile = (entity, file) => (dispatch, getState) => {
+export const attachFile = (entity, file, history) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
-    //dispatch(startLoading());
+    let normalizedEntity = normalizeEntity(entity);
 
     let params = {
         access_token : accessToken
     };
 
     if (entity.id) {
-        return dispatch(uploadFile(entity, file));
+        return dispatch(uploadFile(entity, file, history));
     } else {
         return postRequest(
-            null,
-            createAction(EVENT_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}`,
-            entity,
-            authErrorHandler
+            createAction(UPDATE_EVENT),
+            createAction(EVENT_ADDED),
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events`,
+            normalizedEntity,
+            authErrorHandler,
+            entity
         )(params)(dispatch)
-            .then(() => {
-                dispatch(uploadFile(entity, file));
-            })
-            .then(() => {
-                dispatch(stopLoading());
-            }
-        );
+            .then((payload) => {
+                dispatch(uploadFile(payload.response, file, history));
+            });
     }
 }
 
-const uploadFile = (entity, file) => (dispatch, getState) => {
+const uploadFile = (entity, file, history) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
@@ -380,6 +377,10 @@ const uploadFile = (entity, file) => (dispatch, getState) => {
         file,
         authErrorHandler
     )(params)(dispatch)
+        .then(() => {
+           history.push(`/app/summits/${currentSummit.id}/events/${entity.id}`);
+           dispatch(stopLoading());
+        });
 }
 
 const normalizeEntity = (entity) => {

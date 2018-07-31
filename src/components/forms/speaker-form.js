@@ -72,10 +72,9 @@ class SpeakerForm extends React.Component {
     }
 
     handleUploadFile(file) {
-        console.log('file uploaded');
         let formData = new FormData();
         formData.append('file', file);
-        this.props.onAttach(this.state.entity, formData)
+        this.props.onAttach(this.state.entity, formData, this.props.history)
     }
 
     handleRemoveFile(ev) {
@@ -271,7 +270,7 @@ class SpeakerForm extends React.Component {
                 </div>
                 <br/>
                 <hr/>
-                { lastSummits.map(s =>
+                { entity.id && lastSummits.map(s =>
                     <Panel key={'last-summits-' + s.id} className="summit-data" show={showSummit == s.id} title={s.name} handleClick={this.toggleSummit.bind(this, s.id)} >
                         {this.getPresentations(s.id)}
                         {this.getAttendance(s.id)}
