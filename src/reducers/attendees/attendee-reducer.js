@@ -73,7 +73,6 @@ const attendeeReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  entity: {...payload}, errors: {} };
         }
         break;
-        case ATTENDEE_ADDED:
         case RECEIVE_ATTENDEE: {
             let entity = {...payload.response};
 
