@@ -26,7 +26,7 @@ const DEFAULT_STATE = {
     term            : null,
     roomId          : null,
     currentEvents   : false,
-    order           : 'id',
+    order           : 'start_date',
     orderDir        : 1,
     currentPage     : 1,
     lastPage        : 1,
@@ -55,8 +55,8 @@ const roomOccupancyReducer = (state = DEFAULT_STATE, action) => {
                 return {
                     id: e.id,
                     title: e.title,
-                    start: moment(e.start_date * 1000).tz(state.summitTZ).format('ddd h:mm a'),
-                    room: e.location.name,
+                    start_date: moment(e.start_date * 1000).tz(state.summitTZ).format('ddd h:mm a'),
+                    room: (e.location) ? e.location.name : '',
                     occupancy: e.occupancy,
                     speakers: (e.speakers) ? e.speakers.map(s => s.first_name + ' ' + s.last_name).join(',') : ''
                 };
@@ -66,7 +66,12 @@ const roomOccupancyReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case UPDATE_EVENT: {
-            return {...state,  events: [...state.events, {...payload}]};
+            let events = state.events.map( e => {
+                if (e.id == payload.id) return payload;
+                else return e;
+            });
+
+            return {...state,  events: [...events]};
         }
             break;
         default:

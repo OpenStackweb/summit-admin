@@ -87,7 +87,7 @@ export const getEvents = ( term = null, page = 1, perPage = 10, order = 'id', or
     );
 };
 
-export const getEventsForOccupancy = ( term = null, roomId = null, currentEvents = false, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
+export const getEventsForOccupancy = ( term = null, roomId = null, currentEvents = false, page = 1, perPage = 10, order = 'start_date', orderDir = 1 ) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;

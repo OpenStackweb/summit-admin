@@ -122,8 +122,8 @@ class RoomOccupancyPage extends React.Component {
         let that = this;
 
         let columns = [
-            { columnKey: 'room', value: T.translate("room_occupancy.room"), sortable: true },
-            { columnKey: 'start', value: T.translate("room_occupancy.start"), sortable: true, width: '100px' },
+            { columnKey: 'room', value: T.translate("room_occupancy.room") },
+            { columnKey: 'start_date', value: T.translate("room_occupancy.start"), sortable: true, width: '100px' },
             { columnKey: 'title', value: T.translate("room_occupancy.title"), sortable: true },
             { columnKey: 'speakers', value: T.translate("room_occupancy.speakers") },
         ];
