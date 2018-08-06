@@ -15,7 +15,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import swal from "sweetalert2";
-import { loadSummits, setCurrentSummit } from '../../actions/summit-actions';
+import { loadSummits, setCurrentSummit, deleteSummit } from '../../actions/summit-actions';
 import { formatEpoch } from 'openstack-uicore-foundation/lib/methods';
 import Member from '../../models/member'
 
@@ -136,5 +136,6 @@ export default connect (
     {
         loadSummits,
         setCurrentSummit,
+        deleteSummit
     }
 )(SummitDirectoryPage);
