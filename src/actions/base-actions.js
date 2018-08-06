@@ -56,7 +56,7 @@ export const authErrorHandler = (err, res) => (dispatch) => {
             break;
         case 412:
             for (var [key, value] of Object.entries(err.response.body.errors)) {
-                msg += '- ' + value + '<br>';
+                msg += key + ': ' + value + '<br>';
             }
             swal("Validation error", msg, "warning");
             dispatch({

@@ -269,6 +269,7 @@ class SummitForm extends React.Component {
                                 timezone={entity.time_zone_id}
                                 timeConstraints={{ hours: { min: 7, max: 22}}}
                                 value={epochToMomentTimeZone(entity.start_date, entity.time_zone_id)}
+                                error={this.hasErrors('start_date')}
                             />
                         </div>
                         <div className="col-md-6">
@@ -281,6 +282,7 @@ class SummitForm extends React.Component {
                                 timezone={entity.time_zone_id}
                                 timeConstraints={{ hours: { min: 7, max: 22}}}
                                 value={epochToMomentTimeZone(entity.end_date, entity.time_zone_id)}
+                                error={this.hasErrors('end_date')}
                             />
                         </div>
                     </div>
@@ -294,6 +296,7 @@ class SummitForm extends React.Component {
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                                 timezone={entity.time_zone_id}
                                 value={epochToMomentTimeZone(entity.registration_begin_date, entity.time_zone_id)}
+                                error={this.hasErrors('registration_begin_date')}
                             />
                         </div>
                         <div className="col-md-6">
@@ -305,6 +308,7 @@ class SummitForm extends React.Component {
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                                 timezone={entity.time_zone_id}
                                 value={epochToMomentTimeZone(entity.registration_end_date, entity.time_zone_id)}
+                                error={this.hasErrors('registration_end_date')}
                             />
                         </div>
                     </div>
@@ -318,6 +322,7 @@ class SummitForm extends React.Component {
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                                 timezone={entity.time_zone_id}
                                 value={epochToMomentTimeZone(entity.schedule_start_date, entity.time_zone_id)}
+                                error={this.hasErrors('schedule_start_date')}
                             />
                         </div>
                         <div className="col-md-6">
@@ -329,6 +334,7 @@ class SummitForm extends React.Component {
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                                 timezone={entity.time_zone_id}
                                 value={epochToMomentTimeZone(entity.start_showing_venues_date, entity.time_zone_id)}
+                                error={this.hasErrors('start_showing_venues_date')}
                             />
                         </div>
                     </div>

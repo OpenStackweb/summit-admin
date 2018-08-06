@@ -1,9 +1,14 @@
 import{ LOGOUT_USER } from '../../actions/auth-actions';
-import { SET_CURRENT_SUMMIT, RECEIVE_SUMMIT, SUMMIT_UPDATED, SUMMIT_ADDED, RESET_SUMMIT_FORM } from '../../actions/summit-actions';
+import { SET_CURRENT_SUMMIT, RECEIVE_SUMMIT, UPDATE_SUMMIT, SUMMIT_UPDATED, SUMMIT_ADDED, RESET_SUMMIT_FORM } from '../../actions/summit-actions';
 import { EVENT_CATEGORY_UPDATED, EVENT_CATEGORY_ADDED, EVENT_CATEGORY_DELETED, EVENT_CATEGORIES_SEEDED } from '../../actions/event-category-actions';
 import { EVENT_TYPE_UPDATED, EVENT_TYPE_ADDED, EVENT_TYPE_DELETED, EVENT_TYPES_SEEDED } from '../../actions/event-type-actions';
 import { LOCATION_UPDATED, LOCATION_ADDED, LOCATION_DELETED } from '../../actions/location-actions';
-import { SELECTION_PLAN_DELETED, SELECTION_PLAN_ADDED } from "../../actions/selection-plan-actions";
+import {
+    SELECTION_PLAN_DELETED,
+    SELECTION_PLAN_ADDED,
+    UPDATE_SELECTION_PLAN
+} from "../../actions/selection-plan-actions";
+import {VALIDATE} from "../../actions/base-actions";
 
 export const DEFAULT_ENTITY = {
     id: 0,
@@ -83,11 +88,11 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
                 }
             }
 
-            return {...state, currentSummit: entity};
+            return {...state, currentSummit: entity, errors: {}};
         }
         break;
-        case SUMMIT_UPDATED: {
-            return state;
+        case UPDATE_SUMMIT: {
+            return {...state,  currentSummit: {...payload}, errors: {} };
         }
         break;
         case EVENT_TYPE_UPDATED: {
@@ -169,6 +174,10 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
             let {selectionPlanId} = payload;
             let selection_plans = state.currentSummit.selection_plans.filter(sp => sp.id != selectionPlanId);
             return {...state, currentSummit: {...state.currentSummit, selection_plans: selection_plans}};
+        }
+        break;
+        case VALIDATE: {
+            return {...state,  errors: payload.errors };
         }
         break;
         default:
