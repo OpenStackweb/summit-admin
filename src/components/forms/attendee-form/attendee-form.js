@@ -61,6 +61,10 @@ class AttendeeForm extends React.Component {
             this.props.onMemberChange(value);
         }
 
+        if (ev.target.type == 'datetime') {
+            value = value.valueOf() / 1000;
+        }
+
         errors[id] = '';
         entity[id] = value;
         this.setState({entity: entity, errors: errors});
@@ -146,22 +150,28 @@ class AttendeeForm extends React.Component {
                                     multi={true}
                                 />
                             </div>
-                            <div className="col-md-2" style={{paddingTop: '24px'}}>
+                            <div className="col-md-2">
+                                <label> {T.translate("edit_attendee.start_date")} </label>
                                 <DateTimePicker
                                     id="affiliation_start_date"
                                     onChange={this.handleChange}
-                                    format={{date:"YYYY-MM-DD", time: "HH:mm"}}
+                                    format={{date:"YYYY-MM-DD", time: false}}
                                     value={epochToMoment(entity.affiliation_start_date)}
                                     inputProps={{placeholder: T.translate("edit_attendee.placeholders.start_date")}}
+                                    timezone={'UTC'}
+                                    utc={true}
                                 />
                             </div>
-                            <div className="col-md-2" style={{paddingTop: '24px'}}>
+                            <div className="col-md-2">
+                                <label> {T.translate("edit_attendee.end_date")} </label>
                                 <DateTimePicker
                                     id="affiliation_end_date"
                                     onChange={this.handleChange}
-                                    format={{date:"YYYY-MM-DD", time: "HH:mm"}}
+                                    format={{date:"YYYY-MM-DD", time: false}}
                                     value={epochToMoment(entity.affiliation_end_date)}
                                     inputProps={{placeholder: T.translate("edit_attendee.placeholders.end_date")}}
+                                    timezone={'UTC'}
+                                    utc={true}
                                 />
                             </div>
                             <div className="col-md-2">

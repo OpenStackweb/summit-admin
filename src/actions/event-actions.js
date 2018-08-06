@@ -278,6 +278,16 @@ export const checkProximityEvents = (event) => (dispatch, getState) => {
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
+    let success_message = {
+        title: T.translate("general.done"),
+        html: T.translate("edit_event.saved_and_published"),
+        type: 'success'
+    };
+
+    if (event.speakers.length == 0 && (!event.moderator_speaker_id)) {
+        dispatch(showMessage(success_message))
+        return;
+    }
 
     let speaker_ids = event.speakers.map(s => `speaker_id==${s}`);
     if (event.moderator_speaker_id) {
@@ -307,12 +317,6 @@ export const checkProximityEvents = (event) => (dispatch, getState) => {
     )(params)(dispatch)
         .then((payload) => {
 
-            let success_message = {
-                title: T.translate("general.done"),
-                html: T.translate("edit_event.saved_and_published"),
-                type: 'success'
-            };
-
             let proximity_events = payload.response.data.filter( e => e.id != event.id );
 
             if (proximity_events.length > 0) {
@@ -328,7 +332,7 @@ export const checkProximityEvents = (event) => (dispatch, getState) => {
             }
 
 
-            dispatch(showMessage(success_message))
+            dispatch(showMessage(success_message));
         }
     );
 }

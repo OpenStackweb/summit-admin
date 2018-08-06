@@ -351,6 +351,8 @@
   },
   "edit_attendee": {
     "current_affiliation"         : "Current Affiliation",
+    "start_date"                  : "Start Date",
+    "end_date"                    : "End Date",
     "affiliation_title"           : "Title",
     "company"                     : "Company",
     "affiliation_current"         : "Current",
