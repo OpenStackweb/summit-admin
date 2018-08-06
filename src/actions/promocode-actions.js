@@ -69,7 +69,7 @@ export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'cod
 
     dispatch(startLoading());
 
-    if(term != null){
+    if(term){
         filter.push(`code=@${term},creator=@${term},creator_email=@${term},owner=@${term},owner_email=@${term},speaker=@${term},speaker_email=@${term},sponsor=@${term}`);
     }
 
@@ -234,7 +234,7 @@ export const exportPromocodes = ( term = null, order = 'code', orderDir = 1, typ
         access_token : accessToken
     };
 
-    if(term != null){
+    if(term){
         filter.push(`code=@${term},creator=@${term},creator_email=@${term},owner=@${term},owner_email=@${term},speaker=@${term},speaker_email=@${term},sponsor=@${term}`);
     }
 

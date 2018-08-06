@@ -60,7 +60,7 @@ export const getRsvpTemplates = ( term = null, page = 1, perPage = 10, order = '
 
     dispatch(startLoading());
 
-    if(term != null){
+    if(term){
         filter.push(`title=@${term}`);
     }
 

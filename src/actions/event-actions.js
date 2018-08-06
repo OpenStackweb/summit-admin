@@ -53,7 +53,7 @@ export const getEvents = ( term = null, page = 1, perPage = 10, order = 'id', or
 
     dispatch(startLoading());
 
-    if(term != null){
+    if(term){
         filter.push(`title=@${term},abstract=@${term},tags=@${term},speaker=@${term},speaker_email=@${term},id==${term}`);
     }
 
@@ -99,7 +99,7 @@ export const getEventsForOccupancy = ( term = null, roomId = null, currentEvents
     dispatch(startLoading());
 
     // search
-    if(term != null){
+    if(term){
         filter.push(`title=@${term},speaker=@${term}`);
     }
 
@@ -436,7 +436,7 @@ export const exportEvents = ( term = null, order = 'id', orderDir = 1 ) => (disp
         access_token : accessToken
     };
 
-    if(term != null){
+    if(term){
         filter.push(`title=@${term},abstract=@${term},tags=@${term},speaker=@${term},speaker_email=@${term},id==${term}`);
     }
 

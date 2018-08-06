@@ -50,7 +50,7 @@ export const getAttendees = ( term = null, page = 1, perPage = 10, order = 'id',
 
     dispatch(startLoading());
 
-    if(term != null){
+    if(term){
         filter.push(`first_name=@${term},last_name=@${term},email=@${term}`);
     }
 

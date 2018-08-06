@@ -76,7 +76,7 @@ export const getUnScheduleEventsPage =
             filter.push(`selection_status==${selection_status}`);
         }
 
-        if(term != null){
+        if(term){
             filter.push(`title=@${term},abstract=@${term},social_summary=@${term},tags=@${term},speaker=@${term},speaker_email=@${term}`);
         }
 
