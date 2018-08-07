@@ -57,7 +57,7 @@ class AuthorizationCallbackRoute extends React.Component {
         if(this.accessTokenParsed) return null;
 
 
-        let { access_token , id_token} = this.extractHashParams();
+        let { access_token , id_token, session_state } = this.extractHashParams();
 
         if(access_token == undefined){
             return (
@@ -77,7 +77,7 @@ class AuthorizationCallbackRoute extends React.Component {
         }
 
         this.accessTokenParsed = true;
-        this.props.onUserAuth(access_token, id_token);
+        this.props.onUserAuth(access_token, id_token, session_state);
         let url              = URI( window.location.href);
         let query            = url.search(true);
         let fragment         = URI.parseQuery(url.fragment());

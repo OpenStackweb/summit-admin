@@ -25,6 +25,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { AjaxLoader } from "openstack-uicore-foundation/lib/components";
 import { getBackURL } from "openstack-uicore-foundation/lib/methods";
 import T from 'i18n-react';
+import OPSessionChecker from "./components/op-session-checker";
 
 
 // here is set by default user lang as en
@@ -57,6 +58,10 @@ class App extends React.PureComponent {
             <BrowserRouter>
                 <div>
                     <AjaxLoader show={ this.props.loading } size={ 120 }/>
+                    <OPSessionChecker
+                        clientId={window.clientId}
+                        idpBaseUrl={window.idpBaseUrl}
+                    />
                     <div className="header">
                         <div className={"header-title " + (isLoggedUser ? '' : 'center')}>
                             {T.translate("landing.os_summit_admin")}

@@ -84,10 +84,10 @@ export const doLogin = (backUrl = null) => {
     window.location = url.toString();
 }
 
-export const onUserAuth = (accessToken, idToken) => (dispatch) => {
+export const onUserAuth = (accessToken, idToken, sessionState) => (dispatch) => {
     dispatch({
         type: SET_LOGGED_USER,
-        payload: {accessToken, idToken}
+        payload: {accessToken, idToken, sessionState}
     });
 }
 
@@ -109,6 +109,7 @@ export const getUserInfo = (history, backUrl) => (dispatch, getState) => {
     if(member != null){
         console.log(`redirecting to ${backUrl}`)
         history.push(backUrl);
+        return;
     }
 
     dispatch(startLoading());
@@ -145,8 +146,8 @@ export const getUserInfo = (history, backUrl) => (dispatch, getState) => {
                 };
 
                 dispatch(showMessage( error_message, initLogOut ));
-
             }
+
             console.log(`redirecting to ${backUrl}`)
             history.push(backUrl);
         }
