@@ -26,6 +26,7 @@ import { AjaxLoader } from "openstack-uicore-foundation/lib/components";
 import { getBackURL } from "openstack-uicore-foundation/lib/methods";
 import T from 'i18n-react';
 import OPSessionChecker from "./components/op-session-checker";
+import CustomErrorPage from "./pages/custom-error-page";
 
 
 // here is set by default user lang as en
@@ -74,6 +75,7 @@ class App extends React.PureComponent {
                         <LogOutCallbackRoute doLogout={doLogout}  path='/auth/logout'/>
                         <Route path="/logout" render={props => (<p>404 - Not Found</p>)}/>
                         <Route path="/404" render={props => (<p>404 - Not Found</p>)}/>
+                        <Route path="/error" component={CustomErrorPage}/>
                         <DefaultRoute isLoggedUser={isLoggedUser} />
                     </Switch>
                 </div>

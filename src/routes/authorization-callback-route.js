@@ -57,21 +57,23 @@ class AuthorizationCallbackRoute extends React.Component {
         if(this.accessTokenParsed) return null;
 
 
-        let { access_token , id_token, session_state } = this.extractHashParams();
+        let { access_token , id_token, session_state, error, error_description } = this.extractHashParams();
 
         if(access_token == undefined){
             return (
                 <Route render={ props => {
-                    return <Redirect to="/error" />
+                    return <Redirect to={`/error?error=${error}&error_description=${error_description}`} />
                 }} />
             )
         }
 
         if(!this.validateIdToken(id_token))
         {
+            let error = "validation error";
+            let error_description = "invalid id token";
             return (
                 <Route render={ props => {
-                    return <Redirect to="/error" />
+                    return <Redirect to={`/error?error=${error}&error_description=${error_description}`} />
                 }} />
             )
         }
