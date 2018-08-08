@@ -161,6 +161,9 @@ class AttendeeForm extends React.Component {
                                     timezone={'UTC'}
                                     utc={true}
                                 />
+                                
+                                
+                                
                             </div>
                             <div className="col-md-2">
                                 <label> {T.translate("edit_attendee.end_date")} </label>

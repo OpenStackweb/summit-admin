@@ -136,6 +136,7 @@ class SummitEventBulkEditorForm extends React.Component
             if (location.class_name != "SummitVenue") continue;
             let option = { value : location, label: location.name };
             venuesOptions.push(option);
+            if(!location.hasOwnProperty('rooms')) continue;
             for(let j = 0; j < location.rooms.length ; j++){
                 let subOption = { value : location.rooms[j] , label: location.rooms[j].name};
                 venuesOptions.push(subOption);

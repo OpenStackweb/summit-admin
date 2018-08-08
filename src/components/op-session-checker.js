@@ -65,7 +65,7 @@ class OPSessionChecker extends React.Component {
 
     render() {
        return(
-         <div>
+         <div style={{height: '0px'}}>
              <iframe
                  ref={this.setOPFrameRef}
                  frameBorder="0" width="0" height="0" id="OPFrame" onLoad={this.setTimer}></iframe>
