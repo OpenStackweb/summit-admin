@@ -503,8 +503,8 @@
     "tags"                        : "Allowed Tags",
     "tag"                         : "Tag",
     "group"                       : "Group",
-    "event_category_saved"        : "Event Category saved successfully.",
-    "event_category_created"      : "Event Category created successfully."
+    "category_saved"              : "Event Category saved successfully.",
+    "category_created"            : "Event Category created successfully."
   },
   "event_category_group_list": {
     "event_category_group_list"   : "Event Category Groups",

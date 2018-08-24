@@ -28,7 +28,7 @@ export const DEFAULT_ENTITY = {
     name                        : '',
     code                        : '',
     description                 : '',
-    sessions_count              : 0,
+    session_count               : 0,
     alternate_count             : 0,
     lightning_count             : 0,
     lightning_alternate_count   : 0,
@@ -61,6 +61,7 @@ const eventCategoryReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case UPDATE_EVENT_CATEGORY: {
+            console.log(payload);
             return {...state,  entity: {...payload}, errors: {} };
         }
         break;

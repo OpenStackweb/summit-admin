@@ -130,7 +130,7 @@ export const saveEventCategory = (entity, history) => (dispatch, getState) => {
 
         let success_message = {
             title: T.translate("general.done"),
-            html: T.translate("edit_event_category.event_category_created"),
+            html: T.translate("edit_event_category.category_created"),
             type: 'success'
         };
 
@@ -196,6 +196,10 @@ export const deleteEventCategory = (categoryId) => (dispatch, getState) => {
 const normalizeEntity = (entity) => {
     let normalizedEntity = {...entity};
 
+    normalizedEntity.session_count              = parseInt(entity.session_count);
+    normalizedEntity.alternate_count            = parseInt(entity.alternate_count);
+    normalizedEntity.lightning_count            = parseInt(entity.lightning_count);
+    normalizedEntity.lightning_alternate_count  = parseInt(entity.lightning_alternate_count);
 
     return normalizedEntity;
 
