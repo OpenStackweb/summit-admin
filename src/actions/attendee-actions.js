@@ -25,6 +25,7 @@ import {
     showSuccessMessage
 } from "openstack-uicore-foundation/lib/methods";
 
+import { saveAffiliation } from './member-actions';
 
 export const REQUEST_ATTENDEES          = 'REQUEST_ATTENDEES';
 export const RECEIVE_ATTENDEES          = 'RECEIVE_ATTENDEES';
@@ -38,7 +39,6 @@ export const ATTENDEE_DELETED           = 'ATTENDEE_DELETED';
 export const TICKET_ADDED               = 'TICKET_ADDED';
 export const TICKET_DELETED             = 'TICKET_DELETED';
 export const RSVP_DELETED               = 'RSVP_DELETED';
-export const AFFILIATION_UPDATED        = 'AFFILIATION_UPDATED';
 
 
 export const getAttendees = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
@@ -140,7 +140,7 @@ export const saveAttendee = (entity, history) => (dispatch, getState) => {
             entity
         )(params)(dispatch)
             .then((payload) => {
-                dispatch(updateAffiliation(normalizedEntity.affiliation));
+                dispatch(saveAffiliation(normalizedEntity.affiliation));
             })
             .then((payload) => {
                 dispatch(showSuccessMessage(T.translate("edit_attendee.attendee_saved")));
@@ -162,7 +162,7 @@ export const saveAttendee = (entity, history) => (dispatch, getState) => {
             entity
         )(params)(dispatch)
             .then((payload) => {
-                dispatch(updateAffiliation(normalizedEntity.affiliation));
+                dispatch(saveAffiliation(normalizedEntity.affiliation));
                 return payload;
             })
             .then((payload) => {
@@ -172,26 +172,6 @@ export const saveAttendee = (entity, history) => (dispatch, getState) => {
                 ));
             });
     }
-}
-
-export const updateAffiliation = (affiliation) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-
-    dispatch(startLoading());
-
-    let params = {
-        access_token : accessToken,
-    };
-
-    putRequest(
-        null,
-        createAction(AFFILIATION_UPDATED),
-        `${apiBaseUrl}/api/v1/members/${affiliation.owner_id}/affiliations/${affiliation.id}`,
-        affiliation,
-        authErrorHandler
-    )(params)(dispatch)
-
 }
 
 export const deleteAttendee = (attendeeId) => (dispatch, getState) => {

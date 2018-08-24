@@ -21,9 +21,10 @@ import
     ATTENDEE_ADDED,
     TICKET_ADDED,
     TICKET_DELETED,
-    RSVP_DELETED,
-    AFFILIATION_UPDATED,
+    RSVP_DELETED
 } from '../../actions/attendee-actions';
+
+import { AFFILIATION_SAVED } from "../../actions/member-actions";
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
 import { VALIDATE } from '../../actions/base-actions';

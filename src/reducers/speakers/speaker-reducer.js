@@ -21,6 +21,8 @@ import
     PIC_ATTACHED
 } from '../../actions/speaker-actions';
 
+import { AFFILIATION_ADDED, AFFILIATION_DELETED } from '../../actions/member-actions'
+
 import { LOGOUT_USER } from '../../actions/auth-actions';
 import { VALIDATE } from '../../actions/base-actions';
 
@@ -37,7 +39,8 @@ export const DEFAULT_ENTITY = {
     pic: '',
     all_presentations: [],
     registration_codes: [],
-    summit_assistances: []
+    summit_assistances: [],
+    affiliations: []
 }
 
 const DEFAULT_STATE = {
@@ -101,6 +104,17 @@ const speakerReducer = (state = DEFAULT_STATE, action) => {
         break;
         case VALIDATE: {
             return {...state,  errors: payload.errors };
+        }
+        break;
+        case AFFILIATION_ADDED: {
+            let affiliation = {...payload.response};
+            return {...state,  entity: {...state.entity, affiliations: [...state.entity.affiliations, affiliation] }};
+        }
+        break;
+        case AFFILIATION_DELETED: {
+            let {affiliationId} = payload;
+            let affiliations = state.entity.affiliations.filter(a => a.id != affiliationId);
+            return {...state, entity: {...state.entity, affiliations: affiliations}};
         }
         break;
         default:

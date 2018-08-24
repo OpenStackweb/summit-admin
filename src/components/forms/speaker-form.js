@@ -16,6 +16,7 @@ import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import { TextEditor, MemberInput, UploadInput, Input, Panel } from 'openstack-uicore-foundation/lib/components';
 import { findElementPos } from 'openstack-uicore-foundation/lib/methods';
+import { AffiliationsTable } from '../tables/affiliationstable';
 
 
 class SpeakerForm extends React.Component {
@@ -193,9 +194,9 @@ class SpeakerForm extends React.Component {
 
     render() {
         let {entity, showSummit} = this.state;
-        let {summits} = this.props;
+        let {summits, onAddAff, onDeleteAff, onSaveAff} = this.props;
 
-        let lastSummits = this.props.summits.sort(
+        let lastSummits = summits.sort(
             (a, b) => (a.start_date > b.start_date ? 1 : (a.start_date < b.start_date ? -1 : 0))
         ).slice(-3);
 
@@ -255,6 +256,20 @@ class SpeakerForm extends React.Component {
                         <TextEditor id="bio" value={entity.bio} onChange={this.handleChange} />
                     </div>
                 </div>
+                {entity.id && entity.member &&
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <label> {T.translate("edit_speaker.affiliations")} </label>
+                        <AffiliationsTable
+                            ownerId={entity.member.id}
+                            data={entity.affiliations}
+                            onAdd={onAddAff}
+                            onSave={onSaveAff}
+                            onDelete={onDeleteAff}
+                        />
+                    </div>
+                </div>
+                }
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_speaker.profile_pic")} </label>

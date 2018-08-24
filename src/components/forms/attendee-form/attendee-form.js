@@ -146,8 +146,7 @@ class AttendeeForm extends React.Component {
                                     id="affiliation_organization"
                                     value={{name: entity.affiliation_organization_name, value: entity.affiliation_organization_id}}
                                     onChange={this.handleChange}
-                                    summitId={currentSummit.id}
-                                    multi={true}
+                                    multi={false}
                                 />
                             </div>
                             <div className="col-md-2">
@@ -161,9 +160,9 @@ class AttendeeForm extends React.Component {
                                     timezone={'UTC'}
                                     utc={true}
                                 />
-                                
-                                
-                                
+
+
+
                             </div>
                             <div className="col-md-2">
                                 <label> {T.translate("edit_attendee.end_date")} </label>

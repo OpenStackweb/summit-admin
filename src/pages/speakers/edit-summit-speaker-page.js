@@ -17,6 +17,7 @@ import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import SpeakerForm from '../../components/forms/speaker-form';
 import { getSpeaker, resetSpeakerForm, saveSpeaker, attachPicture } from "../../actions/speaker-actions";
+import { addAffiliation, saveAffiliation, deleteAffiliation } from "../../actions/member-actions"
 import { loadSummits } from '../../actions/summit-actions';
 import '../../styles/edit-summit-speaker-page.less';
 
@@ -51,7 +52,7 @@ class EditSummitSpeakerPage extends React.Component {
     }
 
     render(){
-        let {entity, errors, summits, history, saveSpeaker, attachPicture, match} = this.props;
+        let {entity, errors, summits, history, saveSpeaker, attachPicture, match, addAffiliation, saveAffiliation, deleteAffiliation} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         let breadcrumb = (entity.id) ? entity.first_name+' '+entity.last_name : T.translate("general.new");
 
@@ -69,6 +70,9 @@ class EditSummitSpeakerPage extends React.Component {
                     errors={errors}
                     onSubmit={saveSpeaker}
                     onAttach={attachPicture}
+                    onAddAff={addAffiliation}
+                    onSaveAff={saveAffiliation}
+                    onDeleteAff={deleteAffiliation}
                 />
             </div>
         )
@@ -87,6 +91,9 @@ export default connect (
         getSpeaker,
         resetSpeakerForm,
         saveSpeaker,
-        attachPicture
+        attachPicture,
+        addAffiliation,
+        saveAffiliation,
+        deleteAffiliation
     }
 )(EditSummitSpeakerPage);
