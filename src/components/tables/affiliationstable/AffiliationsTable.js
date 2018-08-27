@@ -2,6 +2,8 @@ import React from 'react';
 import AffiliationsActionsTableCell from './AffiliationsActionsTableCell';
 import { CompanyInput, DateTimePicker } from 'openstack-uicore-foundation/lib/components'
 import { epochToMoment, formatEpoch } from 'openstack-uicore-foundation/lib/methods'
+import T from "i18n-react/dist/i18n-react";
+
 
 import './affiliationstable.css';
 
@@ -136,9 +138,7 @@ export default class AffiliationsTable extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.data.length !== this.state.rows.length) {
-            this.setState({ rows: nextProps.data });
-        }
+        this.setState({ rows: nextProps.data });
     }
 
     saveRow(id, ev) {
@@ -264,12 +264,12 @@ export default class AffiliationsTable extends React.Component {
                 <table className="table table-striped table-bordered table-hover dataTable">
                     <thead>
                         <tr>
-                            <th>Title</th>
-                            <th>Organization</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th>Is Current?</th>
-                            <th>Actions</th>
+                            <th>{T.translate("affiliations.title")}</th>
+                            <th>{T.translate("affiliations.organization")}</th>
+                            <th>{T.translate("affiliations.start_date")}</th>
+                            <th>{T.translate("affiliations.end_date")}</th>
+                            <th>{T.translate("affiliations.is_current")}</th>
+                            <th>{T.translate("affiliations.actions")}</th>
                         </tr>
                     </thead>
                     <tbody>

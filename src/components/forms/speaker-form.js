@@ -200,6 +200,8 @@ class SpeakerForm extends React.Component {
             (a, b) => (a.start_date > b.start_date ? 1 : (a.start_date < b.start_date ? -1 : 0))
         ).slice(-3);
 
+        console.log(entity.affiliations);
+
         return (
             <form className="summit-speaker-form">
                 <input type="hidden" id="id" value={entity.id} />

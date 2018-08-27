@@ -46,7 +46,9 @@ export const addAffiliation = (affiliation) => (dispatch, getState) => {
         `${apiBaseUrl}/api/v1/members/${affiliation.owner_id}/affiliations`,
         affiliation,
         authErrorHandler
-    )(params)(dispatch)
+    )(params)(dispatch).then((payload) => {
+        dispatch(stopLoading());
+    });
 
 }
 
@@ -68,6 +70,9 @@ export const saveAffiliation = (affiliation) => (dispatch, getState) => {
         affiliation,
         authErrorHandler
     )(params)(dispatch)
+        .then((payload) => {
+            dispatch(stopLoading());
+    });
 
 }
 

@@ -273,6 +273,7 @@
     "irc"                 : "Irc",
     "bio"                 : "Bio",
     "profile_pic"         : "Picture",
+    "affiliations"        : "Affiliations",
     "speaker_saved"       : "Speaker saved successfully.",
     "speaker_created"     : "Speaker created successfully."
   },
@@ -733,5 +734,13 @@
       "search_events"       : "Search by Event Title or Speaker Name",
       "select_room"         : "Select a Room"
     }
+  },
+  "affiliations": {
+    "title"           : "Title",
+    "organization"    : "Organization",
+    "start_date"      : "Start",
+    "end_date"        : "End",
+    "is_current"      : "Is Current?",
+    "actions"         : "Actions"
   }
 }

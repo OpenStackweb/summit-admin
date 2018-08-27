@@ -79,6 +79,16 @@ const speakerReducer = (state = DEFAULT_STATE, action) => {
                 }
             }
 
+            if (entity.hasOwnProperty('affiliations')) {
+                entity.affiliations = entity.affiliations.map(a => {
+                    let affiliationTmp = {};
+                    for(var key in a) {
+                        affiliationTmp[key] = (a[key] == null) ? '' : a[key] ;
+                    }
+                    return affiliationTmp;
+                });
+            }
+
             if (entity.hasOwnProperty('registration_code')) {
                 entity.registration_code = entity.registration_code.code;
                 entity.code_redeemed = entity.registration_code.redeemed;
