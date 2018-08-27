@@ -2,7 +2,7 @@ import React from 'react'
 import {doLogout, doLogin} from "../actions/auth-actions";
 import {connect} from "react-redux";
 
-const CHECK_SESSION_INTERVAL = 1000 * 5;
+const CHECK_SESSION_INTERVAL = 1000 * 10;
 
 class OPSessionChecker extends React.Component {
 
@@ -17,6 +17,7 @@ class OPSessionChecker extends React.Component {
         this.setOPFrameRef = element => {
             this.opFrame = element;
         };
+        this.interval = null;
      }
 
     componentDidMount() {
@@ -39,9 +40,10 @@ class OPSessionChecker extends React.Component {
 
     setTimer()
     {
+        if(!this.props.isLoggedUser) return;
         console.log("setTimer");
         this.checkSession();
-        window.setInterval(this.checkSession, CHECK_SESSION_INTERVAL);
+        this.interval = window.setInterval(this.checkSession, CHECK_SESSION_INTERVAL);
     }
 
     onSetupCheckSessionRP(){
@@ -56,10 +58,11 @@ class OPSessionChecker extends React.Component {
         if (e.origin !== this.props.idpBaseUrl ) {return;}
         var status = e.data;
         console.log("receiveMessage status "+ status);
-        if(status == "changed" && !this.reLoginDone){
+        if(status == "changed" && !this.reLoginDone && this.props.isLoggedUser){
             this.reLoginDone = true;
+            window.clearInterval(this.interval);
             console.log("receiveMessage session state has changed on OP");
-            this.props.doLogin()
+            this.props.doLogout(window.location);
         }
     }
 
@@ -76,9 +79,11 @@ class OPSessionChecker extends React.Component {
 
 const mapStateToProps = ({ loggedUserState }) => ({
     sessionState: loggedUserState.sessionState,
+    isLoggedUser: loggedUserState.isLoggedUser,
 })
 
 export default connect(mapStateToProps, {
     doLogout,
     doLogin,
+
 })(OPSessionChecker)

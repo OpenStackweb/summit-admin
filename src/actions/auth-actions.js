@@ -28,7 +28,7 @@ const getAuthUrl = (backUrl = null) => {
     let oauth2ClientId = process.env['OAUTH2_CLIENT_ID'];
     let baseUrl        = process.env['IDP_BASE_URL'];
     let scopes         = process.env['SCOPES'];
-    let redirectUri    =`${ window.location.origin}/auth/callback`;
+    let redirectUri    =`${window.location.origin}/auth/callback`;
 
     if(backUrl != null)
         redirectUri += `?BackUrl=${encodeURI(backUrl)}`;
@@ -80,6 +80,8 @@ const createNonce = (len) => {
 }
 
 export const doLogin = (backUrl = null) => {
+    if(backUrl)
+        console.log(`doLogin - backUrl ${backUrl} `);
     let url = getAuthUrl(backUrl);
     window.location = url.toString();
 }
@@ -95,10 +97,11 @@ export const initLogOut = () => {
     window.location = getLogoutUrl(window.idToken).toString();
 }
 
-export const doLogout = () => (dispatch, getState) => {
+
+export const doLogout = (backUrl) => (dispatch, getState) => {
     dispatch({
         type: LOGOUT_USER,
-        payload: {}
+        payload: {backUrl:backUrl}
     });
 }
 

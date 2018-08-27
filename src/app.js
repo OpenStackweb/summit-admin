@@ -53,7 +53,7 @@ class App extends React.PureComponent {
     }
 
     render() {
-        let { isLoggedUser, onUserAuth, doLogout, getUserInfo, member} = this.props;
+        let { isLoggedUser, onUserAuth, doLogout, getUserInfo, member, backUrl} = this.props;
         let profile_pic = member ? member.pic : '';
         return (
             <BrowserRouter>
@@ -70,7 +70,7 @@ class App extends React.PureComponent {
                         </div>
                     </div>
                     <Switch>
-                        <AuthorizedRoute isLoggedUser={isLoggedUser} path="/app" component={PrimaryLayout} />
+                        <AuthorizedRoute isLoggedUser={isLoggedUser} backUrl={backUrl} path="/app" component={PrimaryLayout} />
                         <AuthorizationCallbackRoute onUserAuth={onUserAuth} path='/auth/callback' getUserInfo={getUserInfo} />
                         <LogOutCallbackRoute doLogout={doLogout}  path='/auth/logout'/>
                         <Route path="/logout" render={props => (<p>404 - Not Found</p>)}/>
@@ -86,6 +86,7 @@ class App extends React.PureComponent {
 
 const mapStateToProps = ({ loggedUserState, baseState }) => ({
     isLoggedUser: loggedUserState.isLoggedUser,
+    backUrl: loggedUserState.backUrl,
     member: loggedUserState.member,
     loading : baseState.loading,
 })

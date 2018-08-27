@@ -17,23 +17,23 @@ import { Route, Redirect } from 'react-router-dom'
 class AuthorizedRoute extends React.Component {
 
     render() {
-        const { component: Component, isLoggedUser, currentSummit, ...rest } = this.props;
+        let { component: Component, isLoggedUser, backUrl, currentSummit, ...rest } = this.props;
         return (
             <Route {...rest} render={props => {
                 let { location } = this.props;
-                let backUrl = location.pathname;
+                let currentBackUrl =  backUrl == null ? location.pathname :  backUrl ;
 
                 if(location.search != null && location.search != null){
-                    backUrl += location.search
+                    currentBackUrl += location.search
                 }
                 if(location.hash != null && location.hash != null){
-                    backUrl += location.hash
+                    currentBackUrl += location.hash
                 }
 
                 if (isLoggedUser) {
                     return (<Component currentSummit={currentSummit} {...props} />);
                 } else {
-                    return (<Redirect to={{pathname: `/?BackUrl=${encodeURIComponent(backUrl)}`, state: { from: location }}} />);
+                    return (<Redirect to={{pathname: `/?BackUrl=${encodeURIComponent(currentBackUrl)}`, state: { from: location }}} />);
                 }
 
             }} />
