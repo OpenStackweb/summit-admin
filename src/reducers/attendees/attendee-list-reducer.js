@@ -60,7 +60,8 @@ const attendeeListReducer = (state = DEFAULT_STATE, action) => {
                     eventbrite_id: a.tickets.map(t => t.external_order_id).join(', '),
                     bought_date: bought_date,
                     summit_hall_checked_in: (a.summit_hall_checked_in ? 'Yes' : 'No'),
-                    schedule: a.member.schedule_summit_events
+                    schedule: a.member.schedule_summit_events,
+                    schedule_count: a.member.schedule_summit_events.length
                 };
             })
 

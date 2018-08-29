@@ -26,12 +26,14 @@ export default class TicketComponent extends React.Component {
             showEditModal: false,
             showAddModal: false,
             editTicket: null,
-            newTicket: {external_order_id: '', external_attendee_id: '', ticket_type_id: 0}
+            newTicket: {external_order_id: '', external_attendee_id: '', ticket_type_id: 0},
+            newOwner: null,
         };
 
         this.handleMemberChange = this.handleMemberChange.bind(this);
         this.handleTicketSave = this.handleTicketSave.bind(this);
         this.handleTicketChange = this.handleTicketChange.bind(this);
+        this.handleTicketReassign = this.handleTicketReassign.bind(this);
         this.onAdd = this.onAdd.bind(this);
         this.onCloseModal = this.onCloseModal.bind(this);
 
@@ -68,7 +70,23 @@ export default class TicketComponent extends React.Component {
     }
 
     handleMemberChange(ev) {
+        this.setState({
+            newOwner: ev.target.value
+        });
+    }
 
+    handleTicketReassign(ev) {
+        let {onReassign, attendeeId} = this.props;
+        let newOwner = {...this.state.newOwner};
+        let editTicket = {...this.state.editTicket};
+
+        this.setState({
+            showEditModal: false,
+            newOwner: null,
+            editTicket: null
+        });
+
+        onReassign(newOwner, editTicket);
     }
 
     handleTicketSave(ev) {
@@ -148,12 +166,18 @@ export default class TicketComponent extends React.Component {
                                 <label>{T.translate("edit_attendee.assign_to_member")}</label><br/>
                                 <MemberInput
                                     id="member"
+                                    value={this.state.newOwner}
                                     onChange={this.handleMemberChange}
                                     multi={false}
                                 />
                             </div>
                         </div>
                     </Modal.Body>
+                    <Modal.Footer>
+                        <button className="btn btn-primary" onClick={this.handleTicketReassign}>
+                            {T.translate("general.save")}
+                        </button>
+                    </Modal.Footer>
                 </Modal>
                 <Modal show={showAddModal} onHide={this.onCloseModal} dialogClassName="ticket-add-modal">
                     <Modal.Header closeButton>

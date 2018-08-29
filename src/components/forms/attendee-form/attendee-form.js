@@ -213,6 +213,7 @@ class AttendeeForm extends React.Component {
                         attendeeId={entity.id}
                         tickets={entity.tickets}
                         summit={currentSummit}
+                        onReassign={this.props.onMemberChange}
                         onSave={this.props.onSaveTicket}
                         onDelete={this.props.onDeleteTicket}
                     />

@@ -66,9 +66,9 @@ export default class ScheduleModal extends React.Component {
                     <tbody>
                     {groupedSchedule[day].map(e =>
                         <tr key={e.id}>
-                            <td>{e.title}</td>
-                            <td>{this.getFormattedLocation(e.location_id)}</td>
-                            <td>{this.getFormattedTime(e.start_date)}</td>
+                            <td style={{width: '60%'}}>{e.title}</td>
+                            <td style={{width: '20%'}}>{this.getFormattedLocation(e.location_id)}</td>
+                            <td style={{width: '20%'}}>{this.getFormattedTime(e.start_date)}</td>
                         </tr>
                     )}
                     </tbody>
