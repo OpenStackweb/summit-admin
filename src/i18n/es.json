@@ -87,6 +87,7 @@
   "schedule": {
     "schedule"                              : "Schedule",
     "find_empty_spots"                      : "Find empty spots for Day/Location",
+    "no_empty_spots"                        : "No empty spots found",
     "placeholders": {
       "select_presentation_selection_status": "Select a Selection Status ...",
       "search_unpublished"                  : "Search for UnPublished Events ...",
@@ -327,8 +328,11 @@
     }
   },
   "empty_spots_modal": {
-    "labels": {
-    },
+    "find_empty_spots"  : "Find Empty Spots",
+    "venue"             : "Venue",
+    "from_date"         : "From date",
+    "to_date"           : "To date",
+    "gap"               : "Gap",
     "placeholders": {
       "start_date": "Enter Start Date",
       "end_date": "Enter End Date",

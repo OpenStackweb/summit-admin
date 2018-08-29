@@ -13,6 +13,7 @@
 import React from 'react';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import { Modal } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import {
     getUnScheduleEventsPage,
@@ -96,6 +97,7 @@ class ScheduleAdminDashBoard extends React.Component {
         this.byPassHashRefresh  = false;
         this.state = {
             showModal : false,
+            searchingEmpty : false
         }
     }
 
@@ -440,7 +442,7 @@ class ScheduleAdminDashBoard extends React.Component {
         gapSize,
     })
     {
-        this.setState({ ... this.state, showModal: false})
+        this.setState({ ... this.state, showModal: false, searchingEmpty: true})
         this.props.getEmptySpots(currentLocation, dateFrom, dateTo, gapSize);
     }
 
@@ -656,15 +658,24 @@ class ScheduleAdminDashBoard extends React.Component {
                             onFindEmptyClick={this.onFindEmptyClick}
                             onClearClick={this.onClearClick}
                     />
-                    {
-                        (emptySpots.length > 0)
-                        &&
+                    {emptySpots.length > 0 &&
                         <ScheduleAdminEmptySpotsList
                             emptySpots={emptySpots}
                             currentSummit={currentSummit}
                             onClickSpot={this.onClickSpot}
                         />
                     }
+                    {emptySpots.length == 0 && this.state.searchingEmpty &&
+                        <Modal show={true} onHide={() => this.setState({searchingEmpty: false})}>
+                            <Modal.Header closeButton>
+                                <Modal.Title>{T.translate("empty_spots_modal.find_empty_spots")}</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                {T.translate("schedule.no_empty_spots")}
+                            </Modal.Body>
+                        </Modal>
+                    }
+
                     {
                         ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm == '' ) &&
                         (emptySpots.length == 0 ) &&

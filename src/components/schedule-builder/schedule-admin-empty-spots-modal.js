@@ -136,12 +136,13 @@ class ScheduleAdminEmptySpotsModal extends React.Component {
         return (
             <Modal show={showModal} onHide={onCloseModal}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Find Empty Spots</Modal.Title>
+                    <Modal.Title>{T.translate("empty_spots_modal.find_empty_spots")}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <form>
                     <div className="row">
                         <div className="col-md-12">
+                            <label> {T.translate("empty_spots_modal.venue")} </label>
                             <FormGroup validationState={this.getValidationStateVenue()}>
                                 <ScheduleAdminVenueSelector
                                     onVenueChanged={this.onVenueChanged}
@@ -153,8 +154,9 @@ class ScheduleAdminEmptySpotsModal extends React.Component {
                         </div>
                     </div>
                     <div className="row">
-                        <div className="col-md-4" style={{paddingTop: '24px'}}>
+                        <div className="col-md-4">
                             <FormGroup validationState={this.getValidationDateFrom()}>
+                                <label> {T.translate("empty_spots_modal.from_date")} </label>
                                 <DateTimePicker
                                     id="start_date"
                                     format={{date:"YYYY-MM-DD", time: "HH:mm"}}
@@ -168,8 +170,9 @@ class ScheduleAdminEmptySpotsModal extends React.Component {
                                 <FormControl.Feedback />
                             </FormGroup>
                         </div>
-                        <div className="col-md-4" style={{paddingTop: '24px'}}>
+                        <div className="col-md-4">
                             <FormGroup validationState={this.getValidationDateTo()}>
+                                <label> {T.translate("empty_spots_modal.to_date")} </label>
                                 <DateTimePicker
                                     id="end_date"
                                     format={{date:"YYYY-MM-DD", time: "HH:mm"}}
@@ -183,7 +186,8 @@ class ScheduleAdminEmptySpotsModal extends React.Component {
                                 <FormControl.Feedback />
                             </FormGroup>
                         </div>
-                        <div className="col-md-4" style={{paddingTop: '24px'}}>
+                        <div className="col-md-4">
+                            <label> {T.translate("empty_spots_modal.gap")} </label>
                             <FormGroup validationState={this.getValidationStateGapSize()}>
                                 <FormControl
                                     type="number"
