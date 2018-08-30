@@ -151,8 +151,7 @@ export const getUserInfo = (history, backUrl) => (dispatch, getState) => {
                 dispatch(showMessage( error_message, initLogOut ));
             }
 
-            console.log(`redirecting to ${backUrl}`)
-            history.push(backUrl);
+            window.location.href = backUrl;
         }
     );
 }
