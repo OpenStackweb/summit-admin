@@ -440,6 +440,7 @@ export const sendAttendanceEmail = (attendanceId) => (dispatch, getState) => {
         null,
         createAction(EMAIL_SENT),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers-assistances/${attendanceId}/mail`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(
         (payload) => {

@@ -32,6 +32,16 @@ class EditLocationMapPage extends React.Component {
         }
     }
 
+    componentWillReceiveProps(newProps) {
+        let {currentLocation} = newProps;
+        let oldId = this.props.match.params.map_id;
+        let newId = newProps.match.params.map_id;
+
+        if (oldId != newId && currentLocation) {
+            this.props.getLocationMap(currentLocation.id, newId);
+        }
+    }
+
     render(){
         let {currentSummit, currentLocation, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");

@@ -34,6 +34,19 @@ class EditPromocodePage extends React.Component {
         this.props.getPromocodeMeta();
     }
 
+    componentWillReceiveProps(newProps) {
+        let oldId = this.props.match.params.promocode_id;
+        let newId = newProps.match.params.promocode_id;
+
+        if (oldId != newId) {
+            if (!newId) {
+                this.props.resetPromocodeForm();
+            } else {
+                this.props.getPromocode(newId);
+            }
+        }
+    }
+
     render(){
         let {currentSummit, allTypes, allClasses, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");

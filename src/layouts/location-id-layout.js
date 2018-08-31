@@ -17,13 +17,14 @@ import T from "i18n-react/dist/i18n-react";
 import { Switch, Route } from 'react-router-dom';
 import { Breadcrumb } from 'react-breadcrumbs';
 
-import { getLocation, resetLocationForm }  from '../actions/location-actions';
+import { getLocation, resetLocationForm, getLocationMeta }  from '../actions/location-actions';
 
 import EditLocationPage from '../pages/locations/edit-location-page'
 import EditFloorPage from '../pages/locations/edit-floor-page';
 import EditRoomPage from '../pages/locations/edit-room-page';
 import EditLocationImagePage from '../pages/locations/edit-location-image-page';
 import EditLocationMapPage from '../pages/locations/edit-location-map-page';
+import NoMatchPage from "../pages/no-match-page";
 
 
 class LocationIdLayout extends React.Component {
@@ -36,6 +37,21 @@ class LocationIdLayout extends React.Component {
         } else {
             this.props.getLocation(locationId);
         }
+
+        this.props.getLocationMeta();
+    }
+
+    componentWillReceiveProps(newProps) {
+        let oldId = this.props.match.params.location_id;
+        let newId = newProps.match.params.location_id;
+
+        if (oldId != newId) {
+            if (!newId) {
+                this.props.resetLocationForm();
+            } else {
+                this.props.getLocation(newId);
+            }
+        }
     }
 
     render(){
@@ -46,13 +62,15 @@ class LocationIdLayout extends React.Component {
             <div>
                 <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
                 <Switch>
+                    <Route exact strict path={match.url} component={EditLocationPage}/>
                     <Route path={`${match.url}/floors`} render={
                         props => (
                             <div>
                                 <Breadcrumb data={{ title: T.translate("edit_floor.floors"), pathname: match.url }} ></Breadcrumb>
                                 <Switch>
-                                    <Route exact path={`${props.match.url}/new`} component={EditFloorPage} />
-                                    <Route exact path={`${props.match.url}/:floor_id`} component={EditFloorPage} />
+                                    <Route strict exact path={`${props.match.url}/new`} component={EditFloorPage} />
+                                    <Route strict exact path={`${props.match.url}/:floor_id(\\d+)`} component={EditFloorPage} />
+                                    <Route component={NoMatchPage}/>
                                 </Switch>
                             </div>
                         )}
@@ -62,8 +80,9 @@ class LocationIdLayout extends React.Component {
                             <div>
                                 <Breadcrumb data={{ title: T.translate("edit_room.rooms"), pathname: match.url }} ></Breadcrumb>
                                 <Switch>
-                                    <Route exact path={`${props.match.url}/new`} component={EditRoomPage} />
-                                    <Route exact path={`${props.match.url}/:room_id`} component={EditRoomPage} />
+                                    <Route strict exact path={`${props.match.url}/new`} component={EditRoomPage} />
+                                    <Route strict exact path={`${props.match.url}/:room_id`} component={EditRoomPage} />
+                                    <Route component={NoMatchPage}/>
                                 </Switch>
                             </div>
                         )}
@@ -73,8 +92,9 @@ class LocationIdLayout extends React.Component {
                             <div>
                                 <Breadcrumb data={{ title: T.translate("edit_location_image.images"), pathname: match.url }} ></Breadcrumb>
                                 <Switch>
-                                    <Route exact path={`${props.match.url}/new`} component={EditLocationImagePage} />
-                                    <Route exact path={`${props.match.url}/:image_id`} component={EditLocationImagePage} />
+                                    <Route strict exact path={`${props.match.url}/new`} component={EditLocationImagePage} />
+                                    <Route strict exact path={`${props.match.url}/:image_id`} component={EditLocationImagePage} />
+                                    <Route component={NoMatchPage}/>
                                 </Switch>
                             </div>
                         )}
@@ -84,13 +104,14 @@ class LocationIdLayout extends React.Component {
                             <div>
                                 <Breadcrumb data={{ title: T.translate("edit_location_map.maps"), pathname: match.url }} ></Breadcrumb>
                                 <Switch>
-                                    <Route exact path={`${props.match.url}/new`} component={EditLocationMapPage} />
-                                    <Route exact path={`${props.match.url}/:map_id`} component={EditLocationMapPage} />
+                                    <Route strict exact path={`${props.match.url}/new`} component={EditLocationMapPage} />
+                                    <Route strict exact path={`${props.match.url}/:map_id`} component={EditLocationMapPage} />
+                                    <Route component={NoMatchPage}/>
                                 </Switch>
                             </div>
                         )}
                     />
-                    <Route component={EditLocationPage}/>
+                    <Route component={NoMatchPage}/>
                 </Switch>
             </div>
         );
@@ -107,7 +128,8 @@ export default connect (
     mapStateToProps,
     {
         getLocation,
-        resetLocationForm
+        resetLocationForm,
+        getLocationMeta
     }
 )(LocationIdLayout);
 

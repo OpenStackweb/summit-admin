@@ -18,6 +18,7 @@ import { epochToMoment } from 'openstack-uicore-foundation/lib/methods'
 import { MemberInput, CompanyInput, DateTimePicker, Input } from 'openstack-uicore-foundation/lib/components'
 import TicketComponent from './ticket-component'
 import RsvpComponent from './rsvp-component'
+import { AffiliationsTable } from '../../tables/affiliationstable'
 
 
 class AttendeeForm extends React.Component {
@@ -128,61 +129,14 @@ class AttendeeForm extends React.Component {
                 </div>
                 {entity.member != null &&
                 <div>
-                    {entity.member.affiliations && entity.member.affiliations.length > 0 &&
+                    {entity.member.affiliations &&
                         <div className="row form-group">
-                            <legend>{T.translate("edit_attendee.current_affiliation")}</legend>
-                            <div className="col-md-3">
-                                <label> {T.translate("edit_attendee.affiliation_title")} </label>
-                                <Input
-                                    className="form-control"
-                                    id="affiliation_title"
-                                    value={entity.affiliation_title}
-                                    onChange={this.handleChange}
+                            <legend>{T.translate("edit_attendee.affiliations")}</legend>
+                            <div className="col-md-12">
+                                <AffiliationsTable
+                                    ownerId={entity.member.id}
+                                    data={entity.member.affiliations}
                                 />
-                            </div>
-                            <div className="col-md-3">
-                                <label> {T.translate("edit_attendee.company")} </label>
-                                <CompanyInput
-                                    id="affiliation_organization"
-                                    value={{name: entity.affiliation_organization_name, value: entity.affiliation_organization_id}}
-                                    onChange={this.handleChange}
-                                    multi={false}
-                                />
-                            </div>
-                            <div className="col-md-2">
-                                <label> {T.translate("edit_attendee.start_date")} </label>
-                                <DateTimePicker
-                                    id="affiliation_start_date"
-                                    onChange={this.handleChange}
-                                    format={{date:"YYYY-MM-DD", time: false}}
-                                    value={epochToMoment(entity.affiliation_start_date)}
-                                    inputProps={{placeholder: T.translate("edit_attendee.placeholders.start_date")}}
-                                    timezone={'UTC'}
-                                    utc={true}
-                                />
-
-
-
-                            </div>
-                            <div className="col-md-2">
-                                <label> {T.translate("edit_attendee.end_date")} </label>
-                                <DateTimePicker
-                                    id="affiliation_end_date"
-                                    onChange={this.handleChange}
-                                    format={{date:"YYYY-MM-DD", time: false}}
-                                    value={epochToMoment(entity.affiliation_end_date)}
-                                    inputProps={{placeholder: T.translate("edit_attendee.placeholders.end_date")}}
-                                    timezone={'UTC'}
-                                    utc={true}
-                                />
-                            </div>
-                            <div className="col-md-2">
-                                <div className="form-check abc-checkbox current_affiliation">
-                                    <input type="checkbox" id="affiliation_current" checked={entity.affiliation_current}
-                                           onChange={this.handleChange} className="form-check-input"/>
-                                    <label className="form-check-label"
-                                           htmlFor="affiliation_current"> {T.translate("edit_attendee.affiliation_current")} </label>
-                                </div>
                             </div>
                         </div>
 

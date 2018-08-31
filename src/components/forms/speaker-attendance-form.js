@@ -84,13 +84,6 @@ class SpeakerAttendanceForm extends React.Component {
         return '';
     }
 
-    handleSpeakerLink(speaker_id, ev) {
-        let {history} = this.props;
-        ev.preventDefault();
-
-        history.push(`/app/speakers/${speaker_id}`);
-    }
-
     render() {
         let {entity} = this.state;
         let { currentSummit } = this.props;

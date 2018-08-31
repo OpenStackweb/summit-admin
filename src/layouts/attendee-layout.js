@@ -20,6 +20,7 @@ import Restrict from '../routes/restrict';
 
 import EditSummitAttendeePage from '../pages/attendees/edit-summit-attendee-page'
 import SummitAttendeeListPage from '../pages/attendees/summit-attendees-list-page'
+import NoMatchPage from "../pages/no-match-page";
 
 
 class AttendeeLayout extends React.Component {
@@ -31,9 +32,10 @@ class AttendeeLayout extends React.Component {
                 <Breadcrumb data={{ title: T.translate("attendee_list.attendees"), pathname: match.url }} ></Breadcrumb>
 
                 <Switch>
-                    <Route exact path={`${match.url}/new`} component={EditSummitAttendeePage}/>
-                    <Route exact path={`${match.url}/:attendee_id`} component={EditSummitAttendeePage}/>
-                    <Route component={SummitAttendeeListPage}/>
+                    <Route strict exact path={match.url} component={SummitAttendeeListPage}/>
+                    <Route exact strict path={`${match.url}/new`} component={EditSummitAttendeePage}/>
+                    <Route exact path={`${match.url}/:attendee_id(\\d+)`} component={EditSummitAttendeePage}/>
+                    <Route component={NoMatchPage}/>
                 </Switch>
             </div>
         );

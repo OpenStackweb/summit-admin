@@ -20,6 +20,7 @@ import Restrict from '../routes/restrict';
 
 import EditEventCategoryGroupPage from '../pages/events/edit-event-category-group-page'
 import EventCategoryGroupListPage from '../pages/events/event-category-group-list-page'
+import NoMatchPage from "../pages/no-match-page";
 
 
 class EventCategoryGroupLayout extends React.Component {
@@ -31,9 +32,10 @@ class EventCategoryGroupLayout extends React.Component {
                 <Breadcrumb data={{ title: T.translate("event_category_group_list.event_category_groups"), pathname: match.url }} ></Breadcrumb>
 
                 <Switch>
-                    <Route exact path={`${match.url}/new`} component={EditEventCategoryGroupPage} />
-                    <Route exact path={`${match.url}/:group_id`} component={EditEventCategoryGroupPage} />
-                    <Route component={EventCategoryGroupListPage}/>
+                    <Route exact strict path={match.url} component={EventCategoryGroupListPage}/>
+                    <Route exact strict path={`${match.url}/new`} component={EditEventCategoryGroupPage} />
+                    <Route exact strict path={`${match.url}/:group_id(\\d+)`} component={EditEventCategoryGroupPage} />
+                    <Route component={NoMatchPage}/>
                 </Switch>
             </div>
         );

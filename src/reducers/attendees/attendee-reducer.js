@@ -24,7 +24,7 @@ import
     RSVP_DELETED
 } from '../../actions/attendee-actions';
 
-import { AFFILIATION_SAVED } from "../../actions/member-actions";
+import {AFFILIATION_ADDED, AFFILIATION_DELETED, AFFILIATION_SAVED} from "../../actions/member-actions";
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
 import { VALIDATE } from '../../actions/base-actions';
@@ -151,6 +151,37 @@ const attendeeReducer = (state = DEFAULT_STATE, action) => {
                     member: {
                         ...state.entity.member,
                         rsvp: state.entity.member.rsvp.filter(r => r.id != rsvpId)
+                    }
+                }
+            };
+        }
+        break;
+        case AFFILIATION_ADDED: {
+            let affiliation = {...payload.response};
+
+            return {
+                ...state,
+                entity: {
+                    ...state.entity,
+                    member: {
+                        ...state.entity.member,
+                        affiliations: [...state.entity.member.affiliations, affiliation]
+                    }
+                }
+            };
+        }
+        break;
+        case AFFILIATION_DELETED: {
+            let {affiliationId} = payload;
+            let affiliations = state.entity.member.affiliations.filter(a => a.id != affiliationId);
+
+            return {
+                ...state,
+                entity: {
+                    ...state.entity,
+                    member: {
+                        ...state.entity.member,
+                        affiliations: affiliations
                     }
                 }
             };

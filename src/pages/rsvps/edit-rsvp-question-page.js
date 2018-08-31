@@ -15,6 +15,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import swal from "sweetalert2";
+import { Breadcrumb } from 'react-breadcrumbs';
 import RsvpQuestionForm from '../../components/forms/rsvp-question-form';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getRsvpQuestion, resetRsvpQuestionForm, saveRsvpQuestion, getRsvpQuestionMeta, deleteRsvpQuestionValue, updateQuestionValuesOrder } from "../../actions/rsvp-template-actions";
@@ -26,10 +27,6 @@ class EditRsvpQuestionPage extends React.Component {
 
         this.handleValueDelete = this.handleValueDelete.bind(this);
         this.handleValueReorder = this.handleValueReorder.bind(this);
-    }
-
-    componentWillMount () {
-        this.props.getRsvpQuestionMeta();
     }
 
     handleValueDelete(valueId, ev) {
@@ -59,26 +56,28 @@ class EditRsvpQuestionPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, currentTemplate, entity, errors, allClasses} = this.props;
+        let {currentSummit, currentTemplate, entity, match, errors, allClasses} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
 
         return(
-            <div className="container">
-                <h3>{title} {T.translate("edit_rsvp_question.rsvp_question")}</h3>
-                <hr/>
-                {currentSummit &&
-                <RsvpQuestionForm
-                    history={this.props.history}
-                    currentSummit={currentSummit}
-                    rsvpTemplateId={currentTemplate.id}
-                    allClasses={allClasses}
-                    entity={entity}
-                    errors={errors}
-                    onValueDelete={this.handleValueDelete}
-                    onValueReorder={this.handleValueReorder}
-                    onSubmit={this.props.saveRsvpQuestion}
-                />
-                }
+            <div>
+                <div className="container">
+                    <h3>{title} {T.translate("edit_rsvp_question.rsvp_question")}</h3>
+                    <hr/>
+                    {currentSummit &&
+                    <RsvpQuestionForm
+                        history={this.props.history}
+                        currentSummit={currentSummit}
+                        rsvpTemplateId={currentTemplate.id}
+                        allClasses={allClasses}
+                        entity={entity}
+                        errors={errors}
+                        onValueDelete={this.handleValueDelete}
+                        onValueReorder={this.handleValueReorder}
+                        onSubmit={this.props.saveRsvpQuestion}
+                    />
+                    }
+                </div>
             </div>
         )
     }

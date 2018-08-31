@@ -38,6 +38,20 @@ class EditRsvpQuestionValuePage extends React.Component {
         }
     }
 
+    componentWillReceiveProps(newProps) {
+        let {currentTemplate, currentQuestion} = newProps;
+        let oldId = this.props.match.params.rsvp_question_value_id;
+        let newId = newProps.match.params.rsvp_question_value_id;
+
+        if (oldId != newId) {
+            if (!newId) {
+                this.props.resetRsvpQuestionValueForm();
+            } else {
+                this.props.getRsvpQuestionValue(currentTemplate.id, currentQuestion.id, newId);
+            }
+        }
+    }
+
     handleSubmit(entity, history) {
         let {currentTemplate, currentQuestion} = this.props;
         this.props.saveRsvpQuestionValue(currentTemplate.id, currentQuestion.id, entity, history);

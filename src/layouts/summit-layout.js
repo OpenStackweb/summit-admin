@@ -17,6 +17,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 
 import EditSummitPage from '../pages/summits/edit-summit-page';
 import SummitIdLayout from './summit-id-layout'
+import NoMatchPage from "../pages/no-match-page";
 
 
 class SummitLayout extends React.Component {
@@ -27,16 +28,9 @@ class SummitLayout extends React.Component {
         return(
             <div>
                 <Switch>
-                    <Route exact path={`${match.url}/new`}  render={
-                        props => (
-                            <div>
-                                <Breadcrumb data={{ title: "New Summit", pathname: props.match.url }} ></Breadcrumb>
-                                <EditSummitPage {...props} />
-                            </div>
-                        )}
-                    />
-                    <Route strict path={`${match.url}/:summit_id`} component={SummitIdLayout}/>
-                    <Route render={props => (<Redirect to="/app/directory"/>)}/>
+                    <Route exact strict path={`${match.url}/new`} component={SummitIdLayout}/>
+                    <Route path={`${match.url}/:summit_id`} component={SummitIdLayout}/>
+                    <Route component={NoMatchPage}/>
                 </Switch>
             </div>
         );

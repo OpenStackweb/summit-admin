@@ -52,11 +52,19 @@ export const authErrorHandler = (err, res) => (dispatch) => {
             else if (err.response.error && err.response.error.message) msg = err.response.error.message;
             else msg = err.message;
 
-            swal("Not Found", msg, "warning");
+            swal("Not Found", msg, "warning")
+                .then(function(){
+                    window.history.back();
+                }).catch(swal.noop);
+
             break;
         case 412:
             for (var [key, value] of Object.entries(err.response.body.errors)) {
-                msg += key + ': ' + value + '<br>';
+                if (isNaN(key)) {
+                    msg += key + ': ';
+                }
+
+                msg += value + '<br>';
             }
             swal("Validation error", msg, "warning");
             dispatch({

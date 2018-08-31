@@ -14,14 +14,14 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { Breadcrumb } from 'react-breadcrumbs';
 
 import { getRsvpTemplate, resetRsvpTemplateForm }  from '../actions/rsvp-template-actions';
 
-import EditRsvpQuestionLayout from './rsvp-question-layout';
+import RsvpQuestionLayout from './rsvp-question-layout';
 import EditRsvpTemplatePage from '../pages/rsvps/edit-rsvp-template-page';
-import EditRsvpQuestionPage from '../pages/rsvps/edit-rsvp-question-page';
+import NoMatchPage from '../pages/no-match-page';
 
 class RsvpTemplateIdLayout extends React.Component {
 
@@ -35,6 +35,20 @@ class RsvpTemplateIdLayout extends React.Component {
         }
     }
 
+    componentWillReceiveProps(newProps) {
+        let oldId = this.props.match.params.rsvp_template_id;
+        let newId = newProps.match.params.rsvp_template_id;
+
+        if (newId != oldId) {
+            if (!newId) {
+                this.props.resetRsvpTemplateForm();
+            } else {
+                this.props.getRsvpTemplate(newId);
+            }
+        }
+    }
+
+
     render() {
         let {match, currentRsvpTemplate} = this.props;
         let breadcrumb = currentRsvpTemplate.id ? currentRsvpTemplate.title : T.translate("general.new");
@@ -44,25 +58,19 @@ class RsvpTemplateIdLayout extends React.Component {
                 <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
                 <Switch>
                     <Route path={`${match.url}/questions`} render={
-                        q_props => (
+                        props => (
                             <div>
                                 <Breadcrumb data={{ title: T.translate("edit_rsvp_template.questions"), pathname: match.url }} ></Breadcrumb>
                                 <Switch>
-                                    <Route exact path={`${q_props.match.url}/new`} render={
-                                        props => (
-                                            <div>
-                                                <Breadcrumb data={{ title: T.translate("general.new"), pathname: props.match.url }} ></Breadcrumb>
-                                                <EditRsvpQuestionPage {...props} />
-                                            </div>
-                                        )}
-                                    />
-                                    <Route path={`${q_props.match.url}/:rsvp_question_id`} component={EditRsvpQuestionLayout} />
-                                    <Route component={EditRsvpTemplatePage}/>
+                                    <Route path={`${props.match.url}/:rsvp_question_id(\\d+)`} component={RsvpQuestionLayout} />
+                                    <Route exact strict path={`${props.match.url}/new`} component={RsvpQuestionLayout} />
+                                    <Route component={NoMatchPage}/>
                                 </Switch>
                             </div>
                         )}
                     />
-                    <Route component={EditRsvpTemplatePage}/>
+                    <Route strict exact path={match.url} component={EditRsvpTemplatePage} />
+                    <Route component={NoMatchPage}/>
                 </Switch>
             </div>
         );

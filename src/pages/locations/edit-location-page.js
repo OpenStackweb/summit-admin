@@ -19,7 +19,6 @@ import LocationForm from '../../components/forms/location-form';
 import { getSummitById }  from '../../actions/summit-actions';
 import {
     getLocation,
-    getLocationMeta,
     resetLocationForm,
     saveLocation,
     updateLocationMap,
@@ -41,10 +40,6 @@ class EditLocationPage extends React.Component {
         this.handleRoomDelete = this.handleRoomDelete.bind(this);
         this.handleImageDelete = this.handleImageDelete.bind(this);
         this.handleMapDelete = this.handleMapDelete.bind(this);
-    }
-
-    componentWillMount () {
-        this.props.getLocationMeta();
     }
 
     handleFloorDelete(floorId, ev) {
@@ -166,7 +161,6 @@ export default connect (
     {
         getSummitById,
         getLocation,
-        getLocationMeta,
         resetLocationForm,
         saveLocation,
         updateLocationMap,

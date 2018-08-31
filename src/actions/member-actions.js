@@ -40,12 +40,15 @@ export const addAffiliation = (affiliation) => (dispatch, getState) => {
         access_token : accessToken,
     };
 
+    let normalizedEntity = normalizeEntity(affiliation);
+
     postRequest(
         null,
         createAction(AFFILIATION_ADDED),
         `${apiBaseUrl}/api/v1/members/${affiliation.owner_id}/affiliations`,
-        affiliation,
-        authErrorHandler
+        normalizedEntity,
+        authErrorHandler,
+        affiliation
     )(params)(dispatch).then((payload) => {
         dispatch(stopLoading());
     });
@@ -63,11 +66,13 @@ export const saveAffiliation = (affiliation) => (dispatch, getState) => {
         access_token : accessToken,
     };
 
+    let normalizedEntity = normalizeEntity(affiliation);
+
     putRequest(
         null,
         createAction(AFFILIATION_SAVED),
         `${apiBaseUrl}/api/v1/members/${affiliation.owner_id}/affiliations/${affiliation.id}`,
-        affiliation,
+        normalizedEntity,
         authErrorHandler
     )(params)(dispatch)
         .then((payload) => {
@@ -96,3 +101,13 @@ export const deleteAffiliation = (ownerId, affiliationId) => (dispatch, getState
     );
 };
 
+const normalizeEntity = (entity) => {
+    let normalizedEntity = {...entity};
+
+    normalizedEntity.organization_id = (normalizedEntity.organization != null) ? normalizedEntity.organization.id : 0;
+
+    //delete normalizedEntity['organization'];
+
+    return normalizedEntity;
+
+}

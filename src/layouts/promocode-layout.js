@@ -19,6 +19,7 @@ import Restrict from '../routes/restrict';
 
 import EditPromocodePage from '../pages/promocodes/edit-promocode-page'
 import PromocodeListPage from '../pages/promocodes/promocode-list-page'
+import NoMatchPage from "../pages/no-match-page";
 
 
 class PromocodeLayout extends React.Component {
@@ -30,9 +31,10 @@ class PromocodeLayout extends React.Component {
                 <Breadcrumb data={{ title: T.translate("promocode_list.promocodes"), pathname: match.url }} ></Breadcrumb>
 
                 <Switch>
-                    <Route exact path={`${match.url}/new`} component={EditPromocodePage}/>
-                    <Route exact path={`${match.url}/:promocode_id`} component={EditPromocodePage}/>
-                    <Route component={PromocodeListPage}/>
+                    <Route strict exact path={match.url} component={PromocodeListPage}/>
+                    <Route strict exact path={`${match.url}/new`} component={EditPromocodePage}/>
+                    <Route strict exact path={`${match.url}/:promocode_id(\\d+)`} component={EditPromocodePage}/>
+                    <Route component={NoMatchPage}/>
                 </Switch>
             </div>
         );

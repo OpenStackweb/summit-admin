@@ -14,24 +14,41 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { Breadcrumb } from 'react-breadcrumbs';
 
-import { getRsvpTemplate, getRsvpQuestion, resetRsvpQuestionForm }  from '../actions/rsvp-template-actions';
+import { getRsvpQuestionMeta, getRsvpQuestion, resetRsvpQuestionForm }  from '../actions/rsvp-template-actions';
 
 import EditRsvpQuestionPage from '../pages/rsvps/edit-rsvp-question-page';
 import EditRsvpQuestionValuePage from '../pages/rsvps/edit-rsvp-question-value-page';
+import NoMatchPage from "../pages/no-match-page";
 
-class EditRsvpQuestionLayout extends React.Component {
+class RsvpQuestionLayout extends React.Component {
 
     componentWillMount() {
         let rsvpQuestionId = this.props.match.params.rsvp_question_id;
         let {currentRsvpTemplate} = this.props;
 
-        if (!rsvpQuestionId || !currentRsvpTemplate) {
+        if (!rsvpQuestionId || rsvpQuestionId == 'new' || !currentRsvpTemplate) {
             this.props.resetRsvpQuestionForm();
         } else {
             this.props.getRsvpQuestion(currentRsvpTemplate.id, rsvpQuestionId);
+        }
+
+        this.props.getRsvpQuestionMeta();
+    }
+
+    componentWillReceiveProps(newProps) {
+        let {currentRsvpTemplate} = newProps;
+        let oldId = this.props.match.params.rsvp_question_id;
+        let newId = newProps.match.params.rsvp_question_id;
+
+        if (newId != oldId) {
+            if (newId == 'new') {
+                this.props.resetRsvpQuestionForm();
+            } else {
+                this.props.getRsvpQuestion(currentRsvpTemplate.id, newId);
+            }
         }
     }
 
@@ -41,20 +58,22 @@ class EditRsvpQuestionLayout extends React.Component {
 
         return (
             <div>
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }}></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
                 <Switch>
                     <Route path={`${match.url}/values`} render={
                         props => (
                             <div>
                                 <Breadcrumb data={{ title: T.translate("edit_rsvp_question.values"), pathname: match.url }} ></Breadcrumb>
                                 <Switch>
-                                    <Route exact path={`${props.match.url}/new`} component={EditRsvpQuestionValuePage} />
-                                    <Route exact path={`${props.match.url}/:rsvp_question_value_id`} component={EditRsvpQuestionValuePage} />
+                                    <Route strict exact path={`${props.match.url}/:rsvp_question_value_id(\\d+)`} component={EditRsvpQuestionValuePage} />
+                                    <Route exact strict path={`${props.match.url}/new`} component={EditRsvpQuestionValuePage} />
+                                    <Route component={NoMatchPage}/>
                                 </Switch>
                             </div>
                         )}
                     />
-                    <Route component={EditRsvpQuestionPage}/>
+                    <Route strict exact path={match.url} component={EditRsvpQuestionPage}/>
+                    <Route component={NoMatchPage}/>
                 </Switch>
             </div>
         );
@@ -69,11 +88,11 @@ const mapStateToProps = ({ currentRsvpTemplateState, currentRsvpQuestionState })
 export default connect (
     mapStateToProps,
     {
+        getRsvpQuestionMeta,
         getRsvpQuestion,
-        resetRsvpQuestionForm,
-        getRsvpTemplate
+        resetRsvpQuestionForm
     }
-)(EditRsvpQuestionLayout);
+)(RsvpQuestionLayout);
 
 
 

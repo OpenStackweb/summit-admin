@@ -34,9 +34,15 @@ class EditRoomPage extends React.Component {
         } else {
             this.props.getRoom(currentLocation.id, roomId);
         }
+    }
 
-        if (currentLocation) {
-            this.props.getLocation(currentLocation.id);
+    componentWillReceiveProps(newProps) {
+        let {currentLocation} = newProps;
+        let oldId = this.props.match.params.room_id;
+        let newId = newProps.match.params.room_id;
+
+        if (oldId != newId && currentLocation) {
+            this.props.getRoom(currentLocation.id, newId);
         }
     }
 

@@ -194,13 +194,11 @@ class SpeakerForm extends React.Component {
 
     render() {
         let {entity, showSummit} = this.state;
-        let {summits, onAddAff, onDeleteAff, onSaveAff} = this.props;
+        let {summits} = this.props;
 
         let lastSummits = summits.sort(
             (a, b) => (a.start_date > b.start_date ? 1 : (a.start_date < b.start_date ? -1 : 0))
         ).slice(-3);
-
-        console.log(entity.affiliations);
 
         return (
             <form className="summit-speaker-form">
@@ -265,9 +263,6 @@ class SpeakerForm extends React.Component {
                         <AffiliationsTable
                             ownerId={entity.member.id}
                             data={entity.affiliations}
-                            onAdd={onAddAff}
-                            onSave={onSaveAff}
-                            onDelete={onDeleteAff}
                         />
                     </div>
                 </div>

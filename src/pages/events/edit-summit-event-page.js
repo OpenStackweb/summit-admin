@@ -27,7 +27,7 @@ import { getRsvpTemplates } from '../../actions/rsvp-template-actions';
 class EditSummitEventPage extends React.Component {
 
     componentWillMount () {
-        let eventId = this.props.match.params.summit_event_id;
+        let eventId = this.props.match.params.event_id;
 
         if (!eventId) {
             this.props.resetEventForm();
@@ -39,14 +39,14 @@ class EditSummitEventPage extends React.Component {
     }
 
     componentWillReceiveProps(newProps) {
-        let eventId = this.props.match.params.summit_event_id;
-        let newEventId = newProps.match.params.summit_event_id;
+        let oldId = this.props.match.params.event_id;
+        let newId = newProps.match.params.event_id;
 
-        if (eventId != newEventId) {
-            if (!newEventId) {
+        if (oldId != newId) {
+            if (!newId) {
                 this.props.resetEventForm();
             } else {
-                this.props.getEvent(newEventId);
+                this.props.getEvent(newId);
             }
         }
     }

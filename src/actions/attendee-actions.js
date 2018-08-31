@@ -25,8 +25,6 @@ import {
     showSuccessMessage
 } from "openstack-uicore-foundation/lib/methods";
 
-import { saveAffiliation } from './member-actions';
-
 export const REQUEST_ATTENDEES          = 'REQUEST_ATTENDEES';
 export const RECEIVE_ATTENDEES          = 'RECEIVE_ATTENDEES';
 export const RECEIVE_ATTENDEE           = 'RECEIVE_ATTENDEE';
@@ -140,9 +138,6 @@ export const saveAttendee = (entity, history) => (dispatch, getState) => {
             entity
         )(params)(dispatch)
             .then((payload) => {
-                dispatch(saveAffiliation(normalizedEntity.affiliation));
-            })
-            .then((payload) => {
                 dispatch(showSuccessMessage(T.translate("edit_attendee.attendee_saved")));
             });
 
@@ -161,10 +156,6 @@ export const saveAttendee = (entity, history) => (dispatch, getState) => {
             authErrorHandler,
             entity
         )(params)(dispatch)
-            .then((payload) => {
-                dispatch(saveAffiliation(normalizedEntity.affiliation));
-                return payload;
-            })
             .then((payload) => {
                 dispatch(showMessage(
                     success_message,

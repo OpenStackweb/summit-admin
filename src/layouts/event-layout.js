@@ -22,6 +22,7 @@ import ScheduleBuilderPage from '../pages/events/schedule-builder-page';
 import SummitEventListPage from '../pages/events/summit-event-list-page';
 import EditSummitEventPage from '../pages/events/edit-summit-event-page';
 import SummitEventsBulkActionsPage from '../pages/events/summit-events-bulk-actions-page';
+import NoMatchPage from "../pages/no-match-page";
 
 
 class EventLayout extends React.Component {
@@ -33,11 +34,12 @@ class EventLayout extends React.Component {
                 <Breadcrumb data={{ title: T.translate("event_list.events"), pathname: match.url }} ></Breadcrumb>
 
                 <Switch>
-                    <Route exact path={`${match.url}/schedule`} component={ScheduleBuilderPage}/>
-                    <Route exact path={`${match.url}/bulk-actions`} component={SummitEventsBulkActionsPage}/>
-                    <Route exact path={`${match.url}/new`} component={EditSummitEventPage}/>
-                    <Route exact path={`${match.url}/:summit_event_id`} component={EditSummitEventPage}/>
-                    <Route component={SummitEventListPage}/>
+                    <Route exact strict path={match.url} component={SummitEventListPage}/>
+                    <Route strict exact path={`${match.url}/schedule`} component={ScheduleBuilderPage}/>
+                    <Route strict exact path={`${match.url}/bulk-actions`} component={SummitEventsBulkActionsPage}/>
+                    <Route strict exact path={`${match.url}/new`} component={EditSummitEventPage}/>
+                    <Route strict exact path={`${match.url}/:event_id(\\d+)`} component={EditSummitEventPage}/>
+                    <Route component={NoMatchPage}/>
                 </Switch>
             </div>
         );

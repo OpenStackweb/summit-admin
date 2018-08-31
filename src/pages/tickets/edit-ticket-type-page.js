@@ -31,6 +31,19 @@ class EditTicketTypePage extends React.Component {
         }
     }
 
+    componentWillReceiveProps(newProps) {
+        let oldId = this.props.match.params.ticket_type_id;
+        let newId = newProps.match.params.ticket_type_id;
+
+        if (newId != oldId) {
+            if (!newId) {
+                this.props.resetTicketTypeForm();
+            } else {
+                this.props.getTicketType(newId);
+            }
+        }
+    }
+
     render(){
         let {currentSummit, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");

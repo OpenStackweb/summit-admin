@@ -156,7 +156,7 @@ export const saveSummit = (entity, history) => (dispatch, getState) => {
         };
 
         postRequest(
-            null,
+            createAction(UPDATE_SUMMIT),
             createAction(SUMMIT_ADDED),
             `${apiBaseUrl}/api/v1/summits`,
             normalizedEntity,

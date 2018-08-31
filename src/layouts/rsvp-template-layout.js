@@ -18,8 +18,8 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import Restrict from '../routes/restrict';
 
 import RsvpTemplateListPage from '../pages/rsvps/rsvp-template-list-page';
-import EditRsvpTemplatePage from '../pages/rsvps/edit-rsvp-template-page';
 import RsvpTemplateIdLayout from './rsvp-template-id-layout';
+import NoMatchPage from "../pages/no-match-page";
 
 
 class RsvpTemplateLayout extends React.Component {
@@ -32,16 +32,10 @@ class RsvpTemplateLayout extends React.Component {
                 <Breadcrumb data={{ title: T.translate("rsvp_template_list.rsvp_template_list"), pathname: match.url }} ></Breadcrumb>
 
                 <Switch>
-                    <Route exact path={`${match.url}/new`} render={
-                        props => (
-                            <div>
-                                <Breadcrumb data={{ title: T.translate("general.new"), pathname: props.match.url }} ></Breadcrumb>
-                                <EditRsvpTemplatePage {...props} />
-                            </div>
-                        )}
-                    />
-                    <Route path={`${match.url}/:rsvp_template_id`} component={RsvpTemplateIdLayout} />
-                    <Route component={RsvpTemplateListPage} />
+                    <Route exact strict path={match.url} component={RsvpTemplateListPage} />
+                    <Route path={`${match.url}/:rsvp_template_id(\\d+)`} component={RsvpTemplateIdLayout} />
+                    <Route exact strict path={`${match.url}/new`} component={RsvpTemplateIdLayout} />
+                    <Route component={NoMatchPage}/>
                 </Switch>
             </div>
         );

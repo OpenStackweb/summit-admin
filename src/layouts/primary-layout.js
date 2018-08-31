@@ -42,7 +42,7 @@ class PrimaryLayout extends React.Component {
                     <Breadcrumb data={{ title: <i className="fa fa-home"></i>, pathname: match.url }} ></Breadcrumb>
 
                     <Switch>
-                        <Route exact path="/app/directory" component={SummitDirectoryPage}/>
+                        <Route strict exact path="/app/directory" component={SummitDirectoryPage}/>
                         <Route path="/app/speakers" component={SpeakerLayout}/>
                         <Route path="/app/summits" component={SummitLayout} />
                         <Route render={props => (<Redirect to="/app/directory"/>)}/>

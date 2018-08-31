@@ -36,6 +36,19 @@ class EditSummitAttendeePage extends React.Component {
         }
     }
 
+    componentWillReceiveProps(newProps) {
+        let oldId = this.props.match.params.attendee_id;
+        let newId = newProps.match.params.attendee_id;
+
+        if (oldId != newId) {
+            if(!newId) {
+                this.props.resetAttendeeForm();
+            } else {
+                this.props.getAttendee(newId);
+            }
+        }
+    }
+
     render(){
         let {currentSummit, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");

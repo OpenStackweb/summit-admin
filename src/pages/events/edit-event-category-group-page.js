@@ -41,12 +41,25 @@ class EditEventCategoryGroupPage extends React.Component {
 
         if (!groupId) {
             this.props.resetEventCategoryGroupForm();
-        } else if (entity.id != groupId) {
+        } else {
             this.props.getEventCategoryGroup(groupId);
         }
 
         if(allClasses.length == 0){
             this.props.getEventCategoryGroupMeta();
+        }
+    }
+
+    componentWillReceiveProps(newProps) {
+        let oldId = this.props.match.params.group_id;
+        let newId = newProps.match.params.group_id;
+
+        if (oldId != newId) {
+            if (!newId) {
+                this.props.resetEventCategoryGroupForm();
+            } else {
+                this.props.getEventCategoryGroup(newId);
+            }
         }
     }
 

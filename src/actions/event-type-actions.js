@@ -169,6 +169,7 @@ export const seedEventTypes = () => (dispatch, getState) => {
         null,
         createAction(EVENT_TYPES_SEEDED),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types/seed-defaults`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

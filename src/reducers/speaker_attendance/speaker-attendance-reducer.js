@@ -62,7 +62,6 @@ const speakerAttendanceReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  entity: {...payload}, errors: {} };
         }
         break;
-        case ATTENDANCE_ADDED:
         case RECEIVE_ATTENDANCE: {
             let entity = {...payload.response};
 

@@ -17,9 +17,9 @@ import { Switch, Route } from 'react-router-dom';
 import { Breadcrumb } from 'react-breadcrumbs';
 import Restrict from '../routes/restrict';
 
-import EditLocationPage from '../pages/locations/edit-location-page'
 import LocationListPage from '../pages/locations/location-list-page'
 import LocationIdLayout from './location-id-layout'
+import NoMatchPage from "../pages/no-match-page";
 
 
 class LocationLayout extends React.Component {
@@ -32,16 +32,10 @@ class LocationLayout extends React.Component {
                 <Breadcrumb data={{ title: T.translate("location_list.locations"), pathname: match.url }} ></Breadcrumb>
 
                 <Switch>
-                    <Route exact path={`${match.url}/new`} render={
-                        props => (
-                            <div>
-                                <Breadcrumb data={{ title: T.translate("general.new"), pathname: props.match.url }} ></Breadcrumb>
-                                <EditLocationPage {...props} />
-                            </div>
-                        )}
-                    />
-                    <Route path={`${match.url}/:location_id`} component={LocationIdLayout} />
-                    <Route component={LocationListPage}/>
+                    <Route strict exact path={match.url} component={LocationListPage}/>
+                    <Route exact strict path={`${match.url}/new`} component={LocationIdLayout}/>
+                    <Route path={`${match.url}/:location_id(\\d+)`} component={LocationIdLayout}/>
+                    <Route component={NoMatchPage}/>
                 </Switch>
             </div>
         );

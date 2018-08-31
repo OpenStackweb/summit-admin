@@ -36,6 +36,19 @@ class EditEventCategoryPage extends React.Component {
         }
     }
 
+    componentWillReceiveProps(newProps) {
+        let oldId = this.props.match.params.event_category_id;
+        let newId = newProps.match.params.event_category_id;
+
+        if (oldId != newId) {
+            if (!newId) {
+                this.props.resetEventCategoryForm();
+            } else {
+                this.props.getEventCategory(newId);
+            }
+        }
+    }
+
     render(){
         let {currentSummit, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");

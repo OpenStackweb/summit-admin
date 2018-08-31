@@ -39,6 +39,16 @@ class EditFloorPage extends React.Component {
         }
     }
 
+    componentWillReceiveProps(newProps) {
+        let {currentLocation} = newProps;
+        let oldId = this.props.match.params.floor_id;
+        let newId = newProps.match.params.floor_id;
+
+        if (oldId != newId && currentLocation) {
+            this.props.getFloor(currentLocation.id, newId);
+        }
+    }
+
     handleRoomDelete(roomId, ev) {
         let {deleteRoom, entity, currentLocation} = this.props;
         let room = entity.rooms.find(r => r.id == roomId);

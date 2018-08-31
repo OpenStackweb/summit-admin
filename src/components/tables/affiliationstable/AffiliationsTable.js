@@ -1,9 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import AffiliationsActionsTableCell from './AffiliationsActionsTableCell';
 import { CompanyInput, DateTimePicker } from 'openstack-uicore-foundation/lib/components'
 import { epochToMoment, formatEpoch } from 'openstack-uicore-foundation/lib/methods'
+import { addAffiliation, saveAffiliation, deleteAffiliation } from "../../../actions/member-actions"
 import T from "i18n-react/dist/i18n-react";
-
 
 import './affiliationstable.css';
 
@@ -109,7 +110,7 @@ const createNewRow = (row, addNew, handleChange) => {
 };
 
 
-export default class AffiliationsTable extends React.Component {
+class AffiliationsTable extends React.Component {
 
     constructor(props) {
         super(props);
@@ -142,6 +143,8 @@ export default class AffiliationsTable extends React.Component {
     }
 
     saveRow(id, ev) {
+        ev.preventDefault();
+
         const { rows } = this.state;
         let row = rows.find(r => r.id == id);
         row.is_edit = false;
@@ -162,11 +165,11 @@ export default class AffiliationsTable extends React.Component {
         delete affiliation.is_edit;
         delete affiliation.created;
 
-        this.props.onSave(affiliation);
+        this.props.saveAffiliation(affiliation);
     }
 
     deleteClick(id) {
-        this.props.onDelete(this.props.ownerId, id);
+        this.props.deleteAffiliation(this.props.ownerId, id);
     }
 
     editRow(id, ev) {
@@ -240,10 +243,12 @@ export default class AffiliationsTable extends React.Component {
     }
 
     saveNewRow(ev) {
+        ev.preventDefault();
+
         let new_row = {...this.state.new_row};
         new_row.owner_id = this.props.ownerId;
 
-        this.props.onAdd(new_row);
+        this.props.addAffiliation(new_row);
 
         this.setState({
             new_row: {
@@ -292,3 +297,12 @@ export default class AffiliationsTable extends React.Component {
         );
     }
 };
+
+export default connect (
+    null,
+    {
+        addAffiliation,
+        saveAffiliation,
+        deleteAffiliation
+    }
+)(AffiliationsTable);

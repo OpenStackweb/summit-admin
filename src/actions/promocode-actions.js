@@ -215,6 +215,7 @@ export const sendEmail = (promocodeId) => (dispatch, getState) => {
         null,
         createAction(EMAIL_SENT),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes/${promocodeId}/mail`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(
         (payload) => {

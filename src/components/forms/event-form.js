@@ -107,7 +107,7 @@ class EventForm extends React.Component {
         let entity = {...this.state.entity};
         ev.preventDefault();
 
-        this.props.onSubmit(this.state.entity, publish, this.props.history);
+        this.props.onSubmit(entity, publish, this.props.history);
     }
 
     handleUnpublish(ev) {

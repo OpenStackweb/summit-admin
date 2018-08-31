@@ -31,6 +31,19 @@ class EditPushNotificationPage extends React.Component {
         }
     }
 
+    componentWillReceiveProps(newProps) {
+        let oldId = this.props.match.params.push_notification_id;
+        let newId = newProps.match.params.push_notification_id;
+
+        if (oldId != newId) {
+            if (!newId) {
+                this.props.resetPushNotificationForm();
+            } else {
+                this.props.getPushNotification(newId);
+            }
+        }
+    }
+
     render(){
         let {currentSummit, entity, errors, match, channels, platforms} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");

@@ -19,6 +19,7 @@ import Restrict from '../routes/restrict';
 
 import EditEventTypePage from '../pages/events/edit-event-type-page'
 import EventTypeListPage from '../pages/events/event-type-list-page'
+import NoMatchPage from "../pages/no-match-page";
 
 
 class EventTypeLayout extends React.Component {
@@ -30,9 +31,10 @@ class EventTypeLayout extends React.Component {
                 <Breadcrumb data={{ title: T.translate("event_type_list.event_types"), pathname: match.url }} ></Breadcrumb>
 
                 <Switch>
-                    <Route exact path={`${match.url}/new`} component={EditEventTypePage}/>
-                    <Route exact path={`${match.url}/:event_type_id`} component={EditEventTypePage}/>
-                    <Route component={EventTypeListPage}/>
+                    <Route exact strict path={match.url} component={EventTypeListPage}/>
+                    <Route strict exact path={`${match.url}/new`} component={EditEventTypePage}/>
+                    <Route strict exact path={`${match.url}/:event_type_id(\\d+)`} component={EditEventTypePage}/>
+                    <Route component={NoMatchPage}/>
                 </Switch>
             </div>
         );

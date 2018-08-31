@@ -19,6 +19,7 @@ import Restrict from '../routes/restrict';
 
 import TicketTypeListPage from '../pages/tickets/ticket-type-list-page'
 import EditTicketTypePage from '../pages/tickets/edit-ticket-type-page'
+import NoMatchPage from "../pages/no-match-page";
 
 
 class TicketTypeLayout extends React.Component {
@@ -30,9 +31,10 @@ class TicketTypeLayout extends React.Component {
                 <Breadcrumb data={{ title: T.translate("ticket_type_list.ticket_types"), pathname: match.url }} ></Breadcrumb>
 
                 <Switch>
-                    <Route exact path={`${match.url}/new`} component={EditTicketTypePage}/>
-                    <Route exact path={`${match.url}/:ticket_type_id`} component={EditTicketTypePage}/>
-                    <Route component={TicketTypeListPage}/>
+                    <Route strict exact path={match.url} component={TicketTypeListPage}/>
+                    <Route strict exact path={`${match.url}/new`} component={EditTicketTypePage}/>
+                    <Route strict exact path={`${match.url}/:ticket_type_id(\\d+)`} component={EditTicketTypePage}/>
+                    <Route component={NoMatchPage}/>
                 </Switch>
             </div>
         );

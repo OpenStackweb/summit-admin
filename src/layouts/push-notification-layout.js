@@ -19,6 +19,7 @@ import Restrict from '../routes/restrict';
 
 import PushNotificationListPage from '../pages/push_notifications/push-notification-list-page'
 import EditPushNotificationPage from '../pages/push_notifications/edit-push-notification-page'
+import NoMatchPage from "../pages/no-match-page";
 
 
 class PushNotificationLayout extends React.Component {
@@ -30,9 +31,10 @@ class PushNotificationLayout extends React.Component {
                 <Breadcrumb data={{ title: T.translate("push_notification_list.push_notifications"), pathname: match.url }} ></Breadcrumb>
 
                 <Switch>
-                    <Route exact path={`${match.url}/new`} component={EditPushNotificationPage}/>
-                    <Route exact path={`${match.url}/:push_notification_id`} component={EditPushNotificationPage}/>
-                    <Route component={PushNotificationListPage}/>
+                    <Route strict exact path={match.url} component={PushNotificationListPage}/>
+                    <Route strict exact path={`${match.url}/new`} component={EditPushNotificationPage}/>
+                    <Route strict exact path={`${match.url}/:push_notification_id(\\d+)`} component={EditPushNotificationPage}/>
+                    <Route component={NoMatchPage}/>
                 </Switch>
             </div>
         );

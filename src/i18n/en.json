@@ -36,6 +36,7 @@
     "remove"              : "Remove",
     "delete"              : "Delete",
     "new"                 : "New",
+    "new_summit"          : "New Summit",
     "drop_files"          : "Drop images or click to select files to upload.",
     "search"              : "Search",
     "save"                : "Save",
@@ -356,7 +357,7 @@
     }
   },
   "edit_attendee": {
-    "current_affiliation"         : "Current Affiliation",
+    "affiliations"                : "Affiliations",
     "start_date"                  : "Start Date",
     "end_date"                    : "End Date",
     "affiliation_title"           : "Title",
@@ -416,6 +417,7 @@
   "speaker_attendance_list": {
     "speaker_attendance_list"   : "Speaker Attendace List",
     "speaker_attendances"       : "Speaker Attendaces",
+    "add_attendance"            : "Add Attendance",
     "created"                   : "Date Created",
     "on_site_phone"             : "On Site Phone",
     "is_confirmed"              : "Confirmed",

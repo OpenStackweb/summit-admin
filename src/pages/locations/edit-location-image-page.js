@@ -32,6 +32,16 @@ class EditLocationImagePage extends React.Component {
         }
     }
 
+    componentWillReceiveProps(newProps) {
+        let {currentLocation} = newProps;
+        let oldId = this.props.match.params.image_id;
+        let newId = newProps.match.params.image_id;
+
+        if (oldId != newId && currentLocation) {
+            this.props.getLocationImage(currentLocation.id, newId);
+        }
+    }
+
     render(){
         let {currentSummit, currentLocation, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");

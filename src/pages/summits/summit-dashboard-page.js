@@ -33,10 +33,6 @@ class SummitDashboardPage extends React.Component {
         }
     }
 
-    componentWillMount() {
-        this.props.getSummitById(this.props.summitId);
-    }
-
     componentDidMount() {
         this.interval = setInterval(this.localTimer.bind(this), 1000);
     }

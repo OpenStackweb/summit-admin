@@ -36,6 +36,19 @@ class EditEventTypePage extends React.Component {
         }
     }
 
+    componentWillReceiveProps(newProps) {
+        let oldId = this.props.match.params.event_type_id;
+        let newId = newProps.match.params.event_type_id;
+
+        if (oldId != newId) {
+            if (!newId) {
+                this.props.resetEventTypeForm();
+            } else {
+                this.props.getEventType(newId);
+            }
+        }
+    }
+
     render(){
         let {currentSummit, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");

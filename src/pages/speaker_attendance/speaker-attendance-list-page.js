@@ -31,6 +31,7 @@ class SpeakerAttendanceListPage extends React.Component {
         this.handleDeleteAttendance = this.handleDeleteAttendance.bind(this);
         this.isNotConfirmed = this.isNotConfirmed.bind(this);
         this.handleExport = this.handleExport.bind(this);
+        this.handleNewAttendance = this.handleNewAttendance.bind(this);
 
         this.state = {};
     }
@@ -105,6 +106,11 @@ class SpeakerAttendanceListPage extends React.Component {
         this.props.exportAttendances(term, order, orderDir);
     }
 
+    handleNewAttendance(ev) {
+        let {currentSummit, history} = this.props;
+        history.push(`/app/summits/${currentSummit.id}/speaker-attendances/new`);
+    }
+
     render(){
         let {currentSummit, attendances, lastPage, currentPage, term, order, orderDir, totalAttendances} = this.props;
 
@@ -142,8 +148,11 @@ class SpeakerAttendanceListPage extends React.Component {
                         />
                     </div>
                     <div className="col-md-6 text-right">
-                        <button className="btn btn-default" onClick={this.handleExport}>
+                        <button className="btn btn-default right-space" onClick={this.handleExport}>
                             {T.translate("general.export")}
+                        </button>
+                        <button className="btn btn-primary" onClick={this.handleNewAttendance}>
+                            {T.translate("speaker_attendance_list.add_attendance")}
                         </button>
                     </div>
                 </div>

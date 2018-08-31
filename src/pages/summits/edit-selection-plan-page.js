@@ -31,6 +31,19 @@ class EditSelectionPlanPage extends React.Component {
         }
     }
 
+    componentWillReceiveProps(newProps) {
+        let oldId = this.props.match.params.selection_plan_id;
+        let newId = newProps.match.params.selection_plan_id;
+
+        if (oldId != newId) {
+            if (!newId) {
+                this.props.resetSelectionPlanForm();
+            } else {
+                this.props.getSelectionPlan(newId);
+            }
+        }
+    }
+
     render(){
         let {currentSummit, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");

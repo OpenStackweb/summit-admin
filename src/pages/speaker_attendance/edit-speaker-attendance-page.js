@@ -32,10 +32,31 @@ class EditSpeakerAttendancePage extends React.Component {
         }
     }
 
+    componentWillReceiveProps(newProps) {
+        let oldId = this.props.match.params.attendance_id;
+        let newId = newProps.match.params.attendance_id;
+
+        if (oldId != newId) {
+            if (!newId) {
+                this.props.resetAttendanceForm();
+            } else {
+                this.props.getAttendance(newId);
+            }
+        }
+    }
+
     render(){
         let {currentSummit, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+        let breadcrumb = T.translate("general.new");
+
+        if(entity.id) {
+            breadcrumb = entity.id;
+
+            if (entity.speaker) {
+                breadcrumb = `${entity.speaker.first_name} ${entity.speaker.last_name}`;
+            }
+        }
 
         return(
             <div className="container">

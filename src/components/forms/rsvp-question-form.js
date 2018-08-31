@@ -85,7 +85,7 @@ class RsvpQuestionForm extends React.Component {
         if (!entity.class_name) return false;
         let entity_type = this.props.allClasses.find(c => c.class_name == entity.class_name);
 
-        return entity_type[field];
+        return (entity_type.hasOwnProperty(field) && entity_type[field]);
     }
 
     handleAddValue(ev) {
@@ -235,7 +235,7 @@ class RsvpQuestionForm extends React.Component {
                     </div>
                 </div>
                 }
-                {this.shouldShowField('values') &&
+                {this.shouldShowField('values') && entity.id &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <button className="btn btn-primary pull-right" onClick={this.handleAddValue}>
