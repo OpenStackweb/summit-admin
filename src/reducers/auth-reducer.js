@@ -1,4 +1,7 @@
-import { LOGOUT_USER , SET_LOGGED_USER, RECEIVE_USER_INFO} from '../actions/auth-actions';
+import {
+    LOGOUT_USER, SET_LOGGED_USER, RECEIVE_USER_INFO, START_SESSION_STATE_CHECK,
+    END_SESSION_STATE_CHECK
+} from '../actions/auth-actions';
 
 const DEFAULT_STATE = {
     isLoggedUser: false,
@@ -7,6 +10,7 @@ const DEFAULT_STATE = {
     idToken: null,
     sessionState: null,
     backUrl : null,
+    checkingSessionState: false,
 }
 
 const loggedUserReducer = (state = DEFAULT_STATE, action) => {
@@ -29,6 +33,12 @@ const loggedUserReducer = (state = DEFAULT_STATE, action) => {
         case RECEIVE_USER_INFO: {
             let { response } = action.payload;
             return {...state, member: response};
+        }
+        case START_SESSION_STATE_CHECK:{
+            return {...state, checkingSessionState: true };
+        }
+        case END_SESSION_STATE_CHECK:{
+            return {...state, checkingSessionState: false };
         }
         default:
             return state;

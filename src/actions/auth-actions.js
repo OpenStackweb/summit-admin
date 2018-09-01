@@ -21,9 +21,12 @@ export const SET_LOGGED_USER    = 'SET_LOGGED_USER';
 export const LOGOUT_USER        = 'LOGOUT_USER';
 export const REQUEST_USER_INFO  = 'REQUEST_USER_INFO';
 export const RECEIVE_USER_INFO  = 'RECEIVE_USER_INFO';
-const NONCE_LEN                 = 16;
+export const START_SESSION_STATE_CHECK = 'START_SESSION_STATE_CHECK';
+export const END_SESSION_STATE_CHECK = 'END_SESSION_STATE_CHECK';
 
-const getAuthUrl = (backUrl = null) => {
+const NONCE_LEN = 16;
+
+export const getAuthUrl = (backUrl = null, prompt = null, tokenIdHint = null) => {
 
     let oauth2ClientId = process.env['OAUTH2_CLIENT_ID'];
     let baseUrl        = process.env['IDP_BASE_URL'];
@@ -39,16 +42,25 @@ const getAuthUrl = (backUrl = null) => {
     window.localStorage.setItem('nonce', nonce);
     let url   = URI(`${baseUrl}/oauth2/auth`);
 
-    url = url.query({
+    let query = {
         "response_type"   : encodeURI("token id_token"),
         "scope"           : encodeURI(scopes),
         "nonce"           : nonce,
         "client_id"       : encodeURI(oauth2ClientId),
         "redirect_uri"    : encodeURI(redirectUri)
-    });
+    };
+
+    if(prompt){
+        query['prompt'] = prompt;
+    }
+
+    if(prompt){
+        query['prompt'] = prompt;
+    }
+
+    url = url.query(query);
 
     return url;
-
 }
 
 const getLogoutUrl = (idToken) => {
@@ -151,7 +163,21 @@ export const getUserInfo = (history, backUrl) => (dispatch, getState) => {
                 dispatch(showMessage( error_message, initLogOut ));
             }
 
-            window.location.href = backUrl;
+            history.push(backUrl);
         }
     );
+}
+
+export const onStartSessionStateCheck = () => (dispatch) => {
+    dispatch({
+        type: START_SESSION_STATE_CHECK,
+        payload: {}
+    });
+}
+
+export const onFinishSessionStateCheck = () => (dispatch) => {
+    dispatch({
+        type: END_SESSION_STATE_CHECK,
+        payload: {}
+    });
 }
