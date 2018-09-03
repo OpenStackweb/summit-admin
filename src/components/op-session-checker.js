@@ -39,7 +39,9 @@ class OPSessionChecker extends React.Component {
             // failed renew
             let backUrl = new URI(window.location);
             this.props.doLogout(backUrl.pathname());
+            return;
         }
+        this.props.onFinishSessionStateCheck();
     }
 
     checkSession()
@@ -77,6 +79,7 @@ class OPSessionChecker extends React.Component {
         var status = e.data;
         console.log("receiveMessage status "+ status);
         if(status == "changed" && !this.props.checkingSessionState && this.props.isLoggedUser){
+            this.props.onStartSessionStateCheck();
             window.clearInterval(this.interval);
             this.interval = null;
             console.log("receiveMessage session state has changed on OP");
