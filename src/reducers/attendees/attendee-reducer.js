@@ -110,23 +110,14 @@ const attendeeReducer = (state = DEFAULT_STATE, action) => {
 
             entity.member = {...member};
 
-            if (member.hasOwnProperty('affiliations') && member.affiliations.length) {
-                let last_affiliation = {...member.affiliations.slice(-1)[0]};
-
-                for(var key in last_affiliation) {
-                    if(last_affiliation.hasOwnProperty(key)) {
-                        last_affiliation[key] = (last_affiliation[key] == null) ? '' : last_affiliation[key] ;
+            if (entity.member.hasOwnProperty('affiliations')) {
+                entity.member.affiliations = entity.member.affiliations.map(a => {
+                    let affiliationTmp = {};
+                    for(var key in a) {
+                        affiliationTmp[key] = (a[key] == null) ? '' : a[key] ;
                     }
-                }
-
-                entity.affiliation_id = last_affiliation.id;
-                entity.affiliation_owner_id = last_affiliation.owner_id;
-                entity.affiliation_title = last_affiliation.job_title;
-                entity.affiliation_organization_id = last_affiliation.organization.id;
-                entity.affiliation_organization_name = last_affiliation.organization.name;
-                entity.affiliation_start_date = last_affiliation.start_date;
-                entity.affiliation_end_date = last_affiliation.end_date;
-                entity.affiliation_current = last_affiliation.is_current;
+                    return affiliationTmp;
+                });
             }
 
             return {...state,  entity: {...entity} };
@@ -144,6 +135,7 @@ const attendeeReducer = (state = DEFAULT_STATE, action) => {
         break;
         case RSVP_DELETED: {
             let {rsvpId} = payload;
+
             return {
                 ...state,
                 entity: {
@@ -159,32 +151,42 @@ const attendeeReducer = (state = DEFAULT_STATE, action) => {
         case AFFILIATION_ADDED: {
             let affiliation = {...payload.response};
 
-            return {
-                ...state,
-                entity: {
-                    ...state.entity,
-                    member: {
-                        ...state.entity.member,
-                        affiliations: [...state.entity.member.affiliations, affiliation]
+            if (state.entity.member && state.entity.member.hasOwnProperty('affiliations')) {
+                return {
+                    ...state,
+                    entity: {
+                        ...state.entity,
+                        member: {
+                            ...state.entity.member,
+                            affiliations: [...state.entity.member.affiliations, affiliation]
+                        }
                     }
-                }
-            };
+                };
+            } else {
+                return state;
+            }
+
         }
         break;
         case AFFILIATION_DELETED: {
             let {affiliationId} = payload;
-            let affiliations = state.entity.member.affiliations.filter(a => a.id != affiliationId);
+            if (state.entity.member && state.entity.member.hasOwnProperty('affiliations')) {
+                let affiliations = state.entity.member.affiliations.filter(a => a.id != affiliationId);
 
-            return {
-                ...state,
-                entity: {
-                    ...state.entity,
-                    member: {
-                        ...state.entity.member,
-                        affiliations: affiliations
+                return {
+                    ...state,
+                    entity: {
+                        ...state.entity,
+                        member: {
+                            ...state.entity.member,
+                            affiliations: affiliations
+                        }
                     }
-                }
-            };
+                };
+            } else {
+                return state;
+            }
+
         }
         break;
         case VALIDATE: {

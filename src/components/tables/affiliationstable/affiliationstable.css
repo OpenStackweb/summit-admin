@@ -467,3 +467,13 @@ div.dtr-modal div.dtr-modal-background {
 .row_actions i{
     margin: 0 10px;
 }
+
+.affiliations-table .is-current-cell {
+    text-align: center;
+}
+
+.affiliations-table .is-current-cell input {
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+}

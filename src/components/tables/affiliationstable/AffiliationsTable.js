@@ -7,9 +7,11 @@ import { addAffiliation, saveAffiliation, deleteAffiliation } from "../../../act
 import T from "i18n-react/dist/i18n-react";
 
 import './affiliationstable.css';
+import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 
 const createRow = (row, actions) => {
     var cells = [];
+    var org_value = (row.organization) ? {name: row.organization.name, value: row.organization.id} : null;
 
     if (row.is_edit) {
         cells = [
@@ -19,7 +21,7 @@ const createRow = (row, actions) => {
             <td key="organization">
                 <CompanyInput
                     id="organization"
-                    value={{name: row.organization.name, value: row.organization.id}}
+                    value={org_value}
                     onChange={actions.handleChange.bind(this, row.id)}
                     multi={false}
                 />
@@ -42,14 +44,14 @@ const createRow = (row, actions) => {
                     value={epochToMoment(row.end_date)}
                 />
             </td>,
-            <td key="is_current">
+            <td key="is_current" className="is-current-cell">
                 <input id="is_current" type="checkbox" checked={row.is_current} onChange={actions.handleChange.bind(this, row.id)}/>
             </td>
         ]
     } else {
         cells = [
             <td key="job_title">{row.job_title}</td>,
-            <td key="organization">{row.organization.name}</td>,
+            <td key="organization">{row.organization ? row.organization.name : ''}</td>,
             <td key="start_date">{formatEpoch(row.start_date,"YYYY-MM-DD")}</td>,
             <td key="end_date">{formatEpoch(row.end_date,"YYYY-MM-DD")}</td>,
             <td key="is_current">{row.is_current ? 'Yes' : 'No'}</td>
@@ -95,7 +97,7 @@ const createNewRow = (row, addNew, handleChange) => {
                 value={epochToMoment(row.end_date)}
             />
         </td>,
-        <td key="new_is_current">
+        <td key="new_is_current" className="is-current-cell">
             <input id="is_current" type="checkbox" checked={row.is_current} onChange={handleChange}/>
         </td>
     ];
@@ -142,9 +144,7 @@ class AffiliationsTable extends React.Component {
         this.setState({ rows: nextProps.data });
     }
 
-    saveRow(id, ev) {
-        ev.preventDefault();
-
+    saveRow(id) {
         const { rows } = this.state;
         let row = rows.find(r => r.id == id);
         row.is_edit = false;
@@ -266,15 +266,15 @@ class AffiliationsTable extends React.Component {
 
         return (
             <div>
-                <table className="table table-striped table-bordered table-hover dataTable">
+                <table className="table table-striped table-bordered table-hover dataTable affiliations-table">
                     <thead>
                         <tr>
-                            <th>{T.translate("affiliations.title")}</th>
-                            <th>{T.translate("affiliations.organization")}</th>
-                            <th>{T.translate("affiliations.start_date")}</th>
-                            <th>{T.translate("affiliations.end_date")}</th>
-                            <th>{T.translate("affiliations.is_current")}</th>
-                            <th>{T.translate("affiliations.actions")}</th>
+                            <th style={{width: '20%'}}>{T.translate("affiliations.title")}</th>
+                            <th style={{width: '20%'}}>{T.translate("affiliations.organization")}</th>
+                            <th style={{width: '15%'}}>{T.translate("affiliations.start_date")}</th>
+                            <th style={{width: '15%'}}>{T.translate("affiliations.end_date")}</th>
+                            <th style={{width: '10%'}}>{T.translate("affiliations.is_current")}</th>
+                            <th style={{width: '10%'}}>{T.translate("affiliations.actions")}</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -56,6 +56,7 @@ const DEFAULT_STATE = {
     scheduleEventsSearch: [],
     currentUnScheduleOrderBy : null,
     emptySpots: [],
+    searchingEmpty: false
 };
 
 const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
@@ -88,11 +89,11 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
         break;
         case RECEIVE_EMPTY_SPOTS:{
             let { data } = payload.response;
-            return {...state, emptySpots : data};
+            return {...state, emptySpots : data, searchingEmpty: true};
         }
         break;
         case CLEAR_EMPTY_SPOTS: {
-            return {...state, emptySpots : []};
+            return {...state, emptySpots : [], searchingEmpty: false};
         }
         break;
         case CLEAR_PUBLISHED_EVENTS:{

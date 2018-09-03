@@ -96,8 +96,7 @@ class ScheduleAdminDashBoard extends React.Component {
         this.shouldTestDeepLink = true;
         this.byPassHashRefresh  = false;
         this.state = {
-            showModal : false,
-            searchingEmpty : false
+            showModal : false
         }
     }
 
@@ -216,16 +215,6 @@ class ScheduleAdminDashBoard extends React.Component {
         );
     }
 
-    componentWillMount () {
-    }
-
-    componentWillReceiveProps(nextProps){
-
-    }
-
-    componentWillUpdate(nextProps, nextState) {
-    }
-
     onScheduleEvent(event, currentDay, startDateTime){
         let eventModel = new SummitEvent(event, this.props.currentSummit);
         this.props.publishEvent(event, currentDay, startDateTime, eventModel.getMinutesDuration());
@@ -329,7 +318,6 @@ class ScheduleAdminDashBoard extends React.Component {
     }
 
     componentDidUpdate() {
-        console.log("componentDidUpdate");
         if (!this.shouldTestDeepLink) return;
         this.testDeepLinks();
         this.shouldTestDeepLink = false;
@@ -377,7 +365,6 @@ class ScheduleAdminDashBoard extends React.Component {
 
     onEditEvent(event){
         let { history, currentSummit } = this.props;
-        console.log(event);
         history.push(`/app/summits/${currentSummit.id}/events/${event.id}`);
     }
 
@@ -442,7 +429,7 @@ class ScheduleAdminDashBoard extends React.Component {
         gapSize,
     })
     {
-        this.setState({ ... this.state, showModal: false, searchingEmpty: true})
+        this.setState({ ... this.state, showModal: false})
         this.props.getEmptySpots(currentLocation, dateFrom, dateTo, gapSize);
     }
 
@@ -469,13 +456,11 @@ class ScheduleAdminDashBoard extends React.Component {
     }
 
     onSelectAllPublished(evt){
-        console.log(evt.target.checked);
         let {scheduleEvents, setBulkEventSelectedState} = this.props;
         setBulkEventSelectedState(scheduleEvents, evt.target.checked, true);
     }
 
     onSelectAllUnPublished(evt){
-        console.log(evt.target.checked);
         let {unScheduleEvents, setBulkEventSelectedState} = this.props;
         setBulkEventSelectedState(unScheduleEvents, evt.target.checked, false);
     }
@@ -529,6 +514,7 @@ class ScheduleAdminDashBoard extends React.Component {
             scheduleEventsSearch,
             currentUnScheduleOrderBy,
             emptySpots,
+            searchingEmpty,
             selectedPublishedEvents,
             selectedUnPublishedEvents,
         } = this.props;
@@ -649,7 +635,7 @@ class ScheduleAdminDashBoard extends React.Component {
                     showModal={this.state.showModal}
                     onCloseModal={this.onCloseModal}
                     onFindEmptySpots={this.onFindEmptySpots}
-                    initialGapSize={10}
+                    initialGapSize={20}
                 />
                 <div className="col-md-6 published-container">
                     <ScheduleAdminSearchFreeTextScheduleEvents
@@ -665,8 +651,8 @@ class ScheduleAdminDashBoard extends React.Component {
                             onClickSpot={this.onClickSpot}
                         />
                     }
-                    {emptySpots.length == 0 && this.state.searchingEmpty &&
-                        <Modal show={true} onHide={() => this.setState({searchingEmpty: false})}>
+                    {emptySpots.length == 0 && searchingEmpty &&
+                        <Modal show={true} onHide={this.onClearClick}>
                             <Modal.Header closeButton>
                                 <Modal.Title>{T.translate("empty_spots_modal.find_empty_spots")}</Modal.Title>
                             </Modal.Header>
@@ -824,6 +810,7 @@ function mapStateToProps({ currentScheduleBuilderState, currentSummitState, summ
         scheduleEventsSearch               : currentScheduleBuilderState.scheduleEventsSearch,
         currentUnScheduleOrderBy           : currentScheduleBuilderState.currentUnScheduleOrderBy,
         emptySpots                         : currentScheduleBuilderState.emptySpots,
+        searchingEmpty                     : currentScheduleBuilderState.searchingEmpty,
         selectedPublishedEvents            : summitEventsBulkActionsState.selectedPublishedEvents,
         selectedUnPublishedEvents          : summitEventsBulkActionsState.selectedUnPublishedEvents,
     }

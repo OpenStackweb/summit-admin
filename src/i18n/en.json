@@ -415,8 +415,8 @@
     "promocode_created" : "Promocode created successfully."
   },
   "speaker_attendance_list": {
-    "speaker_attendance_list"   : "Speaker Attendace List",
-    "speaker_attendances"       : "Speaker Attendaces",
+    "speaker_attendance_list"   : "Speaker Attendance List",
+    "speaker_attendances"       : "Speaker Attendances",
     "add_attendance"            : "Add Attendance",
     "created"                   : "Date Created",
     "on_site_phone"             : "On Site Phone",

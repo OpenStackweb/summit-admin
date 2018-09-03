@@ -171,6 +171,7 @@ class PromocodeListPage extends React.Component {
                                 placeholder={T.translate("promocode_list.placeholders.select_type")}
                                 options={promocode_types_ddl}
                                 onChange={this.handleTypeChange}
+                                clearable={false}
                             />
                         </div>
                         <button className="btn btn-primary right-space" onClick={this.handleNewPromocode}>

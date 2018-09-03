@@ -24,7 +24,7 @@ class ScheduleAdminEmptySpotsModal extends React.Component {
 
         let { currentSummit } = this.props;
         let defaultValueStart = moment.tz(currentSummit.start_date * 1000, currentSummit.time_zone.name).hour(7).minute(0).second(0);
-        let defaultValueEnd   = moment.tz(currentSummit.start_date * 1000, currentSummit.time_zone.name).hour(22).minute(0).second(0);
+        let defaultValueEnd   = moment.tz(currentSummit.start_date * 1000, currentSummit.time_zone.name).hour(19).minute(0).second(0);
 
         this.state = {
             currentLocation: null,
@@ -116,6 +116,8 @@ class ScheduleAdminEmptySpotsModal extends React.Component {
 
     render(){
         let { showModal, onCloseModal, currentSummit } = this.props;
+        let { currentLocation, dateFrom, dateTo, gapSize } = this.state;
+
         // process venues
         let venues = [];
         for(let i = 0; i < currentSummit.locations.length; i++) {
@@ -146,7 +148,7 @@ class ScheduleAdminEmptySpotsModal extends React.Component {
                             <FormGroup validationState={this.getValidationStateVenue()}>
                                 <ScheduleAdminVenueSelector
                                     onVenueChanged={this.onVenueChanged}
-                                    currentValue={this.state.currentLocation}
+                                    currentValue={currentLocation}
                                     venues={venues}
                                 />
                                 <FormControl.Feedback />
@@ -165,7 +167,7 @@ class ScheduleAdminEmptySpotsModal extends React.Component {
                                     timeConstraints={{ hours: { min: 7, max: 22}}}
                                     validation={{after: currenSummitStartDate.valueOf()/1000, before: currenSummitEndDate.valueOf()/1000}}
                                     onChange={this.handleChangeDateFrom}
-                                    defaultValue={defaultValueStart}
+                                    value={dateFrom}
                                 />
                                 <FormControl.Feedback />
                             </FormGroup>
@@ -181,7 +183,7 @@ class ScheduleAdminEmptySpotsModal extends React.Component {
                                     timezone={currentSummit.time_zone.name}
                                     validation={{after: currenSummitStartDate.valueOf()/1000, before: currenSummitEndDate.valueOf()/1000}}
                                     onChange={this.handleChangeDateTo}
-                                    defaultValue={defaultValueEnd}
+                                    value={dateTo}
                                 />
                                 <FormControl.Feedback />
                             </FormGroup>
@@ -193,7 +195,7 @@ class ScheduleAdminEmptySpotsModal extends React.Component {
                                     type="number"
                                     placeholder={T.translate("empty_spots_modal.placeholders.gap_size")}
                                     onChange={this.handleChangeGapValue}
-                                    defaultValue={this.props.initialGapSize}
+                                    value={gapSize}
                                 />
                                 <FormControl.Feedback />
                             </FormGroup>

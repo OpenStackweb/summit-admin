@@ -14,7 +14,7 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { epochToMoment } from 'openstack-uicore-foundation/lib/methods'
+import { epochToMoment, findElementPos } from 'openstack-uicore-foundation/lib/methods'
 import { MemberInput, CompanyInput, DateTimePicker, Input } from 'openstack-uicore-foundation/lib/components'
 import TicketComponent from './ticket-component'
 import RsvpComponent from './rsvp-component'
