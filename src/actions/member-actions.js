@@ -28,6 +28,31 @@ import {
 export const AFFILIATION_SAVED        = 'AFFILIATION_SAVED';
 export const AFFILIATION_DELETED      = 'AFFILIATION_DELETED';
 export const AFFILIATION_ADDED        = 'AFFILIATION_ADDED';
+export const ORGANIZATION_ADDED        = 'ORGANIZATION_ADDED';
+
+
+export const addOrganization = (organization, callback) => (dispatch, getState) => {
+    let { loggedUserState } = getState();
+    let { accessToken }     = loggedUserState;
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    dispatch(startLoading());
+
+    postRequest(
+        null,
+        createAction(ORGANIZATION_ADDED),
+        `${apiBaseUrl}/api/v1/organizations`,
+        {name: organization},
+        authErrorHandler
+    )(params)(dispatch).then((payload) => {
+        dispatch(stopLoading());
+        callback(payload.response);
+    });
+
+}
 
 
 export const addAffiliation = (affiliation) => (dispatch, getState) => {
@@ -38,6 +63,7 @@ export const addAffiliation = (affiliation) => (dispatch, getState) => {
 
     let params = {
         access_token : accessToken,
+        expand: 'organization'
     };
 
     let normalizedEntity = normalizeEntity(affiliation);

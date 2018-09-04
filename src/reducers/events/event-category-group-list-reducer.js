@@ -11,15 +11,13 @@
  * limitations under the License.
  **/
 
-import
-{
+import {
     RECEIVE_EVENT_CATEGORY_GROUPS,
     REQUEST_EVENT_CATEGORY_GROUPS,
     EVENT_CATEGORY_GROUP_DELETED
 } from '../../actions/event-category-actions';
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
-import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 const DEFAULT_STATE = {
     eventCategoryGroups : []

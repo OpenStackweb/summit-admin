@@ -14,8 +14,8 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { findElementPos, queryTags } from 'openstack-uicore-foundation/lib/methods'
-import { Input, TextEditor, SimpleLinkList } from 'openstack-uicore-foundation/lib/components'
+import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
+import { Input, TextEditor, TagInput } from 'openstack-uicore-foundation/lib/components'
 
 
 class EventCategoryForm extends React.Component {
@@ -211,17 +211,18 @@ class EventCategoryForm extends React.Component {
                     </div>
                 </div>
                 <hr />
-                <SimpleLinkList
-                    title={T.translate("edit_event_category.tags")}
-                    values={entity.tags}
-                    columns={tagsColumns}
-                    valueKey="tag"
-                    labelKey="tag"
-                    onEdit={this.handleTagEdit}
-                    onLink={this.handleTagLink}
-                    onUnLink={this.handleTagUnLink}
-                    queryOptions={queryTags}
-                />
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <label> {T.translate("edit_event_category.tags")} </label>
+                        <TagInput
+                            id="allowed_tags"
+                            value={entity.allowed_tags}
+                            onChange={this.handleChange}
+                            allowNew={false}
+                            error={this.hasErrors('allowed_tags')}
+                        />
+                    </div>
+                </div>
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">

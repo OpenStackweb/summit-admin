@@ -51,7 +51,10 @@ class RsvpTemplateIdLayout extends React.Component {
 
     render() {
         let {match, currentRsvpTemplate} = this.props;
+        let rsvpTemplateId = match.params.rsvp_template_id;
         let breadcrumb = currentRsvpTemplate.id ? currentRsvpTemplate.title : T.translate("general.new");
+
+        if (rsvpTemplateId && !currentRsvpTemplate.id) return (<div></div>);
 
         return (
             <div>

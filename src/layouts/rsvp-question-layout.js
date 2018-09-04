@@ -53,8 +53,12 @@ class RsvpQuestionLayout extends React.Component {
     }
 
     render() {
-        let {match, currentRsvpQuestion} = this.props;
-        let breadcrumb = currentRsvpQuestion.id ? currentRsvpQuestion.name : T.translate("general.new");
+        let {match, entity, allClasses} = this.props;
+        let rsvpQuestionId = match.params.rsvp_question_id;
+        let breadcrumb = entity.id ? entity.name : T.translate("general.new");
+
+        if (!allClasses.length) return (<div></div>);
+        if (rsvpQuestionId && !entity.id) return (<div></div>);
 
         return (
             <div>
@@ -82,7 +86,7 @@ class RsvpQuestionLayout extends React.Component {
 
 const mapStateToProps = ({ currentRsvpTemplateState, currentRsvpQuestionState }) => ({
     currentRsvpTemplate   : currentRsvpTemplateState.entity,
-    currentRsvpQuestion   : currentRsvpQuestionState.entity
+    ...currentRsvpQuestionState
 })
 
 export default connect (

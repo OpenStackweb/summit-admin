@@ -83,7 +83,7 @@ export const getEventCategory = (eventCategoryId) => (dispatch, getState) => {
     let { currentSummit }   = currentSummitState;
 
     let params = {
-        expand       : "track_groups",
+        expand       : "track_groups, allowed_tags",
         access_token : accessToken,
     };
 

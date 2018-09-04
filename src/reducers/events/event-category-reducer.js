@@ -34,7 +34,7 @@ export const DEFAULT_ENTITY = {
     lightning_alternate_count   : 0,
     voting_visible              : false,
     chair_visible               : false,
-    tags                        : [],
+    allowed_tags                : [],
     track_groups                : []
 }
 

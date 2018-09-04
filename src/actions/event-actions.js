@@ -43,6 +43,7 @@ export const FILE_ATTACHED                  = 'FILE_ATTACHED';
 export const RECEIVE_PROXIMITY_EVENTS       = 'RECEIVE_PROXIMITY_EVENTS';
 
 
+
 export const getEvents = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();

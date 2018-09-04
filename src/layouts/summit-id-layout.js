@@ -67,6 +67,8 @@ class SummitIdLayout extends React.Component {
         let summitId = this.props.match.params.summit_id;
         let breadcrumb = currentSummit.id ? currentSummit.name : T.translate("general.new_summit");
 
+        if (summitId && !currentSummit.id) return (<div></div>);
+
         return(
             <div>
                 <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>

@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import AffiliationsActionsTableCell from './AffiliationsActionsTableCell';
-import { CompanyInput, DateTimePicker } from 'openstack-uicore-foundation/lib/components'
+import { OrganizationInput, DateTimePicker } from 'openstack-uicore-foundation/lib/components'
 import { epochToMoment, formatEpoch } from 'openstack-uicore-foundation/lib/methods'
-import { addAffiliation, saveAffiliation, deleteAffiliation } from "../../../actions/member-actions"
+import { addAffiliation, saveAffiliation, deleteAffiliation, addOrganization } from "../../../actions/member-actions"
 import T from "i18n-react/dist/i18n-react";
 
 import './affiliationstable.css';
@@ -19,11 +19,13 @@ const createRow = (row, actions) => {
                 <input id="job_title" className="form-control" value={row.job_title} onChange={actions.handleChange.bind(this, row.id)}/>
             </td>,
             <td key="organization">
-                <CompanyInput
+                <OrganizationInput
                     id="organization"
                     value={org_value}
                     onChange={actions.handleChange.bind(this, row.id)}
                     multi={false}
+                    allowCreate
+                    onCreate={actions.addOrganization}
                 />
             </td>,
             <td key="start_date">
@@ -66,23 +68,25 @@ const createRow = (row, actions) => {
     return cells;
 };
 
-const createNewRow = (row, addNew, handleChange) => {
+const createNewRow = (row, actions) => {
     let cells = [
         <td key="new_job_title">
-            <input id="job_title" className="form-control" value={row.job_title} onChange={handleChange}/>
+            <input id="job_title" className="form-control" value={row.job_title} onChange={actions.handleChange}/>
         </td>,
         <td key="new_organization">
-            <CompanyInput
+            <OrganizationInput
                 id="organization"
                 value={row.organization}
-                onChange={handleChange}
+                onChange={actions.handleChange}
                 multi={false}
+                allowCreate
+                onCreate={actions.addOrganization}
             />
         </td>,
         <td key="new_start_date">
             <DateTimePicker
                 id="start_date"
-                onChange={handleChange}
+                onChange={actions.handleChange}
                 format={{date:"YYYY-MM-DD", time: false}}
                 timezone={'UTC'}
                 value={epochToMoment(row.start_date)}
@@ -91,20 +95,20 @@ const createNewRow = (row, addNew, handleChange) => {
         <td key="new_end_date">
             <DateTimePicker
                 id="end_date"
-                onChange={handleChange}
+                onChange={actions.handleChange}
                 format={{date:"YYYY-MM-DD", time: false}}
                 timezone={'UTC'}
                 value={epochToMoment(row.end_date)}
             />
         </td>,
         <td key="new_is_current" className="is-current-cell">
-            <input id="is_current" type="checkbox" checked={row.is_current} onChange={handleChange}/>
+            <input id="is_current" type="checkbox" checked={row.is_current} onChange={actions.handleChange}/>
         </td>
     ];
 
     cells.push(
         <td key='add_new'>
-            <button className="btn btn-default" onClick={addNew}> Add </button>
+            <button className="btn btn-default" onClick={actions.save}> Add </button>
         </td>
     );
 
@@ -120,7 +124,7 @@ class AffiliationsTable extends React.Component {
         this.state = {
             rows: props.data,
             new_row: {
-                owner_id: this.props.ownerId,
+                owner_id: props.ownerId,
                 job_title: '',
                 organization: {name: '', value: 0},
                 start_date: '',
@@ -135,9 +139,12 @@ class AffiliationsTable extends React.Component {
         this.actions.delete = this.deleteClick.bind(this);
         this.actions.handleChange = this.onChangeCell.bind(this);
         this.actions.cancel = this.editRowCancel.bind(this);
+        this.actions.addOrganization = props.addOrganization;
 
-        this.saveNewRow = this.saveNewRow.bind(this);
-        this.handleNewChange = this.onChangeNewCell.bind(this);
+        this.newActions = {};
+        this.newActions.save = this.saveNewRow.bind(this);
+        this.newActions.handleChange = this.onChangeNewCell.bind(this);
+        this.newActions.addOrganization = props.addOrganization;
     }
 
     componentWillReceiveProps(nextProps) {
@@ -289,7 +296,7 @@ class AffiliationsTable extends React.Component {
                         })}
 
                         <tr id='new_row' key='new_row' className="odd">
-                            {createNewRow(this.state.new_row, this.saveNewRow, this.handleNewChange)}
+                            {createNewRow(this.state.new_row, this.newActions)}
                         </tr>
                     </tbody>
                 </table>
@@ -303,6 +310,7 @@ export default connect (
     {
         addAffiliation,
         saveAffiliation,
-        deleteAffiliation
+        deleteAffiliation,
+        addOrganization
     }
 )(AffiliationsTable);

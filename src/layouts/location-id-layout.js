@@ -55,8 +55,12 @@ class LocationIdLayout extends React.Component {
     }
 
     render(){
-        let { match, currentLocation } = this.props;
-        let breadcrumb = currentLocation.id ? currentLocation.name : T.translate("general.new");
+        let { match, entity, allClasses } = this.props;
+        let locationId = match.params.location_id;
+        let breadcrumb = entity.id ? entity.name : T.translate("general.new");
+
+        if (!allClasses.length) return (<div></div>);
+        if (locationId && !entity.id) return (<div></div>);
 
         return(
             <div>
@@ -121,7 +125,7 @@ class LocationIdLayout extends React.Component {
 
 
 const mapStateToProps = ({ currentLocationState }) => ({
-    currentLocation   : currentLocationState.entity
+    ...currentLocationState
 })
 
 export default connect (
