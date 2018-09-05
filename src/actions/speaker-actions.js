@@ -31,6 +31,7 @@ export const RECEIVE_SPEAKERS       = 'RECEIVE_SPEAKERS';
 export const RECEIVE_SPEAKER        = 'RECEIVE_SPEAKER';
 export const REQUEST_SPEAKER        = 'REQUEST_SPEAKER';
 export const RESET_SPEAKER_FORM     = 'RESET_SPEAKER_FORM';
+export const SPEAKER_DELETED        = 'SPEAKER_DELETED';
 export const UPDATE_SPEAKER         = 'UPDATE_SPEAKER';
 export const SPEAKER_UPDATED        = 'SPEAKER_UPDATED';
 export const SPEAKER_ADDED          = 'SPEAKER_ADDED';
@@ -125,6 +126,28 @@ export const getSpeakerForMerge = (speakerId, speakerCol) => (dispatch, getState
         `${apiBaseUrl}/api/v1/speakers/${speakerId}`,
         authErrorHandler,
         {speakerCol}
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const deleteSpeaker = (speakerId) => (dispatch, getState) => {
+
+    let { loggedUserState } = getState();
+    let { accessToken }     = loggedUserState;
+
+    dispatch(startLoading());
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    return deleteRequest(
+        null,
+        createAction(SPEAKER_DELETED)({speakerId}),
+        `${apiBaseUrl}/api/v1/speakers/${speakerId}`,
+        authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
@@ -270,6 +293,9 @@ const normalizeEntity = (entity) => {
     return normalizedEntity;
 }
 
+
+
+/****************************************************************************************************/
 /* SPEAKER ATTENDANCE */
 
 export const getAttendances = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = '1' ) => (dispatch, getState) => {
@@ -327,6 +353,8 @@ export const deleteAttendance = (attendanceId) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
 
     let params = {
         access_token : accessToken,

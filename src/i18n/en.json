@@ -261,7 +261,8 @@
     "add_speaker"           : "Add Speaker",
     "member_id"             : "Member Id",
     "registration_code"     : "Registration Code",
-    "on_site_phone"         : "On Site Phone"
+    "on_site_phone"         : "On Site Phone",
+    "delete_speaker_warning" : "Are you sure you want to delete speaker"
   },
   "edit_speaker": {
     "registration_code"   : "Registration Code",

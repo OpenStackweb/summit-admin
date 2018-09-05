@@ -201,6 +201,8 @@ const normalizeEntity = (entity) => {
     normalizedEntity.lightning_count            = parseInt(entity.lightning_count);
     normalizedEntity.lightning_alternate_count  = parseInt(entity.lightning_alternate_count);
 
+    normalizedEntity.allowed_tags = entity.allowed_tags.map(t => t.tag);
+
     return normalizedEntity;
 
 }

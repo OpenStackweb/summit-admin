@@ -14,11 +14,11 @@
 import
 {
     REQUEST_SPEAKERS,
-    RECEIVE_SPEAKERS
+    RECEIVE_SPEAKERS,
+    SPEAKER_DELETED
 } from '../../actions/speaker-actions';
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
-import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 const DEFAULT_STATE = {
     speakers        : {},
@@ -51,6 +51,11 @@ const speakerListReducer = (state = DEFAULT_STATE, action) => {
             }))
 
             return {...state, speakers: speakers, currentPage: current_page, totalSpeakers: total, lastPage: last_page };
+        }
+        break;
+        case SPEAKER_DELETED: {
+            let {speakerId} = payload;
+            return {...state, speakers: state.speakers.filter(s => s.id != speakerId)};
         }
         break;
         default:

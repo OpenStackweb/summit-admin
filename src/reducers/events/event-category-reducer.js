@@ -75,7 +75,7 @@ const eventCategoryReducer = (state = DEFAULT_STATE, action) => {
                 }
             }
 
-            return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
+            return {...state, errors: {}, entity: {...DEFAULT_ENTITY, ...entity} };
         }
         break;
         case VALIDATE: {

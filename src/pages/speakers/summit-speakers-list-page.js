@@ -14,9 +14,10 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
+import swal from "sweetalert2";
 import { Pagination } from 'react-bootstrap';
 import { FreeTextSearch, Table } from 'openstack-uicore-foundation/lib/components';
-import { getSpeakers } from "../../actions/speaker-actions";
+import { getSpeakers, deleteSpeaker } from "../../actions/speaker-actions";
 
 
 class SummitSpeakerListPage extends React.Component {
@@ -25,6 +26,7 @@ class SummitSpeakerListPage extends React.Component {
         super(props);
 
         this.handleEdit = this.handleEdit.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
         this.handleSort = this.handleSort.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
@@ -40,6 +42,26 @@ class SummitSpeakerListPage extends React.Component {
     handleEdit(speaker_id) {
         let {history} = this.props;
         history.push(`/app/speakers/${speaker_id}`);
+    }
+
+    handleDelete(speakerId, ev) {
+        let {deleteSpeaker, speakers} = this.props;
+        let speaker = speakers.find(s => s.id == speakerId);
+
+        ev.preventDefault();
+
+        swal({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("speaker_list.delete_speaker_warning") + ' ' + speaker.name,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: T.translate("general.yes_delete")
+        }).then(function(result){
+            if (result.value) {
+                deleteSpeaker(speakerId);
+            }
+        }).catch(swal.noop);
     }
 
     handlePageChange(page) {
@@ -78,7 +100,8 @@ class SummitSpeakerListPage extends React.Component {
             sortCol: (order == 'last_name') ? 'name' : order,
             sortDir: orderDir,
             actions: {
-                edit: {onClick: this.handleEdit}
+                edit: {onClick: this.handleEdit},
+                delete: {onClick: this.handleDelete}
             }
         }
 
@@ -136,6 +159,7 @@ const mapStateToProps = ({ currentSpeakerListState }) => ({
 export default connect (
     mapStateToProps,
     {
-        getSpeakers
+        getSpeakers,
+        deleteSpeaker
     }
 )(SummitSpeakerListPage);
