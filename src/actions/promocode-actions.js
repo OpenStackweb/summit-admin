@@ -231,8 +231,11 @@ export const exportPromocodes = ( term = null, order = 'code', orderDir = 1, typ
     let { currentSummit }   = currentSummitState;
     let filter = [];
     let filename = currentSummit.name + '-Promocodes.csv';
+
     let params = {
-        access_token : accessToken
+        access_token : accessToken,
+        expand: 'owner_name,owner_email,sponsor_name',
+        columns: 'code,type,owner_name,owner_email,sponsor_name,redeemed,email_sent'
     };
 
     if(term){
