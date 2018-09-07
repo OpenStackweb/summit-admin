@@ -217,6 +217,7 @@ class EventCategoryForm extends React.Component {
                         <TagInput
                             id="allowed_tags"
                             value={entity.allowed_tags}
+                            summitId={currentSummit.id}
                             onChange={this.handleChange}
                             allowNew={false}
                             error={this.hasErrors('allowed_tags')}

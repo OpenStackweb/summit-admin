@@ -120,7 +120,6 @@ class MergeSpeakerPage extends React.Component {
                             multi={false}
                             clearable={false}
                             history={history}
-                            queryAll
                         />
 
                     </div>
@@ -133,7 +132,6 @@ class MergeSpeakerPage extends React.Component {
                             multi={false}
                             clearable={false}
                             history={history}
-                            queryAll
                         />
                     </div>
                 </div>

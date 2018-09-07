@@ -361,6 +361,7 @@ class EventForm extends React.Component {
                         <TagInput
                             id="tags"
                             value={entity.tags}
+                            summitId={currentSummit.id}
                             onChange={this.handleChange}
                             allow_new={false}
                             error={this.hasErrors('tags')}
@@ -391,7 +392,6 @@ class EventForm extends React.Component {
                             onChange={this.handleChange}
                             multi={true}
                             history={history}
-                            queryAll
                         />
                     </div>
                 </div>
@@ -406,7 +406,6 @@ class EventForm extends React.Component {
                             onChange={this.handleChange}
                             multi={false}
                             history={history}
-                            queryAll
                         />
                     </div>
                 </div>
@@ -421,7 +420,6 @@ class EventForm extends React.Component {
                             onChange={this.handleChange}
                             multi={false}
                             history={history}
-                            queryAll
                         />
                     </div>
                 </div>
