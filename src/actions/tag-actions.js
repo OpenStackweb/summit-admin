@@ -1,0 +1,219 @@
+/**
+ * Copyright 2018 OpenStack Foundation
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ **/
+
+import { authErrorHandler, apiBaseUrl } from './base-actions';
+import T from "i18n-react/dist/i18n-react";
+import {
+    getRequest,
+    putRequest,
+    postRequest,
+    deleteRequest,
+    createAction,
+    stopLoading,
+    startLoading,
+    showMessage,
+    showSuccessMessage
+} from 'openstack-uicore-foundation/lib/methods';
+import {QUESTION_VALUE_ORDER_UPDATED} from "./rsvp-template-actions";
+import {TRACK_GROUP_ADDED, TRACK_GROUP_REMOVED} from "./selection-plan-actions";
+
+export const REQUEST_TAG_GROUPS       = 'REQUEST_TAG_GROUPS';
+export const RECEIVE_TAG_GROUPS       = 'RECEIVE_TAG_GROUPS';
+export const RECEIVE_TAG_GROUP        = 'RECEIVE_TAG_GROUP';
+export const TAG_GROUP_ORDER_UPDATED  = 'TAG_GROUP_ORDER_UPDATED';
+export const RESET_TAG_GROUP_FORM     = 'RESET_TAG_GROUP_FORM';
+export const UPDATE_TAG_GROUP         = 'UPDATE_TAG_GROUP';
+export const TAG_GROUP_UPDATED        = 'TAG_GROUP_UPDATED';
+export const TAG_GROUP_ADDED          = 'TAG_GROUP_ADDED';
+export const TAG_GROUP_DELETED        = 'TAG_GROUP_DELETED';
+export const TAG_GROUPS_SEEDED        = 'TAG_GROUPS_SEEDED';
+
+export const getTagGroups = ( ) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let params = {
+        access_token : accessToken,
+        per_page     : 100,
+        page         : 1
+    };
+
+    return getRequest(
+        createAction(REQUEST_TAG_GROUPS),
+        createAction(RECEIVE_TAG_GROUPS),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-tag-groups`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+
+export const updateTagGroupsOrder = (tagGroups, tagGroupId, newOrder) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    let tagGroup = tagGroups.find(tg => tg.id == tagGroupId);
+    delete(tagGroup.allowed_tags);
+
+    putRequest(
+        null,
+        createAction(TAG_GROUP_ORDER_UPDATED)(tagGroups),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-tag-groups/${tagGroupId}`,
+        normalizedEntity,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+
+}
+
+
+export const getTagGroup = (tagGroupId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        expand       : 'allowed_tags,tag',
+        access_token : accessToken,
+    };
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_TAG_GROUP),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-tag-groups/${tagGroupId}`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const resetTagGroupForm = () => (dispatch, getState) => {
+    dispatch(createAction(RESET_TAG_GROUP_FORM)({}));
+};
+
+export const saveTagGroup = (entity, history) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let normalizedEntity = normalizeEntity(entity);
+    let params = { access_token : accessToken };
+
+    if (entity.id) {
+
+        putRequest(
+            createAction(UPDATE_TAG_GROUP),
+            createAction(TAG_GROUP_UPDATED),
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-tag-groups/${entity.id}`,
+            normalizedEntity,
+            authErrorHandler,
+            entity
+        )(params)(dispatch)
+            .then((payload) => {
+                dispatch(showSuccessMessage(T.translate("edit_tag_group.tag_group_saved")));
+            });
+
+    } else {
+        let success_message = {
+            title: T.translate("general.done"),
+            html: T.translate("edit_tag_group.tag_group_created"),
+            type: 'success'
+        };
+
+        postRequest(
+            createAction(UPDATE_TAG_GROUP),
+            createAction(TAG_GROUP_ADDED),
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-tag-groups`,
+            normalizedEntity,
+            authErrorHandler,
+            entity
+        )(params)(dispatch)
+            .then((payload) => {
+                dispatch(showMessage(
+                    success_message,
+                    () => { history.push(`/app/summits/${currentSummit.id}/tag-groups/${payload.response.id}`) }
+                ));
+            });
+    }
+}
+
+export const deleteTagGroup = (tagGroupId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(TAG_GROUP_DELETED)({tagGroupId}),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-tag-groups/${tagGroupId}`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const seedTagGroups = () => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return postRequest(
+        null,
+        createAction(TAG_GROUPS_SEEDED),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-tag-groups/seed-defaults`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+
+const normalizeEntity = (entity) => {
+    let normalizedEntity = {...entity};
+
+    normalizedEntity.allowed_tags = entity.allowed_tags.map(at => at.tag);
+
+    return normalizedEntity;
+
+}

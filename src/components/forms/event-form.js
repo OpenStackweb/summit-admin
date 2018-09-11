@@ -363,7 +363,6 @@ class EventForm extends React.Component {
                             value={entity.tags}
                             summitId={currentSummit.id}
                             onChange={this.handleChange}
-                            allow_new={false}
                             error={this.hasErrors('tags')}
                         />
                     </div>

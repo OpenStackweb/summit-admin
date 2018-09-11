@@ -134,10 +134,32 @@ class EventCategoryGroupForm extends React.Component {
             { columnKey: 'code', value: T.translate("edit_event_category.code") }
         ];
 
+        let tracksOptions = {
+            title: T.translate("edit_event_category_group.tracks"),
+            valueKey: "name",
+            labelKey: "name",
+            actions: {
+                search: this.getTracks,
+                delete: { onClick: this.handleTrackUnLink },
+                add: { onClick: this.handleTrackLink }
+            }
+        };
+
         let allowedGroupsColumns = [
             { columnKey: 'title', value: T.translate("edit_event_category.name") },
             { columnKey: 'description', value: T.translate("edit_event_category.description") }
         ];
+
+        let allowedGroupsOptions = {
+            title: T.translate("edit_event_category_group.allowed_groups"),
+            valueKey: "id",
+            labelKey: "title",
+            actions: {
+                search: queryGroups,
+                delete: { onClick: this.handleAllowedGroupUnLink },
+                add: { onClick: this.handleAllowedGroupLink }
+            }
+        };
 
         let class_name_ddl = allClasses.map(i => ({label:i.class_name, value:i.class_name}));
 
@@ -227,28 +249,18 @@ class EventCategoryGroupForm extends React.Component {
                 <hr />
                 {entity.id != 0 &&
                 <SimpleLinkList
-                    title={T.translate("edit_event_category_group.tracks")}
                     values={entity.tracks}
                     columns={tracksColumns}
-                    valueKey="name"
-                    labelKey="name"
-                    onLink={this.handleTrackLink}
-                    onUnLink={this.handleTrackUnLink}
-                    queryOptions={this.getTracks}
+                    options={tracksOptions}
                 />
                 }
                 <br />
                 <br />
                 {entity.id != 0 && this.shouldShowField('allowed_groups') &&
                 <SimpleLinkList
-                    title={T.translate("edit_event_category_group.allowed_groups")}
                     values={entity.allowed_groups}
                     columns={allowedGroupsColumns}
-                    valueKey="id"
-                    labelKey="title"
-                    onLink={this.handleAllowedGroupLink}
-                    onUnLink={this.handleAllowedGroupUnLink}
-                    queryOptions={queryGroups}
+                    options={allowedGroupsOptions}
                 />
                 }
 

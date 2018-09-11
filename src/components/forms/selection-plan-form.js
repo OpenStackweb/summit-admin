@@ -14,7 +14,12 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { findElementPos, epochToMomentTimeZone, queryTrackGroups } from 'openstack-uicore-foundation/lib/methods'
+import {
+    findElementPos,
+    epochToMomentTimeZone,
+    queryTrackGroups,
+    queryGroups
+} from 'openstack-uicore-foundation/lib/methods'
 import { Input, DateTimePicker, SimpleLinkList } from 'openstack-uicore-foundation/lib/components';
 
 
@@ -111,6 +116,17 @@ class SelectionPlanForm extends React.Component {
             { columnKey: 'name', value: T.translate("edit_selection_plan.name") },
             { columnKey: 'description', value: T.translate("edit_selection_plan.description") }
         ];
+
+        let trackGroupsOptions = {
+            title: T.translate("edit_selection_plan.track_groups"),
+            valueKey: "name",
+            labelKey: "name",
+            actions: {
+                search: this.getTrackGroups,
+                delete: { onClick: this.handleTrackGroupUnLink },
+                add: { onClick: this.handleTrackGroupLink }
+            }
+        };
 
         return (
             <form className="selection-plan-form">
@@ -218,14 +234,9 @@ class SelectionPlanForm extends React.Component {
                 <hr />
                 {entity.id != 0 &&
                 <SimpleLinkList
-                    title={T.translate("edit_selection_plan.track_groups")}
                     values={entity.track_groups}
                     columns={trackGroupsColumns}
-                    valueKey="name"
-                    labelKey="name"
-                    onLink={this.handleTrackGroupLink}
-                    onUnLink={this.handleTrackGroupUnLink}
-                    queryOptions={this.getTrackGroups}
+                    options={trackGroupsOptions}
                 />
                 }
 

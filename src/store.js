@@ -51,6 +51,8 @@ import pushNotificationListReducer from './reducers/push_notifications/push-noti
 import pushNotificationReducer from './reducers/push_notifications/push-notification-reducer';
 import selectionPlanReducer from './reducers/summits/selection-plan-reducer';
 import roomOccupancyReducer from "./reducers/events/room-occupancy-reducer";
+import tagGroupListReducer from "./reducers/tags/tag-group-list-reducer";
+import tagGroupReducer from "./reducers/tags/tag-group-reducer";
 
 
 import thunk from 'redux-thunk';
@@ -102,7 +104,9 @@ const reducers = persistCombineReducers(config, {
     currentPushNotificationListState: pushNotificationListReducer,
     currentPushNotificationState: pushNotificationReducer,
     currentSelectionPlanState: selectionPlanReducer,
-    currentRoomOccupancyState: roomOccupancyReducer
+    currentRoomOccupancyState: roomOccupancyReducer,
+    currentTagGroupListState: tagGroupListReducer,
+    currentTagGroupState: tagGroupReducer
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
