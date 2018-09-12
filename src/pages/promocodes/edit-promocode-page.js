@@ -50,7 +50,7 @@ class EditPromocodePage extends React.Component {
     render(){
         let {currentSummit, allTypes, allClasses, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+        let breadcrumb = (entity.id) ? entity.code : T.translate("general.new");
 
         if (!allClasses.length) return (<div></div>);
 

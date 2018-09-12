@@ -33,18 +33,9 @@ import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 export const DEFAULT_ENTITY = {
     id: 0,
     member: null,
-    speaker: null,
     shared_contact_info: 0,
     summit_hall_checked_in: 0,
     summit_hall_checked_in_date: '',
-    affiliation_id: 0,
-    affiliation_owner_id: 0,
-    affiliation_title: '',
-    affiliation_organization_name: '',
-    affiliation_organization_id: 0,
-    affiliation_start_date: '',
-    affiliation_end_date: '',
-    affiliation_current: '',
     tickets: []
 }
 
@@ -78,23 +69,10 @@ const attendeeReducer = (state = DEFAULT_STATE, action) => {
             let entity = {...payload.response};
 
 
-            if (entity.member.hasOwnProperty('affiliations') && entity.member.affiliations.length) {
-                let last_affiliation = {...entity.member.affiliations.slice(-1)[0]};
-
-                for(var key in last_affiliation) {
-                    if(last_affiliation.hasOwnProperty(key)) {
-                        last_affiliation[key] = (last_affiliation[key] == null) ? '' : last_affiliation[key] ;
-                    }
+            for(var key in entity) {
+                if(entity.hasOwnProperty(key)) {
+                    entity[key] = (entity[key] == null) ? '' : entity[key] ;
                 }
-
-                entity.affiliation_id = last_affiliation.id;
-                entity.affiliation_owner_id = last_affiliation.owner_id;
-                entity.affiliation_title = last_affiliation.job_title;
-                entity.affiliation_organization_id = last_affiliation.organization.id;
-                entity.affiliation_organization_name = last_affiliation.organization.name;
-                entity.affiliation_start_date = last_affiliation.start_date;
-                entity.affiliation_end_date = last_affiliation.end_date;
-                entity.affiliation_current = last_affiliation.is_current;
             }
 
             return {...state,  entity: {...entity}, errors: {} };
@@ -105,22 +83,8 @@ const attendeeReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case CHANGE_MEMBER: {
-            let {member} = payload;
-            let entity = {...state.entity}
-
-            entity.member = {...member};
-
-            if (entity.member.hasOwnProperty('affiliations')) {
-                entity.member.affiliations = entity.member.affiliations.map(a => {
-                    let affiliationTmp = {};
-                    for(var key in a) {
-                        affiliationTmp[key] = (a[key] == null) ? '' : a[key] ;
-                    }
-                    return affiliationTmp;
-                });
-            }
-
-            return {...state,  entity: {...entity} };
+            console.log(payload);
+            return {...state };
         }
         break;
         case TICKET_ADDED: {

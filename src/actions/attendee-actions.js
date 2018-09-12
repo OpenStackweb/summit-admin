@@ -108,10 +108,26 @@ export const resetAttendeeForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_ATTENDEE_FORM)({}));
 };
 
-export const changeMember = (member) => (dispatch, getState) => {
-    if (member !== null) {
-        dispatch(createAction(CHANGE_MEMBER)({member}));
-    }
+export const reassignTicket = (attendeeId, newMemberId, ticketId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    putRequest(
+        null,
+        createAction(CHANGE_MEMBER),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}/tickets/${ticketId}/reassign/${newMemberId}`,
+        {},
+        authErrorHandler
+    )(params)(dispatch)
+        .then((payload) => {
+            dispatch(showSuccessMessage(T.translate("edit_attendee.attendee_saved")));
+        });
 };
 
 export const saveAttendee = (entity, history) => (dispatch, getState) => {
@@ -254,27 +270,8 @@ const normalizeEntity = (entity) => {
 
     normalizedEntity.member_id = (normalizedEntity.member != null) ? normalizedEntity.member.id : 0;
 
-    normalizedEntity.affiliation = {
-        id: entity.affiliation_id,
-        owner_id: entity.affiliation_owner_id,
-        start_date: entity.affiliation_start_date,
-        end_date: entity.affiliation_end_date,
-        is_current: entity.affiliation_current,
-        job_title: entity.affiliation_title,
-        organization_id: entity.affiliation_organization_id
-    }
-
     delete normalizedEntity['summit_hall_checked_in_date'];
-    delete normalizedEntity['affiliation_id'];
-    delete normalizedEntity['affiliation_owner_id'];
-    delete normalizedEntity['affiliation_start_date'];
-    delete normalizedEntity['affiliation_end_date'];
-    delete normalizedEntity['affiliation_current'];
-    delete normalizedEntity['affiliation_title'];
-    delete normalizedEntity['affiliation_organization_id'];
-    delete normalizedEntity['affiliation_organization_name'];
     delete normalizedEntity['member'];
-    delete normalizedEntity['speaker'];
     delete normalizedEntity['tickets'];
 
     return normalizedEntity;

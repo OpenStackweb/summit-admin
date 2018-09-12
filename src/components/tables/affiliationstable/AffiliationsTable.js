@@ -121,16 +121,18 @@ class AffiliationsTable extends React.Component {
     constructor(props) {
         super(props);
 
+        this.new_row = {
+            owner_id: props.ownerId,
+            job_title: '',
+            organization: {name: '', value: 0},
+            start_date: '',
+            end_date: '',
+            is_current: 0
+        };
+
         this.state = {
             rows: props.data,
-            new_row: {
-                owner_id: props.ownerId,
-                job_title: '',
-                organization: {name: '', value: 0},
-                start_date: '',
-                end_date: '',
-                is_current: 0
-            }
+            new_row: {...this.new_row}
         };
 
         this.actions = {};
@@ -148,7 +150,7 @@ class AffiliationsTable extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({ rows: nextProps.data });
+        this.setState({ rows: nextProps.data, new_row: {...this.new_row} });
     }
 
     saveRow(id) {
@@ -162,17 +164,7 @@ class AffiliationsTable extends React.Component {
             rows: rows
         });
 
-        let affiliation = {...row};
-
-        if (!affiliation.end_date || affiliation.is_current) {
-            affiliation.end_date = null;
-        }
-
-        delete affiliation.last_edited;
-        delete affiliation.is_edit;
-        delete affiliation.created;
-
-        this.props.saveAffiliation(affiliation);
+        this.props.saveAffiliation(row);
     }
 
     deleteClick(id) {
@@ -256,17 +248,6 @@ class AffiliationsTable extends React.Component {
         new_row.owner_id = this.props.ownerId;
 
         this.props.addAffiliation(new_row);
-
-        this.setState({
-            new_row: {
-                owner_id: this.props.ownerId,
-                job_title: '',
-                organization: {name: '', value: 0},
-                start_date: '',
-                end_date: '',
-                is_current: 0
-            }
-        });
     }
 
     render() {

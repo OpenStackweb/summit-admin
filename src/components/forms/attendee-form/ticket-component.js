@@ -86,7 +86,7 @@ export default class TicketComponent extends React.Component {
             editTicket: null
         });
 
-        onReassign(newOwner, editTicket);
+        onReassign(attendeeId, newOwner.id, editTicket.id);
     }
 
     handleTicketSave(ev) {

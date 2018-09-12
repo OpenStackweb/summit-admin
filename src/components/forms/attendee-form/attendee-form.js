@@ -58,10 +58,6 @@ class AttendeeForm extends React.Component {
             value = ev.target.checked;
         }
 
-        if (ev.target.type == 'memberinput') {
-            this.props.onMemberChange(value);
-        }
-
         if (ev.target.type == 'datetime') {
             value = value.valueOf() / 1000;
         }
@@ -116,6 +112,7 @@ class AttendeeForm extends React.Component {
                             value={entity.member}
                             onChange={this.handleChange}
                             multi={false}
+                            disabled
                         />
                     </div>
                     {entity.speaker != null &&
@@ -167,7 +164,7 @@ class AttendeeForm extends React.Component {
                         attendeeId={entity.id}
                         tickets={entity.tickets}
                         summit={currentSummit}
-                        onReassign={this.props.onMemberChange}
+                        onReassign={this.props.onTicketReassign}
                         onSave={this.props.onSaveTicket}
                         onDelete={this.props.onDeleteTicket}
                     />
