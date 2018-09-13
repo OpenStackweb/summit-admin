@@ -513,8 +513,23 @@
     "tags"                        : "Allowed Tags",
     "tag"                         : "Tag",
     "group"                       : "Group",
+    "questions"                   : "Extra Questions",
+    "add_question"                : "Add Extra Question",
     "category_saved"              : "Event Category saved successfully.",
-    "category_created"            : "Event Category created successfully."
+    "category_created"            : "Event Category created successfully.",
+    "delete_warning"              : "Are you sure you want to delete extra question "
+  },
+  "edit_event_category_question": {
+    "extra_question"            : "Extra Question",
+    "name"                      : "Name",
+    "label"                     : "Label",
+    "class"                     : "Class",
+    "mandatory"                 : "Mandatory",
+    "read_only"                 : "Read Only",
+    "values"                    : "Values",
+    "question_saved"            : "Extra Question saved successfully.",
+    "question_created"          : "Extra Question created successfully.",
+    "delete_warning"            : "Are you sure you want to delete value "
   },
   "event_category_group_list": {
     "event_category_group_list"   : "Event Category Groups",

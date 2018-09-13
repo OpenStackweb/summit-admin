@@ -13,10 +13,11 @@
 
 import
 {
-    RECEIVE_EVENT_CATEGORY,
-    RESET_EVENT_CATEGORY_FORM,
-    EVENT_CATEGORY_ADDED,
-    UPDATE_EVENT_CATEGORY
+    RECEIVE_EVENT_CATEGORY_QUESTION,
+    RESET_EVENT_CATEGORY_QUESTION_FORM,
+    UPDATE_EVENT_CATEGORY_QUESTION,
+    RECEIVE_EVENT_CATEGORY_QUESTION_META,
+    EVENT_CATEGORY_QUESTION_ADDED
 } from '../../actions/event-category-actions';
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
@@ -24,27 +25,22 @@ import { VALIDATE } from '../../actions/base-actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 export const DEFAULT_ENTITY = {
-    id                          : 0,
-    name                        : '',
-    code                        : '',
-    description                 : '',
-    session_count               : 0,
-    alternate_count             : 0,
-    lightning_count             : 0,
-    lightning_alternate_count   : 0,
-    voting_visible              : false,
-    chair_visible               : false,
-    allowed_tags                : [],
-    track_groups                : [],
-    extra_questions             : []
+    id                              : 0,
+    class_name                      : '',
+    name                            : '',
+    label                           : '',
+    is_mandatory                    : 0,
+    is_read_only                    : 0,
+    values                          : []
 }
 
 const DEFAULT_STATE = {
     entity      : DEFAULT_ENTITY,
+    allClasses  : [],
     errors      : {}
 };
 
-const eventCategoryReducer = (state = DEFAULT_STATE, action) => {
+const eventCategoryQuestionReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
         case LOGOUT_USER: {
@@ -57,17 +53,22 @@ const eventCategoryReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case SET_CURRENT_SUMMIT:
-        case RESET_EVENT_CATEGORY_FORM: {
+        case RESET_EVENT_CATEGORY_QUESTION_FORM: {
             return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
         }
         break;
-        case UPDATE_EVENT_CATEGORY: {
-            console.log(payload);
+        case RECEIVE_EVENT_CATEGORY_QUESTION_META: {
+            let allClasses = [...payload.response];
+
+            return {...state, allClasses: allClasses }
+        }
+        break;
+        case UPDATE_EVENT_CATEGORY_QUESTION: {
             return {...state,  entity: {...payload}, errors: {} };
         }
         break;
-        case EVENT_CATEGORY_ADDED:
-        case RECEIVE_EVENT_CATEGORY: {
+        case EVENT_CATEGORY_QUESTION_ADDED:
+        case RECEIVE_EVENT_CATEGORY_QUESTION: {
             let entity = {...payload.response};
 
             for(var key in entity) {
@@ -76,7 +77,7 @@ const eventCategoryReducer = (state = DEFAULT_STATE, action) => {
                 }
             }
 
-            return {...state, errors: {}, entity: {...DEFAULT_ENTITY, ...entity} };
+            return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
         }
         break;
         case VALIDATE: {
@@ -88,4 +89,4 @@ const eventCategoryReducer = (state = DEFAULT_STATE, action) => {
     }
 };
 
-export default eventCategoryReducer;
+export default eventCategoryQuestionReducer;

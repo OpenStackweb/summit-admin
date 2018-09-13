@@ -17,7 +17,7 @@ import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import Restrict from '../routes/restrict';
 
-import EditEventCategoryPage from '../pages/events/edit-event-category-page'
+import EventCategoryIdLayout from './event-category-id-layout'
 import EventCategoryListPage from '../pages/events/event-category-list-page'
 import NoMatchPage from "../pages/no-match-page";
 
@@ -32,8 +32,8 @@ class EventCategoryLayout extends React.Component {
 
                 <Switch>
                     <Route exact strict path={match.url} component={EventCategoryListPage}/>
-                    <Route exact strict path={`${match.url}/new`} component={EditEventCategoryPage}/>
-                    <Route exact strict path={`${match.url}/:event_category_id(\\d+)`} component={EditEventCategoryPage}/>
+                    <Route exact strict path={`${match.url}/new`} component={EventCategoryIdLayout}/>
+                    <Route path={`${match.url}/:event_category_id(\\d+)`} component={EventCategoryIdLayout}/>
                     <Route component={NoMatchPage}/>
                 </Switch>
             </div>

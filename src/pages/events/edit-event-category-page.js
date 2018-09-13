@@ -14,7 +14,6 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
-import { Breadcrumb } from 'react-breadcrumbs';
 import EventCategoryForm from '../../components/forms/event-category-form';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getEventCategory, resetEventCategoryForm, saveEventCategory } from "../../actions/event-category-actions";
@@ -26,37 +25,12 @@ class EditEventCategoryPage extends React.Component {
         super(props);
     }
 
-    componentWillMount () {
-        let eventCategoryId = this.props.match.params.event_category_id;
-
-        if (!eventCategoryId) {
-            this.props.resetEventCategoryForm();
-        } else {
-            this.props.getEventCategory(eventCategoryId);
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.event_category_id;
-        let newId = newProps.match.params.event_category_id;
-
-        if (oldId != newId) {
-            if (!newId) {
-                this.props.resetEventCategoryForm();
-            } else {
-                this.props.getEventCategory(newId);
-            }
-        }
-    }
-
     render(){
         let {currentSummit, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
                 <h3>{title} {T.translate("edit_event_category.event_category")}</h3>
                 <hr/>
                 {currentSummit &&
@@ -66,6 +40,7 @@ class EditEventCategoryPage extends React.Component {
                     entity={entity}
                     errors={errors}
                     onSubmit={this.props.saveEventCategory}
+                    onDeleteQuestion={() => {console.log('delete')}}
                 />
                 }
             </div>

@@ -15,7 +15,7 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
-import { Input, TextEditor, TagInput } from 'openstack-uicore-foundation/lib/components'
+import { Input, TextEditor, TagInput, Panel, Table } from 'openstack-uicore-foundation/lib/components'
 
 
 class EventCategoryForm extends React.Component {
@@ -24,7 +24,8 @@ class EventCategoryForm extends React.Component {
 
         this.state = {
             entity: {...props.entity},
-            errors: props.errors
+            errors: props.errors,
+            showQuestions: false,
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -32,6 +33,8 @@ class EventCategoryForm extends React.Component {
         this.handleTagLink = this.handleTagLink.bind(this);
         this.handleTagEdit = this.handleTagEdit.bind(this);
         this.handleTagUnLink = this.handleTagUnLink.bind(this);
+        this.handleEditQuestion = this.handleEditQuestion.bind(this);
+        this.handleNewQuestion = this.handleNewQuestion.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -79,6 +82,23 @@ class EventCategoryForm extends React.Component {
         return '';
     }
 
+    toggleQuestions(ev) {
+        ev.preventDefault();
+        this.setState({showQuestions: !this.state.showQuestions});
+    }
+
+    handleEditQuestion(questionId) {
+        let {currentSummit, entity, history} = this.props;
+        history.push(`/app/summits/${currentSummit.id}/event-categories/${entity.id}/questions/${questionId}`);
+    }
+
+    handleNewQuestion(ev) {
+        let {currentSummit, entity, history} = this.props;
+
+        ev.preventDefault();
+        history.push(`/app/summits/${currentSummit.id}/event-categories/${entity.id}/questions/new`);
+    }
+
     handleTagLink(value) {
         let tags = [...this.state.entity.tags];
         tags.push(value);
@@ -100,13 +120,24 @@ class EventCategoryForm extends React.Component {
     }
 
     render() {
-        let {entity} = this.state;
+        let {entity, showQuestions} = this.state;
         let { currentSummit } = this.props;
 
-        let tagsColumns = [
-            { columnKey: 'tag', value: T.translate("edit_event_category.tag") },
-            { columnKey: 'group', value: T.translate("edit_event_category.group") }
+        let question_columns = [
+            { columnKey: 'id', value: T.translate("general.id") },
+            { columnKey: 'class_name', value: T.translate("edit_event_category_question.class") },
+            { columnKey: 'name', value: T.translate("edit_event_category_question.name") },
+            { columnKey: 'label', value: T.translate("edit_event_category_question.label") },
+            { columnKey: 'is_mandatory', value: T.translate("edit_event_category_question.mandatory") }
         ];
+
+        let question_options = {
+            className: "dataTable",
+            actions: {
+                edit: {onClick: this.handleEditQuestion},
+                delete: { onClick: this.props.onDeleteQuestion }
+            }
+        }
 
         return (
             <form className="event-type-form">
@@ -210,6 +241,22 @@ class EventCategoryForm extends React.Component {
                         </div>
                     </div>
                 </div>
+
+                <hr />
+                {entity.id != 0 &&
+                <Panel show={showQuestions} title={T.translate("edit_event_category.questions")}
+                       handleClick={this.toggleQuestions.bind(this)}>
+                    <button className="btn btn-primary pull-right left-space" onClick={this.handleNewQuestion}>
+                        {T.translate("edit_event_category.add_question")}
+                    </button>
+                    <Table
+                        options={question_options}
+                        data={entity.extra_questions}
+                        columns={question_columns}
+                    />
+                </Panel>
+                }
+
                 <hr />
                 <div className="row form-group">
                     <div className="col-md-12">

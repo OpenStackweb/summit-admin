@@ -33,6 +33,7 @@ import eventTypeListReducer from './reducers/events/event-type-list-reducer';
 import eventTypeReducer from './reducers/events/event-type-reducer';
 import eventCategoryListReducer from './reducers/events/event-category-list-reducer';
 import eventCategoryReducer from './reducers/events/event-category-reducer';
+import eventCategoryQuestionReducer from './reducers/events/event-category-question-reducer';
 import eventCategoryGroupListReducer from './reducers/events/event-category-group-list-reducer';
 import eventCategoryGroupReducer from './reducers/events/event-category-group-reducer';
 import locationListReducer from './reducers/locations/location-list-reducer';
@@ -87,6 +88,7 @@ const reducers = persistCombineReducers(config, {
     currentEventTypeState: eventTypeReducer,
     currentEventCategoryListState: eventCategoryListReducer,
     currentEventCategoryState: eventCategoryReducer,
+    currentEventCategoryQuestionState: eventCategoryQuestionReducer,
     currentEventCategoryGroupListState: eventCategoryGroupListReducer,
     currentEventCategoryGroupState: eventCategoryGroupReducer,
     currentLocationListState: locationListReducer,

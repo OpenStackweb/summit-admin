@@ -36,6 +36,16 @@ export const EVENT_CATEGORY_ADDED          = 'EVENT_CATEGORY_ADDED';
 export const EVENT_CATEGORY_DELETED        = 'EVENT_CATEGORY_DELETED';
 export const EVENT_CATEGORIES_SEEDED       = 'EVENT_CATEGORIES_SEEDED';
 
+
+export const RECEIVE_EVENT_CATEGORY_QUESTION        = 'RECEIVE_EVENT_CATEGORY_QUESTION';
+export const RECEIVE_EVENT_CATEGORY_QUESTION_META   = 'RECEIVE_EVENT_CATEGORY_QUESTION_META';
+export const RESET_EVENT_CATEGORY_QUESTION_FORM     = 'RESET_EVENT_CATEGORY_QUESTION_FORM';
+export const UPDATE_EVENT_CATEGORY_QUESTION         = 'UPDATE_EVENT_CATEGORY_QUESTION';
+export const EVENT_CATEGORY_QUESTION_UPDATED        = 'EVENT_CATEGORY_QUESTION_UPDATED';
+export const EVENT_CATEGORY_QUESTION_ADDED          = 'EVENT_CATEGORY_QUESTION_ADDED';
+export const EVENT_CATEGORY_QUESTION_DELETED        = 'EVENT_CATEGORY_QUESTION_DELETED';
+
+
 export const REQUEST_EVENT_CATEGORY_GROUPS       = 'REQUEST_EVENT_CATEGORY_GROUPS';
 export const RECEIVE_EVENT_CATEGORY_GROUPS       = 'RECEIVE_EVENT_CATEGORY_GROUPS';
 export const RECEIVE_EVENT_CATEGORY_GROUP        = 'RECEIVE_EVENT_CATEGORY_GROUP';
@@ -49,6 +59,8 @@ export const CATEGORY_ADDED_TO_GROUP             = 'CATEGORY_ADDED_TO_GROUP';
 export const CATEGORY_REMOVED_FROM_GROUP         = 'CATEGORY_REMOVED_FROM_GROUP';
 export const GROUP_ADDED_TO_GROUP                = 'GROUP_ADDED_TO_GROUP';
 export const GROUP_REMOVED_FROM_GROUP            = 'GROUP_REMOVED_FROM_GROUP';
+
+
 
 export const getEventCategories = ( ) => (dispatch, getState) => {
 
@@ -83,7 +95,7 @@ export const getEventCategory = (eventCategoryId) => (dispatch, getState) => {
     let { currentSummit }   = currentSummitState;
 
     let params = {
-        expand       : "track_groups, allowed_tags",
+        expand       : "track_groups,allowed_tags,extra_questions",
         access_token : accessToken,
     };
 
@@ -206,6 +218,133 @@ const normalizeEntity = (entity) => {
     return normalizedEntity;
 
 }
+
+
+/***********************************  CATEGORY QUESTIONS ***************************************************/
+
+
+export const getEventCategoryQuestion = (questionId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState, currentEventCategoryState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+    let currentEventCategory = currentEventCategoryState.entity;
+
+    let params = {
+        expand: 'values',
+        access_token : accessToken,
+    };
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_EVENT_CATEGORY_QUESTION),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/tracks/${currentEventCategory.id}/extra-questions/${questionId}`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const getEventCategoryQuestionMeta = () => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_EVENT_CATEGORY_QUESTION_META),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/tracks/extra-questions-metadata`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const resetEventCategoryQuestionForm = () => (dispatch, getState) => {
+    dispatch(createAction(RESET_EVENT_CATEGORY_QUESTION_FORM)({}));
+};
+
+export const saveEventCategoryQuestion = (entity, history) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState, currentEventCategoryState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+    let currentEventCategory = currentEventCategoryState.entity;
+
+
+    dispatch(startLoading());
+
+    let normalizedEntity = normalizeQuestionEntity(entity);
+    let params = { access_token : accessToken };
+
+    if (entity.id) {
+        putRequest(
+            createAction(UPDATE_EVENT_CATEGORY_QUESTION),
+            createAction(EVENT_CATEGORY_QUESTION_UPDATED),
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/tracks/${currentEventCategory.id}/extra-questions/${entity.id}`,
+            normalizedEntity,
+            authErrorHandler,
+            entity
+        )(params)(dispatch)
+            .then((payload) => {
+                dispatch(showSuccessMessage(T.translate("edit_event_category_question.question_saved")));
+            });
+
+    } else {
+        let success_message = {
+            title: T.translate("general.done"),
+            html: T.translate("edit_event_category_question.question_created"),
+            type: 'success'
+        };
+
+        postRequest(
+            createAction(UPDATE_EVENT_CATEGORY_QUESTION),
+            createAction(EVENT_CATEGORY_QUESTION_ADDED),
+            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/tracks/${currentEventCategory.id}/extra-questions`,
+            normalizedEntity,
+            authErrorHandler,
+            entity
+        )(params)(dispatch)
+            .then((payload) => {
+                dispatch(showMessage(
+                    success_message,
+                    () => {
+                        history.replace(`/app/summits/${currentSummit.id}/event-category-groups/${payload.response.id}`)
+                    }
+                ));
+            });
+    }
+}
+
+export const deleteEventCategoryQuestion = (questionId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+    let currentEventCategory = currentEventCategoryState.entity;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(EVENT_CATEGORY_QUESTION_DELETED)({questionId}),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/tracks/${currentEventCategory.id}/extra-questions/${questionId}`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+
 
 
 /***********************************  CATEGORY GROUPS ***************************************************/

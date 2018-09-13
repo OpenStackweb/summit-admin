@@ -14,24 +14,21 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { Input, TextEditor, Panel, Table } from 'openstack-uicore-foundation/lib/components'
-import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/methods'
+import { Input, Table } from 'openstack-uicore-foundation/lib/components'
+import EditableTable from '../tables/editabletable'
 
 
-class FloorForm extends React.Component {
+class EventCategoryQuestionForm extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             entity: {...props.entity},
-            errors: props.errors,
-            showRooms: false,
+            errors: props.errors
         };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleRoomEdit = this.handleRoomEdit.bind(this);
-        this.handleNewRoom = this.handleNewRoom.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -54,8 +51,8 @@ class FloorForm extends React.Component {
         let errors = {...this.state.errors};
         let {value, id} = ev.target;
 
-        if (ev.target.type == 'number') {
-            value = parseInt(ev.target.value);
+        if (ev.target.type == 'checkbox') {
+            value = ev.target.checked;
         }
 
         errors[id] = '';
@@ -65,11 +62,11 @@ class FloorForm extends React.Component {
 
     handleSubmit(ev) {
         let entity = {...this.state.entity};
-        let {locationId} = this.props;
+        let {eventCategory} = this.props;
 
         ev.preventDefault();
 
-        this.props.onSubmit(locationId, entity, this.props.history);
+        this.props.onSubmit(eventCategoryId, entity, this.props.history);
     }
 
     hasErrors(field) {
@@ -81,48 +78,24 @@ class FloorForm extends React.Component {
         return '';
     }
 
-    toggleRooms(ev) {
-        ev.preventDefault();
-
-        this.setState({showRooms: !this.state.showRooms});
-    }
-
-    handleRoomEdit(roomId) {
-        let {currentSummit, locationId, history} = this.props;
-        history.push(`/app/summits/${currentSummit.id}/locations/${locationId}/rooms/${roomId}`);
-    }
-
-    handleNewRoom(ev) {
-        ev.preventDefault();
-
-        let {currentSummit, locationId, history} = this.props;
-        history.push(`/app/summits/${currentSummit.id}/locations/${locationId}/rooms/new`);
-    }
-
     render() {
-        let {entity, showRooms} = this.state;
+        let {entity} = this.state;
 
-        let room_columns = [
-            { columnKey: 'id', value: T.translate("general.id") },
+        let value_columns = [
             { columnKey: 'name', value: T.translate("general.name") },
-            { columnKey: 'capacity', value: T.translate("edit_location.capacity") },
-            { columnKey: 'floor_name', value: T.translate("edit_location.floor") }
+            { columnKey: 'value', value: T.translate("general.value") }
         ];
 
-        let room_options = {
-            className: "dataTable",
-            actions: {
-                edit: {onClick: this.handleRoomEdit},
-                delete: { onClick: this.props.onRoomDelete }
-            }
+        let value_options = {
+            className: "dataTable"
         }
 
         return (
-            <form className="floor-form">
+            <form className="event-category-question-form">
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
                     <div className="col-md-4">
-                        <label> {T.translate("edit_floor.name")} *</label>
+                        <label> {T.translate("edit_event_category_question.name")} *</label>
                         <Input
                             id="name"
                             value={entity.name}
@@ -132,41 +105,47 @@ class FloorForm extends React.Component {
                         />
                     </div>
                     <div className="col-md-4">
-                        <label> {T.translate("edit_floor.number")}</label>
+                        <label> {T.translate("edit_event_category_question.label")} *</label>
                         <Input
-                            id="number"
-                            type="number"
-                            value={entity.number}
+                            id="label"
+                            value={entity.label}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('number')}
+                            error={this.hasErrors('label')}
                         />
                     </div>
                 </div>
                 <div className="row form-group">
-                    <div className="col-md-12">
-                        <label> {T.translate("edit_floor.description")} </label>
-                        <TextEditor
-                            id="description"
-                            value={entity.description}
-                            onChange={this.handleChange}
-                            error={this.hasErrors('description')}
-                        />
+                    <div className="col-md-4 checkboxes-div">
+                        <div className="form-check abc-checkbox">
+                            <input type="checkbox" id="is_mandatory" checked={entity.is_mandatory}
+                                   onChange={this.handleChange} className="form-check-input" />
+                            <label className="form-check-label" htmlFor="is_mandatory">
+                                {T.translate("edit_event_category_question.mandatory")}
+                            </label>
+                        </div>
+                    </div>
+                    <div className="col-md-4 checkboxes-div">
+                        <div className="form-check abc-checkbox">
+                            <input type="checkbox" id="is_read_only" checked={entity.is_read_only}
+                                   onChange={this.handleChange} className="form-check-input" />
+                            <label className="form-check-label" htmlFor="is_read_only">
+                                {T.translate("edit_event_category_question.read_only")}
+                            </label>
+                        </div>
                     </div>
                 </div>
 
                 {entity.id != 0 &&
-                <Panel show={showRooms} title={T.translate("edit_location.rooms")}
-                                     handleClick={this.toggleRooms.bind(this)}>
-                    <button className="btn btn-primary pull-right left-space" onClick={this.handleNewRoom}>
-                        {T.translate("edit_location.add_room")}
-                    </button>
-                    <Table
-                        options={room_options}
-                        data={entity.rooms}
-                        columns={room_columns}
-                    />
-                </Panel>
+                <div className="row">
+                    <div className="col-md-12">
+                        <EditableTable
+                            options={value_options}
+                            data={entity.values}
+                            columns={value_columns}
+                        />
+                    </div>
+                </div>
                 }
 
                 <div className="row">
@@ -180,4 +159,4 @@ class FloorForm extends React.Component {
     }
 }
 
-export default FloorForm;
+export default EventCategoryQuestionForm;

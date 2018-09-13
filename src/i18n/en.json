@@ -83,7 +83,8 @@
     "tickets"                 : "Tickets",
     "ticket_type_list"        : "Ticket Types",
     "push_notifications"      : "Push Notifications",
-    "room_occupancy"          : "Room Occupancy"
+    "room_occupancy"          : "Room Occupancy",
+    "tag_groups"              : "Tag Groups"
   },
   "schedule": {
     "schedule"                              : "Schedule",
@@ -512,8 +513,23 @@
     "tags"                        : "Allowed Tags",
     "tag"                         : "Tag",
     "group"                       : "Group",
+    "questions"                   : "Extra Questions",
+    "add_question"                : "Add Extra Question",
     "category_saved"              : "Event Category saved successfully.",
-    "category_created"            : "Event Category created successfully."
+    "category_created"            : "Event Category created successfully.",
+    "delete_warning"              : "Are you sure you want to delete extra question "
+  },
+  "edit_event_category_question": {
+    "extra_question"            : "Extra Question",
+    "name"                      : "Name",
+    "label"                     : "Label",
+    "class"                     : "Class",
+    "mandatory"                 : "Mandatory",
+    "read_only"                 : "Read Only",
+    "values"                    : "Values",
+    "question_saved"            : "Extra Question saved successfully.",
+    "question_created"          : "Extra Question created successfully.",
+    "delete_warning"            : "Are you sure you want to delete value "
   },
   "event_category_group_list": {
     "event_category_group_list"   : "Event Category Groups",
@@ -750,5 +766,22 @@
     "end_date"        : "End",
     "is_current"      : "Is Current?",
     "actions"         : "Actions"
+  },
+  "tag_group_list": {
+    "tag_groups"               : "Tag Groups",
+    "add_tag_group"            : "Add Tag Group",
+    "name"                     : "Name",
+    "label"                    : "Label",
+    "seed_tag_groups"          : "Seed Tag Groups",
+    "remove_tag_group_warning" : "Are you sure you want to delete tag group"
+  },
+  "edit_tag_group": {
+    "tag_group"         : "Tag Group",
+    "name"              : "Name (lowercase)",
+    "label"             : "Label",
+    "allowed_tags"      : "Allowed Tags",
+    "tag"               : "Tag",
+    "tag_group_saved"   : "Tag Group saved successfully",
+    "tag_group_created" : "Tag Group created successfully"
   }
 }
