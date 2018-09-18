@@ -53,11 +53,9 @@ class EventCategoryGroupListPage extends React.Component {
         history.push(`/app/summits/${currentSummit.id}/event-category-groups/new`);
     }
 
-    handleDelete(groupId, ev) {
+    handleDelete(groupId) {
         let {deleteEventCategoryGroup, eventCategoryGroups} = this.props;
         let group = eventCategoryGroups.find(g => g.id == groupId);
-
-        ev.preventDefault();
 
         swal({
             title: T.translate("general.are_you_sure"),
@@ -85,7 +83,6 @@ class EventCategoryGroupListPage extends React.Component {
         ];
 
         let table_options = {
-            className: "dataTable",
             actions: {
                 edit: {onClick: this.handleEdit},
                 delete: { onClick: this.handleDelete }
@@ -115,7 +112,6 @@ class EventCategoryGroupListPage extends React.Component {
                         options={table_options}
                         data={eventCategoryGroups}
                         columns={columns}
-                        className="dataTable"
                     />
                 </div>
                 }

@@ -254,7 +254,7 @@ class AffiliationsTable extends React.Component {
 
         return (
             <div>
-                <table className="table table-striped table-bordered table-hover dataTable affiliations-table">
+                <table className="table table-striped table-bordered table-hover affiliationsTable">
                     <thead>
                         <tr>
                             <th style={{width: '20%'}}>{T.translate("affiliations.title")}</th>

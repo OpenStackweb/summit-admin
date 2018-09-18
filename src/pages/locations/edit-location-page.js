@@ -82,11 +82,9 @@ class EditLocationPage extends React.Component {
         }).catch(swal.noop);
     }
 
-    handleImageDelete(imageId, ev) {
+    handleImageDelete(imageId) {
         let {deleteLocationImage, entity} = this.props;
         let image = entity.images.find(i => i.id == imageId);
-
-        ev.preventDefault();
 
         swal({
             title: T.translate("general.are_you_sure"),
@@ -102,11 +100,9 @@ class EditLocationPage extends React.Component {
         }).catch(swal.noop);
     }
 
-    handleMapDelete(mapId, ev) {
+    handleMapDelete(mapId) {
         let {deleteLocationMap, entity} = this.props;
         let map = entity.maps.find(m => m.id == mapId);
-
-        ev.preventDefault();
 
         swal({
             title: T.translate("general.are_you_sure"),

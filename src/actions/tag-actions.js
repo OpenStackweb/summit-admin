@@ -37,6 +37,8 @@ export const TAG_GROUP_UPDATED        = 'TAG_GROUP_UPDATED';
 export const TAG_GROUP_ADDED          = 'TAG_GROUP_ADDED';
 export const TAG_GROUP_DELETED        = 'TAG_GROUP_DELETED';
 export const TAG_GROUPS_SEEDED        = 'TAG_GROUPS_SEEDED';
+export const TAG_SEEDED_TO_CATEGORIES = 'TAG_SEEDED_TO_CATEGORIES';
+export const TAGS_COPIED_TO_CATEGORY  = 'TAGS_COPIED_TO_CATEGORY';
 
 export const getTagGroups = ( ) => (dispatch, getState) => {
 
@@ -207,6 +209,48 @@ export const seedTagGroups = () => (dispatch, getState) => {
         }
     );
 };
+
+export const copyTagToAllCategories = (tagId) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return postRequest(
+        null,
+        createAction(TAG_SEEDED_TO_CATEGORIES),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-tag-groups/all/allowed-tags/${tagId}/seed-on-tracks`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(showSuccessMessage(T.translate("edit_tag_group.tag_seeded")));
+        }
+    );
+}
+
+export const copyAllTagsToCategory = (tagGroupId, categoryId) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return postRequest(
+        null,
+        createAction(TAGS_COPIED_TO_CATEGORY),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-tag-groups/${tagGroupId}/allowed-tags/all/copy/tracks/${categoryId}`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(showSuccessMessage(T.translate("edit_tag_group.tags_copied")));
+        }
+    );
+}
 
 
 const normalizeEntity = (entity) => {

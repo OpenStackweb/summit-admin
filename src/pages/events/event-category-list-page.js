@@ -62,11 +62,9 @@ class EventCategoryListPage extends React.Component {
         history.push(`/app/summits/${currentSummit.id}/event-categories/new`);
     }
 
-    handleDelete(categoryId, ev) {
+    handleDelete(categoryId) {
         let {deleteEventCategory, eventCategories} = this.props;
         let category = eventCategories.find(c => c.id == categoryId);
-
-        ev.preventDefault();
 
         swal({
             title: T.translate("general.are_you_sure"),
@@ -93,7 +91,6 @@ class EventCategoryListPage extends React.Component {
         ];
 
         let table_options = {
-            className: "dataTable",
             actions: {
                 edit: {onClick: this.handleEdit},
                 delete: { onClick: this.handleDelete }
@@ -128,7 +125,6 @@ class EventCategoryListPage extends React.Component {
                         options={table_options}
                         data={eventCategories}
                         columns={columns}
-                        className="dataTable"
                     />
                 </div>
                 }

@@ -17,7 +17,6 @@ import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import {findElementPos, queryTags} from 'openstack-uicore-foundation/lib/methods'
 import { Input, SimpleLinkList } from 'openstack-uicore-foundation/lib/components'
 
-
 class TagGroupForm extends React.Component {
     constructor(props) {
         super(props);
@@ -30,7 +29,6 @@ class TagGroupForm extends React.Component {
         this.handleAllowedTagLink = this.handleAllowedTagLink.bind(this);
         this.handleAllowedTagUnLink = this.handleAllowedTagUnLink.bind(this);
         this.getTags = this.getTags.bind(this);
-        this.handleCopyToCategory = this.handleCopyToCategory.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -99,16 +97,9 @@ class TagGroupForm extends React.Component {
         queryTags(null, input, callback);
     }
 
-    handleCopyToCategory(tagId, ev) {
-        ev.preventDefault();
-
-        alert('WIP');
-
-        // TODO
-    }
-
     render() {
         let {entity} = this.state;
+        let {currentSummit} = this.props;
 
         let allowedTagsColumns = [
             { columnKey: 'tag', value: T.translate("edit_tag_group.tag") }
@@ -126,8 +117,9 @@ class TagGroupForm extends React.Component {
                 custom: [
                     {
                         name: 'copy_to_category',
+                        tooltip: 'copy to all categories',
                         icon: <i className="fa fa-files-o"></i>,
-                        onClick: this.handleCopyToCategory
+                        onClick: this.props.onCopyTag
                     }
                 ]
             }
@@ -147,8 +139,6 @@ class TagGroupForm extends React.Component {
                             error={this.hasErrors('name')}
                         />
                     </div>
-                </div>
-                <div className="row form-group">
                     <div className="col-md-6">
                         <label> {T.translate("edit_tag_group.label")}</label>
                         <Input

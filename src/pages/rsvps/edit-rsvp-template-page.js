@@ -29,11 +29,9 @@ class EditRsvpTemplatePage extends React.Component {
         this.handleReorderQuestion = this.handleReorderQuestion.bind(this);
     }
 
-    handleDeleteQuestion(rsvpQuestionId, ev) {
+    handleDeleteQuestion(rsvpQuestionId) {
         let {deleteRsvpQuestion, entity} = this.props;
         let question = entity.questions.find(q => q.id == rsvpQuestionId);
-
-        ev.preventDefault();
 
         swal({
             title: T.translate("general.are_you_sure"),

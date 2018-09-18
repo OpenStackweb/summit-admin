@@ -110,7 +110,6 @@ class FloorForm extends React.Component {
         ];
 
         let room_options = {
-            className: "dataTable",
             actions: {
                 edit: {onClick: this.handleRoomEdit},
                 delete: { onClick: this.props.onRoomDelete }

@@ -1,0 +1,121 @@
+/*
+ * This combined file was created by the DataTables downloader builder:
+ *   https://datatables.net/download
+ *
+ * To rebuild or modify this file with the latest versions of the included
+ * software please visit:
+ *   https://datatables.net/download/#bs/pdfmake-0.1.18,dt-1.10.10,b-1.1.0,b-html5-1.1.0,b-print-1.1.0,r-2.0.0
+ *
+ * Included libraries:
+ *   pdfmake 0.1.18, DataTables 1.10.10, Buttons 1.1.0, HTML5 export 1.1.0, Print view 1.1.0, Responsive 2.0.0
+ */
+
+table.occupancyTable {
+    clear: both;
+    margin-top: 6px !important;
+    margin-bottom: 6px !important;
+    max-width: none !important
+}
+table.occupancyTable td,
+table.occupancyTable th {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box
+}
+table.occupancyTable td.occupancyTables_empty,
+table.occupancyTable th.occupancyTables_empty {
+    text-align: center
+}
+table.occupancyTable.nowrap th,
+table.occupancyTable.nowrap td {
+    white-space: nowrap
+}
+
+table.occupancyTable thead>tr>th.sorting_asc,
+table.occupancyTable thead>tr>th.sorting_desc,
+table.occupancyTable thead>tr>th.sorting,
+table.occupancyTable thead>tr>td.sorting_asc,
+table.occupancyTable thead>tr>td.sorting_desc,
+table.occupancyTable thead>tr>td.sorting {
+    padding-right: 30px
+}
+table.occupancyTable thead>tr>th:active,
+table.occupancyTable thead>tr>td:active {
+    outline: none
+}
+table.occupancyTable thead .sorting,
+table.occupancyTable thead .sorting_asc,
+table.occupancyTable thead .sorting_desc,
+table.occupancyTable thead .sorting_asc_disabled,
+table.occupancyTable thead .sorting_desc_disabled {
+    cursor: pointer;
+    position: relative
+}
+table.occupancyTable thead .sorting:after,
+table.occupancyTable thead .sorting_asc:after,
+table.occupancyTable thead .sorting_desc:after,
+table.occupancyTable thead .sorting_asc_disabled:after,
+table.occupancyTable thead .sorting_desc_disabled:after {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    display: block;
+    font-family: 'Glyphicons Halflings';
+    opacity: 0.5
+}
+table.occupancyTable thead .sorting:after {
+    opacity: 0.2;
+    content: "\e150"
+}
+table.occupancyTable thead .sorting_asc:after {
+    content: "\e155"
+}
+table.occupancyTable thead .sorting_desc:after {
+    content: "\e156"
+}
+table.occupancyTable thead .sorting_asc_disabled:after,
+table.occupancyTable thead .sorting_desc_disabled:after {
+    color: #eee
+}
+
+table.table-bordered.occupancyTable {
+    border-collapse: separate !important
+}
+table.table-bordered.occupancyTable th,
+table.table-bordered.occupancyTable td {
+    border-left-width: 0
+}
+table.table-bordered.occupancyTable th:last-child,
+table.table-bordered.occupancyTable th:last-child,
+table.table-bordered.occupancyTable td:last-child,
+table.table-bordered.occupancyTable td:last-child {
+    border-right-width: 0
+}
+table.table-bordered.occupancyTable tbody th,
+table.table-bordered.occupancyTable tbody td {
+    border-bottom-width: 0
+}
+
+table.occupancyTable>tbody>tr.child {
+    padding: 0.5em 1em
+}
+table.occupancyTable>tbody>tr.child:hover {
+    background: transparent !important
+}
+table.occupancyTable>tbody>tr.child ul {
+    display: inline-block;
+    list-style-type: none;
+    margin: 0;
+    padding: 0
+}
+table.occupancyTable>tbody>tr.child ul li {
+    border-bottom: 1px solid #efefef;
+    padding: 0.5em 0
+}
+table.occupancyTable>tbody>tr.child ul li:first-child {
+    padding-top: 0
+}
+table.occupancyTable>tbody>tr.child ul li:last-child {
+    border-bottom: none
+}
+

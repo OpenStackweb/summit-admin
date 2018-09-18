@@ -15,7 +15,14 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
-import { getEventCategoryQuestion, resetEventCategoryQuestionForm, saveEventCategoryQuestion } from "../../actions/event-category-actions";
+import {
+    getEventCategoryQuestion,
+    resetEventCategoryQuestionForm,
+    saveEventCategoryQuestion,
+    getEventCategoryQuestionMeta,
+    saveEventCategoryQuestionValue,
+    deleteEventCategoryQuestionValue
+} from "../../actions/event-category-actions";
 import EventCategoryQuestionForm from "../../components/forms/event-category-question-form";
 //import '../../styles/edit-summit-attendee-page.less';
 
@@ -23,6 +30,9 @@ class EditEventCategoryQuestionPage extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.handleSaveValue = this.handleSaveValue.bind(this);
+        this.handleDeleteValue = this.handleDeleteValue.bind(this);
     }
 
     componentWillMount () {
@@ -31,8 +41,10 @@ class EditEventCategoryQuestionPage extends React.Component {
         if (!eventCategoryQuestionId) {
             this.props.resetEventCategoryQuestionForm();
         } else {
-            //this.props.getEventCategoryQuestion(eventCategoryQuestionId);
+            this.props.getEventCategoryQuestion(eventCategoryQuestionId);
         }
+
+        this.props.getEventCategoryQuestionMeta();
     }
 
     componentWillReceiveProps(newProps) {
@@ -43,15 +55,29 @@ class EditEventCategoryQuestionPage extends React.Component {
             if (!newId) {
                 this.props.resetEventCategoryQuestionForm();
             } else {
-                //this.props.getEventCategoryQuestion(newId);
+                this.props.getEventCategoryQuestion(newId);
             }
         }
     }
 
+    handleSaveValue(value) {
+        let {entity, history} = this.props;
+
+        this.props.saveEventCategoryQuestionValue(entity.id, value, history);
+    }
+
+    handleDeleteValue(valueId) {
+        let {entity} = this.props;
+
+        this.props.deleteEventCategoryQuestionValue(entity.id, valueId);
+    }
+
     render(){
-        let {currentSummit, entity, errors, match} = this.props;
+        let {currentSummit, currentEventCategory, allClasses, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+
+        if (!currentEventCategory.id) return (<div></div>);
 
         return(
             <div className="container">
@@ -62,8 +88,11 @@ class EditEventCategoryQuestionPage extends React.Component {
                 <EventCategoryQuestionForm
                     history={this.props.history}
                     entity={entity}
+                    allClasses={allClasses}
                     errors={errors}
-                    onSubmit={this.props.saveEventCategory}
+                    onSubmit={this.props.saveEventCategoryQuestion}
+                    onSaveValue={this.handleSaveValue}
+                    onDeleteValue={this.handleDeleteValue}
                 />
                 }
             </div>
@@ -71,8 +100,9 @@ class EditEventCategoryQuestionPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState ,currentEventCategoryQuestionState }) => ({
+const mapStateToProps = ({ currentSummitState, currentEventCategoryState, currentEventCategoryQuestionState }) => ({
     currentSummit : currentSummitState.currentSummit,
+    currentEventCategory: currentEventCategoryState.entity,
     ...currentEventCategoryQuestionState
 })
 
@@ -80,6 +110,10 @@ export default connect (
     mapStateToProps,
     {
         resetEventCategoryQuestionForm,
-        getEventCategoryQuestion
+        getEventCategoryQuestion,
+        saveEventCategoryQuestion,
+        getEventCategoryQuestionMeta,
+        saveEventCategoryQuestionValue,
+        deleteEventCategoryQuestionValue
     }
 )(EditEventCategoryQuestionPage);

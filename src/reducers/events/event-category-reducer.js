@@ -16,7 +16,8 @@ import
     RECEIVE_EVENT_CATEGORY,
     RESET_EVENT_CATEGORY_FORM,
     EVENT_CATEGORY_ADDED,
-    UPDATE_EVENT_CATEGORY
+    UPDATE_EVENT_CATEGORY,
+    EVENT_CATEGORY_QUESTION_DELETED, EVENT_CATEGORY_QUESTION_ADDED
 } from '../../actions/event-category-actions';
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
@@ -41,6 +42,7 @@ export const DEFAULT_ENTITY = {
 
 const DEFAULT_STATE = {
     entity      : DEFAULT_ENTITY,
+    allClasses  : [],
     errors      : {}
 };
 
@@ -77,6 +79,20 @@ const eventCategoryReducer = (state = DEFAULT_STATE, action) => {
             }
 
             return {...state, errors: {}, entity: {...DEFAULT_ENTITY, ...entity} };
+        }
+        break;
+        case EVENT_CATEGORY_QUESTION_DELETED: {
+            let {questionId} = payload;
+            let extra_questions = state.entity.extra_questions.filter(eq => eq.id != questionId);
+
+            return {...state, entity: { ...state.entity, extra_questions: extra_questions}};
+        }
+        break;
+        case EVENT_CATEGORY_QUESTION_ADDED: {
+            let entity = {...payload.response};
+            let extra_questions = [...state.entity.extra_questions, entity];
+
+            return {...state, entity: { ...state.entity, extra_questions: extra_questions}};
         }
         break;
         case VALIDATE: {

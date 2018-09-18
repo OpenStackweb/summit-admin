@@ -44,11 +44,9 @@ class SummitSpeakerListPage extends React.Component {
         history.push(`/app/speakers/${speaker_id}`);
     }
 
-    handleDelete(speakerId, ev) {
+    handleDelete(speakerId) {
         let {deleteSpeaker, speakers} = this.props;
         let speaker = speakers.find(s => s.id == speakerId);
-
-        ev.preventDefault();
 
         swal({
             title: T.translate("general.are_you_sure"),
@@ -96,7 +94,6 @@ class SummitSpeakerListPage extends React.Component {
         ];
 
         let table_options = {
-            className: "dataTable",
             sortCol: (order == 'last_name') ? 'name' : order,
             sortDir: orderDir,
             actions: {
@@ -130,7 +127,6 @@ class SummitSpeakerListPage extends React.Component {
                         data={speakers}
                         columns={columns}
                         onSort={this.handleSort}
-                        className="dataTable"
                     />
                     <Pagination
                         bsSize="medium"

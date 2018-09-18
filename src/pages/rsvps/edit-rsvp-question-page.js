@@ -29,12 +29,10 @@ class EditRsvpQuestionPage extends React.Component {
         this.handleValueReorder = this.handleValueReorder.bind(this);
     }
 
-    handleValueDelete(valueId, ev) {
+    handleValueDelete(valueId) {
         let {rsvpQuestionId, rsvpTemplateId} = this.state;
         let {deleteRsvpQuestionValue, entity} = this.props;
         let value = entity.values.find(v => v.id == valueId);
-
-        ev.preventDefault();
 
         swal({
             title: T.translate("general.are_you_sure"),

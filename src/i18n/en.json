@@ -45,6 +45,8 @@
     "are_you_sure"        : "Are you sure?",
     "yes_delete"          : "Yes, delete.",
     "id"                  : "Id",
+    "label"               : "Label",
+    "value"               : "Value",
     "attention"           : "Attention!",
     "done"                : "Done!",
     "email_sent"          : "Email sent successfully.",
@@ -524,12 +526,22 @@
     "name"                      : "Name",
     "label"                     : "Label",
     "class"                     : "Class",
+    "content"                   : "Content",
+    "empty_string"              : "Empty String",
+    "initial_value"             : "Initial Value",
+    "default_value"             : "Default Value",
     "mandatory"                 : "Mandatory",
     "read_only"                 : "Read Only",
+    "country_selector"          : "Is Country Selector",
+    "multi_select"              : "Is Multi Select",
     "values"                    : "Values",
     "question_saved"            : "Extra Question saved successfully.",
     "question_created"          : "Extra Question created successfully.",
-    "delete_warning"            : "Are you sure you want to delete value "
+    "delete_warning"            : "Are you sure you want to delete value ",
+    "placeholders": {
+      "select_class"        : "Select Class",
+      "select_default_value": "Select Default Value"
+    }
   },
   "event_category_group_list": {
     "event_category_group_list"   : "Event Category Groups",
@@ -782,6 +794,10 @@
     "allowed_tags"      : "Allowed Tags",
     "tag"               : "Tag",
     "tag_group_saved"   : "Tag Group saved successfully",
-    "tag_group_created" : "Tag Group created successfully"
+    "tag_group_created" : "Tag Group created successfully",
+    "tag_seeded"        : "Tag was copied to all categories",
+    "copy_tags"         : "Copy Tags",
+    "select_category"   : "Select Category",
+    "tags_copied"       : "All tags copied successfully"
   }
 }

@@ -129,7 +129,6 @@ class RoomOccupancyPage extends React.Component {
         ];
 
         let table_options = {
-            className: "dataTable",
             sortCol: (order == 'last_name') ? 'name' : order,
             sortDir: orderDir,
             actions: {
@@ -187,7 +186,6 @@ class RoomOccupancyPage extends React.Component {
                             data={events}
                             columns={columns}
                             onSort={this.handleSort}
-                            className="dataTable"
                         />
                         <Pagination
                             bsSize="medium"

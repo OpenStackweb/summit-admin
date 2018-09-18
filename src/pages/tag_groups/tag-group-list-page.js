@@ -52,11 +52,9 @@ class TagGroupListPage extends React.Component {
         history.push(`/app/summits/${currentSummit.id}/tag-groups/${tag_group_id}`);
     }
 
-    handleDelete(tagGroupId, ev) {
+    handleDelete(tagGroupId) {
         let {deleteTagGroup, tagGroups} = this.props;
         let tagGroup = tagGroups.find(tg => tg.id == tagGroupId);
-
-        ev.preventDefault();
 
         swal({
             title: T.translate("general.are_you_sure"),
@@ -96,7 +94,6 @@ class TagGroupListPage extends React.Component {
         ];
 
         let table_options = {
-            className: "dataTable",
             actions: {
                 edit: { onClick: this.handleEdit },
                 delete: { onClick: this.handleDelete }

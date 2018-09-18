@@ -49,11 +49,9 @@ class EditFloorPage extends React.Component {
         }
     }
 
-    handleRoomDelete(roomId, ev) {
+    handleRoomDelete(roomId) {
         let {deleteRoom, entity, currentLocation} = this.props;
         let room = entity.rooms.find(r => r.id == roomId);
-
-        ev.preventDefault();
 
         swal({
             title: T.translate("general.are_you_sure"),

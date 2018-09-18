@@ -52,8 +52,6 @@ class EventCategoryIdLayout extends React.Component {
         let { match, currentEventCategory } = this.props;
         let breadcrumb = currentEventCategory.id ? currentEventCategory.name : T.translate("general.new");
 
-        if (!currentEventCategory.id) return (<div></div>);
-
         return(
             <div>
                 <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
@@ -64,8 +62,8 @@ class EventCategoryIdLayout extends React.Component {
                             <div>
                                 <Breadcrumb data={{ title: T.translate("edit_event_category.questions"), pathname: match.url }} ></Breadcrumb>
                                 <Switch>
-                                    <Route exact strict path={`${props.match.url}/:category_question_id(\\d+)`} component={EditEventCategoryQuestionPage} />
                                     <Route exact strict path={`${props.match.url}/new`} component={EditEventCategoryQuestionPage} />
+                                    <Route exact strict path={`${props.match.url}/:category_question_id(\\d+)`} component={EditEventCategoryQuestionPage} />
                                     <Route component={NoMatchPage}/>
                                 </Switch>
                             </div>

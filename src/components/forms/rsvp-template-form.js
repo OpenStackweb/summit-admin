@@ -99,7 +99,6 @@ class RsvpTemplateForm extends React.Component {
         ];
 
         let table_options = {
-            className: "dataTable",
             actions: {
                 edit: { onClick: this.handleEditQuestion },
                 delete: { onClick: onQuestionDelete }

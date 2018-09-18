@@ -32,11 +32,9 @@ class EditSummitPage extends React.Component {
         this.handleSPlanDelete = this.handleSPlanDelete.bind(this);
     }
 
-    handleSPlanDelete(selectionPlanId, ev) {
+    handleSPlanDelete(selectionPlanId) {
         let {currentSummit, deleteSelectionPlan} = this.props;
         let selectionPlan = currentSummit.selection_plans.find(sp => sp.id == selectionPlanId);
-
-        ev.preventDefault();
 
         swal({
             title: T.translate("general.are_you_sure"),

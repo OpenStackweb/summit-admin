@@ -60,11 +60,9 @@ class TicketTypeListPage extends React.Component {
         this.props.seedTicketTypes();
     }
 
-    handleDelete(ticketTypeId, ev) {
+    handleDelete(ticketTypeId) {
         let {deleteTicketType, ticketTypes} = this.props;
         let ticketType = ticketTypes.find(t => t.id == ticketTypeId);
-
-        ev.preventDefault();
 
         swal({
             title: T.translate("general.are_you_sure"),
@@ -98,7 +96,6 @@ class TicketTypeListPage extends React.Component {
         ];
 
         let table_options = {
-            className: "dataTable",
             sortCol: order,
             sortDir: orderDir,
             actions: {
@@ -133,7 +130,6 @@ class TicketTypeListPage extends React.Component {
                         data={ticketTypes}
                         columns={columns}
                         onSort={this.handleSort}
-                        className="dataTable"
                     />
                 }
 

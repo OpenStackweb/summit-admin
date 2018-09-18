@@ -63,9 +63,7 @@ class SummitAttendeeListPage extends React.Component {
         history.push(`/app/summits/${currentSummit.id}/attendees/${attendee_id}`);
     }
 
-    handleViewSchedule(attendee_id, ev) {
-        ev.preventDefault();
-
+    handleViewSchedule(attendee_id) {
         let {attendees} = this.props;
         let attendee = attendees.find(a => a.id == attendee_id);
 
@@ -109,11 +107,9 @@ class SummitAttendeeListPage extends React.Component {
         history.push(`/app/summits/${currentSummit.id}/attendees/new`);
     }
 
-    handleDeleteAttendee(attendeeId, ev) {
+    handleDeleteAttendee(attendeeId) {
         let {deleteAttendee, attendees} = this.props;
         let attendee = attendees.find(a => a.id == attendeeId);
-
-        ev.preventDefault();
 
         swal({
             title: T.translate("general.are_you_sure"),
@@ -144,7 +140,6 @@ class SummitAttendeeListPage extends React.Component {
         ];
 
         let table_options = {
-            className: "dataTable",
             sortCol: (order == 'last_name') ? 'name' : order,
             sortDir: orderDir,
             actions: {
@@ -153,6 +148,7 @@ class SummitAttendeeListPage extends React.Component {
                 custom: [
                     {
                         name: 'show_schedule',
+                        tooltip: 'show schedule',
                         icon: <i className="fa fa-list"></i>,
                         onClick: this.handleViewSchedule,
                         display: this.hasSchedule
@@ -192,7 +188,6 @@ class SummitAttendeeListPage extends React.Component {
                         data={attendees}
                         columns={columns}
                         onSort={this.handleSort}
-                        className="dataTable"
                     />
                     <Pagination
                         bsSize="medium"

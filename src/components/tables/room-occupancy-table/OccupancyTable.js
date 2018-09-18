@@ -4,7 +4,7 @@ import OccupancyTableCell from './OccupancyTableCell';
 import OccupancyTableRow from './OccupancyTableRow';
 import OccupancyActionsTableCell from './OccupancyActionsTableCell';
 
-import './datatables.css';
+import './occupancy-table.css';
 
 const defaults = {
     sortFunc: (a,b) => (a < b ? -1 : (a > b ? 1 : 0)),

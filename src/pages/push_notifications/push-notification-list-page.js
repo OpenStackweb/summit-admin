@@ -62,11 +62,9 @@ class PushNotificationListPage extends React.Component {
         history.push(`/app/summits/${currentSummit.id}/push-notifications/${push_notification_id}`);
     }
 
-    handleDelete(pushNotificationId, ev) {
+    handleDelete(pushNotificationId) {
         let {deletePushNotification, pushNotifications} = this.props;
         let pushNotification = pushNotifications.find(n => n.id == pushNotificationId);
-
-        ev.preventDefault();
 
         swal({
             title: T.translate("general.are_you_sure"),
@@ -132,7 +130,6 @@ class PushNotificationListPage extends React.Component {
         ];
 
         let table_options = {
-            className: "dataTable",
             sortCol: order,
             sortDir: orderDir,
             actions: {
@@ -196,7 +193,6 @@ class PushNotificationListPage extends React.Component {
                             data={pushNotifications}
                             columns={columns}
                             onSort={this.handleSort}
-                            className="dataTable"
                         />
                         <Pagination
                             bsSize="medium"

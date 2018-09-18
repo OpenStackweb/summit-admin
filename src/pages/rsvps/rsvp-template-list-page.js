@@ -56,11 +56,9 @@ class RsvpTemplateListPage extends React.Component {
         history.push(`/app/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}`);
     }
 
-    handleDelete(rsvpTemplateId, ev) {
+    handleDelete(rsvpTemplateId) {
         let {deleteRsvpTemplate, rsvpTemplates} = this.props;
         let rsvpTemplate = rsvpTemplates.find(r => r.id == rsvpTemplateId);
-
-        ev.preventDefault();
 
         swal({
             title: T.translate("general.are_you_sure"),
@@ -105,7 +103,6 @@ class RsvpTemplateListPage extends React.Component {
         ];
 
         let table_options = {
-            className: "dataTable",
             sortCol: order,
             sortDir: orderDir,
             actions: {
@@ -145,7 +142,6 @@ class RsvpTemplateListPage extends React.Component {
                         data={rsvpTemplates}
                         columns={columns}
                         onSort={this.handleSort}
-                        className="dataTable"
                     />
                     <Pagination
                         bsSize="medium"

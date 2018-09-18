@@ -58,11 +58,9 @@ class LocationListPage extends React.Component {
         this.props.exportLocations();
     }
 
-    handleDelete(locationId, ev) {
+    handleDelete(locationId) {
         let {deleteLocation, locations} = this.props;
         let location = locations.find(p => p.id == locationId);
-
-        ev.preventDefault();
 
         swal({
             title: T.translate("general.are_you_sure"),
@@ -92,7 +90,6 @@ class LocationListPage extends React.Component {
         ];
 
         let table_options = {
-            className: "dataTable",
             actions: {
                 edit: { onClick: this.handleEdit },
                 delete: { onClick: this.handleDelete }

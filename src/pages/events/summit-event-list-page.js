@@ -85,11 +85,9 @@ class SummitEventListPage extends React.Component {
         history.push(`/app/summits/${currentSummit.id}/events/new`);
     }
 
-    handleDeleteEvent(eventId, ev) {
+    handleDeleteEvent(eventId) {
         let {deleteEvent, events} = this.props;
         let event = events.find(e => e.id == eventId);
-
-        ev.preventDefault();
 
         swal({
             title: T.translate("general.are_you_sure"),
@@ -118,7 +116,6 @@ class SummitEventListPage extends React.Component {
         ];
 
         let table_options = {
-            className: "dataTable",
             sortCol: (order == 'last_name') ? 'name' : order,
             sortDir: orderDir,
             actions: {
@@ -161,7 +158,6 @@ class SummitEventListPage extends React.Component {
                         data={events}
                         columns={columns}
                         onSort={this.handleSort}
-                        className="dataTable"
                     />
                     <Pagination
                         bsSize="medium"

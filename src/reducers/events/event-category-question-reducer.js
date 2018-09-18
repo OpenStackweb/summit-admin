@@ -17,7 +17,11 @@ import
     RESET_EVENT_CATEGORY_QUESTION_FORM,
     UPDATE_EVENT_CATEGORY_QUESTION,
     RECEIVE_EVENT_CATEGORY_QUESTION_META,
-    EVENT_CATEGORY_QUESTION_ADDED
+    EVENT_CATEGORY_QUESTION_ADDED,
+    UPDATE_EVENT_CATEGORY_QUESTION_VALUE,
+    EVENT_CATEGORY_QUESTION_VALUE_ADDED,
+    EVENT_CATEGORY_QUESTION_VALUE_UPDATED,
+    EVENT_CATEGORY_QUESTION_VALUE_DELETED
 } from '../../actions/event-category-actions';
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
@@ -29,8 +33,14 @@ export const DEFAULT_ENTITY = {
     class_name                      : '',
     name                            : '',
     label                           : '',
+    content                         : '',
+    empty_string                    : '',
+    initial_value                   : '',
     is_mandatory                    : 0,
     is_read_only                    : 0,
+    is_country_selector             : 0,
+    is_multi_select                 : 0,
+    default_value_id                : 0,
     values                          : []
 }
 
@@ -67,7 +77,10 @@ const eventCategoryQuestionReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  entity: {...payload}, errors: {} };
         }
         break;
-        case EVENT_CATEGORY_QUESTION_ADDED:
+        case UPDATE_EVENT_CATEGORY_QUESTION_VALUE: {
+            return {...state, entity: {...state.entity, values: [...state.entity.values, payload]}, errors: {} };
+        }
+        break;
         case RECEIVE_EVENT_CATEGORY_QUESTION: {
             let entity = {...payload.response};
 
@@ -78,6 +91,28 @@ const eventCategoryQuestionReducer = (state = DEFAULT_STATE, action) => {
             }
 
             return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
+        }
+        break;
+        case EVENT_CATEGORY_QUESTION_VALUE_UPDATED: {
+            let newValue = {...payload.response};
+            let oldValues = state.entity.values.filter(v => v.id != newValue.id);
+            let values = [...oldValues, newValue];
+
+            return {...state, entity: {...state.entity, values: values}, errors: {} };
+        }
+        break;
+        case EVENT_CATEGORY_QUESTION_VALUE_ADDED: {
+            let newValue = {...payload.response};
+            let values = [...state.entity.values, newValue];
+
+            return {...state, entity: {...state.entity, values: values}, errors: {} };
+        }
+        break;
+        case EVENT_CATEGORY_QUESTION_VALUE_DELETED: {
+            let {valueId} = payload;
+            let values = state.entity.values.filter(v => v.id != valueId);
+
+            return {...state, entity: {...state.entity, values: values}};
         }
         break;
         case VALIDATE: {

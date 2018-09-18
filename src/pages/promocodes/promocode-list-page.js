@@ -70,11 +70,9 @@ class PromocodeListPage extends React.Component {
         this.props.exportPromocodes(term, order, orderDir, type);
     }
 
-    handleDelete(promocodeId, ev) {
+    handleDelete(promocodeId) {
         let {deletePromocode, promocodes} = this.props;
         let promocode = promocodes.find(p => p.id == promocodeId);
-
-        ev.preventDefault();
 
         swal({
             title: T.translate("general.are_you_sure"),
@@ -138,7 +136,6 @@ class PromocodeListPage extends React.Component {
         ];
 
         let table_options = {
-            className: "dataTable",
             sortCol: order,
             sortDir: orderDir,
             actions: {
@@ -194,7 +191,6 @@ class PromocodeListPage extends React.Component {
                         data={promocodes}
                         columns={columns}
                         onSort={this.handleSort}
-                        className="dataTable"
                     />
                     <Pagination
                         bsSize="medium"

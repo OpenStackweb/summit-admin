@@ -199,7 +199,6 @@ class LocationForm extends React.Component {
         ];
 
         let floor_options = {
-            className: "dataTable",
             actions: {
                 edit: {onClick: this.handleFloorEdit},
                 delete: { onClick: this.props.onFloorDelete }
@@ -214,7 +213,6 @@ class LocationForm extends React.Component {
         ];
 
         let room_options = {
-            className: "dataTable",
             actions: {
                 edit: {onClick: this.handleRoomEdit},
                 delete: { onClick: this.props.onRoomDelete }
@@ -227,7 +225,6 @@ class LocationForm extends React.Component {
         ];
 
         let image_options = {
-            className: "dataTable",
             actions: {
                 edit: {onClick: this.handleImageEdit},
                 delete: { onClick: this.props.onImageDelete }
@@ -240,7 +237,6 @@ class LocationForm extends React.Component {
         ];
 
         let map_options = {
-            className: "dataTable",
             actions: {
                 edit: {onClick: this.handleMapEdit},
                 delete: { onClick: this.props.onMapDelete }
@@ -444,7 +440,6 @@ class LocationForm extends React.Component {
                         options={floor_options}
                         data={entity.floors}
                         columns={floor_columns}
-                        className="dataTable"
                     />
                 </Panel>
                 }
@@ -459,7 +454,6 @@ class LocationForm extends React.Component {
                         options={room_options}
                         data={entity.rooms}
                         columns={room_columns}
-                        className="dataTable"
                     />
                 </Panel>
                 }
@@ -476,7 +470,6 @@ class LocationForm extends React.Component {
                                 options={image_options}
                                 data={entity.images}
                                 columns={image_columns}
-                                className="dataTable"
                             />
                         </div>
                     </div>
@@ -490,7 +483,6 @@ class LocationForm extends React.Component {
                                 options={map_options}
                                 data={entity.maps}
                                 columns={map_columns}
-                                className="dataTable"
                             />
                         </div>
                     </div>

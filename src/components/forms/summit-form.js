@@ -103,9 +103,8 @@ class SummitForm extends React.Component {
         this.setState({showSection: newShowSection});
     }
 
-    handleSPlanEdit(selectionPlanId, ev) {
+    handleSPlanEdit(selectionPlanId) {
         let {entity, history} = this.props;
-        ev.preventDefault();
         history.push(`/app/summits/${entity.id}/selection-plans/${selectionPlanId}`);
     }
 
@@ -127,7 +126,6 @@ class SummitForm extends React.Component {
         ];
 
         let splan_table_options = {
-            className: "dataTable",
             actions: {
                 edit: { onClick: this.handleSPlanEdit },
                 delete: { onClick: onSPlanDelete }
@@ -347,7 +345,6 @@ class SummitForm extends React.Component {
                             options={splan_table_options}
                             data={entity.selection_plans}
                             columns={splan_columns}
-                            className="dataTable"
                         />
                     </div>
                     }

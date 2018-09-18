@@ -132,10 +132,9 @@ class EventCategoryForm extends React.Component {
         ];
 
         let question_options = {
-            className: "dataTable",
             actions: {
                 edit: {onClick: this.handleEditQuestion},
-                delete: { onClick: this.props.onDeleteQuestion }
+                delete: { onClick: this.props.onDeleteQuestion}
             }
         }
 
@@ -257,7 +256,6 @@ class EventCategoryForm extends React.Component {
                 </Panel>
                 }
 
-                <hr />
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_event_category.tags")} </label>

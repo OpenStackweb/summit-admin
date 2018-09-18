@@ -71,11 +71,9 @@ class SpeakerAttendanceListPage extends React.Component {
         this.props.getAttendances(term, page, perPage, order, orderDir);
     }
 
-    handleDeleteAttendance(attendanceId, ev) {
+    handleDeleteAttendance(attendanceId) {
         let {deleteAttendance, attendances} = this.props;
         let attendance = attendances.find(a => a.id == attendanceId);
-
-        ev.preventDefault();
 
         swal({
             title: T.translate("general.are_you_sure"),
@@ -125,7 +123,6 @@ class SpeakerAttendanceListPage extends React.Component {
         ];
 
         let table_options = {
-            className: "dataTable",
             sortCol: order,
             sortDir: orderDir,
             actions: {
@@ -168,7 +165,6 @@ class SpeakerAttendanceListPage extends React.Component {
                         data={attendances}
                         columns={columns}
                         onSort={this.handleSort}
-                        className="dataTable"
                     />
                     <Pagination
                         bsSize="medium"

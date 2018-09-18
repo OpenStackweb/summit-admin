@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import EventCategoryForm from '../../components/forms/event-category-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getEventCategory, resetEventCategoryForm, saveEventCategory } from "../../actions/event-category-actions";
+import { getEventCategory, resetEventCategoryForm, saveEventCategory, deleteEventCategoryQuestion } from "../../actions/event-category-actions";
 //import '../../styles/edit-summit-attendee-page.less';
 
 class EditEventCategoryPage extends React.Component {
@@ -40,7 +40,7 @@ class EditEventCategoryPage extends React.Component {
                     entity={entity}
                     errors={errors}
                     onSubmit={this.props.saveEventCategory}
-                    onDeleteQuestion={() => {console.log('delete')}}
+                    onDeleteQuestion={this.props.deleteEventCategoryQuestion}
                 />
                 }
             </div>
@@ -59,6 +59,7 @@ export default connect (
         getSummitById,
         getEventCategory,
         resetEventCategoryForm,
-        saveEventCategory
+        saveEventCategory,
+        deleteEventCategoryQuestion
     }
 )(EditEventCategoryPage);

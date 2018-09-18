@@ -14,8 +14,7 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { Input, Table } from 'openstack-uicore-foundation/lib/components'
-import EditableTable from '../tables/editabletable'
+import { Input, EditableTable, Dropdown, TextEditor } from 'openstack-uicore-foundation/lib/components'
 
 
 class EventCategoryQuestionForm extends React.Component {
@@ -62,11 +61,10 @@ class EventCategoryQuestionForm extends React.Component {
 
     handleSubmit(ev) {
         let entity = {...this.state.entity};
-        let {eventCategory} = this.props;
 
         ev.preventDefault();
 
-        this.props.onSubmit(eventCategoryId, entity, this.props.history);
+        this.props.onSubmit(entity, this.props.history);
     }
 
     hasErrors(field) {
@@ -78,22 +76,49 @@ class EventCategoryQuestionForm extends React.Component {
         return '';
     }
 
+    shouldShowField(field){
+        let {entity} = this.state;
+        if (!entity.class_name) return false;
+        let entity_type = this.props.allClasses.find(c => c.class_name == entity.class_name);
+
+        return (entity_type.hasOwnProperty(field) && entity_type[field]);
+    }
+
     render() {
         let {entity} = this.state;
+        let {allClasses} = this.props;
 
         let value_columns = [
-            { columnKey: 'name', value: T.translate("general.name") },
+            { columnKey: 'label', value: T.translate("general.label") },
             { columnKey: 'value', value: T.translate("general.value") }
         ];
 
         let value_options = {
-            className: "dataTable"
+            actions: {
+                save: {onClick: this.props.onSaveValue},
+                delete: {onClick: this.props.onDeleteValue}
+            }
         }
+
+        let class_name_ddl = allClasses.map(i => ({label:i.class_name, value:i.class_name}));
 
         return (
             <form className="event-category-question-form">
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_event_category_question.class")} *</label>
+                        <Dropdown
+                            id="class_name"
+                            disabled={entity.id != 0}
+                            value={entity.class_name}
+                            onChange={this.handleChange}
+                            placeholder={T.translate("edit_event_category_question.placeholders.select_class")}
+                            options={class_name_ddl}
+                            error={this.hasErrors('class_name')}
+                            clearable={false}
+                        />
+                    </div>
                     <div className="col-md-4">
                         <label> {T.translate("edit_event_category_question.name")} *</label>
                         <Input
@@ -116,7 +141,7 @@ class EventCategoryQuestionForm extends React.Component {
                     </div>
                 </div>
                 <div className="row form-group">
-                    <div className="col-md-4 checkboxes-div">
+                    <div className="col-md-3 checkboxes-div">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="is_mandatory" checked={entity.is_mandatory}
                                    onChange={this.handleChange} className="form-check-input" />
@@ -125,7 +150,7 @@ class EventCategoryQuestionForm extends React.Component {
                             </label>
                         </div>
                     </div>
-                    <div className="col-md-4 checkboxes-div">
+                    <div className="col-md-3 checkboxes-div">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="is_read_only" checked={entity.is_read_only}
                                    onChange={this.handleChange} className="form-check-input" />
@@ -134,9 +159,85 @@ class EventCategoryQuestionForm extends React.Component {
                             </label>
                         </div>
                     </div>
+                    {this.shouldShowField('is_country_selector') &&
+                    <div className="col-md-3 checkboxes-div">
+                        <div className="form-check abc-checkbox">
+                            <input type="checkbox" id="is_country_selector" checked={entity.is_country_selector}
+                                   onChange={this.handleChange} className="form-check-input"/>
+                            <label className="form-check-label" htmlFor="is_country_selector">
+                                {T.translate("edit_event_category_question.country_selector")}
+                            </label>
+                        </div>
+                    </div>
+                    }
+                    {this.shouldShowField('is_multi_select') &&
+                    <div className="col-md-3 checkboxes-div">
+                        <div className="form-check abc-checkbox">
+                            <input type="checkbox" id="is_multi_select" checked={entity.is_multi_select}
+                                   onChange={this.handleChange} className="form-check-input"/>
+                            <label className="form-check-label" htmlFor="is_multi_select">
+                                {T.translate("edit_event_category_question.multi_select")}
+                            </label>
+                        </div>
+                    </div>
+                    }
                 </div>
 
-                {entity.id != 0 &&
+                <div className="row form-group">
+                    {this.shouldShowField('default_value_id') &&
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_event_category_question.default_value")}</label>
+                        <Dropdown
+                            id="default_value_id"
+                            value={entity.default_value_id}
+                            onChange={this.handleChange}
+                            placeholder={T.translate("edit_event_category_question.placeholders.select_default_value")}
+                            options={entity.values}
+                            error={this.hasErrors('default_value_id')}
+                        />
+                    </div>
+                    }
+                    {this.shouldShowField('initial_value') &&
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_event_category_question.initial_value")}</label>
+                        <Input
+                            id="initial_value"
+                            value={entity.initial_value}
+                            onChange={this.handleChange}
+                            className="form-control"
+                            error={this.hasErrors('initial_value')}
+                        />
+                    </div>
+                    }
+                    {this.shouldShowField('empty_string') &&
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_event_category_question.empty_string")}</label>
+                        <Input
+                            id="empty_string"
+                            value={entity.empty_string}
+                            onChange={this.handleChange}
+                            className="form-control"
+                            error={this.hasErrors('empty_string')}
+                        />
+                    </div>
+                    }
+                </div>
+
+                {this.shouldShowField('content') &&
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <label> {T.translate("edit_event_category_question.content")} </label>
+                        <TextEditor
+                            id="content"
+                            value={entity.content}
+                            onChange={this.handleChange}
+                            error={this.hasErrors('content')}
+                        />
+                    </div>
+                </div>
+                }
+
+                {this.shouldShowField('values') && entity.id != 0 &&
                 <div className="row">
                     <div className="col-md-12">
                         <EditableTable

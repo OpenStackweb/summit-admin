@@ -27,6 +27,8 @@ import { getBackURL } from "openstack-uicore-foundation/lib/methods";
 import T from 'i18n-react';
 import OPSessionChecker from "./components/op-session-checker";
 import CustomErrorPage from "./pages/custom-error-page";
+import ReactTooltip from 'react-tooltip'
+
 
 
 // here is set by default user lang as en
@@ -59,6 +61,7 @@ class App extends React.PureComponent {
             <BrowserRouter>
                 <div>
                     <AjaxLoader show={ this.props.loading } size={ 120 }/>
+                    <ReactTooltip delayShow={1000} />
                     <OPSessionChecker
                         clientId={window.clientId}
                         idpBaseUrl={window.idpBaseUrl}
