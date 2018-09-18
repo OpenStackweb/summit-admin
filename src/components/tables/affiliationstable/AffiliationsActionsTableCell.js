@@ -51,7 +51,7 @@ export default class AffiliationsActionsTableCell extends React.Component {
 
         if (this.state.is_editing) {
             return (
-                <td className="row_actions">
+                <td className="actions">
                     <a href="" onClick={this.onSave.bind(this,id)} data-tip="save" >
                         <i className="fa fa-floppy-o"></i>
                     </a>
@@ -62,7 +62,7 @@ export default class AffiliationsActionsTableCell extends React.Component {
             );
         } else {
             return (
-                <td className="row_actions">
+                <td className="actions">
                     {'edit' in actions &&
                         <a href="" onClick={this.onEdit.bind(this,id)} data-tip="edit" >
                             <i className="fa fa-pencil-square-o"></i>

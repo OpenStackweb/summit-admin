@@ -98,7 +98,8 @@ class LocationListPage extends React.Component {
 
         if(!currentSummit.id) return(<div></div>);
 
-        locations = locations.sort(
+        let sortedLocations = [...locations];
+        sortedLocations.sort(
             (a, b) => (a.order > b.order ? 1 : (a.order < b.order ? -1 : 0))
         );
 
@@ -124,7 +125,7 @@ class LocationListPage extends React.Component {
                 <div>
                     <SortableTable
                         options={table_options}
-                        data={locations}
+                        data={sortedLocations}
                         columns={columns}
                         dropCallback={this.props.updateLocationOrder}
                         orderField="order"

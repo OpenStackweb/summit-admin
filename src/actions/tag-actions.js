@@ -83,7 +83,7 @@ export const updateTagGroupsOrder = (tagGroups, tagGroupId, newOrder) => (dispat
         null,
         createAction(TAG_GROUP_ORDER_UPDATED)(tagGroups),
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-tag-groups/${tagGroupId}`,
-        normalizedEntity,
+        tagGroup,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

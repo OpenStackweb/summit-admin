@@ -45,8 +45,8 @@ const tagGroupListReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case TAG_GROUP_ORDER_UPDATED: {
-            let values = [...payload];
-            return {...state}
+            let tagGroups = [...payload];
+            return {...state, tagGroups: tagGroups}
         }
         break;
         case TAG_GROUP_DELETED: {

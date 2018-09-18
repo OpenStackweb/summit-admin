@@ -102,6 +102,11 @@ class TagGroupListPage extends React.Component {
 
         if(!currentSummit.id) return(<div></div>);
 
+        let sortedTagGroups = [...tagGroups];
+        sortedTagGroups.sort(
+            (a, b) => (a.order > b.order ? 1 : (a.order < b.order ? -1 : 0))
+        );
+
         return(
             <div className="container">
                 <h3> {T.translate("tag_group_list.tag_groups")} </h3>
@@ -124,7 +129,7 @@ class TagGroupListPage extends React.Component {
                 <div>
                     <SortableTable
                         options={table_options}
-                        data={tagGroups}
+                        data={sortedTagGroups}
                         columns={columns}
                         dropCallback={this.props.updateTagGroupsOrder}
                         orderField="order"

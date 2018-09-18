@@ -105,7 +105,8 @@ class RsvpTemplateForm extends React.Component {
             }
         }
 
-        let questions = entity.questions.sort(
+        let sortedQuestions = [...entity.questions];
+        sortedQuestions.sort(
             (a, b) => (a.order > b.order ? 1 : (a.order < b.order ? -1 : 0))
         );
 
@@ -141,7 +142,7 @@ class RsvpTemplateForm extends React.Component {
                         </button>
                         <SortableTable
                             options={table_options}
-                            data={questions}
+                            data={sortedQuestions}
                             columns={columns}
                             dropCallback={onQuestionReorder}
                             orderField="order"

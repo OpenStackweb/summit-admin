@@ -130,10 +130,10 @@ export const deleteAffiliation = (ownerId, affiliationId) => (dispatch, getState
 const normalizeEntity = (entity) => {
     let normalizedEntity = {...entity};
 
-    if (!normalizedEntity.end_date) normalizedEntity.end_date = null;
+    if (!normalizedEntity.end_date) delete(normalizedEntity['end_date']);
 
     normalizedEntity.organization_id = (normalizedEntity.organization != null) ? normalizedEntity.organization.id : 0;
-    delete normalizedEntity['organization'];
+    delete(normalizedEntity['organization']);
 
     return normalizedEntity;
 
