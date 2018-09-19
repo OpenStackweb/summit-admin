@@ -13,6 +13,7 @@
 
 import { authErrorHandler, apiBaseUrl } from './base-actions';
 import T from "i18n-react/dist/i18n-react";
+import history from '../history'
 import {
     getRequest,
     putRequest,
@@ -24,8 +25,6 @@ import {
     showMessage,
     showSuccessMessage
 } from 'openstack-uicore-foundation/lib/methods';
-import {QUESTION_VALUE_ORDER_UPDATED} from "./rsvp-template-actions";
-import {TRACK_GROUP_ADDED, TRACK_GROUP_REMOVED} from "./selection-plan-actions";
 
 export const REQUEST_TAG_GROUPS       = 'REQUEST_TAG_GROUPS';
 export const RECEIVE_TAG_GROUPS       = 'RECEIVE_TAG_GROUPS';
@@ -119,7 +118,7 @@ export const resetTagGroupForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_TAG_GROUP_FORM)({}));
 };
 
-export const saveTagGroup = (entity, history) => (dispatch, getState) => {
+export const saveTagGroup = (entity) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
@@ -205,7 +204,7 @@ export const seedTagGroups = () => (dispatch, getState) => {
         null,
         authErrorHandler
     )(params)(dispatch).then(() => {
-            dispatch(stopLoading());
+        dispatch(showSuccessMessage(T.translate("edit_tag_group.tag_groups_seeded")));
         }
     );
 };

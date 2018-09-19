@@ -83,7 +83,7 @@ class SummitForm extends React.Component {
     handleSubmit(ev) {
         ev.preventDefault();
 
-        this.props.onSubmit(this.state.entity, this.props.history);
+        this.props.onSubmit(this.state.entity);
     }
 
     hasErrors(field) {

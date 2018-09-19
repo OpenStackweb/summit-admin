@@ -77,7 +77,6 @@ class EditEventCategoryGroupPage extends React.Component {
                 <hr/>
                 {currentSummit &&
                 <EventCategoryGroupForm
-                    history={this.props.history}
                     currentSummit={currentSummit}
                     allClasses={allClasses}
                     entity={entity}

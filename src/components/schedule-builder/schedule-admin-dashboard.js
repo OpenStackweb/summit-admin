@@ -466,7 +466,7 @@ class ScheduleAdminDashBoard extends React.Component {
     }
 
     onSelectedBulkActionPublished(bulkAction){
-        let {selectedPublishedEvents, performBulkAction, history} = this.props;
+        let {selectedPublishedEvents, performBulkAction} = this.props;
         if(selectedPublishedEvents.length == 0) return;
         if(bulkAction == BulkActionUnPublish){
             swal({
@@ -479,19 +479,19 @@ class ScheduleAdminDashBoard extends React.Component {
                 confirmButtonText: T.translate("schedule_builder_page.buttons.bulk_unpublish_confirmation"),
             }).then((result) => {
                 if (result.value) {
-                    performBulkAction(selectedPublishedEvents, bulkAction, true, history);
+                    performBulkAction(selectedPublishedEvents, bulkAction, true);
                 }
             })
             return;
         }
 
-        performBulkAction(selectedPublishedEvents, bulkAction, true, history);
+        performBulkAction(selectedPublishedEvents, bulkAction, true);
     }
 
     onSelectedBulkActionUnPublished(bulkAction){
-        let {selectedUnPublishedEvents, performBulkAction, history} = this.props;
+        let {selectedUnPublishedEvents, performBulkAction} = this.props;
         if(selectedUnPublishedEvents.length == 0) return;
-        performBulkAction(selectedUnPublishedEvents, bulkAction, false, history);
+        performBulkAction(selectedUnPublishedEvents, bulkAction, false);
     }
 
     render(){

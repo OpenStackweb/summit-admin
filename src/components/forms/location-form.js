@@ -83,10 +83,10 @@ class LocationForm extends React.Component {
 
     handleSubmit(ev) {
         let entity = {...this.state.entity};
-        let {allClasses, history} = this.props;
+        let {allClasses} = this.props;
         ev.preventDefault();
 
-        this.props.onSubmit(entity, allClasses, history);
+        this.props.onSubmit(entity, allClasses);
     }
 
     hasErrors(field) {

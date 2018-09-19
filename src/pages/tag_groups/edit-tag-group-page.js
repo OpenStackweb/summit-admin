@@ -72,6 +72,7 @@ class EditTagGroupPage extends React.Component {
                     <div className="col-md-8">
                         <h3>{title} {T.translate("edit_tag_group.tag_group")}</h3>
                     </div>
+                    {entity.id > 0 && entity.allowed_tags.length > 0 &&
                     <div className="col-md-4 text-right" style={{marginTop: '20px'}}>
                         <ActionDropdown
                             options={categoryOptions}
@@ -80,6 +81,7 @@ class EditTagGroupPage extends React.Component {
                             onClick={this.handleCopyTagsToCategory}
                         />
                     </div>
+                    }
                 </div>
                 <hr/>
                 {currentSummit &&

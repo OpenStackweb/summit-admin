@@ -34,7 +34,7 @@ class SummitDirectoryPage extends React.Component {
 
     onSelectedSummit(event, summit){
         event.preventDefault();
-        this.props.setCurrentSummit(summit, this.props.history);
+        this.props.setCurrentSummit(summit);
         return false;
     }
 

@@ -61,11 +61,11 @@ class ImageForm extends React.Component {
 
     handleSubmit(ev) {
         let {entity, file} = this.state;
-        let {locationId, history} = this.props;
+        let {locationId} = this.props;
 
         ev.preventDefault();
 
-        this.props.onSubmit(locationId, entity, file, history);
+        this.props.onSubmit(locationId, entity, file);
     }
 
     hasErrors(field) {

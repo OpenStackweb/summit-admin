@@ -13,6 +13,7 @@
 
 import { authErrorHandler, apiBaseUrl } from './base-actions';
 import T from "i18n-react/dist/i18n-react";
+import history from '../history'
 import {
     getRequest,
     putRequest,
@@ -112,7 +113,7 @@ export const resetPushNotificationForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_PUSH_NOTIFICATION_FORM)({}));
 };
 
-export const savePushNotification = (entity, history) => (dispatch, getState) => {
+export const savePushNotification = (entity) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;

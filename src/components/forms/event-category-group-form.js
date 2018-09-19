@@ -37,7 +37,6 @@ class EventCategoryGroupForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleTrackLink = this.handleTrackLink.bind(this);
         this.handleTrackUnLink = this.handleTrackUnLink.bind(this);
-        this.getTracks = this.getTracks.bind(this);
         this.handleAllowedGroupLink = this.handleAllowedGroupLink.bind(this);
         this.handleAllowedGroupUnLink = this.handleAllowedGroupUnLink.bind(this);
     }
@@ -75,7 +74,7 @@ class EventCategoryGroupForm extends React.Component {
         let entity = {...this.state.entity};
         ev.preventDefault();
 
-        this.props.onSubmit(this.state.entity, this.props.history);
+        this.props.onSubmit(this.state.entity);
     }
 
     hasErrors(field) {
@@ -95,16 +94,6 @@ class EventCategoryGroupForm extends React.Component {
     handleTrackUnLink(valueId) {
         let {entity} = this.state;
         this.props.onTrackUnLink(entity.id, valueId);
-    }
-
-    getTracks (input) {
-        let { currentSummit } = this.props;
-
-        if (!input) {
-            return Promise.resolve({ options: [] });
-        }
-
-        return queryTracks(currentSummit.id, input);
     }
 
     handleAllowedGroupLink(value) {
@@ -139,7 +128,7 @@ class EventCategoryGroupForm extends React.Component {
             valueKey: "name",
             labelKey: "name",
             actions: {
-                search: this.getTracks,
+                search: (input, callback) => { queryTracks(currentSummit.id, input, callback) },
                 delete: { onClick: this.handleTrackUnLink },
                 add: { onClick: this.handleTrackLink }
             }

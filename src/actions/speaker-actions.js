@@ -13,6 +13,7 @@
 
 import { authErrorHandler, apiBaseUrl } from './base-actions';
 import T from "i18n-react/dist/i18n-react";
+import history from '../history'
 import {
     getRequest,
     putRequest,
@@ -154,7 +155,7 @@ export const deleteSpeaker = (speakerId) => (dispatch, getState) => {
     );
 };
 
-export const mergeSpeakers = (speakers, selectedFields, changedFields, history) => (dispatch, getState) => {
+export const mergeSpeakers = (speakers, selectedFields, changedFields) => (dispatch, getState) => {
     let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
 
@@ -183,7 +184,7 @@ export const resetSpeakerForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_SPEAKER_FORM)({}));
 };
 
-export const saveSpeaker = (entity, history) => (dispatch, getState) => {
+export const saveSpeaker = (entity) => (dispatch, getState) => {
     let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
 
@@ -229,7 +230,7 @@ export const saveSpeaker = (entity, history) => (dispatch, getState) => {
     }
 }
 
-export const attachPicture = (entity, file, history) => (dispatch, getState) => {
+export const attachPicture = (entity, file) => (dispatch, getState) => {
     let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
 
@@ -239,7 +240,7 @@ export const attachPicture = (entity, file, history) => (dispatch, getState) => 
     console.log(normalizedEntity);
 
     if (entity.id) {
-        dispatch(uploadFile(entity, file, history));
+        dispatch(uploadFile(entity, file));
     } else {
         return postRequest(
             createAction(UPDATE_SPEAKER),
@@ -250,13 +251,13 @@ export const attachPicture = (entity, file, history) => (dispatch, getState) => 
             entity
         )({})(dispatch)
             .then((payload) => {
-                dispatch(uploadFile(payload.response, file, history));
+                dispatch(uploadFile(payload.response, file));
             }
         );
     }
 }
 
-const uploadFile = (entity, file, history) => (dispatch, getState) => {
+const uploadFile = (entity, file) => (dispatch, getState) => {
     let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
 
@@ -399,7 +400,7 @@ export const resetAttendanceForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_ATTENDANCE_FORM)({}));
 };
 
-export const saveAttendance = (entity, history) => (dispatch, getState) => {
+export const saveAttendance = (entity) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;

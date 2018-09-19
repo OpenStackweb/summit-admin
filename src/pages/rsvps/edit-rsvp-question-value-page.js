@@ -52,9 +52,9 @@ class EditRsvpQuestionValuePage extends React.Component {
         }
     }
 
-    handleSubmit(entity, history) {
+    handleSubmit(entity) {
         let {currentTemplate, currentQuestion} = this.props;
-        this.props.saveRsvpQuestionValue(currentTemplate.id, currentQuestion.id, entity, history);
+        this.props.saveRsvpQuestionValue(currentTemplate.id, currentQuestion.id, entity);
     }
 
     render(){
@@ -73,7 +73,6 @@ class EditRsvpQuestionValuePage extends React.Component {
                 <hr/>
                 {currentSummit &&
                 <SimpleForm
-                    history={this.props.history}
                     entity={entity}
                     errors={errors}
                     fields={fields}

@@ -13,6 +13,7 @@
 
 import { authErrorHandler, apiBaseUrl } from './base-actions';
 import T from "i18n-react/dist/i18n-react";
+import history from '../history'
 import {
     getRequest,
     putRequest,
@@ -86,7 +87,7 @@ export const resetEventTypeForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_EVENT_TYPE_FORM)({}));
 };
 
-export const saveEventType = (entity, history) => (dispatch, getState) => {
+export const saveEventType = (entity) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;

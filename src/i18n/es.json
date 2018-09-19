@@ -382,6 +382,10 @@
     "remove_rsvp_from_attendee"   : "Do you really want to remove this rsvp from this attendee?",
     "attendee_saved"              : "Attendee saved successfully.",
     "attendee_created"            : "Attendee created successfully.",
+    "ticket_reassigned"           : "Ticket reassigned successfully.",
+    "event"                       : "Event",
+    "created"                     : "Created Date",
+    "seat"                        : "Seat",
     "placeholders": {
       "start_date"            : "Start Date",
       "end_date"              : "End Date",
@@ -516,7 +520,7 @@
     "tag"                         : "Tag",
     "group"                       : "Group",
     "questions"                   : "Extra Questions",
-    "add_question"                : "Add Extra Question",
+    "add_question"                : "New Question",
     "category_saved"              : "Event Category saved successfully.",
     "category_created"            : "Event Category created successfully.",
     "delete_warning"              : "Are you sure you want to delete extra question "
@@ -795,6 +799,7 @@
     "tag"               : "Tag",
     "tag_group_saved"   : "Tag Group saved successfully",
     "tag_group_created" : "Tag Group created successfully",
+    "tag_groups_seeded" : "Tag groups were seeded from defaults.",
     "tag_seeded"        : "Tag was copied to all categories",
     "copy_tags"         : "Copy Tags",
     "select_category"   : "Select Category",

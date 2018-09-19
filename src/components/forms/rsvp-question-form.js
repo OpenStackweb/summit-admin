@@ -68,7 +68,7 @@ class RsvpQuestionForm extends React.Component {
 
         ev.preventDefault();
 
-        this.props.onSubmit(rsvpTemplateId, this.state.entity, this.props.history);
+        this.props.onSubmit(rsvpTemplateId, this.state.entity);
     }
 
     hasErrors(field) {

@@ -38,7 +38,7 @@
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.21",
     "node-sass": "^4.9.2",
-    "openstack-uicore-foundation": "^1.0.33",
+    "openstack-uicore-foundation": "^1.0.34",
     "postcss-loader": "^2.1.6",
     "react": "^16.4.1",
     "react-bootstrap": "^0.31.5",

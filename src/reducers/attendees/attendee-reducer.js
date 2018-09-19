@@ -83,7 +83,6 @@ const attendeeReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case CHANGE_MEMBER: {
-            console.log(payload);
             return {...state };
         }
         break;

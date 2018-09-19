@@ -19,7 +19,7 @@ export default class OccupancyActionsTableCell extends React.Component {
         }
 
         return (
-            <td className="actions" key="actions" style={{width: "140px"}}>
+            <td className="actions" key="actions" style={{width: "160px"}}>
                 <button className="btn btn-default" onClick={actions.onMore.bind(this, id)}>
                     <i className="fa fa-plus"></i>
                 </button>

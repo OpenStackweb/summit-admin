@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import EventCategoryForm from '../../components/forms/event-category-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getEventCategory, resetEventCategoryForm, saveEventCategory, deleteEventCategoryQuestion } from "../../actions/event-category-actions";
+import { getEventCategory, resetEventCategoryForm, saveEventCategory, linkQuestionToCategory, unlinkQuestionToCategory } from "../../actions/event-category-actions";
 //import '../../styles/edit-summit-attendee-page.less';
 
 class EditEventCategoryPage extends React.Component {
@@ -26,7 +26,7 @@ class EditEventCategoryPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors, match} = this.props;
+        let {currentSummit, entity, errors, match, history} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
 
         return(
@@ -35,12 +35,14 @@ class EditEventCategoryPage extends React.Component {
                 <hr/>
                 {currentSummit &&
                 <EventCategoryForm
-                    history={this.props.history}
+                    history={history}
                     currentSummit={currentSummit}
                     entity={entity}
                     errors={errors}
                     onSubmit={this.props.saveEventCategory}
                     onDeleteQuestion={this.props.deleteEventCategoryQuestion}
+                    onQuestionLink={this.props.linkQuestionToCategory}
+                    onQuestionUnLink={this.props.unlinkQuestionToCategory}
                 />
                 }
             </div>
@@ -60,6 +62,7 @@ export default connect (
         getEventCategory,
         resetEventCategoryForm,
         saveEventCategory,
-        deleteEventCategoryQuestion
+        linkQuestionToCategory,
+        unlinkQuestionToCategory
     }
 )(EditEventCategoryPage);

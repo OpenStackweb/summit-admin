@@ -14,6 +14,7 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
+import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
 import { Input, EditableTable, Dropdown, TextEditor } from 'openstack-uicore-foundation/lib/components'
 
 
@@ -64,7 +65,7 @@ class EventCategoryQuestionForm extends React.Component {
 
         ev.preventDefault();
 
-        this.props.onSubmit(entity, this.props.history);
+        this.props.onSubmit(entity);
     }
 
     hasErrors(field) {
@@ -101,6 +102,8 @@ class EventCategoryQuestionForm extends React.Component {
         }
 
         let class_name_ddl = allClasses.map(i => ({label:i.class_name, value:i.class_name}));
+
+        let values_ddl = entity.values.map(v => ({value: v.id, label: v.label}));
 
         return (
             <form className="event-category-question-form">
@@ -192,7 +195,7 @@ class EventCategoryQuestionForm extends React.Component {
                             value={entity.default_value_id}
                             onChange={this.handleChange}
                             placeholder={T.translate("edit_event_category_question.placeholders.select_default_value")}
-                            options={entity.values}
+                            options={values_ddl}
                             error={this.hasErrors('default_value_id')}
                         />
                     </div>

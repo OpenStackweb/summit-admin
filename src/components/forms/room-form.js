@@ -70,7 +70,7 @@ class RoomForm extends React.Component {
 
         ev.preventDefault();
 
-        this.props.onSubmit(locationId, entity, this.props.history);
+        this.props.onSubmit(locationId, entity);
     }
 
     hasErrors(field) {

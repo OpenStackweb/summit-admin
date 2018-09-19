@@ -75,7 +75,7 @@ class SpeakerForm extends React.Component {
     handleUploadFile(file) {
         let formData = new FormData();
         formData.append('file', file);
-        this.props.onAttach(this.state.entity, formData, this.props.history)
+        this.props.onAttach(this.state.entity, formData)
     }
 
     handleRemoveFile(ev) {
@@ -89,7 +89,7 @@ class SpeakerForm extends React.Component {
         let entity = {...this.state.entity};
         ev.preventDefault();
 
-        this.props.onSubmit(this.state.entity, this.props.history);
+        this.props.onSubmit(this.state.entity);
     }
 
     handlePresentationLink(summit, event_id, ev) {

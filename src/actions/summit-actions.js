@@ -13,6 +13,7 @@
 
 import {apiBaseUrl, authErrorHandler } from "./base-actions";
 import T from "i18n-react/dist/i18n-react";
+import history from '../history'
 import {
     getRequest,
     putRequest,
@@ -26,7 +27,6 @@ import {
     postFile,
     putFile
 } from 'openstack-uicore-foundation/lib/methods';
-
 
 
 export const RECEIVE_SUMMIT           = 'RECEIVE_SUMMIT';
@@ -61,7 +61,7 @@ export const getSummitById = (summitId) => (dispatch, getState) => {
     );
 }
 
-export const setCurrentSummit = (summit, history) => (dispatch, getState) =>
+export const setCurrentSummit = (summit) => (dispatch, getState) =>
 {
     let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
@@ -122,7 +122,7 @@ export const resetSummitForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_SUMMIT_FORM)({}));
 };
 
-export const saveSummit = (entity, history) => (dispatch, getState) => {
+export const saveSummit = (entity) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
 

@@ -61,7 +61,6 @@ class EditEventTypePage extends React.Component {
                 <hr/>
                 {currentSummit &&
                 <EventTypeForm
-                    history={this.props.history}
                     currentSummit={currentSummit}
                     entity={entity}
                     errors={errors}

@@ -13,6 +13,7 @@
 
 import { authErrorHandler, apiBaseUrl } from './base-actions';
 import T from "i18n-react/dist/i18n-react";
+import history from '../history'
 import {
     getRequest,
     putRequest,
@@ -120,7 +121,7 @@ export const resetRsvpTemplateForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_RSVP_TEMPLATE_FORM)({}));
 };
 
-export const saveRsvpTemplate = (entity, history) => (dispatch, getState) => {
+export const saveRsvpTemplate = (entity) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
@@ -279,7 +280,7 @@ export const resetRsvpQuestionForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_RSVP_QUESTION_FORM)({}));
 };
 
-export const saveRsvpQuestion = (rsvpTemplateId, entity, history) => (dispatch, getState) => {
+export const saveRsvpQuestion = (rsvpTemplateId, entity) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
@@ -405,7 +406,7 @@ export const resetRsvpQuestionValueForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_RSVP_QUESTION_VALUE_FORM)({}));
 };
 
-export const saveRsvpQuestionValue = (rsvpTemplateId, rsvpQuestionId, entity, history) => (dispatch, getState) => {
+export const saveRsvpQuestionValue = (rsvpTemplateId, rsvpQuestionId, entity) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;

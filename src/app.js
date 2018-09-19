@@ -12,7 +12,7 @@
  **/
 
 import React from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, Router } from 'react-router-dom'
 import PrimaryLayout from "./layouts/primary-layout"
 import AuthorizedRoute from './routes/authorized-route'
 import AuthorizationCallbackRoute from "./routes/authorization-callback-route"
@@ -21,13 +21,13 @@ import AuthButton from './components/auth-button'
 import DefaultRoute from './routes/default-route'
 import { connect } from 'react-redux'
 import { onUserAuth, doLogin, doLogout, initLogOut, getUserInfo } from './actions/auth-actions'
-import { BrowserRouter } from 'react-router-dom'
 import { AjaxLoader } from "openstack-uicore-foundation/lib/components";
 import { getBackURL } from "openstack-uicore-foundation/lib/methods";
 import T from 'i18n-react';
 import OPSessionChecker from "./components/op-session-checker";
 import CustomErrorPage from "./pages/custom-error-page";
 import ReactTooltip from 'react-tooltip'
+import history from './history'
 
 
 
@@ -58,7 +58,7 @@ class App extends React.PureComponent {
         let { isLoggedUser, onUserAuth, doLogout, getUserInfo, member, backUrl} = this.props;
         let profile_pic = member ? member.pic : '';
         return (
-            <BrowserRouter>
+            <Router history={history}>
                 <div>
                     <AjaxLoader show={ this.props.loading } size={ 120 }/>
                     <ReactTooltip delayShow={1000} />
@@ -82,7 +82,7 @@ class App extends React.PureComponent {
                         <DefaultRoute isLoggedUser={isLoggedUser} />
                     </Switch>
                 </div>
-            </BrowserRouter>
+            </Router>
         );
     }
 }

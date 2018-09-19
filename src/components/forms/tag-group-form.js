@@ -28,7 +28,6 @@ class TagGroupForm extends React.Component {
 
         this.handleAllowedTagLink = this.handleAllowedTagLink.bind(this);
         this.handleAllowedTagUnLink = this.handleAllowedTagUnLink.bind(this);
-        this.getTags = this.getTags.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -63,7 +62,7 @@ class TagGroupForm extends React.Component {
 
         ev.preventDefault();
 
-        this.props.onSubmit(entity, this.props.history);
+        this.props.onSubmit(entity);
     }
 
     hasErrors(field) {
@@ -78,7 +77,6 @@ class TagGroupForm extends React.Component {
     handleAllowedTagLink(value) {
         let {entity} = this.state;
         entity.allowed_tags = [...entity.allowed_tags, value];
-        //this.props.onSubmit(entity, this.props.history);
 
         this.setState({entity: entity});
     }
@@ -88,14 +86,10 @@ class TagGroupForm extends React.Component {
         ev.preventDefault();
 
         entity.allowed_tags = entity.allowed_tags.map(at => at.id != valueId);
-        //this.props.onSubmit(entity, this.props.history);
 
         this.setState({entity: entity});
     }
 
-    getTags(input, callback) {
-        queryTags(null, input, callback);
-    }
 
     render() {
         let {entity} = this.state;
@@ -111,7 +105,7 @@ class TagGroupForm extends React.Component {
             valueKey: "id",
             labelKey: "tag",
             actions: {
-                search: this.getTags,
+                search: (input, callback) => { queryTags(null, input, callback); },
                 delete: { onClick: this.handleAllowedTagUnLink },
                 add: { onClick: this.handleAllowedTagLink },
                 custom: [

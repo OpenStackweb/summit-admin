@@ -94,7 +94,7 @@ class EventForm extends React.Component {
         let formData = new FormData();
         formData.append('file', file);
 
-        this.props.onAttach(entity, formData, this.props.history);
+        this.props.onAttach(entity, formData);
     }
 
     handleRemoveFile(ev) {
@@ -108,7 +108,7 @@ class EventForm extends React.Component {
         let entity = {...this.state.entity};
         ev.preventDefault();
 
-        this.props.onSubmit(entity, publish, this.props.history);
+        this.props.onSubmit(entity, publish);
     }
 
     handleUnpublish(ev) {

@@ -34,7 +34,6 @@ class SelectionPlanForm extends React.Component {
 
         this.handleTrackGroupLink = this.handleTrackGroupLink.bind(this);
         this.handleTrackGroupUnLink = this.handleTrackGroupUnLink.bind(this);
-        this.getTrackGroups = this.getTrackGroups.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -76,7 +75,7 @@ class SelectionPlanForm extends React.Component {
         let entity = {...this.state.entity};
         ev.preventDefault();
 
-        this.props.onSubmit(this.state.entity, this.props.history);
+        this.props.onSubmit(this.state.entity);
     }
 
     hasErrors(field) {
@@ -98,15 +97,6 @@ class SelectionPlanForm extends React.Component {
         this.props.onTrackGroupUnLink(entity.id, valueId);
     }
 
-    getTrackGroups (input) {
-        let { currentSummit } = this.props;
-
-        if (!input) {
-            return Promise.resolve({ options: [] });
-        }
-
-        return queryTrackGroups(currentSummit.id, input);
-    }
 
     render() {
         let {entity} = this.state;
@@ -122,7 +112,7 @@ class SelectionPlanForm extends React.Component {
             valueKey: "name",
             labelKey: "name",
             actions: {
-                search: this.getTrackGroups,
+                search: (input, callback) => { queryTrackGroups(currentSummit.id, input, callback); },
                 delete: { onClick: this.handleTrackGroupUnLink },
                 add: { onClick: this.handleTrackGroupLink }
             }

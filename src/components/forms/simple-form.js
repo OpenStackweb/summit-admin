@@ -60,7 +60,7 @@ class SimpleForm extends React.Component {
         let entity = {...this.state.entity};
         ev.preventDefault();
 
-        this.props.onSubmit(this.state.entity, this.props.history);
+        this.props.onSubmit(this.state.entity);
     }
 
     hasErrors(field) {

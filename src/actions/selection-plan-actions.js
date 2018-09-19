@@ -13,6 +13,7 @@
 
 import { authErrorHandler, apiBaseUrl } from './base-actions';
 import T from "i18n-react/dist/i18n-react";
+import history from '../history'
 import {
     getRequest,
     putRequest,
@@ -61,7 +62,7 @@ export const resetSelectionPlanForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_SELECTION_PLAN_FORM)({}));
 };
 
-export const saveSelectionPlan = (entity, history) => (dispatch, getState) => {
+export const saveSelectionPlan = (entity) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;

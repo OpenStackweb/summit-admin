@@ -75,7 +75,7 @@ class MergeSpeakerPage extends React.Component {
 
     handleMerge(ev) {
         let selectedFields = {...this.state.selectedFields};
-        let {history, speakers} = this.props;
+        let {speakers} = this.props;
         let props = this.props;
         let changedFields = [];
 
@@ -95,7 +95,7 @@ class MergeSpeakerPage extends React.Component {
             confirmButtonText: T.translate("merge_speakers.merge_and_delete")
         }).then(function(result){
             if (result.value) {
-                props.mergeSpeakers(speakers, selectedFields, changedFields, history);
+                props.mergeSpeakers(speakers, selectedFields, changedFields);
             }
         }).catch(swal.noop);
 

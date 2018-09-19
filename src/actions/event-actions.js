@@ -14,6 +14,7 @@
 import moment from 'moment-timezone';
 import { authErrorHandler, apiBaseUrl } from './base-actions';
 import T from "i18n-react/dist/i18n-react";
+import history from '../history'
 import {
     getRequest,
     putRequest,
@@ -169,7 +170,7 @@ export const resetEventForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_EVENT_FORM)({}));
 };
 
-export const saveEvent = (entity, publish, history) => (dispatch, getState) => {
+export const saveEvent = (entity, publish) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
@@ -338,7 +339,7 @@ export const checkProximityEvents = (event) => (dispatch, getState) => {
     );
 }
 
-export const attachFile = (entity, file, history) => (dispatch, getState) => {
+export const attachFile = (entity, file) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
@@ -350,7 +351,7 @@ export const attachFile = (entity, file, history) => (dispatch, getState) => {
     };
 
     if (entity.id) {
-        return dispatch(uploadFile(entity, file, history));
+        return dispatch(uploadFile(entity, file));
     } else {
         return postRequest(
             createAction(UPDATE_EVENT),
@@ -361,12 +362,12 @@ export const attachFile = (entity, file, history) => (dispatch, getState) => {
             entity
         )(params)(dispatch)
             .then((payload) => {
-                dispatch(uploadFile(payload.response, file, history));
+                dispatch(uploadFile(payload.response, file));
             });
     }
 }
 
-const uploadFile = (entity, file, history) => (dispatch, getState) => {
+const uploadFile = (entity, file) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;

@@ -74,3 +74,13 @@ body {
     padding-top: 2px;
     font-weight: 400;
 }
+
+
+
+/* MOBILE SPECIFIC */
+
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+    }
+}

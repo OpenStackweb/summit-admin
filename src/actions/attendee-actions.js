@@ -13,6 +13,7 @@
 
 import { authErrorHandler, apiBaseUrl } from './base-actions';
 import T from "i18n-react/dist/i18n-react";
+import history from '../history'
 import {
     getRequest,
     putRequest,
@@ -118,6 +119,12 @@ export const reassignTicket = (attendeeId, newMemberId, ticketId) => (dispatch, 
         access_token : accessToken,
     };
 
+    let success_message = {
+        title: T.translate("general.done"),
+        html: T.translate("edit_attendee.ticket_reassigned"),
+        type: 'success'
+    };
+
     putRequest(
         null,
         createAction(CHANGE_MEMBER),
@@ -126,11 +133,14 @@ export const reassignTicket = (attendeeId, newMemberId, ticketId) => (dispatch, 
         authErrorHandler
     )(params)(dispatch)
         .then((payload) => {
-            dispatch(showSuccessMessage(T.translate("edit_attendee.attendee_saved")));
+            dispatch(showMessage(
+                success_message,
+                () => { history.push(`/app/summits/${currentSummit.id}/attendees/${payload.response.id}`) }
+            ));
         });
 };
 
-export const saveAttendee = (entity, history) => (dispatch, getState) => {
+export const saveAttendee = (entity) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;

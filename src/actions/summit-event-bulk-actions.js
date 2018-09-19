@@ -14,6 +14,7 @@
 import {apiBaseUrl, authErrorHandler } from "./base-actions";
 import T from 'i18n-react/dist/i18n-react'
 import URI from "urijs";
+import history from '../history'
 import {BulkActionEdit, BulkActionUnPublish} from '../utils/constants';
 import { getPublishedEventsBySummitDayLocation } from './summit-builder-actions';
 import {
@@ -185,7 +186,7 @@ export const setBulkEventSelectedState = (events, selectedState, published) => (
     dispatch(createAction(UPDATE_EVENT_SELECTED_STATE_BULK)({events, selectedState, published} ));
 }
 
-export const performBulkAction = (eventsIds, bulkAction, published, history) => (dispatch, getState) => {
+export const performBulkAction = (eventsIds, bulkAction, published) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState,  currentScheduleBuilderState } = getState();
     let { accessToken }                         = loggedUserState;
     let { currentSummit }                       = currentSummitState;

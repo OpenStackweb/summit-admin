@@ -13,6 +13,7 @@
 
 import { authErrorHandler, apiBaseUrl } from './base-actions';
 import T from "i18n-react/dist/i18n-react";
+import history from '../history'
 import {
     getRequest,
     putRequest,
@@ -133,7 +134,7 @@ export const resetPromocodeForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_PROMOCODE_FORM)({}));
 };
 
-export const savePromocode = (entity, history) => (dispatch, getState) => {
+export const savePromocode = (entity) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;

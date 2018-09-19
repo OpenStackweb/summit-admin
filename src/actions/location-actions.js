@@ -14,6 +14,7 @@
 import { authErrorHandler, apiBaseUrl } from './base-actions';
 import swal from "sweetalert2";
 import T from "i18n-react/dist/i18n-react";
+import history from '../history'
 import {
     getRequest,
     putRequest,
@@ -150,7 +151,7 @@ export const resetLocationForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_LOCATION_FORM)({}));
 };
 
-export const saveLocation = (entity, allClasses, history) => (dispatch, getState) => {
+export const saveLocation = (entity, allClasses) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
@@ -335,7 +336,7 @@ export const resetFloorForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_FLOOR_FORM)({}));
 };
 
-export const saveFloor = (locationId, entity, history) => (dispatch, getState) => {
+export const saveFloor = (locationId, entity) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
@@ -445,7 +446,7 @@ export const resetRoomForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_ROOM_FORM)({}));
 };
 
-export const saveRoom = (locationId, entity, history) => (dispatch, getState) => {
+export const saveRoom = (locationId, entity) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
@@ -564,7 +565,7 @@ export const resetLocationImageForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_LOCATION_IMAGE_FORM)({}));
 };
 
-export const saveLocationImage = (locationId, entity, file, history) => (dispatch, getState) => {
+export const saveLocationImage = (locationId, entity, file) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
@@ -683,7 +684,7 @@ export const resetLocationMapForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_LOCATION_MAP_FORM)({}));
 };
 
-export const saveLocationMap = (locationId, entity, file, history) => (dispatch, getState) => {
+export const saveLocationMap = (locationId, entity, file) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;

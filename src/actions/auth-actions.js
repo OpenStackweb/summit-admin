@@ -16,6 +16,7 @@ import {createAction, getRequest, startLoading, stopLoading, showMessage} from "
 import {authErrorHandler, apiBaseUrl} from "./base-actions";
 import { AllowedUserGroups } from '../utils/constants';
 import URI from "urijs";
+import history from '../history'
 
 export const SET_LOGGED_USER    = 'SET_LOGGED_USER';
 export const LOGOUT_USER        = 'LOGOUT_USER';
@@ -117,7 +118,7 @@ export const doLogout = (backUrl) => (dispatch, getState) => {
     });
 }
 
-export const getUserInfo = (history, backUrl) => (dispatch, getState) => {
+export const getUserInfo = (backUrl) => (dispatch, getState) => {
 
     let { loggedUserState }     = getState();
     let { accessToken, member } = loggedUserState;

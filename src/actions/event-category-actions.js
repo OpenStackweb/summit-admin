@@ -13,6 +13,8 @@
 
 import { authErrorHandler, apiBaseUrl } from './base-actions';
 import T from "i18n-react/dist/i18n-react";
+import _ from 'lodash';
+import history from '../history'
 import {
     getRequest,
     putRequest,
@@ -22,7 +24,9 @@ import {
     stopLoading,
     startLoading,
     showMessage,
-    showSuccessMessage
+    showSuccessMessage,
+    fetchResponseHandler,
+    fetchErrorHandler
 } from "openstack-uicore-foundation/lib/methods";
 
 
@@ -119,7 +123,7 @@ export const resetEventCategoryForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_EVENT_CATEGORY_FORM)({}));
 };
 
-export const saveEventCategory = (entity, history) => (dispatch, getState) => {
+export const saveEventCategory = (entity) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
@@ -274,7 +278,7 @@ export const resetEventCategoryQuestionForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_EVENT_CATEGORY_QUESTION_FORM)({}));
 };
 
-export const saveEventCategoryQuestion = (entity, history) => (dispatch, getState) => {
+export const saveEventCategoryQuestion = (entity) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState, currentEventCategoryState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
@@ -283,7 +287,6 @@ export const saveEventCategoryQuestion = (entity, history) => (dispatch, getStat
 
     dispatch(startLoading());
 
-    let normalizedEntity = entity;
     let params = { access_token : accessToken };
 
     if (entity.id) {
@@ -291,12 +294,12 @@ export const saveEventCategoryQuestion = (entity, history) => (dispatch, getStat
             createAction(UPDATE_EVENT_CATEGORY_QUESTION),
             createAction(EVENT_CATEGORY_QUESTION_UPDATED),
             `${apiBaseUrl}/api/v1/track-question-templates/${entity.id}`,
-            normalizedEntity,
+            entity,
             authErrorHandler,
             entity
         )(params)(dispatch)
             .then((payload) => {
-                dispatch(assignQuestionToCategory(entity.id));
+                dispatch(showSuccessMessage(T.translate("edit_event_category_question.question_saved")));
             });
 
     } else {
@@ -306,13 +309,13 @@ export const saveEventCategoryQuestion = (entity, history) => (dispatch, getStat
             type: 'success'
         };
 
-        normalizedEntity.tracks = [currentEventCategory.id];
+        entity.tracks = [currentEventCategory.id];
 
         postRequest(
             createAction(UPDATE_EVENT_CATEGORY_QUESTION),
             createAction(EVENT_CATEGORY_QUESTION_ADDED),
             `${apiBaseUrl}/api/v1/track-question-templates`,
-            normalizedEntity,
+            entity,
             authErrorHandler,
             entity
         )(params)(dispatch)
@@ -327,7 +330,7 @@ export const saveEventCategoryQuestion = (entity, history) => (dispatch, getStat
     }
 };
 
-const assignQuestionToCategory = (questionId) => (dispatch, getState) => {
+export const linkQuestionToCategory = (question) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState, currentEventCategoryState } = getState();
     let { accessToken }     = loggedUserState;
@@ -338,18 +341,19 @@ const assignQuestionToCategory = (questionId) => (dispatch, getState) => {
 
     putRequest(
         null,
-        createAction(EVENT_CATEGORY_QUESTION_ASSIGNED),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/tracks/${currentEventCategory.id}/extra-questions/${questionId}`,
+        createAction(EVENT_CATEGORY_QUESTION_ASSIGNED)(question),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/tracks/${currentEventCategory.id}/extra-questions/${question.id}`,
         null,
         authErrorHandler
     )(params)(dispatch)
         .then((payload) => {
-            dispatch(showSuccessMessage(T.translate("edit_event_category_question.question_saved")));
+            dispatch(stopLoading());
         });
 
 };
 
-export const deleteEventCategoryQuestion = (questionId) => (dispatch, getState) => {
+
+export const unlinkQuestionToCategory = (questionId) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState, currentEventCategoryState } = getState();
     let { accessToken }     = loggedUserState;
@@ -372,7 +376,26 @@ export const deleteEventCategoryQuestion = (questionId) => (dispatch, getState) 
 };
 
 
-export const saveEventCategoryQuestionValue = (questionId, entity, history) => (dispatch, getState) => {
+export const queryQuestions = _.debounce((input, callback) => {
+
+    let accessToken = window.accessToken;
+
+    fetch(`${window.apiBaseUrl}/api/v1/track-question-templates?filter=name=@${input}&order=name&access_token=${accessToken}`)
+        .then(fetchResponseHandler)
+        .then((json) => {
+            let options = [...json.data];
+
+            callback(null, { options: options });
+        })
+        .catch(fetchErrorHandler);
+}, 500);
+
+
+
+/***********************************  CATEGORY QUESTION VALUES  *******************************************/
+
+
+export const saveEventCategoryQuestionValue = (questionId, entity) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState, currentEventCategoryState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
@@ -381,7 +404,6 @@ export const saveEventCategoryQuestionValue = (questionId, entity, history) => (
 
     dispatch(startLoading());
 
-    let normalizedEntity = entity;
     let params = { access_token : accessToken };
 
     if (entity.id) {
@@ -389,12 +411,12 @@ export const saveEventCategoryQuestionValue = (questionId, entity, history) => (
             null,
             createAction(EVENT_CATEGORY_QUESTION_VALUE_UPDATED),
             `${apiBaseUrl}/api/v1/track-question-templates/${questionId}/values/${entity.id}`,
-            normalizedEntity,
+            entity,
             authErrorHandler,
             entity
         )(params)(dispatch)
             .then((payload) => {
-                dispatch(showSuccessMessage(T.translate("edit_event_category_question.question_saved")));
+                dispatch(stopLoading());
             });
 
     } else {
@@ -410,11 +432,11 @@ export const saveEventCategoryQuestionValue = (questionId, entity, history) => (
             null,
             createAction(EVENT_CATEGORY_QUESTION_VALUE_ADDED),
             `${apiBaseUrl}/api/v1/track-question-templates/${questionId}/values`,
-            normalizedEntity,
+            entity,
             authErrorHandler
         )(params)(dispatch)
             .then((payload) => {
-                dispatch(showMessage(success_message));
+                dispatch(stopLoading());
             });
     }
 };
@@ -517,7 +539,7 @@ export const resetEventCategoryGroupForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_EVENT_CATEGORY_GROUP_FORM)({}));
 };
 
-export const saveEventCategoryGroup = (entity, history) => (dispatch, getState) => {
+export const saveEventCategoryGroup = (entity) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;

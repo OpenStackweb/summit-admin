@@ -61,9 +61,9 @@ class EditEventCategoryQuestionPage extends React.Component {
     }
 
     handleSaveValue(value) {
-        let {entity, history} = this.props;
+        let {entity} = this.props;
 
-        this.props.saveEventCategoryQuestionValue(entity.id, value, history);
+        this.props.saveEventCategoryQuestionValue(entity.id, value);
     }
 
     handleDeleteValue(valueId) {
@@ -86,7 +86,6 @@ class EditEventCategoryQuestionPage extends React.Component {
                 <hr/>
                 {currentSummit &&
                 <EventCategoryQuestionForm
-                    history={this.props.history}
                     entity={entity}
                     allClasses={allClasses}
                     errors={errors}

@@ -14,8 +14,9 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
-import { Input, TextEditor, TagInput, Panel, Table } from 'openstack-uicore-foundation/lib/components'
+import {findElementPos} from 'openstack-uicore-foundation/lib/methods'
+import { Input, TextEditor, TagInput, Panel, Table, SimpleLinkList } from 'openstack-uicore-foundation/lib/components'
+import {queryQuestions} from '../../actions/event-category-actions';
 
 
 class EventCategoryForm extends React.Component {
@@ -31,7 +32,6 @@ class EventCategoryForm extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleTagLink = this.handleTagLink.bind(this);
-        this.handleTagEdit = this.handleTagEdit.bind(this);
         this.handleTagUnLink = this.handleTagUnLink.bind(this);
         this.handleEditQuestion = this.handleEditQuestion.bind(this);
         this.handleNewQuestion = this.handleNewQuestion.bind(this);
@@ -70,7 +70,7 @@ class EventCategoryForm extends React.Component {
         let entity = {...this.state.entity};
         ev.preventDefault();
 
-        this.props.onSubmit(this.state.entity, this.props.history);
+        this.props.onSubmit(this.state.entity);
     }
 
     hasErrors(field) {
@@ -114,16 +114,11 @@ class EventCategoryForm extends React.Component {
         this.setState({entity: entity});
     }
 
-    handleTagEdit() {
-        let {currentSummit, history} = this.props;
-        history.push(`/app/summits/${currentSummit.id}/event-categories/new`);
-    }
-
     render() {
         let {entity, showQuestions} = this.state;
         let { currentSummit } = this.props;
 
-        let question_columns = [
+        let questionColumns = [
             { columnKey: 'id', value: T.translate("general.id") },
             { columnKey: 'class_name', value: T.translate("edit_event_category_question.class") },
             { columnKey: 'name', value: T.translate("edit_event_category_question.name") },
@@ -131,10 +126,14 @@ class EventCategoryForm extends React.Component {
             { columnKey: 'is_mandatory', value: T.translate("edit_event_category_question.mandatory") }
         ];
 
-        let question_options = {
+        let questionOptions = {
+            valueKey: "id",
+            labelKey: "name",
             actions: {
                 edit: {onClick: this.handleEditQuestion},
-                delete: { onClick: this.props.onDeleteQuestion}
+                delete: { onClick: this.props.onQuestionUnLink},
+                search: queryQuestions,
+                add: { onClick: this.props.onQuestionLink }
             }
         }
 
@@ -248,10 +247,11 @@ class EventCategoryForm extends React.Component {
                     <button className="btn btn-primary pull-right left-space" onClick={this.handleNewQuestion}>
                         {T.translate("edit_event_category.add_question")}
                     </button>
-                    <Table
-                        options={question_options}
-                        data={entity.extra_questions}
-                        columns={question_columns}
+
+                    <SimpleLinkList
+                        values={entity.extra_questions}
+                        columns={questionColumns}
+                        options={questionOptions}
                     />
                 </Panel>
                 }

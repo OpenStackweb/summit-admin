@@ -32,7 +32,7 @@ export default class AuthButton extends React.Component {
     }
 
     render() {
-        let {history, isLoggedUser, doLogin, initLogOut, picture} = this.props;
+        let {isLoggedUser, doLogin, initLogOut, picture} = this.props;
         let {showLogOut} = this.state;
 
         if (isLoggedUser) {
