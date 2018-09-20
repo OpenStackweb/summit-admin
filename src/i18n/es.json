@@ -770,6 +770,8 @@
     "start"                 : "Start",
     "speakers"              : "Speakers",
     "currentEvents"         : "Show only current events",
+    "current_event_view"    : "Current Event View",
+    "no_current_event"      : "No current event for this room.",
     "placeholders": {
       "search_events"       : "Search by Event Title or Speaker Name",
       "select_room"         : "Select a Room"

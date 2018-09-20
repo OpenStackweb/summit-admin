@@ -33,7 +33,7 @@ import LocationLayout from './location-layout'
 import RsvpTemplateLayout from './rsvp-template-layout'
 import TicketTypeLayout from './ticket-type-layout'
 import PushNotificationLayout from './push-notification-layout'
-import RoomOccupancyPage from '../pages/room-occupancy-page'
+import RoomOccupancyLayout from './room-occupancy-layout'
 import TagGroupLayout from './tag-group-layout'
 import NoMatchPage from "../pages/no-match-page";
 
@@ -88,7 +88,7 @@ class SummitIdLayout extends React.Component {
                     <Route path={`${match.url}/promocodes`} component={PromocodeLayout}/>
                     <Route path={`${match.url}/ticket-types`} component={TicketTypeLayout}/>
                     <Route path={`${match.url}/push-notifications`} component={PushNotificationLayout}/>
-                    <Route strict exact path={`${match.url}/room-occupancy`} component={RoomOccupancyPage}/>
+                    <Route path={`${match.url}/room-occupancy`} component={RoomOccupancyLayout}/>
                     <Route path={`${match.url}/tag-groups`} component={TagGroupLayout}/>
                     <Route path={`${match.url}/selection-plans`} render={
                         props => (
@@ -96,7 +96,7 @@ class SummitIdLayout extends React.Component {
                                 <Breadcrumb data={{ title: T.translate("edit_selection_plan.selection_plans"), pathname: match.url }} ></Breadcrumb>
                                 <Switch>
                                     <Route strict exact path={`${props.match.url}/new`} component={EditSelectionPlanPage} />
-                                    <Route strict exact path={`${props.match.url}/:selection_plan_id`} component={EditSelectionPlanPage} />
+                                    <Route strict exact path={`${props.match.url}/:selection_plan_id(\\d+)`} component={EditSelectionPlanPage} />
                                     <Route component={NoMatchPage}/>
                                 </Switch>
                             </div>

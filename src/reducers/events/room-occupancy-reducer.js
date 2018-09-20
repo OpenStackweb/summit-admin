@@ -14,6 +14,7 @@
 import moment from 'moment-timezone';
 import
 {
+    RECEIVE_CURRENT_EVENT_FOR_OCCUPANCY,
     RECEIVE_EVENTS_FOR_OCCUPANCY,
     REQUEST_EVENTS_FOR_OCCUPANCY,
     UPDATE_EVENT
@@ -23,6 +24,7 @@ import { LOGOUT_USER } from '../../actions/auth-actions';
 
 const DEFAULT_STATE = {
     events          : [],
+    currentEvent    : {},
     term            : null,
     roomId          : null,
     currentEvents   : false,
@@ -65,15 +67,48 @@ const roomOccupancyReducer = (state = DEFAULT_STATE, action) => {
             return {...state, events: events, currentPage: current_page, totalEvents: total, lastPage: last_page };
         }
         break;
+        case RECEIVE_CURRENT_EVENT_FOR_OCCUPANCY: {
+            let currentEvent = {};
+            let payloadEvent = null;
+
+            if (payload.response.hasOwnProperty('data') && payload.response.data.length == 1) {
+                payloadEvent = payload.response.data[0];
+            } else if (payload.response.hasOwnProperty('id')){
+                payloadEvent = {... payload.response};
+            }
+
+            if (payloadEvent) {
+                currentEvent = {
+                    id: payloadEvent.id,
+                    title: payloadEvent.title,
+                    start_date: moment(payloadEvent.start_date * 1000).tz(state.summitTZ).format('ddd h:mm a'),
+                    end_date: moment(payloadEvent.end_date * 1000).tz(state.summitTZ).format('ddd h:mm a'),
+                    room: (payloadEvent.location) ? payloadEvent.location.name : '',
+                    occupancy: payloadEvent.occupancy,
+                    speakers: (payloadEvent.speakers) ? payloadEvent.speakers.map(s => s.first_name + ' ' + s.last_name).join(',') : ''
+                };
+            }
+
+            return {...state, currentEvent: currentEvent };
+        }
+        break;
         case UPDATE_EVENT: {
+            let updatedEvent = payload;
+            let currentEvent = state.currentEvent;
+
             let events = state.events.map( e => {
-                if (e.id == payload.id) return payload;
+                if (e.id == updatedEvent.id) return updatedEvent;
                 else return e;
             });
 
-            return {...state,  events: [...events]};
+            if(currentEvent.id == updatedEvent.id) {
+                currentEvent = {...updatedEvent};
+            }
+
+
+            return {...state,  events: [...events], currentEvent: currentEvent};
         }
-            break;
+        break;
         default:
             return state;
     }

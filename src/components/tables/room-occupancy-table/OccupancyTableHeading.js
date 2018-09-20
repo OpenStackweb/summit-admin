@@ -35,9 +35,11 @@ class OccupancyTableHeading extends React.Component {
 	}
 
 	render () {
-		return (
+	    let cellClass = this.getSortClass() + ' ' + this.props.className;
+
+	    return (
 			<th onClick={this.handleSort}
-				className={this.getSortClass()}
+				className={cellClass}
 				width={this.props.width}
 				>
 				{this.props.children}

@@ -29,19 +29,21 @@ import {
 } from "openstack-uicore-foundation/lib/methods";
 
 
-export const REQUEST_EVENTS                 = 'REQUEST_EVENTS';
-export const RECEIVE_EVENTS                 = 'RECEIVE_EVENTS';
-export const REQUEST_EVENTS_FOR_OCCUPANCY   = 'REQUEST_EVENTS_FOR_OCCUPANCY';
-export const RECEIVE_EVENTS_FOR_OCCUPANCY   = 'RECEIVE_EVENTS_FOR_OCCUPANCY';
-export const RECEIVE_EVENT                  = 'RECEIVE_EVENT';
-export const RESET_EVENT_FORM               = 'RESET_EVENT_FORM';
-export const UPDATE_EVENT                   = 'UPDATE_EVENT';
-export const EVENT_UPDATED                  = 'EVENT_UPDATED';
-export const EVENT_ADDED                    = 'EVENT_ADDED';
-export const EVENT_PUBLISHED                = 'EVENT_PUBLISHED';
-export const EVENT_DELETED                  = 'EVENT_DELETED';
-export const FILE_ATTACHED                  = 'FILE_ATTACHED';
-export const RECEIVE_PROXIMITY_EVENTS       = 'RECEIVE_PROXIMITY_EVENTS';
+export const REQUEST_EVENTS                         = 'REQUEST_EVENTS';
+export const RECEIVE_EVENTS                         = 'RECEIVE_EVENTS';
+export const REQUEST_EVENTS_FOR_OCCUPANCY           = 'REQUEST_EVENTS_FOR_OCCUPANCY';
+export const RECEIVE_EVENTS_FOR_OCCUPANCY           = 'RECEIVE_EVENTS_FOR_OCCUPANCY';
+export const REQUEST_CURRENT_EVENT_FOR_OCCUPANCY    = 'REQUEST_CURRENT_EVENT_FOR_OCCUPANCY';
+export const RECEIVE_CURRENT_EVENT_FOR_OCCUPANCY    = 'RECEIVE_CURRENT_EVENT_FOR_OCCUPANCY';
+export const RECEIVE_EVENT                          = 'RECEIVE_EVENT';
+export const RESET_EVENT_FORM                       = 'RESET_EVENT_FORM';
+export const UPDATE_EVENT                           = 'UPDATE_EVENT';
+export const EVENT_UPDATED                          = 'EVENT_UPDATED';
+export const EVENT_ADDED                            = 'EVENT_ADDED';
+export const EVENT_PUBLISHED                        = 'EVENT_PUBLISHED';
+export const EVENT_DELETED                          = 'EVENT_DELETED';
+export const FILE_ATTACHED                          = 'FILE_ATTACHED';
+export const RECEIVE_PROXIMITY_EVENTS               = 'RECEIVE_PROXIMITY_EVENTS';
 
 
 
@@ -143,6 +145,47 @@ export const getEventsForOccupancy = ( term = null, roomId = null, currentEvents
         `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/${endPoint}`,
         authErrorHandler,
         {order, orderDir, term, roomId, currentEvents, summitTZ}
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const getCurrentEventForOccupancy = ( roomId, eventId = null ) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+    let filter = [];
+    let summitTZ = currentSummit.time_zone.name;
+    let endPoint = `${apiBaseUrl}/api/v1/summits/${currentSummit.id}`;
+
+    dispatch(startLoading());
+
+    let params = {
+        expand       : 'speakers, location',
+        page         : 1,
+        per_page     : 100,
+        access_token : accessToken,
+    };
+
+    if (eventId) {
+        endPoint = endPoint + `/events/${eventId}`;
+    } else {
+        endPoint = endPoint + `/locations/${roomId}/events/published`;
+
+        // only current events
+        let now = 1542103200; //moment().tz(summitTZ).unix(); // now in summit timezone converted to epoch
+        filter.push(`start_date<=${now}`);
+        filter.push(`end_date>=${now}`);
+        params['filter[]']= filter;
+    }
+
+    return getRequest(
+        createAction(REQUEST_CURRENT_EVENT_FOR_OCCUPANCY),
+        createAction(RECEIVE_CURRENT_EVENT_FOR_OCCUPANCY),
+        endPoint,
+        authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }

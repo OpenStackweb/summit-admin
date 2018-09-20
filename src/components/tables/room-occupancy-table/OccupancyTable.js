@@ -18,8 +18,10 @@ const createRow = (row, columns, actions) => {
 
     var action_buttons = '';
     var cells = columns.map((col,i) => {
+        let colClass = col.hasOwnProperty('className') ? col.className : '';
+
         return (
-            <OccupancyTableCell key={'cell_'+i}>
+            <OccupancyTableCell key={'cell_'+i} className={colClass}>
                 {row[col.columnKey]}
             </OccupancyTableCell>
         );
@@ -51,14 +53,16 @@ const OccupancyTable = (props) => {
                 <tr>
 			    {columns.map((col,i) => {
 
-                    let sortCol = (typeof options.sortCol != 'undefined') ? options.sortCol : defaults.sortCol;
-                    let sortDir = (typeof options.sortDir != 'undefined') ? options.sortDir : defaults.sortDir;
-                    let sortFunc = (typeof options.sortFunc != 'undefined') ? options.sortFunc : defaults.sortFunc;
-                    let sortable = (typeof col.sortable != 'undefined') ? col.sortable : defaults.sortable;
-                    let colWidth = (typeof col.width != 'undefined') ? col.width : defaults.colWidth;
+                    let sortCol = options.hasOwnProperty('sortCol') ? options.sortCol : defaults.sortCol;
+                    let sortDir = options.hasOwnProperty('sortDir') ? options.sortDir : defaults.sortDir;
+                    let sortFunc = options.hasOwnProperty('sortFunc') ? options.sortFunc : defaults.sortFunc;
+                    let sortable = col.hasOwnProperty('sortable') ? col.sortable : defaults.sortable;
+                    let colWidth = col.hasOwnProperty('width') ? col.width : defaults.colWidth;
+                    let colClass = col.hasOwnProperty('className') ? col.className : '';
 
                     return (
                         <OccupancyTableHeading
+                            className={colClass}
                             onSort={props.onSort}
                             sortDir={getSortDir(col.columnKey, i, sortCol, sortDir)}
                             sortable={sortable}

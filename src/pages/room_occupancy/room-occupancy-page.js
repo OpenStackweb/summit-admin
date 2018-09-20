@@ -14,15 +14,14 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
-import { Breadcrumb } from 'react-breadcrumbs';
 import { Pagination } from 'react-bootstrap';
 import { FreeTextSearch, Dropdown } from 'openstack-uicore-foundation/lib/components';
-import { getSummitById }  from '../actions/summit-actions';
-import { getEventsForOccupancy, saveOccupancy } from "../actions/event-actions";
-import OccupancyTable from "../components/tables/room-occupancy-table/OccupancyTable";
-import FragmentParser from '../utils/fragmen-parser';
+import { getSummitById }  from '../../actions/summit-actions';
+import { getEventsForOccupancy, saveOccupancy } from "../../actions/event-actions";
+import OccupancyTable from "../../components/tables/room-occupancy-table/OccupancyTable";
+import FragmentParser from '../../utils/fragmen-parser';
 
-import '../styles/room-occupancy-page.less';
+import '../../styles/room-occupancy-page.less';
 
 class RoomOccupancyPage extends React.Component {
 
@@ -34,6 +33,7 @@ class RoomOccupancyPage extends React.Component {
         this.handleSearch               = this.handleSearch.bind(this);
         this.handleRoomFilter           = this.handleRoomFilter.bind(this);
         this.handleChangeCurrentEvents  = this.handleChangeCurrentEvents.bind(this);
+        this.handleEventViewClick       = this.handleEventViewClick.bind(this);
         this.fragmentParser             = new FragmentParser();
 
     }
@@ -117,15 +117,23 @@ class RoomOccupancyPage extends React.Component {
 
     }
 
+    handleEventViewClick(ev) {
+        let {roomId, history, currentSummit} = this.props;
+
+        ev.preventDefault();
+
+        history.push(`/app/summits/${currentSummit.id}/room-occupancy/${roomId}`);
+    }
+
     render(){
-        let {currentSummit, events, lastPage, currentPage, term, order, orderDir, match, roomId, currentEvents} = this.props;
+        let {currentSummit, events, lastPage, currentPage, term, order, orderDir, roomId, currentEvents} = this.props;
         let that = this;
 
         let columns = [
             { columnKey: 'room', value: T.translate("room_occupancy.room") },
             { columnKey: 'start_date', value: T.translate("room_occupancy.start"), sortable: true, width: '100px' },
-            { columnKey: 'title', value: T.translate("room_occupancy.title"), sortable: true },
-            { columnKey: 'speakers', value: T.translate("room_occupancy.speakers") },
+            { columnKey: 'title', value: T.translate("room_occupancy.title"), sortable: true, className: 'hidden-xs' },
+            { columnKey: 'speakers', value: T.translate("room_occupancy.speakers"), className: 'hidden-xs' },
         ];
 
         let table_options = {
@@ -147,8 +155,6 @@ class RoomOccupancyPage extends React.Component {
 
         return(
             <div>
-                <Breadcrumb data={{ title: T.translate("room_occupancy.room_occupancy"), pathname: match.url }} ></Breadcrumb>
-
                 <div className="container">
                     <h3> {T.translate("room_occupancy.room_occupancy")}</h3>
                     <div className="row filters">
@@ -164,7 +170,7 @@ class RoomOccupancyPage extends React.Component {
                                       options={room_ddl} onChange={this.handleRoomFilter}
                             />
                         </div>
-                        <div className="col-md-3 checkboxes-div currentEvents">
+                        <div className="col-md-3 checkboxes-div currentEvents hidden-xs">
                             <div className="form-check abc-checkbox">
                                 <input type="checkbox" id="currentEvents" checked={currentEvents}
                                        onChange={this.handleChangeCurrentEvents} className="form-check-input" />
@@ -173,6 +179,13 @@ class RoomOccupancyPage extends React.Component {
                                 </label>
                             </div>
                         </div>
+                        {roomId &&
+                        <div className="col-md-3 visible-xs-block">
+                            <button onClick={this.handleEventViewClick} className="btn btn-primary currentEventButton">
+                                {T.translate("room_occupancy.current_event_view")}
+                            </button>
+                        </div>
+                        }
                     </div>
 
                     {events.length == 0 &&
