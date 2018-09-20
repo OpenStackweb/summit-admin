@@ -15,7 +15,7 @@ import moment from 'moment-timezone';
 import
 {
     RECEIVE_CURRENT_EVENT_FOR_OCCUPANCY,
-    RECEIVE_EVENTS_FOR_OCCUPANCY,
+    RECEIVE_EVENTS_FOR_OCCUPANCY, REQUEST_CURRENT_EVENT_FOR_OCCUPANCY,
     REQUEST_EVENTS_FOR_OCCUPANCY,
     UPDATE_EVENT
 } from '../../actions/event-actions';
@@ -48,6 +48,12 @@ const roomOccupancyReducer = (state = DEFAULT_STATE, action) => {
             let {order, orderDir, term, roomId, currentEvents, summitTZ} = payload;
 
             return {...state, order, orderDir, term, roomId, currentEvents, summitTZ }
+        }
+        break;
+        case REQUEST_CURRENT_EVENT_FOR_OCCUPANCY: {
+            let {summitTZ} = payload;
+
+            return {...state, summitTZ }
         }
         break;
         case RECEIVE_EVENTS_FOR_OCCUPANCY: {

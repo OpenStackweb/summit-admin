@@ -175,7 +175,7 @@ export const getCurrentEventForOccupancy = ( roomId, eventId = null ) => (dispat
         endPoint = endPoint + `/locations/${roomId}/events/published`;
 
         // only current events
-        let now = 1542103200; //moment().tz(summitTZ).unix(); // now in summit timezone converted to epoch
+        let now = moment().tz(summitTZ).unix(); // now in summit timezone converted to epoch
         filter.push(`start_date<=${now}`);
         filter.push(`end_date>=${now}`);
         params['filter[]']= filter;
@@ -185,7 +185,8 @@ export const getCurrentEventForOccupancy = ( roomId, eventId = null ) => (dispat
         createAction(REQUEST_CURRENT_EVENT_FOR_OCCUPANCY),
         createAction(RECEIVE_CURRENT_EVENT_FOR_OCCUPANCY),
         endPoint,
-        authErrorHandler
+        authErrorHandler,
+        {summitTZ}
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
