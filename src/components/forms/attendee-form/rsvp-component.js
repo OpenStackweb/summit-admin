@@ -48,8 +48,8 @@ export default class RsvpComponent extends React.Component {
 
         return (
             <div className="row form-group">
-                <legend>{T.translate("edit_attendee.rsvp")}</legend>
                 <div className="col-md-12">
+                    <legend>{T.translate("edit_attendee.rsvp")}</legend>
                     <table className="table table-striped">
                         <thead>
                         <tr>

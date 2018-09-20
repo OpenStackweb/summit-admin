@@ -220,7 +220,7 @@ class EventCategoryForm extends React.Component {
                     </div>
                 </div>
                 <div className="row form-group">
-                    <div className="col-md-4 checkboxes-div">
+                    <div className="col-md-3 checkboxes-div">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="voting_visible" checked={entity.voting_visible}
                                    onChange={this.handleChange} className="form-check-input"/>
@@ -229,7 +229,7 @@ class EventCategoryForm extends React.Component {
                             </label>
                         </div>
                     </div>
-                    <div className="col-md-4 checkboxes-div">
+                    <div className="col-md-6 checkboxes-div">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="chair_visible" checked={entity.chair_visible}
                                    onChange={this.handleChange} className="form-check-input"/>

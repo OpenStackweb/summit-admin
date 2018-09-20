@@ -52,10 +52,7 @@ export const authErrorHandler = (err, res) => (dispatch) => {
             else if (err.response.error && err.response.error.message) msg = err.response.error.message;
             else msg = err.message;
 
-            swal("Not Found", msg, "warning")
-                .then(function(){
-                    window.history.back();
-                }).catch(swal.noop);
+            swal("Not Found", msg, "warning");
 
             break;
         case 412:

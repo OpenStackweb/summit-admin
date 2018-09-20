@@ -122,8 +122,8 @@ export default class TicketComponent extends React.Component {
         return (
             <div className="ticket-component">
                 <div className="row form-group">
-                    <legend>{T.translate("edit_attendee.tickets")}</legend>
                     <div className="col-md-12">
+                        <legend>{T.translate("edit_attendee.tickets")}</legend>
                         {tickets.map(t =>
                             <div key={'tix_' + t.id} className="btn-group btn-group-xs ticket-btn">
                                 <a href="" className="ticket btn btn-default" onClick={this.onEdit.bind(this, t)}>

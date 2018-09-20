@@ -89,6 +89,8 @@ export const getAttendee = (attendeeId) => (dispatch, getState) => {
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
+    dispatch(startLoading());
+
     let params = {
         expand       : 'member, speaker, tickets, rsvp, schedule_summit_events, all_affiliations',
         access_token : accessToken,
@@ -135,7 +137,7 @@ export const reassignTicket = (attendeeId, newMemberId, ticketId) => (dispatch, 
         .then((payload) => {
             dispatch(showMessage(
                 success_message,
-                () => { history.push(`/app/summits/${currentSummit.id}/attendees/${payload.response.id}`) }
+                () => { history.push(`/app/summits/${currentSummit.id}/attendees/${payload.response.owner_id}`) }
             ));
         });
 };

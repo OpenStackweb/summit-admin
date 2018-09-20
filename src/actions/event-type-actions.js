@@ -67,6 +67,8 @@ export const getEventType = (eventTypeId) => (dispatch, getState) => {
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
+    dispatch(startLoading());
+
     let params = {
         expand       : '',
         access_token : accessToken,

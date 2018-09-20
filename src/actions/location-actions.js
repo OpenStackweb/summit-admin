@@ -131,6 +131,8 @@ export const getLocation = (locationId) => (dispatch, getState) => {
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
+    dispatch(startLoading());
+
     let params = {
         expand       : 'rooms,floors',
         access_token : accessToken,
@@ -316,6 +318,8 @@ export const getFloor = (locationId, floorId) => (dispatch, getState) => {
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
+    dispatch(startLoading());
+
     let params = {
         expand       : 'rooms',
         access_token : accessToken,
@@ -426,6 +430,8 @@ export const getRoom = (locationId, roomId) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
 
     let params = {
         access_token : accessToken,
@@ -546,6 +552,8 @@ export const getLocationImage = (locationId, imageId) => (dispatch, getState) =>
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
+    dispatch(startLoading());
+
     let params = {
         access_token : accessToken,
     };
@@ -664,6 +672,8 @@ export const getLocationMap = (locationId, mapId) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
 
     let params = {
         access_token : accessToken,

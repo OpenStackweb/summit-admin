@@ -103,6 +103,8 @@ export const getEventCategory = (eventCategoryId) => (dispatch, getState) => {
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
+    dispatch(startLoading());
+
     let params = {
         expand       : "track_groups,allowed_tags,extra_questions",
         access_token : accessToken,
@@ -236,6 +238,8 @@ export const getEventCategoryQuestion = (questionId) => (dispatch, getState) => 
 
     let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
+
+    dispatch(startLoading());
 
     let params = {
         expand: 'values',
@@ -497,6 +501,8 @@ export const getEventCategoryGroup = (groupId) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
 
     let params = {
         expand: 'tracks',

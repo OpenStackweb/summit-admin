@@ -13,6 +13,11 @@
 import React from 'react';
 import URI from "urijs";
 import swal from "sweetalert2";
+import '../styles/error-page.less';
+import T from "i18n-react/dist/i18n-react";
+import {doLogin} from "../actions/auth-actions";
+import {getBackURL} from "openstack-uicore-foundation/lib/methods";
+
 
 class CustomErrorPage extends React.Component {
 
@@ -23,8 +28,21 @@ class CustomErrorPage extends React.Component {
             "error");
     }
 
+    onClickLogin(){
+        doLogin(getBackURL());
+    }
+
     render(){
-        return null
+        return (
+            <div className="error_page_wrapper container">
+                <h1>{T.translate("landing.not_logged_in")}</h1>
+
+                <br/><br/>
+                <button className="btn btn-primary btn-lg" onClick={this.onClickLogin.bind(this)}>
+                    {T.translate("landing.log_in")}
+                </button>
+            </div>
+        );
     }
 }
 

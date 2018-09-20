@@ -98,6 +98,8 @@ export const getTagGroup = (tagGroupId) => (dispatch, getState) => {
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
+    dispatch(startLoading());
+
     let params = {
         expand       : 'allowed_tags,tag',
         access_token : accessToken,

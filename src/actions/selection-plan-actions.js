@@ -42,6 +42,8 @@ export const getSelectionPlan = (selectionPlanId) => (dispatch, getState) => {
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
+    dispatch(startLoading());
+
     let params = {
         access_token : accessToken,
         expand: 'track_groups'

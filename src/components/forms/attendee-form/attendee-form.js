@@ -124,41 +124,42 @@ class AttendeeForm extends React.Component {
                     </div>
                     }
                 </div>
+
+                <div className="row form-group">
+                    <div className="col-md-3 checkboxes-div">
+                        <div className="form-check abc-checkbox">
+                            <input type="checkbox" id="shared_contact_info" checked={entity.shared_contact_info}
+                                   onChange={this.handleChange} className="form-check-input"/>
+                            <label className="form-check-label" htmlFor="shared_contact_info">
+                                {T.translate("edit_attendee.shared_contact_info")}
+                            </label>
+                        </div>
+                    </div>
+                    <div className="col-md-3 checkboxes-div">
+                        <div className="form-check abc-checkbox">
+                            <input type="checkbox" id="summit_hall_checked_in" checked={entity.summit_hall_checked_in}
+                                   onChange={this.handleChange} className="form-check-input"/>
+                            <label className="form-check-label" htmlFor="summit_hall_checked_in">
+                                {T.translate("edit_attendee.checked_in")}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
                 {entity.member != null &&
                 <div>
                     {entity.member.affiliations &&
-                        <div className="row form-group">
-                            <legend>{T.translate("edit_attendee.affiliations")}</legend>
-                            <div className="col-md-12">
-                                <AffiliationsTable
-                                    ownerId={entity.member.id}
-                                    data={entity.member.affiliations}
-                                />
-                            </div>
-                        </div>
-
-                    }
                     <div className="row form-group">
-                        <legend>{T.translate("general.attendee")}</legend>
-                        <div className="col-md-3">
-                            <div className="form-check abc-checkbox">
-                                <input type="checkbox" id="shared_contact_info" checked={entity.shared_contact_info}
-                                       onChange={this.handleChange} className="form-check-input"/>
-                                <label className="form-check-label" htmlFor="shared_contact_info">
-                                    {T.translate("edit_attendee.shared_contact_info")}
-                                </label>
-                            </div>
-                        </div>
-                        <div className="col-md-3">
-                            <div className="form-check abc-checkbox">
-                                <input type="checkbox" id="summit_hall_checked_in" checked={entity.summit_hall_checked_in}
-                                       onChange={this.handleChange} className="form-check-input"/>
-                                <label className="form-check-label" htmlFor="summit_hall_checked_in">
-                                    {T.translate("edit_attendee.checked_in")}
-                                </label>
-                            </div>
+                        <div className="col-md-12">
+                            <legend>{T.translate("edit_attendee.affiliations")}</legend>
+                            <AffiliationsTable
+                                ownerId={entity.member.id}
+                                data={entity.member.affiliations}
+                            />
                         </div>
                     </div>
+                    }
+
                     {entity.hasOwnProperty('tickets') &&
                     <TicketComponent
                         attendeeId={entity.id}

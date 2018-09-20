@@ -114,6 +114,8 @@ export const getPromocode = (promocodeId) => (dispatch, getState) => {
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
+    dispatch(startLoading());
+
     let params = {
         expand       : 'owner, sponsor, speaker, tickets, ticket_type',
         access_token : accessToken,

@@ -94,6 +94,8 @@ export const getPushNotification = (pushNotificationId) => (dispatch, getState) 
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
+    dispatch(startLoading());
+
     let params = {
         access_token : accessToken,
     };
