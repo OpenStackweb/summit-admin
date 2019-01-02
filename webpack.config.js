@@ -4,11 +4,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const UglifyJSPlugin    = require('uglifyjs-webpack-plugin');
 const                 _ = require('lodash');
-const VersioningPlugin = require('versioning-webpack-plugin')
-const WebpackMd5Hash = require('webpack-md5-hash')
+const VersioningPlugin  = require('versioning-webpack-plugin')
+const WebpackMd5Hash    = require('webpack-md5-hash')
 
 var PRODUCTION  = process.env.NODE_ENV === 'production';
 console.log(`FLAVOR ${process.env.FLAVOR}`);
+
 let suffix      = process.env.FLAVOR == 'dev' ? '.dev' : '';
 let envFilePath = `.env${suffix}`;
 console.log(`envFilePath ${envFilePath}`);
@@ -21,11 +22,6 @@ console.log(dotenvConfig);
 
 var plugins = [
     new ExtractTextPlugin({ filename: 'css/[name].css' }),
-    new webpack.optimize.CommonsChunkPlugin({
-        name: 'common',
-        filename: '__common__[chunkhash].js',
-        deepChildren: true
-    }),
     new HtmlWebpackPlugin(
         {
             title: 'Custom template',
@@ -79,10 +75,9 @@ function postCSSLoader() {
     }
 }
 
-module.exports = {
-    entry: {
-        'index': './src/index.js',
-    },
+const config = {
+    mode: "development",
+    entry: "./src/index.js",
     devtool: "source-map",
     devServer: {
         contentBase: './dist',
@@ -91,11 +86,18 @@ module.exports = {
     output: {
         filename: '[name]_[chunkhash].js',
         path: path.resolve(__dirname, 'dist'),
-        publicPath: '/'
+        publicPath: '/',
+        pathinfo: false
     },
     module: {
         rules: [
-            { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" },
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader'
+                }
+            },
             {
                 test: /\.css$/,
                 exclude: /\.module\.css$/,
@@ -128,10 +130,6 @@ module.exports = {
                 use: "file-loader?name=svg/[name].[ext]!svgo-loader"
             },
             {
-                test: /\.json/,
-                use: "json-loader"
-            },
-            {
                 test: /\.yaml$/,
                 use: 'js-yaml-loader',
             }
@@ -140,4 +138,19 @@ module.exports = {
     plugins: PRODUCTION
         ? plugins.concat(productionPlugins)
         : plugins.concat(devPlugins),
+    optimization: {
+        removeAvailableModules: false,
+        removeEmptyChunks: false,
+        splitChunks: {
+            cacheGroups: {
+                commons: {
+                    name: 'commons',
+                    chunks: 'initial',
+                    minChunks: 2
+                }
+            }
+        },
+    }
 };
+
+module.exports = config;
