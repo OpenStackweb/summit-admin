@@ -160,7 +160,7 @@ class PromocodeListPage extends React.Component {
                         />
                     </div>
                     <div className="col-md-6 text-right">
-                        <div className="col-md-4 text-left">
+                        <div className="col-md-6 text-left">
                             <Dropdown
                                 id="ticket_type"
                                 className="right-space"
@@ -168,7 +168,6 @@ class PromocodeListPage extends React.Component {
                                 placeholder={T.translate("promocode_list.placeholders.select_type")}
                                 options={promocode_types_ddl}
                                 onChange={this.handleTypeChange}
-                                clearable={false}
                             />
                         </div>
                         <button className="btn btn-primary right-space" onClick={this.handleNewPromocode}>

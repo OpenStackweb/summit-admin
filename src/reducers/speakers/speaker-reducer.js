@@ -31,7 +31,7 @@ export const DEFAULT_ENTITY = {
     title: '',
     first_name: '',
     last_name: '',
-    member: {},
+    member: null,
     email: '',
     twitter: '',
     irc: '',
@@ -101,7 +101,7 @@ const speakerReducer = (state = DEFAULT_STATE, action) => {
                 entity.confirmed = entity.summit_assistance.confirmed;
             }
 
-            return {...state, entity: {...state.entity, ...entity}, errors: {} };
+            return {...state, entity: {...DEFAULT_ENTITY, ...entity}, errors: {} };
         }
         break;
         case PIC_ATTACHED: {

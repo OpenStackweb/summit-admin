@@ -210,7 +210,6 @@ class SpeakerForm extends React.Component {
                             id="member"
                             value={entity.member}
                             onChange={this.handleChange}
-                            multi={false}
                         />
                     </div>
                     {entity.id != 0 &&
@@ -219,7 +218,7 @@ class SpeakerForm extends React.Component {
                         <Input
                             className="form-control"
                             id="email"
-                            disabled="true"
+                            disabled={true}
                             value={entity.email}
                             onChange={this.handleChange}
                         />
@@ -256,7 +255,7 @@ class SpeakerForm extends React.Component {
                         <TextEditor id="bio" value={entity.bio} onChange={this.handleChange} />
                     </div>
                 </div>
-                {entity.id && entity.member &&
+                {entity.id != 0 && entity.member != null &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_speaker.affiliations")} </label>

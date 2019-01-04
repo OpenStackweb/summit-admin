@@ -168,7 +168,6 @@ export default class TicketComponent extends React.Component {
                                     id="member"
                                     value={this.state.newOwner}
                                     onChange={this.handleMemberChange}
-                                    multi={false}
                                 />
                             </div>
                         </div>

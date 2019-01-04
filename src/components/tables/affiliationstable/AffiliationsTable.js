@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import AffiliationsActionsTableCell from './AffiliationsActionsTableCell';
-import { OrganizationInput, DateTimePicker } from 'openstack-uicore-foundation/lib/components'
+import { DateTimePicker, OrganizationInput } from 'openstack-uicore-foundation/lib/components'
 import { epochToMoment, formatEpoch } from 'openstack-uicore-foundation/lib/methods'
 import { addAffiliation, saveAffiliation, deleteAffiliation, addOrganization } from "../../../actions/member-actions"
 import T from "i18n-react/dist/i18n-react";
@@ -11,7 +11,7 @@ import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 
 const createRow = (row, actions) => {
     var cells = [];
-    var org_value = (row.organization) ? {name: row.organization.name, value: row.organization.id} : null;
+    var org_value = (row.organization) ? row.organization : null;
 
     if (row.is_edit) {
         cells = [
@@ -23,7 +23,6 @@ const createRow = (row, actions) => {
                     id="organization"
                     value={org_value}
                     onChange={actions.handleChange.bind(this, row.id)}
-                    multi={false}
                     allowCreate
                     onCreate={actions.addOrganization}
                 />
@@ -78,7 +77,6 @@ const createNewRow = (row, actions) => {
                 id="organization"
                 value={row.organization}
                 onChange={actions.handleChange}
-                multi={false}
                 allowCreate
                 onCreate={actions.addOrganization}
             />
@@ -124,7 +122,7 @@ class AffiliationsTable extends React.Component {
         this.new_row = {
             owner_id: props.ownerId,
             job_title: '',
-            organization: {name: '', value: 0},
+            organization: null,
             start_date: '',
             end_date: '',
             is_current: 0

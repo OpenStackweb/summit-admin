@@ -670,7 +670,7 @@ class ScheduleAdminDashBoard extends React.Component {
                     }
                     { ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm == '' ) &&
                         ( emptySpots.length == 0 ) &&
-                        <ScheduleAdminVenueSelector multi={false} onVenueChanged={this.onVenueChanged}
+                        <ScheduleAdminVenueSelector onVenueChanged={this.onVenueChanged}
                                                     venues={venues} currentValue={currentVenueSelectorItem} />
                     }
                     { ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm == '' )

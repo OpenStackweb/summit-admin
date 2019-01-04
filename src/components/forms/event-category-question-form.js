@@ -119,7 +119,7 @@ class EventCategoryQuestionForm extends React.Component {
                             placeholder={T.translate("edit_event_category_question.placeholders.select_class")}
                             options={class_name_ddl}
                             error={this.hasErrors('class_name')}
-                            clearable={false}
+                            clearable
                         />
                     </div>
                     <div className="col-md-4">

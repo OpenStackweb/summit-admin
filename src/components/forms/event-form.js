@@ -376,7 +376,7 @@ class EventForm extends React.Component {
                             value={entity.sponsors}
                             onChange={this.handleChange}
                             summitId={currentSummit.id}
-                            multi={true}
+                            multi
                         />
                     </div>
                 </div>
@@ -403,7 +403,6 @@ class EventForm extends React.Component {
                             id="moderator"
                             value={entity.moderator}
                             onChange={this.handleChange}
-                            multi={false}
                             history={history}
                         />
                     </div>
@@ -417,7 +416,6 @@ class EventForm extends React.Component {
                             id="moderator"
                             value={entity.moderator}
                             onChange={this.handleChange}
-                            multi={false}
                             history={history}
                         />
                     </div>

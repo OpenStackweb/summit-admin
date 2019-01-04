@@ -111,7 +111,6 @@ class AttendeeForm extends React.Component {
                             id="member"
                             value={entity.member}
                             onChange={this.handleChange}
-                            multi={false}
                             disabled
                         />
                     </div>

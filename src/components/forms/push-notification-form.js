@@ -153,7 +153,6 @@ class PushNotificationForm extends React.Component {
                             summit={currentSummit}
                             value={entity.event}
                             onChange={this.handleChange}
-                            multi={false}
                             onlyPublished={true}
                         />
                     </div>
@@ -165,7 +164,6 @@ class PushNotificationForm extends React.Component {
                             id="group"
                             value={entity.group}
                             onChange={this.handleChange}
-                            multi={false}
                         />
                     </div>
                     }

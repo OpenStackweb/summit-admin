@@ -158,7 +158,6 @@ class PromocodeForm extends React.Component {
                             value={entity.sponsor}
                             onChange={this.handleChange}
                             summitId={currentSummit.id}
-                            multi={false}
                             error={this.hasErrors('sponsor_id')}
                         />
                     </div>
@@ -172,7 +171,6 @@ class PromocodeForm extends React.Component {
                             id="owner"
                             value={entity.owner}
                             onChange={this.handleChange}
-                            multi={false}
                             error={this.hasErrors('owner_id')}
                         />
                     </div>
@@ -187,7 +185,6 @@ class PromocodeForm extends React.Component {
                             value={entity.speaker}
                             onChange={this.handleChange}
                             summitId={currentSummit.id}
-                            multi={false}
                             error={this.hasErrors('speaker_id')}
                         />
                     </div>

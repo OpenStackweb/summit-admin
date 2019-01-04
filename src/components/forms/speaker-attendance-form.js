@@ -99,7 +99,6 @@ class SpeakerAttendanceForm extends React.Component {
                             value={entity.speaker}
                             onChange={this.handleChange}
                             summitId={currentSummit.id}
-                            multi={false}
                             history={history}
                         />
                     </div>
