@@ -4,8 +4,8 @@
   "description": "OpenStack Summit Admin App",
   "main": "index.js",
   "scripts": {
-    "build-dev": "./node_modules/.bin/webpack --config webpack.config.js",
-    "build": "NODE_ENV=production ./node_modules/.bin/webpack --config webpack.config.js",
+    "build-dev": "./node_modules/.bin/webpack --mode=development --config webpack.config.js",
+    "build": "NODE_ENV=production ./node_modules/.bin/webpack --mode=production --config webpack.config.js",
     "serve": "webpack-dev-server --open --https"
   },
   "author": "",

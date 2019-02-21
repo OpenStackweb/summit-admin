@@ -76,9 +76,7 @@ function postCSSLoader() {
 }
 
 const config = {
-    mode: "development",
     entry: "./src/index.js",
-    devtool: "source-map",
     devServer: {
         contentBase: './dist',
         historyApiFallback: true
@@ -153,4 +151,24 @@ const config = {
     }
 };
 
-module.exports = config;
+
+module.exports = (env, argv) => {
+    let mode = argv.mode;
+    console.log(`mode is ${mode}`);
+    if(mode === undefined) {
+        console.log("setting mode to development ...");
+        mode = 'development';
+    }
+    config.mode = mode;
+
+    if (mode === 'development') {
+        config.devtool = 'source-map';
+
+    }
+
+    if (mode === 'production') {
+        //...
+    }
+
+    return config;
+};
