@@ -20,7 +20,9 @@ import
     RSVP_QUESTION_ADDED,
     RECEIVE_RSVP_QUESTION_META,
     RSVP_QUESTION_VALUE_DELETED,
-    QUESTION_VALUE_ORDER_UPDATED
+    QUESTION_VALUE_ORDER_UPDATED,
+    RSVP_QUESTION_VALUE_ADDED,
+    RSVP_QUESTION_VALUE_UPDATED
 } from '../../actions/rsvp-template-actions';
 
 import { LOGOUT_USER } from '../../actions/auth-actions';
@@ -31,6 +33,7 @@ export const DEFAULT_ENTITY = {
     id                  : 0,
     name                : '',
     label               : '',
+    order               : 0,
     class_name          : '',
     is_mandatory        : false,
     is_read_only        : false,
@@ -98,6 +101,23 @@ const rsvpQuestionReducer = (state = DEFAULT_STATE, action) => {
             let values = [...payload];
             return {...state, entity: {...state.entity, values: values}}
             }
+        break;
+        case RSVP_QUESTION_VALUE_ADDED: {
+            let entity = {...payload.response};
+            let values = [...state.entity.values, entity];
+
+            return {...state, entity: { ...state.entity, values: values}};
+        }
+        break;
+        case RSVP_QUESTION_VALUE_UPDATED: {
+            let entity = {...payload.response};
+            let values_tmp = state.entity.values.filter(v => v.id != entity.id);
+            let values = [...values_tmp, entity];
+
+            values.sort((a, b) => (a.order > b.order ? 1 : (a.order < b.order ? -1 : 0)));
+
+            return {...state, entity: { ...state.entity, values: values}};
+        }
         break;
         case RSVP_QUESTION_VALUE_DELETED: {
             let {rsvpQuestionValueId} = payload;

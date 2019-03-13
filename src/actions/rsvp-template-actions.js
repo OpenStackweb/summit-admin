@@ -419,6 +419,12 @@ export const saveRsvpQuestionValue = (rsvpTemplateId, rsvpQuestionId, entity) =>
 
     if (entity.id) {
 
+        let success_message = {
+            title: T.translate("general.done"),
+            html: T.translate("edit_rsvp_question_value.rsvp_question_value_saved"),
+            type: 'success'
+        };
+
         putRequest(
             createAction(UPDATE_RSVP_QUESTION_VALUE),
             createAction(RSVP_QUESTION_VALUE_UPDATED),
@@ -428,7 +434,10 @@ export const saveRsvpQuestionValue = (rsvpTemplateId, rsvpQuestionId, entity) =>
             entity
         )(params)(dispatch)
             .then((payload) => {
-                dispatch(showSuccessMessage(T.translate("edit_rsvp_question_value.rsvp_question_value_saved")));
+                dispatch(showMessage(
+                    success_message,
+                    () => { history.push(`/app/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${rsvpQuestionId}`) }
+                ));
             });
 
     } else {
@@ -450,7 +459,7 @@ export const saveRsvpQuestionValue = (rsvpTemplateId, rsvpQuestionId, entity) =>
             .then((payload) => {
                 dispatch(showMessage(
                     success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${rsvpQuestionId}/values/${payload.response.id}`) }
+                    () => { history.push(`/app/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${rsvpQuestionId}`) }
                 ));
             });
     }
