@@ -235,22 +235,7 @@ class RsvpQuestionForm extends React.Component {
                     </div>
                 </div>
                 }
-                {this.shouldShowField('values') && entity.id &&
-                <div className="row form-group">
-                    <div className="col-md-12">
-                        <button className="btn btn-primary pull-right" onClick={this.handleAddValue}>
-                            {T.translate("edit_rsvp_question.add_value")}
-                        </button>
-                        <SortableTable
-                            options={table_options}
-                            data={sortedValues}
-                            columns={columns}
-                            dropCallback={this.props.onValueReorder}
-                            orderField="order"
-                        />
-                    </div>
-                </div>
-                }
+
                 <div className="row form-group">
                     {this.shouldShowField('is_country_selector') &&
                     <div className="col-md-3 checkboxes-div">
@@ -263,12 +248,12 @@ class RsvpQuestionForm extends React.Component {
                         </div>
                     </div>
                     }
-                    {this.shouldShowField('is_multi_select') &&
+                    {this.shouldShowField('is_multiselect') &&
                     <div className="col-md-3 checkboxes-div">
                         <div className="form-check abc-checkbox">
-                            <input type="checkbox" id="is_multi_select" checked={entity.is_multi_select}
+                            <input type="checkbox" id="is_multiselect" checked={entity.is_multiselect}
                                    onChange={this.handleChange} className="form-check-input"/>
-                            <label className="form-check-label" htmlFor="is_multi_select">
+                            <label className="form-check-label" htmlFor="is_multiselect">
                                 {T.translate("edit_rsvp_question.is_multi_select")}
                             </label>
                         </div>
@@ -286,6 +271,23 @@ class RsvpQuestionForm extends React.Component {
                     </div>
                     }
                 </div>
+
+                {this.shouldShowField('values') && entity.id &&
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <button className="btn btn-primary pull-right" onClick={this.handleAddValue}>
+                            {T.translate("edit_rsvp_question.add_value")}
+                        </button>
+                        <SortableTable
+                            options={table_options}
+                            data={sortedValues}
+                            columns={columns}
+                            dropCallback={this.props.onValueReorder}
+                            orderField="order"
+                        />
+                    </div>
+                </div>
+                }
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">

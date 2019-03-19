@@ -37,7 +37,7 @@ export const DEFAULT_ENTITY = {
     class_name          : '',
     is_mandatory        : false,
     is_read_only        : false,
-    is_multi_select     : false,
+    is_multiselect     : false,
     use_chosen_plugin   : false,
     is_country_selector : false,
     content             : '',
