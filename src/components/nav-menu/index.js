@@ -113,6 +113,7 @@ class NavMenu extends React.Component {
             {name: 'dashboard', iconClass: 'fa-dashboard', linkUrl: `summits/${summit_id}/dashboard`, accessRoute: 'summit-edit'},
             {name: 'events', iconClass: 'fa-calendar', accessRoute: 'events',
                 childs: [
+                    {name:'new_event', linkUrl:`summits/${summit_id}/events/new`},
                     {name:'event_list', linkUrl:`summits/${summit_id}/events`},
                     {name:'schedule', linkUrl:`summits/${summit_id}/events/schedule`},
                     {name:'event_types', linkUrl:`summits/${summit_id}/event-types`},

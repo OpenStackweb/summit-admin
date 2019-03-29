@@ -77,7 +77,7 @@ export const getUnScheduleEventsPage =
         }
 
         if(term){
-            filter.push(`title=@${term},abstract=@${term},social_summary=@${term},tags=@${term},speaker=@${term},speaker_email=@${term}`);
+            filter.push(`title=@${term},abstract=@${term},social_summary=@${term},tags=@${term},speaker=@${term},speaker_email=@${term},id==${term}`);
         }
 
         let params = {
@@ -280,7 +280,7 @@ export const searchScheduleEvents = (term) => (dispatch, getState) => {
         page         : 1,
         per_page     : ScheduleEventsSearchResultMaxPage,
         access_token : accessToken,
-        filter: `title=@${term},abstract=@${term},social_summary=@${term},tags=@${term},speaker=@${term},speaker_email=@${term}`,
+        filter: `title=@${term},abstract=@${term},social_summary=@${term},tags=@${term},speaker=@${term},speaker_email=@${term},id==${term}`,
         order:'+title,+id'
     };
 
