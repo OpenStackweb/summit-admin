@@ -88,6 +88,9 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
                     entity[key] = (entity[key] == null) ? '' : entity[key] ;
                 }
             }
+
+            if (!entity.rsvp_external) entity.rsvp_link = null;
+
             return {...state, entity: {...state.entity, ...entity}, errors: {} };
         }
         break;

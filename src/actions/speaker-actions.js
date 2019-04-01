@@ -261,7 +261,7 @@ const uploadFile = (entity, file) => (dispatch, getState) => {
     let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
 
-    putRequest(
+    postRequest(
         null,
         createAction(PIC_ATTACHED),
         `${apiBaseUrl}/api/v1/speakers/${entity.id}/photo?access_token=${accessToken}`,

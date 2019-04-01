@@ -101,6 +101,10 @@ const speakerReducer = (state = DEFAULT_STATE, action) => {
                 entity.confirmed = entity.summit_assistance.confirmed;
             }
 
+            delete entity.languages;
+            delete entity.areas_of_expertise;
+            delete entity.organizational_roles;
+
             return {...state, entity: {...DEFAULT_ENTITY, ...entity}, errors: {} };
         }
         break;
