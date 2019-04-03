@@ -24,7 +24,7 @@ export default class UnAuthorizedPage extends React.Component {
 
         return (
             <div>
-                <div className="container">
+                <div className="container not-allowed-page">
                     <h1>Sorry... </h1>
                     <h3>{T.translate("errors.not_allowed")}</h3>
                 </div>

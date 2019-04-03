@@ -75,6 +75,14 @@ body {
     font-weight: 400;
 }
 
+.not-allowed-page {
+    margin-top: 20px
+}
+
+.not-allowed-page h3, .not-allowed-page h1 {
+    text-align: center;
+}
+
 
 
 /* MOBILE SPECIFIC */
