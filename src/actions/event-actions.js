@@ -198,6 +198,8 @@ export const getEvent = (eventId) => (dispatch, getState) => {
         let { accessToken }     = loggedUserState;
         let { currentSummit }   = currentSummitState;
 
+        if (!currentSummit.id) return;
+
         dispatch(startLoading());
         return getRequest(
             null,

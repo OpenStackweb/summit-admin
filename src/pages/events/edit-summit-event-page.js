@@ -14,52 +14,21 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
-import { Breadcrumb } from 'react-breadcrumbs';
 import EventForm from '../../components/forms/event-form';
-import { getSummitById }  from '../../actions/summit-actions';
+import { saveEvent, attachFile } from '../../actions/event-actions';
+import { unPublishEvent } from '../../actions/summit-builder-actions';
+
 import '../../styles/edit-summit-event-page.less';
 import '../../components/form-validation/validate.less';
-import { getEvent, resetEventForm, saveEvent, attachFile } from '../../actions/event-actions';
-import { unPublishEvent } from '../../actions/summit-builder-actions';
-import { getRsvpTemplates } from '../../actions/rsvp-template-actions';
 
 
 class EditSummitEventPage extends React.Component {
 
-    componentWillMount () {
-        let eventId = this.props.match.params.event_id;
-
-        if (!eventId) {
-            this.props.resetEventForm();
-        } else {
-            this.props.getEvent(eventId);
-        }
-
-        this.props.getRsvpTemplates();
-    }
-
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.event_id;
-        let newId = newProps.match.params.event_id;
-
-        if (oldId != newId) {
-            if (!newId) {
-                this.props.resetEventForm();
-            } else {
-                this.props.getEvent(newId);
-            }
-        }
-    }
-
     render(){
         let {currentSummit, entity, errors, levelOptions, rsvpTemplateOptions, match} = this.props;
-        let breadcrumb = (entity.id) ? entity.title : T.translate("general.new");
-
-        if(!currentSummit.id) return(<div></div>);
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
                 <h3>{T.translate("general.summit_event")}</h3>
                 <hr/>
                 {currentSummit &&
@@ -94,12 +63,8 @@ const mapStateToProps = ({ currentSummitState, currentSummitEventState, currentR
 export default connect (
     mapStateToProps,
     {
-        getSummitById,
-        getEvent,
-        resetEventForm,
         saveEvent,
         attachFile,
-        unPublishEvent,
-        getRsvpTemplates
+        unPublishEvent
     }
 )(EditSummitEventPage);

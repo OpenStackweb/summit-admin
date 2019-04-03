@@ -40,7 +40,7 @@ import NoMatchPage from "../pages/no-match-page";
 
 class SummitIdLayout extends React.Component {
 
-    componentWillMount() {
+    componentDidMount() {
         let summitId = this.props.match.params.summit_id;
 
         if (!summitId) {
@@ -68,7 +68,7 @@ class SummitIdLayout extends React.Component {
         let summitId = this.props.match.params.summit_id;
         let breadcrumb = currentSummit.id ? currentSummit.name : T.translate("general.new_summit");
 
-        if (summitId && !currentSummit.id) return (<div></div>);
+        if (!currentSummit.id || summitId != currentSummit.id) return (<div></div>);
 
         return(
             <div>

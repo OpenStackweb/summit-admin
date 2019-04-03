@@ -49,7 +49,8 @@ export const DEFAULT_ENTITY = {
     discussion_leader: 0,
     groups: [],
     attachment: '',
-    occupancy: 'EMPTY'
+    occupancy: 'EMPTY',
+    materials: []
 }
 
 const DEFAULT_STATE = {
@@ -90,6 +91,12 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
             }
 
             if (!entity.rsvp_external) entity.rsvp_link = null;
+
+            let links = entity.links.map(l => ({...l, type: 'Link', name: l.name ? l.name : l.link, display_on_site: l.display_on_site ? 'Yes' : 'No'}));
+            let videos = entity.videos.map(v => ({...v, type: 'Video', display_on_site: v.display_on_site ? 'Yes' : 'No'}));
+            let slides = entity.slides.map(s => ({...s, type: 'Slide', display_on_site: s.display_on_site ? 'Yes' : 'No'}));
+
+            entity.materials = [...links, ...videos, ...slides];
 
             return {...state, entity: {...state.entity, ...entity}, errors: {} };
         }

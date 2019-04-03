@@ -248,6 +248,10 @@
     "event_created"       : "Event created successfully.",
     "saved_and_published" : "Event saved & published successfully.",
     "proximity_alert"     : "Speaker/s have sessions 90min before or after:",
+    "materials"           : "Materials",
+    "add_material"        : "Add Material",
+    "display_on_site"     : "Display on site",
+    "type"                : "Type",
     "placeholders": {
       "select_venue"        : "Select a Summit Venue ...",
       "start_date"          : "Start Date",
@@ -256,6 +260,19 @@
       "select_track"        : "Select a Track ...",
       "select_level"        : "Select a Level ...",
       "select_rsvp_template": "Select a Template ..."
+    }
+  },
+  "edit_event_material": {
+    "material"              : "Material",
+    "type"                  : "Type",
+    "name"                  : "Name",
+    "featured"              : "Featured",
+    "display_on_site"       : "Display on site",
+    "link"                  : "Link",
+    "slide"                 : "Slide",
+    "youtube_id"            : "Youtube Id",
+    "placeholders": {
+      "select_type"        : "Select a Type ..."
     }
   },
   "speaker_list": {

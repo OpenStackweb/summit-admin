@@ -26,7 +26,8 @@ import {
     GroupInput,
     UploadInput,
     Input,
-    Panel
+    Panel,
+    Table
 } from 'openstack-uicore-foundation/lib/components'
 
 
@@ -45,6 +46,8 @@ class EventForm extends React.Component {
         this.handleUploadFile = this.handleUploadFile.bind(this);
         this.handleRemoveFile = this.handleRemoveFile.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleMaterialEdit = this.handleMaterialEdit.bind(this);
+        this.handleNewMaterial = this.handleNewMaterial.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -177,6 +180,18 @@ class EventForm extends React.Component {
         this.setState({showSection: newShowSection});
     }
 
+    handleMaterialEdit(materialId) {
+        let {currentSummit, entity, history} = this.props;
+        history.push(`/app/summits/${currentSummit.id}/events/${entity.id}/materials/${materialId}`);
+    }
+
+    handleNewMaterial(ev) {
+        ev.preventDefault();
+
+        let {currentSummit, entity, history} = this.props;
+        history.push(`/app/summits/${currentSummit.id}/events/${entity.id}/materials/new`);
+    }
+
     render() {
         let {entity, showSection} = this.state;
         let { currentSummit, levelOpts, typeOpts, trackOpts, locationOpts, rsvpTemplateOpts, history } = this.props;
@@ -210,6 +225,19 @@ class EventForm extends React.Component {
                 return {label: t.title, value: t.id}
             }
         );
+
+        let material_columns = [
+            { columnKey: 'type', value: T.translate("edit_event.type") },
+            { columnKey: 'name', value: T.translate("general.name") },
+            { columnKey: 'display_on_site', value: T.translate("edit_event.display_on_site") }
+        ];
+
+        let material_options = {
+            actions: {
+                edit: {onClick: this.handleMaterialEdit},
+                delete: { onClick: this.props.onMaterialDelete }
+            }
+        }
 
         return (
             <form>
@@ -484,6 +512,18 @@ class EventForm extends React.Component {
                             />
                         </div>
                     </div>
+                </Panel>
+
+                <Panel show={showSection == 'materials'} title={T.translate("edit_event.materials")}
+                       handleClick={this.toggleSection.bind(this, 'materials')}>
+                    <button className="btn btn-primary pull-right left-space" onClick={this.handleNewMaterial}>
+                        {T.translate("edit_event.add_material")}
+                    </button>
+                    <Table
+                        options={material_options}
+                        data={entity.materials}
+                        columns={material_columns}
+                    />
                 </Panel>
 
                 <div className="row">
