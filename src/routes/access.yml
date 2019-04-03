@@ -1,4 +1,9 @@
 
+general:
+  - administrators
+  - summit-front-end-administrators
+  - summit-room-administrators
+
 summit-edit:
   - administrators
   - summit-front-end-administrators

@@ -20,6 +20,7 @@ import NavMenu from '../components/nav-menu'
 import SummitLayout from './summit-layout';
 import SummitDirectoryPage from '../pages/summits/summit-directory-page';
 import SpeakerLayout from './speaker-layout';
+import Restrict from "../routes/restrict";
 
 
 class PrimaryLayout extends React.Component {
@@ -59,6 +60,9 @@ const mapStateToProps = ({ currentSummitState, loggedUserState }) => ({
     member: loggedUserState.member
 })
 
-export default connect(mapStateToProps, {})(PrimaryLayout)
+export default Restrict(connect(
+    mapStateToProps,
+    {}
+)(PrimaryLayout), 'general');
 
 
