@@ -35,9 +35,11 @@ const loggedUserReducer = (state = DEFAULT_STATE, action) => {
             return {...state, member: response};
         }
         case START_SESSION_STATE_CHECK:{
+            console.log('loggedUserReducer.START_SESSION_STATE_CHECK');
             return {...state, checkingSessionState: true };
         }
         case END_SESSION_STATE_CHECK:{
+            console.log('loggedUserReducer.END_SESSION_STATE_CHECK');
             return {...state, checkingSessionState: false };
         }
         default:

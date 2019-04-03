@@ -29,61 +29,112 @@ class OPSessionChecker extends React.Component {
      }
 
     componentDidMount() {
+        // add event listener to receive messages from idp through OP frame
         window.addEventListener("message", this.receiveMessage, false);
+        // set up op frame
         this.onSetupCheckSessionRP();
     }
 
     rpCheckSessionStateFrameOnLoad(event){
+        // this is called bc we set the RP frame to check the session state with promp=none
+        console.log("OPSessionChecker::rpCheckSessionStateFrameOnLoad");
+        this.props.onFinishSessionStateCheck();
         let resultUrl = new URI(event.target.contentDocument.URL);
+        // test the result Url
+        console.log("OPSessionChecker::rpCheckSessionStateFrameOnLoad - resultUrl "+resultUrl);
         if(resultUrl.hasQuery("error")){
-            // failed renew
+            let error = resultUrl.query(true).error;
+            console.log("OPSessionChecker::rpCheckSessionStateFrameOnLoad - error "+error);
+            // check session state with prompt none failed do logout
             let backUrl = new URI(window.location);
             this.props.doLogout(backUrl.pathname());
             return;
         }
-        this.props.onFinishSessionStateCheck();
+        // no error we still logged so re init the checking
+        // set up op frame
+        this.onSetupCheckSessionRP();
     }
 
     checkSession()
     {
-        if(this.opFrame == null ) return;
-        console.log("checkSession");
-        if(this.props.sessionState == null) return;
-        if(this.props.clientId == null) return;
-        var targetOrigin = this.props.idpBaseUrl;
-        var frame = this.opFrame.contentWindow;
-        var message = this.props.clientId + " " + this.props.sessionState;
-        console.log("message " + message);
-        frame.postMessage( message, targetOrigin);
+        console.log("OPSessionChecker::checkSession");
+
+        if(this.opFrame == null ){
+            console.log("OPSessionChecker::checkSession - this.opFrame == null ");
+            return;
+        }
+
+        if(this.props.sessionState == null){
+            console.log("OPSessionChecker::checkSession - this.props.sessionState == null ");
+            return;
+        }
+
+        if(this.props.clientId == null){
+            console.log("OPSessionChecker::checkSession - this.props.clientId == null ");
+            return;
+        }
+        let targetOrigin = this.props.idpBaseUrl;
+        let frame = this.opFrame.contentWindow;
+        let message = this.props.clientId + " " + this.props.sessionState;
+        console.log("OPSessionChecker::checkSession - message" + message);
+        // postMessage to the OP iframe
+        frame.postMessage(message, targetOrigin);
     }
 
     setTimer()
     {
-        if(!this.props.isLoggedUser) return;
-        if(this.props.checkingSessionState) return;
-        console.log("setTimer");
+        console.log("OPSessionChecker::setTimer");
+
+        if(!this.props.isLoggedUser){
+            console.log("OPSessionChecker::setTimer - !this.props.isLoggedUser");
+            return;
+        }
+
+        if(this.props.checkingSessionState){
+            console.log("OPSessionChecker::setTimer - this.props.checkingSessionState");
+            return;
+        }
+
         this.checkSession();
         this.interval = window.setInterval(this.checkSession, CHECK_SESSION_INTERVAL);
     }
 
     onSetupCheckSessionRP(){
-        if(this.opFrame == null) return;
-        var sessionCheckEndpoint = this.props.idpBaseUrl + "/oauth2/check-session";
-        console.log("onSetupCheckSessionRP sessionCheckEndpoint "+ sessionCheckEndpoint)
+        // https://openid.net/specs/openid-connect-session-1_0.html#OPiframe
+        console.log("OPSessionChecker::onSetupCheckSessionRP");
+        if(this.opFrame == null){
+            console.log("OPSessionChecker::onSetupCheckSessionRP - opFrame is null");
+            return;
+        }
+        const sessionCheckEndpoint = `${this.props.idpBaseUrl}/oauth2/check-session`;
+        console.log("OPSessionChecker::onSetupCheckSessionRP - sessionCheckEndpoint "+ sessionCheckEndpoint);
         this.opFrame.src = sessionCheckEndpoint;
     }
 
     receiveMessage(e)
     {
-        if (e.origin !== this.props.idpBaseUrl ) {return;}
-        var status = e.data;
-        console.log("receiveMessage status "+ status);
+        console.log("OPSessionChecker::receiveMessage");
+        console.log("OPSessionChecker::receiveMessage - e.origin "+e.origin);
+        if (e.origin !== this.props.idpBaseUrl ) {
+            console.log("OPSessionChecker::receiveMessage - e.origin !== this.props.idpBaseUrl");
+            return;
+        }
+        let status = e.data;
+        console.log("OPSessionChecker::receiveMessage - status "+ status);
+        console.log("OPSessionChecker::receiveMessage - this.props.checkingSessionState "+ this.props.checkingSessionState);
+        console.log("OPSessionChecker::receiveMessage - this.props.isLoggedUser "+ this.props.isLoggedUser);
         if(status == "changed" && !this.props.checkingSessionState && this.props.isLoggedUser){
+            console.log("OPSessionChecker::receiveMessage - session state has changed on OP");
+            // signal session start check
             this.props.onStartSessionStateCheck();
+            // kill timer
             window.clearInterval(this.interval);
             this.interval = null;
-            console.log("receiveMessage session state has changed on OP");
+
             let url =  getAuthUrl(null, 'none', this.props.idToken);
+            // https://openid.net/specs/openid-connect-session-1_0.html#RPiframe
+            // set the frame to idp
+            // doing a promt to check if session is still alive, if so
             this.rpCheckSessionStateFrame.src = url.toString();
         }
     }
