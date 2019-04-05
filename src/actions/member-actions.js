@@ -10,8 +10,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-
-import { authErrorHandler, apiBaseUrl } from './base-actions';
 import {
     getRequest,
     putRequest,
@@ -21,7 +19,8 @@ import {
     stopLoading,
     startLoading,
     showMessage,
-    showSuccessMessage
+    showSuccessMessage,
+    authErrorHandler,
 } from "openstack-uicore-foundation/lib/methods";
 
 
@@ -44,7 +43,7 @@ export const addOrganization = (organization, callback) => (dispatch, getState) 
     postRequest(
         null,
         createAction(ORGANIZATION_ADDED),
-        `${apiBaseUrl}/api/v1/organizations`,
+        `${window.API_BASE_URL}/api/v1/organizations`,
         {name: organization},
         authErrorHandler
     )(params)(dispatch).then((payload) => {
@@ -71,7 +70,7 @@ export const addAffiliation = (affiliation) => (dispatch, getState) => {
     postRequest(
         null,
         createAction(AFFILIATION_ADDED),
-        `${apiBaseUrl}/api/v1/members/${affiliation.owner_id}/affiliations`,
+        `${window.API_BASE_URL}/api/v1/members/${affiliation.owner_id}/affiliations`,
         normalizedEntity,
         authErrorHandler,
         affiliation
@@ -97,7 +96,7 @@ export const saveAffiliation = (affiliation) => (dispatch, getState) => {
     putRequest(
         null,
         createAction(AFFILIATION_SAVED),
-        `${apiBaseUrl}/api/v1/members/${affiliation.owner_id}/affiliations/${affiliation.id}`,
+        `${window.API_BASE_URL}/api/v1/members/${affiliation.owner_id}/affiliations/${affiliation.id}`,
         normalizedEntity,
         authErrorHandler
     )(params)(dispatch)
@@ -119,7 +118,7 @@ export const deleteAffiliation = (ownerId, affiliationId) => (dispatch, getState
     return deleteRequest(
         null,
         createAction(AFFILIATION_DELETED)({affiliationId}),
-        `${apiBaseUrl}/api/v1/members/${ownerId}/affiliations/${affiliationId}`,
+        `${window.API_BASE_URL}/api/v1/members/${ownerId}/affiliations/${affiliationId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

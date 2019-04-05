@@ -19,7 +19,7 @@ import
     EVENT_DELETED,
 } from '../../actions/event-actions';
 
-import { LOGOUT_USER } from '../../actions/auth-actions';
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
 
 const DEFAULT_STATE = {
     events          : {},

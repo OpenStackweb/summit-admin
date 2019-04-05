@@ -11,7 +11,6 @@
  * limitations under the License.
  **/
 
-import { authErrorHandler, apiBaseUrl } from './base-actions';
 import T from "i18n-react/dist/i18n-react";
 import history from '../history'
 import {
@@ -23,7 +22,8 @@ import {
     stopLoading,
     startLoading,
     showMessage,
-    showSuccessMessage
+    showSuccessMessage,
+    authErrorHandler
 } from 'openstack-uicore-foundation/lib/methods';
 
 export const REQUEST_RSVP_TEMPLATES         = 'REQUEST_RSVP_TEMPLATES';
@@ -85,7 +85,7 @@ export const getRsvpTemplates = ( term = null, page = 1, perPage = 10, order = '
     return getRequest(
         createAction(REQUEST_RSVP_TEMPLATES),
         createAction(RECEIVE_RSVP_TEMPLATES),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/rsvp-templates`,
         authErrorHandler,
         {page, perPage, order, orderDir, term}
     )(params)(dispatch).then(() => {
@@ -109,7 +109,7 @@ export const getRsvpTemplate = (rsvpTemplateId) => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_RSVP_TEMPLATE),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -139,7 +139,7 @@ export const saveRsvpTemplate = (entity) => (dispatch, getState) => {
         putRequest(
             createAction(UPDATE_RSVP_TEMPLATE),
             createAction(RSVP_TEMPLATE_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/${entity.id}`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/rsvp-templates/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -158,7 +158,7 @@ export const saveRsvpTemplate = (entity) => (dispatch, getState) => {
         postRequest(
             createAction(UPDATE_RSVP_TEMPLATE),
             createAction(RSVP_TEMPLATE_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/rsvp-templates`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -185,7 +185,7 @@ export const deleteRsvpTemplate = (rsvpTemplateId) => (dispatch, getState) => {
     return deleteRequest(
         null,
         createAction(RSVP_TEMPLATE_DELETED)({rsvpTemplateId}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -222,7 +222,7 @@ export const updateQuestionsOrder = (questions, templateId, questionId, newOrder
     putRequest(
         null,
         createAction(QUESTION_ORDER_UPDATED)(questions),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/${templateId}/questions/${questionId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/rsvp-templates/${templateId}/questions/${questionId}`,
         question,
         authErrorHandler
     )(params)(dispatch).then(() => {
@@ -245,7 +245,7 @@ export const getRsvpQuestionMeta = () => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_RSVP_QUESTION_META),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/questions/metadata`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/rsvp-templates/questions/metadata`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -268,7 +268,7 @@ export const getRsvpQuestion = (rsvpTemplateId, rsvpQuestionId) => (dispatch, ge
     return getRequest(
         null,
         createAction(RECEIVE_RSVP_QUESTION),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${rsvpQuestionId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${rsvpQuestionId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -296,7 +296,7 @@ export const saveRsvpQuestion = (rsvpTemplateId, entity) => (dispatch, getState)
         putRequest(
             createAction(UPDATE_RSVP_QUESTION),
             createAction(RSVP_QUESTION_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${entity.id}`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${entity.id}`,
             entity,
             authErrorHandler,
             entity
@@ -315,7 +315,7 @@ export const saveRsvpQuestion = (rsvpTemplateId, entity) => (dispatch, getState)
         postRequest(
             createAction(UPDATE_RSVP_QUESTION),
             createAction(RSVP_QUESTION_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions`,
             entity,
             authErrorHandler,
             entity
@@ -342,7 +342,7 @@ export const deleteRsvpQuestion = (rsvpTemplateId, rsvpQuestionId) => (dispatch,
     return deleteRequest(
         null,
         createAction(RSVP_QUESTION_DELETED)({rsvpQuestionId}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${rsvpQuestionId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${rsvpQuestionId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -369,7 +369,7 @@ export const updateQuestionValuesOrder = (values, templateId, questionId, valueI
     putRequest(
         null,
         createAction(QUESTION_VALUE_ORDER_UPDATED)(values),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/${templateId}/questions/${questionId}/values/${valueId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/rsvp-templates/${templateId}/questions/${questionId}/values/${valueId}`,
         value,
         authErrorHandler
     )(params)(dispatch).then(() => {
@@ -394,7 +394,7 @@ export const getRsvpQuestionValue = (rsvpTemplateId, rsvpQuestionId, rsvpQuestio
     return getRequest(
         null,
         createAction(RECEIVE_RSVP_QUESTION_VALUE),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${rsvpQuestionId}/values/${rsvpQuestionValueId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${rsvpQuestionId}/values/${rsvpQuestionValueId}`,
         authErrorHandler('snana')
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -428,7 +428,7 @@ export const saveRsvpQuestionValue = (rsvpTemplateId, rsvpQuestionId, entity) =>
         putRequest(
             createAction(UPDATE_RSVP_QUESTION_VALUE),
             createAction(RSVP_QUESTION_VALUE_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${rsvpQuestionId}/values/${entity.id}`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${rsvpQuestionId}/values/${entity.id}`,
             entity,
             authErrorHandler,
             entity
@@ -451,7 +451,7 @@ export const saveRsvpQuestionValue = (rsvpTemplateId, rsvpQuestionId, entity) =>
         postRequest(
             createAction(UPDATE_RSVP_QUESTION_VALUE),
             createAction(RSVP_QUESTION_VALUE_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${rsvpQuestionId}/values`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${rsvpQuestionId}/values`,
             entity,
             authErrorHandler,
             entity
@@ -478,7 +478,7 @@ export const deleteRsvpQuestionValue = (rsvpTemplateId, rsvpQuestionId, rsvpQues
     return deleteRequest(
         null,
         createAction(RSVP_QUESTION_VALUE_DELETED)({rsvpQuestionValueId}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${rsvpQuestionId}/values/${rsvpQuestionValueId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${rsvpQuestionId}/values/${rsvpQuestionValueId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

@@ -13,7 +13,6 @@
 
 import moment from "moment-timezone";
 import SummitEvent from "../models/summit-event";
-import { authErrorHandler, apiBaseUrl } from './base-actions';
 import { ScheduleEventsSearchResultMaxPage } from '../utils/constants';
 import { checkProximityEvents } from './event-actions';
 import {
@@ -22,9 +21,9 @@ import {
     putRequest,
     startLoading,
     stopLoading,
-    deleteRequest
+    deleteRequest,
+    authErrorHandler
 } from "openstack-uicore-foundation/lib/methods";
-
 
 export const REQUEST_UNSCHEDULE_EVENTS_PAGE               = 'REQUEST_UNSCHEDULE_EVENTS_PAGE';
 export const RECEIVE_UNSCHEDULE_EVENTS_PAGE               = 'RECEIVE_UNSCHEDULE_EVENTS_PAGE';
@@ -99,7 +98,7 @@ export const getUnScheduleEventsPage =
         return getRequest(
             createAction(REQUEST_UNSCHEDULE_EVENTS_PAGE),
             createAction(RECEIVE_UNSCHEDULE_EVENTS_PAGE),
-            `${apiBaseUrl}/api/v1/summits/${summitId}/events/unpublished`,
+            `${window.API_BASE_URL}/api/v1/summits/${summitId}/events/unpublished`,
             authErrorHandler
         )(params)(dispatch).then(() => {
                 dispatch(stopLoading());
@@ -131,7 +130,7 @@ export const publishEvent = (event, day, startTime, minutes) =>
                     minutes,
                 }
             ),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${event.id}/publish?access_token=${accessToken}`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/${event.id}/publish?access_token=${accessToken}`,
             {
                 location_id : currentLocation.id,
                 start_date  : eventStarDateTime.valueOf()/1000,
@@ -182,7 +181,7 @@ export const getPublishedEventsBySummitDayLocation = (currentSummit, currentDay,
     return getRequest(
         createAction(REQUEST_SCHEDULE_EVENTS_PAGE),
         createAction(RECEIVE_SCHEDULE_EVENTS_PAGE),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/${locationId}/events/published?access_token=${accessToken}&filter[]=start_date>=${startDate}&filter[]=end_date<=${endDate}&page=${page}&per_page=${per_page}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/${locationId}/events/published?access_token=${accessToken}&filter[]=start_date>=${startDate}&filter[]=end_date<=${endDate}&page=${page}&per_page=${per_page}`,
         authErrorHandler
     )({})(dispatch)
         .then(() =>
@@ -257,7 +256,7 @@ export const unPublishEvent = (event) => (dispatch, getState) => {
                 event
             }
         ),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${event.id}/publish?access_token=${accessToken}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/${event.id}/publish?access_token=${accessToken}`,
         {},
         authErrorHandler
     )({})(dispatch)
@@ -287,7 +286,7 @@ export const searchScheduleEvents = (term) => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_SCHEDULE_EVENTS_SEARCH_PAGE),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/published`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/published`,
         authErrorHandler
     )(params)(dispatch)
         .then(() =>
@@ -315,7 +314,7 @@ export const getEmptySpots = (location, fromDate, toDate, gapSize) => (dispatch,
     return getRequest(
         null,
         createAction(RECEIVE_EMPTY_SPOTS),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/published/empty-spots`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/published/empty-spots`,
         authErrorHandler
     )(params)(dispatch)
         .then(() =>

@@ -18,7 +18,7 @@ import
     PUSH_NOTIFICATION_DELETED
 } from '../../actions/push-notification-actions';
 
-import { LOGOUT_USER } from '../../actions/auth-actions';
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 import moment from 'moment-timezone';
 

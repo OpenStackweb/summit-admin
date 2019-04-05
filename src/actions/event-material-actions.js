@@ -10,8 +10,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-
-import { authErrorHandler, apiBaseUrl } from './base-actions';
 import T from "i18n-react/dist/i18n-react";
 import history from '../history'
 import {
@@ -23,7 +21,8 @@ import {
     stopLoading,
     startLoading,
     showMessage,
-    showSuccessMessage
+    showSuccessMessage,
+    authErrorHandler
 } from 'openstack-uicore-foundation/lib/methods';
 
 export const RECEIVE_EVENT_MATERIAL        = 'RECEIVE_EVENT_MATERIAL';
@@ -51,7 +50,7 @@ export const getEventMaterial = (eventMaterialId) => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_EVENT_MATERIAL),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${eventId}/${eventMaterialId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/${eventId}/${eventMaterialId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -79,7 +78,7 @@ export const saveEventMaterial = (entity) => (dispatch, getState) => {
         putRequest(
             createAction(UPDATE_EVENT_MATERIAL),
             createAction(EVENT_MATERIAL_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${eventId}/materials/${entity.id}`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/${eventId}/materials/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -98,7 +97,7 @@ export const saveEventMaterial = (entity) => (dispatch, getState) => {
         postRequest(
             createAction(UPDATE_EVENT_MATERIAL),
             createAction(EVENT_MATERIAL_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${eventId}/materials`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/${eventId}/materials`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -126,7 +125,7 @@ export const deleteEventMaterial = (eventMaterialId) => (dispatch, getState) => 
     return deleteRequest(
         null,
         createAction(EVENT_MATERIAL_DELETED)({eventMaterialId}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${eventId}/materials/${eventMaterialId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/${eventId}/materials/${eventMaterialId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

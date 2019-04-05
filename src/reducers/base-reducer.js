@@ -11,8 +11,7 @@
  * limitations under the License.
  **/
 
-import { START_LOADING, STOP_LOADING, RECEIVE_COUNTRIES } from "openstack-uicore-foundation/lib/actions";
-import { LOGOUT_USER } from '../actions/auth-actions';
+import { START_LOADING, STOP_LOADING, RECEIVE_COUNTRIES, LOGOUT_USER } from "openstack-uicore-foundation/lib/actions";
 
 const DEFAULT_STATE = {
     loading: false,

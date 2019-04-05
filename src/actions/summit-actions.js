@@ -11,7 +11,6 @@
  * limitations under the License.
  **/
 
-import {apiBaseUrl, authErrorHandler } from "./base-actions";
 import T from "i18n-react/dist/i18n-react";
 import history from '../history'
 import {
@@ -25,9 +24,9 @@ import {
     showMessage,
     showSuccessMessage,
     postFile,
-    putFile
+    putFile,
+    authErrorHandler
 } from 'openstack-uicore-foundation/lib/methods';
-
 
 export const REQUEST_SUMMIT           = 'REQUEST_SUMMIT';
 export const RECEIVE_SUMMIT           = 'RECEIVE_SUMMIT';
@@ -54,7 +53,7 @@ export const getSummitById = (summitId) => (dispatch, getState) => {
     return getRequest(
         createAction(REQUEST_SUMMIT),
         createAction(RECEIVE_SUMMIT),
-        `${apiBaseUrl}/api/v2/summits/${summitId}`,
+        `${window.API_BASE_URL}/api/v2/summits/${summitId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -78,7 +77,7 @@ export const setCurrentSummit = (summit) => (dispatch, getState) =>
         return getRequest(
             null,
             createAction(SET_CURRENT_SUMMIT),
-            `${apiBaseUrl}/api/v1/summits/${summit.id}`,
+            `${window.API_BASE_URL}/api/v1/summits/${summit.id}`,
             authErrorHandler
         )(params)(dispatch).then(() => {
                 dispatch(stopLoading());
@@ -111,7 +110,7 @@ export const loadSummits = () => (dispatch, getState) => {
     getRequest(
         createAction(REQUEST_SUMMITS),
         createAction(RECEIVE_SUMMITS),
-        `${apiBaseUrl}/api/v1/summits/all?expand=none&relations=none&access_token=${accessToken}`,
+        `${window.API_BASE_URL}/api/v1/summits/all?expand=none&relations=none&access_token=${accessToken}`,
         authErrorHandler
     )(params)(dispatch, getState).then(() => {
             dispatch(stopLoading());
@@ -140,7 +139,7 @@ export const saveSummit = (entity) => (dispatch, getState) => {
         putRequest(
             createAction(UPDATE_SUMMIT),
             createAction(SUMMIT_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${entity.id}`,
+            `${window.API_BASE_URL}/api/v1/summits/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -159,7 +158,7 @@ export const saveSummit = (entity) => (dispatch, getState) => {
         postRequest(
             createAction(UPDATE_SUMMIT),
             createAction(SUMMIT_ADDED),
-            `${apiBaseUrl}/api/v1/summits`,
+            `${window.API_BASE_URL}/api/v1/summits`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -185,7 +184,7 @@ export const deleteSummit = (summitId) => (dispatch, getState) => {
     return deleteRequest(
         null,
         createAction(SUMMIT_DELETED)({summitId}),
-        `${apiBaseUrl}/api/v1/summits/${summitId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${summitId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

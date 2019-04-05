@@ -11,7 +11,6 @@
  * limitations under the License.
  **/
 
-import { authErrorHandler, apiBaseUrl } from './base-actions';
 import T from "i18n-react/dist/i18n-react";
 import history from '../history'
 import {
@@ -23,7 +22,8 @@ import {
     stopLoading,
     startLoading,
     showMessage,
-    showSuccessMessage
+    showSuccessMessage,
+    authErrorHandler
 } from 'openstack-uicore-foundation/lib/methods';
 
 export const RECEIVE_SELECTION_PLAN        = 'RECEIVE_SELECTION_PLAN';
@@ -52,7 +52,7 @@ export const getSelectionPlan = (selectionPlanId) => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_SELECTION_PLAN),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -78,7 +78,7 @@ export const saveSelectionPlan = (entity) => (dispatch, getState) => {
         putRequest(
             createAction(UPDATE_SELECTION_PLAN),
             createAction(SELECTION_PLAN_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/selection-plans/${entity.id}?access_token=${accessToken}`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${entity.id}?access_token=${accessToken}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -97,7 +97,7 @@ export const saveSelectionPlan = (entity) => (dispatch, getState) => {
         postRequest(
             createAction(UPDATE_SELECTION_PLAN),
             createAction(SELECTION_PLAN_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/selection-plans?access_token=${accessToken}`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans?access_token=${accessToken}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -124,7 +124,7 @@ export const deleteSelectionPlan = (selectionPlanId) => (dispatch, getState) => 
     return deleteRequest(
         null,
         createAction(SELECTION_PLAN_DELETED)({selectionPlanId}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -147,7 +147,7 @@ export const addTrackGroupToSelectionPlan = (selectionPlanId, trackGroup) => (di
     return putRequest(
         null,
         createAction(TRACK_GROUP_ADDED)({trackGroup}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}/track-groups/${trackGroup.id}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}/track-groups/${trackGroup.id}`,
         {},
         authErrorHandler
     )(params)(dispatch).then(() => {
@@ -171,7 +171,7 @@ export const removeTrackGroupFromSelectionPlan = (selectionPlanId, trackGroupId)
     return deleteRequest(
         null,
         createAction(TRACK_GROUP_REMOVED)({trackGroupId}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}/track-groups/${trackGroupId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}/track-groups/${trackGroupId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

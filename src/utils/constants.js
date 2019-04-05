@@ -22,5 +22,3 @@ export const BulkActionPublish                 = 'BULK_ACTION_PUBLISH';
 export const BulkActionUnPublish               = 'BULK_ACTION_UNPUBLISH';
 
 export const TBALocation = {id : 0, name : 'TBD', class_name: 'SummitVenue'};
-
-export const AllowedUserGroups = [AdminGroupCode, SummitAdminGroupCode, SummitRoomAdminGroupCode];

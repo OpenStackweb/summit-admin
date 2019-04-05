@@ -11,7 +11,6 @@
  * limitations under the License.
  **/
 
-import { authErrorHandler, apiBaseUrl } from './base-actions';
 import T from "i18n-react/dist/i18n-react";
 import history from '../history'
 import {
@@ -24,7 +23,8 @@ import {
     startLoading,
     showMessage,
     showSuccessMessage,
-    getCSV
+    getCSV,
+    authErrorHandler
 } from 'openstack-uicore-foundation/lib/methods';
 
 export const REQUEST_PROMOCODES       = 'REQUEST_PROMOCODES';
@@ -52,14 +52,13 @@ export const getPromocodeMeta = () => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_PROMOCODE_META),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes/metadata`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes/metadata`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
     );
 };
-
 
 export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'code', orderDir = 1, type = 'ALL' ) => (dispatch, getState) => {
 
@@ -99,7 +98,7 @@ export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'cod
     return getRequest(
         createAction(REQUEST_PROMOCODES),
         createAction(RECEIVE_PROMOCODES),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes`,
         authErrorHandler,
         {page, perPage, order, orderDir, type, term}
     )(params)(dispatch).then(() => {
@@ -124,7 +123,7 @@ export const getPromocode = (promocodeId) => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_PROMOCODE),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes/${promocodeId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes/${promocodeId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -150,7 +149,7 @@ export const savePromocode = (entity) => (dispatch, getState) => {
         putRequest(
             createAction(UPDATE_PROMOCODE),
             createAction(PROMOCODE_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes/${entity.id}?access_token=${accessToken}`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes/${entity.id}?access_token=${accessToken}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -169,7 +168,7 @@ export const savePromocode = (entity) => (dispatch, getState) => {
         postRequest(
             createAction(UPDATE_PROMOCODE),
             createAction(PROMOCODE_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes?access_token=${accessToken}`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes?access_token=${accessToken}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -196,7 +195,7 @@ export const deletePromocode = (promocodeId) => (dispatch, getState) => {
     return deleteRequest(
         null,
         createAction(PROMOCODE_DELETED)({promocodeId}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes/${promocodeId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes/${promocodeId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -217,7 +216,7 @@ export const sendEmail = (promocodeId) => (dispatch, getState) => {
     return postRequest(
         null,
         createAction(EMAIL_SENT),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes/${promocodeId}/mail`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes/${promocodeId}/mail`,
         null,
         authErrorHandler
     )(params)(dispatch).then(
@@ -259,7 +258,7 @@ export const exportPromocodes = ( term = null, order = 'code', orderDir = 1, typ
         params['order']= `${orderDirSign}${order}`;
     }
 
-    dispatch(getCSV(`${apiBaseUrl}/api/v1/summits/${currentSummit.id}/promo-codes/csv`, params, filename));
+    dispatch(getCSV(`${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes/csv`, params, filename));
 
 };
 

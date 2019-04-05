@@ -23,7 +23,7 @@ import { RECEIVE_SELECTED_EVENTS,
     UPDATE_END_DATE_BULK,
 } from '../../actions/summit-event-bulk-actions';
 
-import{ LOGOUT_USER } from '../../actions/auth-actions';
+import{ LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
 
 import
 {

@@ -12,7 +12,6 @@
  **/
 
 import moment from 'moment-timezone';
-import { authErrorHandler, apiBaseUrl } from './base-actions';
 import T from "i18n-react/dist/i18n-react";
 import history from '../history'
 import {
@@ -25,9 +24,9 @@ import {
     startLoading,
     showMessage,
     showSuccessMessage,
-    epochToMomentTimeZone
+    epochToMomentTimeZone,
+    authErrorHandler
 } from "openstack-uicore-foundation/lib/methods";
-
 
 export const REQUEST_EVENTS                         = 'REQUEST_EVENTS';
 export const RECEIVE_EVENTS                         = 'RECEIVE_EVENTS';
@@ -82,7 +81,7 @@ export const getEvents = ( term = null, page = 1, perPage = 10, order = 'id', or
     return getRequest(
         createAction(REQUEST_EVENTS),
         createAction(RECEIVE_EVENTS),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events`,
         authErrorHandler,
         {order, orderDir, term, summitTZ}
     )(params)(dispatch).then(() => {
@@ -142,7 +141,7 @@ export const getEventsForOccupancy = ( term = null, roomId = null, currentEvents
     return getRequest(
         createAction(REQUEST_EVENTS_FOR_OCCUPANCY),
         createAction(RECEIVE_EVENTS_FOR_OCCUPANCY),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/${endPoint}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/${endPoint}`,
         authErrorHandler,
         {order, orderDir, term, roomId, currentEvents, summitTZ}
     )(params)(dispatch).then(() => {
@@ -158,7 +157,7 @@ export const getCurrentEventForOccupancy = ( roomId, eventId = null ) => (dispat
     let { currentSummit }   = currentSummitState;
     let filter = [];
     let summitTZ = currentSummit.time_zone.name;
-    let endPoint = `${apiBaseUrl}/api/v1/summits/${currentSummit.id}`;
+    let endPoint = `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}`;
 
     dispatch(startLoading());
 
@@ -204,7 +203,7 @@ export const getEvent = (eventId) => (dispatch, getState) => {
         return getRequest(
             null,
             createAction(RECEIVE_EVENT),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${eventId}?access_token=${accessToken}&expand=speakers,sponsors,groups`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/${eventId}?access_token=${accessToken}&expand=speakers,sponsors,groups`,
             authErrorHandler
         )({})(dispatch).then(() => {
                 dispatch(stopLoading());
@@ -234,7 +233,7 @@ export const saveEvent = (entity, publish) => (dispatch, getState) => {
         putRequest(
             createAction(UPDATE_EVENT),
             createAction(EVENT_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -257,7 +256,7 @@ export const saveEvent = (entity, publish) => (dispatch, getState) => {
         postRequest(
             createAction(UPDATE_EVENT),
             createAction(EVENT_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -288,7 +287,7 @@ export const saveOccupancy = (entity) => (dispatch, getState) => {
     putRequest(
         createAction(UPDATE_EVENT),
         createAction(EVENT_UPDATED),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/${entity.id}`,
         {id: entity.id, occupancy: entity.occupancy},
         authErrorHandler,
         entity
@@ -308,7 +307,7 @@ const publishEvent = (entity) => (dispatch, getState) => {
     putRequest(
         null,
         createAction(EVENT_PUBLISHED),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}/publish`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/${entity.id}/publish`,
         {
             location_id : entity.location_id,
             start_date  : entity.start_date,
@@ -360,7 +359,7 @@ export const checkProximityEvents = (event) => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_PROXIMITY_EVENTS),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/published`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/published`,
         authErrorHandler
     )(params)(dispatch)
         .then((payload) => {
@@ -402,7 +401,7 @@ export const attachFile = (entity, file) => (dispatch, getState) => {
         return postRequest(
             createAction(UPDATE_EVENT),
             createAction(EVENT_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -425,7 +424,7 @@ const uploadFile = (entity, file) => (dispatch, getState) => {
     postRequest(
         null,
         createAction(FILE_ATTACHED),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${entity.id}/attachment`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/${entity.id}/attachment`,
         file,
         authErrorHandler
     )(params)(dispatch)
@@ -469,7 +468,7 @@ export const deleteEvent = (eventId) => (dispatch, getState) => {
     return deleteRequest(
         null,
         createAction(EVENT_DELETED)({eventId}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/${eventId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/${eventId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -502,7 +501,7 @@ export const exportEvents = ( term = null, order = 'id', orderDir = 1 ) => (disp
         params['order']= `${orderDirSign}${order}`;
     }
 
-    dispatch(getCSV(`${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/csv`, params, filename));
+    dispatch(getCSV(`${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/csv`, params, filename));
 
 };
 
