@@ -12,7 +12,6 @@
  **/
 
 import { createStore, applyMiddleware, compose} from 'redux';
-import loggedUserReducer from './reducers/auth-reducer'
 import baseReducer from './reducers/base-reducer'
 import currentSummitReducer from './reducers/summits/current-summit-reducer';
 import directoryReducer from './reducers/summits/directory-reducer';
@@ -55,7 +54,7 @@ import selectionPlanReducer from './reducers/summits/selection-plan-reducer';
 import roomOccupancyReducer from "./reducers/events/room-occupancy-reducer";
 import tagGroupListReducer from "./reducers/tags/tag-group-list-reducer";
 import tagGroupReducer from "./reducers/tags/tag-group-reducer";
-
+import { loggedUserReducer } from "openstack-uicore-foundation/lib/reducers"
 
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
@@ -116,10 +115,6 @@ const reducers = persistCombineReducers(config, {
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(reducers, composeEnhancers(applyMiddleware(thunk)));
-
-window.apiBaseUrl = process.env['API_BASE_URL'];
-window.clientId = process.env['OAUTH2_CLIENT_ID'];
-window.idpBaseUrl= process.env['IDP_BASE_URL'];
 
 const onRehydrateComplete = () => {
     // repopulate access token on global access variable

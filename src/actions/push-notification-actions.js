@@ -11,7 +11,6 @@
  * limitations under the License.
  **/
 
-import { authErrorHandler, apiBaseUrl } from './base-actions';
 import T from "i18n-react/dist/i18n-react";
 import history from '../history'
 import {
@@ -23,7 +22,8 @@ import {
     stopLoading,
     startLoading,
     showMessage,
-    showSuccessMessage
+    showSuccessMessage,
+    authErrorHandler
 } from 'openstack-uicore-foundation/lib/methods';
 
 export const REQUEST_PUSH_NOTIFICATIONS       = 'REQUEST_PUSH_NOTIFICATIONS';
@@ -79,7 +79,7 @@ export const getPushNotifications = ( page = 1, perPage = 10, order = 'created',
     return getRequest(
         createAction(REQUEST_PUSH_NOTIFICATIONS),
         createAction(RECEIVE_PUSH_NOTIFICATIONS),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/notifications`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/notifications`,
         authErrorHandler,
         {order, orderDir}
     )(params)(dispatch).then(() => {
@@ -103,7 +103,7 @@ export const getPushNotification = (pushNotificationId) => (dispatch, getState) 
     return getRequest(
         null,
         createAction(RECEIVE_PUSH_NOTIFICATION),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/notifications/${pushNotificationId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/notifications/${pushNotificationId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -133,7 +133,7 @@ export const savePushNotification = (entity) => (dispatch, getState) => {
         putRequest(
             createAction(UPDATE_PUSH_NOTIFICATION),
             createAction(PUSH_NOTIFICATION_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/notifications/${entity.id}`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/notifications/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -153,7 +153,7 @@ export const savePushNotification = (entity) => (dispatch, getState) => {
         postRequest(
             createAction(UPDATE_PUSH_NOTIFICATION),
             createAction(PUSH_NOTIFICATION_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/notifications`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/notifications`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -180,7 +180,7 @@ export const deletePushNotification = (pushNotificationId) => (dispatch, getStat
     return deleteRequest(
         null,
         createAction(PUSH_NOTIFICATION_DELETED)({pushNotificationId}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/notifications/${pushNotificationId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/notifications/${pushNotificationId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

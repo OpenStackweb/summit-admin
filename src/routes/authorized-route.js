@@ -26,6 +26,7 @@ class AuthorizedRoute extends React.Component {
                 if(location.search != null && location.search != null){
                     currentBackUrl += location.search
                 }
+
                 if(location.hash != null && location.hash != null){
                     currentBackUrl += location.hash
                 }

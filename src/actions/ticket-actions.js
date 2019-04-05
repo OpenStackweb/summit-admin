@@ -11,7 +11,6 @@
  * limitations under the License.
  **/
 
-import { authErrorHandler, apiBaseUrl } from './base-actions';
 import T from "i18n-react/dist/i18n-react";
 import history from '../history'
 import {
@@ -23,7 +22,8 @@ import {
     stopLoading,
     startLoading,
     showMessage,
-    showSuccessMessage
+    showSuccessMessage,
+    authErrorHandler
 } from 'openstack-uicore-foundation/lib/methods';
 
 export const REQUEST_TICKET_TYPES       = 'REQUEST_TICKET_TYPES';
@@ -61,7 +61,7 @@ export const getTicketTypes = ( order = 'name', orderDir = 1 ) => (dispatch, get
     return getRequest(
         createAction(REQUEST_TICKET_TYPES),
         createAction(RECEIVE_TICKET_TYPES),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/ticket-types`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/ticket-types`,
         authErrorHandler,
         {order, orderDir}
     )(params)(dispatch).then(() => {
@@ -85,7 +85,7 @@ export const getTicketType = (ticketTypeId) => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_TICKET_TYPE),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/ticket-types/${ticketTypeId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/ticket-types/${ticketTypeId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -115,7 +115,7 @@ export const saveTicketType = (entity) => (dispatch, getState) => {
         putRequest(
             createAction(UPDATE_TICKET_TYPE),
             createAction(TICKET_TYPE_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/ticket-types/${entity.id}`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/ticket-types/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -134,7 +134,7 @@ export const saveTicketType = (entity) => (dispatch, getState) => {
         postRequest(
             createAction(UPDATE_TICKET_TYPE),
             createAction(TICKET_TYPE_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/ticket-types`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/ticket-types`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -161,7 +161,7 @@ export const deleteTicketType = (ticketTypeId) => (dispatch, getState) => {
     return deleteRequest(
         null,
         createAction(TICKET_TYPE_DELETED)({ticketTypeId}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/ticket-types/${ticketTypeId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/ticket-types/${ticketTypeId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -182,7 +182,7 @@ export const seedTicketTypes = ( ) => (dispatch, getState) => {
     postRequest(
         null,
         createAction(TICKET_TYPES_SEEDED),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/ticket-types/seed-defaults`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/ticket-types/seed-defaults`,
         {},
         authErrorHandler
     )(params)(dispatch).then(() => {

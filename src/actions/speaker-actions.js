@@ -11,7 +11,6 @@
  * limitations under the License.
  **/
 
-import { authErrorHandler, apiBaseUrl } from './base-actions';
 import T from "i18n-react/dist/i18n-react";
 import history from '../history'
 import {
@@ -24,7 +23,8 @@ import {
     startLoading,
     showMessage,
     showSuccessMessage,
-    getCSV
+    getCSV,
+    authErrorHandler
 } from 'openstack-uicore-foundation/lib/methods';
 
 export const REQUEST_SPEAKERS       = 'REQUEST_SPEAKERS';
@@ -82,7 +82,7 @@ export const getSpeakers = ( term = null, page = 1, perPage = 10, order = 'id', 
     return getRequest(
         createAction(REQUEST_SPEAKERS),
         createAction(RECEIVE_SPEAKERS),
-        `${apiBaseUrl}/api/v1/speakers`,
+        `${window.API_BASE_URL}/api/v1/speakers`,
         authErrorHandler,
         {order, orderDir, page, term}
     )(params)(dispatch).then(() => {
@@ -101,7 +101,7 @@ export const getSpeaker = (speakerId) => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_SPEAKER),
-        `${apiBaseUrl}/api/v1/speakers/${speakerId}?access_token=${accessToken}&expand=member,presentations`,
+        `${window.API_BASE_URL}/api/v1/speakers/${speakerId}?access_token=${accessToken}&expand=member,presentations`,
         authErrorHandler
     )({})(dispatch).then(() => {
             dispatch(stopLoading());
@@ -124,7 +124,7 @@ export const getSpeakerForMerge = (speakerId, speakerCol) => (dispatch, getState
     return getRequest(
         createAction(REQUEST_SPEAKER),
         createAction(RECEIVE_SPEAKER),
-        `${apiBaseUrl}/api/v1/speakers/${speakerId}`,
+        `${window.API_BASE_URL}/api/v1/speakers/${speakerId}`,
         authErrorHandler,
         {speakerCol}
     )(params)(dispatch).then(() => {
@@ -147,7 +147,7 @@ export const deleteSpeaker = (speakerId) => (dispatch, getState) => {
     return deleteRequest(
         null,
         createAction(SPEAKER_DELETED)({speakerId}),
-        `${apiBaseUrl}/api/v1/speakers/${speakerId}`,
+        `${window.API_BASE_URL}/api/v1/speakers/${speakerId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -170,7 +170,7 @@ export const mergeSpeakers = (speakers, selectedFields, changedFields) => (dispa
     putRequest(
         null,
         createAction(RESET_SPEAKER_FORM),
-        `${apiBaseUrl}/api/v1/speakers/merge/${speakers[0].id}/${speakers[1].id}?access_token=${accessToken}`,
+        `${window.API_BASE_URL}/api/v1/speakers/merge/${speakers[0].id}/${speakers[1].id}?access_token=${accessToken}`,
         selectedFields,
         authErrorHandler
     )({})(dispatch)
@@ -197,7 +197,7 @@ export const saveSpeaker = (entity) => (dispatch, getState) => {
         putRequest(
             createAction(UPDATE_SPEAKER),
             createAction(SPEAKER_UPDATED),
-            `${apiBaseUrl}/api/v1/speakers/${entity.id}?access_token=${accessToken}`,
+            `${window.API_BASE_URL}/api/v1/speakers/${entity.id}?access_token=${accessToken}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -216,7 +216,7 @@ export const saveSpeaker = (entity) => (dispatch, getState) => {
         postRequest(
             createAction(UPDATE_SPEAKER),
             createAction(SPEAKER_ADDED),
-            `${apiBaseUrl}/api/v1/speakers?access_token=${accessToken}`,
+            `${window.API_BASE_URL}/api/v1/speakers?access_token=${accessToken}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -245,7 +245,7 @@ export const attachPicture = (entity, file) => (dispatch, getState) => {
         return postRequest(
             createAction(UPDATE_SPEAKER),
             createAction(SPEAKER_ADDED),
-            `${apiBaseUrl}/api/v1/speakers?access_token=${accessToken}`,
+            `${window.API_BASE_URL}/api/v1/speakers?access_token=${accessToken}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -264,7 +264,7 @@ const uploadFile = (entity, file) => (dispatch, getState) => {
     postRequest(
         null,
         createAction(PIC_ATTACHED),
-        `${apiBaseUrl}/api/v1/speakers/${entity.id}/photo?access_token=${accessToken}`,
+        `${window.API_BASE_URL}/api/v1/speakers/${entity.id}/photo?access_token=${accessToken}`,
         file,
         authErrorHandler,
         {pic: entity.pic}
@@ -340,7 +340,7 @@ export const getAttendances = ( term = null, page = 1, perPage = 10, order = 'id
     return getRequest(
         createAction(REQUEST_ATTENDANCES),
         createAction(RECEIVE_ATTENDANCES),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers-assistances`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/speakers-assistances`,
         authErrorHandler,
         req_params
     )(params)(dispatch).then(() => {
@@ -364,7 +364,7 @@ export const deleteAttendance = (attendanceId) => (dispatch, getState) => {
     return deleteRequest(
         null,
         createAction(ATTENDANCE_DELETED)({attendanceId}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers-assistances/${attendanceId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/speakers-assistances/${attendanceId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -388,7 +388,7 @@ export const getAttendance = (attendanceId) => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_ATTENDANCE),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers-assistances/${attendanceId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/speakers-assistances/${attendanceId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -418,7 +418,7 @@ export const saveAttendance = (entity) => (dispatch, getState) => {
         putRequest(
             createAction(UPDATE_ATTENDANCE),
             createAction(ATTENDANCE_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers-assistances/${entity.id}`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/speakers-assistances/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -439,7 +439,7 @@ export const saveAttendance = (entity) => (dispatch, getState) => {
         postRequest(
             createAction(UPDATE_ATTENDANCE),
             createAction(ATTENDANCE_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers-assistances`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/speakers-assistances`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -468,7 +468,7 @@ export const sendAttendanceEmail = (attendanceId) => (dispatch, getState) => {
     return postRequest(
         null,
         createAction(EMAIL_SENT),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers-assistances/${attendanceId}/mail`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/speakers-assistances/${attendanceId}/mail`,
         null,
         authErrorHandler
     )(params)(dispatch).then(
@@ -503,7 +503,7 @@ export const exportAttendances = ( term = null, order = 'code', orderDir = 1 ) =
         params['order']= `${orderDirSign}${order}`;
     }
 
-    dispatch(getCSV(`${apiBaseUrl}/api/v1/summits/${currentSummit.id}/speakers-assistances/csv`, params, filename));
+    dispatch(getCSV(`${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/speakers-assistances/csv`, params, filename));
 
 };
 

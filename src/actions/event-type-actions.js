@@ -10,8 +10,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-
-import { authErrorHandler, apiBaseUrl } from './base-actions';
 import T from "i18n-react/dist/i18n-react";
 import history from '../history'
 import {
@@ -23,7 +21,8 @@ import {
     stopLoading,
     startLoading,
     showMessage,
-    showSuccessMessage
+    showSuccessMessage,
+    authErrorHandler
 } from 'openstack-uicore-foundation/lib/methods';
 
 export const REQUEST_EVENT_TYPES       = 'REQUEST_EVENT_TYPES';
@@ -53,7 +52,7 @@ export const getEventTypes = ( ) => (dispatch, getState) => {
     return getRequest(
         createAction(REQUEST_EVENT_TYPES),
         createAction(RECEIVE_EVENT_TYPES),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/event-types`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -77,7 +76,7 @@ export const getEventType = (eventTypeId) => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_EVENT_TYPE),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types/${eventTypeId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/event-types/${eventTypeId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -104,7 +103,7 @@ export const saveEventType = (entity) => (dispatch, getState) => {
         putRequest(
             createAction(UPDATE_EVENT_TYPE),
             createAction(EVENT_TYPE_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types/${entity.id}`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/event-types/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -123,7 +122,7 @@ export const saveEventType = (entity) => (dispatch, getState) => {
         postRequest(
             createAction(UPDATE_EVENT_TYPE),
             createAction(EVENT_TYPE_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/event-types`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -150,7 +149,7 @@ export const deleteEventType = (eventTypeId) => (dispatch, getState) => {
     return deleteRequest(
         null,
         createAction(EVENT_TYPE_DELETED)({eventTypeId}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types/${eventTypeId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/event-types/${eventTypeId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -171,7 +170,7 @@ export const seedEventTypes = () => (dispatch, getState) => {
     return postRequest(
         null,
         createAction(EVENT_TYPES_SEEDED),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/event-types/seed-defaults`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/event-types/seed-defaults`,
         null,
         authErrorHandler
     )(params)(dispatch).then(() => {

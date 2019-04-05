@@ -11,7 +11,6 @@
  * limitations under the License.
  **/
 
-import {apiBaseUrl, authErrorHandler } from "./base-actions";
 import T from 'i18n-react/dist/i18n-react'
 import URI from "urijs";
 import history from '../history'
@@ -25,6 +24,7 @@ import {
     stopLoading,
     startLoading,
     showSuccessMessage,
+    authErrorHandler
 } from 'openstack-uicore-foundation/lib/methods';
 
 export const UPDATE_LOCAL_EVENT               = 'UPDATE_LOCAL_EVENT';
@@ -60,7 +60,7 @@ export const getSummitEventsById = (summitId, eventIds ) => (dispatch, getState)
     return getRequest(
         null,
         createAction(RECEIVE_SELECTED_EVENTS),
-        `${apiBaseUrl}/api/v1/summits/${summitId}/events`,
+        `${window.API_BASE_URL}/api/v1/summits/${summitId}/events`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -105,7 +105,7 @@ export const updateEvents = (summitId, events) =>  (dispatch, getState) => {
     putRequest(
         null,
         createAction(UPDATED_REMOTE_EVENTS)({}),
-        `${apiBaseUrl}/api/v1/summits/${summitId}/events/?access_token=${accessToken}`,
+        `${window.API_BASE_URL}/api/v1/summits/${summitId}/events/?access_token=${accessToken}`,
         {
             events: events.map((event) => ({
                 id:event.id,
@@ -145,7 +145,7 @@ export const updateAndPublishEvents = (summitId, events) =>  (dispatch, getState
     putRequest(
         null,
         createAction(UPDATED_REMOTE_EVENTS)({}),
-        `${apiBaseUrl}/api/v1/summits/${summitId}/events/?access_token=${accessToken}`,
+        `${window.API_BASE_URL}/api/v1/summits/${summitId}/events/?access_token=${accessToken}`,
         {
             events
         },
@@ -157,7 +157,7 @@ export const updateAndPublishEvents = (summitId, events) =>  (dispatch, getState
                 putRequest(
                     null,
                     createAction(UPDATED_REMOTE_EVENTS)({}),
-                    `${apiBaseUrl}/api/v1/summits/${summitId}/events/publish/?access_token=${accessToken}`,
+                    `${window.API_BASE_URL}/api/v1/summits/${summitId}/events/publish/?access_token=${accessToken}`,
                     {
                         events: events.map((event) => ({
                             id:event.id,
@@ -207,7 +207,7 @@ export const performBulkAction = (eventsIds, bulkAction, published) => (dispatch
             deleteRequest(
                 null,
                 createAction(UPDATED_REMOTE_EVENTS)({}),
-                `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/events/publish`,
+                `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/publish`,
                 {
                     events : eventsIds
                 },

@@ -22,8 +22,7 @@ import
     EMAIL_SENT
 } from '../../actions/promocode-actions';
 
-import { LOGOUT_USER } from '../../actions/auth-actions';
-import { VALIDATE } from '../../actions/base-actions';
+import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 export const DEFAULT_ENTITY = {

@@ -10,8 +10,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-
-import { authErrorHandler, apiBaseUrl } from './base-actions';
 import T from "i18n-react/dist/i18n-react";
 import _ from 'lodash';
 import history from '../history'
@@ -26,7 +24,8 @@ import {
     showMessage,
     showSuccessMessage,
     fetchResponseHandler,
-    fetchErrorHandler
+    fetchErrorHandler,
+    authErrorHandler
 } from "openstack-uicore-foundation/lib/methods";
 
 
@@ -89,7 +88,7 @@ export const getEventCategories = ( ) => (dispatch, getState) => {
     return getRequest(
         createAction(REQUEST_EVENT_CATEGORIES),
         createAction(RECEIVE_EVENT_CATEGORIES),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/tracks`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tracks`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -113,7 +112,7 @@ export const getEventCategory = (eventCategoryId) => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_EVENT_CATEGORY),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/tracks/${eventCategoryId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tracks/${eventCategoryId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -140,7 +139,7 @@ export const saveEventCategory = (entity) => (dispatch, getState) => {
         putRequest(
             createAction(UPDATE_EVENT_CATEGORY),
             createAction(EVENT_CATEGORY_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/tracks/${entity.id}`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tracks/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -160,7 +159,7 @@ export const saveEventCategory = (entity) => (dispatch, getState) => {
         postRequest(
             createAction(UPDATE_EVENT_CATEGORY),
             createAction(EVENT_CATEGORY_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/tracks`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tracks`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -186,7 +185,7 @@ export const copyEventCategories = (fromSummitId) => (dispatch, getState) => {
     postRequest(
         null,
         createAction(EVENT_CATEGORIES_SEEDED),
-        `${apiBaseUrl}/api/v1/summits/${fromSummitId}/tracks/copy/${currentSummit.id}`,
+        `${window.API_BASE_URL}/api/v1/summits/${fromSummitId}/tracks/copy/${currentSummit.id}`,
         null,
         authErrorHandler
     )(params)(dispatch)
@@ -208,7 +207,7 @@ export const deleteEventCategory = (categoryId) => (dispatch, getState) => {
     return deleteRequest(
         null,
         createAction(EVENT_CATEGORY_DELETED)({categoryId}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/tracks/${categoryId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tracks/${categoryId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -249,7 +248,7 @@ export const getEventCategoryQuestion = (questionId) => (dispatch, getState) => 
     return getRequest(
         null,
         createAction(RECEIVE_EVENT_CATEGORY_QUESTION),
-        `${apiBaseUrl}/api/v1/track-question-templates/${questionId}`,
+        `${window.API_BASE_URL}/api/v1/track-question-templates/${questionId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -270,7 +269,7 @@ export const getEventCategoryQuestionMeta = () => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_EVENT_CATEGORY_QUESTION_META),
-        `${apiBaseUrl}/api/v1/track-question-templates/metadata`,
+        `${window.API_BASE_URL}/api/v1/track-question-templates/metadata`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -297,7 +296,7 @@ export const saveEventCategoryQuestion = (entity) => (dispatch, getState) => {
         putRequest(
             createAction(UPDATE_EVENT_CATEGORY_QUESTION),
             createAction(EVENT_CATEGORY_QUESTION_UPDATED),
-            `${apiBaseUrl}/api/v1/track-question-templates/${entity.id}`,
+            `${window.API_BASE_URL}/api/v1/track-question-templates/${entity.id}`,
             entity,
             authErrorHandler,
             entity
@@ -318,7 +317,7 @@ export const saveEventCategoryQuestion = (entity) => (dispatch, getState) => {
         postRequest(
             createAction(UPDATE_EVENT_CATEGORY_QUESTION),
             createAction(EVENT_CATEGORY_QUESTION_ADDED),
-            `${apiBaseUrl}/api/v1/track-question-templates`,
+            `${window.API_BASE_URL}/api/v1/track-question-templates`,
             entity,
             authErrorHandler,
             entity
@@ -346,7 +345,7 @@ export const linkQuestionToCategory = (question) => (dispatch, getState) => {
     putRequest(
         null,
         createAction(EVENT_CATEGORY_QUESTION_ASSIGNED)(question),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/tracks/${currentEventCategory.id}/extra-questions/${question.id}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tracks/${currentEventCategory.id}/extra-questions/${question.id}`,
         null,
         authErrorHandler
     )(params)(dispatch)
@@ -371,7 +370,7 @@ export const unlinkQuestionToCategory = (questionId) => (dispatch, getState) => 
     return deleteRequest(
         null,
         createAction(EVENT_CATEGORY_QUESTION_DELETED)({questionId}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/tracks/${currentEventCategory.id}/extra-questions/${questionId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tracks/${currentEventCategory.id}/extra-questions/${questionId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -384,7 +383,7 @@ export const queryQuestions = _.debounce((input, callback) => {
 
     let accessToken = window.accessToken;
 
-    fetch(`${window.apiBaseUrl}/api/v1/track-question-templates?filter=name=@${input}&order=name&access_token=${accessToken}`)
+    fetch(`${window.API_BASE_URL}/api/v1/track-question-templates?filter=name=@${input}&order=name&access_token=${accessToken}`)
         .then(fetchResponseHandler)
         .then((json) => {
             let options = [...json.data];
@@ -414,7 +413,7 @@ export const saveEventCategoryQuestionValue = (questionId, entity) => (dispatch,
         putRequest(
             null,
             createAction(EVENT_CATEGORY_QUESTION_VALUE_UPDATED),
-            `${apiBaseUrl}/api/v1/track-question-templates/${questionId}/values/${entity.id}`,
+            `${window.API_BASE_URL}/api/v1/track-question-templates/${questionId}/values/${entity.id}`,
             entity,
             authErrorHandler,
             entity
@@ -435,7 +434,7 @@ export const saveEventCategoryQuestionValue = (questionId, entity) => (dispatch,
         postRequest(
             null,
             createAction(EVENT_CATEGORY_QUESTION_VALUE_ADDED),
-            `${apiBaseUrl}/api/v1/track-question-templates/${questionId}/values`,
+            `${window.API_BASE_URL}/api/v1/track-question-templates/${questionId}/values`,
             entity,
             authErrorHandler
         )(params)(dispatch)
@@ -458,7 +457,7 @@ export const deleteEventCategoryQuestionValue = (questionId, valueId) => (dispat
     return deleteRequest(
         null,
         createAction(EVENT_CATEGORY_QUESTION_VALUE_DELETED)({valueId}),
-        `${apiBaseUrl}/api/v1/track-question-templates/${questionId}/values/${valueId}`,
+        `${window.API_BASE_URL}/api/v1/track-question-templates/${questionId}/values/${valueId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -488,7 +487,7 @@ export const getEventCategoryGroups = ( ) => (dispatch, getState) => {
     return getRequest(
         createAction(REQUEST_EVENT_CATEGORY_GROUPS),
         createAction(RECEIVE_EVENT_CATEGORY_GROUPS),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-groups`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/track-groups`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -512,7 +511,7 @@ export const getEventCategoryGroup = (groupId) => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_EVENT_CATEGORY_GROUP),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-groups/${groupId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/track-groups/${groupId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -533,7 +532,7 @@ export const getEventCategoryGroupMeta = () => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_EVENT_CATEGORY_GROUP_META),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-groups/metadata`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/track-groups/metadata`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -559,7 +558,7 @@ export const saveEventCategoryGroup = (entity) => (dispatch, getState) => {
         putRequest(
             createAction(UPDATE_EVENT_CATEGORY_GROUP),
             createAction(EVENT_CATEGORY_GROUP_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-groups/${entity.id}`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/track-groups/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -578,7 +577,7 @@ export const saveEventCategoryGroup = (entity) => (dispatch, getState) => {
         postRequest(
             createAction(UPDATE_EVENT_CATEGORY_GROUP),
             createAction(EVENT_CATEGORY_GROUP_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-groups`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/track-groups`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -607,7 +606,7 @@ export const deleteEventCategoryGroup = (groupId) => (dispatch, getState) => {
     return deleteRequest(
         null,
         createAction(EVENT_CATEGORY_GROUP_DELETED)({groupId}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-groups/${groupId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/track-groups/${groupId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -630,7 +629,7 @@ export const addCategoryToGroup = (groupId, category) => (dispatch, getState) =>
     return putRequest(
         null,
         createAction(CATEGORY_ADDED_TO_GROUP)({category}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-groups/${groupId}/tracks/${category.id}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/track-groups/${groupId}/tracks/${category.id}`,
         {},
         authErrorHandler
     )(params)(dispatch).then(() => {
@@ -654,7 +653,7 @@ export const removeCategoryFromGroup = (groupId, categoryId) => (dispatch, getSt
     return deleteRequest(
         null,
         createAction(CATEGORY_REMOVED_FROM_GROUP)({categoryId}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-groups/${groupId}/tracks/${categoryId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/track-groups/${groupId}/tracks/${categoryId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -677,7 +676,7 @@ export const addAllowedGroupToGroup = (groupId, allowedGroup) => (dispatch, getS
     return putRequest(
         null,
         createAction(GROUP_ADDED_TO_GROUP)({allowedGroup}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-groups/${groupId}/allowed-groups/${allowedGroup.id}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/track-groups/${groupId}/allowed-groups/${allowedGroup.id}`,
         null,
         authErrorHandler
     )(params)(dispatch).then(() => {
@@ -701,7 +700,7 @@ export const removeAllowedGroupFromGroup = (groupId, allowedGroupId) => (dispatc
     return deleteRequest(
         null,
         createAction(GROUP_REMOVED_FROM_GROUP)({allowedGroupId}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-groups/${groupId}/allowed-groups/${allowedGroupId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/track-groups/${groupId}/allowed-groups/${allowedGroupId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

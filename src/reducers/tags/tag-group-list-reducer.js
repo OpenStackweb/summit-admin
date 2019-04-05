@@ -20,7 +20,7 @@ import
     TAG_GROUPS_SEEDED
 } from '../../actions/tag-actions';
 
-import { LOGOUT_USER } from '../../actions/auth-actions';
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
 
 const DEFAULT_STATE = {
     tagGroups      : []

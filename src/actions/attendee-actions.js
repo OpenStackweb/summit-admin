@@ -11,7 +11,6 @@
  * limitations under the License.
  **/
 
-import { authErrorHandler, apiBaseUrl } from './base-actions';
 import T from "i18n-react/dist/i18n-react";
 import history from '../history'
 import {
@@ -23,7 +22,8 @@ import {
     stopLoading,
     startLoading,
     showMessage,
-    showSuccessMessage
+    showSuccessMessage,
+    authErrorHandler
 } from "openstack-uicore-foundation/lib/methods";
 
 export const REQUEST_ATTENDEES          = 'REQUEST_ATTENDEES';
@@ -74,7 +74,7 @@ export const getAttendees = ( term = null, page = 1, perPage = 10, order = 'id',
     return getRequest(
         createAction(REQUEST_ATTENDEES),
         createAction(RECEIVE_ATTENDEES),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/attendees`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/attendees`,
         authErrorHandler,
         {page, perPage, order, orderDir, term}
     )(params)(dispatch).then(() => {
@@ -99,7 +99,7 @@ export const getAttendee = (attendeeId) => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_ATTENDEE),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -130,7 +130,7 @@ export const reassignTicket = (attendeeId, newMemberId, ticketId) => (dispatch, 
     putRequest(
         null,
         createAction(CHANGE_MEMBER),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}/tickets/${ticketId}/reassign/${newMemberId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}/tickets/${ticketId}/reassign/${newMemberId}`,
         {},
         authErrorHandler
     )(params)(dispatch)
@@ -160,7 +160,7 @@ export const saveAttendee = (entity) => (dispatch, getState) => {
         putRequest(
             createAction(UPDATE_ATTENDEE),
             createAction(ATTENDEE_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/attendees/${entity.id}`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/attendees/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -179,7 +179,7 @@ export const saveAttendee = (entity) => (dispatch, getState) => {
         postRequest(
             createAction(UPDATE_ATTENDEE),
             createAction(ATTENDEE_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/attendees`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/attendees`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -206,7 +206,7 @@ export const deleteAttendee = (attendeeId) => (dispatch, getState) => {
     return deleteRequest(
         null,
         createAction(ATTENDEE_DELETED)({attendeeId}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -227,7 +227,7 @@ export const deleteTicket = (attendeeId, ticketId) => (dispatch, getState) => {
     return deleteRequest(
         null,
         createAction(TICKET_DELETED)({ticketId}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}/tickets/${ticketId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}/tickets/${ticketId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -248,7 +248,7 @@ export const saveTicket = (attendeeId, newTicket) => (dispatch, getState) => {
     postRequest(
         null,
         createAction(TICKET_ADDED),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}/tickets`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}/tickets`,
         newTicket,
         authErrorHandler
     )(params)(dispatch).then(() => {
@@ -269,7 +269,7 @@ export const deleteRsvp = (memberId, rsvpId) => (dispatch, getState) => {
     return deleteRequest(
         null,
         createAction(RSVP_DELETED)({rsvpId}),
-        `${apiBaseUrl}/api/v1/members/${memberId}/rsvp/${rsvpId}`,
+        `${window.API_BASE_URL}/api/v1/members/${memberId}/rsvp/${rsvpId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

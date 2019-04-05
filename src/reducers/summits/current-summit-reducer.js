@@ -1,4 +1,4 @@
-import{ LOGOUT_USER } from '../../actions/auth-actions';
+import{ LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
 import { SET_CURRENT_SUMMIT, REQUEST_SUMMIT,RECEIVE_SUMMIT, UPDATE_SUMMIT, SUMMIT_UPDATED, SUMMIT_ADDED, RESET_SUMMIT_FORM } from '../../actions/summit-actions';
 import { EVENT_CATEGORY_UPDATED, EVENT_CATEGORY_ADDED, EVENT_CATEGORY_DELETED, EVENT_CATEGORIES_SEEDED } from '../../actions/event-category-actions';
 import { EVENT_TYPE_UPDATED, EVENT_TYPE_ADDED, EVENT_TYPE_DELETED, EVENT_TYPES_SEEDED } from '../../actions/event-type-actions';
@@ -8,7 +8,6 @@ import {
     SELECTION_PLAN_ADDED,
     UPDATE_SELECTION_PLAN
 } from "../../actions/selection-plan-actions";
-import {VALIDATE} from "../../actions/base-actions";
 
 export const DEFAULT_ENTITY = {
     id: 0,

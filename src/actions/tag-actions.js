@@ -11,7 +11,6 @@
  * limitations under the License.
  **/
 
-import { authErrorHandler, apiBaseUrl } from './base-actions';
 import T from "i18n-react/dist/i18n-react";
 import history from '../history'
 import {
@@ -23,7 +22,8 @@ import {
     stopLoading,
     startLoading,
     showMessage,
-    showSuccessMessage
+    showSuccessMessage,
+    authErrorHandler
 } from 'openstack-uicore-foundation/lib/methods';
 
 export const REQUEST_TAG_GROUPS       = 'REQUEST_TAG_GROUPS';
@@ -56,14 +56,13 @@ export const getTagGroups = ( ) => (dispatch, getState) => {
     return getRequest(
         createAction(REQUEST_TAG_GROUPS),
         createAction(RECEIVE_TAG_GROUPS),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-tag-groups`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/track-tag-groups`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
     );
 };
-
 
 export const updateTagGroupsOrder = (tagGroups, tagGroupId, newOrder) => (dispatch, getState) => {
 
@@ -81,7 +80,7 @@ export const updateTagGroupsOrder = (tagGroups, tagGroupId, newOrder) => (dispat
     putRequest(
         null,
         createAction(TAG_GROUP_ORDER_UPDATED)(tagGroups),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-tag-groups/${tagGroupId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/track-tag-groups/${tagGroupId}`,
         tagGroup,
         authErrorHandler
     )(params)(dispatch).then(() => {
@@ -108,7 +107,7 @@ export const getTagGroup = (tagGroupId) => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_TAG_GROUP),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-tag-groups/${tagGroupId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/track-tag-groups/${tagGroupId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -135,7 +134,7 @@ export const saveTagGroup = (entity) => (dispatch, getState) => {
         putRequest(
             createAction(UPDATE_TAG_GROUP),
             createAction(TAG_GROUP_UPDATED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-tag-groups/${entity.id}`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/track-tag-groups/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -154,7 +153,7 @@ export const saveTagGroup = (entity) => (dispatch, getState) => {
         postRequest(
             createAction(UPDATE_TAG_GROUP),
             createAction(TAG_GROUP_ADDED),
-            `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-tag-groups`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/track-tag-groups`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -181,7 +180,7 @@ export const deleteTagGroup = (tagGroupId) => (dispatch, getState) => {
     return deleteRequest(
         null,
         createAction(TAG_GROUP_DELETED)({tagGroupId}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-tag-groups/${tagGroupId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/track-tag-groups/${tagGroupId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -202,7 +201,7 @@ export const seedTagGroups = () => (dispatch, getState) => {
     return postRequest(
         null,
         createAction(TAG_GROUPS_SEEDED),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-tag-groups/seed-defaults`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/track-tag-groups/seed-defaults`,
         null,
         authErrorHandler
     )(params)(dispatch).then(() => {
@@ -223,7 +222,7 @@ export const copyTagToAllCategories = (tagId) => (dispatch, getState) => {
     return postRequest(
         null,
         createAction(TAG_SEEDED_TO_CATEGORIES),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-tag-groups/all/allowed-tags/${tagId}/seed-on-tracks`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/track-tag-groups/all/allowed-tags/${tagId}/seed-on-tracks`,
         null,
         authErrorHandler
     )(params)(dispatch).then(() => {
@@ -244,7 +243,7 @@ export const copyAllTagsToCategory = (tagGroupId, categoryId) => (dispatch, getS
     return postRequest(
         null,
         createAction(TAGS_COPIED_TO_CATEGORY),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/track-tag-groups/${tagGroupId}/allowed-tags/all/copy/tracks/${categoryId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/track-tag-groups/${tagGroupId}/allowed-tags/all/copy/tracks/${categoryId}`,
         null,
         authErrorHandler
     )(params)(dispatch).then(() => {

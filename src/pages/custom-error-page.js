@@ -15,9 +15,7 @@ import URI from "urijs";
 import swal from "sweetalert2";
 import '../styles/error-page.less';
 import T from "i18n-react/dist/i18n-react";
-import {doLogin} from "../actions/auth-actions";
-import {getBackURL} from "openstack-uicore-foundation/lib/methods";
-
+import {getBackURL, doLogin} from "openstack-uicore-foundation/lib/methods";
 
 class CustomErrorPage extends React.Component {
 
