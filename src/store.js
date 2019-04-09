@@ -54,6 +54,7 @@ import selectionPlanReducer from './reducers/summits/selection-plan-reducer';
 import roomOccupancyReducer from "./reducers/events/room-occupancy-reducer";
 import tagGroupListReducer from "./reducers/tags/tag-group-list-reducer";
 import tagGroupReducer from "./reducers/tags/tag-group-reducer";
+import reportReducer from "./reducers/reports/report-reducer";
 import { loggedUserReducer } from "openstack-uicore-foundation/lib/reducers"
 
 import thunk from 'redux-thunk';
@@ -109,7 +110,8 @@ const reducers = persistCombineReducers(config, {
     currentSelectionPlanState: selectionPlanReducer,
     currentRoomOccupancyState: roomOccupancyReducer,
     currentTagGroupListState: tagGroupListReducer,
-    currentTagGroupState: tagGroupReducer
+    currentTagGroupState: tagGroupReducer,
+    currentReportState: reportReducer
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
