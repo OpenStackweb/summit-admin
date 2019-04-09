@@ -102,6 +102,8 @@ class AuthorizationCallbackRoute extends React.Component {
 
         if(access_token == null){
             console.log("AuthorizationCallbackRoute::render - access_token is null");
+            let error = "token error";
+            let error_description = "access_token is null";
             return (
                 <Route render={ props => {
                     return <Redirect to={`/error?error=${error}&error_description=${error_description}`} />
