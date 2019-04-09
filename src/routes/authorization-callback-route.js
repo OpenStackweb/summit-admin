@@ -98,12 +98,11 @@ class AuthorizationCallbackRoute extends React.Component {
     render() {
         console.log("AuthorizationCallbackRoute::render");
         let { getUserInfo } = this.props;
-        let {access_token, id_token } = this.state;
+        let {access_token, id_token, error, error_description } = this.state;
 
-        if(access_token == null){
+        if(error){
             console.log("AuthorizationCallbackRoute::render - access_token is null");
-            let error = "token error";
-            let error_description = "access_token is null";
+
             return (
                 <Route render={ props => {
                     return <Redirect to={`/error?error=${error}&error_description=${error_description}`} />
@@ -114,11 +113,11 @@ class AuthorizationCallbackRoute extends React.Component {
         if(!this.validateIdToken(id_token))
         {
             console.log("AuthorizationCallbackRoute::render - not valid id_token");
-            let error = "validation error";
-            let error_description = "invalid id token";
+            let tmp_error = "validation error";
+            let tmp_error_description = "invalid id token";
             return (
                 <Route render={ props => {
-                    return <Redirect to={`/error?error=${error}&error_description=${error_description}`} />
+                    return <Redirect to={`/error?error=${tmp_error}&error_description=${tmp_error_description}`} />
                 }} />
             )
         }
