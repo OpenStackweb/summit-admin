@@ -24,13 +24,13 @@ const baseReducer = (state = DEFAULT_STATE, action) => {
     switch(type){
         case LOGOUT_USER:
             return DEFAULT_STATE;
-        case START_LOADING:
-            //console.log('START_LOADING')
+        case START_LOADING: {
             return {...state, loading: true};
+        }
         break;
-        case STOP_LOADING:
-            //console.log('STOP_LOADING')
+        case STOP_LOADING: {
             return {...state, loading: false};
+        }
         break;
         case RECEIVE_COUNTRIES:
             return {...state, countries: payload};

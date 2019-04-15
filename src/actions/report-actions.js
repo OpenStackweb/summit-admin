@@ -30,23 +30,24 @@ export const REQUEST_REPORT       = 'REQUEST_REPORT';
 export const RECEIVE_REPORT       = 'RECEIVE_REPORT';
 
 
-export const getReport = (reportName) => (dispatch, getState) => {
+export const getReport = (query, reportName, page) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
     let params = {
         access_token : accessToken,
+        query: "{ "+ query + " }"
     };
 
     return getRequest(
         createAction(REQUEST_REPORT),
         createAction(RECEIVE_REPORT),
-        `${window.REPORT_API_BASE_URL}/reports/${reportName}`,
-        authErrorHandler
+        `${window.REPORT_API_BASE_URL}/reports`,
+        authErrorHandler,
+        {name: reportName, page}
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }

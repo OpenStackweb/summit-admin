@@ -14,6 +14,7 @@
 import
 {
     RECEIVE_REPORT,
+    REQUEST_REPORT
 } from '../../actions/report-actions';
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
@@ -22,8 +23,34 @@ import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 const DEFAULT_STATE = {
     name            : '',
-    data            : []
+    data            : [],
+    pageInfo        : {},
+    previousCursor  : '',
+    currentPage     : 1,
+    perPage         : 25,
+    totalCount      : 0
 };
+
+const processReportData = (data) => {
+    let tmpData = {};
+
+    for (var property in data) {
+        if (data[property] && typeof data[property] == 'object') {
+
+            if (data[property].hasOwnProperty('edges')) {
+
+                let collection = data[property].edges.map(it => processReportData(it.node))
+                tmpData[property] = collection;
+            } else {
+                tmpData = {...data};
+            }
+        } else {
+            tmpData = data;
+        }
+    }
+
+    return tmpData
+}
 
 const reportReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
@@ -37,10 +64,26 @@ const reportReducer = (state = DEFAULT_STATE, action) => {
             }
         }
         break;
-        case RECEIVE_REPORT: {
-            let data = {...payload.response};
+        case REQUEST_REPORT: {
+            let {name, page} = payload;
+            let previousCursor = (state.pageInfo && page > 1) ? state.pageInfo.endCursor : '';
 
-            return {...state, data: data };
+            return {...DEFAULT_STATE, name: name, currentPage: page, previousCursor: previousCursor}
+        }
+        break;
+        case RECEIVE_REPORT: {
+            let data = {...payload.response.data};
+            let firstKey = Object.keys(data)[0];
+            let pageInfo = {...data[firstKey].pageInfo};
+            let totalCount = {...data[firstKey].totalCount};
+
+            delete data[firstKey].pageInfo;
+            delete data[firstKey].totalCount;
+
+            let processedData = processReportData(data);
+            //console.log(processedData);
+
+            return {...state, data: processedData[firstKey], pageInfo, totalCount };
         }
         break;
         default:

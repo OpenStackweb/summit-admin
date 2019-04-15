@@ -43,53 +43,13 @@ class ReportListPage extends React.Component {
 
                 <div className="row">
                     <div className="col-md-6">
-                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'presentations')}>
-                            {T.translate("reports.presentation_report")}
+                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'tag_report')}>
+                            {T.translate(`reports.tag_report`)}
                         </button>
                     </div>
                     <div className="col-md-6">
-                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'presentations-company')}>
-                            {T.translate("reports.presentation_company_report")}
-                        </button>
-                    </div>
-                    <div className="col-md-6">
-                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'presentations-track')}>
-                            {T.translate("reports.presentation_track_report")}
-                        </button>
-                    </div>
-                    <div className="col-md-6">
-                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'track-questions')}>
-                            {T.translate("reports.track_questions_report")}
-                        </button>
-                    </div>
-                    <div className="col-md-6">
-                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'feedback')}>
-                            {T.translate("reports.feedback_report")}
-                        </button>
-                    </div>
-                    <div className="col-md-6">
-                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'rsvp')}>
-                            {T.translate("reports.rsvp_report")}
-                        </button>
-                    </div>
-                    <div className="col-md-6">
-                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'room')}>
-                            {T.translate("reports.room_report")}
-                        </button>
-                    </div>
-                    <div className="col-md-6">
-                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'presentation-video')}>
-                            {T.translate("reports.presentation_video_report")}
-                        </button>
-                    </div>
-                    <div className="col-md-6">
-                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'speaker')}>
-                            {T.translate("reports.speaker_report")}
-                        </button>
-                    </div>
-                    <div className="col-md-6">
-                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'tag')}>
-                            {T.translate("reports.tag_report")}
+                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'presentation_company_report')}>
+                            {T.translate(`reports.presentation_company_report`)}
                         </button>
                     </div>
                 </div>
