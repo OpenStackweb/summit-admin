@@ -17,6 +17,7 @@ import T from "i18n-react/dist/i18n-react";
 import EventForm from '../../components/forms/event-form';
 import { saveEvent, attachFile } from '../../actions/event-actions';
 import { unPublishEvent } from '../../actions/summit-builder-actions';
+import { deleteEventMaterial } from '../../actions/event-material-actions';
 
 import '../../styles/edit-summit-event-page.less';
 import '../../components/form-validation/validate.less';
@@ -45,6 +46,7 @@ class EditSummitEventPage extends React.Component {
                     onSubmit={this.props.saveEvent}
                     onAttach={this.props.attachFile}
                     onUnpublish={this.props.unPublishEvent}
+                    onMaterialDelete={this.props.deleteEventMaterial}
                 />
                 }
             </div>
@@ -65,6 +67,7 @@ export default connect (
     {
         saveEvent,
         attachFile,
-        unPublishEvent
+        unPublishEvent,
+        deleteEventMaterial
     }
 )(EditSummitEventPage);

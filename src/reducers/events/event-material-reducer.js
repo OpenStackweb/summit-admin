@@ -24,15 +24,15 @@ import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 export const DEFAULT_ENTITY = {
     id                          : 0,
+    class_name                  : null,
     name                        : '',
-    class_name                  : '',
     description                 : '',
     featured                    : 0,
     display_on_site             : 0,
     order                       : 0,
     link                        : '',
-    slide                       : '',
-    youtube_id                  : ''
+    file                        : null,
+    you_tube_id                 : ''
 }
 
 const DEFAULT_STATE = {
@@ -61,9 +61,8 @@ const eventMaterialReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  entity: {...payload}, errors: {} };
         }
         break;
-        case EVENT_MATERIAL_ADDED:
         case RECEIVE_EVENT_MATERIAL: {
-            let entity = {...payload.response};
+            let entity = {...payload.material};
 
             for(var key in entity) {
                 if(entity.hasOwnProperty(key)) {

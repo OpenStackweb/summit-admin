@@ -263,14 +263,17 @@
     }
   },
   "edit_event_material": {
-    "material"              : "Material",
-    "type"                  : "Type",
-    "name"                  : "Name",
-    "featured"              : "Featured",
-    "display_on_site"       : "Display on site",
-    "link"                  : "Link",
-    "slide"                 : "Slide",
-    "youtube_id"            : "Youtube Id",
+    "material"               : "Material",
+    "type"                   : "Type",
+    "name"                   : "Name",
+    "description"            : "Description",
+    "featured"               : "Featured",
+    "display_on_site"        : "Display on site",
+    "link"                   : "Link",
+    "slide"                  : "Slide",
+    "youtube_id"             : "Youtube Id",
+    "event_material_saved"   : "Material saved successfully.",
+    "event_material_created" : "Material created successfully.",
     "placeholders": {
       "select_type"        : "Select a Type ..."
     }

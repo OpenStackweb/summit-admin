@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import EventMaterialForm from '../../components/forms/event-material-form';
-import { getEventMaterial, resetEventMaterialForm, saveEventMaterial } from "../../actions/event-material-actions";
+import { getEventMaterial, resetEventMaterialForm, saveEventMaterial, saveSlide } from "../../actions/event-material-actions";
 //import '../../styles/edit-event-material-page.less';
 
 class EditEventMaterialPage extends React.Component {
@@ -49,9 +49,11 @@ class EditEventMaterialPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors, match} = this.props;
+        let {currentSummit, entity, errors, match, event} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+
+        if (!event) return(<div></div>);
 
         return(
             <div className="container">
@@ -64,6 +66,7 @@ class EditEventMaterialPage extends React.Component {
                     entity={entity}
                     errors={errors}
                     onSubmit={this.props.saveEventMaterial}
+                    onSubmitSlide={this.props.saveSlide}
                 />
                 }
             </div>
@@ -72,8 +75,9 @@ class EditEventMaterialPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentEventMaterialState }) => ({
+const mapStateToProps = ({ currentSummitState, currentEventMaterialState, currentSummitEventState }) => ({
     currentSummit : currentSummitState.currentSummit,
+    event: currentSummitEventState.entity,
     ...currentEventMaterialState
 })
 
@@ -83,5 +87,6 @@ export default connect (
         getEventMaterial,
         resetEventMaterialForm,
         saveEventMaterial,
+        saveSlide,
     }
 )(EditEventMaterialPage);

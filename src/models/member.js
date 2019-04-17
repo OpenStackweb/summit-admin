@@ -22,6 +22,8 @@ class Member {
     hasAccess(accessRoute) {
         if (!access.hasOwnProperty(accessRoute)) return true;
 
+        if (!this._member) return false;
+
         for (var i in this._member.groups) {
             if (access[accessRoute].includes(this._member.groups[i].code)) return true;
         }
