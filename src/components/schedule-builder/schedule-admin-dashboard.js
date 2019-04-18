@@ -534,7 +534,7 @@ class ScheduleAdminDashBoard extends React.Component {
         let currentEventTypeSelectorItem = null;
 
         do{
-            let option = { value: currentAuxDay.format("YYYY-MM-DD") , label: currentAuxDay.format('MMMM Do YYYY') };
+            let option = { value: currentAuxDay.format("YYYY-MM-DD") , label: currentAuxDay.format('dddd Do , MMMM YYYY') };
             if(currentDay != null && currentAuxDay.format("YYYY-MM-DD") == currentDay)
                 currentDaySelectorItem = option;
             days.push(option);

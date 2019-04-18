@@ -42,11 +42,9 @@ class EditLocationPage extends React.Component {
         this.handleMapDelete = this.handleMapDelete.bind(this);
     }
 
-    handleFloorDelete(floorId, ev) {
+    handleFloorDelete(floorId) {
         let {deleteFloor, entity} = this.props;
         let floor = entity.floors.find(f => f.id == floorId);
-
-        ev.preventDefault();
 
         swal({
             title: T.translate("general.are_you_sure"),
@@ -62,11 +60,9 @@ class EditLocationPage extends React.Component {
         }).catch(swal.noop);
     }
 
-    handleRoomDelete(roomId, ev) {
+    handleRoomDelete(roomId) {
         let {deleteRoom, entity} = this.props;
         let room = entity.rooms.find(r => r.id == roomId);
-
-        ev.preventDefault();
 
         swal({
             title: T.translate("general.are_you_sure"),

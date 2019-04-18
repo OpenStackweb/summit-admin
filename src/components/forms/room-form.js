@@ -64,13 +64,13 @@ class RoomForm extends React.Component {
         this.setState({entity: entity, errors: errors});
     }
 
-    handleSubmit(ev) {
+    handleSubmit(continueAdding, ev) {
         let entity = {...this.state.entity};
         let {locationId} = this.props;
 
         ev.preventDefault();
 
-        this.props.onSubmit(locationId, entity);
+        this.props.onSubmit(locationId, entity, continueAdding);
     }
 
     hasErrors(field) {
@@ -146,8 +146,12 @@ class RoomForm extends React.Component {
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">
-                        <input type="button" onClick={this.handleSubmit}
+                        <input type="button" onClick={this.handleSubmit.bind(this, false)}
                                className="btn btn-primary pull-right" value={T.translate("general.save")}/>
+                        {!entity.id &&
+                        <input type="button" onClick={this.handleSubmit.bind(this, true)}
+                               className="btn btn-primary pull-right" value={T.translate("general.save_and_add_next")}/>
+                        }
                     </div>
                 </div>
             </form>

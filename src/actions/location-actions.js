@@ -340,7 +340,7 @@ export const resetFloorForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_FLOOR_FORM)({}));
 };
 
-export const saveFloor = (locationId, entity) => (dispatch, getState) => {
+export const saveFloor = (locationId, entity, continueAdding) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
@@ -386,7 +386,13 @@ export const saveFloor = (locationId, entity) => (dispatch, getState) => {
             .then((payload) => {
                 dispatch(showMessage(
                     success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/locations/${locationId}/floors/${payload.response.id}`) }
+                    () => {
+                        if (continueAdding) {
+                            window.location.reload();
+                        } else {
+                            history.push(`/app/summits/${currentSummit.id}/locations/${locationId}/floors/${payload.response.id}`)
+                        }
+                    }
                 ));
             });
     }
@@ -452,7 +458,7 @@ export const resetRoomForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_ROOM_FORM)({}));
 };
 
-export const saveRoom = (locationId, entity) => (dispatch, getState) => {
+export const saveRoom = (locationId, entity, continueAdding) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
@@ -503,7 +509,13 @@ export const saveRoom = (locationId, entity) => (dispatch, getState) => {
             .then((payload) => {
                 dispatch(showMessage(
                     success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/locations/${locationId}/rooms/${payload.response.id}`) }
+                    () => {
+                        if (continueAdding) {
+                            window.location.reload();
+                        } else {
+                            history.push(`/app/summits/${currentSummit.id}/locations/${locationId}/rooms/${payload.response.id}`);
+                        }
+                    }
                 ));
             });
     }

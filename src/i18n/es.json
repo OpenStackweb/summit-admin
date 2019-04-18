@@ -41,6 +41,7 @@
     "search"              : "Search",
     "save"                : "Save",
     "save_and_publish"    : "Save & Publish",
+    "save_and_add_next"   : "Save & Add Next",
     "export"              : "Export",
     "are_you_sure"        : "Are you sure?",
     "yes_delete"          : "Yes, delete.",
