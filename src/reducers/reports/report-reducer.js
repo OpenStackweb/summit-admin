@@ -39,13 +39,13 @@ const processReportData = (data) => {
 
             if (data[property].hasOwnProperty('edges')) {
 
-                let collection = data[property].edges.map(it => processReportData(it.node))
+                let collection = data[property].edges.map(it => processReportData(it.node));
                 tmpData[property] = collection;
             } else {
-                tmpData = {...data};
+                tmpData[property] = processReportData(data[property]);
             }
         } else {
-            tmpData = data;
+            tmpData[property] = data[property];
         }
     }
 
@@ -75,7 +75,7 @@ const reportReducer = (state = DEFAULT_STATE, action) => {
             let data = {...payload.response.data};
             let firstKey = Object.keys(data)[0];
             let pageInfo = {...data[firstKey].pageInfo};
-            let totalCount = {...data[firstKey].totalCount};
+            let totalCount = data[firstKey].totalCount;
 
             delete data[firstKey].pageInfo;
             delete data[firstKey].totalCount;

@@ -27,6 +27,7 @@ class PresentationCompanyReport extends React.Component {
         super(props);
 
         this.buildQuery = this.buildQuery.bind(this);
+        this.handleSort = this.handleSort.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
     }
 
@@ -37,16 +38,23 @@ class PresentationCompanyReport extends React.Component {
     }
 
 
-    buildQuery(page) {
+    buildQuery(page, key=null, dir=null) {
         let {pageInfo, currentPage, perPage} = this.props;
         let filters = {first: 25, summit_Id: 25};
 
-        if(page > currentPage) {
-            filters.first = perPage;
-            filters.after = pageInfo.endCursor;
-        } else {
-            filters.last = perPage;
-            filters.before = pageInfo.startCursor;
+        if (page != 1) {
+            if(page > currentPage) {
+                filters.first = perPage;
+                filters.after = pageInfo.endCursor;
+            } else {
+                filters.last = perPage;
+                filters.before = pageInfo.startCursor;
+            }
+        }
+
+        if (key) {
+            let order = (dir == 1) ? '' : '-';
+            filters.sortBy = order + '' + key;
         }
 
 
@@ -87,6 +95,18 @@ class PresentationCompanyReport extends React.Component {
         return query;
     }
 
+    handleSort(index, key, dir, func) {
+        let sortKey = null;
+        switch(key) {
+            case 'track':
+                sortKey = 'presentations__category__title';
+                break;
+        }
+
+        let query = this.buildQuery(1, key, dir);
+        this.props.getReport(query, reportName, 1);
+    }
+
     handlePageChange(page) {
         let query = this.buildQuery(page);
         this.props.getReport(query, reportName, page);
@@ -97,15 +117,35 @@ class PresentationCompanyReport extends React.Component {
         let {data, pageInfo, match, currentPage, totalCount, perPage} = this.props;
 
         let report_columns = [
-            { columnKey: 'id', value: 'ID' },
-            { columnKey: 'firstName', value: 'First Name' },
-            { columnKey: 'lastName', value: 'Last Name' },
+            { columnKey: 'link', value: 'Link' },
+            { columnKey: 'event_title', value: 'Presentation' },
+            { columnKey: 'description', value: 'Description' },
+            { columnKey: 'track', value: 'Track', sortable: true },
+            { columnKey: 'first_name', value: 'First Name' },
+            { columnKey: 'last_name', value: 'Last Name' },
+            { columnKey: 'email', value: 'Email' },
+            { columnKey: 'company', value: 'Company' }
         ];
 
         let report_options = { actions: {} }
-
-        let reportData = data;
         let lastPage = Math.floor(totalCount / perPage);
+
+
+        let reportData = data.filter(it => it.presentations.length > 0).map(it => {
+
+            let org = (it.member.affiliations.length > 0 && it.member.affiliations[0].organization) ? it.member.affiliations[0].organization.name : 'N/A';
+
+            return ({
+                link: '<a href="">link</a>',
+                event_title: it.presentations[0].title,
+                description: it.presentations[0].abstract,
+                track: it.presentations[0].category.title,
+                first_name: it.firstName,
+                last_name: it.lastName,
+                email: it.member.email,
+                company: org
+            });
+        });
 
         return (
             <div className="container">
@@ -119,19 +159,24 @@ class PresentationCompanyReport extends React.Component {
                 <hr/>
 
                 <div className="report-container">
-                    <Table
-                        options={report_options}
-                        data={reportData}
-                        columns={report_columns}
-                    />
+                    <div className="panel panel-default">
+                        <div className="panel-heading">Speakers ({totalCount})</div>
+
+                        <Table
+                            options={report_options}
+                            data={reportData}
+                            columns={report_columns}
+                            onSort={this.handleSort}
+                        />
+                    </div>
                 </div>
 
                 <Pagination
                     bsSize="medium"
                     prev
                     next
-                    ellipsis
-                    boundaryLinks
+                    ellipsis={false}
+                    boundaryLinks={false}
                     maxButtons={1}
                     items={lastPage}
                     activePage={currentPage}
