@@ -45,7 +45,21 @@ export const getEventMaterial = (eventMaterialId) => (dispatch, getState) => {
 
     let material = event.materials.find(m => m.id == eventMaterialId);
 
-    dispatch(createAction(RECEIVE_EVENT_MATERIAL)({material}));
+    if (material) {
+        dispatch(createAction(RECEIVE_EVENT_MATERIAL)({material}));
+    } else {
+        let message = {
+            title: T.translate("errors.not_found"),
+            html: T.translate("errors.entity_not_found"),
+            type: 'error'
+        };
+
+        dispatch(showMessage(
+            message,
+            () => { history.push(`/app/summits/${currentSummit.id}/events/${event.id}`) }
+        ));
+    }
+
 
     dispatch(stopLoading());
 
@@ -204,13 +218,12 @@ const normalizeEntity = (entity) => {
     delete(normalizedEntity['display_on_site_label']);
     delete(normalizedEntity['order']);
     delete(normalizedEntity['presentation_id']);
+    delete(normalizedEntity['file']);
+    delete(normalizedEntity['file_link']);
+    delete(normalizedEntity['has_file']);
 
     if (entity.class_name != 'PresentationVideo') {
         delete(normalizedEntity['you_tube_id']);
-    }
-
-    if (entity.class_name != 'PresentationSlide') {
-        delete(normalizedEntity['file']);
     }
 
     if (entity.class_name == 'PresentationVideo') {

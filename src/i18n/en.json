@@ -6,7 +6,9 @@
     "empty_list"                : "there not are any item that match your criteria.",
     "server_error"              : "There was a problem with our server, please contact admin.",
     "empty_list_schedule_events": "Please select a Day and a Location ...",
-    "not_allowed"               : "You are not allowed here, please login with another user to access this page."
+    "not_allowed"               : "You are not allowed here, please login with another user to access this page.",
+    "not_found"                 : "Not Found!",
+    "entity_not_found"          : "The entity you are looking for was not found."
   },
   "general": {
     "summit"              : "Summit",

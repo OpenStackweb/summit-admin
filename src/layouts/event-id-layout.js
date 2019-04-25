@@ -55,7 +55,7 @@ class EventIdLayout extends React.Component {
         let eventId = this.props.match.params.event_id;
         let breadcrumb = entity.id ? entity.title : T.translate("general.new");
 
-        if(!entity.id || entity.id != eventId) return(<div></div>);
+        if(eventId && entity.id != eventId) return(<div></div>);
 
         return(
             <div>

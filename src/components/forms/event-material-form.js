@@ -68,20 +68,11 @@ class EventMaterialForm extends React.Component {
     }
 
     handleUploadFile(file) {
-        let entity = {...this.state.entity};
-        let {valueField} = this.props;
-
-        entity[valueField] = file.preview;
-
-        this.setState({file: file, entity:entity});
+        this.setState({file: file});
     }
 
     handleRemoveFile(ev) {
-        let entity = {...this.state.entity};
-        let {valueField} = this.props;
-
-        entity[valueField] = '';
-        this.setState({entity:entity});
+        this.setState({file: null});
     }
 
     handleSubmit(ev) {
@@ -105,8 +96,9 @@ class EventMaterialForm extends React.Component {
     }
 
     render() {
-        let {entity} = this.state;
+        let {entity, file} = this.state;
         let event_materials_ddl = [{label: 'Link', value: 'PresentationLink'}, {label: 'Slide', value: 'PresentationSlide'}, {label: 'Video', value: 'PresentationVideo'}];
+        let filePreview = file ? file.preview : entity.file_link;
 
         return (
             <form className="event-material-form">
@@ -179,7 +171,7 @@ class EventMaterialForm extends React.Component {
                     <div className="col-md-12">
                         <label> {T.translate("edit_event_material.slide")} </label>
                         <UploadInput
-                            value={entity.link}
+                            value={filePreview}
                             handleUpload={this.handleUploadFile}
                             handleRemove={this.handleRemoveFile}
                             className="dropzone col-md-6"

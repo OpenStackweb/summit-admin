@@ -32,6 +32,8 @@ export const DEFAULT_ENTITY = {
     order                       : 0,
     link                        : '',
     file                        : null,
+    file_link                   : '',
+    has_file                    : false,
     you_tube_id                 : ''
 }
 
@@ -68,6 +70,11 @@ const eventMaterialReducer = (state = DEFAULT_STATE, action) => {
                 if(entity.hasOwnProperty(key)) {
                     entity[key] = (entity[key] == null) ? '' : entity[key] ;
                 }
+            }
+
+            if (entity.has_file) {
+                entity.file_link = entity.link;
+                entity.link = '';
             }
 
             return {...state, entity: {...DEFAULT_ENTITY, ...entity} };

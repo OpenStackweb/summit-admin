@@ -38,7 +38,7 @@ class EventLayout extends React.Component {
                     <Route exact strict path={match.url} component={SummitEventListPage}/>
                     <Route strict exact path={`${match.url}/schedule`} component={ScheduleBuilderPage}/>
                     <Route strict exact path={`${match.url}/bulk-actions`} component={SummitEventsBulkActionsPage}/>
-                    <Route strict exact path={`${match.url}/new`} component={EditSummitEventPage}/>
+                    <Route strict exact path={`${match.url}/new`} component={EventIdLayout}/>
                     <Route path={`${match.url}/:event_id(\\d+)`} component={EventIdLayout}/>
                     <Route component={NoMatchPage}/>
                 </Switch>
