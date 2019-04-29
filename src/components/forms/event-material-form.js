@@ -72,7 +72,9 @@ class EventMaterialForm extends React.Component {
     }
 
     handleRemoveFile(ev) {
-        this.setState({file: null});
+        let entity = {...this.state.entity};
+        entity.file_link = '';
+        this.setState({entity: entity, file: null});
     }
 
     handleSubmit(ev) {

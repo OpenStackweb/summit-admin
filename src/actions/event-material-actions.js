@@ -211,6 +211,14 @@ export const deleteEventMaterial = (eventMaterialId) => (dispatch, getState) => 
 const normalizeEntity = (entity) => {
     let normalizedEntity = {...entity};
 
+    if (entity.class_name != 'PresentationVideo') {
+        delete(normalizedEntity['you_tube_id']);
+    }
+
+    if (entity.class_name == 'PresentationVideo') {
+        delete(normalizedEntity['link']);
+    }
+
     delete(normalizedEntity['id']);
     delete(normalizedEntity['created']);
     delete(normalizedEntity['last_edited']);
@@ -222,13 +230,7 @@ const normalizeEntity = (entity) => {
     delete(normalizedEntity['file_link']);
     delete(normalizedEntity['has_file']);
 
-    if (entity.class_name != 'PresentationVideo') {
-        delete(normalizedEntity['you_tube_id']);
-    }
 
-    if (entity.class_name == 'PresentationVideo') {
-        delete(normalizedEntity['link']);
-    }
 
     return normalizedEntity;
 

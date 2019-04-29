@@ -60,7 +60,13 @@ const eventMaterialReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case UPDATE_EVENT_MATERIAL: {
-            return {...state,  entity: {...payload}, errors: {} };
+            let entity = {...payload};
+
+            if (entity.link) {
+                entity.file_link = '';
+            }
+
+            return {...state,  entity: entity, errors: {} };
         }
         break;
         case RECEIVE_EVENT_MATERIAL: {
@@ -75,6 +81,8 @@ const eventMaterialReducer = (state = DEFAULT_STATE, action) => {
             if (entity.has_file) {
                 entity.file_link = entity.link;
                 entity.link = '';
+            } else {
+                entity.file_link = '';
             }
 
             return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
