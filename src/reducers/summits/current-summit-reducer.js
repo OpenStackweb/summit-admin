@@ -47,6 +47,7 @@ export const DEFAULT_ENTITY = {
     speakers_count: 0,
     start_date: 0,
     start_showing_venues_date: 0,
+    slug: '',
     ticket_types: [],
     time_zone: {},
     time_zone_id: '',

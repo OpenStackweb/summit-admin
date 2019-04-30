@@ -190,24 +190,24 @@ class SummitForm extends React.Component {
                         />
                     </div>
                     <div className="col-md-4">
-                        <label> {T.translate("edit_summit.secondary_registration_link")}</label>
-                        <Input
-                            className="form-control"
-                            error={this.hasErrors('secondary_registration_link')}
-                            id="secondary_registration_link"
-                            value={entity.secondary_registration_link}
-                            onChange={this.handleChange}
-                        />
-                    </div>
-                </div>
-                <div className="row form-group">
-                    <div className="col-md-4">
                         <label> {T.translate("edit_summit.dates_label")}</label>
                         <Input
                             className="form-control"
                             error={this.hasErrors('dates_label')}
                             id="dates_label"
                             value={entity.dates_label}
+                            onChange={this.handleChange}
+                        />
+                    </div>
+                </div>
+                <div className="row form-group">
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_summit.secondary_registration_link")}</label>
+                        <Input
+                            className="form-control"
+                            error={this.hasErrors('secondary_registration_link')}
+                            id="secondary_registration_link"
+                            value={entity.secondary_registration_link}
                             onChange={this.handleChange}
                         />
                     </div>
@@ -218,6 +218,16 @@ class SummitForm extends React.Component {
                             error={this.hasErrors('secondary_registration_label')}
                             id="secondary_registration_label"
                             value={entity.secondary_registration_label}
+                            onChange={this.handleChange}
+                        />
+                    </div>
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_summit.slug")}</label>
+                        <Input
+                            className="form-control"
+                            error={this.hasErrors('slug')}
+                            id="slug"
+                            value={entity.slug}
                             onChange={this.handleChange}
                         />
                     </div>

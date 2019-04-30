@@ -176,6 +176,7 @@
     "name"                            : "Name",
     "eventbrite_id"                   : "Eventbrite Id",
     "max_submission_allowed_per_user" : "Max. Submissions per User",
+    "slug"                            : "Slug",
     "link"                            : "Summit Page Link",
     "registration_link"               : "Registration Link",
     "secondary_registration_link"     : "Sec. Registration Link",
