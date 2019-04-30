@@ -202,11 +202,11 @@ class EventMaterialForm extends React.Component {
                     <div className="col-md-6">
                         <label> {T.translate("edit_event_material.youtube_id")} *</label>
                         <Input
-                            id="you_tube_id"
-                            value={entity.you_tube_id}
+                            id="youtube_id"
+                            value={entity.youtube_id}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('you_tube_id')}
+                            error={this.hasErrors('youtube_id')}
                         />
                     </div>
                 </div>

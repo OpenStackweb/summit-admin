@@ -34,7 +34,7 @@ export const DEFAULT_ENTITY = {
     file                        : null,
     file_link                   : '',
     has_file                    : false,
-    you_tube_id                 : ''
+    youtube_id                  : ''
 }
 
 const DEFAULT_STATE = {

@@ -212,7 +212,7 @@ const normalizeEntity = (entity) => {
     let normalizedEntity = {...entity};
 
     if (entity.class_name != 'PresentationVideo') {
-        delete(normalizedEntity['you_tube_id']);
+        delete(normalizedEntity['youtube_id']);
     }
 
     if (entity.class_name == 'PresentationVideo') {
