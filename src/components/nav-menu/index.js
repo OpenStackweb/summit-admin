@@ -31,6 +31,7 @@ class NavMenu extends React.Component {
 
         this.drawMenuItem = this.drawMenuItem.bind(this);
         this.closeMenu = this.closeMenu.bind(this);
+        this.isMenuOpen = this.isMenuOpen.bind(this);
     }
 
     componentDidMount() {
@@ -41,13 +42,17 @@ class NavMenu extends React.Component {
         document.body.removeEventListener('click', this.closeMenu);
     }
 
+    isMenuOpen(state) {
+        this.setState({menuOpen: state.isOpen});
+    }
+
     closeMenu() {
         this.setState({menuOpen: false});
     }
 
     toggleSubMenu(event, submenu) {
         event.preventDefault();
-        this.setState({ ...this.state,
+        this.setState({
             subMenuOpen: submenu,
             menuOpen: true
         });
@@ -141,7 +146,7 @@ class NavMenu extends React.Component {
         ];
 
         return (
-            <Menu id="summit-admin-menu" isOpen={ menuOpen } noOverlay width={ 300 } pageWrapId={ "page-wrap" } >
+            <Menu id="summit-admin-menu" isOpen={ menuOpen } onStateChange={ this.isMenuOpen } noOverlay width={ 300 } pageWrapId={ "page-wrap" } >
                 <div className="separator">
                     {T.translate('menu.general')}
                 </div>

@@ -42,7 +42,7 @@
     "react": "^16.6.3",
     "react-bootstrap": "^0.31.5",
     "react-breadcrumbs": "^2.1.6",
-    "react-burger-menu": "^2.5.2",
+    "react-burger-menu": "^2.6.10",
     "react-datetime": "^2.15.0",
     "react-dnd": "^2.6.0",
     "react-dnd-html5-backend": "^2.6.0",
