@@ -34,12 +34,14 @@ class ScheduleAdminVenueSelector extends React.Component {
 
     render(){
         let { venues, currentValue } = this.props;
+        let theValue = venues.find(op => op.value == currentValue);
+
         return (
             <Select
                 placeholder={T.translate("schedule.placeholders.select_venue")}
                 className="venues-selector"
                 name="form-field-name"
-                value={currentValue}
+                value={theValue}
                 onChange={this.onChange}
                 options={venues}
                 optionRenderer={this.renderOption}

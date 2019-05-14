@@ -27,12 +27,14 @@ class ScheduleAdminPresentationSelectionStatusSelector extends React.Component {
 
     render(){
         let { presentationSelectionStatus, currentValue } = this.props;
+        let theValue = presentationSelectionStatus.find(op => op.value == currentValue);
+
         return (
             <Select
                 placeholder={T.translate("schedule.placeholders.select_presentation_selection_status")}
                 className="presentation-selection-status-selector"
                 name="form-field-name"
-                value={currentValue}
+                value={theValue}
                 onChange={this.onChange}
                 options={presentationSelectionStatus}
             />

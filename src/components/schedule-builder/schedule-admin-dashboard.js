@@ -612,8 +612,10 @@ class ScheduleAdminDashBoard extends React.Component {
         // sort options
 
         let orderByOptions = [
-            { value : 'title+', label: 'Title' },
-            { value : 'id+', label: 'Id' },
+            { value : 'title', label: 'Title' },
+            { value : 'id', label: 'Id' },
+            { value : 'start_date', label: 'Start Date' },
+            { value : 'track', label: 'Track Chair Sel.' },
         ]
 
         // bulk options published

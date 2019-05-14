@@ -22,12 +22,14 @@ class ScheduleAdminOrderSelector extends React.Component {
 
     render(){
         let { sortOptions, currentValue } = this.props;
+        let theValue = sortOptions.find(op => op.value == currentValue);
+
         return (
             <Select
                 placeholder={T.translate("schedule.placeholders.select_order_by")}
                 className="order-by-selector"
                 name="form-field-name"
-                value={currentValue}
+                value={theValue}
                 onChange={this.onChange.bind(this)}
                 options={sortOptions}
             />
