@@ -195,10 +195,13 @@ class SpeakerForm extends React.Component {
     render() {
         let {entity, showSummit} = this.state;
         let {summits} = this.props;
+        let allPresentations = entity.all_presentations;
 
-        let lastSummits = summits.sort(
-            (a, b) => (a.start_date > b.start_date ? 1 : (a.start_date < b.start_date ? -1 : 0))
-        ).slice(-3);
+        let lastSummits = summits
+            .filter(s => allPresentations.filter( p => p.summit_id === s.id ).length > 0)
+            .sort(
+                (a, b) => (a.start_date > b.start_date ? 1 : (a.start_date < b.start_date ? -1 : 0))
+            ).slice(-3);
 
         return (
             <form className="summit-speaker-form">
