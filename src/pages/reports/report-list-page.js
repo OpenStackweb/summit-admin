@@ -52,6 +52,11 @@ class ReportListPage extends React.Component {
                             {T.translate(`reports.presentation_company_report`)}
                         </button>
                     </div>
+                    <div className="col-md-6">
+                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'presentation_report')}>
+                            {T.translate(`reports.presentation_report`)}
+                        </button>
+                    </div>
                 </div>
 
             </div>

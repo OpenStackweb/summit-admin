@@ -24,32 +24,45 @@ import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 const DEFAULT_STATE = {
     name            : '',
     data            : [],
-    pageInfo        : {},
-    previousCursor  : '',
     currentPage     : 1,
     perPage         : 25,
     totalCount      : 0
 };
 
-const processReportData = (data) => {
-    let tmpData = {};
+const flattenData = (data) => {
+    let flatData = [];
 
-    for (var property in data) {
-        if (data[property] && typeof data[property] == 'object') {
+    for (var idx=0; idx < data.length; idx++) {
+        let idxRef = {idx};
+        let flatItem = flattenItem(data[idx], idxRef);
+        idx = idxRef.idx;
 
-            if (data[property].hasOwnProperty('edges')) {
+        flatData.push(flatItem);
+    }
 
-                let collection = data[property].edges.map(it => processReportData(it.node));
-                tmpData[property] = collection;
-            } else {
-                tmpData[property] = processReportData(data[property]);
+    return flatData;
+
+}
+
+const flattenItem = (item, idxRef) => {
+    let flatItem = {};
+
+    for (var property in item) {
+        if (item[property] == null) {
+            flatItem[property] = '';
+        } else if (Array.isArray(item[property]) && item[property].length > 0) {
+            flatItem[property] = flattenItem(item[property].shift(), idxRef);
+            if (item[property].length > 0) {
+                idxRef.idx--; // redo this item
             }
+        } else if (typeof item[property] == 'object') {
+            flatItem[property] = flattenItem(item[property], idxRef)
         } else {
-            tmpData[property] = data[property];
+            flatItem[property] = item[property];
         }
     }
 
-    return tmpData
+    return flatItem;
 }
 
 const reportReducer = (state = DEFAULT_STATE, action) => {
@@ -66,24 +79,19 @@ const reportReducer = (state = DEFAULT_STATE, action) => {
         break;
         case REQUEST_REPORT: {
             let {name, page} = payload;
-            let previousCursor = (state.pageInfo && page > 1) ? state.pageInfo.endCursor : '';
 
-            return {...DEFAULT_STATE, name: name, currentPage: page, previousCursor: previousCursor}
+            return {...DEFAULT_STATE, name: name, currentPage: page}
         }
         break;
         case RECEIVE_REPORT: {
-            let data = {...payload.response.data};
-            let firstKey = Object.keys(data)[0];
-            let pageInfo = {...data[firstKey].pageInfo};
-            let totalCount = data[firstKey].totalCount;
+            let responseData = {...payload.response.data};
+            let data = responseData[Object.keys(responseData)[0]];
 
-            delete data[firstKey].pageInfo;
-            delete data[firstKey].totalCount;
+            let flatData = flattenData(data.results);
 
-            let processedData = processReportData(data);
-            //console.log(processedData);
+            console.log(flatData);
 
-            return {...state, data: processedData[firstKey], pageInfo, totalCount };
+            return {...state, data: flatData, totalCount: data.totalCount };
         }
         break;
         default:

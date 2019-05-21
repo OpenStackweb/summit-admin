@@ -13,8 +13,10 @@
 
 import TagReport from './tag-report'
 import PresentationCompanyReport from './presentation-company-report'
+import PresentationReport from './presentation-report'
 
 export {
     TagReport,
-    PresentationCompanyReport
+    PresentationCompanyReport,
+    PresentationReport,
 }

@@ -17,7 +17,7 @@ import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import Restrict from '../routes/restrict';
 import ReportListPage from '../pages/reports/report-list-page';
-import {TagReport, PresentationCompanyReport} from "../components/reports"
+import {TagReport, PresentationCompanyReport, PresentationReport} from "../components/reports"
 import NoMatchPage from "../pages/no-match-page";
 
 
@@ -33,6 +33,7 @@ class ReportsLayout extends React.Component {
                     <Route strict exact path={match.url} component={ReportListPage}/>
                     <Route strict exact path={`${match.url}/tag_report`} component={TagReport}/>
                     <Route strict exact path={`${match.url}/presentation_company_report`} component={PresentationCompanyReport}/>
+                    <Route strict exact path={`${match.url}/presentation_report`} component={PresentationReport}/>
                     <Route component={NoMatchPage}/>
                 </Switch>
             </div>
