@@ -14,7 +14,8 @@
 import
 {
     RECEIVE_REPORT,
-    REQUEST_REPORT
+    REQUEST_REPORT,
+    flattenData
 } from '../../actions/report-actions';
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
@@ -29,41 +30,6 @@ const DEFAULT_STATE = {
     totalCount      : 0
 };
 
-const flattenData = (data) => {
-    let flatData = [];
-
-    for (var idx=0; idx < data.length; idx++) {
-        let idxRef = {idx};
-        let flatItem = flattenItem(data[idx], idxRef);
-        idx = idxRef.idx;
-
-        flatData.push(flatItem);
-    }
-
-    return flatData;
-
-}
-
-const flattenItem = (item, idxRef) => {
-    let flatItem = {};
-
-    for (var property in item) {
-        if (item[property] == null) {
-            flatItem[property] = '';
-        } else if (Array.isArray(item[property]) && item[property].length > 0) {
-            flatItem[property] = flattenItem(item[property].shift(), idxRef);
-            if (item[property].length > 0) {
-                idxRef.idx--; // redo this item
-            }
-        } else if (typeof item[property] == 'object') {
-            flatItem[property] = flattenItem(item[property], idxRef)
-        } else {
-            flatItem[property] = item[property];
-        }
-    }
-
-    return flatItem;
-}
 
 const reportReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action

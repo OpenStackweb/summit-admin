@@ -16,7 +16,7 @@ import T from 'i18n-react/dist/i18n-react'
 import { Pagination } from 'react-bootstrap';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { Table, FreeTextSearch } from 'openstack-uicore-foundation/lib/components'
-import {getReport} from "../../actions/report-actions";
+import {getReport, exportReport} from "../../actions/report-actions";
 import {connect} from "react-redux";
 const Query = require('graphql-query-builder');
 
@@ -56,10 +56,11 @@ class PresentationReport extends React.Component {
     }
 
 
-    buildQuery(page) {
+    buildQuery(page, forExport=false) {
         let {perPage, currentSummit} = this.props;
         let {searchTerm, sortKey, sortDir} = this.state;
         let filters = {limit: perPage};
+        let listFilters = {summitId: currentSummit.id};
 
         if (page != 1) {
             filters.offset = page * perPage;
@@ -67,15 +68,15 @@ class PresentationReport extends React.Component {
 
         if (sortKey) {
             let order = (sortDir == 1) ? '' : '-';
-            filters.sorting = order + '' + sortKey;
+            filters.ordering = order + '' + sortKey;
         }
 
         if (searchTerm) {
-            filters.search = searchTerm;
+            listFilters.search = searchTerm;
         }
 
 
-        let query = new Query("presentations",{summitId: currentSummit.id});
+        let query = new Query("presentations", listFilters);
         let category = new Query("category");
         category.find(["title"]);
         let location = new Query("location");
@@ -126,8 +127,16 @@ class PresentationReport extends React.Component {
         });
     }
 
-    handleExportReport() {
-        console.log("export");
+    handleExportReport(ev) {
+        ev.preventDefault();
+
+        let query = this.buildQuery(1, true);
+        this.props.exportReport(query, reportName);
+    }
+
+    getTrueFalseIcon(value) {
+        return value ? '<div class="text-center"><i class="fa fa-times" aria-hidden="true"></i></div>' :
+            '<div class="text-center"><i class="fa fa-check" aria-hidden="true"></i></div>';
     }
 
     render() {
@@ -158,28 +167,33 @@ class PresentationReport extends React.Component {
 
 
         let reportData = data.map(it => {
+
+            let confirmed = this.getTrueFalseIcon(it.speakers_attendances_confirmed) || 'N/A';
+            let registered = this.getTrueFalseIcon(it.speakers_attendances_registered) || 'N/A';
+            let checkedIn = this.getTrueFalseIcon(it.speakers_attendances_checkedIn) || 'N/A';
+
             return ({
                 id: it.id,
                 title: it.title,
                 published: it.published,
-                track: it.category.title,
+                track: it.category_title,
                 start_date: it.startDate,
-                location: it.location.name,
-                speaker_id: it.speakers.id,
-                member_id: it.speakers.member.id,
-                speaker: it.speakers.firstName + ' ' + it.speakers.lastName,
-                email: it.speakers.member.email,
-                phone: it.speakers.attendances.phoneNumber,
-                code: it.speakers.promoCodes.code,
-                code_type: it.speakers.promoCodes.type,
-                confirmed: it.speakers.attendances.confirmed,
-                registered: it.speakers.attendances.registered,
-                checked_in: it.speakers.attendances.checkedIn,
+                location: it.location_name,
+                speaker_id: it.speakers_id,
+                member_id: (it.speakers_member_id || 'N/A'),
+                speaker: it.speakers_firstName + ' ' + it.speakers_lastName,
+                email: (it.speakers_member_email || 'N/A'),
+                phone: (it.speakers_attendances_phoneNumber || 'N/A'),
+                code: (it.speakers_promoCodes_code || 'N/A'),
+                code_type: (it.speakers_promoCodes_type || 'N/A'),
+                confirmed: confirmed,
+                registered: registered,
+                checked_in: checkedIn,
             });
         });
 
         return (
-            <div className="container">
+            <div className="container large">
                 <Breadcrumb data={{ title: T.translate(`reports.${reportName}`), pathname: match.url }} ></Breadcrumb>
                 <div className="row">
                     <div className="col-md-8">
@@ -207,13 +221,14 @@ class PresentationReport extends React.Component {
                 <div className="report-container">
                     <div className="panel panel-default">
                         <div className="panel-heading">Presentations ({totalCount})</div>
-
+                        <div className="table-responsive">
                         <Table
                             options={report_options}
                             data={reportData}
                             columns={report_columns}
                             onSort={this.handleSort}
                         />
+                        </div>
                     </div>
                 </div>
 
@@ -223,7 +238,7 @@ class PresentationReport extends React.Component {
                     next
                     ellipsis={false}
                     boundaryLinks={false}
-                    maxButtons={1}
+                    maxButtons={10}
                     items={lastPage}
                     activePage={currentPage}
                     onSelect={this.handlePageChange}
@@ -242,5 +257,6 @@ export default connect (
     mapStateToProps,
     {
         getReport,
+        exportReport
     }
 )(PresentationReport);

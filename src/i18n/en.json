@@ -843,6 +843,10 @@
     "room_report"                   : "Room Report",
     "presentation_video_report"     : "Video Output List",
     "speaker_report"                : "Speaker Report",
-    "tag_report"                    : "Tag Report"
+    "tag_report"                    : "Tag Report",
+    "export"                        : "Export",
+    "placeholders": {
+      "search"       : "Search by Title, Abstract, Speaker LastName, Member Email "
+    }
   }
 }

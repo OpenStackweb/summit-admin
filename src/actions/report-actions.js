@@ -13,6 +13,8 @@
 
 import T from "i18n-react/dist/i18n-react";
 import history from '../history'
+import moment from 'moment-timezone'
+
 import {
     getRequest,
     putRequest,
@@ -26,8 +28,11 @@ import {
     authErrorHandler
 } from 'openstack-uicore-foundation/lib/methods';
 
-export const REQUEST_REPORT       = 'REQUEST_REPORT';
-export const RECEIVE_REPORT       = 'RECEIVE_REPORT';
+
+export const REQUEST_REPORT         = 'REQUEST_REPORT';
+export const RECEIVE_REPORT         = 'RECEIVE_REPORT';
+export const REQUEST_EXPORT_REPORT  = 'REQUEST_EXPORT_REPORT';
+export const RECEIVE_EXPORT_REPORT  = 'RECEIVE_EXPORT_REPORT';
 
 
 export const getReport = (query, reportName, page) => (dispatch, getState) => {
@@ -54,6 +59,53 @@ export const getReport = (query, reportName, page) => (dispatch, getState) => {
     );
 };
 
+const jsonToCsv = (items) => {
+    const replacer = (key, value) => value === null ? '' : value ;
+    const header = Object.keys(items[0])
+    let csv = items.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','))
+    csv.unshift(header.join(','))
+    csv = csv.join('\r\n')
+
+    return csv;
+}
+
+export const exportReport = ( query, reportName ) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+
+    dispatch(startLoading());
+
+    let params = {
+        access_token : accessToken,
+        query: "{ "+ query + " }"
+    };
+
+    return getRequest(
+        createAction(REQUEST_EXPORT_REPORT),
+        createAction(RECEIVE_EXPORT_REPORT),
+        `${window.REPORT_API_BASE_URL}/reports`,
+        authErrorHandler
+    )(params)(dispatch).then((payload) => {
+        dispatch(stopLoading());
+
+        let responseData = {...payload.response.data};
+        let data = responseData[Object.keys(responseData)[0]];
+        let flatData = flattenData(data.results);
+
+        let csv = jsonToCsv(flatData);
+
+        let link = document.createElement('a');
+        link.textContent = 'download';
+        link.download = reportName+ '.csv';
+        link.href = 'data:text/csv;charset=utf-8,'+ encodeURI(csv);
+        document.body.appendChild(link); // Required for FF
+        link.click();
+        document.body.removeChild(link);
+    });
+
+};
+
 
 const normalizeEntity = (entity) => {
     let normalizedEntity = {...entity};
@@ -61,3 +113,78 @@ const normalizeEntity = (entity) => {
     return normalizedEntity;
 
 }
+
+export const flattenData = (data) => {
+    let flatData = [];
+
+    for (var idx=0; idx < data.length; idx++) {
+        let idxRef = {idx};
+        let flatItem = {};
+        flattenItem(flatItem, data[idx], idxRef);
+        idx = idxRef.idx;
+        flatData.push(flatItem);
+    }
+
+    return flatData;
+
+}
+
+export const flattenItem = (flatData, item, idxRef, ctx='') => {
+    for (var property in item) {
+        let flatName = ctx ? ctx+'_'+property : property;
+
+        if (item[property] == null) {
+            flatData[flatName] = '';
+        } else if (Array.isArray(item[property]) && item[property].length > 0) {
+            flattenItem(flatData, item[property].shift(), idxRef, flatName);
+            if (item[property].length > 0) {
+                idxRef.idx--; // redo this item
+            }
+        } else if (typeof item[property] == 'object') {
+            flattenItem(flatData, item[property], idxRef, flatName)
+        } else {
+            flatData[flatName] = item[property];
+        }
+    }
+
+}
+
+/*
+export const flattenItem = (item, idxRef) => {
+    let flatItem = {};
+
+    for (var property in item) {
+        if (item[property] == null) {
+            flatItem[property] = '';
+        } else if (Array.isArray(item[property]) && item[property].length > 0) {
+            flatItem[property] = flattenItem(item[property].shift(), idxRef);
+            if (item[property].length > 0) {
+                idxRef.idx--; // redo this item
+            }
+        } else if (typeof item[property] == 'object') {
+            flatItem[property] = flattenItem(item[property], idxRef)
+        } else {
+            flatItem[property] = item[property];
+        }
+    }
+
+    return flatItem;
+}
+
+export const flattenData = (data) => {
+    let flatData = [];
+
+    for (var idx=0; idx < data.length; idx++) {
+        let idxRef = {idx};
+        let flatItem = flattenItem(data[idx], idxRef);
+        idx = idxRef.idx;
+
+        flatData.push(flatItem);
+    }
+
+    return flatData;
+
+}
+*/
+
+
