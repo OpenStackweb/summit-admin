@@ -55,7 +55,7 @@ const reportReducer = (state = DEFAULT_STATE, action) => {
 
             let flatData = flattenData(data.results);
 
-            console.log(flatData);
+            //console.log(flatData);
 
             return {...state, data: flatData, totalCount: data.totalCount };
         }

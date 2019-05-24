@@ -14,9 +14,23 @@
 import TagReport from './tag-report'
 import PresentationCompanyReport from './presentation-company-report'
 import PresentationReport from './presentation-report'
+import RsvpReport from './rsvp-report'
+import RoomReport from './room-report'
+import SpeakerReport from './speaker-report'
+import TrackQuestionsReport from './track-questions-report'
+import PresentationVideoReport from './presentation-video-report'
+import FeedbackReport from './feedback-report'
+import PresentationTrackReport from './presentation-track-report'
 
 export {
-    TagReport,
     PresentationCompanyReport,
     PresentationReport,
+    PresentationTrackReport,
+    RsvpReport,
+    RoomReport,
+    SpeakerReport,
+    TrackQuestionsReport,
+    PresentationVideoReport,
+    FeedbackReport,
+    TagReport
 }

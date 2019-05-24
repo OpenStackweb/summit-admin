@@ -17,7 +17,7 @@ import { Table } from 'openstack-uicore-foundation/lib/components'
 const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
 
-const reportName = 'presentation_report';
+const reportName = 'speaker_report';
 
 const buildQuery = (filters, listFilters, summitId) => {
 
@@ -42,7 +42,7 @@ const buildQuery = (filters, listFilters, summitId) => {
     return query;
 }
 
-class PresentationReport extends React.Component {
+class SpeakerReport extends React.Component {
     constructor(props) {
         super(props);
 
@@ -136,4 +136,4 @@ class PresentationReport extends React.Component {
 }
 
 
-export default wrapReport(PresentationReport, buildQuery, reportName);
+export default wrapReport(SpeakerReport, buildQuery, reportName);

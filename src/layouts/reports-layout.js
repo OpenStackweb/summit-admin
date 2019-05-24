@@ -17,8 +17,19 @@ import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import Restrict from '../routes/restrict';
 import ReportListPage from '../pages/reports/report-list-page';
-import {TagReport, PresentationCompanyReport, PresentationReport} from "../components/reports"
 import NoMatchPage from "../pages/no-match-page";
+import {
+    PresentationCompanyReport,
+    PresentationReport,
+    PresentationTrackReport,
+    RsvpReport,
+    RoomReport,
+    SpeakerReport,
+    TrackQuestionsReport,
+    PresentationVideoReport,
+    FeedbackReport,
+    TagReport
+} from "../components/reports"
 
 
 class ReportsLayout extends React.Component {
@@ -31,9 +42,16 @@ class ReportsLayout extends React.Component {
 
                 <Switch>
                     <Route strict exact path={match.url} component={ReportListPage}/>
-                    <Route strict exact path={`${match.url}/tag_report`} component={TagReport}/>
-                    <Route strict exact path={`${match.url}/presentation_company_report`} component={PresentationCompanyReport}/>
                     <Route strict exact path={`${match.url}/presentation_report`} component={PresentationReport}/>
+                    <Route strict exact path={`${match.url}/rsvp_report`} component={RsvpReport}/>
+                    <Route strict exact path={`${match.url}/presentation_company_report`} component={PresentationCompanyReport}/>
+                    <Route strict exact path={`${match.url}/room_report`} component={RoomReport}/>
+                    <Route strict exact path={`${match.url}/presentation_track_report`} component={PresentationTrackReport}/>
+                    <Route strict exact path={`${match.url}/speaker_report`} component={SpeakerReport}/>
+                    <Route strict exact path={`${match.url}/track_questions_report`} component={TrackQuestionsReport}/>
+                    <Route strict exact path={`${match.url}/presentation_video_report`} component={PresentationVideoReport}/>
+                    <Route strict exact path={`${match.url}/feedback_report`} component={FeedbackReport}/>
+                    <Route strict exact path={`${match.url}/tag_report`} component={TagReport}/>
                     <Route component={NoMatchPage}/>
                 </Switch>
             </div>

@@ -17,43 +17,28 @@ import { Table } from 'openstack-uicore-foundation/lib/components'
 const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
 
-const reportName = 'presentation_company_report';
+const reportName = 'presentation_track_report';
 
 const buildQuery = (filters, listFilters, summitId) => {
 
-    let query = new Query("speakers", listFilters);
-    let registration = new Query("registration");
-    registration.find(["id", "email"]);
-    let organization = new Query("organization");
-    organization.find(["name"]);
-    let affiliations = new Query("affiliations", {current: true});
-    affiliations.find(["id", {"organization": organization}]);
-    let member = new Query("member");
-    member.find(["id", "firstName", "lastName","email", {"affiliations": affiliations}]);
+    let query = new Query("presentations", listFilters);
     let category = new Query("category");
-    category.find(["id", "title"]);
-    let presentations = new Query("presentations",{summitId: summitId});
-    presentations.find(["id", "title", "abstract", {"category": category}]);
+    category.find(["title"]);
+    let type = new Query("type");
+    type.find(["type"]);
     let results = new Query("results", filters);
-    results.find([
-        "id",
-        "firstName",
-        "lastName",
-        {"registration": registration},
-        {"member": member},
-        {"presentations": presentations}
-    ]);
+    results.find(["id", "title", "status", {"category": category}, {"type": type}])
 
     query.find([{"results": results}, "totalCount"]);
 
     return query;
 }
 
-class PresentationCompanyReport extends React.Component {
+class PresentationTrackReport extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {};
+        this.state = { };
 
         this.handleSort = this.handleSort.bind(this);
 
@@ -63,7 +48,7 @@ class PresentationCompanyReport extends React.Component {
         let sortKey = null;
         switch(key) {
             case 'track':
-                sortKey = 'presentations__category__title';
+                sortKey = 'category__title';
                 break;
         }
 
@@ -71,18 +56,16 @@ class PresentationCompanyReport extends React.Component {
 
     }
 
+
     render() {
         let {data, totalCount, onSort} = this.props;
 
         let report_columns = [
-            { columnKey: 'link', value: 'Link' },
-            { columnKey: 'event_title', value: 'Presentation' },
-            { columnKey: 'description', value: 'Description' },
+            { columnKey: 'id', value: 'Id' },
+            { columnKey: 'title', value: 'Presentation' },
             { columnKey: 'track', value: 'Track', sortable: true },
-            { columnKey: 'first_name', value: 'First Name' },
-            { columnKey: 'last_name', value: 'Last Name' },
-            { columnKey: 'email', value: 'Email' },
-            { columnKey: 'company', value: 'Company' }
+            { columnKey: 'status', value: 'Status' },
+            { columnKey: 'type', value: 'Type' },
         ];
 
         let report_options = { actions: {} }
@@ -90,20 +73,17 @@ class PresentationCompanyReport extends React.Component {
         let reportData = data.map(it => {
 
             return ({
-                link: '<a href="">link</a>',
-                event_title: it.presentations_title,
-                description: it.presentations_abstract,
-                track: it.presentations_category_title,
-                first_name: it.firstName,
-                last_name: it.lastName,
-                email: it.member_email,
-                company: it.member_affiliations_organization_name
+                id: it.id,
+                title: it.title,
+                track: it.category_title,
+                status: it.status,
+                type: it.type_type,
             });
         });
 
         return (
             <div className="panel panel-default">
-                <div className="panel-heading">Speakers ({totalCount})</div>
+                <div className="panel-heading">Presentations ({totalCount})</div>
                 <div className="table-responsive">
                     <Table
                         options={report_options}
@@ -118,4 +98,4 @@ class PresentationCompanyReport extends React.Component {
 }
 
 
-export default wrapReport(PresentationCompanyReport, buildQuery, reportName);
+export default wrapReport(PresentationTrackReport, buildQuery, reportName);
