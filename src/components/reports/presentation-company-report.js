@@ -16,38 +16,10 @@ import T from 'i18n-react/dist/i18n-react'
 import { Table } from 'openstack-uicore-foundation/lib/components'
 const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
+import {flattenData} from "../../actions/report-actions";
 
 const reportName = 'presentation_company_report';
 
-const buildQuery = (filters, listFilters, summitId) => {
-
-    let query = new Query("speakers", listFilters);
-    let registration = new Query("registration");
-    registration.find(["id", "email"]);
-    let organization = new Query("organization");
-    organization.find(["name"]);
-    let affiliations = new Query("affiliations", {current: true});
-    affiliations.find(["id", {"organization": organization}]);
-    let member = new Query("member");
-    member.find(["id", "firstName", "lastName","email", {"affiliations": affiliations}]);
-    let category = new Query("category");
-    category.find(["id", "title"]);
-    let presentations = new Query("presentations",{summitId: summitId});
-    presentations.find(["id", "title", "abstract", {"category": category}]);
-    let results = new Query("results", filters);
-    results.find([
-        "id",
-        "firstName",
-        "lastName",
-        {"registration": registration},
-        {"member": member},
-        {"presentations": presentations}
-    ]);
-
-    query.find([{"results": results}, "totalCount"]);
-
-    return query;
-}
 
 class PresentationCompanyReport extends React.Component {
     constructor(props) {
@@ -55,8 +27,41 @@ class PresentationCompanyReport extends React.Component {
 
         this.state = {};
 
+        this.buildReportQuery = this.buildReportQuery.bind(this);
         this.handleSort = this.handleSort.bind(this);
 
+    }
+
+    buildReportQuery(filters, listFilters) {
+        let {currentSummit} = this.props;
+        listFilters.summitId = currentSummit.id;
+
+        let query = new Query("speakers", listFilters);
+        let registration = new Query("registration");
+        registration.find(["id", "email"]);
+        let organization = new Query("organization");
+        organization.find(["name"]);
+        let affiliations = new Query("affiliations", {current: true});
+        affiliations.find(["id", {"organization": organization}]);
+        let member = new Query("member");
+        member.find(["id", "firstName", "lastName","email", {"affiliations": affiliations}]);
+        let category = new Query("category");
+        category.find(["id", "title"]);
+        let presentations = new Query("presentations",{summitId: currentSummit.id});
+        presentations.find(["id", "title", "abstract", {"category": category}]);
+        let results = new Query("results", filters);
+        results.find([
+            "id",
+            "firstName",
+            "lastName",
+            {"registration": registration},
+            {"member": member},
+            {"presentations": presentations}
+        ]);
+
+        query.find([{"results": results}, "totalCount"]);
+
+        return query;
     }
 
     handleSort(index, key, dir, func) {
@@ -72,7 +77,9 @@ class PresentationCompanyReport extends React.Component {
     }
 
     render() {
-        let {data, totalCount, onSort} = this.props;
+        let {data, currentSummit, totalCount, onSort} = this.props;
+
+        let flatData = flattenData(data);
 
         let report_columns = [
             { columnKey: 'link', value: 'Link' },
@@ -87,10 +94,10 @@ class PresentationCompanyReport extends React.Component {
 
         let report_options = { actions: {} }
 
-        let reportData = data.map(it => {
+        let reportData = flatData.map(it => {
 
             return ({
-                link: '<a href="">link</a>',
+                link: `<a href="/app/summits/${currentSummit.id}/events/${it.presentations_id}">link</a>`,
                 event_title: it.presentations_title,
                 description: it.presentations_abstract,
                 track: it.presentations_category_title,
@@ -118,4 +125,4 @@ class PresentationCompanyReport extends React.Component {
 }
 
 
-export default wrapReport(PresentationCompanyReport, buildQuery, reportName);
+export default wrapReport(PresentationCompanyReport, {reportName, pagination: true});

@@ -13,122 +13,262 @@
 
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
+import history from '../../history'
 import { Table } from 'openstack-uicore-foundation/lib/components'
+import StarRatings from 'react-star-ratings';
+import Select from 'react-select'
 const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
+import {flattenData} from "../../actions/report-actions";
 
 const reportName = 'feedback_report';
 
-const buildQuery = (filters, listFilters, summitId) => {
-
-    let query = new Query("presentations", listFilters);
-    let category = new Query("category");
-    category.find(["title"]);
-    let location = new Query("location");
-    location.find(["name"]);
-    let member = new Query("member");
-    member.find(["id", "firstName", "lastName","email"]);
-    let attendances = new Query("attendances", {summit_Id: summitId});
-    attendances.find(["phoneNumber", "registered", "checkedIn", "confirmed"]);
-    let promoCodes = new Query("promoCodes", {summit_Id: summitId});
-    promoCodes.find(["code", "type"]);
-    let speakers = new Query("speakers");
-    speakers.find(["id", "firstName", "lastName", {"member": member}, {"attendances": attendances}, {"promoCodes": promoCodes}]);
-    let results = new Query("results", filters);
-    results.find(["id", "title", "startDate", "published", {"category": category}, {"location": location}, {"speakers": speakers}])
-
-    query.find([{"results": results}, "totalCount"]);
-
-    return query;
-}
 
 class FeedbackReport extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { };
+        this.state = {
+            groupBy: 'feedback'
+        };
 
+        this.buildReportQuery = this.buildReportQuery.bind(this);
         this.handleSort = this.handleSort.bind(this);
+        this.handleFilterChange = this.handleFilterChange.bind(this);
+        this.preProcessData = this.preProcessData.bind(this);
 
+    }
+
+    buildReportQuery(filters, listFilters) {
+        let {currentSummit} = this.props;
+        let {groupBy} = this.state
+        listFilters.summitId = currentSummit.id;
+        filters.ordering = filters.ordering ? filters.ordering : 'rate';
+        let query = null;
+
+        switch (groupBy) {
+            case 'feedback': {
+                query = new Query("feedbacks", listFilters);
+                let presentation = new Query("presentation");
+                presentation.find(["id", "speakerNames"]);
+                let event = new Query("event");
+                event.find(["id", "title", {"presentation": presentation}]);
+                let owner = new Query("owner");
+                owner.find(["id", "firstName", "lastName"]);
+                let results = new Query("results", filters);
+                results.find(["id", "rate", "note", {"event": event}, {"owner": owner}])
+
+                query.find([{"results": results}, "totalCount", "avgRate"]);
+            }
+            break;
+            case 'presentation': {
+                listFilters.hasFeedback = true;
+                query = new Query("presentations", listFilters);
+                let results = new Query("results", filters);
+                results.find(["id", "title", "speakerNames", "feedbackCount", "feedbackAvg"])
+
+                query.find([{"results": results}, "totalCount"]);
+            }
+            break;
+            case 'track': {
+                listFilters.hasFeedback = true;
+                query = new Query("categories", listFilters);
+                let results = new Query("results", filters);
+                results.find(["id", "title", "feedbackCount", "feedbackAvg"])
+
+                query.find([{"results": results}, "totalCount"]);
+            }
+            break;
+            case 'speaker': {
+                listFilters.hasFeedbackForSummit = currentSummit.id;
+                query = new Query("speakers", listFilters);
+                let results = new Query("results", filters);
+                results.find([
+                    "id",
+                    "firstName",
+                    "lastName",
+                    "feedbackCount(summitId:"+currentSummit.id+")",
+                    "feedbackAvg(summitId:"+currentSummit.id+")",
+                    {"overallCount": "feedbackCount"},
+                    {"overallAvg": "feedbackAvg"}
+                ])
+
+                query.find([{"results": results}, "totalCount"]);
+            }
+            break;
+        }
+
+        return query;
     }
 
     handleSort(index, key, dir, func) {
         let sortKey = null;
         switch(key) {
-            case 'track':
-                sortKey = 'category__title';
+            case 'rate':
+                sortKey = 'rate';
                 break;
         }
 
         this.props.onSort(index, sortKey, dir, func);
-
     }
 
-    getTrueFalseIcon(value) {
-        return value ? '<div class="text-center"><i class="fa fa-times" aria-hidden="true"></i></div>' :
-            '<div class="text-center"><i class="fa fa-check" aria-hidden="true"></i></div>';
+    handleFilterChange(value) {
+        this.setState({groupBy: value.value}, () => {this.props.onReload()});
     }
+
+    preProcessData(data, extraData) {
+        let {groupBy} = this.state;
+        let processedData = []
+        let columns = [];
+
+        switch (groupBy) {
+            case 'feedback': {
+                processedData = flattenData(data).map(it => {
+                    return ({
+                        rate: <StarRatings rating={it.rate} starRatedColor="gold" starDimension="10px" starSpacing="1px"
+                                           isSelectable={false}/>,
+                        presentation: it.event_title,
+                        speakers: it.event_presentation_speakerNames,
+                        critic: it.owner_firstName + ' ' + it.owner_lastName,
+                        note: it.note,
+                    });
+                });
+
+                columns = [
+                    { columnKey: 'rate', value: 'Rate', sortable: true },
+                    { columnKey: 'presentation', value: 'Presentation' },
+                    { columnKey: 'speakers', value: 'Speakers' },
+                    { columnKey: 'critic', value: 'Critic' },
+                    { columnKey: 'note', value: 'Note' },
+                ];
+            }
+            break;
+            case 'presentation': {
+                processedData = data.map(it => {
+                    let pres = <a onClick={() => {history.push(`feedback_report/presentation/${it.id}`, {name: it.title})}} >{it.title}</a>
+
+                    return ({
+                        rate: <StarRatings rating={it.feedbackAvg} starRatedColor="gold" starDimension="10px" starSpacing="1px"
+                                           isSelectable={false}/>,
+                        presentation: pres,
+                        speakers: it.speakerNames,
+                        count: it.feedbackCount
+                    });
+                });
+
+                columns = [
+                    { columnKey: 'rate', value: 'Rate', sortable: true },
+                    { columnKey: 'presentation', value: 'Presentation' },
+                    { columnKey: 'speakers', value: 'Speakers' },
+                    { columnKey: 'count', value: 'Count' }
+                ];
+            }
+            break;
+            case 'track': {
+                processedData = data.map(it => {
+                    let track = <a onClick={() => {history.push(`feedback_report/track/${it.id}`, {name: it.title})}} >{it.title}</a>
+
+                    return ({
+                        rate: <StarRatings rating={it.feedbackAvg} starRatedColor="gold" starDimension="10px" starSpacing="1px"
+                                           isSelectable={false}/>,
+                        category: track,
+                        count: it.feedbackCount
+                    });
+                });
+
+                columns = [
+                    { columnKey: 'rate', value: 'Rate', sortable: true },
+                    { columnKey: 'category', value: 'Track' },
+                    { columnKey: 'count', value: 'Count' }
+                ];
+            }
+            break;
+            case 'speaker': {
+                processedData = data.map(it => {
+                    let speakerName = it.firstName + ' ' + it.lastName;
+                    let speaker = <a onClick={() => {history.push(`feedback_report/speaker/${it.id}`, {name: speakerName})}} >{speakerName}</a>
+                    return ({
+                        rate: <StarRatings rating={it.feedbackAvg} starRatedColor="gold" starDimension="10px" starSpacing="1px"
+                                           isSelectable={false}/>,
+                        speaker: speaker,
+                        count: it.feedbackCount,
+                        overall_avg: it.overallAvg,
+                        overall_count: it.overallCount
+                    });
+                });
+
+                columns = [
+                    { columnKey: 'rate', value: 'Rate', sortable: true },
+                    { columnKey: 'count', value: 'Count' },
+                    { columnKey: 'speaker', value: 'Speaker' },
+                    { columnKey: 'overall_avg', value: 'Overall Avg' },
+                    { columnKey: 'overall_count', value: 'Overall Count' }
+                ];
+            }
+            break;
+        }
+
+        return {reportData: processedData, tableColumns: columns};
+    }
+
 
     render() {
-        let {data, totalCount, onSort} = this.props;
+        let {data, extraData, totalCount, extraStat, sortKey, sortDir} = this.props;
+        let {groupBy} = this.state;
 
-        let report_columns = [
-            { columnKey: 'id', value: 'Id' },
-            { columnKey: 'title', value: 'Presentation' },
-            { columnKey: 'published', value: 'Published' },
-            { columnKey: 'track', value: 'Track', sortable: true },
-            { columnKey: 'start_date', value: 'Start Date' },
-            { columnKey: 'location', value: 'Location' },
-            { columnKey: 'speaker_id', value: 'Speaker Id' },
-            { columnKey: 'member_id', value: 'Member Id' },
-            { columnKey: 'speaker', value: 'Speaker' },
-            { columnKey: 'email', value: 'Email' },
-            { columnKey: 'phone', value: 'Phone' },
-            { columnKey: 'code', value: 'Promo Code' },
-            { columnKey: 'code_type', value: 'Code Type' },
-            { columnKey: 'confirmed', value: 'Confirmed' },
-            { columnKey: 'registered', value: 'Registered' },
-            { columnKey: 'checked_in', value: 'Checked In' },
+        if (!data) return (<div></div>)
+
+        let avgRate = extraStat ? extraStat : 0;
+
+        let {reportData, tableColumns} = this.preProcessData(data, extraData);
+
+        let groupOptions = [
+            {label: 'Feedback', value: 'feedback'},
+            {label: 'Track', value: 'track'},
+            {label: 'Presentation', value: 'presentation'},
+            {label: 'Speaker', value: 'speaker'}
         ];
 
-        let report_options = { actions: {} }
-
-        let reportData = data.map(it => {
-
-            let confirmed = this.getTrueFalseIcon(it.speakers_attendances_confirmed) || 'N/A';
-            let registered = this.getTrueFalseIcon(it.speakers_attendances_registered) || 'N/A';
-            let checkedIn = this.getTrueFalseIcon(it.speakers_attendances_checkedIn) || 'N/A';
-
-            return ({
-                id: it.id,
-                title: it.title,
-                published: it.published,
-                track: it.category_title,
-                start_date: it.startDate,
-                location: it.location_name,
-                speaker_id: it.speakers_id,
-                member_id: (it.speakers_member_id || 'N/A'),
-                speaker: it.speakers_firstName + ' ' + it.speakers_lastName,
-                email: (it.speakers_member_email || 'N/A'),
-                phone: (it.speakers_attendances_phoneNumber || 'N/A'),
-                code: (it.speakers_promoCodes_code || 'N/A'),
-                code_type: (it.speakers_promoCodes_type || 'N/A'),
-                confirmed: confirmed,
-                registered: registered,
-                checked_in: checkedIn,
-            });
-        });
+        let table_options = {
+            sortCol: sortKey,
+            sortDir: sortDir,
+            actions: {}
+        }
 
         return (
-            <div className="panel panel-default">
-                <div className="panel-heading">Presentations ({totalCount})</div>
-                <div className="table-responsive">
-                    <Table
-                        options={report_options}
-                        data={reportData}
-                        columns={report_columns}
-                        onSort={this.handleSort}
-                    />
+            <div>
+                <div className="row report-filters">
+                    <div className="col-md-4 pull-right">
+                        <label>Group by</label>
+                        <Select
+                            value={groupOptions.find(v => v.value == groupBy)}
+                            id="report_group_by"
+                            options={groupOptions}
+                            onChange={this.handleFilterChange}
+                        />
+                    </div>
+                </div>
+                <div className="panel panel-default">
+                    {extraStat ?
+                        (<div className="panel-heading">
+                            <StarRatings rating={avgRate} starRatedColor="gold" starDimension="20px" starSpacing="3px"
+                                     isSelectable={false}/>
+                            &nbsp; of {totalCount} feedbacks
+                        </div>)
+                        :
+                        (
+                            <div className="panel-heading"> Grouped by {groupBy} </div>
+                        )
+                    }
+
+                    <div className="table-responsive">
+                        <Table
+                            options={table_options}
+                            data={reportData}
+                            columns={tableColumns}
+                            onSort={this.handleSort}
+                        />
+                    </div>
                 </div>
             </div>
         );
@@ -136,4 +276,4 @@ class FeedbackReport extends React.Component {
 }
 
 
-export default wrapReport(FeedbackReport, buildQuery, reportName);
+export default wrapReport(FeedbackReport, {reportName, pagination: true});

@@ -7,7 +7,7 @@ import { FreeTextSearch } from 'openstack-uicore-foundation/lib/components'
 import {exportReport, getReport} from "../../actions/report-actions";
 import T from "i18n-react/dist/i18n-react";
 
-const wrapReport = (ReportComponent, buildReportQuery, reportName) => {
+const wrapReport = (ReportComponent, specs) => {
     class ReportBase extends React.Component {
 
         constructor(props) {
@@ -16,7 +16,7 @@ const wrapReport = (ReportComponent, buildReportQuery, reportName) => {
             this.state = {
                 searchTerm: null,
                 sortKey: null,
-                sortDir: null
+                sortDir: null,
             };
 
             this.buildQuery = this.buildQuery.bind(this);
@@ -24,13 +24,14 @@ const wrapReport = (ReportComponent, buildReportQuery, reportName) => {
             this.handlePageChange = this.handlePageChange.bind(this);
             this.handleSearch = this.handleSearch.bind(this);
             this.handleExportReport = this.handleExportReport.bind(this);
+            this.handleReload = this.handleReload.bind(this);
         }
 
-        componentWillMount () {
+        componentDidMount () {
             if (!this.props.currentSummit) return;
 
             let query = this.buildQuery(1);
-            this.props.getReport(query, reportName, 1);
+            this.props.getReport(query, specs.reportName, 1);
         }
 
         componentWillReceiveProps (newProps) {
@@ -38,7 +39,7 @@ const wrapReport = (ReportComponent, buildReportQuery, reportName) => {
             if (this.props.currentSummit.id != newProps.currentSummit.id) {
                 this.setState({searchTerm: null});
                 let query = this.buildQuery(1);
-                this.props.getReport(query, reportName, 1);
+                this.props.getReport(query, specs.reportName, 1);
             }
         }
 
@@ -46,12 +47,12 @@ const wrapReport = (ReportComponent, buildReportQuery, reportName) => {
             let {perPage, currentSummit} = this.props;
             let {searchTerm, sortKey, sortDir} = this.state;
             let filters = {};
-            let listFilters = {summitId: currentSummit.id};
+            let listFilters = {};
 
-            if (!forExport) {
+            if (!forExport && specs.pagination) {
                 filters = {limit: perPage};
                 if (page != 1) {
-                    filters.offset = page * perPage;
+                    filters.offset = (page - 1) * perPage;
                 }
             }
 
@@ -64,20 +65,25 @@ const wrapReport = (ReportComponent, buildReportQuery, reportName) => {
                 listFilters.search = searchTerm;
             }
 
-            let query = buildReportQuery(filters, listFilters, currentSummit.id);
+            let query = this.refs.childCmp.buildReportQuery(filters, listFilters);
 
-            return query;
+            return "{ reportData: "+ query + " }";
+        }
+
+        handleReload() {
+            let query = this.buildQuery(1);
+            this.props.getReport(query, specs.reportName, 1);
         }
 
         handlePageChange(page) {
             let query = this.buildQuery(page);
-            this.props.getReport(query, reportName, page);
+            this.props.getReport(query, specs.reportName, page);
         }
 
         handleSearch(term) {
             this.setState({searchTerm: term}, () => {
                 let query = this.buildQuery(1);
-                this.props.getReport(query, reportName, 1);
+                this.props.getReport(query, specs.reportName, 1);
             });
         }
 
@@ -85,7 +91,7 @@ const wrapReport = (ReportComponent, buildReportQuery, reportName) => {
 
             this.setState({sortKey: key, sortDir: dir}, () => {
                 let query = this.buildQuery(1);
-                this.props.getReport(query, reportName, 1);
+                this.props.getReport(query, specs.reportName, 1);
             });
 
         }
@@ -94,20 +100,20 @@ const wrapReport = (ReportComponent, buildReportQuery, reportName) => {
             ev.preventDefault();
 
             let query = this.buildQuery(1, true);
-            this.props.exportReport(query, reportName);
+            this.props.exportReport(query, specs.reportName, this.refs.childCmp.preProcessData);
         }
 
         render() {
-            let {data, match, currentPage, totalCount, perPage} = this.props;
-            let {searchTerm} = this.state;
-            let lastPage = Math.floor(totalCount / perPage);
+            let {data, extraData, currentSummit, match, currentPage, totalCount, extraStat, perPage} = this.props;
+            let {searchTerm, sortKey, sortDir} = this.state;
+            let pageCount = Math.ceil(totalCount / perPage);
 
             return (
                 <div className="container large">
-                    <Breadcrumb data={{ title: T.translate(`reports.${reportName}`), pathname: match.url }} ></Breadcrumb>
+                    <Breadcrumb data={{ title: T.translate(`reports.${specs.reportName}`), pathname: match.url }} ></Breadcrumb>
                     <div className="row">
                         <div className="col-md-8">
-                            <h3>{T.translate(`reports.${reportName}`)}</h3>
+                            <h3>{T.translate(`reports.${specs.reportName}`)}</h3>
                         </div>
 
                     </div>
@@ -129,20 +135,30 @@ const wrapReport = (ReportComponent, buildReportQuery, reportName) => {
                     <hr/>
 
                     <div className="report-container">
-                        <ReportComponent data={data} totalCount={totalCount} onSort={this.handleSort} />
+                        <ReportComponent
+                            ref="childCmp"
+                            sortKey={sortKey}
+                            sortDir={sortDir}
+                            onSort={this.handleSort}
+                            onReload={this.handleReload}
+                            {...this.props}
+                        />
                     </div>
 
-                    <Pagination
-                        bsSize="medium"
-                        prev
-                        next
-                        ellipsis={false}
-                        boundaryLinks={false}
-                        maxButtons={10}
-                        items={lastPage}
-                        activePage={currentPage}
-                        onSelect={this.handlePageChange}
-                    />
+                    {specs.pagination &&
+                        <Pagination
+                            bsSize="medium"
+                            prev
+                            next
+                            ellipsis={false}
+                            boundaryLinks={false}
+                            maxButtons={10}
+                            items={pageCount}
+                            activePage={currentPage}
+                            onSelect={this.handlePageChange}
+                        />
+                    }
+
                 </div>
 
             );

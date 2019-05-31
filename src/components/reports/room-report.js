@@ -12,31 +12,15 @@
  **/
 
 import React from 'react'
+import moment from 'moment-timezone'
 import T from 'i18n-react/dist/i18n-react'
 import { Table } from 'openstack-uicore-foundation/lib/components'
 const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
+import {groupBy} from '../../utils/methods'
+import {flattenData} from "../../actions/report-actions";
 
 const reportName = 'room_report';
-
-const buildQuery = (filters, listFilters, summitId) => {
-
-    listFilters.published = true;
-
-    let query = new Query("presentations", listFilters);
-    let category = new Query("category");
-    category.find(["code"]);
-    let venueroom = new Query("venueroom");
-    venueroom.find(["name", "capacity"]);
-    let location = new Query("location");
-    location.find(["name", {"venueroom": venueroom}]);
-    let results = new Query("results", filters);
-    results.find(["id", "title", "startDate", "endDate", "headCount", "speakerCount", "attendeeCount", {"category": category}, {"location": location}])
-
-    query.find([{"results": results}, "totalCount"]);
-
-    return query;
-}
 
 class RoomReport extends React.Component {
     constructor(props) {
@@ -44,8 +28,32 @@ class RoomReport extends React.Component {
 
         this.state = { };
 
+        this.buildReportQuery = this.buildReportQuery.bind(this);
         this.handleSort = this.handleSort.bind(this);
 
+    }
+
+    buildReportQuery(filters, listFilters) {
+        let {currentSummit} = this.props;
+
+        listFilters.published = true;
+        listFilters.summitId = currentSummit.id;
+
+        let query = new Query("presentations", listFilters);
+        let category = new Query("category");
+        category.find(["code"]);
+        let venue = new Query("venue");
+        venue.find(["name"]);
+        let venueroom = new Query("venueroom");
+        venueroom.find(["name", "capacity", {"venue": venue}]);
+        let location = new Query("location");
+        location.find([{"venueroom": venueroom}]);
+        let results = new Query("results", filters);
+        results.find(["id", "title", "startDate", "endDate", "headCount", "speakerCount", "attendeeCount", {"category": category}, {"location": location}])
+
+        query.find([{"results": results}, "totalCount"]);
+
+        return query;
     }
 
     handleSort(index, key, dir, func) {
@@ -67,9 +75,10 @@ class RoomReport extends React.Component {
     render() {
         let {data, totalCount, onSort} = this.props;
 
+        let flatData = flattenData(data);
+
         let report_columns = [
             { columnKey: 'id', value: 'Id' },
-            { columnKey: 'date', value: 'Date' },
             { columnKey: 'time', value: 'Time' },
             { columnKey: 'code', value: 'Code' },
             { columnKey: 'event', value: 'Event', sortable: true },
@@ -83,10 +92,10 @@ class RoomReport extends React.Component {
 
         let report_options = { actions: {} }
 
-        let reportData = data.map(it => {
+        let reportData = flatData.map(it => {
 
-            let date = it.startDate;
-            let time = it.endDate;
+            let date = moment(it.startDate).format('dddd Do');
+            let time = moment(it.startDate).format('h:mm a') + ' - ' + moment(it.endDate).format('h:mm a');
 
             return ({
                 id: it.id,
@@ -95,7 +104,7 @@ class RoomReport extends React.Component {
                 code: it.category_code,
                 event: it.title,
                 room: it.location_venueroom_name,
-                venue: it.location_name,
+                venue: it.location_venueroom_venue_name,
                 capacity: this.centerValue(it.location_venueroom_capacity),
                 speakers: this.centerValue(it.speakerCount),
                 head_count: this.centerValue(it.headCount),
@@ -103,21 +112,31 @@ class RoomReport extends React.Component {
             });
         });
 
-        return (
-            <div className="panel panel-default">
-                <div className="panel-heading">Presentations ({totalCount})</div>
-                <div className="table-responsive">
-                    <Table
-                        options={report_options}
-                        data={reportData}
-                        columns={report_columns}
-                        onSort={this.handleSort}
-                    />
+
+
+        let groupedData = groupBy(reportData ,'date');
+
+        let tables = [];
+
+        for (var key in groupedData) {
+            tables.push(
+                <div className="panel panel-default" key={'section_'+key}>
+                    <div className="panel-heading">{key}</div>
+                    <div className="table-responsive">
+                        <Table
+                            options={report_options}
+                            data={groupedData[key]}
+                            columns={report_columns}
+                            onSort={this.handleSort}
+                        />
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        }
+
+        return (tables);
     }
 }
 
 
-export default wrapReport(RoomReport, buildQuery, reportName);
+export default wrapReport(RoomReport, {reportName, pagination: false});

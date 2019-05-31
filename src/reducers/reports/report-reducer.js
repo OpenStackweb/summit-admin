@@ -15,7 +15,6 @@ import
 {
     RECEIVE_REPORT,
     REQUEST_REPORT,
-    flattenData
 } from '../../actions/report-actions';
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
@@ -25,9 +24,11 @@ import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 const DEFAULT_STATE = {
     name            : '',
     data            : [],
+    extraData       : null,
     currentPage     : 1,
     perPage         : 25,
-    totalCount      : 0
+    totalCount      : 0,
+    extraStat       : null
 };
 
 
@@ -51,13 +52,11 @@ const reportReducer = (state = DEFAULT_STATE, action) => {
         break;
         case RECEIVE_REPORT: {
             let responseData = {...payload.response.data};
-            let data = responseData[Object.keys(responseData)[0]];
+            let data = (responseData.hasOwnProperty("reportData")) ? responseData.reportData : [];
+            let extraData = (responseData.hasOwnProperty("extraData")) ? responseData.extraData : null;
+            let extraStat = data.hasOwnProperty("avgRate") ? data.avgRate : null;
 
-            let flatData = flattenData(data.results);
-
-            //console.log(flatData);
-
-            return {...state, data: flatData, totalCount: data.totalCount };
+            return {...state, data: data.results, extraData: extraData, totalCount: data.totalCount, extraStat: extraStat };
         }
         break;
         default:

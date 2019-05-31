@@ -19,28 +19,6 @@ import wrapReport from './report-wrapper';
 
 const reportName = 'track_questions_report';
 
-const buildQuery = (filters, listFilters, summitId) => {
-
-    let query = new Query("presentations", listFilters);
-    let category = new Query("category");
-    category.find(["title"]);
-    let location = new Query("location");
-    location.find(["name"]);
-    let member = new Query("member");
-    member.find(["id", "firstName", "lastName","email"]);
-    let attendances = new Query("attendances", {summit_Id: summitId});
-    attendances.find(["phoneNumber", "registered", "checkedIn", "confirmed"]);
-    let promoCodes = new Query("promoCodes", {summit_Id: summitId});
-    promoCodes.find(["code", "type"]);
-    let speakers = new Query("speakers");
-    speakers.find(["id", "firstName", "lastName", {"member": member}, {"attendances": attendances}, {"promoCodes": promoCodes}]);
-    let results = new Query("results", filters);
-    results.find(["id", "title", "startDate", "published", {"category": category}, {"location": location}, {"speakers": speakers}])
-
-    query.find([{"results": results}, "totalCount"]);
-
-    return query;
-}
 
 class TrackQuestionsReport extends React.Component {
     constructor(props) {
@@ -48,8 +26,34 @@ class TrackQuestionsReport extends React.Component {
 
         this.state = { };
 
+        this.buildReportQuery = this.buildReportQuery.bind(this);
         this.handleSort = this.handleSort.bind(this);
 
+    }
+
+    buildReportQuery(filters, listFilters) {
+        let {summit} = this.props;
+        listFilters.summitId = summit.id;
+
+        let query = new Query("presentations", listFilters);
+        let category = new Query("category");
+        category.find(["title"]);
+        let location = new Query("location");
+        location.find(["name"]);
+        let member = new Query("member");
+        member.find(["id", "firstName", "lastName","email"]);
+        let attendances = new Query("attendances", {summit_Id: summit.id});
+        attendances.find(["phoneNumber", "registered", "checkedIn", "confirmed"]);
+        let promoCodes = new Query("promoCodes", {summit_Id: summit.id});
+        promoCodes.find(["code", "type"]);
+        let speakers = new Query("speakers");
+        speakers.find(["id", "firstName", "lastName", {"member": member}, {"attendances": attendances}, {"promoCodes": promoCodes}]);
+        let results = new Query("results", filters);
+        results.find(["id", "title", "startDate", "published", {"category": category}, {"location": location}, {"speakers": speakers}])
+
+        query.find([{"results": results}, "totalCount"]);
+
+        return query;
     }
 
     handleSort(index, key, dir, func) {
@@ -136,4 +140,4 @@ class TrackQuestionsReport extends React.Component {
 }
 
 
-export default wrapReport(TrackQuestionsReport, buildQuery, reportName);
+export default wrapReport(TrackQuestionsReport, {reportName, pagination: true});

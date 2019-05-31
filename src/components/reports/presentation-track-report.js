@@ -16,23 +16,10 @@ import T from 'i18n-react/dist/i18n-react'
 import { Table } from 'openstack-uicore-foundation/lib/components'
 const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
+import {flattenData} from "../../actions/report-actions";
 
 const reportName = 'presentation_track_report';
 
-const buildQuery = (filters, listFilters, summitId) => {
-
-    let query = new Query("presentations", listFilters);
-    let category = new Query("category");
-    category.find(["title"]);
-    let type = new Query("type");
-    type.find(["type"]);
-    let results = new Query("results", filters);
-    results.find(["id", "title", "status", {"category": category}, {"type": type}])
-
-    query.find([{"results": results}, "totalCount"]);
-
-    return query;
-}
 
 class PresentationTrackReport extends React.Component {
     constructor(props) {
@@ -40,8 +27,26 @@ class PresentationTrackReport extends React.Component {
 
         this.state = { };
 
+        this.buildReportQuery = this.buildReportQuery.bind(this);
         this.handleSort = this.handleSort.bind(this);
 
+    }
+
+    buildReportQuery(filters, listFilters) {
+        let {currentSummit} = this.props;
+        listFilters.summitId = currentSummit.id;
+
+        let query = new Query("presentations", listFilters);
+        let category = new Query("category");
+        category.find(["title"]);
+        let type = new Query("type");
+        type.find(["type"]);
+        let results = new Query("results", filters);
+        results.find(["id", "title", "status", {"category": category}, {"type": type}])
+
+        query.find([{"results": results}, "totalCount"]);
+
+        return query;
     }
 
     handleSort(index, key, dir, func) {
@@ -60,6 +65,8 @@ class PresentationTrackReport extends React.Component {
     render() {
         let {data, totalCount, onSort} = this.props;
 
+        let flatData = flattenData(data);
+
         let report_columns = [
             { columnKey: 'id', value: 'Id' },
             { columnKey: 'title', value: 'Presentation' },
@@ -70,7 +77,7 @@ class PresentationTrackReport extends React.Component {
 
         let report_options = { actions: {} }
 
-        let reportData = data.map(it => {
+        let reportData = flatData.map(it => {
 
             return ({
                 id: it.id,
@@ -98,4 +105,4 @@ class PresentationTrackReport extends React.Component {
 }
 
 
-export default wrapReport(PresentationTrackReport, buildQuery, reportName);
+export default wrapReport(PresentationTrackReport, {reportName, pagination: true});

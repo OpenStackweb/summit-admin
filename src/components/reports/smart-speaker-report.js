@@ -14,46 +14,64 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import { Table } from 'openstack-uicore-foundation/lib/components'
+import Select from 'react-select';
 const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
 
-const reportName = 'speaker_report';
+const reportName = 'smart_speaker_report';
 
-
-class SpeakerReport extends React.Component {
+class SmartSpeakerReport extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { };
+        this.state = {
+            speakerFields: ["id", "firstName", "lastName"]
+        };
 
         this.buildReportQuery = this.buildReportQuery.bind(this);
         this.handleSort = this.handleSort.bind(this);
+        this.handleFilterChange = this.handleFilterChange.bind(this);
 
     }
 
     buildReportQuery(filters, listFilters) {
         let {currentSummit} = this.props;
+        let {speakerFields} = this.state;
         listFilters.summitId = currentSummit.id;
 
-        let query = new Query("presentations", listFilters);
-        let category = new Query("category");
-        category.find(["title"]);
-        let location = new Query("location");
-        location.find(["name"]);
-        let member = new Query("member");
-        member.find(["id", "firstName", "lastName","email"]);
-        let attendances = new Query("attendances", {summit_Id: currentSummit.id});
-        attendances.find(["phoneNumber", "registered", "checkedIn", "confirmed"]);
-        let promoCodes = new Query("promoCodes", {summit_Id: currentSummit.id});
-        promoCodes.find(["code", "type"]);
-        let speakers = new Query("speakers");
-        speakers.find(["id", "firstName", "lastName", {"member": member}, {"attendances": attendances}, {"promoCodes": promoCodes}]);
+        let query = new Query("speakers", listFilters);
+        let speakerData = [];
+
+        const attendanceFields = speakerFields.filter(f => ["phoneNumber","registered","checkedIn","confirmed"].includes(f));
+        if (attendanceFields.length > 0) {
+            let attendances = new Query("attendances", {summit_Id: currentSummit.id});
+            attendances.find(attendanceFields);
+            speakerData.push({"attendances": attendances})
+        }
+
+        if (speakerFields.includes("registrationEmail")) {
+            let registration = new Query("registration");
+            registration.find(["id","email"]);
+            speakerData.push({"registration": registration})
+        }
+
+        if (speakerFields.includes("promoCode")) {
+            let promoCodes = new Query("promoCodes", {summit_Id: currentSummit.id});
+            promoCodes.find(["code", "type"]);
+            speakerData.push({"promoCodes": promoCodes})
+        }
+
+        let speakerF = speakerFields.filter(f => ["id","firstName","lastName"].includes(f));
         let results = new Query("results", filters);
-        results.find(["id", "title", "startDate", "published", {"category": category}, {"location": location}, {"speakers": speakers}])
+        results.find([...speakerData, ...speakerF]);
 
         query.find([{"results": results}, "totalCount"]);
 
         return query;
+    }
+
+    handleFilterChange(value) {
+        this.setState({speakerFields: value.map(v => v.value)});
     }
 
     handleSort(index, key, dir, func) {
@@ -75,6 +93,7 @@ class SpeakerReport extends React.Component {
 
     render() {
         let {data, totalCount, onSort} = this.props;
+        let {speakerFields} = this.state;
 
         let report_columns = [
             { columnKey: 'id', value: 'Id' },
@@ -123,16 +142,48 @@ class SpeakerReport extends React.Component {
             });
         });
 
+        let speakerFieldOptions = [
+            {label: 'Speaker Id', value: 'id'},
+            {label: 'Member Id', value: 'memberId'},
+            {label: 'First Name', value: 'firstName'},
+            {label: 'Last Name', value: 'lastName'},
+            {label: 'Email', value: 'email'},
+            {label: 'Phone', value: 'phoneNumber'},
+            {label: 'Company', value: 'company'},
+            {label: 'Registered', value: 'registered'},
+            {label: 'Checked In', value: 'checkedIn'},
+            {label: 'Confirmed', value: 'confirmed'},
+            {label: 'PromoCode Type', value: 'promoCodeType'},
+            {label: 'PromoCode Code', value: 'promoCodeCode'},
+            {label: 'Reg Email', value: 'registrationEmail'},
+            {label: 'Presentations', value: 'presentations'},
+
+        ];
+
+
         return (
-            <div className="panel panel-default">
-                <div className="panel-heading">Presentations ({totalCount})</div>
-                <div className="table-responsive">
-                    <Table
-                        options={report_options}
-                        data={reportData}
-                        columns={report_columns}
-                        onSort={this.handleSort}
+            <div>
+                <div className="report-filters">
+                    <Select
+                        name="fieldsDropDown"
+                        id="speaker_fields"
+                        placeholder={T.translate("reports.placeholders.select_fields")}
+                        options={speakerFieldOptions}
+                        onChange={this.handleFilterChange}
+                        isMulti
                     />
+                    <button onClick={this.props.onReload}> Go </button>
+                </div>
+                <div className="panel panel-default">
+                    <div className="panel-heading">Presentations ({totalCount})</div>
+                    <div className="table-responsive">
+                        <Table
+                            options={report_options}
+                            data={reportData}
+                            columns={report_columns}
+                            onSort={this.handleSort}
+                        />
+                    </div>
                 </div>
             </div>
         );
@@ -140,4 +191,4 @@ class SpeakerReport extends React.Component {
 }
 
 
-export default wrapReport(SpeakerReport, {reportName, pagination: true});
+export default wrapReport(SmartSpeakerReport, {reportName, pagination: true});

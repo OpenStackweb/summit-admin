@@ -44,7 +44,7 @@ export const getReport = (query, reportName, page) => (dispatch, getState) => {
 
     let params = {
         access_token : accessToken,
-        query: "{ "+ query + " }"
+        query: query
     };
 
     return getRequest(
@@ -69,7 +69,7 @@ const jsonToCsv = (items) => {
     return csv;
 }
 
-export const exportReport = ( query, reportName ) => (dispatch, getState) => {
+export const exportReport = ( query, reportName, preProcessData=null ) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -78,7 +78,7 @@ export const exportReport = ( query, reportName ) => (dispatch, getState) => {
 
     let params = {
         access_token : accessToken,
-        query: "{ "+ query + " }"
+        query: query
     };
 
     return getRequest(
@@ -90,10 +90,31 @@ export const exportReport = ( query, reportName ) => (dispatch, getState) => {
         dispatch(stopLoading());
 
         let responseData = {...payload.response.data};
-        let data = responseData[Object.keys(responseData)[0]];
-        let flatData = flattenData(data.results);
+        let data = (responseData.hasOwnProperty("reportData")) ? responseData.reportData : [];
+        let extraData = (responseData.hasOwnProperty("extraData")) ? responseData.extraData : null;
+        let reportData = [];
 
-        let csv = jsonToCsv(flatData);
+        if (preProcessData) {
+            let procData = preProcessData(data.results, extraData);
+            let labels = procData.tableColumns.map(col => col.value);
+            let keys = procData.tableColumns.map(col => col.columnKey);
+
+            for (var item in procData.reportData) {
+                var newData = {};
+
+                for (var a in labels) {
+                    newData[labels[a]] = procData.reportData[item][keys[a]];
+                }
+
+                reportData.push(newData);
+            }
+
+        } else {
+            reportData = flattenData(data.results);
+        }
+
+
+        let csv = jsonToCsv(reportData);
 
         let link = document.createElement('a');
         link.textContent = 'download';

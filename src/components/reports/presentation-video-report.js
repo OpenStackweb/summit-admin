@@ -19,28 +19,6 @@ import wrapReport from './report-wrapper';
 
 const reportName = 'presentation_video_report';
 
-const buildQuery = (filters, listFilters, summitId) => {
-
-    let query = new Query("presentations", listFilters);
-    let category = new Query("category");
-    category.find(["title"]);
-    let location = new Query("location");
-    location.find(["name"]);
-    let member = new Query("member");
-    member.find(["id", "firstName", "lastName","email"]);
-    let attendances = new Query("attendances", {summit_Id: summitId});
-    attendances.find(["phoneNumber", "registered", "checkedIn", "confirmed"]);
-    let promoCodes = new Query("promoCodes", {summit_Id: summitId});
-    promoCodes.find(["code", "type"]);
-    let speakers = new Query("speakers");
-    speakers.find(["id", "firstName", "lastName", {"member": member}, {"attendances": attendances}, {"promoCodes": promoCodes}]);
-    let results = new Query("results", filters);
-    results.find(["id", "title", "startDate", "published", {"category": category}, {"location": location}, {"speakers": speakers}])
-
-    query.find([{"results": results}, "totalCount"]);
-
-    return query;
-}
 
 class PresentationVideoReport extends React.Component {
     constructor(props) {
@@ -49,7 +27,33 @@ class PresentationVideoReport extends React.Component {
         this.state = { };
 
         this.handleSort = this.handleSort.bind(this);
+        this.buildReportQuery = this.buildReportQuery.bind(this);
 
+    }
+
+    buildReportQuery(filters, listFilters) {
+        let {currentSummit} = this.props;
+        listFilters.summitId = currentSummit.id;
+
+        let query = new Query("presentations", listFilters);
+        let category = new Query("category");
+        category.find(["title"]);
+        let location = new Query("location");
+        location.find(["name"]);
+        let member = new Query("member");
+        member.find(["id", "firstName", "lastName","email"]);
+        let attendances = new Query("attendances", {summit_Id: currentSummit.id});
+        attendances.find(["phoneNumber", "registered", "checkedIn", "confirmed"]);
+        let promoCodes = new Query("promoCodes", {summit_Id: currentSummit.id});
+        promoCodes.find(["code", "type"]);
+        let speakers = new Query("speakers");
+        speakers.find(["id", "firstName", "lastName", {"member": member}, {"attendances": attendances}, {"promoCodes": promoCodes}]);
+        let results = new Query("results", filters);
+        results.find(["id", "title", "startDate", "published", {"category": category}, {"location": location}, {"speakers": speakers}])
+
+        query.find([{"results": results}, "totalCount"]);
+
+        return query;
     }
 
     handleSort(index, key, dir, func) {
@@ -136,4 +140,4 @@ class PresentationVideoReport extends React.Component {
 }
 
 
-export default wrapReport(PresentationVideoReport, buildQuery, reportName);
+export default wrapReport(PresentationVideoReport, {reportName, pagination: true});

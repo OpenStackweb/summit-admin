@@ -16,31 +16,10 @@ import T from 'i18n-react/dist/i18n-react'
 import { Table } from 'openstack-uicore-foundation/lib/components'
 const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
+import { flattenData } from '../../actions/report-actions';
 
 const reportName = 'presentation_report';
 
-const buildQuery = (filters, listFilters, summitId) => {
-
-    let query = new Query("presentations", listFilters);
-    let category = new Query("category");
-    category.find(["title"]);
-    let location = new Query("location");
-    location.find(["name"]);
-    let member = new Query("member");
-    member.find(["id", "firstName", "lastName","email"]);
-    let attendances = new Query("attendances", {summit_Id: summitId});
-    attendances.find(["phoneNumber", "registered", "checkedIn", "confirmed"]);
-    let promoCodes = new Query("promoCodes", {summit_Id: summitId});
-    promoCodes.find(["code", "type"]);
-    let speakers = new Query("speakers");
-    speakers.find(["id", "firstName", "lastName", {"member": member}, {"attendances": attendances}, {"promoCodes": promoCodes}]);
-    let results = new Query("results", filters);
-    results.find(["id", "title", "startDate", "published", {"category": category}, {"location": location}, {"speakers": speakers}])
-
-    query.find([{"results": results}, "totalCount"]);
-
-    return query;
-}
 
 class PresentationReport extends React.Component {
     constructor(props) {
@@ -48,8 +27,34 @@ class PresentationReport extends React.Component {
 
         this.state = { };
 
+        this.buildReportQuery = this.buildReportQuery.bind(this);
         this.handleSort = this.handleSort.bind(this);
 
+    }
+
+    buildReportQuery(filters, listFilters) {
+        let {currentSummit} = this.props;
+        listFilters.summitId = currentSummit.id;
+
+        let query = new Query("presentations", listFilters);
+        let category = new Query("category");
+        category.find(["title"]);
+        let location = new Query("location");
+        location.find(["name"]);
+        let member = new Query("member");
+        member.find(["id", "firstName", "lastName","email"]);
+        let attendances = new Query("attendances", {summit_Id: currentSummit.id});
+        attendances.find(["phoneNumber", "registered", "checkedIn", "confirmed"]);
+        let promoCodes = new Query("promoCodes", {summit_Id: currentSummit.id});
+        promoCodes.find(["code", "type"]);
+        let speakers = new Query("speakers");
+        speakers.find(["id", "firstName", "lastName", {"member": member}, {"attendances": attendances}, {"promoCodes": promoCodes}]);
+        let results = new Query("results", filters);
+        results.find(["id", "title", "startDate", "published", {"category": category}, {"location": location}, {"speakers": speakers}])
+
+        query.find([{"results": results}, "totalCount"]);
+
+        return query;
     }
 
     handleSort(index, key, dir, func) {
@@ -65,12 +70,14 @@ class PresentationReport extends React.Component {
     }
 
     getTrueFalseIcon(value) {
-        return value ? '<div class="text-center"><i class="fa fa-times" aria-hidden="true"></i></div>' :
-            '<div class="text-center"><i class="fa fa-check" aria-hidden="true"></i></div>';
+        return value ? '<div class="text-center"><i class="fa fa-check" aria-hidden="true"></i></div>' :
+            '<div class="text-center"><i class="fa fa-times" aria-hidden="true"></i></div>';
     }
 
     render() {
         let {data, totalCount, onSort} = this.props;
+
+        let flatData = flattenData(data);
 
         let report_columns = [
             { columnKey: 'id', value: 'Id' },
@@ -93,16 +100,17 @@ class PresentationReport extends React.Component {
 
         let report_options = { actions: {} }
 
-        let reportData = data.map(it => {
+        let reportData = flatData.map(it => {
 
-            let confirmed = this.getTrueFalseIcon(it.speakers_attendances_confirmed) || 'N/A';
-            let registered = this.getTrueFalseIcon(it.speakers_attendances_registered) || 'N/A';
-            let checkedIn = this.getTrueFalseIcon(it.speakers_attendances_checkedIn) || 'N/A';
+            let confirmed = this.getTrueFalseIcon(it.speakers_attendances_confirmed) ;
+            let registered = this.getTrueFalseIcon(it.speakers_attendances_registered);
+            let checkedIn = this.getTrueFalseIcon(it.speakers_attendances_checkedIn);
+            let published = this.getTrueFalseIcon(it.published);
 
             return ({
                 id: it.id,
                 title: it.title,
-                published: it.published,
+                published: published,
                 track: it.category_title,
                 start_date: it.startDate,
                 location: it.location_name,
@@ -136,4 +144,4 @@ class PresentationReport extends React.Component {
 }
 
 
-export default wrapReport(PresentationReport, buildQuery, reportName);
+export default wrapReport(PresentationReport, {reportName, pagination: true});

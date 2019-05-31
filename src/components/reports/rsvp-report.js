@@ -19,28 +19,6 @@ import wrapReport from './report-wrapper';
 
 const reportName = 'rsvp_report';
 
-const buildQuery = (filters, listFilters, summitId) => {
-
-    let query = new Query("presentations", listFilters);
-    let category = new Query("category");
-    category.find(["title"]);
-    let location = new Query("location");
-    location.find(["name"]);
-    let member = new Query("member");
-    member.find(["id", "firstName", "lastName","email"]);
-    let attendances = new Query("attendances", {summit_Id: summitId});
-    attendances.find(["phoneNumber", "registered", "checkedIn", "confirmed"]);
-    let promoCodes = new Query("promoCodes", {summit_Id: summitId});
-    promoCodes.find(["code", "type"]);
-    let speakers = new Query("speakers");
-    speakers.find(["id", "firstName", "lastName", {"member": member}, {"attendances": attendances}, {"promoCodes": promoCodes}]);
-    let results = new Query("results", filters);
-    results.find(["id", "title", "startDate", "published", {"category": category}, {"location": location}, {"speakers": speakers}])
-
-    query.find([{"results": results}, "totalCount"]);
-
-    return query;
-}
 
 class RsvpReport extends React.Component {
     constructor(props) {
@@ -48,8 +26,40 @@ class RsvpReport extends React.Component {
 
         this.state = { };
 
+        this.buildReportQuery = this.buildReportQuery.bind(this);
         this.handleSort = this.handleSort.bind(this);
 
+    }
+
+    buildReportQuery(filters, listFilters) {
+        let {currentSummit} = this.props;
+
+        listFilters.isRsvp = true;
+        listFilters.summitId = currentSummit.id;
+
+        let query = new Query("presentations", listFilters);
+
+        let question = new Query("question");
+        question.find(["id"]);
+        let answers = new Query("answers");
+        answers.find(["value", {"question": question}]);
+        let rsvps = new Query("rsvps");
+        rsvps.find(["id", {"answers": answers}]);
+        let values = new Query("values");
+        values.find(["id", "value"]);
+        let rsvpquestionmulti = new Query("rsvpquestionmulti");
+        rsvpquestionmulti.find([{"values": values}]);
+        let questions = new Query("questions");
+        questions.find(["label", {"rsvpquestionmulti": rsvpquestionmulti}]);
+        let rsvpTemplate = new Query("rsvpTemplate");
+        rsvpTemplate.find(["id", {"questions": questions}]);
+
+        let results = new Query("results", filters);
+        results.find(["id", "title", "startDate", "endDate", "rsvpCount"])
+
+        query.find([{"results": results}, "totalCount"]);
+
+        return query;
     }
 
     handleSort(index, key, dir, func) {
@@ -75,65 +85,33 @@ class RsvpReport extends React.Component {
         let report_columns = [
             { columnKey: 'id', value: 'Id' },
             { columnKey: 'title', value: 'Presentation' },
-            { columnKey: 'published', value: 'Published' },
-            { columnKey: 'track', value: 'Track', sortable: true },
             { columnKey: 'start_date', value: 'Start Date' },
-            { columnKey: 'location', value: 'Location' },
-            { columnKey: 'speaker_id', value: 'Speaker Id' },
-            { columnKey: 'member_id', value: 'Member Id' },
-            { columnKey: 'speaker', value: 'Speaker' },
-            { columnKey: 'email', value: 'Email' },
-            { columnKey: 'phone', value: 'Phone' },
-            { columnKey: 'code', value: 'Promo Code' },
-            { columnKey: 'code_type', value: 'Code Type' },
-            { columnKey: 'confirmed', value: 'Confirmed' },
-            { columnKey: 'registered', value: 'Registered' },
-            { columnKey: 'checked_in', value: 'Checked In' },
+            { columnKey: 'end_date', value: 'End Date' },
         ];
 
         let report_options = { actions: {} }
 
         let reportData = data.map(it => {
 
-            let confirmed = this.getTrueFalseIcon(it.speakers_attendances_confirmed) || 'N/A';
-            let registered = this.getTrueFalseIcon(it.speakers_attendances_registered) || 'N/A';
-            let checkedIn = this.getTrueFalseIcon(it.speakers_attendances_checkedIn) || 'N/A';
-
             return ({
                 id: it.id,
                 title: it.title,
-                published: it.published,
-                track: it.category_title,
                 start_date: it.startDate,
-                location: it.location_name,
-                speaker_id: it.speakers_id,
-                member_id: (it.speakers_member_id || 'N/A'),
-                speaker: it.speakers_firstName + ' ' + it.speakers_lastName,
-                email: (it.speakers_member_email || 'N/A'),
-                phone: (it.speakers_attendances_phoneNumber || 'N/A'),
-                code: (it.speakers_promoCodes_code || 'N/A'),
-                code_type: (it.speakers_promoCodes_type || 'N/A'),
-                confirmed: confirmed,
-                registered: registered,
-                checked_in: checkedIn,
+                end_date: it.endDate,
             });
         });
 
         return (
-            <div className="panel panel-default">
-                <div className="panel-heading">Presentations ({totalCount})</div>
-                <div className="table-responsive">
-                    <Table
-                        options={report_options}
-                        data={reportData}
-                        columns={report_columns}
-                        onSort={this.handleSort}
-                    />
-                </div>
+            <div className="list-group">
+                {reportData.map(it =>
+                <a href={'rsvp_report/' + it.id} className="list-group-item">
+                    {it.title}
+                </a>
+                )}
             </div>
         );
     }
 }
 
 
-export default wrapReport(RsvpReport, buildQuery, reportName);
+export default wrapReport(RsvpReport, {reportName, pagination: true});
