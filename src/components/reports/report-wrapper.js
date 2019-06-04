@@ -6,6 +6,9 @@ import { Pagination } from 'react-bootstrap';
 import { FreeTextSearch } from 'openstack-uicore-foundation/lib/components'
 import {exportReport, getReport} from "../../actions/report-actions";
 import T from "i18n-react/dist/i18n-react";
+import FragmentParser from "../../utils/fragmen-parser";
+import {TrackFilter, RoomFilter} from '../filters'
+
 
 const wrapReport = (ReportComponent, specs) => {
     class ReportBase extends React.Component {
@@ -19,53 +22,51 @@ const wrapReport = (ReportComponent, specs) => {
                 sortDir: null,
             };
 
-            this.buildQuery = this.buildQuery.bind(this);
-            this.handleSort = this.handleSort.bind(this);
-            this.handlePageChange = this.handlePageChange.bind(this);
-            this.handleSearch = this.handleSearch.bind(this);
+            this.fragmentParser     = new FragmentParser();
+            this.buildQuery         = this.buildQuery.bind(this);
+            this.handleSort         = this.handleSort.bind(this);
+            this.handlePageChange   = this.handlePageChange.bind(this);
+            this.handleSearch       = this.handleSearch.bind(this);
             this.handleExportReport = this.handleExportReport.bind(this);
-            this.handleReload = this.handleReload.bind(this);
+            this.handleReload       = this.handleReload.bind(this);
+            this.handleGetReport    = this.handleGetReport.bind(this);
+            this.renderFilters      = this.renderFilters.bind(this);
         }
 
         componentDidMount () {
             if (!this.props.currentSummit) return;
 
-            let query = this.buildQuery(1);
-            this.props.getReport(query, specs.reportName, 1);
-        }
-
-        componentWillReceiveProps (newProps) {
-            if (!newProps.currentSummit) return;
-            if (this.props.currentSummit.id != newProps.currentSummit.id) {
-                this.setState({searchTerm: null});
-                let query = this.buildQuery(1);
-                this.props.getReport(query, specs.reportName, 1);
-            }
+            this.handleGetReport(1);
         }
 
         buildQuery(page, forExport=false) {
             let {perPage, currentSummit} = this.props;
             let {searchTerm, sortKey, sortDir} = this.state;
-            let filters = {};
+            let queryFilters = {};
             let listFilters = {};
+            let filters = this.fragmentParser.getParams();
 
             if (!forExport && specs.pagination) {
-                filters = {limit: perPage};
+                queryFilters = {limit: perPage};
                 if (page != 1) {
-                    filters.offset = (page - 1) * perPage;
+                    queryFilters.offset = (page - 1) * perPage;
                 }
             }
 
             if (sortKey) {
                 let order = (sortDir == 1) ? '' : '-';
-                filters.ordering = order + '' + sortKey;
+                queryFilters.ordering = order + '' + sortKey;
             }
 
             if (searchTerm) {
                 listFilters.search = searchTerm;
             }
 
-            let query = this.refs.childCmp.buildReportQuery(filters, listFilters);
+            if (filters) {
+                listFilters = {...listFilters, ...filters}
+            }
+
+            let query = this.refs.childCmp.buildReportQuery(queryFilters, listFilters);
 
             return "{ reportData: "+ query + " }";
         }
@@ -76,22 +77,19 @@ const wrapReport = (ReportComponent, specs) => {
         }
 
         handlePageChange(page) {
-            let query = this.buildQuery(page);
-            this.props.getReport(query, specs.reportName, page);
+            this.handleGetReport(page);
         }
 
         handleSearch(term) {
             this.setState({searchTerm: term}, () => {
-                let query = this.buildQuery(1);
-                this.props.getReport(query, specs.reportName, 1);
+                this.handleGetReport(1);
             });
         }
 
         handleSort(index, key, dir, func) {
 
             this.setState({sortKey: key, sortDir: dir}, () => {
-                let query = this.buildQuery(1);
-                this.props.getReport(query, specs.reportName, 1);
+                this.handleGetReport(1);
             });
 
         }
@@ -100,20 +98,60 @@ const wrapReport = (ReportComponent, specs) => {
             ev.preventDefault();
 
             let query = this.buildQuery(1, true);
-            this.props.exportReport(query, specs.reportName, this.refs.childCmp.preProcessData);
+            let name = this.refs.childCmp.getName();
+            this.props.exportReport(query, name, this.refs.childCmp.preProcessData);
+        }
+
+        handleGetReport(page) {
+            let query = this.buildQuery(page);
+            let name = this.refs.childCmp.getName();
+            this.props.getReport(query, name, page);
+        }
+
+        handleFilterChange(filter, value) {
+            this.fragmentParser.setParam(filter, value.join(','));
+            window.location.hash   = this.fragmentParser.serialize();
+            this.handleReload()
+        }
+
+        renderFilters() {
+            let {currentSummit} = this.props;
+            let filterHtml = [];
+            let filters = this.fragmentParser.getParams();
+
+            if (specs.filters.includes('track')) {
+                let filterValue = filters.hasOwnProperty('track') ? filters.track : null;
+                filterHtml.push(
+                    <div className="col-md-4" key="track-filter">
+                        <TrackFilter value={filterValue} tracks={currentSummit.tracks} onChange={(value) => {this.handleFilterChange('track',value)}} isMulti/>
+                    </div>
+                );
+            }
+
+            if (specs.filters.includes('room')) {
+                let filterValue = filters.hasOwnProperty('room') ? filters.room : null;
+                filterHtml.push(
+                    <div className="col-md-4" key="room-filter">
+                        <RoomFilter value={filterValue} rooms={currentSummit.locations.filter(l => l.class_name == 'SummitVenueRoom')} onChange={(value) => {this.handleFilterChange('room',value)}} isMulti/>
+                    </div>
+                );
+            }
+
+            return filterHtml;
         }
 
         render() {
-            let {data, extraData, currentSummit, match, currentPage, totalCount, extraStat, perPage} = this.props;
+            let { match, currentPage, totalCount, perPage, currentSummit} = this.props;
             let {searchTerm, sortKey, sortDir} = this.state;
             let pageCount = Math.ceil(totalCount / perPage);
+            let reportName = this.refs.childCmp ? this.refs.childCmp.getName() : 'report';
 
             return (
                 <div className="container large">
-                    <Breadcrumb data={{ title: T.translate(`reports.${specs.reportName}`), pathname: match.url }} ></Breadcrumb>
+                    <Breadcrumb data={{ title:reportName, pathname: match.url }} ></Breadcrumb>
                     <div className="row">
                         <div className="col-md-8">
-                            <h3>{T.translate(`reports.${specs.reportName}`)}</h3>
+                            <h3>{reportName}</h3>
                         </div>
 
                     </div>
@@ -133,6 +171,15 @@ const wrapReport = (ReportComponent, specs) => {
                         </div>
                     </div>
                     <hr/>
+
+                    {specs.filters &&
+                        <div>
+                            <div className="row report-filters">
+                                {this.renderFilters()}
+                            </div>
+                            <hr/>
+                        </div>
+                    }
 
                     <div className="report-container">
                         <ReportComponent

@@ -18,8 +18,6 @@ const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
 import {flattenData} from "../../actions/report-actions";
 
-const reportName = 'presentation_company_report';
-
 
 class PresentationCompanyReport extends React.Component {
     constructor(props) {
@@ -76,6 +74,10 @@ class PresentationCompanyReport extends React.Component {
 
     }
 
+    getName() {
+        return 'Presentation Company Report';
+    }
+
     render() {
         let {data, currentSummit, totalCount, onSort} = this.props;
 
@@ -125,4 +127,4 @@ class PresentationCompanyReport extends React.Component {
 }
 
 
-export default wrapReport(PresentationCompanyReport, {reportName, pagination: true});
+export default wrapReport(PresentationCompanyReport, {pagination: true});

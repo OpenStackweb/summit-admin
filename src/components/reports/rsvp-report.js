@@ -16,8 +16,7 @@ import T from 'i18n-react/dist/i18n-react'
 import { Table } from 'openstack-uicore-foundation/lib/components'
 const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
-
-const reportName = 'rsvp_report';
+import history from "../../history";
 
 
 class RsvpReport extends React.Component {
@@ -74,9 +73,8 @@ class RsvpReport extends React.Component {
 
     }
 
-    getTrueFalseIcon(value) {
-        return value ? '<div class="text-center"><i class="fa fa-times" aria-hidden="true"></i></div>' :
-            '<div class="text-center"><i class="fa fa-check" aria-hidden="true"></i></div>';
+    getName() {
+        return 'RSVP Report';
     }
 
     render() {
@@ -104,7 +102,7 @@ class RsvpReport extends React.Component {
         return (
             <div className="list-group">
                 {reportData.map(it =>
-                <a href={'rsvp_report/' + it.id} className="list-group-item">
+                <a onClick={() => {history.push(`rsvp_report/${it.id}`, {name: it.title})}} className="list-group-item">
                     {it.title}
                 </a>
                 )}
@@ -114,4 +112,4 @@ class RsvpReport extends React.Component {
 }
 
 
-export default wrapReport(RsvpReport, {reportName, pagination: true});
+export default wrapReport(RsvpReport, {pagination: true});

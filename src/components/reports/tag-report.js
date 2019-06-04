@@ -13,83 +13,100 @@
 
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
-import { Breadcrumb } from 'react-breadcrumbs';
 import { Table } from 'openstack-uicore-foundation/lib/components'
-import history from "../../history";
-import {connect} from "react-redux";
-import {getReport} from "../../actions/report-actions";
 const Query = require('graphql-query-builder');
+import wrapReport from './report-wrapper';
+import history from "../../history";
 
-const reportName = 'tag_report';
 
 class TagReport extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = { };
+
+        this.buildReportQuery = this.buildReportQuery.bind(this);
+        this.handleSort = this.handleSort.bind(this);
+
     }
 
-    componentWillMount () {
-        let query = this.buildQuery();
+    buildReportQuery(filters, listFilters) {
+        let {currentSummit} = this.props;
 
-        this.props.getReport(query, reportName);
-    }
+        listFilters.summitId = currentSummit.id;
+        listFilters.published = true;
 
+        let query = new Query("tags", listFilters);
 
-    buildQuery() {
-        let query = new Query("allTags",{first: 25, summit_Id: 25});
-        let events = new Query("events",{summit_Id: 25, published: true});
-        events.find([{"edges":[{"node":["id"]}]}]);
+        let results = new Query("results", filters);
+        results.find(["id", "tag", `eventCount(summitId:${currentSummit.id})`]);
 
-        query.find([{"edges":[{"node":["id", "tag", {"events": events}]}]}]);
-
-        console.log(query.toString());
+        query.find([{"results": results}, "totalCount"]);
 
         return query;
     }
 
-    render() {
-        let {data, match} = this.props;
+    preProcessData(data, extraData, forExport=false) {
 
-        let report_columns = [
-            { columnKey: 'tag', value: 'Tag' },
-            { columnKey: 'count', value: 'Count' }
+        let processedData = data.map(it => {
+            let tag = forExport ? it.tag : <a onClick={() => {history.push(`tag_report/${it.id}`, {name: it.tag})}} >{it.tag}</a>
+
+            return ({
+                id: it.id,
+                tag: tag,
+                count: it.eventCount,
+            });
+        });
+
+        let columns = [
+            { columnKey: 'tag', value: 'Tag', sortable: true },
+            { columnKey: 'count', value: 'Count' },
         ];
+
+        return {reportData: processedData, tableColumns: columns};
+    }
+
+    handleSort(index, key, dir, func) {
+        let sortKey = null;
+        switch(key) {
+            case 'track':
+                sortKey = 'category__title';
+                break;
+        }
+
+        this.props.onSort(index, sortKey, dir, func);
+
+    }
+
+    getName() {
+        return 'Tag Report';
+    }
+
+    render() {
+        let {data, extraData, totalCount} = this.props;
 
         let report_options = { actions: {} }
 
-        let reportData = data.map(it => ({tag: it.tag, count: it.events.length}));
+        let {reportData, tableColumns} = this.preProcessData(data, extraData);
 
         return (
-            <div className="container">
-                <Breadcrumb data={{ title: T.translate(`reports.${reportName}`), pathname: match.url }} ></Breadcrumb>
-                <div className="row">
-                    <div className="col-md-8">
-                        <h3>{T.translate(`reports.${reportName}`)}</h3>
+            <div className="tag-report">
+                <div className="panel panel-default">
+                    <div className="panel-heading"> Tags ({totalCount}) </div>
+
+                    <div className="table">
+                        <Table
+                            options={report_options}
+                            data={reportData}
+                            columns={tableColumns}
+                            onSort={this.handleSort}
+                        />
                     </div>
-
-                </div>
-                <hr/>
-
-                <div className="report-container">
-                    <Table
-                        options={report_options}
-                        data={reportData}
-                        columns={report_columns}
-                    />
                 </div>
             </div>
         );
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentReportState }) => ({
-    currentSummit : currentSummitState.currentSummit,
-    ...currentReportState
-})
 
-export default connect (
-    mapStateToProps,
-    {
-        getReport,
-    }
-)(TagReport);
+export default wrapReport(TagReport, {pagination: true});

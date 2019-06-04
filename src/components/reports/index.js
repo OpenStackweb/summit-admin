@@ -11,6 +11,7 @@
  * limitations under the License.
  **/
 
+import SingleTagReport from './tag-single-report'
 import TagReport from './tag-report'
 import PresentationCompanyReport from './presentation-company-report'
 import PresentationReport from './presentation-report'
@@ -38,5 +39,6 @@ export {
     FeedbackReport,
     FeedbackGroupReport,
     TagReport,
+    SingleTagReport,
     SmartSpeakerReport
 }

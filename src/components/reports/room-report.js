@@ -20,16 +20,13 @@ import wrapReport from './report-wrapper';
 import {groupBy} from '../../utils/methods'
 import {flattenData} from "../../actions/report-actions";
 
-const reportName = 'room_report';
-
 class RoomReport extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { };
-
         this.buildReportQuery = this.buildReportQuery.bind(this);
         this.handleSort = this.handleSort.bind(this);
+        this.preProcessData = this.preProcessData.bind(this);
 
     }
 
@@ -68,16 +65,15 @@ class RoomReport extends React.Component {
 
     }
 
-    centerValue(value) {
-        return `<div class="text-center">${value+''}</div>`;
+    getName() {
+        return 'Room Report';
     }
 
-    render() {
-        let {data, totalCount, onSort} = this.props;
+    preProcessData(data, extraData, forExport=false) {
 
         let flatData = flattenData(data);
 
-        let report_columns = [
+        let columns = [
             { columnKey: 'id', value: 'Id' },
             { columnKey: 'time', value: 'Time' },
             { columnKey: 'code', value: 'Code' },
@@ -90,12 +86,15 @@ class RoomReport extends React.Component {
             { columnKey: 'total', value: 'Total' },
         ];
 
-        let report_options = { actions: {} }
 
-        let reportData = flatData.map(it => {
+        let processedData = flatData.map(it => {
 
             let date = moment(it.startDate).format('dddd Do');
             let time = moment(it.startDate).format('h:mm a') + ' - ' + moment(it.endDate).format('h:mm a');
+            let capacity = forExport ? it.location_venueroom_capacity : <div className="text-center">{it.location_venueroom_capacity + ''}</div>;
+            let speakers = forExport ? it.speakerCount : <div className="text-center">{it.speakerCount + ''}</div>;
+            let head_count = forExport ? it.headCount : <div className="text-center">{it.headCount + ''}</div>;
+            let total = forExport ? it.attendeeCount : <div className="text-center">{it.attendeeCount + ''}</div>;
 
             return ({
                 id: it.id,
@@ -105,15 +104,26 @@ class RoomReport extends React.Component {
                 event: it.title,
                 room: it.location_venueroom_name,
                 venue: it.location_venueroom_venue_name,
-                capacity: this.centerValue(it.location_venueroom_capacity),
-                speakers: this.centerValue(it.speakerCount),
-                head_count: this.centerValue(it.headCount),
-                total: this.centerValue(it.attendeeCount),
+                capacity: capacity,
+                speakers: speakers,
+                head_count: head_count,
+                total: total,
             });
         });
 
+        return {reportData: processedData, tableColumns: columns};
+    }
 
+    render() {
+        let {data, sortKey, sortDir, currentSummit} = this.props;
 
+        let report_options = {
+            sortCol: sortKey,
+            sortDir: sortDir,
+            actions: {}
+        }
+
+        let {reportData, tableColumns} = this.preProcessData(data, null);
         let groupedData = groupBy(reportData ,'date');
 
         let tables = [];
@@ -126,7 +136,7 @@ class RoomReport extends React.Component {
                         <Table
                             options={report_options}
                             data={groupedData[key]}
-                            columns={report_columns}
+                            columns={tableColumns}
                             onSort={this.handleSort}
                         />
                     </div>
@@ -134,9 +144,13 @@ class RoomReport extends React.Component {
             );
         }
 
-        return (tables);
+        return (
+            <div>
+                {tables}
+            </div>
+        );
     }
 }
 
 
-export default wrapReport(RoomReport, {reportName, pagination: false});
+export default wrapReport(RoomReport, {pagination: false, filters:['track', 'room']});

@@ -16,8 +16,9 @@ import T from 'i18n-react/dist/i18n-react'
 import { Table } from 'openstack-uicore-foundation/lib/components'
 const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
-
-const reportName = 'presentation_video_report';
+import history from "../../history";
+import {flattenData} from "../../actions/report-actions";
+import moment from "moment-timezone";
 
 
 class PresentationVideoReport extends React.Component {
@@ -26,34 +27,61 @@ class PresentationVideoReport extends React.Component {
 
         this.state = { };
 
-        this.handleSort = this.handleSort.bind(this);
         this.buildReportQuery = this.buildReportQuery.bind(this);
+        this.handleSort = this.handleSort.bind(this);
 
     }
 
     buildReportQuery(filters, listFilters) {
         let {currentSummit} = this.props;
+
         listFilters.summitId = currentSummit.id;
+        listFilters.hasVideo = true;
 
         let query = new Query("presentations", listFilters);
-        let category = new Query("category");
-        category.find(["title"]);
+        let venue = new Query("venue");
+        venue.find(["id", "name"]);
+        let venueroom = new Query("venueroom");
+        venueroom.find(["id", "name", {"venue": venue}]);
         let location = new Query("location");
-        location.find(["name"]);
-        let member = new Query("member");
-        member.find(["id", "firstName", "lastName","email"]);
-        let attendances = new Query("attendances", {summit_Id: currentSummit.id});
-        attendances.find(["phoneNumber", "registered", "checkedIn", "confirmed"]);
-        let promoCodes = new Query("promoCodes", {summit_Id: currentSummit.id});
-        promoCodes.find(["code", "type"]);
-        let speakers = new Query("speakers");
-        speakers.find(["id", "firstName", "lastName", {"member": member}, {"attendances": attendances}, {"promoCodes": promoCodes}]);
+        location.find(["id", {"venueroom": venueroom}]);
         let results = new Query("results", filters);
-        results.find(["id", "title", "startDate", "published", {"category": category}, {"location": location}, {"speakers": speakers}])
+        results.find(["id", "title", "startDate", "endDate", "tagNames", "youtubeId", {"location": location}]);
 
         query.find([{"results": results}, "totalCount"]);
 
         return query;
+    }
+
+    preProcessData(data, extraData, forExport=false) {
+
+        let flatData = flattenData(data);
+
+        let processedData = flatData.map(it => {
+            let time = moment(it.startDate).format('h:mm a') + ' - ' + moment(it.endDate).format('h:mm a');
+
+            return ({
+                id: it.id,
+                event: it.title,
+                time: time,
+                tags: it.tagNames,
+                room: it.location_venueroom_name,
+                venue: it.location_venueroom_venue_name,
+                youtubeId: it.youtubeId,
+            });
+        });
+
+        let columns = [
+            { columnKey: 'id', value: 'ID', sortable: true },
+            { columnKey: 'time', value: 'Time' },
+            { columnKey: 'tags', value: 'Tags' },
+            { columnKey: 'event', value: 'Event' },
+            { columnKey: 'room', value: 'Room' },
+            { columnKey: 'venue', value: 'Venue' },
+            { columnKey: 'youtubeId', value: 'Youtube Id' },
+        ];
+
+        return {reportData: processedData, tableColumns: columns};
     }
 
     handleSort(index, key, dir, func) {
@@ -68,71 +96,30 @@ class PresentationVideoReport extends React.Component {
 
     }
 
-    getTrueFalseIcon(value) {
-        return value ? '<div class="text-center"><i class="fa fa-times" aria-hidden="true"></i></div>' :
-            '<div class="text-center"><i class="fa fa-check" aria-hidden="true"></i></div>';
+    getName() {
+        return 'Video Output Report';
     }
 
     render() {
-        let {data, totalCount, onSort} = this.props;
-
-        let report_columns = [
-            { columnKey: 'id', value: 'Id' },
-            { columnKey: 'title', value: 'Presentation' },
-            { columnKey: 'published', value: 'Published' },
-            { columnKey: 'track', value: 'Track', sortable: true },
-            { columnKey: 'start_date', value: 'Start Date' },
-            { columnKey: 'location', value: 'Location' },
-            { columnKey: 'speaker_id', value: 'Speaker Id' },
-            { columnKey: 'member_id', value: 'Member Id' },
-            { columnKey: 'speaker', value: 'Speaker' },
-            { columnKey: 'email', value: 'Email' },
-            { columnKey: 'phone', value: 'Phone' },
-            { columnKey: 'code', value: 'Promo Code' },
-            { columnKey: 'code_type', value: 'Code Type' },
-            { columnKey: 'confirmed', value: 'Confirmed' },
-            { columnKey: 'registered', value: 'Registered' },
-            { columnKey: 'checked_in', value: 'Checked In' },
-        ];
+        let {data, extraData, totalCount} = this.props;
 
         let report_options = { actions: {} }
 
-        let reportData = data.map(it => {
-
-            let confirmed = this.getTrueFalseIcon(it.speakers_attendances_confirmed) || 'N/A';
-            let registered = this.getTrueFalseIcon(it.speakers_attendances_registered) || 'N/A';
-            let checkedIn = this.getTrueFalseIcon(it.speakers_attendances_checkedIn) || 'N/A';
-
-            return ({
-                id: it.id,
-                title: it.title,
-                published: it.published,
-                track: it.category_title,
-                start_date: it.startDate,
-                location: it.location_name,
-                speaker_id: it.speakers_id,
-                member_id: (it.speakers_member_id || 'N/A'),
-                speaker: it.speakers_firstName + ' ' + it.speakers_lastName,
-                email: (it.speakers_member_email || 'N/A'),
-                phone: (it.speakers_attendances_phoneNumber || 'N/A'),
-                code: (it.speakers_promoCodes_code || 'N/A'),
-                code_type: (it.speakers_promoCodes_type || 'N/A'),
-                confirmed: confirmed,
-                registered: registered,
-                checked_in: checkedIn,
-            });
-        });
+        let {reportData, tableColumns} = this.preProcessData(data, extraData);
 
         return (
-            <div className="panel panel-default">
-                <div className="panel-heading">Presentations ({totalCount})</div>
-                <div className="table-responsive">
-                    <Table
-                        options={report_options}
-                        data={reportData}
-                        columns={report_columns}
-                        onSort={this.handleSort}
-                    />
+            <div className="tag-report">
+                <div className="panel panel-default">
+                    <div className="panel-heading"> Events ({totalCount}) </div>
+
+                    <div className="table">
+                        <Table
+                            options={report_options}
+                            data={reportData}
+                            columns={tableColumns}
+                            onSort={this.handleSort}
+                        />
+                    </div>
                 </div>
             </div>
         );
@@ -140,4 +127,4 @@ class PresentationVideoReport extends React.Component {
 }
 
 
-export default wrapReport(PresentationVideoReport, {reportName, pagination: true});
+export default wrapReport(PresentationVideoReport, {pagination: true, filters:["track", "room"]});

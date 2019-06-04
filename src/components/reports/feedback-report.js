@@ -21,8 +21,6 @@ const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
 import {flattenData} from "../../actions/report-actions";
 
-const reportName = 'feedback_report';
-
 
 class FeedbackReport extends React.Component {
     constructor(props) {
@@ -36,6 +34,7 @@ class FeedbackReport extends React.Component {
         this.handleSort = this.handleSort.bind(this);
         this.handleFilterChange = this.handleFilterChange.bind(this);
         this.preProcessData = this.preProcessData.bind(this);
+        this.getName = this.getName.bind(this);
 
     }
 
@@ -116,7 +115,13 @@ class FeedbackReport extends React.Component {
         this.setState({groupBy: value.value}, () => {this.props.onReload()});
     }
 
-    preProcessData(data, extraData) {
+    getName() {
+        let {groupBy} = this.state;
+        let name = groupBy == 'feedback' ? '' : ' by ' + groupBy;
+        return `Feedback Report ${name}`;
+    }
+
+    preProcessData(data, extraData, forExport=false) {
         let {groupBy} = this.state;
         let processedData = []
         let columns = [];
@@ -124,9 +129,10 @@ class FeedbackReport extends React.Component {
         switch (groupBy) {
             case 'feedback': {
                 processedData = flattenData(data).map(it => {
+                    let rate = forExport ? it.rate : <StarRatings rating={it.rate} starRatedColor="gold" starDimension="10px" starSpacing="1px" isSelectable={false}/>
+
                     return ({
-                        rate: <StarRatings rating={it.rate} starRatedColor="gold" starDimension="10px" starSpacing="1px"
-                                           isSelectable={false}/>,
+                        rate: rate,
                         presentation: it.event_title,
                         speakers: it.event_presentation_speakerNames,
                         critic: it.owner_firstName + ' ' + it.owner_lastName,
@@ -145,11 +151,11 @@ class FeedbackReport extends React.Component {
             break;
             case 'presentation': {
                 processedData = data.map(it => {
-                    let pres = <a onClick={() => {history.push(`feedback_report/presentation/${it.id}`, {name: it.title})}} >{it.title}</a>
+                    let pres = forExport ? it.title : <a onClick={() => {history.push(`feedback_report/presentation/${it.id}`, {name: it.title})}} >{it.title}</a>
+                    let rate = forExport ? it.feedbackAvg : <StarRatings rating={it.feedbackAvg} starRatedColor="gold" starDimension="10px" starSpacing="1px" isSelectable={false}/>
 
                     return ({
-                        rate: <StarRatings rating={it.feedbackAvg} starRatedColor="gold" starDimension="10px" starSpacing="1px"
-                                           isSelectable={false}/>,
+                        rate: rate,
                         presentation: pres,
                         speakers: it.speakerNames,
                         count: it.feedbackCount
@@ -166,11 +172,12 @@ class FeedbackReport extends React.Component {
             break;
             case 'track': {
                 processedData = data.map(it => {
-                    let track = <a onClick={() => {history.push(`feedback_report/track/${it.id}`, {name: it.title})}} >{it.title}</a>
+                    let track = forExport ? it.title : <a onClick={() => {history.push(`feedback_report/track/${it.id}`, {name: it.title})}} >{it.title}</a>
+                    let rate = forExport ? it.feedbackAvg : <StarRatings rating={it.feedbackAvg} starRatedColor="gold" starDimension="10px" starSpacing="1px" isSelectable={false}/>
+
 
                     return ({
-                        rate: <StarRatings rating={it.feedbackAvg} starRatedColor="gold" starDimension="10px" starSpacing="1px"
-                                           isSelectable={false}/>,
+                        rate: rate,
                         category: track,
                         count: it.feedbackCount
                     });
@@ -186,10 +193,12 @@ class FeedbackReport extends React.Component {
             case 'speaker': {
                 processedData = data.map(it => {
                     let speakerName = it.firstName + ' ' + it.lastName;
-                    let speaker = <a onClick={() => {history.push(`feedback_report/speaker/${it.id}`, {name: speakerName})}} >{speakerName}</a>
+                    let speaker = forExport ? speakerName : <a onClick={() => {history.push(`feedback_report/speaker/${it.id}`, {name: speakerName})}} >{speakerName}</a>
+                    let rate = forExport ? it.feedbackAvg : <StarRatings rating={it.feedbackAvg} starRatedColor="gold" starDimension="10px" starSpacing="1px" isSelectable={false}/>
+
+
                     return ({
-                        rate: <StarRatings rating={it.feedbackAvg} starRatedColor="gold" starDimension="10px" starSpacing="1px"
-                                           isSelectable={false}/>,
+                        rate: rate,
                         speaker: speaker,
                         count: it.feedbackCount,
                         overall_avg: it.overallAvg,
@@ -276,4 +285,4 @@ class FeedbackReport extends React.Component {
 }
 
 
-export default wrapReport(FeedbackReport, {reportName, pagination: true});
+export default wrapReport(FeedbackReport, {pagination: true});

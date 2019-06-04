@@ -95,7 +95,7 @@ export const exportReport = ( query, reportName, preProcessData=null ) => (dispa
         let reportData = [];
 
         if (preProcessData) {
-            let procData = preProcessData(data.results, extraData);
+            let procData = preProcessData(data.results, extraData, true);
             let labels = procData.tableColumns.map(col => col.value);
             let keys = procData.tableColumns.map(col => col.columnKey);
 

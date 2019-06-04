@@ -17,8 +17,6 @@ import { Table } from 'openstack-uicore-foundation/lib/components'
 const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
 
-const reportName = 'rsvp_event_report';
-
 
 class RsvpEventReport extends React.Component {
     constructor(props) {
@@ -28,6 +26,7 @@ class RsvpEventReport extends React.Component {
 
         this.buildReportQuery = this.buildReportQuery.bind(this);
         this.handleSort = this.handleSort.bind(this);
+        this.getName = this.getName.bind(this);
 
     }
 
@@ -55,7 +54,7 @@ class RsvpEventReport extends React.Component {
         let rsvpTemplate = new Query("rsvpTemplate");
         rsvpTemplate.find(["id", {"questions": questions}]);
         let query2 = new Query("presentation", {id: event_id});
-        query2.find("id", {"rsvpTemplate": rsvpTemplate})
+        query2.find("id", "title", {"rsvpTemplate": rsvpTemplate})
 
 
         return query + ', extraData: ' + query2;
@@ -73,7 +72,7 @@ class RsvpEventReport extends React.Component {
 
     }
 
-    preProcessData(data, extraData) {
+    preProcessData(data, extraData, forExport=false) {
         let questions = extraData.rsvpTemplate.questions.map(q => {
             let qtmp= {id: q.id, label: q.label}
             if (q.rsvpquestionmulti.values.length > 0) {
@@ -118,6 +117,10 @@ class RsvpEventReport extends React.Component {
     }
 
 
+    getName() {
+        let {location} = this.props;
+        return `${location.state.name}`;
+    }
 
     render() {
         let {data, extraData, totalCount} = this.props;
@@ -145,4 +148,4 @@ class RsvpEventReport extends React.Component {
 }
 
 
-export default wrapReport(RsvpEventReport, {reportName, pagination: true});
+export default wrapReport(RsvpEventReport, {pagination: true});

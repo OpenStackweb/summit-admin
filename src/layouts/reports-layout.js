@@ -31,6 +31,7 @@ import {
     FeedbackReport,
     FeedbackGroupReport,
     TagReport,
+    SingleTagReport,
     SmartSpeakerReport
 } from "../components/reports"
 
@@ -46,17 +47,45 @@ class ReportsLayout extends React.Component {
                 <Switch>
                     <Route strict exact path={match.url} component={ReportListPage}/>
                     <Route strict exact path={`${match.url}/presentation_report`} component={PresentationReport}/>
-                    <Route strict exact path={`${match.url}/rsvp_report`} component={RsvpReport}/>
-                    <Route strict exact path={`${match.url}/rsvp_report/:event_id(\\d+)`} component={RsvpEventReport}/>
+                    <Route path={`${match.url}/rsvp_report`} render={
+                        props => (
+                            <div>
+                                <Breadcrumb data={{ title: T.translate("reports.rsvp_report"), pathname: match.url }} ></Breadcrumb>
+                                <Switch>
+                                    <Route strict exact path={`${props.match.url}`} component={RsvpReport}/>
+                                    <Route strict exact path={`${props.match.url}/:event_id(\\d+)`} component={RsvpEventReport}/>
+                                </Switch>
+                            </div>
+                        )}
+                    />
                     <Route strict exact path={`${match.url}/presentation_company_report`} component={PresentationCompanyReport}/>
                     <Route strict exact path={`${match.url}/room_report`} component={RoomReport}/>
                     <Route strict exact path={`${match.url}/presentation_track_report`} component={PresentationTrackReport}/>
                     <Route strict exact path={`${match.url}/speaker_report`} component={SpeakerReport}/>
                     <Route strict exact path={`${match.url}/track_questions_report`} component={TrackQuestionsReport}/>
                     <Route strict exact path={`${match.url}/presentation_video_report`} component={PresentationVideoReport}/>
-                    <Route strict exact path={`${match.url}/feedback_report`} component={FeedbackReport}/>
-                    <Route strict exact path={`${match.url}/feedback_report/:group(track|speaker|presentation)/:group_id(\\d+)`} component={FeedbackGroupReport}/>
-                    <Route strict exact path={`${match.url}/tag_report`} component={TagReport}/>
+                    <Route path={`${match.url}/feedback_report`} render={
+                        props => (
+                            <div>
+                                <Breadcrumb data={{ title: T.translate("reports.feedback_report"), pathname: match.url }} ></Breadcrumb>
+                                <Switch>
+                                    <Route strict exact path={`${props.match.url}`} component={FeedbackReport}/>
+                                    <Route strict exact path={`${props.match.url}/:group(track|speaker|presentation)/:group_id(\\d+)`} component={FeedbackGroupReport}/>
+                                </Switch>
+                            </div>
+                        )}
+                    />
+                    <Route path={`${match.url}/tag_report`} render={
+                        props => (
+                            <div>
+                                <Breadcrumb data={{ title: T.translate("reports.tag_report"), pathname: match.url }} ></Breadcrumb>
+                                <Switch>
+                                    <Route strict exact path={`${props.match.url}`} component={TagReport}/>
+                                    <Route strict exact path={`${props.match.url}/:tag_id(\\d+)`} component={SingleTagReport}/>
+                                </Switch>
+                            </div>
+                        )}
+                    />
                     <Route strict exact path={`${match.url}/smart_speaker_report`} component={SmartSpeakerReport}/>
                     <Route component={NoMatchPage}/>
                 </Switch>

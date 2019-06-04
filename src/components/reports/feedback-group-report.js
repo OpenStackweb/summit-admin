@@ -20,7 +20,6 @@ const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
 import {flattenData} from "../../actions/report-actions";
 
-const reportName = 'feedback_group_report';
 
 
 class FeedbackGroupReport extends React.Component {
@@ -30,6 +29,7 @@ class FeedbackGroupReport extends React.Component {
         this.buildReportQuery = this.buildReportQuery.bind(this);
         this.handleSort = this.handleSort.bind(this);
         this.preProcessData = this.preProcessData.bind(this);
+        this.getName = this.getName.bind(this);
 
     }
 
@@ -81,13 +81,18 @@ class FeedbackGroupReport extends React.Component {
         this.props.onSort(index, sortKey, dir, func);
     }
 
+    getName() {
+        let {location} = this.props;
+        return `${location.state.name}`;
+    }
 
-    preProcessData(data, extraData) {
+
+    preProcessData(data, extraData, forExport=false) {
 
         let processedData = flattenData(data).map(it => {
+            let rate = forExport ? it.rate : <StarRatings rating={it.rate} starRatedColor="gold" starDimension="10px" starSpacing="1px" isSelectable={false}/>
             return ({
-                rate: <StarRatings rating={it.rate} starRatedColor="gold" starDimension="10px" starSpacing="1px"
-                                   isSelectable={false}/>,
+                rate: rate,
                 presentation: it.event_title,
                 speakers: it.event_presentation_speakerNames,
                 critic: it.owner_firstName + ' ' + it.owner_lastName,
@@ -147,4 +152,4 @@ class FeedbackGroupReport extends React.Component {
 }
 
 
-export default wrapReport(FeedbackGroupReport, {reportName, pagination: true});
+export default wrapReport(FeedbackGroupReport, {pagination: true});
