@@ -38,6 +38,7 @@ export const TAG_GROUP_DELETED        = 'TAG_GROUP_DELETED';
 export const TAG_GROUPS_SEEDED        = 'TAG_GROUPS_SEEDED';
 export const TAG_SEEDED_TO_CATEGORIES = 'TAG_SEEDED_TO_CATEGORIES';
 export const TAGS_COPIED_TO_CATEGORY  = 'TAGS_COPIED_TO_CATEGORY';
+export const TAG_CREATED              = 'TAG_CREATED';
 
 export const getTagGroups = ( ) => (dispatch, getState) => {
 
@@ -248,6 +249,28 @@ export const copyAllTagsToCategory = (tagGroupId, categoryId) => (dispatch, getS
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(showSuccessMessage(T.translate("edit_tag_group.tags_copied")));
+        }
+    );
+}
+
+export const createTag = (tag) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken,
+        tag: tag
+    };
+
+    return postRequest(
+        null,
+        createAction(TAG_CREATED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tag`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            //dispatch(showSuccessMessage(T.translate("edit_tag_group.tags_copied")));
         }
     );
 }

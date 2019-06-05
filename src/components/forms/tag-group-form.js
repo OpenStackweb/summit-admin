@@ -104,6 +104,7 @@ class TagGroupForm extends React.Component {
             sortCol: "tag",
             valueKey: "id",
             labelKey: "tag",
+            onCreateTag: this.props.onCreateTag,
             actions: {
                 search: (input, callback) => { queryTags(null, input, callback); },
                 delete: { onClick: this.handleAllowedTagUnLink },

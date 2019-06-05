@@ -28,7 +28,7 @@ class SummitLayout extends React.Component {
         return(
             <div>
                 <Switch>
-                    <Route exact strict path={`${match.url}/new`} component={SummitIdLayout}/>
+                    <Route exact strict path={`${match.url}/new`} component={EditSummitPage}/>
                     <Route path={`${match.url}/:summit_id`} component={SummitIdLayout}/>
                     <Route component={NoMatchPage}/>
                 </Switch>

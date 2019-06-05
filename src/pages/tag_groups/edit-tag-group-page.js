@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import TagGroupForm from '../../components/forms/tag-group-form';
-import { getTagGroup, resetTagGroupForm, saveTagGroup, copyTagToAllCategories, copyAllTagsToCategory } from "../../actions/tag-actions";
+import { getTagGroup, resetTagGroupForm, saveTagGroup, copyTagToAllCategories, copyAllTagsToCategory, createTag } from "../../actions/tag-actions";
 import {ActionDropdown} from "openstack-uicore-foundation/lib/components";
 
 
@@ -91,6 +91,7 @@ class EditTagGroupPage extends React.Component {
                     entity={entity}
                     errors={errors}
                     onCopyTag={this.props.copyTagToAllCategories}
+                    onCreateTag={this.props.createTag}
                     onSubmit={this.props.saveTagGroup}
                 />
                 }
@@ -111,6 +112,7 @@ export default connect (
         resetTagGroupForm,
         saveTagGroup,
         copyTagToAllCategories,
-        copyAllTagsToCategory
+        copyAllTagsToCategory,
+        createTag
     }
 )(EditTagGroupPage);
