@@ -347,6 +347,7 @@ class SummitForm extends React.Component {
                         </div>
                     </div>
 
+                    {entity.id &&
                     <div>
                         <input type="button" onClick={this.handleSPlanAdd}
                                className="btn btn-primary pull-right" value={T.translate("edit_summit.add_splan")}/>
@@ -356,6 +357,7 @@ class SummitForm extends React.Component {
                             columns={splan_columns}
                         />
                     </div>
+                    }
 
                 </Panel>
 
