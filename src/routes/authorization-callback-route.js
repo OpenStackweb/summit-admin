@@ -63,8 +63,12 @@ class AuthorizationCallbackRoute extends React.Component {
 
     componentDidMount() {
         console.log("AuthorizationCallbackRoute::componentDidMount");
+        let {access_token, id_token, session_state, error, error_description } = this.state;
+        if(error){
+            return;
+        }
         let { getUserInfo } = this.props;
-        let {access_token, id_token, session_state } = this.state;
+
 
         this.props.onUserAuth(access_token, id_token, session_state);
         let url              = URI( window.location.href);
