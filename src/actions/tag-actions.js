@@ -253,26 +253,27 @@ export const copyAllTagsToCategory = (tagGroupId, categoryId) => (dispatch, getS
     );
 }
 
-export const createTag = (tag) => (dispatch, getState) => {
+export const createTag = (tag, callback) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
     let params = {
         access_token : accessToken,
-        tag: tag
     };
+
+    dispatch(startLoading());
 
     return postRequest(
         null,
         createAction(TAG_CREATED),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tag`,
-        null,
+        `${window.API_BASE_URL}/api/v1/tags`,
+        {tag: tag},
         authErrorHandler
-    )(params)(dispatch).then(() => {
-            //dispatch(showSuccessMessage(T.translate("edit_tag_group.tags_copied")));
-        }
-    );
+    )(params)(dispatch).then((payload) => {
+        dispatch(stopLoading());
+        callback(payload.response);
+    });
 }
 
 
