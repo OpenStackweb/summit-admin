@@ -65,7 +65,7 @@ class App extends React.PureComponent {
             <Router history={history}>
                 <div>
                     <AjaxLoader show={ this.props.loading } size={ 120 }/>
-                    <ReactTooltip delayShow={1000} />
+                    <ReactTooltip delayShow={10} />
                     <OPSessionChecker
                         clientId={window.OAUTH2_CLIENT_ID}
                         idpBaseUrl={window.IDP_BASE_URL}
