@@ -19,20 +19,16 @@ import Restrict from '../routes/restrict';
 import ReportListPage from '../pages/reports/report-list-page';
 import NoMatchPage from "../pages/no-match-page";
 import {
-    PresentationCompanyReport,
-    PresentationReport,
-    PresentationTrackReport,
     RsvpReport,
     RsvpEventReport,
     RoomReport,
-    SpeakerReport,
-    TrackQuestionsReport,
     PresentationVideoReport,
     FeedbackReport,
     FeedbackGroupReport,
     TagReport,
     SingleTagReport,
-    SmartSpeakerReport
+    SmartSpeakerReport,
+    SmartPresentationReport
 } from "../components/reports"
 
 
@@ -46,7 +42,6 @@ class ReportsLayout extends React.Component {
 
                 <Switch>
                     <Route strict exact path={match.url} component={ReportListPage}/>
-                    <Route strict exact path={`${match.url}/presentation_report`} component={PresentationReport}/>
                     <Route path={`${match.url}/rsvp_report`} render={
                         props => (
                             <div>
@@ -58,11 +53,7 @@ class ReportsLayout extends React.Component {
                             </div>
                         )}
                     />
-                    <Route strict exact path={`${match.url}/presentation_company_report`} component={PresentationCompanyReport}/>
                     <Route strict exact path={`${match.url}/room_report`} component={RoomReport}/>
-                    <Route strict exact path={`${match.url}/presentation_track_report`} component={PresentationTrackReport}/>
-                    <Route strict exact path={`${match.url}/speaker_report`} component={SpeakerReport}/>
-                    <Route strict exact path={`${match.url}/track_questions_report`} component={TrackQuestionsReport}/>
                     <Route strict exact path={`${match.url}/presentation_video_report`} component={PresentationVideoReport}/>
                     <Route path={`${match.url}/feedback_report`} render={
                         props => (
@@ -86,7 +77,8 @@ class ReportsLayout extends React.Component {
                             </div>
                         )}
                     />
-                    <Route strict exact path={`${match.url}/smart_speaker_report`} component={SmartSpeakerReport}/>
+                    <Route strict exact path={`${match.url}/speaker_report`} component={SmartSpeakerReport}/>
+                    <Route strict exact path={`${match.url}/presentation_report`} component={SmartPresentationReport}/>
                     <Route component={NoMatchPage}/>
                 </Switch>
             </div>

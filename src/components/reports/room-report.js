@@ -116,6 +116,9 @@ class RoomReport extends React.Component {
 
     render() {
         let {data, sortKey, sortDir, currentSummit} = this.props;
+        let storedDataName = this.props.name;
+
+        if (!data || storedDataName != this.getName()) return (<div></div>)
 
         let report_options = {
             sortCol: sortKey,

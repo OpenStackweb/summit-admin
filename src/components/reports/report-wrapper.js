@@ -7,7 +7,7 @@ import { FreeTextSearch } from 'openstack-uicore-foundation/lib/components'
 import {exportReport, getReport} from "../../actions/report-actions";
 import T from "i18n-react/dist/i18n-react";
 import FragmentParser from "../../utils/fragmen-parser";
-import {TrackFilter, RoomFilter} from '../filters'
+import {TrackFilter, RoomFilter, PublishedFilter, StatusFilter} from '../filters'
 
 
 const wrapReport = (ReportComponent, specs) => {
@@ -72,8 +72,7 @@ const wrapReport = (ReportComponent, specs) => {
         }
 
         handleReload() {
-            let query = this.buildQuery(1);
-            this.props.getReport(query, specs.reportName, 1);
+            this.handleGetReport(1);
         }
 
         handlePageChange(page) {
@@ -109,9 +108,19 @@ const wrapReport = (ReportComponent, specs) => {
         }
 
         handleFilterChange(filter, value) {
-            this.fragmentParser.setParam(filter, value.join(','));
+            let multiFilters = ['track', 'room'];
+            let theValue = null;
+
+            if (multiFilters.includes(filter)) {
+                theValue = value.join(',');
+            } else {
+                theValue = value;
+            }
+
+            this.fragmentParser.setParam(filter, theValue);
             window.location.hash   = this.fragmentParser.serialize();
             this.handleReload()
+
         }
 
         renderFilters() {
@@ -133,6 +142,24 @@ const wrapReport = (ReportComponent, specs) => {
                 filterHtml.push(
                     <div className="col-md-4" key="room-filter">
                         <RoomFilter value={filterValue} rooms={currentSummit.locations.filter(l => l.class_name == 'SummitVenueRoom')} onChange={(value) => {this.handleFilterChange('room',value)}} isMulti/>
+                    </div>
+                );
+            }
+
+            if (specs.filters.includes('published')) {
+                let filterValue = filters.hasOwnProperty('published') ? filters.published : null;
+                filterHtml.push(
+                    <div className="col-md-4" key="published-filter">
+                        <PublishedFilter value={filterValue} onChange={(value) => {this.handleFilterChange('published',value)}} />
+                    </div>
+                );
+            }
+
+            if (specs.filters.includes('status')) {
+                let filterValue = filters.hasOwnProperty('status') ? filters.status : null;
+                filterHtml.push(
+                    <div className="col-md-4" key="status-filter">
+                        <StatusFilter value={filterValue} onChange={(value) => {this.handleFilterChange('status',value)}} />
                     </div>
                 );
             }
@@ -188,6 +215,7 @@ const wrapReport = (ReportComponent, specs) => {
                             sortDir={sortDir}
                             onSort={this.handleSort}
                             onReload={this.handleReload}
+                            data={this.props.data}
                             {...this.props}
                         />
                     </div>

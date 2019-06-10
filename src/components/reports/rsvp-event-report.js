@@ -124,8 +124,9 @@ class RsvpEventReport extends React.Component {
 
     render() {
         let {data, extraData, totalCount} = this.props;
+        let storedDataName = this.props.name;
 
-        if (!extraData) return(<div></div>);
+        if (!extraData || !data || storedDataName != this.getName()) return (<div></div>)
 
         let report_options = { actions: {} };
 

@@ -102,6 +102,9 @@ class PresentationVideoReport extends React.Component {
 
     render() {
         let {data, extraData, totalCount} = this.props;
+        let storedDataName = this.props.name;
+
+        if (!data || storedDataName != this.getName()) return (<div></div>)
 
         let report_options = { actions: {} }
 

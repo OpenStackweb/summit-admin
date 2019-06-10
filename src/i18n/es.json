@@ -848,7 +848,8 @@
     "tag_report"                    : "Tag Report",
     "export"                        : "Export",
     "placeholders": {
-      "search"       : "Search by Title, Abstract, Speaker LastName, Member Email "
+      "search"       : "Search by Title, Abstract, Speaker LastName, Member Email ",
+      "select_fields" : "Select data to display"
     }
   }
 }

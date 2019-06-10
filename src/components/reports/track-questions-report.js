@@ -75,6 +75,9 @@ class TrackQuestionsReport extends React.Component {
 
     render() {
         let {data, totalCount, onSort} = this.props;
+        let storedDataName = this.props.name;
+
+        if (!data || storedDataName != this.getName()) return (<div></div>)
 
         let report_columns = [
             { columnKey: 'id', value: 'Id' },

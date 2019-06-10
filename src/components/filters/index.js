@@ -13,8 +13,12 @@
 
 import TrackFilter from './track-filter'
 import RoomFilter from './room-filter'
+import PublishedFilter from './published-filter'
+import StatusFilter from './status-filter'
 
 export {
     TrackFilter,
     RoomFilter,
+    PublishedFilter,
+    StatusFilter,
 }

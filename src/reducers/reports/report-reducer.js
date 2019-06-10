@@ -54,7 +54,7 @@ const reportReducer = (state = DEFAULT_STATE, action) => {
             let responseData = {...payload.response.data};
             let data = (responseData.hasOwnProperty("reportData")) ? responseData.reportData : [];
             let extraData = (responseData.hasOwnProperty("extraData")) ? responseData.extraData : null;
-            let extraStat = data.hasOwnProperty("avgRate") ? data.avgRate : null;
+            let extraStat = data.hasOwnProperty("extraStat") ? data.extraStat : null;
 
             return {...state, data: data.results, extraData: extraData, totalCount: data.totalCount, extraStat: extraStat };
         }

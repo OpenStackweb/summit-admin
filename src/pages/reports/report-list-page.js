@@ -43,12 +43,12 @@ class ReportListPage extends React.Component {
 
                 <div className="row">
                     <div className="col-md-6">
-                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'smart_presentation_report')}>
+                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'presentation_report')}>
                             {T.translate(`reports.presentation_report`)}
                         </button>
                     </div>
                     <div className="col-md-6">
-                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'smart_speaker_report')}>
+                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'speaker_report')}>
                             {T.translate(`reports.speaker_report`)}
                         </button>
                     </div>

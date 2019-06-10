@@ -65,7 +65,7 @@ class FeedbackGroupReport extends React.Component {
         let results = new Query("results", filters);
         results.find(["id", "rate", "note", {"event": event}, {"owner": owner}])
 
-        query.find([{"results": results}, "totalCount", "avgRate"]);
+        query.find([{"results": results}, "totalCount", {"extraStat":"avgRate"}]);
 
         return query;
     }
@@ -114,8 +114,9 @@ class FeedbackGroupReport extends React.Component {
 
     render() {
         let {data, extraData, totalCount, extraStat, sortKey, sortDir, location} = this.props;
+        let storedDataName = this.props.name;
 
-        if (!data) return (<div></div>)
+        if (!data || storedDataName != this.getName()) return (<div></div>)
 
         let avgRate = extraStat ? extraStat : 0;
 

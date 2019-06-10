@@ -79,6 +79,9 @@ class RsvpReport extends React.Component {
 
     render() {
         let {data, totalCount, onSort} = this.props;
+        let storedDataName = this.props.name;
+
+        if (!data || storedDataName != this.getName()) return (<div></div>)
 
         let report_columns = [
             { columnKey: 'id', value: 'Id' },
@@ -102,7 +105,7 @@ class RsvpReport extends React.Component {
         return (
             <div className="list-group">
                 {reportData.map(it =>
-                <a onClick={() => {history.push(`rsvp_report/${it.id}`, {name: it.title})}} className="list-group-item">
+                <a key={"room_pres_" + it.id} onClick={() => {history.push(`rsvp_report/${it.id}`, {name: it.title})}} className="list-group-item">
                     {it.title}
                 </a>
                 )}

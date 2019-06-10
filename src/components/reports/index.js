@@ -25,6 +25,7 @@ import FeedbackReport from './feedback-report'
 import FeedbackGroupReport from './feedback-group-report'
 import PresentationTrackReport from './presentation-track-report'
 import SmartSpeakerReport from './smart-speaker-report'
+import SmartPresentationReport from './smart-presentation-report'
 
 export {
     PresentationCompanyReport,
@@ -40,5 +41,6 @@ export {
     FeedbackGroupReport,
     TagReport,
     SingleTagReport,
-    SmartSpeakerReport
+    SmartSpeakerReport,
+    SmartPresentationReport
 }
