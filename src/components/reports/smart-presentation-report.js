@@ -134,7 +134,7 @@ class SmartPresentationReport extends React.Component {
     }
 
     render() {
-        let {data, totalCount, extraStat, onSort} = this.props;
+        let {data, totalCount, extraStat, onSort, sortKey, sortDir} = this.props;
         let {showFields} = this.state;
         let storedDataName = this.props.name;
 
