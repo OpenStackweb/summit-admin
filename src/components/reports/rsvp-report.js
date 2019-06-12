@@ -78,7 +78,7 @@ class RsvpReport extends React.Component {
     }
 
     render() {
-        let {data, totalCount, onSort} = this.props;
+        let {data, totalCount, onSort, sortKey, sortDir} = this.props;
         let storedDataName = this.props.name;
 
         if (!data || storedDataName != this.getName()) return (<div></div>)
@@ -90,7 +90,11 @@ class RsvpReport extends React.Component {
             { columnKey: 'end_date', value: 'End Date' },
         ];
 
-        let report_options = { actions: {} }
+        let report_options = {
+            sortCol: sortKey,
+            sortDir: sortDir,
+            actions: {}
+        };
 
         let reportData = data.map(it => {
 

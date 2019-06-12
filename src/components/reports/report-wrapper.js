@@ -7,7 +7,7 @@ import { FreeTextSearch } from 'openstack-uicore-foundation/lib/components'
 import {exportReport, getReport} from "../../actions/report-actions";
 import T from "i18n-react/dist/i18n-react";
 import FragmentParser from "../../utils/fragmen-parser";
-import {TrackFilter, RoomFilter, PublishedFilter, StatusFilter} from '../filters'
+import {TrackFilter, RoomFilter, PublishedFilter, StatusFilter, AttendanceFilter, MediaFilter} from '../filters'
 
 
 const wrapReport = (ReportComponent, specs) => {
@@ -17,20 +17,17 @@ const wrapReport = (ReportComponent, specs) => {
             super(props);
 
             this.state = {
-                searchTerm: null,
-                sortKey: null,
-                sortDir: null,
             };
 
-            this.fragmentParser     = new FragmentParser();
-            this.buildQuery         = this.buildQuery.bind(this);
-            this.handleSort         = this.handleSort.bind(this);
-            this.handlePageChange   = this.handlePageChange.bind(this);
-            this.handleSearch       = this.handleSearch.bind(this);
-            this.handleExportReport = this.handleExportReport.bind(this);
-            this.handleReload       = this.handleReload.bind(this);
-            this.handleGetReport    = this.handleGetReport.bind(this);
-            this.renderFilters      = this.renderFilters.bind(this);
+            this.fragmentParser         = new FragmentParser();
+            this.buildQuery             = this.buildQuery.bind(this);
+            this.handleSort             = this.handleSort.bind(this);
+            this.handlePageChange       = this.handlePageChange.bind(this);
+            this.handleSearch           = this.handleSearch.bind(this);
+            this.handleExportReport     = this.handleExportReport.bind(this);
+            this.handleReload           = this.handleReload.bind(this);
+            this.handleGetReport        = this.handleGetReport.bind(this);
+            this.renderFilters          = this.renderFilters.bind(this);
         }
 
         componentDidMount () {
@@ -39,12 +36,28 @@ const wrapReport = (ReportComponent, specs) => {
             this.handleGetReport(1);
         }
 
+        buildFiltersForQuery(filters, summitId) {
+            let {exclude_attendance, only_media, ...otherFilters} = filters;
+
+            if (exclude_attendance) {
+                let queryFilters = exclude_attendance.split(',').forEach(val => {
+                    let filterQS = val + 'ForSummit';
+                    otherFilters[filterQS] = `${summitId},false`;
+                });
+            }
+
+            if (only_media) {
+                otherFilters['attendingMediaForSummit'] = `${summitId},true`;
+            }
+
+            return otherFilters;
+        }
+
         buildQuery(page, forExport=false) {
             let {perPage, currentSummit} = this.props;
-            let {searchTerm, sortKey, sortDir} = this.state;
+            let {sort, sortdir, search, ...filters} = this.fragmentParser.getParams();
             let queryFilters = {};
             let listFilters = {};
-            let filters = this.fragmentParser.getParams();
 
             if (!forExport && specs.pagination) {
                 queryFilters = {limit: perPage};
@@ -53,17 +66,18 @@ const wrapReport = (ReportComponent, specs) => {
                 }
             }
 
-            if (sortKey) {
-                let order = (sortDir == 1) ? '' : '-';
-                queryFilters.ordering = order + '' + sortKey;
+            if (sort) {
+                let order = (sortdir == 1) ? '' : '-';
+                queryFilters.ordering = order + '' + sort;
             }
 
-            if (searchTerm) {
-                listFilters.search = searchTerm;
+            if (search) {
+                listFilters.search = search;
             }
 
             if (filters) {
-                listFilters = {...listFilters, ...filters}
+                let queryFilters = this.buildFiltersForQuery(filters, currentSummit.id);
+                listFilters = {...listFilters, ...queryFilters}
             }
 
             let query = this.refs.childCmp.buildReportQuery(queryFilters, listFilters);
@@ -80,17 +94,18 @@ const wrapReport = (ReportComponent, specs) => {
         }
 
         handleSearch(term) {
-            this.setState({searchTerm: term}, () => {
-                this.handleGetReport(1);
-            });
+            this.fragmentParser.setParam('search', term);
+            window.location.hash   = this.fragmentParser.serialize();
+            this.handleGetReport(1);
         }
 
         handleSort(index, key, dir, func) {
 
-            this.setState({sortKey: key, sortDir: dir}, () => {
-                this.handleGetReport(1);
-            });
+            this.fragmentParser.setParam('sort', key);
+            this.fragmentParser.setParam('sortdir', dir);
+            window.location.hash   = this.fragmentParser.serialize();
 
+            this.handleGetReport(1);
         }
 
         handleExportReport(ev) {
@@ -126,7 +141,7 @@ const wrapReport = (ReportComponent, specs) => {
         renderFilters() {
             let {currentSummit} = this.props;
             let filterHtml = [];
-            let filters = this.fragmentParser.getParams();
+            let {sort, sortdir, search, ...filters} = this.fragmentParser.getParams();
 
             if (specs.filters.includes('track')) {
                 let filterValue = filters.hasOwnProperty('track') ? filters.track : null;
@@ -164,12 +179,30 @@ const wrapReport = (ReportComponent, specs) => {
                 );
             }
 
+            if (specs.filters.includes('attendance')) {
+                let filterValue = filters.hasOwnProperty('exclude_attendance') ? filters.exclude_attendance : null;
+                filterHtml.push(
+                    <div className="col-md-4" key="attendance-filter">
+                        <AttendanceFilter value={filterValue} onChange={(value) => {this.handleFilterChange('exclude_attendance',value)}} />
+                    </div>
+                );
+            }
+
+            if (specs.filters.includes('media')) {
+                let filterValue = filters.hasOwnProperty('only_media') ? filters.only_media : null;
+                filterHtml.push(
+                    <div className="col-md-4" key="only-media-filter">
+                        <MediaFilter value={filterValue} onChange={(value) => {this.handleFilterChange('only_media',value)}} />
+                    </div>
+                );
+            }
+
             return filterHtml;
         }
 
         render() {
             let { match, currentPage, totalCount, perPage, currentSummit} = this.props;
-            let {searchTerm, sortKey, sortDir} = this.state;
+            let {sort, sortdir, search, ...filters} = this.fragmentParser.getParams();
             let pageCount = Math.ceil(totalCount / perPage);
             let reportName = this.refs.childCmp ? this.refs.childCmp.getName() : 'report';
 
@@ -186,7 +219,7 @@ const wrapReport = (ReportComponent, specs) => {
                     <div className={'row'}>
                         <div className={'col-md-6'}>
                             <FreeTextSearch
-                                value={searchTerm}
+                                value={search}
                                 placeholder={T.translate("reports.placeholders.search")}
                                 onSearch={this.handleSearch}
                             />
@@ -211,8 +244,8 @@ const wrapReport = (ReportComponent, specs) => {
                     <div className="report-container">
                         <ReportComponent
                             ref="childCmp"
-                            sortKey={sortKey}
-                            sortDir={sortDir}
+                            sortKey={sort}
+                            sortDir={sortdir}
                             onSort={this.handleSort}
                             onReload={this.handleReload}
                             data={this.props.data}

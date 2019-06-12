@@ -74,7 +74,7 @@ class TrackQuestionsReport extends React.Component {
     }
 
     render() {
-        let {data, totalCount, onSort} = this.props;
+        let {data, totalCount, onSort, sortKey, sortDir} = this.props;
         let storedDataName = this.props.name;
 
         if (!data || storedDataName != this.getName()) return (<div></div>)
@@ -98,7 +98,11 @@ class TrackQuestionsReport extends React.Component {
             { columnKey: 'checked_in', value: 'Checked In' },
         ];
 
-        let report_options = { actions: {} }
+        let report_options = {
+            sortCol: sortKey,
+            sortDir: sortDir,
+            actions: {}
+        };
 
         let reportData = data.map(it => {
 

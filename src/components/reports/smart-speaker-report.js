@@ -17,53 +17,83 @@ import { Table } from 'openstack-uicore-foundation/lib/components'
 import Select from 'react-select';
 const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
+import moment from "moment-timezone";
+import {flattenData} from "../../actions/report-actions";
 
-const reportName = 'smart_speaker_report';
+
+const fieldNames = [
+    {label: 'Id', key: 'id', simple: true},
+    {label: 'Speaker', key: 'fullName', simple: true},
+    {label: 'Emails', key: 'emails', simple: true},
+    {label: 'Title', key: 'title', simple: true},
+    {label: 'Company', key: 'currentCompany', simple: true},
+    {label: 'Job Title', key: 'currentJobTitle', simple: true},
+    {label: 'Bio', key: 'bio', simple: true},
+    {label: 'IRC', key: 'ircHandle', simple: true},
+    {label: 'Twitter', key: 'twitter', simple: true},
+    {label: 'Member ID', key: 'member_id'},
+    {label: 'PromoCode', key: 'promoCodes_code'},
+    {label: 'Code Type', key: 'promoCodes_type'},
+    {label: 'Confirmed', key: 'attendances_confirmed'},
+    {label: 'Registered', key: 'attendances_registered'},
+    {label: 'Checked In', key: 'attendances_checkedIn'},
+    {label: 'Phone #', key: 'attendances_phoneNumber'},
+    {label: 'Presentations', key: 'presentationTitles'},
+];
 
 class SmartSpeakerReport extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            speakerFields: ["id", "firstName", "lastName"]
+            showFields: ["emails"]
         };
 
         this.buildReportQuery = this.buildReportQuery.bind(this);
         this.handleSort = this.handleSort.bind(this);
         this.handleFilterChange = this.handleFilterChange.bind(this);
+        this.preProcessData = this.preProcessData.bind(this);
 
     }
 
     buildReportQuery(filters, listFilters) {
         let {currentSummit} = this.props;
-        let {speakerFields} = this.state;
+        let {showFields} = this.state;
         listFilters.summitId = currentSummit.id;
 
         let query = new Query("speakers", listFilters);
-        let speakerData = [];
+        let reportData = ["id", "title", "fullName"];
 
-        const attendanceFields = speakerFields.filter(f => ["phoneNumber","registered","checkedIn","confirmed"].includes(f));
-        if (attendanceFields.length > 0) {
-            let attendances = new Query("attendances", {summit_Id: currentSummit.id});
-            attendances.find(attendanceFields);
-            speakerData.push({"attendances": attendances})
+
+        if (showFields.includes('member_id')) {
+            let member = new Query("member");
+            member.find(["id"]);
+            reportData.push({"member": member})
         }
 
-        if (speakerFields.includes("registrationEmail")) {
-            let registration = new Query("registration");
-            registration.find(["id","email"]);
-            speakerData.push({"registration": registration})
-        }
-
-        if (speakerFields.includes("promoCode")) {
-            let promoCodes = new Query("promoCodes", {summit_Id: currentSummit.id});
+        let promoCodesFields = ['promoCodes_code', 'promoCodes_type'];
+        if (showFields.filter(f => promoCodesFields.includes(f)).length > 0) {
+            let promoCodes = new Query("promoCodes", {summit_Id:currentSummit.id});
             promoCodes.find(["code", "type"]);
-            speakerData.push({"promoCodes": promoCodes})
+            reportData.push({"promoCodes": promoCodes})
         }
 
-        let speakerF = speakerFields.filter(f => ["id","firstName","lastName"].includes(f));
+        let attendancesFields = ['attendances_confirmed', 'attendances_registered', 'attendances_checkedIn', 'attendances_phoneNumber'];
+        if (showFields.filter(f => attendancesFields.includes(f)).length > 0) {
+            let attendances = new Query("attendances", {summit_Id:currentSummit.id});
+            attendances.find(["confirmed", "registered", "checkedIn", "phoneNumber"]);
+            reportData.push({"attendances": attendances})
+        }
+
+        if (showFields.includes("presentationTitles")) {
+            let presentationTitles = new Query("presentationTitles", {summitId: currentSummit.id});
+            reportData.push(`presentationTitles (summitId:${currentSummit.id})`)
+        }
+
+        let allSimpleFields = fieldNames.filter(f => f.simple).map(f => f.key);
+        let simpleFields = showFields.filter(f => allSimpleFields.includes(f));
         let results = new Query("results", filters);
-        results.find([...speakerData, ...speakerF]);
+        results.find([...reportData, ...simpleFields]);
 
         query.find([{"results": results}, "totalCount"]);
 
@@ -71,7 +101,7 @@ class SmartSpeakerReport extends React.Component {
     }
 
     handleFilterChange(value) {
-        this.setState({speakerFields: value.map(v => v.value)});
+        this.setState({showFields: value.map(v => v.value)});
     }
 
     handleSort(index, key, dir, func) {
@@ -86,101 +116,82 @@ class SmartSpeakerReport extends React.Component {
 
     }
 
-    getTrueFalseIcon(value) {
-        return value ? '<div class="text-center"><i class="fa fa-times" aria-hidden="true"></i></div>' :
-            '<div class="text-center"><i class="fa fa-check" aria-hidden="true"></i></div>';
+    getName() {
+        return 'Speaker Report';
+    }
+
+    preProcessData(data, extraData, forExport=false) {
+        let {showFields} = this.state;
+
+        let flatData = flattenData(data);
+
+        let columns = [
+            { columnKey: 'id', value: 'Id' },
+            { columnKey: 'fullName', value: 'Speaker' }
+        ];
+
+
+        let showColumns = fieldNames
+            .filter(f => showFields.includes(f.key) )
+            .map( f2 => ({columnKey: f2.key, value: f2.label, sortable: f2.sortable}));
+
+
+        columns = [...columns, ...showColumns];
+
+
+        return {reportData: flatData, tableColumns: columns};
     }
 
     render() {
-        let {data, totalCount, onSort} = this.props;
-        let {speakerFields} = this.state;
+        let {data, totalCount, extraStat, onSort, sortKey, sortDir} = this.props;
+        let {showFields} = this.state;
+        let storedDataName = this.props.name;
 
-        let report_columns = [
-            { columnKey: 'id', value: 'Id' },
-            { columnKey: 'title', value: 'Presentation' },
-            { columnKey: 'published', value: 'Published' },
-            { columnKey: 'track', value: 'Track', sortable: true },
-            { columnKey: 'start_date', value: 'Start Date' },
-            { columnKey: 'location', value: 'Location' },
-            { columnKey: 'speaker_id', value: 'Speaker Id' },
-            { columnKey: 'member_id', value: 'Member Id' },
-            { columnKey: 'speaker', value: 'Speaker' },
-            { columnKey: 'email', value: 'Email' },
-            { columnKey: 'phone', value: 'Phone' },
-            { columnKey: 'code', value: 'Promo Code' },
-            { columnKey: 'code_type', value: 'Code Type' },
-            { columnKey: 'confirmed', value: 'Confirmed' },
-            { columnKey: 'registered', value: 'Registered' },
-            { columnKey: 'checked_in', value: 'Checked In' },
-        ];
+        if (!data || storedDataName != this.getName()) return (<div></div>)
 
-        let report_options = { actions: {} }
+        let report_options = {
+            sortCol: sortKey,
+            sortDir: sortDir,
+            actions: {}
+        };
 
-        let reportData = data.map(it => {
+        let {reportData, tableColumns} = this.preProcessData(data, null);
 
-            let confirmed = this.getTrueFalseIcon(it.speakers_attendances_confirmed) || 'N/A';
-            let registered = this.getTrueFalseIcon(it.speakers_attendances_registered) || 'N/A';
-            let checkedIn = this.getTrueFalseIcon(it.speakers_attendances_checkedIn) || 'N/A';
-
-            return ({
-                id: it.id,
-                title: it.title,
-                published: it.published,
-                track: it.category_title,
-                start_date: it.startDate,
-                location: it.location_name,
-                speaker_id: it.speakers_id,
-                member_id: (it.speakers_member_id || 'N/A'),
-                speaker: it.speakers_firstName + ' ' + it.speakers_lastName,
-                email: (it.speakers_member_email || 'N/A'),
-                phone: (it.speakers_attendances_phoneNumber || 'N/A'),
-                code: (it.speakers_promoCodes_code || 'N/A'),
-                code_type: (it.speakers_promoCodes_type || 'N/A'),
-                confirmed: confirmed,
-                registered: registered,
-                checked_in: checkedIn,
-            });
-        });
-
-        let speakerFieldOptions = [
-            {label: 'Speaker Id', value: 'id'},
-            {label: 'Member Id', value: 'memberId'},
-            {label: 'First Name', value: 'firstName'},
-            {label: 'Last Name', value: 'lastName'},
-            {label: 'Email', value: 'email'},
-            {label: 'Phone', value: 'phoneNumber'},
-            {label: 'Company', value: 'company'},
-            {label: 'Registered', value: 'registered'},
-            {label: 'Checked In', value: 'checkedIn'},
-            {label: 'Confirmed', value: 'confirmed'},
-            {label: 'PromoCode Type', value: 'promoCodeType'},
-            {label: 'PromoCode Code', value: 'promoCodeCode'},
-            {label: 'Reg Email', value: 'registrationEmail'},
-            {label: 'Presentations', value: 'presentations'},
-
-        ];
-
+        let showFieldOptions = fieldNames.map( f => ({label: f.label, value: f.key}));
+        let showFieldSelection = fieldNames
+            .filter(f => showFields.includes(f.key) )
+            .map( f2 => ({label: f2.label, value: f2.key}));
 
         return (
             <div>
                 <div className="report-filters">
-                    <Select
-                        name="fieldsDropDown"
-                        id="speaker_fields"
-                        placeholder={T.translate("reports.placeholders.select_fields")}
-                        options={speakerFieldOptions}
-                        onChange={this.handleFilterChange}
-                        isMulti
-                    />
-                    <button onClick={this.props.onReload}> Go </button>
+                    <div className="row">
+                        <div className="col-md-4">
+                            <label>Select Data</label>
+                            <Select
+                                name="fieldsDropDown"
+                                value={showFieldSelection}
+                                id="show_fields"
+                                placeholder={T.translate("reports.placeholders.select_fields")}
+                                options={showFieldOptions}
+                                onChange={this.handleFilterChange}
+                                isMulti
+                            />
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-md-12">
+                            <button className="btn btn-primary pull-right" onClick={this.props.onReload}> Go </button>
+                        </div>
+                    </div>
                 </div>
                 <div className="panel panel-default">
-                    <div className="panel-heading">Presentations ({totalCount})</div>
+                    <div className="panel-heading">Speakers ({totalCount})</div>
                     <div className="table-responsive">
                         <Table
                             options={report_options}
                             data={reportData}
-                            columns={report_columns}
+                            columns={tableColumns}
                             onSort={this.handleSort}
                         />
                     </div>
@@ -191,4 +202,4 @@ class SmartSpeakerReport extends React.Component {
 }
 
 
-export default wrapReport(SmartSpeakerReport, {reportName, pagination: true});
+export default wrapReport(SmartSpeakerReport, {pagination: true, filters:['track', 'attendance', 'media']});

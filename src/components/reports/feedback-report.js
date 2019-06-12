@@ -243,7 +243,7 @@ class FeedbackReport extends React.Component {
             sortCol: sortKey,
             sortDir: sortDir,
             actions: {}
-        }
+        };
 
         return (
             <div>

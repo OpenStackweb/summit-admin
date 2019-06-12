@@ -124,7 +124,7 @@ class RoomReport extends React.Component {
             sortCol: sortKey,
             sortDir: sortDir,
             actions: {}
-        }
+        };
 
         let {reportData, tableColumns} = this.preProcessData(data, null);
         let groupedData = groupBy(reportData ,'date');

@@ -26,6 +26,12 @@ class FeedbackGroupReport extends React.Component {
     constructor(props) {
         super(props);
 
+        let reportName = props.location.state ? props.location.state.name : `${props.match.params.group} ${props.match.params.group_id}`;
+
+        this.state = {
+            reportName: reportName
+        };
+
         this.buildReportQuery = this.buildReportQuery.bind(this);
         this.handleSort = this.handleSort.bind(this);
         this.preProcessData = this.preProcessData.bind(this);
@@ -82,8 +88,7 @@ class FeedbackGroupReport extends React.Component {
     }
 
     getName() {
-        let {location} = this.props;
-        return `${location.state.name}`;
+        return this.state.reportName;
     }
 
 
@@ -114,6 +119,7 @@ class FeedbackGroupReport extends React.Component {
 
     render() {
         let {data, extraData, totalCount, extraStat, sortKey, sortDir, location} = this.props;
+        let {reportName} = this.state;
         let storedDataName = this.props.name;
 
         if (!data || storedDataName != this.getName()) return (<div></div>)
@@ -126,13 +132,13 @@ class FeedbackGroupReport extends React.Component {
             sortCol: sortKey,
             sortDir: sortDir,
             actions: {}
-        }
+        };
 
         return (
             <div>
                 <div className="panel panel-default">
                     <div className="panel-heading">
-                        {location.state.name} &nbsp;-&nbsp;
+                        {reportName} &nbsp;-&nbsp;
                         <StarRatings rating={avgRate} starRatedColor="gold" starDimension="20px" starSpacing="3px"
                                      isSelectable={false}/>
                         &nbsp; of {totalCount} feedbacks

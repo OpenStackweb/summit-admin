@@ -66,12 +66,6 @@ class SmartPresentationReport extends React.Component {
         let reportData = ["id", "title"];
 
 
-        if (showFields.includes("ssss")) {
-            let category = new Query("category", {summit_Id: currentSummit.id});
-            promoCodes.find(["code", "type"]);
-            reportData.push({"promoCodes": promoCodes})
-        }
-
         if (showFields.includes("type_name")) {
             let type = new Query("type");
             type.find(["id", "name"]);
@@ -113,11 +107,6 @@ class SmartPresentationReport extends React.Component {
 
     }
 
-    getTrueFalseIcon(value) {
-        return value ? '<div class="text-center"><i class="fa fa-times" aria-hidden="true"></i></div>' :
-            '<div class="text-center"><i class="fa fa-check" aria-hidden="true"></i></div>';
-    }
-
     getName() {
         return 'Presentation Report';
     }
@@ -151,7 +140,11 @@ class SmartPresentationReport extends React.Component {
 
         if (!data || storedDataName != this.getName()) return (<div></div>)
 
-        let report_options = { actions: {} }
+        let report_options = {
+            sortCol: sortKey,
+            sortDir: sortDir,
+            actions: {}
+        };
 
         let {reportData, tableColumns} = this.preProcessData(data, null);
 

@@ -60,22 +60,14 @@ class TagReport extends React.Component {
 
         let columns = [
             { columnKey: 'tag', value: 'Tag', sortable: true },
-            { columnKey: 'count', value: 'Count' },
+            { columnKey: 'count', value: 'Count', sortable: true },
         ];
 
         return {reportData: processedData, tableColumns: columns};
     }
 
     handleSort(index, key, dir, func) {
-        let sortKey = null;
-        switch(key) {
-            case 'track':
-                sortKey = 'category__title';
-                break;
-        }
-
-        this.props.onSort(index, sortKey, dir, func);
-
+        this.props.onSort(index, key, dir, func);
     }
 
     getName() {
@@ -83,12 +75,16 @@ class TagReport extends React.Component {
     }
 
     render() {
-        let {data, extraData, totalCount} = this.props;
+        let {data, extraData, totalCount, sortKey, sortDir} = this.props;
         let storedDataName = this.props.name;
 
         if (!data || storedDataName != this.getName()) return (<div></div>)
 
-        let report_options = { actions: {} }
+        let report_options = {
+            sortCol: sortKey,
+            sortDir: sortDir,
+            actions: {}
+        };
 
         let {reportData, tableColumns} = this.preProcessData(data, extraData);
 

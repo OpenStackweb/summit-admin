@@ -137,11 +137,12 @@ const normalizeEntity = (entity) => {
 
 export const flattenData = (data) => {
     let flatData = [];
+    let rawData = JSON.parse(JSON.stringify(data));
 
-    for (var idx=0; idx < data.length; idx++) {
+    for (var idx=0; idx < rawData.length; idx++) {
         let idxRef = {idx};
         let flatItem = {};
-        flattenItem(flatItem, data[idx], idxRef);
+        flattenItem(flatItem, rawData[idx], idxRef);
         idx = idxRef.idx;
         flatData.push(flatItem);
     }

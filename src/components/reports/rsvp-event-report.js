@@ -22,7 +22,11 @@ class RsvpEventReport extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { };
+        let reportName = props.location.state ? props.location.state.name : `Event ${props.match.params.event_id}`;
+
+        this.state = {
+            reportName: reportName
+        };
 
         this.buildReportQuery = this.buildReportQuery.bind(this);
         this.handleSort = this.handleSort.bind(this);
@@ -118,17 +122,20 @@ class RsvpEventReport extends React.Component {
 
 
     getName() {
-        let {location} = this.props;
-        return `${location.state.name}`;
+        return this.state.reportName;
     }
 
     render() {
-        let {data, extraData, totalCount} = this.props;
+        let {data, extraData, totalCount, sortKey, sortDir} = this.props;
         let storedDataName = this.props.name;
 
         if (!extraData || !data || storedDataName != this.getName()) return (<div></div>)
 
-        let report_options = { actions: {} };
+        let report_options = {
+            sortCol: sortKey,
+            sortDir: sortDir,
+            actions: {}
+        };
 
         let {reportData, tableColumns} = this.preProcessData(data, extraData);
 
