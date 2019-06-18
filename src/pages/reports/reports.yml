@@ -1,0 +1,66 @@
+-
+  name: 'presentation_company_report'
+  query: '{
+            allSpeakers(id: 12822) {
+              edges {
+                node {
+                  id
+                  firstName
+                  lastName
+                  registration {
+                    id
+                    email
+                  }
+                  member {
+                    id
+                    firstName
+                    lastName
+                    email
+                    affiliations(current: true) {
+                      edges {
+                        node {
+                          id
+                          organization {
+                            name
+                          }
+                        }
+                      }
+                    }
+                  }
+                  presentations(summit_Id: 25) {
+                    edges {
+                      node {
+                        id
+                        title
+                        abstract
+                        category {
+                          id
+                          title
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }'
+
+-
+  name: 'tag_report'
+  query: '{
+            allTags(hasEventsFromSummit:25) {
+              edges {
+                node {
+                  id
+                  tag
+                  events (summit_Id:25, published:true){
+                    edges {
+                      node {
+                        id
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }'

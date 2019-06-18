@@ -62,7 +62,8 @@ const mapStateToProps = ({ currentSummitState, loggedUserState }) => ({
 
 export default Restrict(connect(
     mapStateToProps,
-    {}
+    {
+    }
 )(PrimaryLayout), 'general');
 
 

@@ -17,6 +17,10 @@ class FragmentParser {
             if(param.length !==  2) continue;
             let val = param[1].trim();
             if(val === '') continue;
+
+            if (val === 'true' || val === 'false')
+                param[1] = val == 'true';
+
             res[param[0]] = param[1];
         }
         return res;

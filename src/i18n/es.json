@@ -89,7 +89,8 @@
     "ticket_type_list"        : "Ticket Types",
     "push_notifications"      : "Push Notifications",
     "room_occupancy"          : "Room Occupancy",
-    "tag_groups"              : "Tag Groups"
+    "tag_groups"              : "Tag Groups",
+    "reports"                 : "Reports"
   },
   "schedule": {
     "schedule"                              : "Schedule",
@@ -830,5 +831,25 @@
     "copy_tags"         : "Copy Tags",
     "select_category"   : "Select Category",
     "tags_copied"       : "All tags copied successfully"
+  },
+  "reports": {
+    "reports"                       : "Reports",
+    "presentation_report"           : "Presentation Report",
+    "presentation_company_report"   : "Presentations by Company",
+    "presentation_track_report"     : "Presentations by Track",
+    "track_questions_report"        : "Track Questions Report",
+    "feedback_report"               : "Feedback Report",
+    "feedback_group_report"         : "Feedback Report",
+    "rsvp_report"                   : "RSVP Report",
+    "rsvp_event_report"             : "RSVP Event Report",
+    "room_report"                   : "Room Report",
+    "presentation_video_report"     : "Video Output List",
+    "speaker_report"                : "Speaker Report",
+    "tag_report"                    : "Tag Report",
+    "export"                        : "Export",
+    "placeholders": {
+      "search"       : "Search by Title, Abstract, Speaker LastName, Member Email ",
+      "select_fields" : "Select data to display"
+    }
   }
 }

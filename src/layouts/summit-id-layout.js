@@ -35,6 +35,7 @@ import TicketTypeLayout from './ticket-type-layout'
 import PushNotificationLayout from './push-notification-layout'
 import RoomOccupancyLayout from './room-occupancy-layout'
 import TagGroupLayout from './tag-group-layout'
+import ReportsLayout from './reports-layout'
 import NoMatchPage from "../pages/no-match-page";
 
 
@@ -90,6 +91,7 @@ class SummitIdLayout extends React.Component {
                     <Route path={`${match.url}/push-notifications`} component={PushNotificationLayout}/>
                     <Route path={`${match.url}/room-occupancy`} component={RoomOccupancyLayout}/>
                     <Route path={`${match.url}/tag-groups`} component={TagGroupLayout}/>
+                    <Route path={`${match.url}/reports`} component={ReportsLayout}/>
                     <Route path={`${match.url}/selection-plans`} render={
                         props => (
                             <div>
