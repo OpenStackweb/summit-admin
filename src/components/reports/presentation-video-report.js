@@ -28,15 +28,20 @@ class PresentationVideoReport extends React.Component {
         this.state = { };
 
         this.buildReportQuery = this.buildReportQuery.bind(this);
-        this.handleSort = this.handleSort.bind(this);
 
     }
 
     buildReportQuery(filters, listFilters) {
-        let {currentSummit} = this.props;
+        let {currentSummit, sortKey, sortDir} = this.props;
 
         listFilters.summitId = currentSummit.id;
         listFilters.hasVideo = true;
+
+        if (sortKey) {
+            let querySortKey = this.translateSortKey(sortKey);
+            let order = (sortDir == 1) ? '' : '-';
+            filters.ordering = order + '' + querySortKey;
+        }
 
         let query = new Query("presentations", listFilters);
         let venue = new Query("venue");
@@ -84,16 +89,10 @@ class PresentationVideoReport extends React.Component {
         return {reportData: processedData, tableColumns: columns};
     }
 
-    handleSort(index, key, dir, func) {
-        let sortKey = null;
-        switch(key) {
-            case 'track':
-                sortKey = 'category__title';
-                break;
-        }
+    translateSortKey(key) {
+        let sortKey = key;
 
-        this.props.onSort(index, sortKey, dir, func);
-
+        return sortKey;
     }
 
     getName() {
@@ -101,12 +100,16 @@ class PresentationVideoReport extends React.Component {
     }
 
     render() {
-        let {data, extraData, totalCount} = this.props;
+        let {data, extraData, totalCount, sortKey, sortDir} = this.props;
         let storedDataName = this.props.name;
 
         if (!data || storedDataName != this.getName()) return (<div></div>)
 
-        let report_options = { actions: {} }
+        let report_options = {
+            sortCol: sortKey,
+            sortDir: sortDir,
+            actions: {}
+        };
 
         let {reportData, tableColumns} = this.preProcessData(data, extraData);
 
@@ -120,7 +123,7 @@ class PresentationVideoReport extends React.Component {
                             options={report_options}
                             data={reportData}
                             columns={tableColumns}
-                            onSort={this.handleSort}
+                            onSort={this.props.onSort}
                         />
                     </div>
                 </div>

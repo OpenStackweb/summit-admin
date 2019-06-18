@@ -51,20 +51,24 @@ class SmartPresentationReport extends React.Component {
         };
 
         this.buildReportQuery = this.buildReportQuery.bind(this);
-        this.handleSort = this.handleSort.bind(this);
         this.handleFilterChange = this.handleFilterChange.bind(this);
         this.preProcessData = this.preProcessData.bind(this);
 
     }
 
     buildReportQuery(filters, listFilters) {
-        let {currentSummit} = this.props;
+        let {currentSummit, sortKey, sortDir} = this.props;
         let {showFields} = this.state;
         listFilters.summitId = currentSummit.id;
 
         let query = new Query("presentations", listFilters);
         let reportData = ["id", "title"];
 
+        if (sortKey) {
+            let querySortKey = this.translateSortKey(sortKey);
+            let order = (sortDir == 1) ? '' : '-';
+            filters.ordering = order + '' + querySortKey;
+        }
 
         if (showFields.includes("type_name")) {
             let type = new Query("type");
@@ -95,16 +99,16 @@ class SmartPresentationReport extends React.Component {
         this.setState({showFields: value.map(v => v.value)});
     }
 
-    handleSort(index, key, dir, func) {
-        let sortKey = null;
+    translateSortKey(key) {
+        let sortKey = key;
+
         switch(key) {
-            case 'track':
+            case 'category_title':
                 sortKey = 'category__title';
                 break;
         }
 
-        this.props.onSort(index, sortKey, dir, func);
-
+        return sortKey;
     }
 
     getName() {
@@ -134,9 +138,12 @@ class SmartPresentationReport extends React.Component {
     }
 
     render() {
-        let {data, totalCount, extraStat, onSort, sortKey, sortDir} = this.props;
+        let {data, totalCount, extraStat, sortKey, sortDir} = this.props;
         let {showFields} = this.state;
         let storedDataName = this.props.name;
+
+        console.log(storedDataName+' - '+this.getName());
+        console.log(data);
 
         if (!data || storedDataName != this.getName()) return (<div></div>)
 
@@ -197,7 +204,7 @@ class SmartPresentationReport extends React.Component {
                             options={report_options}
                             data={reportData}
                             columns={tableColumns}
-                            onSort={this.handleSort}
+                            onSort={this.props.onSort}
                         />
                     </div>
                 </div>

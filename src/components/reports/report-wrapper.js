@@ -66,11 +66,6 @@ const wrapReport = (ReportComponent, specs) => {
                 }
             }
 
-            if (sort) {
-                let order = (sortdir == 1) ? '' : '-';
-                queryFilters.ordering = order + '' + sort;
-            }
-
             if (search) {
                 listFilters.search = search;
             }
@@ -245,7 +240,7 @@ const wrapReport = (ReportComponent, specs) => {
                         <ReportComponent
                             ref="childCmp"
                             sortKey={sort}
-                            sortDir={sortdir}
+                            sortDir={parseInt(sortdir)}
                             onSort={this.handleSort}
                             onReload={this.handleReload}
                             data={this.props.data}

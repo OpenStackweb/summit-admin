@@ -26,15 +26,20 @@ class TagReport extends React.Component {
         this.state = { };
 
         this.buildReportQuery = this.buildReportQuery.bind(this);
-        this.handleSort = this.handleSort.bind(this);
 
     }
 
     buildReportQuery(filters, listFilters) {
-        let {currentSummit} = this.props;
+        let {currentSummit, sortKey, sortDir} = this.props;
 
         listFilters.summitId = currentSummit.id;
         listFilters.published = true;
+
+        if (sortKey) {
+            let querySortKey = this.translateSortKey(sortKey);
+            let order = (sortDir == 1) ? '' : '-';
+            filters.ordering = order + '' + querySortKey;
+        }
 
         let query = new Query("tags", listFilters);
 
@@ -66,8 +71,10 @@ class TagReport extends React.Component {
         return {reportData: processedData, tableColumns: columns};
     }
 
-    handleSort(index, key, dir, func) {
-        this.props.onSort(index, key, dir, func);
+    translateSortKey(key) {
+        let sortKey = key;
+
+        return sortKey;
     }
 
     getName() {
@@ -98,7 +105,7 @@ class TagReport extends React.Component {
                             options={report_options}
                             data={reportData}
                             columns={tableColumns}
-                            onSort={this.handleSort}
+                            onSort={this.props.onSort}
                         />
                     </div>
                 </div>

@@ -50,20 +50,24 @@ class SmartSpeakerReport extends React.Component {
         };
 
         this.buildReportQuery = this.buildReportQuery.bind(this);
-        this.handleSort = this.handleSort.bind(this);
         this.handleFilterChange = this.handleFilterChange.bind(this);
         this.preProcessData = this.preProcessData.bind(this);
 
     }
 
     buildReportQuery(filters, listFilters) {
-        let {currentSummit} = this.props;
+        let {currentSummit, sortKey, sortDir} = this.props;
         let {showFields} = this.state;
         listFilters.summitId = currentSummit.id;
 
         let query = new Query("speakers", listFilters);
         let reportData = ["id", "title", "fullName"];
 
+        if (sortKey) {
+            let querySortKey = this.translateSortKey(sortKey);
+            let order = (sortDir == 1) ? '' : '-';
+            filters.ordering = order + '' + querySortKey;
+        }
 
         if (showFields.includes('member_id')) {
             let member = new Query("member");
@@ -104,16 +108,10 @@ class SmartSpeakerReport extends React.Component {
         this.setState({showFields: value.map(v => v.value)});
     }
 
-    handleSort(index, key, dir, func) {
-        let sortKey = null;
-        switch(key) {
-            case 'track':
-                sortKey = 'category__title';
-                break;
-        }
+    translateSortKey(key) {
+        let sortKey = key;
 
-        this.props.onSort(index, sortKey, dir, func);
-
+        return sortKey;
     }
 
     getName() {
@@ -143,7 +141,7 @@ class SmartSpeakerReport extends React.Component {
     }
 
     render() {
-        let {data, totalCount, extraStat, onSort, sortKey, sortDir} = this.props;
+        let {data, totalCount, sortKey, sortDir} = this.props;
         let {showFields} = this.state;
         let storedDataName = this.props.name;
 
@@ -192,7 +190,7 @@ class SmartSpeakerReport extends React.Component {
                             options={report_options}
                             data={reportData}
                             columns={tableColumns}
-                            onSort={this.handleSort}
+                            onSort={this.props.onSort}
                         />
                     </div>
                 </div>

@@ -31,7 +31,6 @@ class FeedbackReport extends React.Component {
         };
 
         this.buildReportQuery = this.buildReportQuery.bind(this);
-        this.handleSort = this.handleSort.bind(this);
         this.handleFilterChange = this.handleFilterChange.bind(this);
         this.preProcessData = this.preProcessData.bind(this);
         this.getName = this.getName.bind(this);
@@ -39,11 +38,16 @@ class FeedbackReport extends React.Component {
     }
 
     buildReportQuery(filters, listFilters) {
-        let {currentSummit} = this.props;
+        let {currentSummit, sortKey, sortDir} = this.props;
         let {groupBy} = this.state
         listFilters.summitId = currentSummit.id;
-        filters.ordering = filters.ordering ? filters.ordering : 'rate';
         let query = null;
+
+        if (sortKey) {
+            let querySortKey = this.translateSortKey(sortKey);
+            let order = (sortDir == 1) ? '' : '-';
+            filters.ordering = order + '' + querySortKey;
+        }
 
         switch (groupBy) {
             case 'feedback': {
@@ -100,15 +104,18 @@ class FeedbackReport extends React.Component {
         return query;
     }
 
-    handleSort(index, key, dir, func) {
-        let sortKey = null;
+    translateSortKey(key) {
+        let sortKey = key;
         switch(key) {
-            case 'rate':
-                sortKey = 'rate';
+            case 'event':
+                sortKey = 'title';
+                break;
+            case 'room':
+                sortKey = 'location__venueroom__name';
                 break;
         }
 
-        this.props.onSort(index, sortKey, dir, func);
+        return sortKey;
     }
 
     handleFilterChange(value) {
@@ -276,7 +283,7 @@ class FeedbackReport extends React.Component {
                             options={table_options}
                             data={reportData}
                             columns={tableColumns}
-                            onSort={this.handleSort}
+                            onSort={this.props.onSort}
                         />
                     </div>
                 </div>

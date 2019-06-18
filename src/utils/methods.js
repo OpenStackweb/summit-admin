@@ -11,11 +11,25 @@
  * limitations under the License.
  **/
 
-export const groupBy = function(array, prop) {
-    return array.reduce(function(groups, item) {
+
+export const groupByDate = function(array, prop, sortBy) {
+    let grouped_unordered = array.reduce(function(groups, item) {
         var val = item[prop];
         groups[val] = groups[val] || [];
         groups[val].push(item);
         return groups;
     }, {});
+
+    const grouped_ordered = {};
+    Object.keys(grouped_unordered)
+        .sort( (a,b) => {
+            let compare_a = grouped_unordered[a][0][sortBy];
+            let compare_b = grouped_unordered[b][0][sortBy];
+            return (compare_a > compare_b ? 1 : (compare_a < compare_b ? -1 : 0));
+        } )
+        .forEach(function(key) {
+            grouped_ordered[key] = grouped_unordered[key];
+        });
+
+    return grouped_ordered;
 };

@@ -33,14 +33,13 @@ class FeedbackGroupReport extends React.Component {
         };
 
         this.buildReportQuery = this.buildReportQuery.bind(this);
-        this.handleSort = this.handleSort.bind(this);
         this.preProcessData = this.preProcessData.bind(this);
         this.getName = this.getName.bind(this);
 
     }
 
     buildReportQuery(filters, listFilters) {
-        let {currentSummit, match} = this.props;
+        let {currentSummit, match, sortKey, sortDir} = this.props;
         listFilters.summitId = currentSummit.id;
         filters.ordering = filters.ordering ? filters.ordering : 'rate';
         let {group, group_id} = match.params;
@@ -61,6 +60,12 @@ class FeedbackGroupReport extends React.Component {
             break;
         }
 
+        if (sortKey) {
+            let querySortKey = this.translateSortKey(sortKey);
+            let order = (sortDir == 1) ? '' : '-';
+            filters.ordering = order + '' + querySortKey;
+        }
+
         query = new Query("feedbacks", listFilters);
         let presentation = new Query("presentation");
         presentation.find(["id", "speakerNames"]);
@@ -76,15 +81,10 @@ class FeedbackGroupReport extends React.Component {
         return query;
     }
 
-    handleSort(index, key, dir, func) {
-        let sortKey = null;
-        switch(key) {
-            case 'rate':
-                sortKey = 'rate';
-                break;
-        }
+    translateSortKey(key) {
+        let sortKey = key;
 
-        this.props.onSort(index, sortKey, dir, func);
+        return sortKey;
     }
 
     getName() {
@@ -149,7 +149,7 @@ class FeedbackGroupReport extends React.Component {
                             options={table_options}
                             data={reportData}
                             columns={tableColumns}
-                            onSort={this.handleSort}
+                            onSort={this.props.onSort}
                         />
                     </div>
                 </div>

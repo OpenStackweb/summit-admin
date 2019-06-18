@@ -29,15 +29,21 @@ class RsvpEventReport extends React.Component {
         };
 
         this.buildReportQuery = this.buildReportQuery.bind(this);
-        this.handleSort = this.handleSort.bind(this);
         this.getName = this.getName.bind(this);
 
     }
 
     buildReportQuery(filters, listFilters) {
+        let {currentSummit, sortKey, sortDir} = this.props;
         let event_id = this.props.match.params.event_id;
 
         listFilters.eventId = parseInt(event_id);
+
+        if (sortKey) {
+            let querySortKey = this.translateSortKey(sortKey);
+            let order = (sortDir == 1) ? '' : '-';
+            filters.ordering = order + '' + querySortKey;
+        }
 
         let query = new Query("rsvps", listFilters);
         let question = new Query("question");
@@ -64,16 +70,11 @@ class RsvpEventReport extends React.Component {
         return query + ', extraData: ' + query2;
     }
 
-    handleSort(index, key, dir, func) {
-        let sortKey = null;
-        switch(key) {
-            case 'track':
-                sortKey = 'category__title';
-                break;
-        }
+    translateSortKey(key) {
+        let sortKey = key;
 
-        this.props.onSort(index, sortKey, dir, func);
 
+        return sortKey;
     }
 
     preProcessData(data, extraData, forExport=false) {
@@ -147,7 +148,7 @@ class RsvpEventReport extends React.Component {
                         options={report_options}
                         data={reportData}
                         columns={tableColumns}
-                        onSort={this.handleSort}
+                        onSort={this.props.onSort}
                     />
                 </div>
             </div>

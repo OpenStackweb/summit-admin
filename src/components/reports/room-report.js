@@ -17,7 +17,7 @@ import T from 'i18n-react/dist/i18n-react'
 import { Table } from 'openstack-uicore-foundation/lib/components'
 const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
-import {groupBy} from '../../utils/methods'
+import {groupByDate} from '../../utils/methods'
 import {flattenData} from "../../actions/report-actions";
 
 class RoomReport extends React.Component {
@@ -25,16 +25,21 @@ class RoomReport extends React.Component {
         super(props);
 
         this.buildReportQuery = this.buildReportQuery.bind(this);
-        this.handleSort = this.handleSort.bind(this);
         this.preProcessData = this.preProcessData.bind(this);
 
     }
 
     buildReportQuery(filters, listFilters) {
-        let {currentSummit} = this.props;
+        let {currentSummit, sortKey, sortDir} = this.props;
 
         listFilters.published = true;
         listFilters.summitId = currentSummit.id;
+
+        if (sortKey) {
+            let querySortKey = this.translateSortKey(sortKey);
+            let order = (sortDir == 1) ? '' : '-';
+            filters.ordering = order + '' + querySortKey;
+        }
 
         let query = new Query("presentations", listFilters);
         let category = new Query("category");
@@ -53,16 +58,18 @@ class RoomReport extends React.Component {
         return query;
     }
 
-    handleSort(index, key, dir, func) {
+    translateSortKey(key) {
         let sortKey = key;
         switch(key) {
-            case 'track':
-                sortKey = 'category__title';
+            case 'event':
+                sortKey = 'title';
+                break;
+            case 'room':
+                sortKey = 'location__venueroom__name';
                 break;
         }
 
-        this.props.onSort(index, sortKey, dir, func);
-
+        return sortKey;
     }
 
     getName() {
@@ -78,7 +85,7 @@ class RoomReport extends React.Component {
             { columnKey: 'time', value: 'Time' },
             { columnKey: 'code', value: 'Code' },
             { columnKey: 'event', value: 'Event', sortable: true },
-            { columnKey: 'room', value: 'Room' },
+            { columnKey: 'room', value: 'Room', sortable: true },
             { columnKey: 'venue', value: 'Venue' },
             { columnKey: 'capacity', value: 'Capacity' },
             { columnKey: 'speakers', value: 'Speakers' },
@@ -90,6 +97,7 @@ class RoomReport extends React.Component {
         let processedData = flatData.map(it => {
 
             let date = moment(it.startDate).format('dddd Do');
+            let date_simple = moment(it.startDate).format('YYYY-M-D');
             let time = moment(it.startDate).format('h:mm a') + ' - ' + moment(it.endDate).format('h:mm a');
             let capacity = forExport ? it.location_venueroom_capacity : <div className="text-center">{it.location_venueroom_capacity + ''}</div>;
             let speakers = forExport ? it.speakerCount : <div className="text-center">{it.speakerCount + ''}</div>;
@@ -99,6 +107,7 @@ class RoomReport extends React.Component {
             return ({
                 id: it.id,
                 date: date,
+                date_simple: date_simple,
                 time: time,
                 code: it.category_code,
                 event: it.title,
@@ -118,7 +127,7 @@ class RoomReport extends React.Component {
         let {data, sortKey, sortDir, currentSummit} = this.props;
         let storedDataName = this.props.name;
 
-        if (!data || storedDataName != this.getName()) return (<div></div>)
+        if (!data || storedDataName != this.getName()) return (<div></div>);
 
         let report_options = {
             sortCol: sortKey,
@@ -127,7 +136,7 @@ class RoomReport extends React.Component {
         };
 
         let {reportData, tableColumns} = this.preProcessData(data, null);
-        let groupedData = groupBy(reportData ,'date');
+        let groupedData = groupByDate(reportData ,'date', 'date_simple');
 
         let tables = [];
 
@@ -140,7 +149,7 @@ class RoomReport extends React.Component {
                             options={report_options}
                             data={groupedData[key]}
                             columns={tableColumns}
-                            onSort={this.handleSort}
+                            onSort={this.props.onSort}
                         />
                     </div>
                 </div>

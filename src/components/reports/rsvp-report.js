@@ -26,7 +26,6 @@ class RsvpReport extends React.Component {
         this.state = { };
 
         this.buildReportQuery = this.buildReportQuery.bind(this);
-        this.handleSort = this.handleSort.bind(this);
 
     }
 
@@ -35,6 +34,7 @@ class RsvpReport extends React.Component {
 
         listFilters.isRsvp = true;
         listFilters.summitId = currentSummit.id;
+
 
         let query = new Query("presentations", listFilters);
 
@@ -61,40 +61,15 @@ class RsvpReport extends React.Component {
         return query;
     }
 
-    handleSort(index, key, dir, func) {
-        let sortKey = null;
-        switch(key) {
-            case 'track':
-                sortKey = 'category__title';
-                break;
-        }
-
-        this.props.onSort(index, sortKey, dir, func);
-
-    }
-
     getName() {
         return 'RSVP Report';
     }
 
     render() {
-        let {data, totalCount, onSort, sortKey, sortDir} = this.props;
+        let {data} = this.props;
         let storedDataName = this.props.name;
 
         if (!data || storedDataName != this.getName()) return (<div></div>)
-
-        let report_columns = [
-            { columnKey: 'id', value: 'Id' },
-            { columnKey: 'title', value: 'Presentation' },
-            { columnKey: 'start_date', value: 'Start Date' },
-            { columnKey: 'end_date', value: 'End Date' },
-        ];
-
-        let report_options = {
-            sortCol: sortKey,
-            sortDir: sortDir,
-            actions: {}
-        };
 
         let reportData = data.map(it => {
 
