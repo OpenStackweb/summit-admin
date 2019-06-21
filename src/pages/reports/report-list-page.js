@@ -28,9 +28,10 @@ class ReportListPage extends React.Component {
 
     }
 
-    handleClick(reportName, hash='', ev) {
+    handleClick(reportName, ev) {
         let {currentSummit, history} = this.props;
-        history.push(`/app/summits/${currentSummit.id}/reports/${reportName}#${hash}`);
+
+        history.push(`/app/summits/${currentSummit.id}/reports/${reportName}`);
     }
 
 
@@ -58,7 +59,7 @@ class ReportListPage extends React.Component {
                         </button>
                     </div>
                     <div className="col-md-6">
-                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'room_report', 'sort=room&sortdir=1')}>
+                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'room_report#sort=room&sortdir=1')}>
                             {T.translate(`reports.room_report`)}
                         </button>
                     </div>
