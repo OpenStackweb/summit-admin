@@ -8,6 +8,7 @@ import {exportReport, getReport} from "../../actions/report-actions";
 import T from "i18n-react/dist/i18n-react";
 import FragmentParser from "../../utils/fragmen-parser";
 import {TrackFilter, RoomFilter, PublishedFilter, StatusFilter, AttendanceFilter, MediaFilter} from '../filters'
+import ExportData from '../export'
 
 
 const wrapReport = (ReportComponent, specs) => {
@@ -105,10 +106,11 @@ const wrapReport = (ReportComponent, specs) => {
 
         handleExportReport(ev) {
             ev.preventDefault();
-
+            let grouped = specs.hasOwnProperty('grouped') ? true : false;
             let query = this.buildQuery(1, true);
             let name = this.refs.childCmp.getName();
-            this.props.exportReport(query, name, this.refs.childCmp.preProcessData);
+
+            this.props.exportReport(query, name, grouped, this.refs.childCmp.preProcessData);
         }
 
         handleGetReport(page) {
@@ -196,10 +198,11 @@ const wrapReport = (ReportComponent, specs) => {
         }
 
         render() {
-            let { match, currentPage, totalCount, perPage, currentSummit} = this.props;
+            let { match, currentPage, totalCount, perPage, currentSummit, exportData} = this.props;
             let {sort, sortdir, search, ...filters} = this.fragmentParser.getParams();
             let pageCount = Math.ceil(totalCount / perPage);
             let reportName = this.refs.childCmp ? this.refs.childCmp.getName() : 'report';
+            let grouped = specs.hasOwnProperty('grouped') ? true : false;
 
             return (
                 <div className="container large">
@@ -223,6 +226,10 @@ const wrapReport = (ReportComponent, specs) => {
                             <button className="btn btn-primary right-space" onClick={this.handleExportReport}>
                                 {T.translate("reports.export")}
                             </button>
+
+                            {exportData &&
+                                <ExportData reportName={reportName} data={exportData} grouped={grouped} />
+                            }
                         </div>
                     </div>
                     <hr/>

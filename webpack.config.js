@@ -148,7 +148,12 @@ const config = {
                 }
             }
         },
-    }
+    },
+    node: {fs: 'empty'},
+    externals: [
+        {'./cptable': 'var cptable'},
+        {'./jszip': 'jszip'}
+    ]
 };
 
 

@@ -15,6 +15,8 @@ import
 {
     RECEIVE_REPORT,
     REQUEST_REPORT,
+    RECEIVE_EXPORT_REPORT,
+    RESET_EXPORT_REPORT,
 } from '../../actions/report-actions';
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
@@ -28,7 +30,8 @@ const DEFAULT_STATE = {
     currentPage     : 1,
     perPage         : 25,
     totalCount      : 0,
-    extraStat       : null
+    extraStat       : null,
+    exportData      : null,
 };
 
 
@@ -47,7 +50,7 @@ const reportReducer = (state = DEFAULT_STATE, action) => {
         case REQUEST_REPORT: {
             let {name, page} = payload;
 
-            return {...DEFAULT_STATE, name: name, currentPage: page}
+            return {...DEFAULT_STATE, name: name, currentPage: page, exportData: null}
         }
         break;
         case RECEIVE_REPORT: {
@@ -57,6 +60,14 @@ const reportReducer = (state = DEFAULT_STATE, action) => {
             let extraStat = data.hasOwnProperty("extraStat") ? data.extraStat : null;
 
             return {...state, data: data.results, extraData: extraData, totalCount: data.totalCount, extraStat: extraStat };
+        }
+        break;
+        case RECEIVE_EXPORT_REPORT: {
+            return {...state, exportData: payload.reportData };
+        }
+        break;
+        case RESET_EXPORT_REPORT: {
+            return {...state, exportData: null };
         }
         break;
         default:

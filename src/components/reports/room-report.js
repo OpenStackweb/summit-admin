@@ -120,7 +120,9 @@ class RoomReport extends React.Component {
             });
         });
 
-        return {reportData: processedData, tableColumns: columns};
+        let groupedData = groupByDate(processedData ,'date', 'date_simple');
+
+        return {reportData: groupedData, tableColumns: columns};
     }
 
     render() {
@@ -136,18 +138,17 @@ class RoomReport extends React.Component {
         };
 
         let {reportData, tableColumns} = this.preProcessData(data, null);
-        let groupedData = groupByDate(reportData ,'date', 'date_simple');
 
         let tables = [];
 
-        for (var key in groupedData) {
+        for (var key in reportData) {
             tables.push(
                 <div className="panel panel-default" key={'section_'+key}>
                     <div className="panel-heading">{key}</div>
                     <div className="table-responsive">
                         <Table
                             options={report_options}
-                            data={groupedData[key]}
+                            data={reportData[key]}
                             columns={tableColumns}
                             onSort={this.props.onSort}
                         />
@@ -165,4 +166,4 @@ class RoomReport extends React.Component {
 }
 
 
-export default wrapReport(RoomReport, {pagination: false, filters:['track', 'room']});
+export default wrapReport(RoomReport, {pagination: false, filters:['track', 'room'], grouped: true});

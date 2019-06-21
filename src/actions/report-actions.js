@@ -33,6 +33,7 @@ export const REQUEST_REPORT         = 'REQUEST_REPORT';
 export const RECEIVE_REPORT         = 'RECEIVE_REPORT';
 export const REQUEST_EXPORT_REPORT  = 'REQUEST_EXPORT_REPORT';
 export const RECEIVE_EXPORT_REPORT  = 'RECEIVE_EXPORT_REPORT';
+export const RESET_EXPORT_REPORT    = 'RESET_EXPORT_REPORT';
 
 
 export const getReport = (query, reportName, page) => (dispatch, getState) => {
@@ -69,7 +70,7 @@ const jsonToCsv = (items) => {
     return csv;
 }
 
-export const exportReport = ( query, reportName, preProcessData=null ) => (dispatch, getState) => {
+export const exportReport = ( query, reportName, grouped, preProcessData=null ) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -83,7 +84,7 @@ export const exportReport = ( query, reportName, preProcessData=null ) => (dispa
 
     return getRequest(
         createAction(REQUEST_EXPORT_REPORT),
-        createAction(RECEIVE_EXPORT_REPORT),
+        createAction('DUMMY_ACTION'),
         `${window.REPORT_API_BASE_URL}/reports`,
         authErrorHandler
     )(params)(dispatch).then((payload) => {
@@ -99,22 +100,46 @@ export const exportReport = ( query, reportName, preProcessData=null ) => (dispa
             let labels = procData.tableColumns.map(col => col.value);
             let keys = procData.tableColumns.map(col => col.columnKey);
 
-            for (var item in procData.reportData) {
-                var newData = {};
+            // replace labels
+            if (grouped) {
+                for (var groupName in procData.reportData) {
+                    let newSheet = {name: groupName, data: []};
+                    let groupData = procData.reportData[groupName];
+                    for (var item in groupData) {
+                        var newData = {};
 
-                for (var a in labels) {
-                    newData[labels[a]] = procData.reportData[item][keys[a]];
+                        for (var a in labels) {
+                            newData[labels[a]] = groupData[item][keys[a]];
+                        }
+
+                        newSheet.data.push(newData);
+                    }
+
+                    reportData.push(newSheet);
                 }
 
-                reportData.push(newData);
+            } else {
+                for (var item in procData.reportData) {
+                    var newData = {};
+
+                    for (var a in labels) {
+                        newData[labels[a]] = procData.reportData[item][keys[a]];
+                    }
+
+                    reportData.push(newData);
+                }
+
+                reportData = [{name: 'Data', data: reportData}];
             }
 
+
         } else {
-            reportData = flattenData(data.results);
+            reportData = [{name: 'Data', data: flattenData(data.results)}];
         }
 
+        return reportData;
 
-        let csv = jsonToCsv(reportData);
+        /*let csv = jsonToCsv(reportData);
 
         let link = document.createElement('a');
         link.textContent = 'download';
@@ -122,7 +147,12 @@ export const exportReport = ( query, reportName, preProcessData=null ) => (dispa
         link.href = 'data:text/csv;charset=utf-8,'+ encodeURIComponent(csv);
         document.body.appendChild(link); // Required for FF
         link.click();
-        document.body.removeChild(link);
+        document.body.removeChild(link);*/
+
+    }).then((reportData)=>{
+        dispatch(createAction(RECEIVE_EXPORT_REPORT)({reportData}));
+    }).then((reportData)=>{
+        dispatch(createAction(RESET_EXPORT_REPORT)({}));
     });
 
 };
@@ -171,43 +201,7 @@ export const flattenItem = (flatData, item, idxRef, ctx='') => {
 
 }
 
-/*
-export const flattenItem = (item, idxRef) => {
-    let flatItem = {};
 
-    for (var property in item) {
-        if (item[property] == null) {
-            flatItem[property] = '';
-        } else if (Array.isArray(item[property]) && item[property].length > 0) {
-            flatItem[property] = flattenItem(item[property].shift(), idxRef);
-            if (item[property].length > 0) {
-                idxRef.idx--; // redo this item
-            }
-        } else if (typeof item[property] == 'object') {
-            flatItem[property] = flattenItem(item[property], idxRef)
-        } else {
-            flatItem[property] = item[property];
-        }
-    }
-
-    return flatItem;
-}
-
-export const flattenData = (data) => {
-    let flatData = [];
-
-    for (var idx=0; idx < data.length; idx++) {
-        let idxRef = {idx};
-        let flatItem = flattenItem(data[idx], idxRef);
-        idx = idxRef.idx;
-
-        flatData.push(flatItem);
-    }
-
-    return flatData;
-
-}
-*/
 
 
 

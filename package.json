@@ -24,6 +24,7 @@
     "dotenv": "^4.0.0",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "^1.1.11",
+    "file-saver": "^2.0.2",
     "font-awesome": "^4.7.0",
     "graphql-query-builder": "^1.0.7",
     "history": "^4.7.2",
@@ -44,6 +45,7 @@
     "react-bootstrap": "^0.31.5",
     "react-breadcrumbs": "^2.1.6",
     "react-burger-menu": "^2.6.10",
+    "react-data-export": "^0.5.0",
     "react-datetime": "^2.15.0",
     "react-dnd": "^2.6.0",
     "react-dnd-html5-backend": "^2.6.0",
@@ -72,6 +74,7 @@
     "webpack": "^4.27.1",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.10",
-    "webpack-md5-hash": "0.0.6"
+    "webpack-md5-hash": "0.0.6",
+    "xlsx": "^0.14.3"
   }
 }

@@ -142,9 +142,6 @@ class SmartPresentationReport extends React.Component {
         let {showFields} = this.state;
         let storedDataName = this.props.name;
 
-        console.log(storedDataName+' - '+this.getName());
-        console.log(data);
-
         if (!data || storedDataName != this.getName()) return (<div></div>)
 
         let report_options = {
