@@ -388,7 +388,7 @@ export const queryQuestions = _.debounce((input, callback) => {
         .then((json) => {
             let options = [...json.data];
 
-            callback(null, { options: options });
+            callback(options);
         })
         .catch(fetchErrorHandler);
 }, 500);

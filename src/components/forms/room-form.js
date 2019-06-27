@@ -15,7 +15,7 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
-import { Input, TextEditor, Dropdown } from 'openstack-uicore-foundation/lib/components'
+import { Input, TextEditor, Dropdown, SimpleLinkList } from 'openstack-uicore-foundation/lib/components'
 
 
 class RoomForm extends React.Component {
@@ -27,6 +27,7 @@ class RoomForm extends React.Component {
             errors: props.errors
         };
 
+        this.queryAttributes = this.queryAttributes.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -82,16 +83,67 @@ class RoomForm extends React.Component {
         return '';
     }
 
+    queryAttributes(input, callback) {
+        let {currentSummit} = this.props;
+        let attributeTypes = currentSummit.meeting_booking_room_allowed_attributes;
+        let attributes = [];
+
+        attributeTypes.forEach(type => {
+            attributes = [...attributes, ...type.values];
+        });
+
+        attributes = attributes.filter(at => at.value.toLowerCase().indexOf(input.toLowerCase()) !== -1)
+
+        callback(attributes);
+    }
+
+
     render() {
         let {entity} = this.state;
         let { allFloors } = this.props;
         let floors_ddl = allFloors.map(f => ({label: f.name, value: f.id}));
 
+        let attributeColumns = [
+            { columnKey: 'id', value: T.translate("general.id") },
+            { columnKey: 'value', value: T.translate("general.value") },
+        ];
+
+        let attributeOptions = {
+            valueKey: "id",
+            labelKey: "value",
+            actions: {
+                delete: { onClick: this.props.onAttributeUnLink},
+                search: this.queryAttributes,
+                add: { onClick: this.props.onAttributeLink }
+            }
+        };
+
+        let class_ddl = [
+            {label: 'Room', value: 'SummitVenueRoom'},
+            {label: 'Bookable Room', value: 'SummitBookableVenueRoom'},
+        ];
+
+        let currency_ddl = [
+            {label: 'USD', value: 'USD'},
+            {label: 'EUR', value: 'EUR'},
+        ];
+
         return (
             <form className="room-form">
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
-                    <div className="col-md-3">
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_room.type")} *</label>
+                        <Dropdown
+                            id="class_name"
+                            disabled={entity.id != 0}
+                            value={entity.class_name}
+                            onChange={this.handleChange}
+                            placeholder={T.translate("edit_room.placeholders.select_type")}
+                            options={class_ddl}
+                        />
+                    </div>
+                    <div className="col-md-4">
                         <label> {T.translate("edit_room.name")} *</label>
                         <Input
                             id="name"
@@ -101,7 +153,9 @@ class RoomForm extends React.Component {
                             error={this.hasErrors('name')}
                         />
                     </div>
-                    <div className="col-md-3">
+                </div>
+                <div className="row form-group">
+                    <div className="col-md-4">
                         <label> {T.translate("edit_room.capacity")}</label>
                         <Input
                             id="capacity"
@@ -112,7 +166,7 @@ class RoomForm extends React.Component {
                             error={this.hasErrors('capacity')}
                         />
                     </div>
-                    <div className="col-md-3">
+                    <div className="col-md-4">
                         <label> {T.translate("edit_room.floor")}</label>
                         <Dropdown
                             id="floor_id"
@@ -122,7 +176,7 @@ class RoomForm extends React.Component {
                             onChange={this.handleChange}
                         />
                     </div>
-                    <div className="col-md-3 checkboxes-div">
+                    <div className="col-md-4 checkboxes-div">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="override_blackouts" checked={entity.override_blackouts}
                                    onChange={this.handleChange} className="form-check-input" />
@@ -143,6 +197,44 @@ class RoomForm extends React.Component {
                         />
                     </div>
                 </div>
+
+                {entity.class_name == 'SummitBookableVenueRoom' &&
+                <div className="row form-group">
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_room.slot_cost")}</label>
+                        <Input
+                            id="time_slot_cost"
+                            type="number"
+                            value={entity.time_slot_cost}
+                            onChange={this.handleChange}
+                            className="form-control"
+                            error={this.hasErrors('time_slot_cost')}
+                        />
+                    </div>
+                    <div className="col-md-4">
+                        <label>{T.translate("edit_room.currency")}</label>
+                        <Dropdown
+                            id="currency"
+                            options={currency_ddl}
+                            onChange={this.handleChange}
+                            value={entity.currency}
+                        />
+                    </div>
+                </div>
+                }
+
+                {entity.class_name == 'SummitBookableVenueRoom' && entity.id != 0 &&
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <SimpleLinkList
+                            values={entity.attributes}
+                            columns={attributeColumns}
+                            options={attributeOptions}
+                        />
+                    </div>
+                </div>
+                }
+
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">

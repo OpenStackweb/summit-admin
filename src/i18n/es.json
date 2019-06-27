@@ -50,6 +50,8 @@
     "id"                  : "Id",
     "label"               : "Label",
     "value"               : "Value",
+    "values"              : "Values",
+    "type"                : "Type",
     "attention"           : "Attention!",
     "done"                : "Done!",
     "email_sent"          : "Email sent successfully.",
@@ -90,7 +92,8 @@
     "push_notifications"      : "Push Notifications",
     "room_occupancy"          : "Room Occupancy",
     "tag_groups"              : "Tag Groups",
-    "reports"                 : "Reports"
+    "reports"                 : "Reports",
+    "room_bookings"           : "Room Bookings"
   },
   "schedule": {
     "schedule"                              : "Schedule",
@@ -678,11 +681,15 @@
     "room"                : "Room",
     "rooms"               : "Rooms",
     "floor"               : "Floor",
+    "currency"            : "Currency",
+    "type"                : "Type",
+    "slot_cost"           : "Cost",
     "override_blackouts"  : "Overrides Blackouts",
     "room_saved"          : "Room saved successfully.",
     "room_created"        : "Room created successfully.",
     "placeholders": {
-      "select_floor"  : "Select Floor"
+      "select_floor"  : "Select Floor",
+      "select_type"  : "Select Room Type"
     }
   },
   "edit_location_image": {
@@ -694,6 +701,54 @@
     "maps"               : "Maps",
     "map_saved"          : "Map saved successfully.",
     "map_created"        : "Map created successfully."
+  },
+  "room_bookings": {
+    "room_bookings"                     : "Room Bookings",
+    "settings"                          : "Settings",
+    "main"                              : "Main",
+    "attributes"                        : "Attributes",
+    "attribute"                         : "Attribute",
+    "attribute_type"                    : "Attribute Type",
+    "meeting_room_booking_start_time"   : "Book From",
+    "meeting_room_booking_end_time"     : "Book Until",
+    "meeting_room_booking_slot_length"  : "Slot Length",
+    "meeting_room_booking_max_allowed"  : "Max Bookings",
+    "add_attribute"                     : "Add Attribute Type",
+    "delete_booking_attribute_warning"   : "Are you sure you want to delete Attribute Type ",
+    "room_booking_attribute_type_saved"   : "Attribute Type saved successfully",
+    "room_booking_attribute_type_created" : "Attribute Type created successfully",
+    "room_booking_attribute_saved"      : "Attribute saved successfully",
+    "room_booking_attribute_created"    : "Attribute created successfully"
+  },
+  "room_booking_list": {
+    "room_booking_list"   : "Room Bookings",
+    "no_room_bookings"    : "No Room Bookings Found",
+    "room"                : "Room",
+    "start"               : "Start",
+    "end"                 : "End",
+    "owner"               : "Owner",
+    "status"              : "Status",
+    "refund"              : "Refund",
+    "amount"              : "Amount",
+    "delete_booking_warning" : "Are you sure you want to delete booking for ",
+    "placeholders": {
+      "search_bookings" : "Search bookings."
+    }
+  },
+  "edit_room_booking": {
+    "room_booking"   : "Room Booking",
+    "room"                : "Room",
+    "start"               : "Start",
+    "end"                 : "End",
+    "owner"               : "Owner",
+    "status"              : "Status",
+    "currency"            : "Currency",
+    "amount"              : "Amount",
+    "placeholders": {
+      "select_status" : "Select Status",
+      "select_currency" : "Select Currency",
+      "select_room" : "Select Room"
+    }
   },
   "rsvp_template_list": {
     "rsvp_template_list"      : "RSVP Templates",

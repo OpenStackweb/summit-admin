@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 OpenStack Foundation
+ * Copyright 2019 OpenStack Foundation
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,36 +13,35 @@
 
 import
 {
-    RECEIVE_ROOM,
-    RESET_ROOM_FORM,
-    UPDATE_ROOM,
-    ROOM_ADDED,
-    ROOM_UPDATED,
-    ATTRIBUTE_ADDED,
-    ATTRIBUTE_REMOVED
-} from '../../actions/location-actions';
+    RECEIVE_ROOM_BOOKING,
+    RESET_ROOM_BOOKING_FORM,
+    UPDATE_ROOM_BOOKING,
+    ROOM_BOOKING_UPDATED,
+    ROOM_BOOKING_ADDED
+} from '../../actions/room-booking-actions';
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 export const DEFAULT_ENTITY = {
-    id                  : 0,
-    name                : '',
-    description         : '',
-    capacity            : 0,
-    override_blackouts  : false,
-    time_slot_cost      : 0,
-    currency            : 'USD',
-    attributes          : [],
-    floor               : null
+    id: 0,
+    amount: 0,
+    approved_payment_date: 0,
+    currency: "USD",
+    start_datetime: 0,
+    end_datetime: 0,
+    owner_id: 0,
+    payment_gateway_client_token: null,
+    room_id: 0,
+    status: ""
 }
 
 const DEFAULT_STATE = {
     entity      : DEFAULT_ENTITY,
-    errors      : {},
+    errors      : {}
 };
 
-const roomReducer = (state = DEFAULT_STATE, action) => {
+const roomBookingReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
         case LOGOUT_USER: {
@@ -55,16 +54,16 @@ const roomReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case SET_CURRENT_SUMMIT:
-        case RESET_ROOM_FORM: {
+        case RESET_ROOM_BOOKING_FORM: {
             return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
         }
         break;
-        case UPDATE_ROOM: {
+        case UPDATE_ROOM_BOOKING: {
             return {...state,  entity: {...payload}, errors: {} };
         }
         break;
-        case ROOM_ADDED:
-        case RECEIVE_ROOM: {
+        case ROOM_BOOKING_ADDED:
+        case RECEIVE_ROOM_BOOKING: {
             let entity = {...payload.response};
 
             for(var key in entity) {
@@ -76,19 +75,8 @@ const roomReducer = (state = DEFAULT_STATE, action) => {
             return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
         }
         break;
-        case ROOM_UPDATED: {
+        case ROOM_BOOKING_UPDATED: {
             return state;
-        }
-        break;
-        case ATTRIBUTE_ADDED: {
-            let {attribute} = payload;
-            return {...state, entity: {...state.entity, attributes: [...state.entity.attributes, attribute]}};
-        }
-        break;
-        case ATTRIBUTE_REMOVED: {
-            let {attributeId} = payload;
-            let attributes = state.entity.attribute.filter(at => at.id != attributeId);
-            return {...state, entity: {...state.entity, attributes: attributes} };
         }
         break;
         case VALIDATE: {
@@ -100,4 +88,4 @@ const roomReducer = (state = DEFAULT_STATE, action) => {
     }
 };
 
-export default roomReducer;
+export default roomBookingReducer;

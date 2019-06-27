@@ -59,6 +59,8 @@ export const UPDATE_ROOM         = 'UPDATE_ROOM';
 export const ROOM_UPDATED        = 'ROOM_UPDATED';
 export const ROOM_ADDED          = 'ROOM_ADDED';
 export const ROOM_DELETED        = 'ROOM_DELETED';
+export const ATTRIBUTE_REMOVED   = 'ATTRIBUTE_REMOVED';
+export const ATTRIBUTE_ADDED     = 'ATTRIBUTE_ADDED';
 
 export const RECEIVE_LOCATION_IMAGE        = 'RECEIVE_LOCATION_IMAGE';
 export const RESET_LOCATION_IMAGE_FORM     = 'RESET_LOCATION_IMAGE_FORM';
@@ -474,7 +476,7 @@ export const saveRoom = (locationId, entity, continueAdding) => (dispatch, getSt
     if (entity.floor_id) {
         url += `/floors/${entity.floor_id}`;
     }
-    url += `/rooms`;
+    url += (entity.class_name == 'SummitVenueRoom') ? `/rooms` : `/bookable-rooms`;
 
     if (entity.id) {
 
@@ -553,6 +555,60 @@ const normalizeRoomEntity = (entity) => {
     return normalizedEntity;
 
 }
+
+
+/**********************  BOOKABLE ROOMS    ***************************************************/
+
+
+export const addAttributeToRoom = (locationId, roomId, attribute) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return putRequest(
+        null,
+        createAction(ATTRIBUTE_ADDED)({attribute}),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/bookable-rooms/${roomId}/attributes/${attribute.id}`,
+        {},
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+
+export const removeAttributeFromRoom = (locationId, roomId, attributeId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(ATTRIBUTE_REMOVED)({attributeId}),
+        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/bookable-rooms/${roomId}/attributes/${attributeId}`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+
 
 
 /**************************************** IMAGES *********************************************/

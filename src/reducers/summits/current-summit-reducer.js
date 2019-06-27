@@ -8,6 +8,14 @@ import {
     SELECTION_PLAN_ADDED,
     UPDATE_SELECTION_PLAN
 } from "../../actions/selection-plan-actions";
+import {
+    ROOM_BOOKING_ATTRIBUTE_TYPE_DELETED,
+    ROOM_BOOKING_ATTRIBUTE_TYPE_ADDED,
+    ROOM_BOOKING_ATTRIBUTE_TYPE_UPDATED,
+    ROOM_BOOKING_ATTRIBUTE_ADDED,
+    ROOM_BOOKING_ATTRIBUTE_UPDATED,
+    ROOM_BOOKING_ATTRIBUTE_DELETED
+} from "../../actions/room-booking-actions";
 
 export const DEFAULT_ENTITY = {
     id: 0,
@@ -56,6 +64,11 @@ export const DEFAULT_ENTITY = {
     type_id: 0,
     wifi_connections: [],
     selection_plans: [],
+    meeting_booking_room_allowed_attributes: [],
+    meeting_room_booking_end_time: null,
+    meeting_room_booking_max_allowed: 0,
+    meeting_room_booking_slot_length: 0,
+    meeting_room_booking_start_time: null,
     api_feed_type: 'Sched',
     api_feed_url: '',
     api_feed_key: '',
@@ -181,6 +194,57 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
             let {selectionPlanId} = payload;
             let selection_plans = state.currentSummit.selection_plans.filter(sp => sp.id != selectionPlanId);
             return {...state, currentSummit: {...state.currentSummit, selection_plans: selection_plans}};
+        }
+        break;
+        case ROOM_BOOKING_ATTRIBUTE_TYPE_UPDATED:
+        case ROOM_BOOKING_ATTRIBUTE_TYPE_ADDED: {
+            let {response} = payload;
+            let attributeTypes = state.currentSummit.meeting_booking_room_allowed_attributes.filter(b => b.id != response.id);
+            return {
+                ...state,
+                currentSummit: {
+                    ...state.currentSummit,
+                    meeting_booking_room_allowed_attributes: [
+                        ...attributeTypes,
+                        response
+                    ]
+                }
+            };
+        }
+        break;
+        case ROOM_BOOKING_ATTRIBUTE_TYPE_DELETED: {
+            let {attributeTypeId} = payload;
+            let attributeTypes = state.currentSummit.meeting_booking_room_allowed_attributes.filter(a => a.id != attributeTypeId);
+            return {...state, currentSummit: {...state.currentSummit, meeting_booking_room_allowed_attributes: attributeTypes}};
+        }
+        break;
+        case ROOM_BOOKING_ATTRIBUTE_UPDATED:
+        case ROOM_BOOKING_ATTRIBUTE_ADDED: {
+            let {response} = payload;
+            let attributeTypes = state.currentSummit.meeting_booking_room_allowed_attributes.filter(b => b.id != response.type_id);
+            let attributeType = state.currentSummit.meeting_booking_room_allowed_attributes.find(b => b.id == response.type_id);
+            let values = attributeType.values.filter(v => v.id != response.id);
+            values = [...values, response];
+            attributeType = {...attributeType, values: values};
+            return {
+                ...state,
+                currentSummit: {
+                    ...state.currentSummit,
+                    meeting_booking_room_allowed_attributes: [
+                        ...attributeTypes,
+                        attributeType
+                    ]
+                }
+            };
+        }
+        break;
+        case ROOM_BOOKING_ATTRIBUTE_DELETED: {
+            let {attributeTypeId, attributeValueId} = payload;
+            let attributeTypes = state.currentSummit.meeting_booking_room_allowed_attributes.filter(a => a.id != attributeTypeId);
+            let attributeType = state.currentSummit.meeting_booking_room_allowed_attributes.find(a => a.id == attributeTypeId);
+            let values = attributeType.values.filter(v => v.id != attributeValueId);
+            attributeType = {...attributeType, values: values};
+            return {...state, currentSummit: {...state.currentSummit, meeting_booking_room_allowed_attributes: [...attributeTypes, attributeType]}};
         }
         break;
         case VALIDATE: {

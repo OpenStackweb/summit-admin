@@ -17,7 +17,7 @@ import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import RoomForm from '../../components/forms/room-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getLocation, getRoom, resetRoomForm, saveRoom } from "../../actions/location-actions";
+import { getLocation, getRoom, resetRoomForm, saveRoom, addAttributeToRoom, removeAttributeFromRoom } from "../../actions/location-actions";
 
 class EditRoomPage extends React.Component {
 
@@ -65,6 +65,8 @@ class EditRoomPage extends React.Component {
                     entity={entity}
                     errors={errors}
                     onSubmit={this.props.saveRoom}
+                    onAttributeLink={(attribute) => {this.props.addAttributeToRoom(currentLocation.id, entity.id, attribute)}}
+                    onAttributeUnLink={(attributeId) => {this.props.removeAttributeFromRoom(currentLocation.id, entity.id, attributeId)}}
                 />
                 }
             </div>
@@ -87,5 +89,7 @@ export default connect (
         getRoom,
         resetRoomForm,
         saveRoom,
+        addAttributeToRoom,
+        removeAttributeFromRoom
     }
 )(EditRoomPage);
