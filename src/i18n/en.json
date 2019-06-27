@@ -200,7 +200,13 @@
     "summit_created"                  : "Summit created successfully.",
     "enabled"                         : "Enabled",
     "add_splan"                       : "Add Selection Plan",
-    "remove_sp_warning"               : "Are you sure you want to delete selection plan "
+    "remove_sp_warning"               : "Are you sure you want to delete selection plan ",
+    "api_feed_type"                   : "API feed type",
+    "api_feed_url"                    : "API feed URL",
+    "api_feed_key"                    : "API feed key",
+    "placeholders": {
+      "api_feed_type"                 : "Select API feed type..."
+    }
   },
   "edit_selection_plan": {
     "selection_plan"                  : "Selection Plan",
@@ -848,7 +854,7 @@
     "tag_report"                    : "Tag Report",
     "export"                        : "Export",
     "placeholders": {
-      "search"        : "Search by Title, Abstract, Speaker LastName, Member Email ",
+      "search"       : "Search by Title, Abstract, Speaker LastName, Member Email ",
       "select_fields" : "Select data to display"
     }
   }

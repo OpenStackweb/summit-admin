@@ -55,7 +55,10 @@ export const DEFAULT_ENTITY = {
     tracks: [],
     type_id: 0,
     wifi_connections: [],
-    selection_plans: []
+    selection_plans: [],
+    api_feed_type: 'Sched',
+    api_feed_url: '',
+    api_feed_key: '',
 }
 
 const DEFAULT_STATE = {

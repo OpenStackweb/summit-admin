@@ -132,6 +132,11 @@ class SummitForm extends React.Component {
             }
         }
 
+        let api_feed_type_ddl = [
+            {label: 'Sched', value: 'Sched'},
+            {label: 'Vanderpoel', value: 'Vanderpoel'}
+        ];
+
         return (
             <form>
                 <input type="hidden" id="id" value={entity.id} />
@@ -228,6 +233,38 @@ class SummitForm extends React.Component {
                             error={this.hasErrors('slug')}
                             id="slug"
                             value={entity.slug}
+                            onChange={this.handleChange}
+                        />
+                    </div>
+                </div>
+                <div className="row form-group">
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_summit.api_feed_type")}</label>
+                        <Dropdown
+                            id="api_feed_type"
+                            value={entity.api_feed_type}
+                            placeholder={T.translate("edit_summit.placeholders.api_feed_type")}
+                            options={api_feed_type_ddl}
+                            onChange={this.handleChange}
+                        />
+                    </div>
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_summit.api_feed_url")}</label>
+                        <Input
+                            className="form-control"
+                            error={this.hasErrors('api_feed_url')}
+                            id="api_feed_url"
+                            value={entity.api_feed_url}
+                            onChange={this.handleChange}
+                        />
+                    </div>
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_summit.api_feed_key")}</label>
+                        <Input
+                            className="form-control"
+                            error={this.hasErrors('api_feed_key')}
+                            id="api_feed_key"
+                            value={entity.api_feed_key}
                             onChange={this.handleChange}
                         />
                     </div>
