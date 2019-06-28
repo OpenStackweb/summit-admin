@@ -79,7 +79,7 @@ class SummitForm extends React.Component {
         }
 
         if (ev.target.type == 'number') {
-            value = parseInt(ev.target.value);
+            value = parseInt(value);
         }
 
         errors[id] = '';
@@ -153,6 +153,7 @@ class SummitForm extends React.Component {
         }
 
         let api_feed_type_ddl = [
+            {label: 'None', value: null},
             {label: 'Sched', value: 'Sched'},
             {label: 'Vanderpoel', value: 'Vanderpoel'}
         ];
@@ -499,7 +500,7 @@ class SummitForm extends React.Component {
                         <div className="col-md-4">
                             <label> {T.translate("room_bookings.meeting_room_booking_max_allowed")} *</label>
                             <Input
-                                id="room_booking_limit"
+                                id="meeting_room_booking_max_allowed"
                                 type="number"
                                 value={entity.meeting_room_booking_max_allowed}
                                 onChange={this.handleChange}
