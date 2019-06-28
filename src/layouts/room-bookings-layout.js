@@ -19,9 +19,7 @@ import Restrict from '../routes/restrict';
 
 import RoomBookingListPage from '../pages/room_bookings/room-booking-list-page'
 import EditRoomBookingPage from '../pages/room_bookings/edit-room-booking-page'
-import RoomBookingSettingsPage from '../pages/room_bookings/room-booking-settings-page'
 import NoMatchPage from "../pages/no-match-page";
-import EditRoomBookingAttributePage from "../pages/room_bookings/edit-room-booking-attribute-page";
 
 
 class RoomBookingsLayout extends React.Component {
@@ -35,19 +33,6 @@ class RoomBookingsLayout extends React.Component {
                 <Switch>
                     <Route strict exact path={match.url} component={RoomBookingListPage}/>
                     <Route strict exact path={`${match.url}/:room_booking_id(\\d+)`} component={EditRoomBookingPage}/>
-                    <Route path={`${match.url}/settings`} render={
-                        props => (
-                            <div>
-                                <Breadcrumb data={{ title: T.translate("room_bookings.settings"), pathname: props.match.url }} ></Breadcrumb>
-                                <Switch>
-                                    <Route strict exact path={`${props.match.url}`} component={RoomBookingSettingsPage} />
-                                    <Route strict exact path={`${props.match.url}/attributes/new`} component={EditRoomBookingAttributePage} />
-                                    <Route strict exact path={`${props.match.url}/attributes/:attribute_id(\\d+)`} component={EditRoomBookingAttributePage} />
-                                    <Route component={NoMatchPage}/>
-                                </Switch>
-                            </div>
-                        )}
-                    />
                     <Route component={NoMatchPage}/>
                 </Switch>
             </div>

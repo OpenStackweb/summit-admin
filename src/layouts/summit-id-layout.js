@@ -38,6 +38,7 @@ import TagGroupLayout from './tag-group-layout'
 import ReportsLayout from './reports-layout'
 import RoomBookingsLayout from './room-bookings-layout';
 import NoMatchPage from "../pages/no-match-page";
+import EditRoomBookingAttributePage from "../pages/room_bookings/edit-room-booking-attribute-page";
 
 
 class SummitIdLayout extends React.Component {
@@ -79,6 +80,8 @@ class SummitIdLayout extends React.Component {
                 <Switch>
                     <Route strict exact path={`${match.url}/dashboard`} component={SummitDashboardPage} />
                     <Route strict exact path={match.url} component={EditSummitPage} />
+                    <Route strict exact path={`${match.url}/room-booking-attributes/new`} component={EditRoomBookingAttributePage} />
+                    <Route strict exact path={`${match.url}/room-booking-attributes/:attribute_id(\\d+)`} component={EditRoomBookingAttributePage} />
                     <Route path={`${match.url}/events`} component={EventLayout}/>
                     <Route path={`${match.url}/event-types`} component={EventTypeLayout}/>
                     <Route path={`${match.url}/event-categories`} component={EventCategoryLayout}/>

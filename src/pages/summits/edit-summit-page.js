@@ -20,6 +20,7 @@ import Restrict from '../../routes/restrict'
 import SummitForm from '../../components/forms/summit-form';
 import { getSummitById, resetSummitForm, saveSummit }  from '../../actions/summit-actions';
 import { deleteSelectionPlan } from '../../actions/selection-plan-actions';
+import { deleteRoomBookingAttributeType } from "../../actions/room-booking-actions";
 import '../../styles/edit-summit-page.less';
 import '../../components/form-validation/validate.less';
 
@@ -30,6 +31,8 @@ class EditSummitPage extends React.Component {
         super(props);
 
         this.handleSPlanDelete = this.handleSPlanDelete.bind(this);
+        this.handleAttributeTypeDelete = this.handleAttributeTypeDelete.bind(this);
+
     }
 
     handleSPlanDelete(selectionPlanId) {
@@ -50,6 +53,24 @@ class EditSummitPage extends React.Component {
         }).catch(swal.noop);
     }
 
+    handleAttributeTypeDelete(attributeTypeId) {
+        let {deleteRoomBookingAttributeType, currentSummit} = this.props;
+        let roomBookingType = currentSummit.meeting_booking_room_allowed_attributes.find(rb => rb.id == attributeTypeId);
+
+        swal({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("room_bookings.delete_booking_attribute_warning") + ' ' + roomBookingType.type,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: T.translate("general.yes_delete")
+        }).then(function(result){
+            if (result.value) {
+                deleteRoomBookingAttributeType(attributeTypeId);
+            }
+        }).catch(swal.noop);
+    }
+
 
     render(){
         let {currentSummit, errors, history} = this.props;
@@ -64,6 +85,7 @@ class EditSummitPage extends React.Component {
                     errors={errors}
                     onSubmit={this.props.saveSummit}
                     onSPlanDelete={this.handleSPlanDelete}
+                    onAttributeTypeDelete={this.handleAttributeTypeDelete}
                 />
             </div>
         )
@@ -81,6 +103,7 @@ export default Restrict(connect (
         getSummitById,
         saveSummit,
         resetSummitForm,
-        deleteSelectionPlan
+        deleteSelectionPlan,
+        deleteRoomBookingAttributeType
     }
 )(EditSummitPage), 'summit-edit');

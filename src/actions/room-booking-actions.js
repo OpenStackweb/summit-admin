@@ -331,7 +331,7 @@ export const saveRoomBookingAttributeType = (entity) => (dispatch, getState) => 
             .then((payload) => {
                 dispatch(showMessage(
                     success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/room-bookings/settings/attributes/${payload.response.id}`) }
+                    () => { history.push(`/app/summits/${currentSummit.id}/room-booking-attributes/${payload.response.id}`) }
                 ));
             });
     }
@@ -350,7 +350,8 @@ export const deleteRoomBookingAttributeType = (attributeTypeId) => (dispatch, ge
     return deleteRequest(
         null,
         createAction(ROOM_BOOKING_ATTRIBUTE_TYPE_DELETED)({attributeTypeId}),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/bookable-room-attribute-types/${attributeId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/bookable-room-attribute-types/${attributeTypeId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -390,12 +391,6 @@ export const saveRoomBookingAttribute = (attributeTypeId, entity) => (dispatch, 
             });
 
     } else {
-        let success_message = {
-            title: T.translate("general.done"),
-            html: T.translate("room_bookings.room_booking_attribute_created"),
-            type: 'success'
-        };
-
         postRequest(
             createAction(UPDATE_ROOM_BOOKING_ATTRIBUTE),
             createAction(ROOM_BOOKING_ATTRIBUTE_ADDED),
@@ -405,10 +400,7 @@ export const saveRoomBookingAttribute = (attributeTypeId, entity) => (dispatch, 
             entity
         )(params)(dispatch)
             .then((payload) => {
-                dispatch(showMessage(
-                    success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/room-bookings/settings/attributes/${attributeTypeId}`) }
-                ));
+                dispatch(showSuccessMessage(T.translate("room_bookings.room_booking_attribute_created")));
             });
     }
 }

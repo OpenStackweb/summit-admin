@@ -14,6 +14,7 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import moment from 'moment-timezone'
+import swal from "sweetalert2";
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import { findElementPos, epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/methods'
 import {
@@ -39,6 +40,8 @@ class SummitForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleSPlanEdit = this.handleSPlanEdit.bind(this);
         this.handleSPlanAdd = this.handleSPlanAdd.bind(this);
+        this.handleAttributeTypeEdit = this.handleAttributeTypeEdit.bind(this);
+        this.handleNewAttributeType = this.handleNewAttributeType.bind(this);
 
     }
 
@@ -73,6 +76,10 @@ class SummitForm extends React.Component {
 
         if (ev.target.type == 'datetime') {
             value = value.valueOf() / 1000;
+        }
+
+        if (ev.target.type == 'number') {
+            value = parseInt(ev.target.value);
         }
 
         errors[id] = '';
@@ -114,9 +121,22 @@ class SummitForm extends React.Component {
         history.push(`/app/summits/${entity.id}/selection-plans/new`);
     }
 
+    handleAttributeTypeEdit(attributeId) {
+        let {entity, history} = this.props;
+        history.push(`/app/summits/${entity.id}/room-booking-attributes/${attributeId}`);
+    }
+
+    handleNewAttributeType(ev) {
+        ev.preventDefault();
+
+        let {entity, history} = this.props;
+        history.push(`/app/summits/${entity.id}/room-booking-attributes/new`);
+    }
+
+
     render() {
         let {entity, showSection} = this.state;
-        let {onSPlanDelete} = this.props;
+        let {onSPlanDelete, onAttributeTypeDelete} = this.props;
         let time_zones_ddl = moment.tz.names().map(tz => ({label: tz, value: tz}));
         let dates_enabled = (entity.hasOwnProperty('time_zone_id') && entity.time_zone_id != '');
 
@@ -136,6 +156,23 @@ class SummitForm extends React.Component {
             {label: 'Sched', value: 'Sched'},
             {label: 'Vanderpoel', value: 'Vanderpoel'}
         ];
+
+        let attribute_columns = [
+            { columnKey: 'id', value: T.translate("general.id") },
+            { columnKey: 'type', value: T.translate("general.type") },
+            { columnKey: 'values', value: T.translate("general.values") },
+        ];
+
+        let attribute_options = {
+            actions: {
+                edit: {onClick: this.handleAttributeTypeEdit},
+                delete: { onClick: onAttributeTypeDelete }
+            }
+        };
+
+        let attributes = entity.meeting_booking_room_allowed_attributes.map(at => {
+            return {id: at.id, type: at.type, values: at.values.map(v => v.value).join(' ,')}
+        });
 
         return (
             <form>
@@ -419,6 +456,67 @@ class SummitForm extends React.Component {
                                 id="calendar_sync_desc"
                                 value={entity.calendar_sync_desc}
                                 onChange={this.handleChange}
+                            />
+                        </div>
+                    </div>
+                </Panel>
+
+                <Panel show={showSection == 'room-booking'} title={T.translate("edit_summit.room-booking")}
+                       handleClick={this.toggleSection.bind(this, 'room-booking')}>
+                    <div className="row form-group">
+                        <div className="col-md-4">
+                            <label> {T.translate("room_bookings.meeting_room_booking_start_time")} *</label>
+                            <DateTimePicker
+                                id="meeting_room_booking_start_time"
+                                onChange={this.handleChange}
+                                format={{date: false, time: "HH:mm"}}
+                                timezone={entity.time_zone_id}
+                                value={epochToMomentTimeZone(entity.meeting_room_booking_start_time, entity.time_zone_id)}
+                            />
+                        </div>
+                        <div className="col-md-4">
+                            <label> {T.translate("room_bookings.meeting_room_booking_end_time")} *</label>
+                            <DateTimePicker
+                                id="meeting_room_booking_end_time"
+                                onChange={this.handleChange}
+                                format={{date: false, time: "HH:mm"}}
+                                timezone={entity.time_zone_id}
+                                value={epochToMomentTimeZone(entity.meeting_room_booking_end_time, entity.time_zone_id)}
+                            />
+                        </div>
+                    </div>
+                    <div className="row form-group">
+                        <div className="col-md-4">
+                            <label> {T.translate("room_bookings.meeting_room_booking_slot_length")} *</label>
+                            <Input
+                                id="meeting_room_booking_slot_length"
+                                type="number"
+                                value={entity.meeting_room_booking_slot_length}
+                                onChange={this.handleChange}
+                                className="form-control"
+                            />
+                        </div>
+                        <div className="col-md-4">
+                            <label> {T.translate("room_bookings.meeting_room_booking_max_allowed")} *</label>
+                            <Input
+                                id="room_booking_limit"
+                                type="number"
+                                value={entity.meeting_room_booking_max_allowed}
+                                onChange={this.handleChange}
+                                className="form-control"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="row form-group">
+                        <div className="col-md-12">
+                            <button className="btn btn-primary pull-right left-space" onClick={this.handleNewAttributeType}>
+                                {T.translate("room_bookings.add_attribute")}
+                            </button>
+                            <Table
+                                options={attribute_options}
+                                data={attributes}
+                                columns={attribute_columns}
                             />
                         </div>
                     </div>

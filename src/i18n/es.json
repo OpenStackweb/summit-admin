@@ -207,6 +207,7 @@
     "api_feed_type"                   : "API feed type",
     "api_feed_url"                    : "API feed URL",
     "api_feed_key"                    : "API feed key",
+    "room-booking"                    : "Room Booking",
     "placeholders": {
       "api_feed_type"                 : "Select API feed type..."
     }

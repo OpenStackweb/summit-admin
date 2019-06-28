@@ -199,6 +199,10 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
         case ROOM_BOOKING_ATTRIBUTE_TYPE_UPDATED:
         case ROOM_BOOKING_ATTRIBUTE_TYPE_ADDED: {
             let {response} = payload;
+            let attributeType = state.currentSummit.meeting_booking_room_allowed_attributes.find(b => b.id == response.id);
+            if (attributeType) {
+                response.values = attributeType.values;
+            }
             let attributeTypes = state.currentSummit.meeting_booking_room_allowed_attributes.filter(b => b.id != response.id);
             return {
                 ...state,
