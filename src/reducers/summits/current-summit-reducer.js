@@ -69,9 +69,9 @@ export const DEFAULT_ENTITY = {
     meeting_room_booking_max_allowed: 0,
     meeting_room_booking_slot_length: 0,
     meeting_room_booking_start_time: null,
-    api_feed_type: null,
-    api_feed_url: null,
-    api_feed_key: null,
+    api_feed_type: '',
+    api_feed_url: '',
+    api_feed_key: '',
 }
 
 const DEFAULT_STATE = {
