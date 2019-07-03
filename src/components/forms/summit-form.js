@@ -16,7 +16,7 @@ import T from 'i18n-react/dist/i18n-react'
 import moment from 'moment-timezone'
 import swal from "sweetalert2";
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { findElementPos, epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/methods'
+import { findElementPos, epochToMomentTimeZone, epochToMoment } from 'openstack-uicore-foundation/lib/methods'
 import {
     DateTimePicker,
     Input,
@@ -174,6 +174,9 @@ class SummitForm extends React.Component {
         let attributes = entity.meeting_booking_room_allowed_attributes.map(at => {
             return {id: at.id, type: at.type, values: at.values.map(v => v.value).join(' ,')}
         });
+
+        let room_booking_start = entity.meeting_room_booking_start_time ? epochToMomentTimeZone(entity.meeting_room_booking_start_time, 'UTC') : moment.utc(0);
+        let room_booking_end = entity.meeting_room_booking_end_time ? epochToMomentTimeZone(entity.meeting_room_booking_end_time, 'UTC') : moment.utc(0);
 
         return (
             <form>
@@ -471,8 +474,9 @@ class SummitForm extends React.Component {
                                 id="meeting_room_booking_start_time"
                                 onChange={this.handleChange}
                                 format={{date: false, time: "HH:mm"}}
-                                timezone={entity.time_zone_id}
-                                value={epochToMomentTimeZone(entity.meeting_room_booking_start_time, entity.time_zone_id)}
+                                defaultValue={0}
+                                timezone="UTC"
+                                value={room_booking_start}
                             />
                         </div>
                         <div className="col-md-4">
@@ -481,8 +485,9 @@ class SummitForm extends React.Component {
                                 id="meeting_room_booking_end_time"
                                 onChange={this.handleChange}
                                 format={{date: false, time: "HH:mm"}}
-                                timezone={entity.time_zone_id}
-                                value={epochToMomentTimeZone(entity.meeting_room_booking_end_time, entity.time_zone_id)}
+                                defaultValue={0}
+                                timezone="UTC"
+                                value={room_booking_end}
                             />
                         </div>
                     </div>
