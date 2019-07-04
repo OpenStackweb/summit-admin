@@ -24,6 +24,8 @@ import {
     Dropdown,
     Table
 } from 'openstack-uicore-foundation/lib/components'
+import {Exclusive} from 'openstack-uicore-foundation/lib/components'
+
 
 
 class SummitForm extends React.Component {
@@ -465,68 +467,70 @@ class SummitForm extends React.Component {
                     </div>
                 </Panel>
 
-                <Panel show={showSection == 'room-booking'} title={T.translate("edit_summit.room-booking")}
-                       handleClick={this.toggleSection.bind(this, 'room-booking')}>
-                    <div className="row form-group">
-                        <div className="col-md-4">
-                            <label> {T.translate("room_bookings.meeting_room_booking_start_time")} *</label>
-                            <DateTimePicker
-                                id="meeting_room_booking_start_time"
-                                onChange={this.handleChange}
-                                format={{date: false, time: "HH:mm"}}
-                                defaultValue={0}
-                                timezone="UTC"
-                                value={room_booking_start}
-                            />
+                <Exclusive name="room-booking">
+                    <Panel show={showSection == 'room-booking'} title={T.translate("edit_summit.room-booking")}
+                           handleClick={this.toggleSection.bind(this, 'room-booking')}>
+                        <div className="row form-group">
+                            <div className="col-md-4">
+                                <label> {T.translate("room_bookings.meeting_room_booking_start_time")} *</label>
+                                <DateTimePicker
+                                    id="meeting_room_booking_start_time"
+                                    onChange={this.handleChange}
+                                    format={{date: false, time: "HH:mm"}}
+                                    defaultValue={0}
+                                    timezone="UTC"
+                                    value={room_booking_start}
+                                />
+                            </div>
+                            <div className="col-md-4">
+                                <label> {T.translate("room_bookings.meeting_room_booking_end_time")} *</label>
+                                <DateTimePicker
+                                    id="meeting_room_booking_end_time"
+                                    onChange={this.handleChange}
+                                    format={{date: false, time: "HH:mm"}}
+                                    defaultValue={0}
+                                    timezone="UTC"
+                                    value={room_booking_end}
+                                />
+                            </div>
                         </div>
-                        <div className="col-md-4">
-                            <label> {T.translate("room_bookings.meeting_room_booking_end_time")} *</label>
-                            <DateTimePicker
-                                id="meeting_room_booking_end_time"
-                                onChange={this.handleChange}
-                                format={{date: false, time: "HH:mm"}}
-                                defaultValue={0}
-                                timezone="UTC"
-                                value={room_booking_end}
-                            />
+                        <div className="row form-group">
+                            <div className="col-md-4">
+                                <label> {T.translate("room_bookings.meeting_room_booking_slot_length")} *</label>
+                                <Input
+                                    id="meeting_room_booking_slot_length"
+                                    type="number"
+                                    value={entity.meeting_room_booking_slot_length}
+                                    onChange={this.handleChange}
+                                    className="form-control"
+                                />
+                            </div>
+                            <div className="col-md-4">
+                                <label> {T.translate("room_bookings.meeting_room_booking_max_allowed")} *</label>
+                                <Input
+                                    id="meeting_room_booking_max_allowed"
+                                    type="number"
+                                    value={entity.meeting_room_booking_max_allowed}
+                                    onChange={this.handleChange}
+                                    className="form-control"
+                                />
+                            </div>
                         </div>
-                    </div>
-                    <div className="row form-group">
-                        <div className="col-md-4">
-                            <label> {T.translate("room_bookings.meeting_room_booking_slot_length")} *</label>
-                            <Input
-                                id="meeting_room_booking_slot_length"
-                                type="number"
-                                value={entity.meeting_room_booking_slot_length}
-                                onChange={this.handleChange}
-                                className="form-control"
-                            />
-                        </div>
-                        <div className="col-md-4">
-                            <label> {T.translate("room_bookings.meeting_room_booking_max_allowed")} *</label>
-                            <Input
-                                id="meeting_room_booking_max_allowed"
-                                type="number"
-                                value={entity.meeting_room_booking_max_allowed}
-                                onChange={this.handleChange}
-                                className="form-control"
-                            />
-                        </div>
-                    </div>
 
-                    <div className="row form-group">
-                        <div className="col-md-12">
-                            <button className="btn btn-primary pull-right left-space" onClick={this.handleNewAttributeType}>
-                                {T.translate("room_bookings.add_attribute")}
-                            </button>
-                            <Table
-                                options={attribute_options}
-                                data={attributes}
-                                columns={attribute_columns}
-                            />
+                        <div className="row form-group">
+                            <div className="col-md-12">
+                                <button className="btn btn-primary pull-right left-space" onClick={this.handleNewAttributeType}>
+                                    {T.translate("room_bookings.add_attribute")}
+                                </button>
+                                <Table
+                                    options={attribute_options}
+                                    data={attributes}
+                                    columns={attribute_columns}
+                                />
+                            </div>
                         </div>
-                    </div>
-                </Panel>
+                    </Panel>
+                </Exclusive>
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">

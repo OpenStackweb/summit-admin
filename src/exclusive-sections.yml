@@ -1,0 +1,9 @@
+# each app name contains the fields that are eclusive for that app only
+
+openstack:
+  - nada
+
+fntech:
+  - room-booking
+
+

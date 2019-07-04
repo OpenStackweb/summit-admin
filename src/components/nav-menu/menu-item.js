@@ -13,6 +13,7 @@
 
 import React from 'react';
 import T from 'i18n-react/dist/i18n-react';
+import {Exclusive} from 'openstack-uicore-foundation/lib/components'
 
 export default class MenuItem extends React.Component {
 
@@ -20,12 +21,23 @@ export default class MenuItem extends React.Component {
     render() {
         let {name, iconClass, onClick} = this.props;
 
-        return (
+        const itemHtml = [
             <a id={name + '-menu'} className="menu-item" onClick={onClick} >
                 <i className={iconClass + ' fa'} />
                 {T.translate('menu.' + name)}
             </a>
-        );
+        ];
+
+        if (this.props.hasOwnProperty('exclusive')) {
+            return (
+                <Exclusive name={this.props.exclusive}>
+                    {itemHtml}
+                </Exclusive>
+            );
+        } else {
+            return (itemHtml);
+        }
+
 
     }
 }

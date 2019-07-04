@@ -140,7 +140,7 @@ class NavMenu extends React.Component {
                     {name:'promocode_list', linkUrl:`summits/${summit_id}/promocodes`}
                 ]
             },
-            {name: 'room_bookings', iconClass: 'fa-bookmark', linkUrl:`summits/${summit_id}/room-bookings`, accessRoute: 'room-bookings'},
+            {name: 'room_bookings', iconClass: 'fa-bookmark', linkUrl:`summits/${summit_id}/room-bookings`, accessRoute: 'room-bookings', exclusive: 'room-booking'},
             {name: 'push_notifications', iconClass: 'fa-paper-plane', linkUrl:`summits/${summit_id}/push-notifications`, accessRoute: 'push-notifications' },
             {name: 'room_occupancy', iconClass: 'fa-male', linkUrl:`summits/${summit_id}/room-occupancy`, accessRoute: 'room-occupancy' },
             {name: 'tag_groups', iconClass: 'fa-tags', linkUrl:`summits/${summit_id}/tag-groups`, accessRoute: 'tag-groups' },

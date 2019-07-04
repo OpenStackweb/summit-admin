@@ -26,6 +26,8 @@ import T from 'i18n-react';
 import CustomErrorPage from "./pages/custom-error-page";
 import ReactTooltip from 'react-tooltip'
 import history from './history'
+import exclusiveSections from 'js-yaml-loader!./exclusive-sections.yml';
+
 
 
 // here is set by default user lang as en
@@ -52,6 +54,12 @@ window.REPORT_API_BASE_URL = process.env['REPORT_API_BASE_URL'];
 window.OAUTH2_CLIENT_ID    = process.env['OAUTH2_CLIENT_ID'];
 window.SCOPES              = process.env['SCOPES'];
 window.ALLOWED_USER_GROUPS = process.env['ALLOWED_USER_GROUPS'];
+window.EXCLUSIVE_SECTIONS  = [];
+
+if (exclusiveSections.hasOwnProperty(process.env['APP_CLIENT_NAME'])) {
+    window.EXCLUSIVE_SECTIONS = exclusiveSections[process.env['APP_CLIENT_NAME']];
+}
+
 
 class App extends React.PureComponent {
 

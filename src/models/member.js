@@ -11,7 +11,7 @@
  * limitations under the License.
  **/
 
-import access from 'js-yaml-loader!../routes/access.yml';
+import access from 'js-yaml-loader!../access-routes.yml';
 
 class Member {
 
