@@ -75,10 +75,12 @@ class App extends React.PureComponent {
                 <div>
                     <AjaxLoader show={ this.props.loading } size={ 120 }/>
                     <ReactTooltip delayShow={10} />
+                    {isLoggedUser &&
                     <OPSessionChecker
                         clientId={window.OAUTH2_CLIENT_ID}
                         idpBaseUrl={window.IDP_BASE_URL}
                     />
+                    }
                     <div className="header">
                         <div className={"header-title " + (isLoggedUser ? '' : 'center')}>
                             {T.translate("landing.os_summit_admin")}
