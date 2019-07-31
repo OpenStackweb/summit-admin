@@ -90,6 +90,8 @@
     "rsvp_template_list"      : "Templates",
     "tickets"                 : "Tickets",
     "ticket_type_list"        : "Ticket Types",
+    "taxes"                   : "Taxes",
+    "tax_type_list"           : "Tax Types",
     "push_notifications"      : "Push Notifications",
     "room_occupancy"          : "Room Occupancy",
     "tag_groups"              : "Tag Groups",
@@ -827,6 +829,23 @@
     "description"         : "Description",
     "ticket_type_saved"   : "Ticket Type saved successfully",
     "ticket_type_created" : "Ticket Type created successfully"
+  },
+  "tax_type_list": {
+    "tax_types"         : "Tax Types",
+    "tax_type_list"     : "Tax Type List",
+    "no_tax_types"      : "No tax types found for current search criteria.",
+    "add_tax_type"      : "Add Tax Type",
+    "name"              : "Name",
+    "external_id"       : "External Id",
+    "remove_warning"    : "Are you sure you want to delete tax type "
+  },
+  "edit_tax_type": {
+    "tax_type"            : "Tax Type",
+    "name"                : "Name",
+    "external_id"         : "External Id",
+    "description"         : "Description",
+    "tax_type_saved"      : "Tax Type saved successfully",
+    "tax_type_created"    : "Tax Type created successfully"
   },
   "push_notification_list": {
     "push_notifications"      : "Push Notifications",

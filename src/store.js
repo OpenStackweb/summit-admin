@@ -48,6 +48,8 @@ import rsvpQuestionReducer from './reducers/rsvps/rsvp-question-reducer';
 import rsvpQuestionValueReducer from './reducers/rsvps/rsvp-question-value-reducer';
 import ticketTypeListReducer from './reducers/tickets/ticket-type-list-reducer';
 import ticketTypeReducer from './reducers/tickets/ticket-type-reducer';
+import taxTypeListReducer from './reducers/taxes/tax-type-list-reducer';
+import taxTypeReducer from './reducers/taxes/tax-type-reducer';
 import pushNotificationListReducer from './reducers/push_notifications/push-notification-list-reducer';
 import pushNotificationReducer from './reducers/push_notifications/push-notification-reducer';
 import selectionPlanReducer from './reducers/summits/selection-plan-reducer';
@@ -108,6 +110,8 @@ const reducers = persistCombineReducers(config, {
     currentRsvpQuestionValueState: rsvpQuestionValueReducer,
     currentTicketTypeListState: ticketTypeListReducer,
     currentTicketTypeState: ticketTypeReducer,
+    currentTaxTypeListState: taxTypeListReducer,
+    currentTaxTypeState: taxTypeReducer,
     currentPushNotificationListState: pushNotificationListReducer,
     currentPushNotificationState: pushNotificationReducer,
     currentSelectionPlanState: selectionPlanReducer,
