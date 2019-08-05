@@ -49,7 +49,6 @@ const DEFAULT_STATE = {
     currentLocation : null,
     currentEventType : null,
     currentTrack : null,
-    unScheduleEventsCurrentOrder : null,
     currentPresentationSelectionStatus: null,
     unScheduleEventsCurrentSearchTerm: null,
     scheduleEventsCurrentSearchTerm: null,

@@ -167,6 +167,9 @@ const locationReducer = (state = DEFAULT_STATE, action) => {
         break;
         case ROOM_ADDED: {
             let { response } = payload;
+            let floor = state.entity.floors.find(f => f.id == response.floor_id);
+            response.floor_name = floor ? floor.name : 'N/A';
+
             return {...state, entity: {...state.entity, rooms: [...state.entity.rooms, response] }};
         }
         break;

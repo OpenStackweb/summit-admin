@@ -71,6 +71,9 @@ class UnScheduleEvent extends React.Component {
     render() {
         const { connectDragSource, isDragging, event, selectedUnPublishedEvents } = this.props;
         let isSelected = selectedUnPublishedEvents.includes(event.id);
+        let title = event.title.slice(0, 75) + (event.title.length > 75 ? '...' : '');
+        let rank = event.rank ? <span className={`rank-status ${event.selection_status}`}> #{event.rank} - {event.selection_status}</span> : <span></span>;
+
 
         return connectDragSource(
 
@@ -93,7 +96,8 @@ class UnScheduleEvent extends React.Component {
                                     <div className="event-content">
                                         <OverlayTrigger trigger={['hover']} placement="bottom" overlay={this.popoverHoverFocus()}>
                                             <span className="event-title">
-                                                { event.title }
+                                                { title }
+                                                { rank }
                                             </span>
                                         </OverlayTrigger>
                                     </div>

@@ -237,7 +237,7 @@ class EventForm extends React.Component {
                 edit: {onClick: this.handleMaterialEdit},
                 delete: { onClick: this.props.onMaterialDelete }
             }
-        }
+        };
 
         return (
             <form>
@@ -303,8 +303,9 @@ class EventForm extends React.Component {
                             format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                             value={epochToMomentTimeZone(entity.start_date, currentSummit.time_zone_id)}
                             inputProps={{placeholder: T.translate("edit_event.placeholders.start_date")}}
-                            timezone={currentSummit.time_zone.name}
+                            timezone={currentSummit.time_zone_id}
                             error={this.hasErrors('start_date')}
+                            viewDate={epochToMomentTimeZone(currentSummit.start_date, currentSummit.time_zone_id)}
                         />
                     </div>
                     <div className="col-md-4" style={{paddingTop: '24px'}}>
@@ -315,8 +316,9 @@ class EventForm extends React.Component {
                             format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                             value={epochToMomentTimeZone(entity.end_date, currentSummit.time_zone_id)}
                             inputProps={{placeholder: T.translate("edit_event.placeholders.end_date")}}
-                            timezone={currentSummit.time_zone.name}
+                            timezone={currentSummit.time_zone_id}
                             error={this.hasErrors('end_date')}
+                            viewDate={epochToMomentTimeZone(currentSummit.start_date, currentSummit.time_zone_id)}
                         />
                     </div>
                 </div>

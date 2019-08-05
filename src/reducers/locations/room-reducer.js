@@ -28,13 +28,15 @@ import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 export const DEFAULT_ENTITY = {
     id                  : 0,
     name                : '',
+    class_name          : null,
     description         : '',
     capacity            : 0,
     override_blackouts  : false,
     time_slot_cost      : 0,
     currency            : 'USD',
     attributes          : [],
-    floor               : null
+    floor               : null,
+    floor_id            : null,
 }
 
 const DEFAULT_STATE = {

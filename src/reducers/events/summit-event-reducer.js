@@ -82,6 +82,9 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
         case EVENT_ADDED:
         case RECEIVE_EVENT: {
             let entity = payload.response;
+            let links = [];
+            let videos = [];
+            let slides = [];
 
             for(var key in entity) {
                 if(entity.hasOwnProperty(key)) {
@@ -91,9 +94,15 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
 
             if (!entity.rsvp_external) entity.rsvp_link = null;
 
-            let links = entity.links.map(l => ({...l, name: l.name ? l.name : l.link, display_on_site_label: l.display_on_site ? 'Yes' : 'No'}));
-            let videos = entity.videos.map(v => ({...v, display_on_site_label: v.display_on_site ? 'Yes' : 'No'}));
-            let slides = entity.slides.map(s => ({...s, display_on_site_label: s.display_on_site ? 'Yes' : 'No'}));
+            if (entity.links) {
+                links = entity.links.map(l => ({...l, name: l.name ? l.name : l.link, display_on_site_label: l.display_on_site ? 'Yes' : 'No'}));
+            }
+            if (entity.videos) {
+                videos = entity.videos.map(v => ({...v, display_on_site_label: v.display_on_site ? 'Yes' : 'No'}));
+            }
+            if (entity.slides) {
+                slides = entity.slides.map(s => ({...s, display_on_site_label: s.display_on_site ? 'Yes' : 'No'}));
+            }
 
             entity.materials = [...links, ...videos, ...slides];
 

@@ -26,17 +26,17 @@ class ScheduleAdminTrackSelector extends React.Component {
     }
 
     render() {
-        let {tracks, currentValue} = this.props;
-        let theValue = tracks.find(op => op.value == currentValue);
+        let {tracks, currentValue,} = this.props;
 
         return (
             <Select
                 placeholder={T.translate("schedule.placeholders.select_track")}
                 className="track-selector"
                 name="form-field-name"
-                value={theValue}
+                value={currentValue}
                 onChange={this.onChange}
                 options={tracks}
+                isClearable={true}
             />);
     }
 }

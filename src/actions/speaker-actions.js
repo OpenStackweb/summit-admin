@@ -59,7 +59,7 @@ export const getSpeakers = ( term = null, page = 1, perPage = 10, order = 'id', 
     dispatch(startLoading());
 
     if(term){
-        filter.push(`first_name=@${term},last_name=@${term},email=@${term}`);
+        filter.push(`full_name=@${term},first_name=@${term},last_name=@${term},email=@${term}`);
     }
 
     let params = {

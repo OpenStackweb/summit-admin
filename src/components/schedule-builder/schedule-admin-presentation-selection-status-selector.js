@@ -37,6 +37,7 @@ class ScheduleAdminPresentationSelectionStatusSelector extends React.Component {
                 value={theValue}
                 onChange={this.onChange}
                 options={presentationSelectionStatus}
+                isClearable={true}
             />
         )
     }

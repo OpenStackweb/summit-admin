@@ -22,7 +22,7 @@ export default class MenuItem extends React.Component {
         let {name, iconClass, onClick} = this.props;
 
         const itemHtml = [
-            <a id={name + '-menu'} className="menu-item" onClick={onClick} >
+            <a id={name + '-menu'} key={name + '-menu'} className="menu-item" onClick={onClick} >
                 <i className={iconClass + ' fa'} />
                 {T.translate('menu.' + name)}
             </a>
