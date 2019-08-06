@@ -2,7 +2,7 @@ const path              = require('path');
 const webpack           = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const UglifyJSPlugin    = require('uglifyjs-webpack-plugin');
+const TerserJSPlugin    = require('terser-webpack-plugin');
 const                 _ = require('lodash');
 const VersioningPlugin  = require('versioning-webpack-plugin')
 const WebpackMd5Hash    = require('webpack-md5-hash')
@@ -44,7 +44,7 @@ var plugins = [
 ];
 
 var productionPlugins = [
-    new UglifyJSPlugin(),
+    new TerserJSPlugin({terserOptions: {compress: {inline: false}}}),
     new webpack.DefinePlugin({
         'process.env': {
             'NODE_ENV': JSON.stringify('production')
@@ -136,7 +136,7 @@ const config = {
     plugins: PRODUCTION
         ? plugins.concat(productionPlugins)
         : plugins.concat(devPlugins),
-    optimization: {
+    optimization: {                  
         removeAvailableModules: false,
         removeEmptyChunks: false,
         splitChunks: {
