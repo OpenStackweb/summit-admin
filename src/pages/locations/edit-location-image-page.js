@@ -17,7 +17,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
 import ImageForm from '../../components/forms/image-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getLocationImage, resetLocationImageForm, saveLocationImage, attachLocationImage } from "../../actions/location-actions";
+import { getLocationImage, resetLocationImageForm, saveLocationImage } from "../../actions/location-actions";
 
 class EditLocationImagePage extends React.Component {
 
@@ -61,7 +61,6 @@ class EditLocationImagePage extends React.Component {
                     entity={entity}
                     errors={errors}
                     onSubmit={this.props.saveLocationImage}
-                    onAttach={attachLocationImage}
                 />
                 }
             </div>
