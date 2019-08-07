@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { Table } from 'openstack-uicore-foundation/lib/components';
 import { getEventCategoryGroups, deleteEventCategoryGroup } from "../../actions/event-category-actions";
 
@@ -57,7 +57,7 @@ class EventCategoryGroupListPage extends React.Component {
         let {deleteEventCategoryGroup, eventCategoryGroups} = this.props;
         let group = eventCategoryGroups.find(g => g.id == groupId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("event_category_group_list.delete_warning") + ' ' + group.name,
             type: "warning",
@@ -68,7 +68,7 @@ class EventCategoryGroupListPage extends React.Component {
             if (result.value) {
                 deleteEventCategoryGroup(groupId);
             }
-        }).catch(swal.noop);
+        });
     }
 
     render(){

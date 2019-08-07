@@ -14,7 +14,7 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import moment from 'moment-timezone'
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import { findElementPos, epochToMomentTimeZone, epochToMoment } from 'openstack-uicore-foundation/lib/methods'
 import {

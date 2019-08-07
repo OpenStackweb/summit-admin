@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { Pagination } from 'react-bootstrap';
 import { FreeTextSearch, Dropdown, Table } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
@@ -74,7 +74,7 @@ class PromocodeListPage extends React.Component {
         let {deletePromocode, promocodes} = this.props;
         let promocode = promocodes.find(p => p.id == promocodeId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("promocode_list.remove_promocode_warning") + ' ' + promocode.owner,
             type: "warning",
@@ -85,7 +85,7 @@ class PromocodeListPage extends React.Component {
             if (result.value) {
                 deletePromocode(promocodeId);
             }
-        }).catch(swal.noop);
+        });
     }
 
     isNotRedeemed(promocodeId) {

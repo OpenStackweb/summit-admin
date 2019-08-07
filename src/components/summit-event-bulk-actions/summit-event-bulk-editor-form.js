@@ -13,7 +13,7 @@
 import React from 'react'
 import SummitEventBulkEditorItem from './summit-event-bulk-editor-item'
 import T from 'i18n-react/dist/i18n-react'
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { DateTimePicker, Dropdown } from 'openstack-uicore-foundation/lib/components'
 import ScheduleAdminVenueSelector from '../schedule-builder/schedule-admin-venue-selector';
 import ScheduleAdminEventTypeSelector from '../schedule-builder/schedule-admin-event-type-selector';
@@ -46,7 +46,7 @@ class SummitEventBulkEditorForm extends React.Component
         let {currentSummit, events }  = this.props;
         let invalidEvents = events.filter((event) => !event.is_valid);
         if(invalidEvents.length > 0){
-            swal({
+            Swal.fire({
                 title: T.translate("bulk_actions_page.messages.validation_title"),
                 text:  T.translate("bulk_actions_page.messages.validation_message"),
                 type: 'warning',
@@ -62,7 +62,7 @@ class SummitEventBulkEditorForm extends React.Component
         let {currentSummit, events }  = this.props;
         let invalidEvents = events.filter((event) => !event.is_valid);
         if(invalidEvents.length > 0){
-            swal({
+            Swal.fire({
                 title: T.translate("bulk_actions_page.messages.validation_title"),
                 text:  T.translate("bulk_actions_page.messages.validation_message"),
                 type: 'warning',

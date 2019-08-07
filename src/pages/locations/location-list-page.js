@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { SortableTable } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getLocations, deleteLocation, exportLocations, updateLocationOrder } from "../../actions/location-actions";
@@ -62,7 +62,7 @@ class LocationListPage extends React.Component {
         let {deleteLocation, locations} = this.props;
         let location = locations.find(p => p.id == locationId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("location_list.remove_warning") + ' ' + location.name,
             type: "warning",
@@ -73,7 +73,7 @@ class LocationListPage extends React.Component {
             if (result.value) {
                 deleteLocation(locationId);
             }
-        }).catch(swal.noop);
+        });
     }
 
     handleNewLocation(ev) {

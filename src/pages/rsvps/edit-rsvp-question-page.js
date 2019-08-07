@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { Breadcrumb } from 'react-breadcrumbs';
 import RsvpQuestionForm from '../../components/forms/rsvp-question-form';
 import { getSummitById }  from '../../actions/summit-actions';
@@ -34,7 +34,7 @@ class EditRsvpQuestionPage extends React.Component {
         let {deleteRsvpQuestionValue, entity} = this.props;
         let value = entity.values.find(v => v.id == valueId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("edit_rsvp_question.remove_value_warning") + ' ' + value.value,
             type: "warning",
@@ -45,7 +45,7 @@ class EditRsvpQuestionPage extends React.Component {
             if (result.value) {
                 deleteRsvpQuestionValue(rsvpTemplateId, rsvpQuestionId, valueId);
             }
-        }).catch(swal.noop);
+        });
     }
 
     handleValueReorder(values, valueId, newOrder) {

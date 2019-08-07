@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { Breadcrumb } from 'react-breadcrumbs';
 import Restrict from '../../routes/restrict'
 import SummitForm from '../../components/forms/summit-form';
@@ -39,7 +39,7 @@ class EditSummitPage extends React.Component {
         let {currentSummit, deleteSelectionPlan} = this.props;
         let selectionPlan = currentSummit.selection_plans.find(sp => sp.id == selectionPlanId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("edit_summit.remove_sp_warning") + ' ' + selectionPlan.name,
             type: "warning",
@@ -50,14 +50,14 @@ class EditSummitPage extends React.Component {
             if (result.value) {
                 deleteSelectionPlan(selectionPlanId);
             }
-        }).catch(swal.noop);
+        });
     }
 
     handleAttributeTypeDelete(attributeTypeId) {
         let {deleteRoomBookingAttributeType, currentSummit} = this.props;
         let roomBookingType = currentSummit.meeting_booking_room_allowed_attributes.find(rb => rb.id == attributeTypeId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("room_bookings.delete_booking_attribute_warning") + ' ' + roomBookingType.type,
             type: "warning",
@@ -68,7 +68,7 @@ class EditSummitPage extends React.Component {
             if (result.value) {
                 deleteRoomBookingAttributeType(attributeTypeId);
             }
-        }).catch(swal.noop);
+        });
     }
 
 

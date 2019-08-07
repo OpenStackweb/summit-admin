@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { Pagination } from 'react-bootstrap';
 import { FreeTextSearch, Table } from 'openstack-uicore-foundation/lib/components';
 import { getAttendances, deleteAttendance, exportAttendances } from "../../actions/speaker-actions";
@@ -75,7 +75,7 @@ class SpeakerAttendanceListPage extends React.Component {
         let {deleteAttendance, attendances} = this.props;
         let attendance = attendances.find(a => a.id == attendanceId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("speaker_attendance_list.delete_attendance_warning") + ' ' + attendance.speaker_name,
             type: "warning",
@@ -86,7 +86,7 @@ class SpeakerAttendanceListPage extends React.Component {
             if (result.value) {
                 deleteAttendance(attendanceId);
             }
-        }).catch(swal.noop);
+        });
     }
 
     isNotConfirmed(attendanceId) {

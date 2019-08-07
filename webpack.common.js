@@ -14,10 +14,6 @@ module.exports = {
         new Dotenv()
     ],
     node: {fs: 'empty'},
-    externals: [
-        {'./cptable': 'var cptable'},
-        {'./jszip': 'jszip'}
-    ],
     module: {
         rules: [
             {

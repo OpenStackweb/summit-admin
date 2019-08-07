@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { Table } from 'openstack-uicore-foundation/lib/components';
 import { getEventTypes, deleteEventType, seedEventTypes } from "../../actions/event-type-actions";
 
@@ -58,7 +58,7 @@ class EventTypeListPage extends React.Component {
         let {deleteEventType, eventTypes} = this.props;
         let eventType = eventTypes.find(e => e.id == eventTypeId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("event_type_list.remove_warning") + ' ' + eventType.name,
             type: "warning",
@@ -69,7 +69,7 @@ class EventTypeListPage extends React.Component {
             if (result.value) {
                 deleteEventType(eventTypeId);
             }
-        }).catch(swal.noop);
+        });
     }
 
     isNotDefault(eventTypeId) {

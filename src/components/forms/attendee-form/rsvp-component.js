@@ -13,7 +13,7 @@
 
 import React from 'react';
 import T from 'i18n-react/dist/i18n-react';
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { epochToMoment } from 'openstack-uicore-foundation/lib/methods'
 
 
@@ -38,9 +38,9 @@ export default class RsvpComponent extends React.Component {
             type: 'warning'
         };
 
-        swal(msg).then(function(){
+        Swal.fire(msg).then(function(){
             onDelete(member.id, rsvpId);
-        }).catch(swal.noop);
+        });
     }
 
     render() {

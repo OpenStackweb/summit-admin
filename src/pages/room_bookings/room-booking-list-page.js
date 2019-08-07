@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { Modal } from 'react-bootstrap';
 import { Pagination } from 'react-bootstrap';
 import { Table, FreeTextSearch } from 'openstack-uicore-foundation/lib/components';
@@ -72,7 +72,7 @@ class RoomBookingListPage extends React.Component {
         let {deleteRoomBooking, roomBookings} = this.props;
         let roomBooking = roomBookings.find(rb => rb.id == bookingId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("room_booking_list.delete_booking_warning") + ' ' + roomBooking.owner,
             type: "warning",
@@ -83,7 +83,7 @@ class RoomBookingListPage extends React.Component {
             if (result.value) {
                 deleteRoomBooking(bookingId);
             }
-        }).catch(swal.noop);
+        });
     }
 
     handlePageChange(page) {

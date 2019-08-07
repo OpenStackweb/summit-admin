@@ -13,7 +13,7 @@
 
 import React from 'react';
 import T from 'i18n-react/dist/i18n-react';
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { Modal } from 'react-bootstrap';
 import { MemberInput, Dropdown } from 'openstack-uicore-foundation/lib/components'
 
@@ -54,9 +54,9 @@ export default class TicketComponent extends React.Component {
             type: 'warning'
         };
 
-        swal(msg).then(function(){
+        Swal.fire(msg).then(function(){
             onDelete(attendeeId, ticket_id);
-        }).catch(swal.noop);
+        });
 
     }
 

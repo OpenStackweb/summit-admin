@@ -11,7 +11,7 @@
  * limitations under the License.
  **/
 
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import T from "i18n-react/dist/i18n-react";
 import history from '../history'
 import {
@@ -279,7 +279,7 @@ export const updateLocationMap = (location) => (dispatch) => {
             dispatch(createAction(LOCATION_GMAP_UPDATED)(results));
         })
         .catch(function(status) {
-            swal(T.translate("edit_location.no_address_title"), T.translate("edit_location.no_address_body"), "warning");
+            Swal.fire(T.translate("edit_location.no_address_title"), T.translate("edit_location.no_address_body"), "warning");
         });
 }
 
@@ -292,7 +292,7 @@ export const updateAddress = (location) => (dispatch) => {
             dispatch(createAction(LOCATION_ADDRESS_UPDATED)(results));
         })
         .catch(function(status) {
-            swal(T.translate("edit_location.no_address_title"), T.translate("edit_location.no_address_body"), "warning");
+            Swal.fire(T.translate("edit_location.no_address_title"), T.translate("edit_location.no_address_body"), "warning");
         });
 }
 

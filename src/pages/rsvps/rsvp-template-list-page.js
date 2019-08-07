@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { Pagination } from 'react-bootstrap';
 import { FreeTextSearch, Table } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
@@ -60,9 +60,9 @@ class RsvpTemplateListPage extends React.Component {
         let {deleteRsvpTemplate, rsvpTemplates} = this.props;
         let rsvpTemplate = rsvpTemplates.find(r => r.id == rsvpTemplateId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
-            text: T.translate("rsvp_template_list.remove_warning") + ' ' + rsvpTemplate.owner,
+            text: T.translate("rsvp_template_list.remove_warning") + ' ' + rsvpTemplate.title,
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
@@ -71,7 +71,7 @@ class RsvpTemplateListPage extends React.Component {
             if (result.value) {
                 deleteRsvpTemplate(rsvpTemplateId);
             }
-        }).catch(swal.noop);
+        });
     }
 
     handlePageChange(page) {

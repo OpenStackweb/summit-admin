@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { Pagination } from 'react-bootstrap';
 import { FreeTextSearch, Table } from 'openstack-uicore-foundation/lib/components';
 import ScheduleModal from "../../components/schedule-modal/index";
@@ -111,7 +111,7 @@ class SummitAttendeeListPage extends React.Component {
         let {deleteAttendee, attendees} = this.props;
         let attendee = attendees.find(a => a.id == attendeeId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("attendee_list.delete_attendee_warning") + ' ' + attendee.name,
             type: "warning",
@@ -122,7 +122,7 @@ class SummitAttendeeListPage extends React.Component {
             if (result.value) {
                 deleteAttendee(attendeeId);
             }
-        }).catch(swal.noop);
+        });
     }
 
     render(){

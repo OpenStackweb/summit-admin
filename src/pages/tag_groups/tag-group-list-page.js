@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { SortableTable } from 'openstack-uicore-foundation/lib/components';
 import { getTagGroups, deleteTagGroup, updateTagGroupsOrder,seedTagGroups } from "../../actions/tag-actions";
 
@@ -56,7 +56,7 @@ class TagGroupListPage extends React.Component {
         let {deleteTagGroup, tagGroups} = this.props;
         let tagGroup = tagGroups.find(tg => tg.id == tagGroupId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("tag_group_list.remove_tag_group_warning") + ' ' + tagGroup.label,
             type: "warning",
@@ -67,7 +67,7 @@ class TagGroupListPage extends React.Component {
             if (result.value) {
                 deleteTagGroup(tagGroupId);
             }
-        }).catch(swal.noop);
+        });
     }
 
     handleNewTagGroup(ev) {

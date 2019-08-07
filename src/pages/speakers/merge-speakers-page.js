@@ -13,7 +13,7 @@
 
 import React from 'react'
 import { connect } from 'react-redux';
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import MergeSpeakerForm from '../../components/forms/merge-speaker-form/merge-speaker-form';
@@ -86,7 +86,7 @@ class MergeSpeakerPage extends React.Component {
             if (field == 0) changedFields.push(key);
         }
 
-        swal({
+        Swal.fire({
             title: T.translate("general.attention"),
             text: T.translate("merge_speakers.merge_warning"),
             type: "warning",
@@ -97,7 +97,7 @@ class MergeSpeakerPage extends React.Component {
             if (result.value) {
                 props.mergeSpeakers(speakers, selectedFields, changedFields);
             }
-        }).catch(swal.noop);
+        });
 
     }
 

@@ -757,6 +757,7 @@
     "add_rsvp_template"       : "Add Template",
     "no_items"                : "No templates found",
     "title"                   : "Title",
+    "remove_warning"          : "Are you sure you want to remove template ",
     "placeholders": {
       "search_rsvp_templates" : "Search by template name."
     }

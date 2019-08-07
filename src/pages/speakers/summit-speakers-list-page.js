@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { Pagination } from 'react-bootstrap';
 import { FreeTextSearch, Table } from 'openstack-uicore-foundation/lib/components';
 import { getSpeakers, deleteSpeaker } from "../../actions/speaker-actions";
@@ -48,7 +48,7 @@ class SummitSpeakerListPage extends React.Component {
         let {deleteSpeaker, speakers} = this.props;
         let speaker = speakers.find(s => s.id == speakerId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("speaker_list.delete_speaker_warning") + ' ' + speaker.name,
             type: "warning",
@@ -59,7 +59,7 @@ class SummitSpeakerListPage extends React.Component {
             if (result.value) {
                 deleteSpeaker(speakerId);
             }
-        }).catch(swal.noop);
+        });
     }
 
     handlePageChange(page) {

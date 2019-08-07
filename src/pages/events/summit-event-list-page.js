@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { Pagination } from 'react-bootstrap';
 import { FreeTextSearch, Table } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
@@ -89,7 +89,7 @@ class SummitEventListPage extends React.Component {
         let {deleteEvent, events} = this.props;
         let event = events.find(e => e.id == eventId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("event_list.delete_event_warning") + ' ' + event.title,
             type: "warning",
@@ -100,7 +100,7 @@ class SummitEventListPage extends React.Component {
             if (result.value) {
                 deleteEvent(eventId);
             }
-        }).catch(swal.noop);
+        });
     }
 
     render(){

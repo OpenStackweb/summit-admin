@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { Table, SummitDropdown } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getEventCategories, deleteEventCategory, copyEventCategories } from "../../actions/event-category-actions";
@@ -66,7 +66,7 @@ class EventCategoryListPage extends React.Component {
         let {deleteEventCategory, eventCategories} = this.props;
         let category = eventCategories.find(c => c.id == categoryId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("event_category_list.delete_warning") + ' ' + category.name,
             type: "warning",
@@ -77,7 +77,7 @@ class EventCategoryListPage extends React.Component {
             if (result.value) {
                 deleteEventCategory(categoryId);
             }
-        }).catch(swal.noop);
+        });
     }
 
     render(){

@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { Table } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getTicketTypes, deleteTicketType, seedTicketTypes } from "../../actions/ticket-actions";
@@ -64,7 +64,7 @@ class TicketTypeListPage extends React.Component {
         let {deleteTicketType, ticketTypes} = this.props;
         let ticketType = ticketTypes.find(t => t.id == ticketTypeId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("ticket_type_list.remove_warning") + ' ' + ticketType.name,
             type: "warning",
@@ -75,7 +75,7 @@ class TicketTypeListPage extends React.Component {
             if (result.value) {
                 deleteTicketType(ticketTypeId);
             }
-        }).catch(swal.noop);
+        });
     }
 
     handleSort(index, key, dir, func) {

@@ -15,7 +15,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import FloorForm from '../../components/forms/floor-form';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getFloor, resetFloorForm, saveFloor, deleteRoom } from "../../actions/location-actions";
@@ -53,7 +53,7 @@ class EditFloorPage extends React.Component {
         let {deleteRoom, entity, currentLocation} = this.props;
         let room = entity.rooms.find(r => r.id == roomId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("edit_location.remove_room_warning") + ' ' + room.name,
             type: "warning",
@@ -64,7 +64,7 @@ class EditFloorPage extends React.Component {
             if (result.value) {
                 deleteRoom(currentLocation.id, roomId);
             }
-        }).catch(swal.noop);
+        });
     }
 
     render(){

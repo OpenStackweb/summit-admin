@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import LocationForm from '../../components/forms/location-form';
 import { getSummitById }  from '../../actions/summit-actions';
 import {
@@ -46,7 +46,7 @@ class EditLocationPage extends React.Component {
         let {deleteFloor, entity} = this.props;
         let floor = entity.floors.find(f => f.id == floorId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("edit_location.remove_floor_warning") + ' ' + floor.name,
             type: "warning",
@@ -57,14 +57,14 @@ class EditLocationPage extends React.Component {
             if (result.value) {
                 deleteFloor(entity.id, floorId);
             }
-        }).catch(swal.noop);
+        });
     }
 
     handleRoomDelete(roomId) {
         let {deleteRoom, entity} = this.props;
         let room = entity.rooms.find(r => r.id == roomId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("edit_location.remove_room_warning") + ' ' + room.name,
             type: "warning",
@@ -75,14 +75,14 @@ class EditLocationPage extends React.Component {
             if (result.value) {
                 deleteRoom(entity.id, roomId);
             }
-        }).catch(swal.noop);
+        });
     }
 
     handleImageDelete(imageId) {
         let {deleteLocationImage, entity} = this.props;
         let image = entity.images.find(i => i.id == imageId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("edit_location.remove_image_warning") + ' ' + image.name,
             type: "warning",
@@ -93,14 +93,14 @@ class EditLocationPage extends React.Component {
             if (result.value) {
                 deleteLocationImage(entity.id, imageId);
             }
-        }).catch(swal.noop);
+        });
     }
 
     handleMapDelete(mapId) {
         let {deleteLocationMap, entity} = this.props;
         let map = entity.maps.find(m => m.id == mapId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("edit_location.remove_map_warning") + ' ' + map.name,
             type: "warning",
@@ -111,7 +111,7 @@ class EditLocationPage extends React.Component {
             if (result.value) {
                 deleteLocationMap(entity.id, mapId);
             }
-        }).catch(swal.noop);
+        });
     }
 
     render(){

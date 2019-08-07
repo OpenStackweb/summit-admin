@@ -56,7 +56,7 @@ import T from "i18n-react/dist/i18n-react";
 import moment from 'moment-timezone';
 import FragmentParser from '../../utils/fragmen-parser';
 import * as Scroll from 'react-scroll';
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import ScheduleAdminEmptySpotsModal from './schedule-admin-empty-spots-modal';
 import ScheduleAdminEmptySpotsList from './schedule-admin-empty-spots-list';
 import ScheduleAdminsBulkActionsSelector from './bulk-actions/schedule-admin-bulk-actions-selector'
@@ -390,7 +390,7 @@ class ScheduleAdminDashBoard extends React.Component {
     }
 
     onUnPublishEvent(event){
-        swal({
+        Swal.fire({
             title: T.translate("schedule_builder_page.titles.unpublish_confirmation"),
             text: T.translate("schedule_builder_page.messages.unpublish_confirmation"),
             type: 'warning',
@@ -486,7 +486,7 @@ class ScheduleAdminDashBoard extends React.Component {
         let {selectedPublishedEvents, performBulkAction} = this.props;
         if(selectedPublishedEvents.length == 0) return;
         if(bulkAction == BulkActionUnPublish){
-            swal({
+            Swal.fire({
                 title: T.translate("schedule_builder_page.titles.bulk_unpublish_confirmation"),
                 text: T.translate("schedule_builder_page.messages.bulk_unpublish_confirmation"),
                 type: 'warning',

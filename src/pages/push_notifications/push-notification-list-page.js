@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { Table, Dropdown } from 'openstack-uicore-foundation/lib/components';
 import { Pagination } from 'react-bootstrap';
 import { getSummitById }  from '../../actions/summit-actions';
@@ -66,7 +66,7 @@ class PushNotificationListPage extends React.Component {
         let {deletePushNotification, pushNotifications} = this.props;
         let pushNotification = pushNotifications.find(n => n.id == pushNotificationId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("push_notification_list.remove_warning") + ' ' + pushNotification.name,
             type: "warning",
@@ -77,7 +77,7 @@ class PushNotificationListPage extends React.Component {
             if (result.value) {
                 deletePushNotification(pushNotificationId);
             }
-        }).catch(swal.noop);
+        });
     }
 
     handlePageChange(page) {
