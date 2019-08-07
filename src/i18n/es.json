@@ -711,6 +711,7 @@
   },
   "room_bookings": {
     "room_bookings"                     : "Room Bookings",
+    "room_bookings_attributes"          : "Room Booking Attributes",
     "settings"                          : "Settings",
     "main"                              : "Main",
     "attributes"                        : "Attributes",

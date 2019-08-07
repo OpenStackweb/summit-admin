@@ -21,7 +21,7 @@ import { getSummitById, resetSummitForm }  from '../actions/summit-actions';
 
 import SummitDashboardPage from '../pages/summits/summit-dashboard-page'
 import EditSummitPage from '../pages/summits/edit-summit-page'
-import EditSelectionPlanPage from '../pages/summits/edit-selection-plan-page'
+import SelectionPlanLayout from './selection-plan-layout'
 import EventTypeLayout from './event-type-layout'
 import SpeakerAttendanceLayout from './speaker-attendance-layout'
 import EventLayout from './event-layout'
@@ -39,8 +39,11 @@ import RoomOccupancyLayout from './room-occupancy-layout'
 import TagGroupLayout from './tag-group-layout'
 import ReportsLayout from './reports-layout'
 import RoomBookingsLayout from './room-bookings-layout';
-import NoMatchPage from "../pages/no-match-page";
-import EditRoomBookingAttributePage from "../pages/room_bookings/edit-room-booking-attribute-page";
+import RoomBookingAttributeLayout from './room-booking-attribute-layout';
+import BadgeFeatureLayout from './badge-feature-layout'
+import AccessLevelLayout from './access-level-layout'
+import BadgeTypeLayout from './badge-type-layout'
+import NoMatchPage from '../pages/no-match-page';
 
 
 class SummitIdLayout extends React.Component {
@@ -82,8 +85,7 @@ class SummitIdLayout extends React.Component {
                 <Switch>
                     <Route strict exact path={`${match.url}/dashboard`} component={SummitDashboardPage} />
                     <Route strict exact path={match.url} component={EditSummitPage} />
-                    <Route strict exact path={`${match.url}/room-booking-attributes/new`} component={EditRoomBookingAttributePage} />
-                    <Route strict exact path={`${match.url}/room-booking-attributes/:attribute_id(\\d+)`} component={EditRoomBookingAttributePage} />
+                    <Route path={`${match.url}/room-booking-attributes`} component={RoomBookingAttributeLayout}/>
                     <Route path={`${match.url}/events`} component={EventLayout}/>
                     <Route path={`${match.url}/event-types`} component={EventTypeLayout}/>
                     <Route path={`${match.url}/event-categories`} component={EventCategoryLayout}/>
@@ -101,18 +103,10 @@ class SummitIdLayout extends React.Component {
                     <Route path={`${match.url}/room-occupancy`} component={RoomOccupancyLayout}/>
                     <Route path={`${match.url}/tag-groups`} component={TagGroupLayout}/>
                     <Route path={`${match.url}/reports`} component={ReportsLayout}/>
-                    <Route path={`${match.url}/selection-plans`} render={
-                        props => (
-                            <div>
-                                <Breadcrumb data={{ title: T.translate("edit_selection_plan.selection_plans"), pathname: match.url }} ></Breadcrumb>
-                                <Switch>
-                                    <Route strict exact path={`${props.match.url}/new`} component={EditSelectionPlanPage} />
-                                    <Route strict exact path={`${props.match.url}/:selection_plan_id(\\d+)`} component={EditSelectionPlanPage} />
-                                    <Route component={NoMatchPage}/>
-                                </Switch>
-                            </div>
-                        )}
-                    />
+                    <Route path={`${match.url}/selection-plans`} component={SelectionPlanLayout}/>
+                    <Route path={`${match.url}/badge-features`} component={BadgeFeatureLayout}/>
+                    <Route path={`${match.url}/badge-types`} component={BadgeTypeLayout}/>
+                    <Route path={`${match.url}/access-levels`} component={AccessLevelLayout}/>
                     <Route component={NoMatchPage}/>
                 </Switch>
             </div>

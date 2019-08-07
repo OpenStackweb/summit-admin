@@ -144,6 +144,13 @@ class NavMenu extends React.Component {
                     {name:'refund_policy_list', linkUrl:`summits/${summit_id}/refund-policies`}
                 ]
             },
+            {name: 'badges', iconClass: 'fa-ticket', accessRoute: 'badges',
+                childs: [
+                    {name:'badge_feature_list', linkUrl:`summits/${summit_id}/badge-features`},
+                    {name:'access_level_list', linkUrl:`summits/${summit_id}/access-levels`},
+                    {name:'badge_type_list', linkUrl:`summits/${summit_id}/badge-types`}
+                ]
+            },
             {name: 'room_bookings', iconClass: 'fa-bookmark', linkUrl:`summits/${summit_id}/room-bookings`, accessRoute: 'room-bookings', exclusive: 'room-booking'},
             {name: 'push_notifications', iconClass: 'fa-paper-plane', linkUrl:`summits/${summit_id}/push-notifications`, accessRoute: 'push-notifications' },
             {name: 'room_occupancy', iconClass: 'fa-male', linkUrl:`summits/${summit_id}/room-occupancy`, accessRoute: 'room-occupancy' },
