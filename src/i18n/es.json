@@ -827,8 +827,17 @@
     "name"                : "Name",
     "external_id"         : "External Id",
     "description"         : "Description",
-    "ticket_type_saved"   : "Ticket Type saved successfully",
-    "ticket_type_created" : "Ticket Type created successfully"
+    "cost"                : "Cost",
+    "currency"              : "Currency",
+    "quantity_to_sell"      : "Quantity to sell",
+    "max_quantity_to_sell_per_order": "Max per order",
+    "sale_start_date"       : "Sale Start",
+    "sale_end_date"         : "Sale End",
+    "ticket_type_saved"     : "Ticket Type saved successfully",
+    "ticket_type_created"   : "Ticket Type created successfully",
+    "placeholders": {
+      "select_currency": "Select currency"
+    }
   },
   "tax_type_list": {
     "tax_types"         : "Tax Types",
@@ -846,6 +855,13 @@
     "description"         : "Description",
     "tax_type_saved"      : "Tax Type saved successfully",
     "tax_type_created"    : "Tax Type created successfully"
+  },
+  "refund_policy_list": {
+    "refund_policy_list": "Refund Policy List",
+    "refund_policies"   : "Refund Policies",
+    "name"              : "Name",
+    "rate"              : "Rate (%)",
+    "days_before"       : "Days before event begin"
   },
   "push_notification_list": {
     "push_notifications"      : "Push Notifications",

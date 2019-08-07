@@ -16,7 +16,6 @@ import
     RECEIVE_TAX_TYPES,
     REQUEST_TAX_TYPES,
     TAX_TYPE_DELETED,
-    TAX_TYPES_SEEDED
 } from '../../actions/tax-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
@@ -49,13 +48,6 @@ const taxTypeListReducer = (state = DEFAULT_STATE, action) => {
             return {...state, taxTypes: taxTypes, totalTaxTypes: total };
         }
         break;
-        case TAX_TYPES_SEEDED: {
-            let { total } = payload.response;
-            let taxTypes = payload.response.data;
-
-            return {...state, taxTypes: [...state.taxTypes, taxTypes], totalTaxTypes: total };
-        }
-            break;
         case TAX_TYPE_DELETED: {
             let {taxTypeId} = payload;
             return {...state, taxTypes: state.taxTypes.filter(t => t.id != taxTypeId)};

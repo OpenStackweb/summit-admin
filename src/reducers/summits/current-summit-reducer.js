@@ -57,6 +57,7 @@ export const DEFAULT_ENTITY = {
     start_date: 0,
     start_showing_venues_date: 0,
     slug: '',
+    supported_currencies: ['USD', 'EUR'],
     ticket_types: [],
     time_zone: {},
     time_zone_id: '',
@@ -73,6 +74,7 @@ export const DEFAULT_ENTITY = {
     api_feed_type: '',
     api_feed_url: '',
     api_feed_key: '',
+    refund_policies: []
 }
 
 const DEFAULT_STATE = {
@@ -109,7 +111,7 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
                 }
             }
 
-            return {...state, currentSummit: entity, errors: {}};
+            return {...state, currentSummit: {...state.currentSummit, ...entity}, errors: {}};
         }
         break;
         case UPDATE_SUMMIT: {

@@ -199,3 +199,30 @@ const normalizeEntity = (entity) => {
     return normalizedEntity;
 
 }
+
+
+
+/****************   REFUND POLICIES ******************************/
+
+export const saveRefundPolicy = (entity) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken,
+    };
+
+}
+
+export const deleteRefundPolicy = (refundPolicyId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+};

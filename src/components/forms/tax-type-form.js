@@ -118,7 +118,7 @@ class TaxTypeForm extends React.Component {
         };
 
         return (
-            <form className="selection-plan-form">
+            <form className="tax-type-form">
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
                     <div className="col-md-4">

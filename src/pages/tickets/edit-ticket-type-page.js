@@ -15,7 +15,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
-import SimpleForm from '../../components/forms/simple-form';
+import TicketTypeForm from '../../components/forms/ticket-type-form';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getTicketType, resetTicketTypeForm, saveTicketType } from "../../actions/ticket-actions";
 
@@ -47,11 +47,6 @@ class EditTicketTypePage extends React.Component {
     render(){
         let {currentSummit, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let fields = [
-            {type: 'text', name: 'name', label: T.translate("edit_ticket_type.name")},
-            {type: 'text', name: 'external_id', label: T.translate("edit_ticket_type.external_id")},
-            {type: 'textarea', name: 'description', label: T.translate("edit_ticket_type.description")}
-        ];
         let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
 
@@ -61,11 +56,10 @@ class EditTicketTypePage extends React.Component {
                 <h3>{title} {T.translate("edit_ticket_type.ticket_type")}</h3>
                 <hr/>
                 {currentSummit &&
-                <SimpleForm
-                    history={this.props.history}
+                <TicketTypeForm
                     entity={entity}
                     errors={errors}
-                    fields={fields}
+                    currentSummit={currentSummit}
                     onSubmit={this.props.saveTicketType}
                 />
                 }

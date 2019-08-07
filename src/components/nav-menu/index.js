@@ -140,7 +140,8 @@ class NavMenu extends React.Component {
                 childs: [
                     {name:'ticket_type_list', linkUrl:`summits/${summit_id}/ticket-types`},
                     {name:'promocode_list', linkUrl:`summits/${summit_id}/promocodes`},
-                    {name:'tax_type_list', linkUrl:`summits/${summit_id}/tax-types`}
+                    {name:'tax_type_list', linkUrl:`summits/${summit_id}/tax-types`},
+                    {name:'refund_policy_list', linkUrl:`summits/${summit_id}/refund-policies`}
                 ]
             },
             {name: 'room_bookings', iconClass: 'fa-bookmark', linkUrl:`summits/${summit_id}/room-bookings`, accessRoute: 'room-bookings', exclusive: 'room-booking'},
