@@ -1,0 +1,139 @@
+/*
+ * This combined file was created by the DataTables downloader builder:
+ *   https://datatables.net/download
+ *
+ * To rebuild or modify this file with the latest versions of the included
+ * software please visit:
+ *   https://datatables.net/download/#bs/pdfmake-0.1.18,dt-1.10.10,b-1.1.0,b-html5-1.1.0,b-print-1.1.0,r-2.0.0
+ *
+ * Included libraries:
+ *   pdfmake 0.1.18, DataTables 1.10.10, Buttons 1.1.0, HTML5 export 1.1.0, Print view 1.1.0, Responsive 2.0.0
+ */
+
+table.discountTicketTable {
+    clear: both;
+    margin-top: 6px !important;
+    margin-bottom: 6px !important;
+    max-width: none !important
+}
+table.discountTicketTable td,
+table.discountTicketTable th {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box
+}
+table.discountTicketTable td.discountTicketTables_empty,
+table.discountTicketTable th.discountTicketTables_empty {
+    text-align: center
+}
+table.discountTicketTable.nowrap th,
+table.discountTicketTable.nowrap td {
+    white-space: nowrap
+}
+
+table.discountTicketTable thead>tr>th.sorting_asc,
+table.discountTicketTable thead>tr>th.sorting_desc,
+table.discountTicketTable thead>tr>th.sorting,
+table.discountTicketTable thead>tr>td.sorting_asc,
+table.discountTicketTable thead>tr>td.sorting_desc,
+table.discountTicketTable thead>tr>td.sorting {
+    padding-right: 30px
+}
+table.discountTicketTable thead>tr>th:active,
+table.discountTicketTable thead>tr>td:active {
+    outline: none
+}
+table.discountTicketTable thead .sorting,
+table.discountTicketTable thead .sorting_asc,
+table.discountTicketTable thead .sorting_desc,
+table.discountTicketTable thead .sorting_asc_disabled,
+table.discountTicketTable thead .sorting_desc_disabled {
+    cursor: pointer;
+    position: relative
+}
+table.discountTicketTable thead .sorting:after,
+table.discountTicketTable thead .sorting_asc:after,
+table.discountTicketTable thead .sorting_desc:after,
+table.discountTicketTable thead .sorting_asc_disabled:after,
+table.discountTicketTable thead .sorting_desc_disabled:after {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    display: block;
+    font-family: 'Glyphicons Halflings';
+    opacity: 0.5
+}
+table.discountTicketTable thead .sorting:after {
+    opacity: 0.2;
+    content: "\e150"
+}
+table.discountTicketTable thead .sorting_asc:after {
+    content: "\e155"
+}
+table.discountTicketTable thead .sorting_desc:after {
+    content: "\e156"
+}
+table.discountTicketTable thead .sorting_asc_disabled:after,
+table.discountTicketTable thead .sorting_desc_disabled:after {
+    color: #eee
+}
+
+table.table-bordered.discountTicketTable {
+    border-collapse: separate !important
+}
+table.table-bordered.discountTicketTable th,
+table.table-bordered.discountTicketTable td {
+    border-left-width: 0
+}
+table.table-bordered.discountTicketTable th:last-child,
+table.table-bordered.discountTicketTable th:last-child,
+table.table-bordered.discountTicketTable td:last-child,
+table.table-bordered.discountTicketTable td:last-child {
+    border-right-width: 0
+}
+table.table-bordered.discountTicketTable tbody th,
+table.table-bordered.discountTicketTable tbody td {
+    border-bottom-width: 0
+}
+
+table.discountTicketTable>tbody>tr.child {
+    padding: 0.5em 1em
+}
+table.discountTicketTable>tbody>tr.child:hover {
+    background: transparent !important
+}
+table.discountTicketTable>tbody>tr.child ul {
+    display: inline-block;
+    list-style-type: none;
+    margin: 0;
+    padding: 0
+}
+table.discountTicketTable>tbody>tr.child ul li {
+    border-bottom: 1px solid #efefef;
+    padding: 0.5em 0
+}
+table.discountTicketTable>tbody>tr.child ul li:first-child {
+    padding-top: 0
+}
+table.discountTicketTable>tbody>tr.child ul li:last-child {
+    border-bottom: none
+}
+
+table.discountTicketTable>tbody>tr.can-edit {
+    cursor:pointer
+}
+
+table.discountTicketTable .actions {
+    width: 70px;
+}
+table.discountTicketTable .actions a {
+    margin-left: 10px;
+}
+table.discountTicketTable .actions a .delete-icon:hover {
+    color: #da0000 !important;
+}
+
+table.discountTicketTable .actions a .fa:hover {
+    color: #024c85;
+}
+
