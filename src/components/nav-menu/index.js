@@ -35,11 +35,13 @@ class NavMenu extends React.Component {
     }
 
     componentDidMount() {
-        document.body.addEventListener('click', this.closeMenu);
+        document.getElementById('page-wrap').addEventListener('click', this.closeMenu);
+        document.getElementById('page-header').addEventListener('click', this.closeMenu);
     }
 
     componentWillUnmount() {
-        document.body.removeEventListener('click', this.closeMenu);
+        document.getElementById('page-wrap').removeEventListener('click', this.closeMenu);
+        document.getElementById('page-header').removeEventListener('click', this.closeMenu);
     }
 
     isMenuOpen(state) {

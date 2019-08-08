@@ -81,7 +81,7 @@ class App extends React.PureComponent {
                         idpBaseUrl={window.IDP_BASE_URL}
                     />
                     }
-                    <div className="header">
+                    <div className="header" id="page-header">
                         <div className={"header-title " + (isLoggedUser ? '' : 'center')}>
                             {T.translate("landing.os_summit_admin")}
                             <AuthButton isLoggedUser={isLoggedUser} picture={profile_pic} doLogin={this.onClickLogin.bind(this)} initLogOut={initLogOut}/>
