@@ -31,8 +31,8 @@ class BadgeTypeForm extends React.Component {
             errors: props.errors
         };
 
-        this.handleTicketLink = this.handleTicketLink.bind(this);
-        this.handleTicketUnLink = this.handleTicketUnLink.bind(this);
+        this.handleAccessLevelLink = this.handleAccessLevelLink.bind(this);
+        this.handleAccessLevelUnLink = this.handleAccessLevelUnLink.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -61,10 +61,6 @@ class BadgeTypeForm extends React.Component {
             value = ev.target.checked;
         }
 
-        if (ev.target.type == 'datetime') {
-            value = value.valueOf() / 1000;
-        }
-
         errors[id] = '';
         entity[id] = value;
         this.setState({entity: entity, errors: errors});
@@ -86,14 +82,14 @@ class BadgeTypeForm extends React.Component {
         return '';
     }
 
-    handleTicketLink(value) {
+    handleAccessLevelLink(accessLevel) {
         let {entity} = this.state;
-        this.props.onTicketLink(entity.id, value);
+        this.props.onAccessLevelLink(entity.id, accessLevel);
     }
 
-    handleTicketUnLink(valueId) {
+    handleAccessLevelUnLink(accessLevelId) {
         let {entity} = this.state;
-        this.props.onTicketUnLink(entity.id, valueId);
+        this.props.onAccessLevelUnLink(entity.id, accessLevelId);
     }
 
 
@@ -101,28 +97,27 @@ class BadgeTypeForm extends React.Component {
         let {entity} = this.state;
         let { currentSummit } = this.props;
 
-        let ticketColumns = [
-            { columnKey: 'name', value: T.translate("edit_tax_type.name") },
-            { columnKey: 'description', value: T.translate("edit_tax_type.description") }
+        let accessLevelColumns = [
+            { columnKey: 'name', value: T.translate("edit_badge_type.name") },
         ];
 
-        let ticketOptions = {
-            title: T.translate("edit_tax_type.ticket_types"),
+        let accessLevelOptions = {
+            title: T.translate("edit_badge_type.access_levels"),
             valueKey: "name",
             labelKey: "name",
             actions: {
-                search: (input, callback) => { queryTickets(currentSummit.id, input, callback); },
-                delete: { onClick: this.handleTicketUnLink },
-                add: { onClick: this.handleTicketLink }
+                search: (input, callback) => { queryAccessLevels(currentSummit.id, input, callback); },
+                delete: { onClick: this.handleAccessLevelUnLink },
+                add: { onClick: this.handleAccessLevelLink }
             }
         };
 
         return (
-            <form className="tax-type-form">
+            <form className="badge-type-form">
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
                     <div className="col-md-4">
-                        <label> {T.translate("edit_tax_type.name")} *</label>
+                        <label> {T.translate("edit_badge_type.name")} *</label>
                         <Input
                             id="name"
                             className="form-control"
@@ -131,29 +126,24 @@ class BadgeTypeForm extends React.Component {
                             value={entity.name}
                         />
                     </div>
-
-
+                    <div className="col-md-4 checkboxes-div">
+                        <div className="form-check abc-checkbox">
+                            <input type="checkbox" id="is_default" checked={entity.is_default}
+                                   onChange={this.handleChange} className="form-check-input" />
+                            <label className="form-check-label" htmlFor="is_default">
+                                {T.translate("edit_badge_type.default")}
+                            </label>
+                        </div>
+                    </div>
                 </div>
                 <div className="row form-group">
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_tax_type.rate")}</label>
-                        <Input
-                            className="form-control"
-                            type="number"
-                            error={this.hasErrors('rate')}
-                            id="rate"
-                            value={entity.rate}
+                    <div className="col-md-12">
+                        <label> {T.translate("edit_badge_type.template_content")}</label>
+                        <textarea
+                            id="tamplate_content"
+                            value={entity.tamplate_content}
                             onChange={this.handleChange}
-                        />
-                    </div>
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_tax_type.tax_id")}</label>
-                        <Input
                             className="form-control"
-                            error={this.hasErrors('tax_id')}
-                            id="tax_id"
-                            value={entity.tax_id}
-                            onChange={this.handleChange}
                         />
                     </div>
                 </div>
@@ -162,9 +152,9 @@ class BadgeTypeForm extends React.Component {
                 <hr />
                 {entity.id != 0 &&
                 <SimpleLinkList
-                    values={entity.ticket_types}
-                    columns={ticketColumns}
-                    options={ticketOptions}
+                    values={entity.access_levels}
+                    columns={accessLevelColumns}
+                    options={accessLevelOptions}
                 />
                 }
 

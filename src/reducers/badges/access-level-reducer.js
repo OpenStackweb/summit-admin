@@ -24,11 +24,11 @@ import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 export const DEFAULT_ENTITY = {
-    id              : 0,
-    name            : '',
-    rate            : 0,
-    tax_id          : '',
-    ticket_types    : [],
+    id                  : 0,
+    name                : '',
+    tamplate_content    : '',
+    tag_name            : '',
+    is_default          : 0
 }
 
 const DEFAULT_STATE = {

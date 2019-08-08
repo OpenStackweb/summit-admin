@@ -961,5 +961,59 @@
       "search"       : "Search by Title, Abstract, Speaker LastName, Member Email ",
       "select_fields" : "Select data to display"
     }
+  },
+  "badge_type_list": {
+    "badge_types"         : "Badge Types",
+    "badge_type_list"     : "Badge Type List",
+    "no_badge_types"      : "No badge types found for current search criteria.",
+    "add_badge_type"      : "Add Badge Type",
+    "name"                : "Name",
+    "external_id"         : "External Id",
+    "remove_warning"      : "Are you sure you want to delete badge type "
+  },
+  "edit_badge_type": {
+    "badge_type"            : "Badge Type",
+    "name"                  : "Name",
+    "template_content"      : "Template Content",
+    "default"               : "Is Default",
+    "access_levels"         : "Access Levels",
+    "badge_type_saved"      : "Badge Type saved successfully",
+    "badge_type_created"    : "Badge Type created successfully"
+  },
+  "badge_feature_list": {
+    "badge_features"          : "Badge Feature",
+    "badge_feature_list"      : "Badge Feature List",
+    "no_badge_features"       : "No badge feature found for current search criteria.",
+    "add_badge_feature"       : "Add Badge Feature",
+    "name"                    : "Name",
+    "external_id"             : "External Id",
+    "remove_warning"          : "Are you sure you want to delete badge feature "
+  },
+  "edit_badge_feature": {
+    "badge_feature"             : "Badge Feature",
+    "name"                      : "Name",
+    "template_content"          : "Template Content",
+    "tag_name"                  : "Tag Name",
+    "badge_feature_saved"       : "Badge Feature saved successfully",
+    "badge_feature_created"     : "Badge Feature created successfully"
+  },
+  "access_level_list": {
+    "access_levels"         : "Access Level",
+    "access_level_list"     : "Access Level List",
+    "no_access_levels"      : "No access level found for current search criteria.",
+    "add_access_level"      : "Add Access Level",
+    "name"                  : "Name",
+    "external_id"           : "External Id",
+    "remove_warning"        : "Are you sure you want to delete access level "
+  },
+  "edit_access_level": {
+    "access_level"          : "Access Level",
+    "name"                  : "Name",
+    "template_content"      : "Template Content",
+    "tag_name"              : "Tag Name",
+    "default"               : "Is Default",
+    "description"           : "Description",
+    "access_level_saved"    : "Access Level saved successfully",
+    "access_level_created"  : "Access Level created successfully"
   }
 }

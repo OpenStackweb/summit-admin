@@ -28,7 +28,7 @@ class AccessLevelLayout extends React.Component {
         let { match } = this.props;
         return(
             <div>
-                <Breadcrumb data={{ title: T.translate("access_level_list.access_level_types"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("access_level_list.access_levels"), pathname: match.url }} ></Breadcrumb>
 
                 <Switch>
                     <Route strict exact path={match.url} component={AccessLevelListPage}/>

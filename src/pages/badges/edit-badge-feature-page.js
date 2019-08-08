@@ -15,7 +15,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
-import SimpleForm from '../../components/forms/simple-form';
+import { SimpleForm } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getBadgeFeature, resetBadgeFeatureForm, saveBadgeFeature } from "../../actions/badge-actions";
 
@@ -61,8 +61,9 @@ class EditBadgeFeaturePage extends React.Component {
         let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
         let fields = [
-            {type: 'text', name: 'value', label: T.translate("edit_badge_feature.value")},
-            {type: 'text', name: 'label', label: T.translate("edit_badge_feature.label")}
+            {type: 'text', name: 'name', label: T.translate("edit_badge_feature.name")},
+            {type: 'text', name: 'tag_name', label: T.translate("edit_badge_feature.tag_name")},
+            {type: 'textarea', name: 'template_content', label: T.translate("edit_badge_feature.template_content")},
         ];
 
         return(
