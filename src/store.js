@@ -61,6 +61,12 @@ import { loggedUserReducer } from "openstack-uicore-foundation/lib/reducers";
 import roomBookingReducer from "./reducers/room_bookings/room-booking-reducer";
 import roomBookingListReducer from "./reducers/room_bookings/room-booking-list-reducer";
 import roomBookingAttributeTypeReducer from "./reducers/room_bookings/room-booking-attribute-type-reducer";
+import badgeTypeListReducer from './reducers/badges/badge-type-list-reducer';
+import badgeTypeReducer from './reducers/badges/badge-type-reducer';
+import badgeFeatureListReducer from './reducers/badges/badge-feature-list-reducer';
+import badgeFeatureReducer from './reducers/badges/badge-feature-reducer';
+import accessLevelListReducer from './reducers/badges/access-level-list-reducer';
+import accessLevelReducer from './reducers/badges/access-level-reducer';
 
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
@@ -122,6 +128,12 @@ const reducers = persistCombineReducers(config, {
     currentRoomBookingState: roomBookingReducer,
     currentRoomBookingListState: roomBookingListReducer,
     currentRoomBookingAttributeTypeState: roomBookingAttributeTypeReducer,
+    currentBadgeTypeListState: badgeTypeListReducer,
+    currentBadgeTypeState: badgeTypeReducer,
+    currentBadgeFeatureListState: badgeFeatureListReducer,
+    currentBadgeFeatureState: badgeFeatureReducer,
+    currentAccessLevelListState: accessLevelListReducer,
+    currentAccessLevelState: accessLevelReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
