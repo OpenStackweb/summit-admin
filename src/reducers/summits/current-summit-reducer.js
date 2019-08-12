@@ -74,7 +74,10 @@ export const DEFAULT_ENTITY = {
     api_feed_type: '',
     api_feed_url: '',
     api_feed_key: '',
-    refund_policies: []
+    refund_policies: [],
+    access_level_types: [],
+    badge_types: [],
+    badge_features: []
 }
 
 const DEFAULT_STATE = {

@@ -96,6 +96,7 @@
     "badge_type_list"         : "Badge Types",
     "taxes"                   : "Taxes",
     "tax_type_list"           : "Tax Types",
+    "refund_policy_list"      : "Refund Policies",
     "push_notifications"      : "Push Notifications",
     "room_occupancy"          : "Room Occupancy",
     "tag_groups"              : "Tag Groups",
@@ -453,16 +454,36 @@
     }
   },
   "edit_promocode": {
-    "promocode"         : "Promocode",
-    "code"              : "Code",
-    "type"              : "Type",
-    "sponsor"           : "Sponsor",
-    "email_sent"        : "Email Sent",
-    "redeemed"          : "Redeemed",
-    "send_email"        : "Send Email",
-    "or"                : "OR",
+    "promocode"             : "Promocode",
+    "code"                  : "Code",
+    "type"                  : "Type",
+    "sponsor"               : "Sponsor",
+    "email_sent"            : "Email Sent",
+    "redeemed"              : "Redeemed",
+    "send_email"            : "Send Email",
+    "or"                    : "OR",
+    "quantity_available"    : "Quantity Available",
+    "quantity_used"         : "Quantity Used",
+    "valid_since_date"      : "Valid Since",
+    "valid_until_date"      : "Valid Until",
+    "badge_type_id"         : "Badge Type",
+    "badge_features"        : "Badge Features",
+    "allowed_ticket_types"  : "Ticket Types",
+    "amount"                : "Amount (USD)",
+    "rate"                  : "Rate (%)",
+    "apply_to_all_tix"      : "Apply to all Ticket Types",
     "promocode_saved"   : "Promocode saved successfully.",
-    "promocode_created" : "Promocode created successfully."
+    "promocode_created" : "Promocode created successfully.",
+    "placeholders": {
+      "select_badge_features"  : "Select one or more Badge Features",
+      "select_badge_type"      : "Select a Badge Type"
+    }
+  },
+  "discount_ticket": {
+    "ticket_type": "Ticket Type",
+    "amount": "Amount (USD)",
+    "rate": "Rate (%)",
+    "actions": "Actions"
   },
   "speaker_attendance_list": {
     "speaker_attendance_list"   : "Speaker Attendance List",

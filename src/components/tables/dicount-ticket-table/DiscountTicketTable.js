@@ -3,41 +3,45 @@ import { connect } from 'react-redux';
 import DiscountTicketActionsTableCell from './DiscountTicketActionsTableCell';
 import { Dropdown, Input } from 'openstack-uicore-foundation/lib/components'
 import { epochToMoment, formatEpoch } from 'openstack-uicore-foundation/lib/methods'
-import { addDiscountTicket, saveDiscountTicket, deleteDiscountTicket, addTicketType } from "../../../actions/member-actions"
+import { addDiscountTicket, saveDiscountTicket, deleteDiscountTicket, addTicketType } from "../../../actions/promocode-actions"
 import T from "i18n-react/dist/i18n-react";
 
 import './discountticket.css';
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 
-const createRow = (row, actions) => {
+const createRow = (row, actions, ticketTypes) => {
     var cells = [];
-    var org_value = (row.ticket_type) ? row.ticket_type : null;
+    var ticket_value = (row.ticket_type) ? row.ticket_type : null;
 
     if (row.is_edit) {
         cells = [
             <td key="ticket_type">
                 <Dropdown
                     id="ticket_type"
-                    value={org_value}
+                    value={ticket_value}
+                    options={ticketTypes}
                     onChange={actions.handleChange.bind(this, row.id)}
-                    allowCreate
-                    onCreate={actions.addTicketType}
                 />
             </td>,
             <td key="amount">
                 <Input
                     id="amount"
                     type="number"
+                    min="0"
                     onChange={actions.handleChange.bind(this, row.id)}
                     value={row.amount}
+                    disabled={row.rate > 0}
                 />
             </td>,
-            <td key="percent">
+            <td key="rate">
                 <Input
-                    id="percent"
-                    type="percent"
+                    id="rate"
+                    type="number"
+                    min="0"
+                    max="100"
                     onChange={actions.handleChange.bind(this, row.id)}
-                    value={row.percent}
+                    value={row.rate}
+                    disabled={row.amount > 0}
                 />
             </td>
         ]
@@ -45,7 +49,7 @@ const createRow = (row, actions) => {
         cells = [
             <td key="ticket_type">{row.ticket_type ? row.ticket_type.name : ''}</td>,
             <td key="amount">{row.amount}</td>,
-            <td key="percent">{row.percent}</td>
+            <td key="rate">{row.rate}</td>
         ]
     }
 
@@ -57,34 +61,35 @@ const createRow = (row, actions) => {
     return cells;
 };
 
-const createNewRow = (row, actions) => {
+const createNewRow = (row, actions, ticketTypes) => {
     let cells = [
-        <td key="new_job_title">
-            <input id="job_title" className="form-control" value={row.job_title} onChange={actions.handleChange}/>
-        </td>,
         <td key="new_ticket_type">
             <Dropdown
                 id="ticket_type"
                 value={row.ticket_type}
+                options={ticketTypes}
                 onChange={actions.handleChange}
-                allowCreate
-                onCreate={actions.addTicketType}
             />
         </td>,
         <td key="new_amount">
             <Input
                 id="amount"
+                min="0"
                 onChange={actions.handleChange}
                 type="number"
                 value={row.amount}
+                disabled={row.rate > 0}
             />
         </td>,
-        <td key="new_percent">
+        <td key="new_rate">
             <Input
-                id="percent"
+                id="rate"
+                min="0"
+                max="100"
                 onChange={actions.handleChange}
                 type="number"
-                value={row.percent}
+                value={row.rate}
+                disabled={row.amount > 0}
             />
         </td>
     ];
@@ -108,7 +113,7 @@ class DiscountTicketTable extends React.Component {
             owner_id: props.ownerId,
             ticket_type: null,
             amount: 0,
-            percent: 0,
+            rate: 0,
         };
 
         this.state = {
@@ -217,6 +222,8 @@ class DiscountTicketTable extends React.Component {
 
     render() {
 
+        let {ticketTypes} = this.props;
+
         return (
             <div>
                 <table className="table table-striped table-bordered table-hover discountTicketTable">
@@ -224,7 +231,7 @@ class DiscountTicketTable extends React.Component {
                         <tr>
                             <th style={{width: '20%'}}>{T.translate("discount_ticket.ticket_type")}</th>
                             <th style={{width: '15%'}}>{T.translate("discount_ticket.amount")}</th>
-                            <th style={{width: '15%'}}>{T.translate("discount_ticket.percent")}</th>
+                            <th style={{width: '15%'}}>{T.translate("discount_ticket.rate")}</th>
                             <th style={{width: '10%'}}>{T.translate("discount_ticket.actions")}</th>
                         </tr>
                     </thead>
@@ -234,13 +241,13 @@ class DiscountTicketTable extends React.Component {
 
                             return (
                                 <tr id={row.id} key={'row_' + row.id} role="row" className={rowClass}>
-                                    {createRow(row, this.actions)}
+                                    {createRow(row, this.actions, ticketTypes)}
                                 </tr>
                             );
                         })}
 
                         <tr id='new_row' key='new_row' className="odd">
-                            {createNewRow(this.state.new_row, this.newActions)}
+                            {createNewRow(this.state.new_row, this.newActions, ticketTypes)}
                         </tr>
                     </tbody>
                 </table>

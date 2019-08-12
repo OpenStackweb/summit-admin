@@ -26,18 +26,26 @@ import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 export const DEFAULT_ENTITY = {
-    id              : 0,
-    owner           : null,
-    speaker         : null,
-    sponsor         : null,
-    first_name      : '',
-    last_name       : '',
-    email           : '',
-    type            : '',
-    class_name      : '',
-    code            : '',
-    email_sent      : false,
-    redeemed        : false
+    id                      : 0,
+    owner                   : null,
+    speaker                 : null,
+    sponsor                 : null,
+    first_name              : '',
+    last_name               : '',
+    email                   : '',
+    type                    : '',
+    class_name              : '',
+    code                    : '',
+    email_sent              : false,
+    redeemed                : false,
+    quantity_available      : 0,
+    quantity_used           : 0,
+    valid_since_date        : '',
+    valid_until_date        : '',
+    badge_type_id           : 0,
+    badge_features          : [],
+    allowed_ticket_types    : [],
+    apply_to_all_tix        : true
 }
 
 const DEFAULT_STATE = {
@@ -90,6 +98,8 @@ const promocodeReducer = (state = DEFAULT_STATE, action) => {
                     entity[key] = (entity[key] == null) ? '' : entity[key] ;
                 }
             }
+
+            entity.apply_to_all_tix = !!(entity.amount || entity.rate);
 
             return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
         }
