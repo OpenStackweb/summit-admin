@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 OpenStack Foundation
+ * Copyright 2017 OpenStack Foundation
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,29 +13,23 @@
 
 import
 {
-    RECEIVE_RSVP_QUESTION_VALUE,
-    RESET_RSVP_QUESTION_VALUE_FORM,
-    UPDATE_RSVP_QUESTION_VALUE,
-    RSVP_QUESTION_VALUE_UPDATED,
-    RSVP_QUESTION_VALUE_ADDED
-} from '../../actions/rsvp-template-actions';
+    RECEIVE_PURCHASE_ORDER,
+} from '../../actions/order-actions';
+
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
-import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 export const DEFAULT_ENTITY = {
-    id              : 0,
-    value           : '',
-    label           : '',
-    order           : 0
+    id: 0,
+    tickets: []
 }
 
 const DEFAULT_STATE = {
-    entity      : DEFAULT_ENTITY,
-    errors      : {},
+    entity: DEFAULT_ENTITY,
+    errors: {}
 };
 
-const rsvpQuestionValueReducer = (state = DEFAULT_STATE, action) => {
+const purchaseOrderReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
         case LOGOUT_USER: {
@@ -47,18 +41,9 @@ const rsvpQuestionValueReducer = (state = DEFAULT_STATE, action) => {
             }
         }
         break;
-        case SET_CURRENT_SUMMIT:
-        case RESET_RSVP_QUESTION_VALUE_FORM: {
-            return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
-        }
-        break;
-        case UPDATE_RSVP_QUESTION_VALUE: {
-            return {...state,  entity: {...payload}, errors: {} };
-        }
-        break;
-        case RSVP_QUESTION_VALUE_ADDED:
-        case RECEIVE_RSVP_QUESTION_VALUE: {
+        case RECEIVE_PURCHASE_ORDER: {
             let entity = {...payload.response};
+
 
             for(var key in entity) {
                 if(entity.hasOwnProperty(key)) {
@@ -66,11 +51,7 @@ const rsvpQuestionValueReducer = (state = DEFAULT_STATE, action) => {
                 }
             }
 
-            return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
-        }
-        break;
-        case RSVP_QUESTION_VALUE_UPDATED: {
-            return state;
+            return {...state,  entity: {...entity}, errors: {} };
         }
         break;
         case VALIDATE: {
@@ -82,4 +63,4 @@ const rsvpQuestionValueReducer = (state = DEFAULT_STATE, action) => {
     }
 };
 
-export default rsvpQuestionValueReducer;
+export default purchaseOrderReducer;

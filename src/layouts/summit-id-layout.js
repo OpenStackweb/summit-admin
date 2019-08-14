@@ -43,6 +43,8 @@ import RoomBookingAttributeLayout from './room-booking-attribute-layout';
 import BadgeFeatureLayout from './badge-feature-layout'
 import AccessLevelLayout from './access-level-layout'
 import BadgeTypeLayout from './badge-type-layout'
+import PurchaseOrderLayout from './purchase-order-layout'
+import OrderExtraQuestionLayout from './order-extra-question-layout'
 import NoMatchPage from '../pages/no-match-page';
 
 
@@ -107,6 +109,8 @@ class SummitIdLayout extends React.Component {
                     <Route path={`${match.url}/badge-features`} component={BadgeFeatureLayout}/>
                     <Route path={`${match.url}/badge-types`} component={BadgeTypeLayout}/>
                     <Route path={`${match.url}/access-levels`} component={AccessLevelLayout}/>
+                    <Route path={`${match.url}/purchase-orders`} component={PurchaseOrderLayout}/>
+                    <Route path={`${match.url}/order-extra-questions`} component={OrderExtraQuestionLayout}/>
                     <Route component={NoMatchPage}/>
                 </Switch>
             </div>

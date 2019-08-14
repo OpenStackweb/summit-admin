@@ -101,7 +101,10 @@
     "room_occupancy"          : "Room Occupancy",
     "tag_groups"              : "Tag Groups",
     "reports"                 : "Reports",
-    "room_bookings"           : "Room Bookings"
+    "room_bookings"           : "Room Bookings",
+    "purchase_orders"         : "Purchase Orders",
+    "purchase_order_list"     : "Order List",
+    "order_extra_questions"   : "Extra Questions"
   },
   "schedule": {
     "schedule"                              : "Schedule",
@@ -469,8 +472,8 @@
     "badge_type_id"         : "Badge Type",
     "badge_features"        : "Badge Features",
     "allowed_ticket_types"  : "Ticket Types",
-    "amount"                : "Amount (USD)",
-    "rate"                  : "Rate (%)",
+    "amount"                : "Amount",
+    "percent"               : "Percent",
     "apply_to_all_tix"      : "Apply to all Ticket Types",
     "promocode_saved"   : "Promocode saved successfully.",
     "promocode_created" : "Promocode created successfully.",
@@ -481,8 +484,8 @@
   },
   "discount_ticket": {
     "ticket_type": "Ticket Type",
-    "amount": "Amount (USD)",
-    "rate": "Rate (%)",
+    "amount": "Amount",
+    "percent": "Percent",
     "actions": "Actions"
   },
   "speaker_attendance_list": {
@@ -783,6 +786,27 @@
       "select_room" : "Select Room"
     }
   },
+  "question_form": {
+    "class_name"                : "Class",
+    "name"                      : "Name",
+    "label"                     : "Label",
+    "is_mandatory"              : "Mandatory ?",
+    "is_read_only"              : "Read Only ?",
+    "is_country_selector"       : "Country Selector ?",
+    "is_multi_select"           : "Multi Select ?",
+    "use_chosen_plugin"         : "Use Chosen Plugin ?",
+    "initial_value"             : "Initial Value",
+    "default_value_id"          : "Default Value",
+    "empty_string"              : "Empty String",
+    "content"                   : "Content",
+    "value"                     : "Value",
+    "values"                    : "Values",
+    "add_value"                 : "Add Value",
+    "placeholders": {
+      "select_class" : "Select a Class",
+      "select_default" : "Select Default Value"
+    }
+  },
   "rsvp_template_list": {
     "rsvp_template_list"      : "RSVP Templates",
     "rsvp_templates"          : "RSVP Templates",
@@ -808,33 +832,9 @@
   },
   "edit_rsvp_question": {
     "rsvp_question"             : "RSVP Question",
-    "class_name"                : "Class",
-    "name"                      : "Name",
-    "label"                     : "Label",
-    "is_mandatory"              : "Mandatory ?",
-    "is_read_only"              : "Read Only ?",
-    "is_country_selector"       : "Country Selector ?",
-    "is_multi_select"           : "Multi Select ?",
-    "use_chosen_plugin"         : "Use Chosen Plugin ?",
-    "initial_value"             : "Initial Value",
-    "default_value_id"          : "Default Value",
-    "empty_string"              : "Empty String",
-    "content"                   : "Content",
-    "value"                     : "Value",
-    "values"                    : "Values",
-    "add_value"                 : "Add Value",
-    "remove_value_warning"      : "Are you sure you want to remove value ",
     "rsvp_question_saved"       : "Rsvp Question saved successfully.",
     "rsvp_question_created"     : "Rsvp Question created successfully.",
-    "placeholders": {
-      "select_class" : "Select a Class",
-      "select_default" : "Select Default Value"
-    }
-  },
-  "edit_rsvp_question_value": {
-    "rsvp_question_value"         : "RSVP Question Value",
-    "value"                       : "Value",
-    "label"                       : "Label",
+    "remove_value_warning"      : "Are you sure you want to remove value ",
     "rsvp_question_value_saved"   : "Rsvp Question Value saved successfully.",
     "rsvp_question_value_created" : "Rsvp Question Value created successfully."
   },
@@ -1036,5 +1036,32 @@
     "description"           : "Description",
     "access_level_saved"    : "Access Level saved successfully",
     "access_level_created"  : "Access Level created successfully"
+  },
+  "order_extra_question_list": {
+    "order_extra_questions"     : "Order Extra Questions",
+    "class_name"                : "Class",
+    "questions"                 : "Questions",
+    "add_question"              : "Add Question",
+    "no_order_extra_questions"  : "No extra questions found.",
+    "remove_question_warning"   : "Are you sure you want to remove question "
+  },
+  "edit_order_extra_question": {
+    "order_extra_question"                : "Order Extra Question",
+    "order_extra_question_saved"          : "Order Extra Question saved successfully.",
+    "order_extra_question_created"        : "Order Extra Question created successfully.",
+    "remove_value_warning"                : "Are you sure you want to remove value ",
+    "order_extra_question_value_saved"    : "Order Extra Question Value saved successfully.",
+    "order_extra_question_value_created"  : "Order Extra Question Value created successfully."
+  },
+  "purchase_order_list": {
+    "purchase_orders"     : "Purchase Orders",
+    "name"                : "Name",
+    "no_purchase_orders"  : "No purchase orders found.",
+    "placeholders": {
+      "search_orders"       : "Search by Order #, Buyer, Attendee "
+    }
+  },
+  "edit_purchase_order": {
+    "purchase_order"                  : "Purchase Order"
   }
 }

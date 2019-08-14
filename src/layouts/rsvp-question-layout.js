@@ -17,11 +17,10 @@ import T from "i18n-react/dist/i18n-react";
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { Breadcrumb } from 'react-breadcrumbs';
 
+import EditRsvpQuestionPage from '../pages/rsvps/edit-rsvp-question-page';
+import NoMatchPage from "../pages/no-match-page";
 import { getRsvpQuestionMeta, getRsvpQuestion, resetRsvpQuestionForm }  from '../actions/rsvp-template-actions';
 
-import EditRsvpQuestionPage from '../pages/rsvps/edit-rsvp-question-page';
-import EditRsvpQuestionValuePage from '../pages/rsvps/edit-rsvp-question-value-page';
-import NoMatchPage from "../pages/no-match-page";
 
 class RsvpQuestionLayout extends React.Component {
 
@@ -64,18 +63,6 @@ class RsvpQuestionLayout extends React.Component {
             <div>
                 <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
                 <Switch>
-                    <Route path={`${match.url}/values`} render={
-                        props => (
-                            <div>
-                                <Breadcrumb data={{ title: T.translate("edit_rsvp_question.values"), pathname: match.url }} ></Breadcrumb>
-                                <Switch>
-                                    <Route strict exact path={`${props.match.url}/:rsvp_question_value_id(\\d+)`} component={EditRsvpQuestionValuePage} />
-                                    <Route exact strict path={`${props.match.url}/new`} component={EditRsvpQuestionValuePage} />
-                                    <Route component={NoMatchPage}/>
-                                </Switch>
-                            </div>
-                        )}
-                    />
                     <Route strict exact path={match.url} component={EditRsvpQuestionPage}/>
                     <Route component={NoMatchPage}/>
                 </Switch>

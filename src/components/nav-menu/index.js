@@ -136,6 +136,12 @@ class NavMenu extends React.Component {
                     {name:'rsvp_template_list', linkUrl:`summits/${summit_id}/rsvp-templates`}
                 ]
             },
+            {name: 'purchase_orders', iconClass: 'fa-ticket', accessRoute: 'purchase-orders',
+                childs: [
+                    {name:'purchase_order_list', linkUrl:`summits/${summit_id}/purchase-orders`},
+                    {name:'order_extra_questions', linkUrl:`summits/${summit_id}/order-extra-questions`},
+                ]
+            },
             {name: 'tickets', iconClass: 'fa-ticket', accessRoute: 'tickets',
                 childs: [
                     {name:'ticket_type_list', linkUrl:`summits/${summit_id}/ticket-types`},

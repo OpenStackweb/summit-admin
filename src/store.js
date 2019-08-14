@@ -45,7 +45,6 @@ import locationMapReducer from './reducers/locations/location-map-reducer';
 import rsvpTemplateListReducer from './reducers/rsvps/rsvp-template-list-reducer';
 import rsvpTemplateReducer from './reducers/rsvps/rsvp-template-reducer';
 import rsvpQuestionReducer from './reducers/rsvps/rsvp-question-reducer';
-import rsvpQuestionValueReducer from './reducers/rsvps/rsvp-question-value-reducer';
 import ticketTypeListReducer from './reducers/tickets/ticket-type-list-reducer';
 import ticketTypeReducer from './reducers/tickets/ticket-type-reducer';
 import taxTypeListReducer from './reducers/taxes/tax-type-list-reducer';
@@ -67,6 +66,10 @@ import badgeFeatureListReducer from './reducers/badges/badge-feature-list-reduce
 import badgeFeatureReducer from './reducers/badges/badge-feature-reducer';
 import accessLevelListReducer from './reducers/badges/access-level-list-reducer';
 import accessLevelReducer from './reducers/badges/access-level-reducer';
+import orderExtraQuestionListReducer from './reducers/orders/order-extra-question-list-reducer';
+import orderExtraQuestionReducer from './reducers/orders/order-extra-question-reducer';
+import purchaseOrderListReducer from './reducers/orders/purchase-order-list-reducer';
+import purchaseOrderReducer from './reducers/orders/purchase-order-reducer';
 
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
@@ -113,7 +116,6 @@ const reducers = persistCombineReducers(config, {
     currentRsvpTemplateListState: rsvpTemplateListReducer,
     currentRsvpTemplateState: rsvpTemplateReducer,
     currentRsvpQuestionState: rsvpQuestionReducer,
-    currentRsvpQuestionValueState: rsvpQuestionValueReducer,
     currentTicketTypeListState: ticketTypeListReducer,
     currentTicketTypeState: ticketTypeReducer,
     currentTaxTypeListState: taxTypeListReducer,
@@ -134,6 +136,10 @@ const reducers = persistCombineReducers(config, {
     currentBadgeFeatureState: badgeFeatureReducer,
     currentAccessLevelListState: accessLevelListReducer,
     currentAccessLevelState: accessLevelReducer,
+    currentOrderExtraQuestionListState: orderExtraQuestionListReducer,
+    currentOrderExtraQuestionState: orderExtraQuestionReducer,
+    currentPurchaseOrderListState: purchaseOrderListReducer,
+    currentPurchaseOrderState: purchaseOrderReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

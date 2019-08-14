@@ -421,7 +421,7 @@ export const saveRsvpQuestionValue = (rsvpTemplateId, rsvpQuestionId, entity) =>
 
         let success_message = {
             title: T.translate("general.done"),
-            html: T.translate("edit_rsvp_question_value.rsvp_question_value_saved"),
+            html: T.translate("edit_rsvp_question.rsvp_question_value_saved"),
             type: 'success'
         };
 
@@ -444,7 +444,7 @@ export const saveRsvpQuestionValue = (rsvpTemplateId, rsvpQuestionId, entity) =>
 
         let success_message = {
             title: T.translate("general.done"),
-            html: T.translate("edit_rsvp_question_value.rsvp_question_value_created"),
+            html: T.translate("edit_rsvp_question.rsvp_question_value_created"),
             type: 'success'
         };
 

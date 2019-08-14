@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import DiscountTicketActionsTableCell from './DiscountTicketActionsTableCell';
 import { Dropdown, Input } from 'openstack-uicore-foundation/lib/components'
 import { epochToMoment, formatEpoch } from 'openstack-uicore-foundation/lib/methods'
-import { addDiscountTicket, saveDiscountTicket, deleteDiscountTicket, addTicketType } from "../../../actions/promocode-actions"
+import { addDiscountTicket, saveDiscountTicket, deleteDiscountTicket } from "../../../actions/promocode-actions"
 import T from "i18n-react/dist/i18n-react";
 
 import './discountticket.css';
@@ -127,12 +127,10 @@ class DiscountTicketTable extends React.Component {
         this.actions.delete = this.deleteClick.bind(this);
         this.actions.handleChange = this.onChangeCell.bind(this);
         this.actions.cancel = this.editRowCancel.bind(this);
-        this.actions.addTicketType = props.addTicketType;
 
         this.newActions = {};
         this.newActions.save = this.saveNewRow.bind(this);
         this.newActions.handleChange = this.onChangeNewCell.bind(this);
-        this.newActions.addTicketType = props.addTicketType;
     }
 
     componentWillReceiveProps(nextProps) {
@@ -217,7 +215,7 @@ class DiscountTicketTable extends React.Component {
         let new_row = {...this.state.new_row};
         new_row.owner_id = this.props.ownerId;
 
-        this.props.addDiscountTicket(new_row);
+        this.props.addDiscountTicket(this.props.ownerId, new_row);
     }
 
     render() {
@@ -261,7 +259,6 @@ export default connect (
     {
         addDiscountTicket,
         saveDiscountTicket,
-        deleteDiscountTicket,
-        addTicketType
+        deleteDiscountTicket
     }
 )(DiscountTicketTable);

@@ -15,10 +15,10 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
-import { Dropdown, Input, SortableTable } from 'openstack-uicore-foundation/lib/components'
+import { Dropdown, Input, EditableTable } from 'openstack-uicore-foundation/lib/components'
 
 
-class RsvpQuestionForm extends React.Component {
+class QuestionForm extends React.Component {
     constructor(props) {
         super(props);
 
@@ -27,8 +27,6 @@ class RsvpQuestionForm extends React.Component {
             errors: props.errors
         };
 
-        this.handleAddValue     = this.handleAddValue.bind(this);
-        this.handleValueEdit    = this.handleValueEdit.bind(this);
         this.handleChange       = this.handleChange.bind(this);
         this.handleSubmit       = this.handleSubmit.bind(this);
     }
@@ -64,11 +62,11 @@ class RsvpQuestionForm extends React.Component {
 
     handleSubmit(ev) {
         let entity = {...this.state.entity};
-        let {rsvpTemplateId} = this.props;
+        let {ownerId} = this.props;
 
         ev.preventDefault();
 
-        this.props.onSubmit(rsvpTemplateId, this.state.entity);
+        this.props.onSubmit(ownerId, this.state.entity);
     }
 
     hasErrors(field) {
@@ -83,36 +81,25 @@ class RsvpQuestionForm extends React.Component {
     shouldShowField(field){
         let {entity} = this.state;
         if (!entity.class_name) return false;
-        let entity_type = this.props.allClasses.find(c => c.class_name == entity.class_name);
+        let entity_type = this.props.questionClasses.find(c => c.class_name == entity.class_name);
 
         return (entity_type.hasOwnProperty(field) && entity_type[field]);
     }
 
-    handleAddValue(ev) {
-        let {currentSummit, history, entity, rsvpTemplateId} = this.props;
-        history.push(`/app/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${entity.id}/values/new`);
-    }
-
-    handleValueEdit(valueId) {
-        let {currentSummit, rsvpTemplateId, history, entity} = this.props;
-        history.push(`/app/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${entity.id}/values/${valueId}`);
-    }
-
     render() {
         let {entity} = this.state;
-        let { onValueDelete, allClasses } = this.props;
-        let question_class_ddl = allClasses.map(c => ({label: c.class_name, value: c.class_name}));
+        let { onValueDelete, onValueSave, questionClasses } = this.props;
+        let question_class_ddl = questionClasses.map(c => ({label: c.class_name, value: c.class_name}));
 
-        let columns = [
-            { columnKey: 'id', value: T.translate("general.id") },
-            { columnKey: 'value', value: T.translate("edit_rsvp_question.value") },
-            { columnKey: 'label', value: T.translate("edit_rsvp_question.label") }
+        let value_columns = [
+            { columnKey: 'value', value: T.translate("question_form.value") },
+            { columnKey: 'label', value: T.translate("question_form.label") }
         ];
 
-        let table_options = {
+        let value_options = {
             actions: {
-                edit: { onClick: this.handleValueEdit },
-                delete: { onClick: onValueDelete }
+                save: {onClick: onValueSave},
+                delete: {onClick: onValueDelete}
             }
         }
 
@@ -130,15 +117,15 @@ class RsvpQuestionForm extends React.Component {
         }
 
         return (
-            <form className="rsvp-question-form">
+            <form className="question-form">
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
                     <div className="col-md-3">
-                        <label> {T.translate("edit_rsvp_question.class_name")} *</label>
+                        <label> {T.translate("question_form.class_name")} *</label>
                         <Dropdown
                             id="class_name"
                             value={entity.class_name}
-                            placeholder={T.translate("edit_rsvp_question.placeholders.select_class")}
+                            placeholder={T.translate("question_form.placeholders.select_class")}
                             options={question_class_ddl}
                             onChange={this.handleChange}
                             disabled={entity.id !== 0}
@@ -155,7 +142,7 @@ class RsvpQuestionForm extends React.Component {
                         />
                     </div>
                     <div className="col-md-6">
-                        <label> {T.translate("edit_rsvp_question.label")} </label>
+                        <label> {T.translate("question_form.label")} </label>
                         <Input
                             id="label"
                             value={entity.label}
@@ -168,7 +155,7 @@ class RsvpQuestionForm extends React.Component {
                 <div className="row form-group">
                     {this.shouldShowField('initial_value') &&
                     <div className="col-md-3">
-                        <label> {T.translate("edit_rsvp_question.initial_value")} </label>
+                        <label> {T.translate("question_form.initial_value")} </label>
                         <Input
                             id="initial_value"
                             value={entity.initial_value}
@@ -180,7 +167,7 @@ class RsvpQuestionForm extends React.Component {
                     }
                     {this.shouldShowField('empty_string') &&
                     <div className="col-md-3">
-                        <label> {T.translate("edit_rsvp_question.empty_string")} </label>
+                        <label> {T.translate("question_form.empty_string")} </label>
                         <Input
                             id="empty_string"
                             value={entity.empty_string}
@@ -192,11 +179,11 @@ class RsvpQuestionForm extends React.Component {
                     }
                     {this.shouldShowField('default_value_id') &&
                     <div className="col-md-3">
-                        <label> {T.translate("edit_rsvp_question.default_value_id")} </label>
+                        <label> {T.translate("question_form.default_value_id")} </label>
                         <Dropdown
                             id="default_value_id"
                             value={entity.default_value_id}
-                            placeholder={T.translate("edit_rsvp_question.placeholders.select_default")}
+                            placeholder={T.translate("question_form.placeholders.select_default")}
                             options={question_values_ddl}
                             onChange={this.handleChange}
                         />
@@ -207,7 +194,7 @@ class RsvpQuestionForm extends React.Component {
                             <input type="checkbox" id="is_mandatory" checked={entity.is_mandatory}
                                    onChange={this.handleChange} className="form-check-input" />
                             <label className="form-check-label" htmlFor="is_mandatory">
-                                {T.translate("edit_rsvp_question.is_mandatory")}
+                                {T.translate("question_form.is_mandatory")}
                             </label>
                         </div>
                     </div>
@@ -216,7 +203,7 @@ class RsvpQuestionForm extends React.Component {
                             <input type="checkbox" id="is_read_only" checked={entity.is_read_only}
                                    onChange={this.handleChange} className="form-check-input" />
                             <label className="form-check-label" htmlFor="is_read_only">
-                                {T.translate("edit_rsvp_question.is_read_only")}
+                                {T.translate("question_form.is_read_only")}
                             </label>
                         </div>
                     </div>
@@ -224,7 +211,7 @@ class RsvpQuestionForm extends React.Component {
                 {this.shouldShowField('content') &&
                 <div className="row form-group">
                     <div className="col-md-12">
-                        <label> {T.translate("edit_rsvp_question.content")} </label>
+                        <label> {T.translate("question_form.content")} </label>
                         <Input
                             id="content"
                             value={entity.content}
@@ -243,7 +230,7 @@ class RsvpQuestionForm extends React.Component {
                             <input type="checkbox" id="is_country_selector" checked={entity.is_country_selector}
                                    onChange={this.handleChange} className="form-check-input"/>
                             <label className="form-check-label" htmlFor="is_country_selector">
-                                {T.translate("edit_rsvp_question.is_country_selector")}
+                                {T.translate("question_form.is_country_selector")}
                             </label>
                         </div>
                     </div>
@@ -254,7 +241,7 @@ class RsvpQuestionForm extends React.Component {
                             <input type="checkbox" id="is_multiselect" checked={entity.is_multiselect}
                                    onChange={this.handleChange} className="form-check-input"/>
                             <label className="form-check-label" htmlFor="is_multiselect">
-                                {T.translate("edit_rsvp_question.is_multi_select")}
+                                {T.translate("question_form.is_multi_select")}
                             </label>
                         </div>
                     </div>
@@ -265,25 +252,20 @@ class RsvpQuestionForm extends React.Component {
                             <input type="checkbox" id="use_chosen_plugin" checked={entity.use_chosen_plugin}
                                    onChange={this.handleChange} className="form-check-input"/>
                             <label className="form-check-label" htmlFor="use_chosen_plugin">
-                                {T.translate("edit_rsvp_question.use_chosen_plugin")}
+                                {T.translate("question_form.use_chosen_plugin")}
                             </label>
                         </div>
                     </div>
                     }
                 </div>
 
-                {this.shouldShowField('values') && entity.id &&
-                <div className="row form-group">
+                {this.shouldShowField('values') && entity.id != 0 &&
+                <div className="row">
                     <div className="col-md-12">
-                        <button className="btn btn-primary pull-right" onClick={this.handleAddValue}>
-                            {T.translate("edit_rsvp_question.add_value")}
-                        </button>
-                        <SortableTable
-                            options={table_options}
+                        <EditableTable
+                            options={value_options}
                             data={sortedValues}
-                            columns={columns}
-                            dropCallback={this.props.onValueReorder}
-                            orderField="order"
+                            columns={value_columns}
                         />
                     </div>
                 </div>
@@ -300,4 +282,4 @@ class RsvpQuestionForm extends React.Component {
     }
 }
 
-export default RsvpQuestionForm;
+export default QuestionForm;

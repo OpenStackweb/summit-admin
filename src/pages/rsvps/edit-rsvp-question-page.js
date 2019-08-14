@@ -16,22 +16,22 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import Swal from "sweetalert2";
 import { Breadcrumb } from 'react-breadcrumbs';
-import RsvpQuestionForm from '../../components/forms/rsvp-question-form';
+import QuestionForm from '../../components/forms/question-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getRsvpQuestion, resetRsvpQuestionForm, saveRsvpQuestion, getRsvpQuestionMeta, deleteRsvpQuestionValue, updateQuestionValuesOrder } from "../../actions/rsvp-template-actions";
+import { getRsvpQuestion, resetRsvpQuestionForm, saveRsvpQuestion, getRsvpQuestionMeta, saveRsvpQuestionValue, deleteRsvpQuestionValue, updateQuestionValuesOrder } from "../../actions/rsvp-template-actions";
 
 class EditRsvpQuestionPage extends React.Component {
 
     constructor(props) {
         super(props);
 
+        this.handleValueSave = this.handleValueSave.bind(this);
         this.handleValueDelete = this.handleValueDelete.bind(this);
         this.handleValueReorder = this.handleValueReorder.bind(this);
     }
 
     handleValueDelete(valueId) {
-        let {rsvpQuestionId, rsvpTemplateId} = this.state;
-        let {deleteRsvpQuestionValue, entity} = this.props;
+        let {deleteRsvpQuestionValue, currentTemplate, entity} = this.props;
         let value = entity.values.find(v => v.id == valueId);
 
         Swal.fire({
@@ -43,9 +43,14 @@ class EditRsvpQuestionPage extends React.Component {
             confirmButtonText: T.translate("general.yes_delete")
         }).then(function(result){
             if (result.value) {
-                deleteRsvpQuestionValue(rsvpTemplateId, rsvpQuestionId, valueId);
+                deleteRsvpQuestionValue(currentTemplate.id, entity.id, valueId);
             }
         });
+    }
+
+    handleValueSave(valueEntity) {
+        let {entity, currentTemplate} = this.props;
+        this.props.saveRsvpQuestionValue(currentTemplate.id, entity.id, valueEntity);
     }
 
     handleValueReorder(values, valueId, newOrder) {
@@ -63,15 +68,13 @@ class EditRsvpQuestionPage extends React.Component {
                     <h3>{title} {T.translate("edit_rsvp_question.rsvp_question")}</h3>
                     <hr/>
                     {currentSummit &&
-                    <RsvpQuestionForm
-                        history={this.props.history}
-                        currentSummit={currentSummit}
-                        rsvpTemplateId={currentTemplate.id}
-                        allClasses={allClasses}
+                    <QuestionForm
+                        ownerId={currentTemplate.id}
+                        questionClasses={allClasses}
                         entity={entity}
                         errors={errors}
                         onValueDelete={this.handleValueDelete}
-                        onValueReorder={this.handleValueReorder}
+                        onValueSave={this.handleValueSave}
                         onSubmit={this.props.saveRsvpQuestion}
                     />
                     }
@@ -96,6 +99,7 @@ export default connect (
         saveRsvpQuestion,
         getRsvpQuestionMeta,
         deleteRsvpQuestionValue,
+        saveRsvpQuestionValue,
         updateQuestionValuesOrder
     }
 )(EditRsvpQuestionPage);
