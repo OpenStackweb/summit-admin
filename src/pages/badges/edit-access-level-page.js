@@ -51,8 +51,7 @@ class EditAccessLevelPage extends React.Component {
     }
 
     handleSubmit(entity) {
-        let {currentTemplate, currentQuestion} = this.props;
-        //this.props.saveRsvpQuestionValue(currentTemplate.id, currentQuestion.id, entity);
+        this.props.saveAccessLevel(entity);
     }
 
     render(){
@@ -63,6 +62,7 @@ class EditAccessLevelPage extends React.Component {
         let fields = [
             {type: 'text', name: 'name', label: T.translate("edit_access_level.name")},
             {type: 'text', name: 'tag_name', label: T.translate("edit_access_level.tag_name")},
+            {type: 'textarea', name: 'description', label: T.translate("edit_access_level.description")},
             {type: 'textarea', name: 'template_content', label: T.translate("edit_access_level.template_content")},
             {type: 'checkbox', name: 'is_default', label: T.translate("edit_access_level.default")}
         ];

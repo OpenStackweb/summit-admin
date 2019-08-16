@@ -857,8 +857,8 @@
     "currency"              : "Currency",
     "quantity_to_sell"      : "Quantity to sell",
     "max_quantity_to_sell_per_order": "Max per order",
-    "sale_start_date"       : "Sale Start",
-    "sale_end_date"         : "Sale End",
+    "sales_start_date"       : "Sale Start",
+    "sales_end_date"         : "Sale End",
     "ticket_type_saved"     : "Ticket Type saved successfully",
     "ticket_type_created"   : "Ticket Type created successfully",
     "placeholders": {
@@ -1007,12 +1007,14 @@
     "no_badge_features"       : "No badge feature found for current search criteria.",
     "add_badge_feature"       : "Add Badge Feature",
     "name"                    : "Name",
-    "external_id"             : "External Id",
+    "description"             : "Description",
+    "tag_name"                : "Tag Name",
     "remove_warning"          : "Are you sure you want to delete badge feature "
   },
   "edit_badge_feature": {
     "badge_feature"             : "Badge Feature",
     "name"                      : "Name",
+    "description"               : "Description",
     "template_content"          : "Template Content",
     "tag_name"                  : "Tag Name",
     "badge_feature_saved"       : "Badge Feature saved successfully",
@@ -1024,16 +1026,17 @@
     "no_access_levels"      : "No access level found for current search criteria.",
     "add_access_level"      : "Add Access Level",
     "name"                  : "Name",
-    "external_id"           : "External Id",
+    "description"           : "Description",
+    "tag_name"              : "Tag Name",
     "remove_warning"        : "Are you sure you want to delete access level "
   },
   "edit_access_level": {
     "access_level"          : "Access Level",
     "name"                  : "Name",
+    "description"           : "Description",
     "template_content"      : "Template Content",
     "tag_name"              : "Tag Name",
     "default"               : "Is Default",
-    "description"           : "Description",
     "access_level_saved"    : "Access Level saved successfully",
     "access_level_created"  : "Access Level created successfully"
   },

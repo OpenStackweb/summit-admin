@@ -24,16 +24,16 @@ import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 export const DEFAULT_ENTITY = {
-    id                              : 0,
-    name                            : '',
-    external_id                     : 0,
-    description                     : '',
-    cost                            : 0,
-    currency                        : 'USD',
-    quantity_to_sell                : 0,
-    max_quantity_to_sell_per_order  : 0,
-    sale_start_date                 : '',
-    sale_end_date                   : '',
+    id                      : 0,
+    name                    : '',
+    external_id             : 0,
+    description             : '',
+    cost                    : 0,
+    currency                : 'USD',
+    quantity_2_sell         : 0,
+    max_quantity_per_order  : 0,
+    sales_start_date         : '',
+    sales_end_date           : '',
 }
 
 const DEFAULT_STATE = {

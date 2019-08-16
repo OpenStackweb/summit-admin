@@ -186,7 +186,7 @@ export const addTicketToTaxType = (taxTypeId, ticket) => (dispatch, getState) =>
     return putRequest(
         null,
         createAction(TAX_TICKET_ADDED)({ticket}),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/taxes/${taxTypeId}/tickets/${ticket.id}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tax-types/${taxTypeId}/ticket-types/${ticket.id}`,
         {},
         authErrorHandler
     )(params)(dispatch).then(() => {
@@ -210,7 +210,7 @@ export const removeTicketFromTaxType = (taxTypeId, ticketId) => (dispatch, getSt
     return deleteRequest(
         null,
         createAction(TAX_TICKET_REMOVED)({ticketId}),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/taxes/${taxTypeId}/tickets/${ticketId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tax-types/${taxTypeId}/ticket-types/${ticketId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

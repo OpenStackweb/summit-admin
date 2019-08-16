@@ -86,7 +86,7 @@ export const getBadgeTypes = ( order = 'name', orderDir = 1 ) => (dispatch, getS
     return getRequest(
         createAction(REQUEST_BADGE_TYPES),
         createAction(RECEIVE_BADGE_TYPES),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tax-types`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-types`,
         authErrorHandler,
         {order, orderDir}
     )(params)(dispatch).then(() => {
@@ -95,7 +95,7 @@ export const getBadgeTypes = ( order = 'name', orderDir = 1 ) => (dispatch, getS
     );
 };
 
-export const getBadgeType = (taxTypeId) => (dispatch, getState) => {
+export const getBadgeType = (badgeTypeId) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -110,7 +110,7 @@ export const getBadgeType = (taxTypeId) => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_BADGE_TYPE),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tax-types/${taxTypeId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-types/${badgeTypeId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -140,7 +140,7 @@ export const saveBadgeType = (entity) => (dispatch, getState) => {
         putRequest(
             createAction(UPDATE_BADGE_TYPE),
             createAction(BADGE_TYPE_UPDATED),
-            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tax-types/${entity.id}`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-types/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -159,7 +159,7 @@ export const saveBadgeType = (entity) => (dispatch, getState) => {
         postRequest(
             createAction(UPDATE_BADGE_TYPE),
             createAction(BADGE_TYPE_ADDED),
-            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tax-types`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-types`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -167,13 +167,13 @@ export const saveBadgeType = (entity) => (dispatch, getState) => {
             .then((payload) => {
                 dispatch(showMessage(
                     success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/tax-types/${payload.response.id}`) }
+                    () => { history.push(`/app/summits/${currentSummit.id}/badge-types/${payload.response.id}`) }
                 ));
             });
     }
 }
 
-export const deleteBadgeType = (taxTypeId) => (dispatch, getState) => {
+export const deleteBadgeType = (badgeTypeId) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -185,8 +185,8 @@ export const deleteBadgeType = (taxTypeId) => (dispatch, getState) => {
 
     return deleteRequest(
         null,
-        createAction(BADGE_TYPE_DELETED)({taxTypeId}),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tax-types/${taxTypeId}`,
+        createAction(BADGE_TYPE_DELETED)({badgeTypeId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-types/${badgeTypeId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -194,7 +194,7 @@ export const deleteBadgeType = (taxTypeId) => (dispatch, getState) => {
     );
 };
 
-export const addTicketToBadgeType = (taxTypeId, ticket) => (dispatch, getState) => {
+export const addAccessLevelToBadgeType = (badgeTypeId, accessLevel) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -209,7 +209,7 @@ export const addTicketToBadgeType = (taxTypeId, ticket) => (dispatch, getState) 
     return putRequest(
         null,
         createAction(BADGE_ACCESS_LEVEL_ADDED)({ticket}),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/taxes/${taxTypeId}/tickets/${ticket.id}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-types/${badgeTypeId}/access-levels/${accessLevel.id}`,
         {},
         authErrorHandler
     )(params)(dispatch).then(() => {
@@ -218,7 +218,7 @@ export const addTicketToBadgeType = (taxTypeId, ticket) => (dispatch, getState) 
     );
 };
 
-export const removeTicketFromBadgeType = (taxTypeId, ticketId) => (dispatch, getState) => {
+export const removeAccessLevelFromBadgeType = (badgeTypeId, accessLevelId) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -232,8 +232,8 @@ export const removeTicketFromBadgeType = (taxTypeId, ticketId) => (dispatch, get
 
     return deleteRequest(
         null,
-        createAction(BADGE_ACCESS_LEVEL_REMOVED)({ticketId}),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/taxes/${taxTypeId}/tickets/${ticketId}`,
+        createAction(BADGE_ACCESS_LEVEL_REMOVED)({accessLevelId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-types/${badgeTypeId}/access-levels/${accessLevelId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -278,7 +278,7 @@ export const getBadgeFeatures = ( order = 'name', orderDir = 1 ) => (dispatch, g
     return getRequest(
         createAction(REQUEST_BADGE_FEATURES),
         createAction(RECEIVE_BADGE_FEATURES),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-features`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-feature-types`,
         authErrorHandler,
         {order, orderDir}
     )(params)(dispatch).then(() => {
@@ -302,7 +302,7 @@ export const getBadgeFeature = (badgeFeatureId) => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_BADGE_FEATURE),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-features/${badgeFeatureId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-feature-types/${badgeFeatureId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -332,7 +332,7 @@ export const saveBadgeFeature = (entity) => (dispatch, getState) => {
         putRequest(
             createAction(UPDATE_BADGE_FEATURE),
             createAction(BADGE_FEATURE_UPDATED),
-            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-features/${entity.id}`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-feature-types/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -351,7 +351,7 @@ export const saveBadgeFeature = (entity) => (dispatch, getState) => {
         postRequest(
             createAction(UPDATE_BADGE_FEATURE),
             createAction(BADGE_FEATURE_ADDED),
-            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-features`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-feature-types`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -378,7 +378,7 @@ export const deleteBadgeFeature = (badgeFeatureId) => (dispatch, getState) => {
     return deleteRequest(
         null,
         createAction(BADGE_FEATURE_DELETED)({badgeFeatureId}),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-features/${badgeFeatureId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-feature-types/${badgeFeatureId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -415,7 +415,7 @@ export const getAccessLevels = ( order = 'name', orderDir = 1 ) => (dispatch, ge
     return getRequest(
         createAction(REQUEST_ACCESS_LEVELS),
         createAction(RECEIVE_ACCESS_LEVELS),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/access-levels`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/access-level-types`,
         authErrorHandler,
         {order, orderDir}
     )(params)(dispatch).then(() => {
@@ -439,7 +439,7 @@ export const getAccessLevel = (accessLevelId) => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_ACCESS_LEVEL),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/access-levels/${accessLevelId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/access-level-types/${accessLevelId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -469,7 +469,7 @@ export const saveAccessLevel = (entity) => (dispatch, getState) => {
         putRequest(
             createAction(UPDATE_ACCESS_LEVEL),
             createAction(ACCESS_LEVEL_UPDATED),
-            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/access-levels/${entity.id}`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/access-level-types/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -488,7 +488,7 @@ export const saveAccessLevel = (entity) => (dispatch, getState) => {
         postRequest(
             createAction(UPDATE_ACCESS_LEVEL),
             createAction(ACCESS_LEVEL_ADDED),
-            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/access-levels`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/access-level-types`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -515,7 +515,7 @@ export const deleteAccessLevel = (accessLevelId) => (dispatch, getState) => {
     return deleteRequest(
         null,
         createAction(ACCESS_LEVEL_DELETED)({accessLevelId}),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/access-levels/${accessLevelId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/access-level-types/${accessLevelId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

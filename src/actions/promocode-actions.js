@@ -44,6 +44,13 @@ export const DISCOUNT_TICKET_ADDED    = 'DISCOUNT_TICKET_ADDED';
 export const DISCOUNT_TICKET_DELETED  = 'DISCOUNT_TICKET_DELETED';
 
 
+
+export const BADGE_FEATURE_ADDED    = 'BADGE_FEATURE_ADDED';
+export const BADGE_FEATURE_REMOVED  = 'BADGE_FEATURE_REMOVED';
+
+
+
+
 export const getPromocodeMeta = () => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
@@ -292,7 +299,54 @@ const normalizeEntity = (entity) => {
 
 }
 
+/************************  BADGE FEATURES **********************************/
 
+export const addBadgeFeatureToPromocode = (promocodeId, badgeFeature) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return putRequest(
+        null,
+        createAction(BADGE_FEATURE_ADDED)({badgeFeature}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes/${promocodeId}/badge-features/${badgeFeature.id}`,
+        {},
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const removeBadgeFeatureFromPromocode = (promocodeId, badgeFeatureId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(BADGE_FEATURE_REMOVED)({badgeFeatureId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes/${promocodeId}/badge-features/${badgeFeatureId}`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
 
 /************************  DICOUNT PROMOCODES **********************************/
 

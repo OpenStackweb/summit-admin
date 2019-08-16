@@ -17,7 +17,7 @@ import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import PromocodeForm from '../../components/forms/promocode-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getPromocode, getPromocodeMeta, resetPromocodeForm, sendEmail, savePromocode } from "../../actions/promocode-actions";
+import { getPromocode, getPromocodeMeta, resetPromocodeForm, sendEmail, addBadgeFeatureToPromocode, removeBadgeFeatureFromPromocode, savePromocode } from "../../actions/promocode-actions";
 import '../../styles/edit-promocode-page.less';
 
 class EditPromocodePage extends React.Component {
@@ -68,6 +68,8 @@ class EditPromocodePage extends React.Component {
                     entity={entity}
                     errors={errors}
                     onSendEmail={this.props.sendEmail}
+                    onBadgeFeatureLink={this.props.addBadgeFeatureToPromocode}
+                    onBadgeFeatureUnLink={this.props.removeBadgeFeatureFromPromocode}
                     onSubmit={this.props.savePromocode}
                 />
                 }
@@ -89,6 +91,8 @@ export default connect (
         getPromocodeMeta,
         resetPromocodeForm,
         sendEmail,
+        addBadgeFeatureToPromocode,
+        removeBadgeFeatureFromPromocode,
         savePromocode,
     }
 )(EditPromocodePage);

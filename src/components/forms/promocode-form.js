@@ -14,8 +14,8 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
-import { Dropdown, DateTimePicker, SpeakerInput, MemberInput, CompanyInput, Input } from 'openstack-uicore-foundation/lib/components'
+import {findElementPos} from 'openstack-uicore-foundation/lib/methods'
+import { Dropdown, SimpleLinkList, DateTimePicker, SpeakerInput, MemberInput, CompanyInput, Input } from 'openstack-uicore-foundation/lib/components'
 import { DiscountTicketTable } from '../tables/dicount-ticket-table';
 
 // FORM DEFS
@@ -207,6 +207,13 @@ const BadgeBasePCForm = (props) => (
                 />
             </div>
         </div>
+        {props.entity.id != 0 &&
+        <SimpleLinkList
+            values={props.entity.badge_features}
+            columns={props.badgeFeatureColumns}
+            options={props.badgeFeatureOptions}
+        />
+        }
     </>
 );
 
@@ -302,6 +309,9 @@ class PromocodeForm extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSendEmail = this.handleSendEmail.bind(this);
         this.hasErrors = this.hasErrors.bind(this);
+        this.handleBadgeFeatureLink = this.handleBadgeFeatureLink.bind(this);
+        this.handleBadgeFeatureUnLink = this.handleBadgeFeatureUnLink.bind(this);
+        this.queryBadgeFeatures = this.queryBadgeFeatures.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -377,6 +387,25 @@ class PromocodeForm extends React.Component {
         return '';
     }
 
+    handleBadgeFeatureLink(value) {
+        let {entity} = this.state;
+        this.props.onBadgeFeatureLink(entity.id, value);
+    }
+
+    handleBadgeFeatureUnLink(valueId) {
+        let {entity} = this.state;
+        this.props.onBadgeFeatureUnLink(entity.id, valueId);
+    }
+
+    queryBadgeFeatures(input, callback) {
+        let {currentSummit} = this.props;
+        let badgeFeatures = [];
+
+        badgeFeatures = currentSummit.badge_features.filter(f => f.name.toLowerCase().indexOf(input.toLowerCase()) !== -1)
+
+        callback(badgeFeatures);
+    }
+
 
     render() {
         let {entity} = this.state;
@@ -386,6 +415,22 @@ class PromocodeForm extends React.Component {
         // tmp for testing
         promocode_types_ddl.push({label: 'BADGE', value: 'BADGE'});
         promocode_types_ddl.push({label: 'DISCOUNT', value: 'DISCOUNT'});
+
+        let badgeFeatureColumns = [
+            { columnKey: 'name', value: T.translate("edit_promocode.name") },
+            { columnKey: 'description', value: T.translate("edit_promocode.description") }
+        ];
+
+        let badgeFeatureOptions = {
+            title: T.translate("edit_promocode.badge_features"),
+            valueKey: "name",
+            labelKey: "name",
+            actions: {
+                search: this.queryBadgeFeatures,
+                delete: { onClick: this.handleBadgeFeatureUnLink },
+                add: { onClick: this.handleBadgeFeatureLink }
+            }
+        };
 
         return (
             <form className="promocode-form">
@@ -449,6 +494,8 @@ class PromocodeForm extends React.Component {
                     entity={entity}
                     summit={currentSummit}
                     handleChange={this.handleChange}
+                    badgeFeatureColumns={badgeFeatureColumns}
+                    badgeFeatureOptions={badgeFeatureOptions}
                     hasErrors={this.hasErrors}
                 />
                 }
@@ -458,6 +505,8 @@ class PromocodeForm extends React.Component {
                     entity={entity}
                     summit={currentSummit}
                     handleChange={this.handleChange}
+                    badgeFeatureColumns={badgeFeatureColumns}
+                    badgeFeatureOptions={badgeFeatureOptions}
                     hasErrors={this.hasErrors}
                 />
                 }

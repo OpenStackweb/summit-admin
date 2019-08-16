@@ -152,45 +152,45 @@ class TicketTypeForm extends React.Component {
                     <div className="col-md-4">
                         <label> {T.translate("edit_ticket_type.quantity_to_sell")}</label>
                         <Input
-                            id="quantity_to_sell"
+                            id="quantity_2_sell"
                             type="number"
                             className="form-control"
-                            error={this.hasErrors('quantity_to_sell')}
+                            error={this.hasErrors('quantity_2_sell')}
                             onChange={this.handleChange}
-                            value={entity.quantity_to_sell}
+                            value={entity.quantity_2_sell}
                         />
                     </div>
                     <div className="col-md-4">
                         <label> {T.translate("edit_ticket_type.max_quantity_to_sell_per_order")}</label>
                         <Input
-                            id="max_quantity_to_sell_per_order"
+                            id="max_quantity_per_order"
                             type="number"
                             className="form-control"
-                            error={this.hasErrors('max_quantity_to_sell_per_order')}
+                            error={this.hasErrors('max_quantity_per_order')}
                             onChange={this.handleChange}
-                            value={entity.max_quantity_to_sell_per_order}
+                            value={entity.max_quantity_per_order}
                         />
                     </div>
                 </div>
                 <div className="row form-group">
                     <div className="col-md-4">
-                        <label> {T.translate("edit_ticket_type.sale_start_date")}</label>
+                        <label> {T.translate("edit_ticket_type.sales_start_date")}</label>
                         <DateTimePicker
-                            id="sale_start_date"
+                            id="sales_start_date"
                             onChange={this.handleChange}
                             format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                             timezone={currentSummit.time_zone_id}
-                            value={epochToMomentTimeZone(entity.sale_start_date, currentSummit.time_zone_id)}
+                            value={epochToMomentTimeZone(entity.sales_start_date, currentSummit.time_zone_id)}
                         />
                     </div>
                     <div className="col-md-4">
-                        <label> {T.translate("edit_ticket_type.sale_end_date")}</label>
+                        <label> {T.translate("edit_ticket_type.sales_end_date")}</label>
                         <DateTimePicker
-                            id="sale_end_date"
+                            id="sales_end_date"
                             onChange={this.handleChange}
                             format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                             timezone={currentSummit.time_zone_id}
-                            value={epochToMomentTimeZone(entity.sale_end_date, currentSummit.time_zone_id)}
+                            value={epochToMomentTimeZone(entity.sales_end_date, currentSummit.time_zone_id)}
                         />
                     </div>
                 </div>

@@ -17,7 +17,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
 import BadgeTypeForm from '../../components/forms/badge-type-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getBadgeType, resetBadgeTypeForm, saveBadgeType, addTicketToBadgeType, removeTicketFromBadgeType } from "../../actions/badge-actions";
+import { getBadgeType, resetBadgeTypeForm, saveBadgeType, addAccessLevelToBadgeType, removeAccessLevelFromBadgeType } from "../../actions/badge-actions";
 
 class EditBadgeTypePage extends React.Component {
 
@@ -60,8 +60,8 @@ class EditBadgeTypePage extends React.Component {
                     entity={entity}
                     currentSummit={currentSummit}
                     errors={errors}
-                    onTicketLink={this.props.addTicketToBadgeType}
-                    onTicketUnLink={this.props.removeTicketFromBadgeType}
+                    onAccessLevelLink={this.props.addAccessLevelToBadgeType}
+                    onAccessLevelUnLink={this.props.removeAccessLevelFromBadgeType}
                     onSubmit={this.props.saveBadgeType}
                 />
                 }
@@ -82,7 +82,7 @@ export default connect (
         getBadgeType,
         resetBadgeTypeForm,
         saveBadgeType,
-        addTicketToBadgeType,
-        removeTicketFromBadgeType
+        addAccessLevelToBadgeType,
+        removeAccessLevelFromBadgeType
     }
 )(EditBadgeTypePage);

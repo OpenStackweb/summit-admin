@@ -85,8 +85,8 @@ class AccessLevelListPage extends React.Component {
 
         let columns = [
             { columnKey: 'name', value: T.translate("access_level_list.name"), sortable: true },
-            { columnKey: 'rate', value: T.translate("access_level_list.rate") },
-            { columnKey: 'badge_id', value: T.translate("access_level_list.badge_id") }
+            { columnKey: 'description', value: T.translate("access_level_list.description") },
+            { columnKey: 'tag_name', value: T.translate("access_level_list.tag_name") }
         ];
 
         let table_options = {

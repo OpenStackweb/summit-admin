@@ -45,7 +45,9 @@ export const DEFAULT_ENTITY = {
     badge_type_id           : 0,
     badge_features          : [],
     allowed_ticket_types    : [],
-    apply_to_all_tix        : true
+    apply_to_all_tix        : true,
+    amount                  : 0,
+    rate                    : 0
 }
 
 const DEFAULT_STATE = {
