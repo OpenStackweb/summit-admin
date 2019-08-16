@@ -32,10 +32,15 @@ import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 export const DEFAULT_ENTITY = {
     id: 0,
     member: null,
+    first_name: '',
+    last_name: '',
+    email: '',
     shared_contact_info: 0,
     summit_hall_checked_in: 0,
     summit_hall_checked_in_date: '',
-    tickets: []
+    tickets: [],
+    badge_printings: [],
+    answers: []
 }
 
 const DEFAULT_STATE = {

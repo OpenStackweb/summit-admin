@@ -125,6 +125,39 @@ class AttendeeForm extends React.Component {
                 </div>
 
                 <div className="row form-group">
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_attendee.first_name")}</label>
+                        <Input
+                            id="first_name"
+                            value={entity.first_name}
+                            onChange={this.handleChange}
+                            className="form-control"
+                            error={this.hasErrors('first_name')}
+                        />
+                    </div>
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_attendee.last_name")}</label>
+                        <Input
+                            id="last_name"
+                            value={entity.last_name}
+                            onChange={this.handleChange}
+                            className="form-control"
+                            error={this.hasErrors('last_name')}
+                        />
+                    </div>
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_attendee.email")}</label>
+                        <Input
+                            id="email"
+                            value={entity.email}
+                            onChange={this.handleChange}
+                            className="form-control"
+                            error={this.hasErrors('email')}
+                        />
+                    </div>
+                </div>
+
+                <div className="row form-group">
                     <div className="col-md-3 checkboxes-div">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="shared_contact_info" checked={entity.shared_contact_info}
@@ -175,6 +208,28 @@ class AttendeeForm extends React.Component {
 
                 </div>
 
+
+                {entity.answers.length > 0 &&
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <legend>{T.translate("edit_attendee.answers")}</legend>
+                        {entity.answers.map(ans =>
+                            <div>{ans.value}</div>
+                        )}
+                    </div>
+                </div>
+                }
+
+                {entity.badge_printings.length > 0 &&
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <legend>{T.translate("edit_attendee.badge_printings")}</legend>
+                        {entity.badge_printings.map(b =>
+                            <div>{b.name}</div>
+                        )}
+                    </div>
+                </div>
+                }
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">
