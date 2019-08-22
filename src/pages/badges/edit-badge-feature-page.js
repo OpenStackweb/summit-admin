@@ -61,7 +61,7 @@ class EditBadgeFeaturePage extends React.Component {
 
         let fields = [
             {type: 'text', name: 'name', label: T.translate("edit_badge_feature.name")},
-            {type: 'text', name: 'tag_name', label: T.translate("edit_badge_feature.tag_name")},
+            /*{type: 'text', name: 'tag_name', label: T.translate("edit_badge_feature.tag_name")},*/
             {type: 'textarea', name: 'description', label: T.translate("edit_badge_feature.description")},
             {type: 'textarea', name: 'template_content', label: T.translate("edit_badge_feature.template_content")},
         ];

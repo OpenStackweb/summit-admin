@@ -9,6 +9,7 @@ import {
     SELECTION_PLAN_ADDED,
     UPDATE_SELECTION_PLAN
 } from "../../actions/selection-plan-actions";
+
 import {
     ROOM_BOOKING_ATTRIBUTE_TYPE_DELETED,
     ROOM_BOOKING_ATTRIBUTE_TYPE_ADDED,
@@ -17,6 +18,14 @@ import {
     ROOM_BOOKING_ATTRIBUTE_UPDATED,
     ROOM_BOOKING_ATTRIBUTE_DELETED
 } from "../../actions/room-booking-actions";
+
+import {
+    RECEIVE_BADGE_TYPES,
+    RECEIVE_ACCESS_LEVELS,
+    RECEIVE_BADGE_FEATURES
+} from "../../actions/badge-actions";
+
+import { RECEIVE_REFUND_POLICIES } from "../../actions/ticket-actions";
 
 export const DEFAULT_ENTITY = {
     id: 0,
@@ -267,6 +276,30 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
             return {...state, currentSummit: {...state.currentSummit, meeting_booking_room_allowed_attributes: [...attributeTypes, attributeType]}};
         }
         break;
+        case RECEIVE_BADGE_TYPES: {
+            let badgeTypes = payload.response.data;
+
+            return {...state, currentSummit: {...state.currentSummit, badge_types: badgeTypes} };
+        }
+        break;
+        case RECEIVE_REFUND_POLICIES: {
+            let refundPolicies = payload.response.data;
+
+            return {...state, currentSummit: {...state.currentSummit, refund_policies: refundPolicies} };
+        }
+        break;
+        case RECEIVE_ACCESS_LEVELS: {
+            let accessLevels = payload.response.data;
+
+            return {...state, currentSummit: {...state.currentSummit, access_level_types: accessLevels} };
+        }
+        break;
+        case RECEIVE_BADGE_FEATURES: {
+            let badgeFeatures = payload.response.data;
+
+            return {...state, currentSummit: {...state.currentSummit, badge_features: badgeFeatures} };
+        }
+            break;
         case VALIDATE: {
             return {...state,  errors: payload.errors };
         }

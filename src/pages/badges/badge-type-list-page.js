@@ -85,8 +85,8 @@ class BadgeTypeListPage extends React.Component {
 
         let columns = [
             { columnKey: 'name', value: T.translate("badge_type_list.name"), sortable: true },
-            { columnKey: 'rate', value: T.translate("badge_type_list.rate") },
-            { columnKey: 'badge_id', value: T.translate("badge_type_list.badge_id") }
+            { columnKey: 'description', value: T.translate("badge_type_list.description") },
+            { columnKey: 'access_level_names', value: T.translate("badge_type_list.access_levels") }
         ];
 
         let table_options = {

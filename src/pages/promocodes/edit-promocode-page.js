@@ -18,6 +18,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import PromocodeForm from '../../components/forms/promocode-form';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getPromocode, getPromocodeMeta, resetPromocodeForm, sendEmail, addBadgeFeatureToPromocode, removeBadgeFeatureFromPromocode, savePromocode } from "../../actions/promocode-actions";
+import { getBadgeFeatures, getBadgeTypes } from '../../actions/badge-actions'
 import '../../styles/edit-promocode-page.less';
 
 class EditPromocodePage extends React.Component {
@@ -32,6 +33,8 @@ class EditPromocodePage extends React.Component {
         }
 
         this.props.getPromocodeMeta();
+        this.props.getBadgeFeatures();
+        this.props.getBadgeTypes()
     }
 
     componentWillReceiveProps(newProps) {
@@ -89,6 +92,8 @@ export default connect (
         getSummitById,
         getPromocode,
         getPromocodeMeta,
+        getBadgeFeatures,
+        getBadgeTypes,
         resetPromocodeForm,
         sendEmail,
         addBadgeFeatureToPromocode,

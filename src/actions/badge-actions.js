@@ -74,6 +74,7 @@ export const getBadgeTypes = ( order = 'name', orderDir = 1 ) => (dispatch, getS
         page         : 1,
         per_page     : 100,
         access_token : accessToken,
+        expand       : 'access_levels'
     };
 
     // order
@@ -105,6 +106,7 @@ export const getBadgeType = (badgeTypeId) => (dispatch, getState) => {
 
     let params = {
         access_token : accessToken,
+        expand: 'access_levels'
     };
 
     return getRequest(
@@ -133,7 +135,10 @@ export const saveBadgeType = (entity) => (dispatch, getState) => {
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity);
+    let normalizedEntity = normalizeBadgeType(entity);
+
+    delete(normalizedEntity.id);
+    delete(normalizedEntity.access_levels);
 
     if (entity.id) {
 
@@ -146,13 +151,13 @@ export const saveBadgeType = (entity) => (dispatch, getState) => {
             entity
         )(params)(dispatch)
             .then((payload) => {
-                dispatch(showSuccessMessage(T.translate("edit_tax_type.tax_type_saved")));
+                dispatch(showSuccessMessage(T.translate("edit_badge_type.badge_type_saved")));
             });
 
     } else {
         let success_message = {
             title: T.translate("general.done"),
-            html: T.translate("edit_tax_type.tax_type_created"),
+            html: T.translate("edit_badge_type.badge_type_created"),
             type: 'success'
         };
 
@@ -208,7 +213,7 @@ export const addAccessLevelToBadgeType = (badgeTypeId, accessLevel) => (dispatch
 
     return putRequest(
         null,
-        createAction(BADGE_ACCESS_LEVEL_ADDED)({ticket}),
+        createAction(BADGE_ACCESS_LEVEL_ADDED)({accessLevel}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-types/${badgeTypeId}/access-levels/${accessLevel.id}`,
         {},
         authErrorHandler
@@ -242,8 +247,11 @@ export const removeAccessLevelFromBadgeType = (badgeTypeId, accessLevelId) => (d
 };
 
 
-const normalizeEntity = (entity) => {
+const normalizeBadgeType = (entity) => {
     let normalizedEntity = {...entity};
+
+    delete(normalizedEntity.id);
+    delete(normalizedEntity.access_levels);
 
     return normalizedEntity;
 
@@ -325,7 +333,7 @@ export const saveBadgeFeature = (entity) => (dispatch, getState) => {
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity);
+    let normalizedEntity = normalizeBadgeFeature(entity);
 
     if (entity.id) {
 
@@ -386,7 +394,12 @@ export const deleteBadgeFeature = (badgeFeatureId) => (dispatch, getState) => {
     );
 };
 
+const normalizeBadgeFeature = (entity) => {
+    let normalizedEntity = {...entity};
 
+    return normalizedEntity;
+
+}
 
 /***********************  ACCESS LEVEL  ************************************************/
 
@@ -462,7 +475,7 @@ export const saveAccessLevel = (entity) => (dispatch, getState) => {
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity);
+    let normalizedEntity = normalizeAccessLevel(entity);
 
     if (entity.id) {
 
@@ -522,3 +535,10 @@ export const deleteAccessLevel = (accessLevelId) => (dispatch, getState) => {
         }
     );
 };
+
+const normalizeAccessLevel = (entity) => {
+    let normalizedEntity = {...entity};
+
+    return normalizedEntity;
+
+}

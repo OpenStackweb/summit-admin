@@ -17,7 +17,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
 import BadgeTypeForm from '../../components/forms/badge-type-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getBadgeType, resetBadgeTypeForm, saveBadgeType, addAccessLevelToBadgeType, removeAccessLevelFromBadgeType } from "../../actions/badge-actions";
+import { getAccessLevels, getBadgeType, resetBadgeTypeForm, saveBadgeType, addAccessLevelToBadgeType, removeAccessLevelFromBadgeType } from "../../actions/badge-actions";
 
 class EditBadgeTypePage extends React.Component {
 
@@ -29,6 +29,8 @@ class EditBadgeTypePage extends React.Component {
         } else {
             this.props.getBadgeType(badgeTypeId);
         }
+
+        this.props.getAccessLevels();
     }
 
     componentWillReceiveProps(newProps) {
@@ -79,6 +81,7 @@ export default connect (
     mapStateToProps,
     {
         getSummitById,
+        getAccessLevels,
         getBadgeType,
         resetBadgeTypeForm,
         saveBadgeType,

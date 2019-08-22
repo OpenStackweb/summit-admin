@@ -45,6 +45,11 @@ const badgeTypeListReducer = (state = DEFAULT_STATE, action) => {
             let { total } = payload.response;
             let badgeTypes = payload.response.data;
 
+            badgeTypes = badgeTypes.map(b => {
+                let access_level_names = b.access_levels.map(al => al.name).join(' ,');
+                return {...b, access_level_names};
+            });
+
             return {...state, badgeTypes: badgeTypes, totalBadgeTypes: total };
         }
         break;

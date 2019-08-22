@@ -459,6 +459,7 @@
   "edit_promocode": {
     "promocode"             : "Promocode",
     "code"                  : "Code",
+    "class_name"            : "Class",
     "type"                  : "Type",
     "sponsor"               : "Sponsor",
     "email_sent"            : "Email Sent",
@@ -473,19 +474,21 @@
     "badge_features"        : "Badge Features",
     "allowed_ticket_types"  : "Ticket Types",
     "amount"                : "Amount",
-    "percent"               : "Percent",
+    "rate"                  : "Rate",
     "apply_to_all_tix"      : "Apply to all Ticket Types",
     "promocode_saved"   : "Promocode saved successfully.",
     "promocode_created" : "Promocode created successfully.",
     "placeholders": {
       "select_badge_features"  : "Select one or more Badge Features",
-      "select_badge_type"      : "Select a Badge Type"
+      "select_badge_type"      : "Select a Badge Type",
+      "select_ticket_types"    : "Select Ticket Types",
+      "select_class_name"      : "Select a Class"
     }
   },
   "discount_ticket": {
     "ticket_type": "Ticket Type",
     "amount": "Amount",
-    "percent": "Percent",
+    "rate": "Rate",
     "actions": "Actions"
   },
   "speaker_attendance_list": {
@@ -871,14 +874,17 @@
     "no_tax_types"      : "No tax types found for current search criteria.",
     "add_tax_type"      : "Add Tax Type",
     "name"              : "Name",
-    "external_id"       : "External Id",
+    "tax_id"            : "Tax Id",
+    "rate"              : "Rate",
     "remove_warning"    : "Are you sure you want to delete tax type "
   },
   "edit_tax_type": {
     "tax_type"            : "Tax Type",
     "name"                : "Name",
-    "external_id"         : "External Id",
+    "rate"                : "Rate",
+    "tax_id"              : "Tax Id",
     "description"         : "Description",
+    "ticket_types"        : "Ticket Types",
     "tax_type_saved"      : "Tax Type saved successfully",
     "tax_type_created"    : "Tax Type created successfully"
   },
@@ -989,12 +995,14 @@
     "no_badge_types"      : "No badge types found for current search criteria.",
     "add_badge_type"      : "Add Badge Type",
     "name"                : "Name",
-    "external_id"         : "External Id",
+    "description"         : "Description",
+    "access_levels"       : "Access Levels",
     "remove_warning"      : "Are you sure you want to delete badge type "
   },
   "edit_badge_type": {
     "badge_type"            : "Badge Type",
     "name"                  : "Name",
+    "description"           : "Description",
     "template_content"      : "Template Content",
     "default"               : "Is Default",
     "access_levels"         : "Access Levels",

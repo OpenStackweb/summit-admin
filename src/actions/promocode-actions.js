@@ -348,9 +348,13 @@ export const removeBadgeFeatureFromPromocode = (promocodeId, badgeFeatureId) => 
     );
 };
 
+
+
 /************************  DICOUNT PROMOCODES **********************************/
 
-export const addDiscountTicket = (promocodeId, ticket) => (dispatch, getState) => {
+
+
+/*export const addDiscountTicket = (promocodeId, ticket) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
@@ -362,7 +366,7 @@ export const addDiscountTicket = (promocodeId, ticket) => (dispatch, getState) =
     return postRequest(
         null,
         createAction(DISCOUNT_TICKET_ADDED),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes/${promocodeId}/dicount-ticket`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes/${promocodeId}/ticket-types`,
         ticket,
         authErrorHandler
     )(params)(dispatch).then(
@@ -370,7 +374,7 @@ export const addDiscountTicket = (promocodeId, ticket) => (dispatch, getState) =
             dispatch(stopLoading());
         });
 
-}
+}*/
 
 
 export const saveDiscountTicket = (ticket) => (dispatch, getState) => {
@@ -385,7 +389,7 @@ export const saveDiscountTicket = (ticket) => (dispatch, getState) => {
     return putRequest(
         null,
         createAction(DISCOUNT_TICKET_UPDATED),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes/${ticket.owner_id}/dicount-ticket/${ticket.id}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes/${ticket.owner_id}/ticket-types/${ticket.id}`,
         ticket,
         authErrorHandler
     )(params)(dispatch).then(
@@ -409,7 +413,7 @@ export const deleteDiscountTicket = (promocodeId, ticketId) => (dispatch, getSta
     return deleteRequest(
         null,
         createAction(DISCOUNT_TICKET_DELETED)({ticketId}),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes/${promocodeId}/tickets/${ticketId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes/${promocodeId}/ticket-types/${ticketId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import DiscountTicketActionsTableCell from './DiscountTicketActionsTableCell';
 import { Dropdown, Input } from 'openstack-uicore-foundation/lib/components'
 import { epochToMoment, formatEpoch } from 'openstack-uicore-foundation/lib/methods'
-import { addDiscountTicket, saveDiscountTicket, deleteDiscountTicket } from "../../../actions/promocode-actions"
+import { saveDiscountTicket, deleteDiscountTicket } from "../../../actions/promocode-actions"
 import T from "i18n-react/dist/i18n-react";
 
 import './discountticket.css';
@@ -215,12 +215,14 @@ class DiscountTicketTable extends React.Component {
         let new_row = {...this.state.new_row};
         new_row.owner_id = this.props.ownerId;
 
-        this.props.addDiscountTicket(this.props.ownerId, new_row);
+        this.props.saveDiscountTicket(new_row);
     }
 
     render() {
 
         let {ticketTypes} = this.props;
+
+        let ticket_types_ddl = ticketTypes.map(f => ({label:f.name, value:f.id}));
 
         return (
             <div>
@@ -239,13 +241,13 @@ class DiscountTicketTable extends React.Component {
 
                             return (
                                 <tr id={row.id} key={'row_' + row.id} role="row" className={rowClass}>
-                                    {createRow(row, this.actions, ticketTypes)}
+                                    {createRow(row, this.actions, ticket_types_ddl)}
                                 </tr>
                             );
                         })}
 
                         <tr id='new_row' key='new_row' className="odd">
-                            {createNewRow(this.state.new_row, this.newActions, ticketTypes)}
+                            {createNewRow(this.state.new_row, this.newActions, ticket_types_ddl)}
                         </tr>
                     </tbody>
                 </table>
@@ -257,7 +259,6 @@ class DiscountTicketTable extends React.Component {
 export default connect (
     null,
     {
-        addDiscountTicket,
         saveDiscountTicket,
         deleteDiscountTicket
     }

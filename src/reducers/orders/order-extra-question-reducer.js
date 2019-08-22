@@ -70,7 +70,7 @@ const orderExtraQuestionReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case RECEIVE_ORDER_EXTRA_QUESTION_META: {
-            let allClasses = [...payload.response];
+            let allClasses = [...payload.response.type];
 
             return {...state, allClasses: allClasses }
         }

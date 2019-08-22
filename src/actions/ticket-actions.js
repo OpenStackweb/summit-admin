@@ -25,6 +25,7 @@ import {
     showSuccessMessage,
     authErrorHandler
 } from 'openstack-uicore-foundation/lib/methods';
+import {RECEIVE_BADGE_TYPES, REQUEST_BADGE_TYPES} from "./badge-actions";
 
 export const REQUEST_TICKET_TYPES       = 'REQUEST_TICKET_TYPES';
 export const RECEIVE_TICKET_TYPES       = 'RECEIVE_TICKET_TYPES';
@@ -35,6 +36,9 @@ export const TICKET_TYPE_UPDATED        = 'TICKET_TYPE_UPDATED';
 export const TICKET_TYPE_ADDED          = 'TICKET_TYPE_ADDED';
 export const TICKET_TYPE_DELETED        = 'TICKET_TYPE_DELETED';
 export const TICKET_TYPES_SEEDED        = 'TICKET_TYPES_SEEDED';
+
+export const REQUEST_REFUND_POLICIES    = 'REQUEST_REFUND_POLICIES';
+export const RECEIVE_REFUND_POLICIES    = 'RECEIVE_REFUND_POLICIES';
 
 
 export const getTicketTypes = ( order = 'name', orderDir = 1 ) => (dispatch, getState) => {
@@ -203,6 +207,31 @@ const normalizeEntity = (entity) => {
 
 
 /****************   REFUND POLICIES ******************************/
+
+export const getRefundPolicies = () => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let params = {
+        access_token : accessToken,
+    };
+
+
+    return getRequest(
+        createAction(REQUEST_REFUND_POLICIES),
+        createAction(RECEIVE_REFUND_POLICIES),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/refund-policies`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
 
 export const saveRefundPolicy = (entity) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();

@@ -17,7 +17,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
 import QuestionForm from '../../components/forms/question-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getOrderExtraQuestion, resetOrderExtraQuestionForm, saveOrderExtraQuestion, deleteOrderExtraQuestionValue, saveOrderExtraQuestionValue } from "../../actions/order-actions";
+import { getOrderExtraQuestionMeta, getOrderExtraQuestion, resetOrderExtraQuestionForm, saveOrderExtraQuestion, deleteOrderExtraQuestionValue, saveOrderExtraQuestionValue } from "../../actions/order-actions";
 import Swal from "sweetalert2";
 
 class EditOrderExtraQuestionPage extends React.Component {
@@ -37,6 +37,8 @@ class EditOrderExtraQuestionPage extends React.Component {
         } else {
             this.props.getOrderExtraQuestion(orderExtraQuestionId);
         }
+
+        this.props.getOrderExtraQuestionMeta();
     }
 
     componentWillReceiveProps(newProps) {
@@ -111,6 +113,7 @@ export default connect (
     {
         getSummitById,
         getOrderExtraQuestion,
+        getOrderExtraQuestionMeta,
         resetOrderExtraQuestionForm,
         deleteOrderExtraQuestionValue,
         saveOrderExtraQuestionValue,

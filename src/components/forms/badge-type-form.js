@@ -33,6 +33,7 @@ class BadgeTypeForm extends React.Component {
 
         this.handleAccessLevelLink = this.handleAccessLevelLink.bind(this);
         this.handleAccessLevelUnLink = this.handleAccessLevelUnLink.bind(this);
+        this.queryAccessLevels = this.queryAccessLevels.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -92,6 +93,15 @@ class BadgeTypeForm extends React.Component {
         this.props.onAccessLevelUnLink(entity.id, accessLevelId);
     }
 
+    queryAccessLevels(input, callback) {
+        let {currentSummit} = this.props;
+        let accessLevels = [];
+
+        accessLevels = currentSummit.access_level_types.filter(f => f.name.toLowerCase().indexOf(input.toLowerCase()) !== -1)
+
+        callback(accessLevels);
+    }
+
 
     render() {
         let {entity} = this.state;
@@ -106,7 +116,7 @@ class BadgeTypeForm extends React.Component {
             valueKey: "name",
             labelKey: "name",
             actions: {
-                search: (input, callback) => { queryAccessLevels(currentSummit.id, input, callback); },
+                search: this.queryAccessLevels,
                 delete: { onClick: this.handleAccessLevelUnLink },
                 add: { onClick: this.handleAccessLevelLink }
             }
@@ -137,11 +147,11 @@ class BadgeTypeForm extends React.Component {
                     </div>
                 </div>
                 <div className="row form-group">
-                    <div className="col-md-12">
-                        <label> {T.translate("edit_badge_type.template_content")}</label>
+                    <div className="col-md-8">
+                        <label> {T.translate("edit_badge_type.description")}</label>
                         <textarea
-                            id="tamplate_content"
-                            value={entity.tamplate_content}
+                            id="description"
+                            value={entity.description}
                             onChange={this.handleChange}
                             className="form-control"
                         />

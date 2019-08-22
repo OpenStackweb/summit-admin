@@ -25,7 +25,7 @@ import {
     showSuccessMessage,
     authErrorHandler
 } from 'openstack-uicore-foundation/lib/methods';
-import {QUESTION_ORDER_UPDATED} from "./rsvp-template-actions";
+import {QUESTION_ORDER_UPDATED, RECEIVE_RSVP_QUESTION_META} from "./rsvp-template-actions";
 
 
 export const REQUEST_ORDER_EXTRA_QUESTIONS       = 'REQUEST_ORDER_EXTRA_QUESTIONS';
@@ -55,6 +55,27 @@ export const RECEIVE_PURCHASE_ORDER = 'RECEIVE_PURCHASE_ORDER';
 
 /***********************  ORDER EXTRA QUESTIONS  *******************************************/
 
+export const getOrderExtraQuestionMeta = () => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_ORDER_EXTRA_QUESTION_META),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/order-extra-questions/metadata`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
 
 export const getOrderExtraQuestions = () => (dispatch, getState) => {
 
@@ -73,8 +94,7 @@ export const getOrderExtraQuestions = () => (dispatch, getState) => {
         createAction(REQUEST_ORDER_EXTRA_QUESTIONS),
         createAction(RECEIVE_ORDER_EXTRA_QUESTIONS),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/order-extra-questions`,
-        authErrorHandler,
-        {order, orderDir}
+        authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }

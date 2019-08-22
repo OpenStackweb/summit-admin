@@ -50,7 +50,116 @@ const EmailRedeemForm = (props) => (
     </>
 );
 
-const SpeakerPCForm = (props) => (
+const BasePCForm = (props) => {
+
+    let badge_features_ddl = props.summit.badge_features.map(f => ({label:f.name, value:f.id}));
+
+    return (
+        <>
+            <div className="row form-group">
+                <div className="col-md-4">
+                    <label> {T.translate("edit_promocode.quantity_available")} </label>
+                    <Input
+                        id="quantity_available"
+                        type="number"
+                        value={props.entity.quantity_available}
+                        onChange={props.handleChange}
+                        className="form-control"
+                    />
+                </div>
+                <div className="col-md-4">
+                    <label> {T.translate("edit_promocode.quantity_used")}</label>
+                    <Input
+                        id="quantity_used"
+                        type="number"
+                        value={props.entity.quantity_used || 0}
+                        onChange={props.handleChange}
+                        className="form-control"
+                        disabled
+                    />
+                </div>
+            </div>
+            <div className="row form-group">
+                <div className="col-md-4">
+                    <label> {T.translate("edit_promocode.valid_since_date")} *</label>
+                    <DateTimePicker
+                        id="valid_since_date"
+                        onChange={props.handleChange}
+                        format={{date: "YYYY-MM-DD", time: false}}
+                        timezone="UTC"
+                        value={props.entity.valid_since_date}
+                    />
+                </div>
+                <div className="col-md-4">
+                    <label> {T.translate("edit_promocode.valid_until_date")} *</label>
+                    <DateTimePicker
+                        id="valid_until_date"
+                        onChange={props.handleChange}
+                        format={{date: "YYYY-MM-DD", time: false}}
+                        timezone="UTC"
+                        value={props.entity.valid_until_date}
+                    />
+                </div>
+            </div>
+            <div className="row form-group">
+                <div className="col-md-4">
+                    <label> {T.translate("edit_promocode.badge_type_id")} *</label>
+                    <Dropdown
+                        id="badge_type_id"
+                        value={props.entity.badge_type_id}
+                        onChange={props.handleChange}
+                        placeholder={T.translate("edit_promocode.placeholders.select_badge_type")}
+                        options={props.summit.badge_types}
+                    />
+                </div>
+                <div className="col-md-8">
+                    <label> {T.translate("edit_promocode.badge_features")} *</label>
+                    <Dropdown
+                        id="badge_features"
+                        value={props.entity.badge_features}
+                        onChange={props.handleChange}
+                        placeholder={T.translate("edit_promocode.placeholders.select_badge_features")}
+                        options={badge_features_ddl}
+                        isMulti
+                    />
+                </div>
+            </div>
+            {props.entity.id != 0 &&
+            <SimpleLinkList
+                values={props.entity.badge_features}
+                columns={props.badgeFeatureColumns}
+                options={props.badgeFeatureOptions}
+            />
+            }
+        </>
+    );
+};
+
+const GenericBasePCForm = (props) => {
+
+    let ticket_types_ddl = props.summit.ticket_types.map(f => ({label:f.name, value:f.id}));
+
+    return (
+        <>
+            <BasePCForm {...props} />
+            <div className="row form-group">
+                <div className="col-md-6">
+                    <label> {T.translate("edit_promocode.allowed_ticket_types")} *</label>
+                    <Dropdown
+                        id="allowed_ticket_types"
+                        value={props.entity.allowed_ticket_types}
+                        onChange={props.handleChange}
+                        placeholder={T.translate("edit_promocode.placeholders.select_ticket_types")}
+                        options={ticket_types_ddl}
+                        isMulti
+                    />
+                </div>
+            </div>
+        </>
+    );
+};
+
+const SpeakerBasePCForm = (props) => (
     <>
         <div className="row form-group">
             <div className="col-md-6">
@@ -64,11 +173,12 @@ const SpeakerPCForm = (props) => (
                 />
             </div>
         </div>
+
         <EmailRedeemForm entity={props.entity} handleChange={props.handleChange} handleSendEmail={props.handleSendEmail} />
     </>
 );
 
-const MemberPCForm = (props) => (
+const MemberBasePCForm = (props) => (
     <>
         <div className="row form-group">
             <div className="col-md-6">
@@ -118,7 +228,7 @@ const MemberPCForm = (props) => (
 );
 
 
-const SponsorPCForm = (props) => (
+const SponsorBasePCForm = (props) => (
     <>
         <div className="row form-group">
             <div className="col-md-6">
@@ -132,113 +242,16 @@ const SponsorPCForm = (props) => (
                 />
             </div>
         </div>
-        <MemberPCForm {...props} />
+        <MemberBasePCForm {...props} />
     </>
 );
 
 
-const BadgeBasePCForm = (props) => (
-    <>
-        <div className="row form-group">
-            <div className="col-md-4">
-                <label> {T.translate("edit_promocode.quantity_available")} </label>
-                <Input
-                    id="quantity_available"
-                    type="number"
-                    value={props.entity.quantity_available}
-                    onChange={props.handleChange}
-                    className="form-control"
-                />
-            </div>
-            <div className="col-md-4">
-                <label> {T.translate("edit_promocode.quantity_used")}</label>
-                <Input
-                    id="quantity_used"
-                    type="number"
-                    value={props.entity.quantity_used || 0}
-                    onChange={props.handleChange}
-                    className="form-control"
-                    disabled
-                />
-            </div>
-        </div>
-        <div className="row form-group">
-            <div className="col-md-4">
-                <label> {T.translate("edit_promocode.valid_since_date")} *</label>
-                <DateTimePicker
-                    id="valid_since_date"
-                    onChange={props.handleChange}
-                    format={{date:"YYYY-MM-DD", time: false}}
-                    timezone="UTC"
-                    value={props.entity.valid_since_date}
-                />
-            </div>
-            <div className="col-md-4">
-                <label> {T.translate("edit_promocode.valid_until_date")} *</label>
-                <DateTimePicker
-                    id="valid_until_date"
-                    onChange={props.handleChange}
-                    format={{date:"YYYY-MM-DD", time: false}}
-                    timezone="UTC"
-                    value={props.entity.valid_until_date}
-                />
-            </div>
-        </div>
-        <div className="row form-group">
-            <div className="col-md-4">
-                <label> {T.translate("edit_promocode.badge_type_id")} *</label>
-                <Dropdown
-                    id="badge_type_id"
-                    value={props.entity.badge_type_id}
-                    onChange={props.handleChange}
-                    placeholder={T.translate("edit_promocode.placeholders.select_badge_type")}
-                    options={props.summit.badge_types}
-                />
-            </div>
-            <div className="col-md-8">
-                <label> {T.translate("edit_promocode.badge_features")} *</label>
-                <Dropdown
-                    id="badge_features"
-                    value={props.entity.badge_features}
-                    onChange={props.handleChange}
-                    placeholder={T.translate("edit_promocode.placeholders.select_badge_features")}
-                    options={props.summit.badge_features}
-                    isMulti
-                />
-            </div>
-        </div>
-        {props.entity.id != 0 &&
-        <SimpleLinkList
-            values={props.entity.badge_features}
-            columns={props.badgeFeatureColumns}
-            options={props.badgeFeatureOptions}
-        />
-        }
-    </>
-);
 
-const BadgePCForm = (props) => (
-    <>
-        <BadgeBasePCForm {...props} />
-        <div className="row form-group">
-            <div className="col-md-6">
-                <label> {T.translate("edit_promocode.allowed_ticket_types")} *</label>
-                <Dropdown
-                    id="allowed_ticket_types"
-                    value={props.entity.allowed_ticket_types}
-                    onChange={props.handleChange}
-                    placeholder={T.translate("edit_promocode.placeholders.select_ticket_types")}
-                    options={props.summit.ticket_types}
-                    isMulti
-                />
-            </div>
-        </div>
-    </>
-);
 
-const DiscountPCForm = (props) => (
+const DiscountBasePCForm = (props) => (
     <>
-        <BadgeBasePCForm {...props} />
+        <BasePCForm {...props} />
 
         <div className="row form-group">
             <div className="col-md-4">
@@ -294,6 +307,55 @@ const DiscountPCForm = (props) => (
 );
 
 
+const MemberPCForm = (props) => (
+    <>
+        <MemberBasePCForm {...props} />
+        <GenericBasePCForm {...props} />
+    </>
+);
+
+const SpeakerPCForm = (props) => (
+    <>
+        <SpeakerBasePCForm {...props} />
+        <GenericBasePCForm {...props} />
+    </>
+);
+
+const SponsorPCForm = (props) => (
+    <>
+        <SponsorBasePCForm {...props} />
+        <GenericBasePCForm {...props} />
+    </>
+);
+
+const MemberDiscountPCForm = (props) => (
+    <>
+        <MemberBasePCForm {...props} />
+        <DiscountBasePCForm {...props} />
+    </>
+);
+
+const SpeakerDiscountPCForm = (props) => (
+    <>
+        <SpeakerBasePCForm {...props} />
+        <DiscountBasePCForm {...props} />
+    </>
+);
+
+const SponsorDiscountPCForm = (props) => (
+    <>
+        <SponsorBasePCForm {...props} />
+        <DiscountBasePCForm {...props} />
+    </>
+);
+
+const SummitPCForm = (props) => (
+    <>
+        <GenericBasePCForm {...props} />
+    </>
+);
+
+
 
 
 class PromocodeForm extends React.Component {
@@ -305,7 +367,7 @@ class PromocodeForm extends React.Component {
             errors: props.errors
         };
 
-        this.handleTypeChange = this.handleTypeChange.bind(this);
+        this.handleClassChange = this.handleClassChange.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSendEmail = this.handleSendEmail.bind(this);
         this.hasErrors = this.hasErrors.bind(this);
@@ -349,17 +411,14 @@ class PromocodeForm extends React.Component {
         this.setState({entity: entity, errors: errors});
     }
 
-    handleTypeChange(ev) {
+    handleClassChange(ev) {
         let entity = {...this.state.entity};
         let {allClasses} = this.props;
         let {value, id} = ev.target;
 
-        // tmp for testing
-        allClasses.push({class_name: 'BADGE_PROMO_CODE', type: ['BADGE']});
-        allClasses.push({class_name: 'DISCOUNT_PROMO_CODE', type: ['DISCOUNT']});
-
-        entity.type = value;
-        entity.class_name = allClasses.find(c => c.type.indexOf(value) !== -1).class_name;
+        entity.class_name = value;
+        entity.type = null;
+        entity.allowed_ticket_types = [];
 
         this.setState({entity: entity});
     }
@@ -409,12 +468,15 @@ class PromocodeForm extends React.Component {
 
     render() {
         let {entity} = this.state;
-        let { currentSummit, allTypes } = this.props;
-        let promocode_types_ddl = allTypes.map(t => ({label: t, value: t}));
+        let { currentSummit, allTypes, allClasses } = this.props;
+        let promocode_class_ddl = allClasses.map(c => ({label: c.class_name, value: c.class_name}));
+        let promocode_types_ddl = [];
 
-        // tmp for testing
-        promocode_types_ddl.push({label: 'BADGE', value: 'BADGE'});
-        promocode_types_ddl.push({label: 'DISCOUNT', value: 'DISCOUNT'});
+        if (entity.class_name) {
+            let classTypes = allClasses.find(c => c.class_name == entity.class_name).type;
+            promocode_types_ddl = classTypes.map(t => ({label: t, value: t}));
+        }
+
 
         let badgeFeatureColumns = [
             { columnKey: 'name', value: T.translate("edit_promocode.name") },
@@ -437,13 +499,24 @@ class PromocodeForm extends React.Component {
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
                     <div className="col-md-3">
+                        <label> {T.translate("edit_promocode.class_name")} *</label>
+                        <Dropdown
+                            id="type"
+                            value={entity.class_name}
+                            placeholder={T.translate("edit_promocode.placeholders.select_class_name")}
+                            options={promocode_class_ddl}
+                            onChange={this.handleClassChange}
+                            disabled={entity.id !== 0}
+                        />
+                    </div>
+                    <div className="col-md-3">
                         <label> {T.translate("edit_promocode.type")} *</label>
                         <Dropdown
                             id="type"
                             value={entity.type}
                             placeholder={T.translate("promocode_list.placeholders.select_type")}
                             options={promocode_types_ddl}
-                            onChange={this.handleTypeChange}
+                            onChange={this.handleChange}
                             disabled={entity.id !== 0}
                         />
                     </div>
@@ -465,6 +538,8 @@ class PromocodeForm extends React.Component {
                     summit={currentSummit}
                     handleChange={this.handleChange}
                     handleSendEmail={this.handleSendEmail}
+                    badgeFeatureColumns={badgeFeatureColumns}
+                    badgeFeatureOptions={badgeFeatureOptions}
                     hasErrors={this.hasErrors}
                 />
                 }
@@ -475,6 +550,8 @@ class PromocodeForm extends React.Component {
                     summit={currentSummit}
                     handleChange={this.handleChange}
                     handleSendEmail={this.handleSendEmail}
+                    badgeFeatureColumns={badgeFeatureColumns}
+                    badgeFeatureOptions={badgeFeatureOptions}
                     hasErrors={this.hasErrors}
                 />
                 }
@@ -485,23 +562,50 @@ class PromocodeForm extends React.Component {
                     summit={currentSummit}
                     handleChange={this.handleChange}
                     handleSendEmail={this.handleSendEmail}
-                    hasErrors={this.hasErrors}
-                />
-                }
-
-                {entity.class_name == 'BADGE_PROMO_CODE' &&
-                <BadgePCForm
-                    entity={entity}
-                    summit={currentSummit}
-                    handleChange={this.handleChange}
                     badgeFeatureColumns={badgeFeatureColumns}
                     badgeFeatureOptions={badgeFeatureOptions}
                     hasErrors={this.hasErrors}
                 />
                 }
 
-                {entity.class_name == 'DISCOUNT_PROMO_CODE' &&
-                <DiscountPCForm
+                {entity.class_name == 'SPEAKER_DISCOUNT_CODE' &&
+                <SpeakerDiscountPCForm
+                    entity={entity}
+                    summit={currentSummit}
+                    handleChange={this.handleChange}
+                    handleSendEmail={this.handleSendEmail}
+                    badgeFeatureColumns={badgeFeatureColumns}
+                    badgeFeatureOptions={badgeFeatureOptions}
+                    hasErrors={this.hasErrors}
+                />
+                }
+
+                {entity.class_name == 'SPONSOR_DISCOUNT_CODE' &&
+                <SponsorDiscountPCForm
+                    entity={entity}
+                    summit={currentSummit}
+                    handleChange={this.handleChange}
+                    handleSendEmail={this.handleSendEmail}
+                    badgeFeatureColumns={badgeFeatureColumns}
+                    badgeFeatureOptions={badgeFeatureOptions}
+                    hasErrors={this.hasErrors}
+                />
+                }
+
+                {entity.class_name == 'MEMBER_DISCOUNT_CODE' &&
+                <MemberDiscountPCForm
+                    entity={entity}
+                    summit={currentSummit}
+                    handleChange={this.handleChange}
+                    handleSendEmail={this.handleSendEmail}
+                    badgeFeatureColumns={badgeFeatureColumns}
+                    badgeFeatureOptions={badgeFeatureOptions}
+                    hasErrors={this.hasErrors}
+                />
+                }
+
+                {entity.class_name == 'SUMMIT_PROMO_CODE' &&
+                <SummitPCForm
                     entity={entity}
                     summit={currentSummit}
                     handleChange={this.handleChange}

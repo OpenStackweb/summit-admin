@@ -26,7 +26,7 @@ import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 export const DEFAULT_ENTITY = {
     id                  : 0,
     name                : '',
-    tamplate_content    : '',
+    description         : '',
     is_default          : 0,
     access_levels       : [],
 }
