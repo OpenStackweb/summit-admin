@@ -104,7 +104,10 @@
     "room_bookings"           : "Room Bookings",
     "purchase_orders"         : "Purchase Orders",
     "purchase_order_list"     : "Order List",
-    "order_extra_questions"   : "Extra Questions"
+    "order_extra_questions"   : "Extra Questions",
+    "sponsors"                : "Sponsors",
+    "sponsor_list"            : "Sponsor List",
+    "sponsorship_list"        : "Sponsorships"
   },
   "schedule": {
     "schedule"                              : "Schedule",
@@ -1074,5 +1077,45 @@
   },
   "edit_purchase_order": {
     "purchase_order"                  : "Purchase Order"
+  },
+  "sponsor_list": {
+    "sponsors"         : "Sponsors",
+    "sponsor_list"     : "Sponsor List",
+    "no_sponsors"      : "No sponsors found for current search criteria.",
+    "add_sponsor"      : "Add Sponsor",
+    "name"             : "Name",
+    "company"          : "Company",
+    "sponsorship"      : "Sponsorship",
+    "order"            : "Order",
+    "remove_warning"   : "Are you sure you want to delete sponsor "
+  },
+  "edit_sponsor": {
+    "sponsor"            : "Sponsor",
+    "name"               : "Name",
+    "order"              : "Order",
+    "company"            : "Company",
+    "sponsorship"        : "Sponsorship",
+    "sponsor_saved"      : "Sponsor saved successfully",
+    "sponsor_created"    : "Sponsor created successfully"
+  },
+  "sponsorship_list": {
+    "sponsorships"         : "Sponsorships",
+    "sponsorship_list"     : "Sponsorship List",
+    "no_sponsorships"      : "No sponsorships found for current search criteria.",
+    "add_sponsorship"      : "Add Sponsorship",
+    "name"                 : "Name",
+    "label"                : "Label",
+    "size"                 : "Size",
+    "order"                : "Order",
+    "remove_warning"       : "Are you sure you want to delete sponsorship "
+  },
+  "edit_sponsorship": {
+    "sponsorship"           : "Sponsorship",
+    "name"                  : "Name",
+    "order"                 : "Order",
+    "label"                 : "Label",
+    "size"                  : "Size",
+    "sponsorship_saved"     : "Sponsorship saved successfully",
+    "sponsorship_created"   : "Sponsorship created successfully"
   }
 }

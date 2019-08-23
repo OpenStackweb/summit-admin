@@ -70,6 +70,10 @@ import orderExtraQuestionListReducer from './reducers/orders/order-extra-questio
 import orderExtraQuestionReducer from './reducers/orders/order-extra-question-reducer';
 import purchaseOrderListReducer from './reducers/orders/purchase-order-list-reducer';
 import purchaseOrderReducer from './reducers/orders/purchase-order-reducer';
+import sponsorListReducer from './reducers/sponsors/sponsor-list-reducer';
+import sponsorReducer from './reducers/sponsors/sponsor-reducer';
+import sponsorshipListReducer from './reducers/sponsors/sponsorship-list-reducer';
+import sponsorshipReducer from './reducers/sponsors/sponsorship-reducer';
 
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
@@ -140,6 +144,10 @@ const reducers = persistCombineReducers(config, {
     currentOrderExtraQuestionState: orderExtraQuestionReducer,
     currentPurchaseOrderListState: purchaseOrderListReducer,
     currentPurchaseOrderState: purchaseOrderReducer,
+    currentSponsorListState: sponsorListReducer,
+    currentSponsorState: sponsorReducer,
+    currentSponsorshipListState: sponsorshipListReducer,
+    currentSponsorshipState: sponsorshipReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

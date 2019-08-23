@@ -25,7 +25,6 @@ import {
     showSuccessMessage,
     authErrorHandler
 } from 'openstack-uicore-foundation/lib/methods';
-import {TRACK_GROUP_ADDED, TRACK_GROUP_REMOVED} from "./selection-plan-actions";
 
 export const REQUEST_TAX_TYPES       = 'REQUEST_TAX_TYPES';
 export const RECEIVE_TAX_TYPES       = 'RECEIVE_TAX_TYPES';

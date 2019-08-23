@@ -25,7 +25,6 @@ import {
     showSuccessMessage,
     authErrorHandler
 } from 'openstack-uicore-foundation/lib/methods';
-import {RECEIVE_BADGE_TYPES, REQUEST_BADGE_TYPES} from "./badge-actions";
 
 export const REQUEST_TICKET_TYPES       = 'REQUEST_TICKET_TYPES';
 export const RECEIVE_TICKET_TYPES       = 'RECEIVE_TICKET_TYPES';

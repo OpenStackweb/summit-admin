@@ -15,10 +15,10 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import { findElementPos, epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/methods'
-import { Input, DateTimePicker, SimpleLinkList } from 'openstack-uicore-foundation/lib/components';
+import { Input, Dropdown } from 'openstack-uicore-foundation/lib/components';
 
 
-class TaxTypeForm extends React.Component {
+class SponsorshipForm extends React.Component {
     constructor(props) {
         super(props);
 
@@ -27,9 +27,6 @@ class TaxTypeForm extends React.Component {
             errors: props.errors
         };
 
-        this.queryTickets = this.queryTickets.bind(this);
-        this.handleTicketLink = this.handleTicketLink.bind(this);
-        this.handleTicketUnLink = this.handleTicketUnLink.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -83,52 +80,24 @@ class TaxTypeForm extends React.Component {
         return '';
     }
 
-    handleTicketLink(value) {
-        let {entity} = this.state;
-        this.props.onTicketLink(entity.id, value);
-    }
-
-    handleTicketUnLink(valueId) {
-        let {entity} = this.state;
-        this.props.onTicketUnLink(entity.id, valueId);
-    }
-
-    queryTickets(input, callback) {
-        let {currentSummit} = this.props;
-        let ticketTypes = [];
-
-        ticketTypes = currentSummit.ticket_types.filter(f => f.name.toLowerCase().indexOf(input.toLowerCase()) !== -1)
-
-        callback(ticketTypes);
-    }
-
 
     render() {
         let {entity} = this.state;
         let { currentSummit } = this.props;
 
-        let ticketColumns = [
-            { columnKey: 'name', value: T.translate("edit_tax_type.name") },
-            { columnKey: 'description', value: T.translate("edit_tax_type.description") }
+        let size_ddl = [
+            {label: 'Small', value: 'Small'},
+            {label: 'Medium', value: 'Medium'},
+            {label: 'Large', value: 'Large'},
+            {label: 'Big', value: 'Big'},
         ];
 
-        let ticketOptions = {
-            title: T.translate("edit_tax_type.ticket_types"),
-            valueKey: "name",
-            labelKey: "name",
-            actions: {
-                search: this.queryTickets,
-                delete: { onClick: this.handleTicketUnLink },
-                add: { onClick: this.handleTicketLink }
-            }
-        };
-
         return (
-            <form className="tax-type-form">
+            <form className="sponsorship-form">
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
                     <div className="col-md-4">
-                        <label> {T.translate("edit_tax_type.name")} *</label>
+                        <label> {T.translate("edit_sponsorship.name")} *</label>
                         <Input
                             id="name"
                             className="form-control"
@@ -142,37 +111,29 @@ class TaxTypeForm extends React.Component {
                 </div>
                 <div className="row form-group">
                     <div className="col-md-4">
-                        <label> {T.translate("edit_tax_type.rate")}</label>
+                        <label> {T.translate("edit_sponsorship.label")}</label>
                         <Input
                             className="form-control"
-                            type="number"
-                            error={this.hasErrors('rate')}
-                            id="rate"
-                            value={entity.rate}
+                            type="label"
+                            error={this.hasErrors('label')}
+                            id="label"
+                            value={entity.label}
                             onChange={this.handleChange}
                         />
                     </div>
                     <div className="col-md-4">
-                        <label> {T.translate("edit_tax_type.tax_id")}</label>
-                        <Input
-                            className="form-control"
-                            error={this.hasErrors('tax_id')}
-                            id="tax_id"
-                            value={entity.tax_id}
+                        <label> {T.translate("edit_sponsorship.size")}</label>
+                        <Dropdown
+                            id="size"
+                            value={entity.size}
                             onChange={this.handleChange}
+                            placeholder={T.translate("edit_sponsorship.placeholders.select_size")}
+                            options={size_ddl}
+                            error={this.hasErrors('size')}
                         />
                     </div>
                 </div>
 
-
-                <hr />
-                {entity.id != 0 &&
-                <SimpleLinkList
-                    values={entity.ticket_types}
-                    columns={ticketColumns}
-                    options={ticketOptions}
-                />
-                }
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">
@@ -185,4 +146,4 @@ class TaxTypeForm extends React.Component {
     }
 }
 
-export default TaxTypeForm;
+export default SponsorshipForm;

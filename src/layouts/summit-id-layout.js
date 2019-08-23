@@ -45,6 +45,8 @@ import AccessLevelLayout from './access-level-layout'
 import BadgeTypeLayout from './badge-type-layout'
 import PurchaseOrderLayout from './purchase-order-layout'
 import OrderExtraQuestionLayout from './order-extra-question-layout'
+import SponsorLayout from './sponsor-layout'
+import SponsorshipLayout from './sponsorship-layout'
 import NoMatchPage from '../pages/no-match-page';
 
 
@@ -111,6 +113,8 @@ class SummitIdLayout extends React.Component {
                     <Route path={`${match.url}/access-levels`} component={AccessLevelLayout}/>
                     <Route path={`${match.url}/purchase-orders`} component={PurchaseOrderLayout}/>
                     <Route path={`${match.url}/order-extra-questions`} component={OrderExtraQuestionLayout}/>
+                    <Route path={`${match.url}/sponsors`} component={SponsorLayout}/>
+                    <Route path={`${match.url}/sponsorships`} component={SponsorshipLayout}/>
                     <Route component={NoMatchPage}/>
                 </Switch>
             </div>

@@ -130,13 +130,19 @@ class NavMenu extends React.Component {
             },
             {name: 'attendees', iconClass: 'fa-users', linkUrl:`summits/${summit_id}/attendees`, accessRoute: 'attendees' },
             {name:'speaker_attendance', iconClass: 'fa-users', linkUrl:`summits/${summit_id}/speaker-attendances`, accessRoute: 'speakers'},
+            {name: 'sponsors', iconClass: 'fa-handshake-o', accessRoute: 'sponsors',
+                childs: [
+                    {name:'sponsor_list', linkUrl:`summits/${summit_id}/sponsors`},
+                    {name:'sponsorship_list', linkUrl:`summits/${summit_id}/sponsorships`},
+                ]
+            },
             {name:'locations', iconClass: 'fa-map-marker', linkUrl:`summits/${summit_id}/locations`, accessRoute: 'locations'},
             {name: 'rsvps', iconClass: 'fa-user-plus', accessRoute: 'rsvp',
                 childs: [
                     {name:'rsvp_template_list', linkUrl:`summits/${summit_id}/rsvp-templates`}
                 ]
             },
-            {name: 'purchase_orders', iconClass: 'fa-ticket', accessRoute: 'purchase-orders',
+            {name: 'purchase_orders', iconClass: 'fa-money', accessRoute: 'purchase-orders',
                 childs: [
                     {name:'purchase_order_list', linkUrl:`summits/${summit_id}/purchase-orders`},
                     {name:'order_extra_questions', linkUrl:`summits/${summit_id}/order-extra-questions`},
@@ -150,7 +156,7 @@ class NavMenu extends React.Component {
                     {name:'refund_policy_list', linkUrl:`summits/${summit_id}/refund-policies`}
                 ]
             },
-            {name: 'badges', iconClass: 'fa-ticket', accessRoute: 'badges',
+            {name: 'badges', iconClass: 'fa-id-card-o', accessRoute: 'badges',
                 childs: [
                     {name:'badge_feature_list', linkUrl:`summits/${summit_id}/badge-features`},
                     {name:'access_level_list', linkUrl:`summits/${summit_id}/access-levels`},

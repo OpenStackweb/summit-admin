@@ -25,7 +25,6 @@ import {
     showSuccessMessage,
     authErrorHandler
 } from 'openstack-uicore-foundation/lib/methods';
-import {QUESTION_ORDER_UPDATED, RECEIVE_RSVP_QUESTION_META} from "./rsvp-template-actions";
 
 
 export const REQUEST_ORDER_EXTRA_QUESTIONS       = 'REQUEST_ORDER_EXTRA_QUESTIONS';
