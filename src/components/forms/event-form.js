@@ -516,6 +516,7 @@ class EventForm extends React.Component {
                     </div>
                 </Panel>
 
+                {entity.id != 0 &&
                 <Panel show={showSection == 'materials'} title={T.translate("edit_event.materials")}
                        handleClick={this.toggleSection.bind(this, 'materials')}>
                     <button className="btn btn-primary pull-right left-space" onClick={this.handleNewMaterial}>
@@ -527,6 +528,7 @@ class EventForm extends React.Component {
                         columns={material_columns}
                     />
                 </Panel>
+                }
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">

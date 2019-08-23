@@ -442,14 +442,13 @@ export const attachRoomImage = (locationId, entity, file) => (dispatch, getState
     dispatch(startLoading());
 
     let normalizedEntity = normalizeRoomEntity(entity);
-    console.log(normalizedEntity);
 
     if (entity.id) {
         dispatch(uploadRoomFile(locationId, entity, file));
     } else {
         return postRequest(
             createAction(UPDATE_ROOM),
-            createAction(ROOM_ADDED)
+            createAction(ROOM_ADDED),
             `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/rooms?access_token=${accessToken}`,
             normalizedEntity,
             authErrorHandler,

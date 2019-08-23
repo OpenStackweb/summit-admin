@@ -100,7 +100,8 @@ const roomReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case ROOM_IMAGE_ATTACHED: {
-            let image = {...state.entity.image, url:  state.entity.image.url + '?' + new Date().getTime()};
+            let image = {...payload.response};
+            //let image = {...state.entity.image, url:  state.entity.image.url + '?' + new Date().getTime()};
             return {...state, entity: {...state.entity, image: image} };
         }
         break;

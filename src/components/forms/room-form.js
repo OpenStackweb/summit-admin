@@ -101,9 +101,12 @@ class RoomForm extends React.Component {
     }
 
     handleUploadFile(file) {
+        let entity = {...this.state.entity};
+        let {locationId} = this.props;
+
         let formData = new FormData();
         formData.append('file', file);
-        this.props.onAttach(this.props.locationId, this.state.entity, formData)
+        this.props.onAttach(locationId, entity, formData);
     }
 
     handleRemoveFile(ev) {
