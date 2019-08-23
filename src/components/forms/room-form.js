@@ -141,7 +141,7 @@ class RoomForm extends React.Component {
             {label: 'USD', value: 'USD'},
             {label: 'EUR', value: 'EUR'},
         ];
-
+        let image_url = entity.image != null ? entity.image.url : '';
         return (
             <form className="room-form">
                 <input type="hidden" id="id" value={entity.id} />
@@ -252,7 +252,7 @@ class RoomForm extends React.Component {
                     <div className="col-md-12">
                         <label> {T.translate("edit_room.image")} </label>
                         <UploadInput
-                            value={entity.image.url}
+                            value={image_url}
                             handleUpload={this.handleUploadFile}
                             handleRemove={this.handleRemoveFile}
                             className="dropzone col-md-6"
