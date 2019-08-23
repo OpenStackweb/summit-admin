@@ -688,6 +688,7 @@
     "override_blackouts"  : "Overrides Blackouts",
     "room_saved"          : "Room saved successfully.",
     "room_created"        : "Room created successfully.",
+    "image"               : "Image",
     "placeholders": {
       "select_floor"  : "Select Floor",
       "select_type"  : "Select Room Type"

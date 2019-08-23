@@ -31,6 +31,7 @@ import {
     geoCodeLatLng,
     authErrorHandler
 } from 'openstack-uicore-foundation/lib/methods';
+import {PIC_ATTACHED, SPEAKER_ADDED, UPDATE_SPEAKER} from "./speaker-actions";
 
 
 export const REQUEST_LOCATIONS          = 'REQUEST_LOCATIONS';
@@ -58,6 +59,7 @@ export const RESET_ROOM_FORM     = 'RESET_ROOM_FORM';
 export const UPDATE_ROOM         = 'UPDATE_ROOM';
 export const ROOM_UPDATED        = 'ROOM_UPDATED';
 export const ROOM_ADDED          = 'ROOM_ADDED';
+export const ROOM_IMAGE_ATTACHED = 'ROOM_IMAGE_ATTACHED';
 export const ROOM_DELETED        = 'ROOM_DELETED';
 export const ATTRIBUTE_REMOVED   = 'ATTRIBUTE_REMOVED';
 export const ATTRIBUTE_ADDED     = 'ATTRIBUTE_ADDED';
@@ -431,6 +433,53 @@ const normalizeFloorEntity = (entity) => {
 
 
 /**************************************** ROOMS *********************************************/
+
+export const attachRoomImage = (locationId, entity, file) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let normalizedEntity = normalizeRoomEntity(entity);
+    console.log(normalizedEntity);
+
+    if (entity.id) {
+        dispatch(uploadRoomFile(locationId, entity, file));
+    } else {
+        return postRequest(
+            createAction(UPDATE_ROOM),
+            createAction(ROOM_ADDED)
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/rooms?access_token=${accessToken}`,
+            normalizedEntity,
+            authErrorHandler,
+            entity
+        )({})(dispatch)
+            .then((payload) => {
+                    dispatch(uploadRoomFile(locationId, payload.response, file));
+                }
+            );
+    }
+}
+
+const uploadRoomFile = (locationId, entity, file) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    postRequest(
+        null,
+        createAction(ROOM_IMAGE_ATTACHED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/rooms/${entity.id}/image?access_token=${accessToken}`,
+        file,
+        authErrorHandler,
+        {image: entity.image}
+    )({})(dispatch)
+        .then(() => {
+            dispatch(stopLoading());
+            history.push(`/app/summits/${currentSummit.id}/locations/${locationId}/rooms/${entity.id}`);
+        });
+}
 
 
 export const getRoom = (locationId, roomId) => (dispatch, getState) => {

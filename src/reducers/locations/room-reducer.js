@@ -19,7 +19,8 @@ import
     ROOM_ADDED,
     ROOM_UPDATED,
     ATTRIBUTE_ADDED,
-    ATTRIBUTE_REMOVED
+    ATTRIBUTE_REMOVED,
+    ROOM_IMAGE_ATTACHED
 } from '../../actions/location-actions';
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
@@ -37,6 +38,7 @@ export const DEFAULT_ENTITY = {
     attributes          : [],
     floor               : null,
     floor_id            : null,
+    image               : null,
 }
 
 const DEFAULT_STATE = {
@@ -95,6 +97,11 @@ const roomReducer = (state = DEFAULT_STATE, action) => {
         break;
         case VALIDATE: {
             return {...state,  errors: payload.errors };
+        }
+        break;
+        case ROOM_IMAGE_ATTACHED: {
+            let image = {...state.entity.image, url:  state.entity.image.url + '?' + new Date().getTime()};
+            return {...state, entity: {...state.entity, image: image} };
         }
         break;
         default:

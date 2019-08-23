@@ -17,7 +17,7 @@ import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import RoomForm from '../../components/forms/room-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getLocation, getRoom, resetRoomForm, saveRoom, addAttributeToRoom, removeAttributeFromRoom } from "../../actions/location-actions";
+import { getLocation, getRoom, resetRoomForm, saveRoom, addAttributeToRoom, removeAttributeFromRoom, attachRoomImage } from "../../actions/location-actions";
 
 class EditRoomPage extends React.Component {
 
@@ -47,7 +47,7 @@ class EditRoomPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, currentLocation, entity, errors, allFloors, match} = this.props;
+        let {currentSummit, currentLocation, entity, errors, allFloors, match, attachRoomImage} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
@@ -67,6 +67,7 @@ class EditRoomPage extends React.Component {
                     onSubmit={this.props.saveRoom}
                     onAttributeLink={(attribute) => {this.props.addAttributeToRoom(currentLocation.id, entity.id, attribute)}}
                     onAttributeUnLink={(attributeId) => {this.props.removeAttributeFromRoom(currentLocation.id, entity.id, attributeId)}}
+                    onAttach={attachRoomImage}
                 />
                 }
             </div>
@@ -90,6 +91,7 @@ export default connect (
         resetRoomForm,
         saveRoom,
         addAttributeToRoom,
-        removeAttributeFromRoom
+        removeAttributeFromRoom,
+        attachRoomImage
     }
 )(EditRoomPage);

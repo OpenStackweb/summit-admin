@@ -15,7 +15,7 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
-import { Input, TextEditor, Dropdown, SimpleLinkList } from 'openstack-uicore-foundation/lib/components'
+import { Input, TextEditor, Dropdown, SimpleLinkList, UploadInput } from 'openstack-uicore-foundation/lib/components'
 
 
 class RoomForm extends React.Component {
@@ -29,6 +29,9 @@ class RoomForm extends React.Component {
 
         this.queryAttributes = this.queryAttributes.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleUploadFile = this.handleUploadFile.bind(this);
+        this.handleRemoveFile = this.handleRemoveFile.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -97,6 +100,17 @@ class RoomForm extends React.Component {
         callback(attributes);
     }
 
+    handleUploadFile(file) {
+        let formData = new FormData();
+        formData.append('file', file);
+        this.props.onAttach(this.props.locationId, this.state.entity, formData)
+    }
+
+    handleRemoveFile(ev) {
+        let entity = {...this.state.entity};
+        entity.attachment = '';
+        this.setState({entity:entity});
+    }
 
     render() {
         let {entity} = this.state;
@@ -234,7 +248,21 @@ class RoomForm extends React.Component {
                     </div>
                 </div>
                 }
-
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <label> {T.translate("edit_room.image")} </label>
+                        <UploadInput
+                            value={entity.image.url}
+                            handleUpload={this.handleUploadFile}
+                            handleRemove={this.handleRemoveFile}
+                            className="dropzone col-md-6"
+                            multiple={false}
+                            accept="image/*"
+                        />
+                    </div>
+                </div>
+                <br/>
+                <hr/>
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">
