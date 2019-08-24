@@ -149,16 +149,15 @@ class RoomBookingListPage extends React.Component {
         let {showModal, modalBooking, modalAmount} = this.state;
 
         roomBookings = roomBookings.map(rb => {
-            let startDate = epochToMomentTimeZone(rb.start_datetime, currentSummit.time_zone_id).format('YYYY-MM-DD h:mm a');
-            let endDate = epochToMomentTimeZone(rb.end_datetime, currentSummit.time_zone_id).format('YYYY-MM-DD h:mm a');
-
-            return {...rb, start_date: startDate, end_date: endDate}
+            let start_datetime = epochToMomentTimeZone(rb.start_datetime, currentSummit.time_zone_id).format('YYYY-MM-DD h:mm a');
+            let end_datetime   = epochToMomentTimeZone(rb.end_datetime, currentSummit.time_zone_id).format('YYYY-MM-DD h:mm a');
+            return {...rb, start_datetime: start_datetime, end_datetime: end_datetime}
         })
 
         let columns = [
             { columnKey: 'room_name', value: T.translate("room_booking_list.room"), sortable: true },
-            { columnKey: 'start_date', value: T.translate("room_booking_list.start"), sortable: true },
-            { columnKey: 'end_date', value: T.translate("room_booking_list.end") },
+            { columnKey: 'start_datetime', value: T.translate("room_booking_list.start"), sortable: true },
+            { columnKey: 'end_datetime', value: T.translate("room_booking_list.end") },
             { columnKey: 'owner', value: T.translate("room_booking_list.owner") },
             { columnKey: 'status', value: T.translate("room_booking_list.status") },
         ];
