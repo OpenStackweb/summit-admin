@@ -81,7 +81,6 @@ export const getRoomBookings = ( term = null, page = 1, perPage = 10, order = 's
         params['order']= `${orderDirSign}${order}`;
     }
 
-
     return getRequest(
         createAction(REQUEST_ROOM_BOOKINGS),
         createAction(RECEIVE_ROOM_BOOKINGS),

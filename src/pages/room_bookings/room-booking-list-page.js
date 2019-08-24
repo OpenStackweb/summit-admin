@@ -156,7 +156,7 @@ class RoomBookingListPage extends React.Component {
         })
 
         let columns = [
-            { columnKey: 'room', value: T.translate("room_booking_list.room"), sortable: true },
+            { columnKey: 'room_name', value: T.translate("room_booking_list.room"), sortable: true },
             { columnKey: 'start_date', value: T.translate("room_booking_list.start"), sortable: true },
             { columnKey: 'end_date', value: T.translate("room_booking_list.end") },
             { columnKey: 'owner', value: T.translate("room_booking_list.owner") },

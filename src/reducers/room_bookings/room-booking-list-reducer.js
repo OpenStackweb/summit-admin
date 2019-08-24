@@ -50,7 +50,7 @@ const roomBookingListReducer = (state = DEFAULT_STATE, action) => {
                 return {
                     ...rb,
                     owner: ownerName,
-                    room: rb.room.name,
+                    room_name: rb.room.name,
                     room_id: rb.room.id
                 };
             })
