@@ -37,7 +37,7 @@ class RoomBookingListPage extends React.Component {
         this.handleRefundClick = this.handleRefundClick.bind(this);
         this.handleRefund = this.handleRefund.bind(this);
         this.handleRefundChange = this.handleRefundChange.bind(this);
-        this.hasPayed = this.hasPayed.bind(this);
+        this.hasPaid = this.hasPaid.bind(this);
         this.onCloseModal = this.onCloseModal.bind(this);
 
         this.state = {
@@ -118,11 +118,11 @@ class RoomBookingListPage extends React.Component {
         });
     }
 
-    hasPayed(bookingId) {
+    hasPaid(bookingId) {
         let {roomBookings} = this.props;
         let roomBooking = roomBookings.find(rb => rb.id == bookingId);
 
-        return roomBooking.status == 'Payed';
+        return roomBooking.status == 'Paid';
     }
 
     onCloseModal() {
@@ -172,7 +172,7 @@ class RoomBookingListPage extends React.Component {
                         tooltip: 'refund',
                         icon: <i className="fa fa-money"></i>,
                         onClick: this.handleRefundClick,
-                        display: this.hasPayed
+                        display: this.hasPaid
                     }
                 ]
             }
