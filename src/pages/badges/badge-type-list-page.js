@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { Table } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getBadgeTypes, deleteBadgeType } from "../../actions/badge-actions";
@@ -57,7 +57,7 @@ class BadgeTypeListPage extends React.Component {
         let {deleteBadgeType, badgeTypes} = this.props;
         let badgeType = badgeTypes.find(t => t.id == badgeTypeId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("badge_type_list.remove_warning") + ' ' + badgeType.name,
             type: "warning",
@@ -68,7 +68,7 @@ class BadgeTypeListPage extends React.Component {
             if (result.value) {
                 deleteBadgeType(badgeTypeId);
             }
-        }).catch(swal.noop);
+        });
     }
 
     handleSort(index, key, dir, func) {

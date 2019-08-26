@@ -22,10 +22,10 @@ import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 const DEFAULT_STATE = {
-    badgeFeatures            : [],
+    badgeFeatures       : [],
     order               : 'name',
     orderDir            : 1,
-    totalBadgeFeatures       : 0
+    totalBadgeFeatures  : 0
 };
 
 const badgeFeatureListReducer = (state = DEFAULT_STATE, action) => {
@@ -50,7 +50,7 @@ const badgeFeatureListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case BADGE_FEATURE_DELETED: {
             let {badgeFeatureId} = payload;
-            return {...state, badgeFeatures: state.badgeFeatures.filter(t => t.id != badgeFeatureId)};
+            return {...state, badgeFeatures: state.badgeFeatures.filter(t => t.id != badgeFeatureId), totalBadgeFeatures: (state.totalBadgeFeatures - 1)};
         }
         break;
         default:

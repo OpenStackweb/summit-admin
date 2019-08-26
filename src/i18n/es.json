@@ -1038,7 +1038,7 @@
     "add_access_level"      : "Add Access Level",
     "name"                  : "Name",
     "description"           : "Description",
-    "tag_name"              : "Tag Name",
+    "is_default"            : "Is Default",
     "remove_warning"        : "Are you sure you want to delete access level "
   },
   "edit_access_level": {
@@ -1084,6 +1084,7 @@
     "no_sponsors"      : "No sponsors found for current search criteria.",
     "add_sponsor"      : "Add Sponsor",
     "name"             : "Name",
+    "id"               : "Id",
     "company"          : "Company",
     "sponsorship"      : "Sponsorship",
     "order"            : "Order",

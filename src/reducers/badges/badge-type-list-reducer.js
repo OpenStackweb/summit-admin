@@ -55,7 +55,7 @@ const badgeTypeListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case BADGE_TYPE_DELETED: {
             let {badgeTypeId} = payload;
-            return {...state, badgeTypes: state.badgeTypes.filter(t => t.id != badgeTypeId)};
+            return {...state, badgeTypes: state.badgeTypes.filter(t => t.id != badgeTypeId), totalBadgeTypes: (state.totalBadgeTypes - 1)};
         }
         break;
         default:

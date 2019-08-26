@@ -106,12 +106,12 @@ class SponsorForm extends React.Component {
                     <div className="col-md-6">
                         <label> {T.translate("edit_sponsor.sponsorship")}</label>
                         <Dropdown
-                            id="sponsorship"
-                            value={entity.sponsorship}
+                            id="sponsorship_id"
+                            value={entity.sponsorship_id}
                             onChange={this.handleChange}
                             placeholder={T.translate("edit_sponsor.placeholders.select_sponsorship")}
                             options={sponsorship_ddl}
-                            error={this.hasErrors('sponsorship')}
+                            error={this.hasErrors('sponsorship_id')}
                         />
                     </div>
                 </div>

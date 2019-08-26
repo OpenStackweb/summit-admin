@@ -396,6 +396,7 @@ export const deleteBadgeFeature = (badgeFeatureId) => (dispatch, getState) => {
 
 const normalizeBadgeFeature = (entity) => {
     let normalizedEntity = {...entity};
+    delete(normalizedEntity.id);
 
     return normalizedEntity;
 
@@ -538,6 +539,7 @@ export const deleteAccessLevel = (accessLevelId) => (dispatch, getState) => {
 
 const normalizeAccessLevel = (entity) => {
     let normalizedEntity = {...entity};
+    delete(normalizedEntity.id);
 
     return normalizedEntity;
 

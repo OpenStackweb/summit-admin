@@ -27,8 +27,7 @@ export const DEFAULT_ENTITY = {
     id                  : 0,
     name                : '',
     description         : '',
-    tamplate_content    : '',
-    tag_name            : '',
+    template_content    : '',
     is_default          : 0
 }
 

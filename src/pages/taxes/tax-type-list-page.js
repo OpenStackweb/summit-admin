@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { Table } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getTaxTypes, deleteTaxType } from "../../actions/tax-actions";
@@ -57,7 +57,7 @@ class TaxTypeListPage extends React.Component {
         let {deleteTaxType, taxTypes} = this.props;
         let taxType = taxTypes.find(t => t.id == taxTypeId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("tax_type_list.remove_warning") + ' ' + taxType.name,
             type: "warning",
@@ -68,7 +68,7 @@ class TaxTypeListPage extends React.Component {
             if (result.value) {
                 deleteTaxType(taxTypeId);
             }
-        }).catch(swal.noop);
+        });
     }
 
     handleSort(index, key, dir, func) {

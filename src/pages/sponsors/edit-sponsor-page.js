@@ -49,7 +49,7 @@ class EditSponsorPage extends React.Component {
     render(){
         let {currentSummit, entity, errors, match, sponsorships} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+        let breadcrumb = (entity.id) ? entity.company.name : T.translate("general.new");
 
 
         return(

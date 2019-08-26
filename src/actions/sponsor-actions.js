@@ -60,7 +60,7 @@ export const getSponsors = ( term = null, page = 1, perPage = 10, order = 'order
     dispatch(startLoading());
 
     if(term){
-        filter.push(`'company_name'=@${term},'sponsorship_name'=@${term},'sponsorship_size'=@${term}`);
+        filter.push(`company_name=@${term},sponsorship_name=@${term},sponsorship_size=@${term}`);
     }
 
     let params = {
@@ -103,6 +103,7 @@ export const getSponsor = (sponsorId) => (dispatch, getState) => {
 
     let params = {
         access_token : accessToken,
+        expand       : 'company',
     };
 
     return getRequest(
@@ -196,6 +197,12 @@ export const deleteSponsor = (sponsorId) => (dispatch, getState) => {
 const normalizeSponsor = (entity) => {
     let normalizedEntity = {...entity};
 
+    normalizedEntity.company_id = (normalizedEntity.company) ? normalizedEntity.company.id : 0;
+
+    delete(normalizedEntity.company);
+    delete(normalizedEntity.sponsorship);
+
+
     return normalizedEntity;
 
 }
@@ -231,7 +238,7 @@ export const getSponsorships = ( order = 'name', orderDir = 1 ) => (dispatch, ge
     return getRequest(
         createAction(REQUEST_SPONSORSHIPS),
         createAction(RECEIVE_SPONSORSHIPS),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsorship-types`,
+        `${window.API_BASE_URL}/api/v1/sponsorship-types`,
         authErrorHandler,
         {order, orderDir}
     )(params)(dispatch).then(() => {
@@ -255,7 +262,7 @@ export const getSponsorship = (sponsorshipId) => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_SPONSORSHIP),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsorship-types/${sponsorshipId}`,
+        `${window.API_BASE_URL}/api/v1/sponsorship-types/${sponsorshipId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -285,7 +292,7 @@ export const saveSponsorship = (entity) => (dispatch, getState) => {
         putRequest(
             createAction(UPDATE_SPONSORSHIP),
             createAction(SPONSORSHIP_UPDATED),
-            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsorship-types/${entity.id}`,
+            `${window.API_BASE_URL}/api/v1/sponsorship-types/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -304,7 +311,7 @@ export const saveSponsorship = (entity) => (dispatch, getState) => {
         postRequest(
             createAction(UPDATE_SPONSORSHIP),
             createAction(SPONSORSHIP_ADDED),
-            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsorship-types`,
+            `${window.API_BASE_URL}/api/v1/sponsorship-types`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -331,7 +338,7 @@ export const deleteSponsorship = (sponsorshipId) => (dispatch, getState) => {
     return deleteRequest(
         null,
         createAction(SPONSORSHIP_DELETED)({sponsorshipId}),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsorship-types/${sponsorshipId}`,
+        `${window.API_BASE_URL}/api/v1/sponsorship-types/${sponsorshipId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

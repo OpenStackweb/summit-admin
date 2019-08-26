@@ -17,7 +17,9 @@ import
     RESET_BADGE_TYPE_FORM,
     UPDATE_BADGE_TYPE,
     BADGE_TYPE_UPDATED,
-    BADGE_TYPE_ADDED
+    BADGE_TYPE_ADDED,
+    BADGE_ACCESS_LEVEL_ADDED,
+    BADGE_ACCESS_LEVEL_REMOVED
 } from '../../actions/badge-actions';
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
@@ -72,6 +74,19 @@ const badgeTypeReducer = (state = DEFAULT_STATE, action) => {
         break;
         case BADGE_TYPE_UPDATED: {
             return state;
+        }
+        break;
+        case BADGE_ACCESS_LEVEL_ADDED: {
+            let newAccessLevel = {...payload.accessLevel};
+            let accessLevels = [...state.entity.access_levels, newAccessLevel];
+
+            return {...state, entity: {...state.entity, access_levels: accessLevels}, errors: {} };
+        }
+        break;
+        case BADGE_ACCESS_LEVEL_REMOVED: {
+            let {accessLevelId} = payload;
+            let accessLevels = state.entity.access_levels.filter(a => a.id != accessLevelId);
+            return {...state, entity: {...state.entity, access_levels: accessLevels} };
         }
         break;
         case VALIDATE: {

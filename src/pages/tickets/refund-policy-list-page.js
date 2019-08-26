@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { EditableTable } from 'openstack-uicore-foundation/lib/components';
-import { saveRefundPolicy, deleteRefundPolicy } from "../../actions/ticket-actions";
+import { getRefundPolicies, saveRefundPolicy, deleteRefundPolicy } from "../../actions/ticket-actions";
 
 class RefundPolicyListPage extends React.Component {
 
@@ -26,18 +26,32 @@ class RefundPolicyListPage extends React.Component {
         this.state = {}
     }
 
+    componentDidMount() {
+        let {currentSummit} = this.props;
+        if(currentSummit !== null) {
+            this.props.getRefundPolicies();
+        }
+    }
+
+    componentWillReceiveProps(newProps) {
+        let {currentSummit} = this.props;
+
+        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
+            this.props.getRefundPolicies();
+        }
+    }
 
     render(){
-        let {currentSummit, match} = this.props;
+        let {currentSummit, match, refundPolicies, totalRefundPolicies} = this.props;
 
 
-        let value_columns = [
+        let refund_columns = [
             { columnKey: 'name', value: T.translate("refund_policy_list.name") },
-            { columnKey: 'rate', value: T.translate("refund_policy_list.rate") },
-            { columnKey: 'days_before_event_start', value: T.translate("refund_policy_list.days_before") }
+            { columnKey: 'refund_rate', value: T.translate("refund_policy_list.rate") },
+            { columnKey: 'until_x_days_before_event_starts', value: T.translate("refund_policy_list.days_before") }
         ];
 
-        let value_options = {
+        let refund_options = {
             actions: {
                 save: {onClick: this.props.saveRefundPolicy},
                 delete: {onClick: this.props.deleteRefundPolicy}
@@ -55,9 +69,9 @@ class RefundPolicyListPage extends React.Component {
                     <div className={'row'}>
                         <div className="col-md-12">
                             <EditableTable
-                                options={value_options}
-                                data={currentSummit.refund_policies}
-                                columns={value_columns}
+                                options={refund_options}
+                                data={refundPolicies}
+                                columns={refund_columns}
                             />
                         </div>
                     </div>
@@ -68,8 +82,9 @@ class RefundPolicyListPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState }) => ({
-    currentSummit   : currentSummitState.currentSummit
+const mapStateToProps = ({ currentSummitState, currentRefundPolicyListState }) => ({
+    currentSummit   : currentSummitState.currentSummit,
+    ...currentRefundPolicyListState
 })
 
 export default connect (
@@ -77,5 +92,6 @@ export default connect (
     {
         saveRefundPolicy,
         deleteRefundPolicy,
+        getRefundPolicies
     }
 )(RefundPolicyListPage);

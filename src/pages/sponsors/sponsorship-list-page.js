@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { Table } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getSponsorships, deleteSponsorship } from "../../actions/sponsor-actions";
@@ -57,7 +57,7 @@ class SponsorshipListPage extends React.Component {
         let {deleteSponsorship, sponsorships} = this.props;
         let sponsorship = sponsorships.find(t => t.id == sponsorshipId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("sponsorship_list.remove_warning") + ' ' + sponsorship.name,
             type: "warning",
@@ -68,7 +68,7 @@ class SponsorshipListPage extends React.Component {
             if (result.value) {
                 deleteSponsorship(sponsorshipId);
             }
-        }).catch(swal.noop);
+        });
     }
 
     handleSort(index, key, dir, func) {
@@ -85,8 +85,8 @@ class SponsorshipListPage extends React.Component {
 
         let columns = [
             { columnKey: 'name', value: T.translate("sponsorship_list.name"), sortable: true },
-            { columnKey: 'label', value: T.translate("sponsorship_list.label") },
-            { columnKey: 'size', value: T.translate("sponsorship_list.size") }
+            { columnKey: 'label', value: T.translate("sponsorship_list.label"), sortable: true },
+            { columnKey: 'size', value: T.translate("sponsorship_list.size"), sortable: true }
         ];
 
         let table_options = {

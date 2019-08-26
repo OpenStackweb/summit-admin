@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { SortableTable } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getOrderExtraQuestions, deleteOrderExtraQuestion, updateOrderExtraQuestionOrder } from "../../actions/order-actions";
@@ -56,7 +56,7 @@ class OrderExtraQuestionListPage extends React.Component {
         let {deleteOrderExtraQuestion, orderExtraQuestions} = this.props;
         let orderExtraQuestion = orderExtraQuestions.find(t => t.id == orderExtraQuestionId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("order_extra_question_list.remove_warning") + ' ' + orderExtraQuestion.name,
             type: "warning",
@@ -67,7 +67,7 @@ class OrderExtraQuestionListPage extends React.Component {
             if (result.value) {
                 deleteOrderExtraQuestion(orderExtraQuestionId);
             }
-        }).catch(swal.noop);
+        });
     }
 
     handleNewOrderExtraQuestion(ev) {

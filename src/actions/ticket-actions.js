@@ -25,6 +25,11 @@ import {
     showSuccessMessage,
     authErrorHandler
 } from 'openstack-uicore-foundation/lib/methods';
+import {
+    EVENT_CATEGORY_QUESTION_VALUE_ADDED,
+    EVENT_CATEGORY_QUESTION_VALUE_DELETED,
+    EVENT_CATEGORY_QUESTION_VALUE_UPDATED
+} from "./event-category-actions";
 
 export const REQUEST_TICKET_TYPES       = 'REQUEST_TICKET_TYPES';
 export const RECEIVE_TICKET_TYPES       = 'RECEIVE_TICKET_TYPES';
@@ -38,6 +43,9 @@ export const TICKET_TYPES_SEEDED        = 'TICKET_TYPES_SEEDED';
 
 export const REQUEST_REFUND_POLICIES    = 'REQUEST_REFUND_POLICIES';
 export const RECEIVE_REFUND_POLICIES    = 'RECEIVE_REFUND_POLICIES';
+export const REFUND_POLICY_ADDED    = 'REFUND_POLICY_ADDED';
+export const REFUND_POLICY_UPDATED    = 'REFUND_POLICY_UPDATED';
+export const REFUND_POLICY_DELETED    = 'REFUND_POLICY_DELETED';
 
 
 export const getTicketTypes = ( order = 'name', orderDir = 1 ) => (dispatch, getState) => {
@@ -241,6 +249,32 @@ export const saveRefundPolicy = (entity) => (dispatch, getState) => {
         access_token : accessToken,
     };
 
+    if (entity.id) {
+        putRequest(
+            null,
+            createAction(REFUND_POLICY_UPDATED),
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/refund-policies/${entity.id}`,
+            entity,
+            authErrorHandler,
+            entity
+        )(params)(dispatch)
+            .then((payload) => {
+                dispatch(stopLoading());
+            });
+
+    } else {
+        postRequest(
+            null,
+            createAction(REFUND_POLICY_ADDED),
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/refund-policies`,
+            entity,
+            authErrorHandler
+        )(params)(dispatch)
+            .then((payload) => {
+                dispatch(stopLoading());
+            });
+    }
+
 }
 
 export const deleteRefundPolicy = (refundPolicyId) => (dispatch, getState) => {
@@ -252,5 +286,15 @@ export const deleteRefundPolicy = (refundPolicyId) => (dispatch, getState) => {
     let params = {
         access_token : accessToken
     };
+
+    return deleteRequest(
+        null,
+        createAction(REFUND_POLICY_DELETED)({refundPolicyId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/refund-policies/${refundPolicyId}`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 
 };

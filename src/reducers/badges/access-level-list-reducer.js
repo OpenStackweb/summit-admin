@@ -50,7 +50,7 @@ const accessLevelListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case ACCESS_LEVEL_DELETED: {
             let {accessLevelId} = payload;
-            return {...state, accessLevels: state.accessLevels.filter(t => t.id != accessLevelId)};
+            return {...state, accessLevels: state.accessLevels.filter(t => t.id != accessLevelId), totalAccessLevels: (state.totalAccessLevels - 1)};
         }
         break;
         default:

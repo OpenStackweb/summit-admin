@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { Table } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getAccessLevels, deleteAccessLevel } from "../../actions/badge-actions";
@@ -57,7 +57,7 @@ class AccessLevelListPage extends React.Component {
         let {deleteAccessLevel, accessLevels} = this.props;
         let accessLevel = accessLevels.find(t => t.id == accessLevelId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("access_level_list.remove_warning") + ' ' + accessLevel.name,
             type: "warning",
@@ -68,7 +68,7 @@ class AccessLevelListPage extends React.Component {
             if (result.value) {
                 deleteAccessLevel(accessLevelId);
             }
-        }).catch(swal.noop);
+        });
     }
 
     handleSort(index, key, dir, func) {
@@ -86,7 +86,7 @@ class AccessLevelListPage extends React.Component {
         let columns = [
             { columnKey: 'name', value: T.translate("access_level_list.name"), sortable: true },
             { columnKey: 'description', value: T.translate("access_level_list.description") },
-            { columnKey: 'tag_name', value: T.translate("access_level_list.tag_name") }
+            { columnKey: 'is_default', value: T.translate("access_level_list.is_default") }
         ];
 
         let table_options = {

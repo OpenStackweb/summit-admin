@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { Table, FreeTextSearch } from 'openstack-uicore-foundation/lib/components';
 import { Pagination } from 'react-bootstrap';
 import { getSummitById }  from '../../actions/summit-actions';
@@ -60,7 +60,7 @@ class SponsorListPage extends React.Component {
         let {deleteSponsor, sponsors} = this.props;
         let sponsor = sponsors.find(t => t.id == sponsorId);
 
-        swal({
+        Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("sponsor_list.remove_warning") + ' ' + sponsor.name,
             type: "warning",
@@ -71,7 +71,7 @@ class SponsorListPage extends React.Component {
             if (result.value) {
                 deleteSponsor(sponsorId);
             }
-        }).catch(swal.noop);
+        });
     }
 
     handlePageChange(page) {
@@ -99,8 +99,10 @@ class SponsorListPage extends React.Component {
         let {currentSummit, sponsors, lastPage, currentPage, term, order, orderDir, totalSponsors} = this.props;
 
         let columns = [
-            { columnKey: 'sponsorship_name', value: T.translate("sponsor_list.sponsorship"), sortable: true },
-            { columnKey: 'company_name', value: T.translate("sponsor_list.company") }
+            { columnKey: 'id', value: T.translate("sponsor_list.id"), sortable: true },
+            { columnKey: 'sponsorship_name', value: T.translate("sponsor_list.sponsorship")},
+            { columnKey: 'company_name', value: T.translate("sponsor_list.company") },
+            { columnKey: 'order', value: T.translate("sponsor_list.order"), sortable: true },
         ];
 
         let table_options = {
