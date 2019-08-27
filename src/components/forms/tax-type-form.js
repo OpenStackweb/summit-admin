@@ -123,6 +123,7 @@ class TaxTypeForm extends React.Component {
             }
         };
 
+
         return (
             <form className="tax-type-form">
                 <input type="hidden" id="id" value={entity.id} />

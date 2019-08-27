@@ -50,6 +50,7 @@ export const getTaxTypes = ( order = 'name', orderDir = 1 ) => (dispatch, getSta
         page         : 1,
         per_page     : 100,
         access_token : accessToken,
+        expand       : 'ticket_types'
     };
 
     // order
@@ -81,6 +82,7 @@ export const getTaxType = (taxTypeId) => (dispatch, getState) => {
 
     let params = {
         access_token : accessToken,
+        expand       : 'ticket_types'
     };
 
     return getRequest(

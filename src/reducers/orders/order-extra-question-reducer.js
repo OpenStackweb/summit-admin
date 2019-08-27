@@ -33,16 +33,11 @@ export const DEFAULT_ENTITY = {
     name                : '',
     label               : '',
     order               : 0,
-    class_name          : '',
-    is_mandatory        : false,
-    is_read_only        : false,
-    is_multiselect     : false,
-    use_chosen_plugin   : false,
-    is_country_selector : false,
-    content             : '',
-    empty_string        : '',
-    default_value_id    : 0,
-    initial_value       : '',
+    type                : '',
+    mandatory           : false,
+    printable           : false,
+    placeholder         : '',
+    usage               : null,
     values              : []
 }
 
@@ -70,7 +65,7 @@ const orderExtraQuestionReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case RECEIVE_ORDER_EXTRA_QUESTION_META: {
-            let allClasses = [...payload.response.type];
+            let allClasses = payload.response;
 
             return {...state, allClasses: allClasses }
         }

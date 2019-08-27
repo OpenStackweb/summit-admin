@@ -15,7 +15,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
-import QuestionForm from '../../components/forms/question-form';
+import ExtraQuestionForm from '../../components/forms/extra-question-form';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getOrderExtraQuestionMeta, getOrderExtraQuestion, resetOrderExtraQuestionForm, saveOrderExtraQuestion, deleteOrderExtraQuestionValue, saveOrderExtraQuestionValue } from "../../actions/order-actions";
 import Swal from "sweetalert2";
@@ -74,7 +74,7 @@ class EditOrderExtraQuestionPage extends React.Component {
 
     handleValueSave(valueEntity) {
         let {entity, currentSummit} = this.props;
-        this.props.saveOrderExtraQuestionValue(currentSummit.id, entity.id, valueEntity);
+        this.props.saveOrderExtraQuestionValue(entity.id, valueEntity);
     }
 
     render(){
@@ -88,8 +88,7 @@ class EditOrderExtraQuestionPage extends React.Component {
                 <h3>{title} {T.translate("edit_order_extra_question.order_extra_question")}</h3>
                 <hr/>
                 {currentSummit &&
-                <QuestionForm
-                    ownerId={currentSummit.id}
+                <ExtraQuestionForm
                     questionClasses={allClasses}
                     entity={entity}
                     errors={errors}

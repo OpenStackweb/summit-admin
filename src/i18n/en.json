@@ -805,11 +805,16 @@
     "default_value_id"          : "Default Value",
     "empty_string"              : "Empty String",
     "content"                   : "Content",
+    "placeholder"               : "Placeholder",
+    "usage"                     : "Usage",
+    "mandatory"                 : "Mandatory",
+    "printable"                 : "Printable",
     "value"                     : "Value",
     "values"                    : "Values",
     "add_value"                 : "Add Value",
     "placeholders": {
       "select_class" : "Select a Class",
+      "select_usage" : "Select Usage",
       "select_default" : "Select Default Value"
     }
   },
@@ -1053,7 +1058,9 @@
   },
   "order_extra_question_list": {
     "order_extra_questions"     : "Order Extra Questions",
-    "class_name"                : "Class",
+    "class"                     : "Class",
+    "label"                     : "Label",
+    "name"                      : "Name",
     "questions"                 : "Questions",
     "add_question"              : "Add Question",
     "no_order_extra_questions"  : "No extra questions found.",

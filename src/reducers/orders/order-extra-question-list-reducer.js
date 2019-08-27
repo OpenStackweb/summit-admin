@@ -16,16 +16,17 @@ import
     RECEIVE_ORDER_EXTRA_QUESTIONS,
     REQUEST_ORDER_EXTRA_QUESTIONS,
     ORDER_EXTRA_QUESTION_DELETED,
+    ORDER_EXTRA_QUESTION_ORDER_UPDATED
 } from '../../actions/order-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 const DEFAULT_STATE = {
-    orderExtraQuestions            : [],
-    order               : 'name',
-    orderDir            : 1,
-    totalOrderExtraQuestions       : 0
+    orderExtraQuestions         : [],
+    order                       : 'order',
+    orderDir                    : 1,
+    totalOrderExtraQuestions    : 0
 };
 
 const orderExtraQuestionListReducer = (state = DEFAULT_STATE, action) => {
@@ -46,6 +47,20 @@ const orderExtraQuestionListReducer = (state = DEFAULT_STATE, action) => {
             let orderExtraQuestions = payload.response.data;
 
             return {...state, orderExtraQuestions: orderExtraQuestions, totalOrderExtraQuestions: total };
+        }
+        break;
+        case ORDER_EXTRA_QUESTION_ORDER_UPDATED: {
+            let questions = payload.map(q => {
+
+                return {
+                    id: q.id,
+                    name: q.name,
+                    type: q.type,
+                    order: parseInt(q.order)
+                };
+            })
+
+            return {...state, orderExtraQuestions: questions };
         }
         break;
         case ORDER_EXTRA_QUESTION_DELETED: {

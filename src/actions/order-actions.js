@@ -43,6 +43,7 @@ export const ORDER_EXTRA_QUESTION_VALUE_UPDATED  = 'ORDER_EXTRA_QUESTION_VALUE_U
 export const RECEIVE_ORDER_EXTRA_QUESTION_VALUE  = 'RECEIVE_ORDER_EXTRA_QUESTION_VALUE';
 export const RESET_ORDER_EXTRA_QUESTION_VALUE_FORM  = 'RESET_ORDER_EXTRA_QUESTION_VALUE_FORM';
 export const UPDATE_ORDER_EXTRA_QUESTION_VALUE   = 'UPDATE_ORDER_EXTRA_QUESTION_VALUE';
+export const ORDER_EXTRA_QUESTION_ORDER_UPDATED   = 'ORDER_EXTRA_QUESTION_ORDER_UPDATED';
 
 
 
@@ -85,9 +86,11 @@ export const getOrderExtraQuestions = () => (dispatch, getState) => {
     dispatch(startLoading());
 
     let params = {
+        page         : 1,
+        per_page     : 100,
+        order        : '+order',
         access_token : accessToken,
     };
-
 
     return getRequest(
         createAction(REQUEST_ORDER_EXTRA_QUESTIONS),
@@ -138,7 +141,7 @@ export const saveOrderExtraQuestion = (entity) => (dispatch, getState) => {
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity);
+    let normalizedEntity = normalizeQuestion(entity);
 
     if (entity.id) {
 
@@ -248,7 +251,7 @@ export const saveOrderExtraQuestionValue = (orderExtraQuestionId, entity) => (di
         putRequest(
             createAction(UPDATE_ORDER_EXTRA_QUESTION_VALUE),
             createAction(ORDER_EXTRA_QUESTION_VALUE_UPDATED),
-            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/order-extra-question/${orderExtraQuestionId}/values/${entity.id}`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/order-extra-questions/${orderExtraQuestionId}/values/${entity.id}`,
             entity,
             authErrorHandler,
             entity
@@ -256,7 +259,7 @@ export const saveOrderExtraQuestionValue = (orderExtraQuestionId, entity) => (di
             .then((payload) => {
                 dispatch(showMessage(
                     success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/order-extra-question/${orderExtraQuestionId}`) }
+                    () => { history.push(`/app/summits/${currentSummit.id}/order-extra-questions/${orderExtraQuestionId}`) }
                 ));
             });
 
@@ -271,7 +274,7 @@ export const saveOrderExtraQuestionValue = (orderExtraQuestionId, entity) => (di
         postRequest(
             createAction(UPDATE_ORDER_EXTRA_QUESTION_VALUE),
             createAction(ORDER_EXTRA_QUESTION_VALUE_ADDED),
-            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/order-extra-question/${orderExtraQuestionId}/values`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/order-extra-questions/${orderExtraQuestionId}/values`,
             entity,
             authErrorHandler,
             entity
@@ -306,6 +309,15 @@ export const deleteOrderExtraQuestionValue = (orderExtraQuestionId, orderExtraQu
     );
 };
 
+
+
+const normalizeQuestion = (entity) => {
+    let normalizedEntity = {...entity};
+
+
+    return normalizedEntity;
+
+}
 
 
 

@@ -207,6 +207,11 @@ export const seedTicketTypes = ( ) => (dispatch, getState) => {
 const normalizeEntity = (entity) => {
     let normalizedEntity = {...entity};
 
+    if (!normalizedEntity.external_id)
+        delete(normalizedEntity.external_id);
+
+    delete(normalizedEntity.id);
+
     return normalizedEntity;
 
 }
