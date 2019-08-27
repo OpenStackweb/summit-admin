@@ -230,6 +230,12 @@ const normalizeEntity = (entity) => {
     if (!normalizedEntity['start_date']) normalizedEntity['start_date'] = null;
     if (!normalizedEntity['end_date']) normalizedEntity['end_date'] = null;
 
+    if (!normalizedEntity['meeting_room_booking_max_allowed'])
+        delete(normalizedEntity['meeting_room_booking_max_allowed']);
+
+    if (!normalizedEntity['meeting_room_booking_slot_length'])
+        delete(normalizedEntity['meeting_room_booking_slot_length']);
+
     return normalizedEntity;
 
 }
