@@ -224,7 +224,7 @@ export const saveSpeaker = (entity) => (dispatch, getState) => {
             .then((payload) => {
                 dispatch(showMessage(
                     success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/speakers/${payload.response.id}`) }
+                    () => { history.push(`/app/speakers`) }
                 ));
             });
     }
@@ -237,7 +237,6 @@ export const attachPicture = (entity, file) => (dispatch, getState) => {
     dispatch(startLoading());
 
     let normalizedEntity = normalizeEntity(entity);
-    console.log(normalizedEntity);
 
     if (entity.id) {
         dispatch(uploadFile(entity, file));

@@ -70,6 +70,8 @@ class App extends React.PureComponent {
     render() {
         let { isLoggedUser, onUserAuth, doLogout, getUserInfo, member, backUrl} = this.props;
         let profile_pic = member ? member.pic : '';
+
+
         return (
             <Router history={history}>
                 <div>

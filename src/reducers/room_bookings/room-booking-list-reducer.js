@@ -25,8 +25,12 @@ import {epochToMomentTimeZone} from "openstack-uicore-foundation/lib/methods";
 
 const DEFAULT_STATE = {
     roomBookings        : [],
+    term                : null,
     order               : 'start_datetime',
     orderDir            : 1,
+    currentPage         : 1,
+    lastPage            : 1,
+    perPage             : 10,
     totalRoomBookings   : 0
 };
 
@@ -38,13 +42,13 @@ const roomBookingListReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case REQUEST_ROOM_BOOKINGS: {
-            let {order, orderDir} = payload;
+            let {order, orderDir, term} = payload;
 
-            return {...state, order, orderDir }
+            return {...state, order, orderDir, term }
         }
         break;
         case RECEIVE_ROOM_BOOKINGS: {
-            let { total } = payload.response;
+            let { current_page, total, last_page } = payload.response;
             let room_bookings = payload.response.data.map(rb => {
                 let ownerName = rb.owner.first_name + ' ' + rb.owner.last_name;
                 return {
@@ -55,7 +59,7 @@ const roomBookingListReducer = (state = DEFAULT_STATE, action) => {
                 };
             })
 
-            return {...state, roomBookings: room_bookings, totalRoomBookings: total };
+            return {...state, roomBookings: room_bookings, currentPage: current_page, totalRoomBookings: total, lastPage: last_page };
         }
         break;
         case ROOM_BOOKING_DELETED: {

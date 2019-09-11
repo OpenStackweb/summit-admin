@@ -39,6 +39,8 @@ export const TAG_GROUPS_SEEDED        = 'TAG_GROUPS_SEEDED';
 export const TAG_SEEDED_TO_CATEGORIES = 'TAG_SEEDED_TO_CATEGORIES';
 export const TAGS_COPIED_TO_CATEGORY  = 'TAGS_COPIED_TO_CATEGORY';
 export const TAG_CREATED              = 'TAG_CREATED';
+export const TAG_ADDED_TO_GROUP       = 'TAG_ADDED_TO_GROUP';
+export const TAG_REMOVED_FROM_GROUP   = 'TAG_REMOVED_FROM_GROUP';
 
 export const getTagGroups = ( ) => (dispatch, getState) => {
 
@@ -274,6 +276,14 @@ export const createTag = (tag, callback) => (dispatch, getState) => {
         dispatch(stopLoading());
         callback(payload.response);
     });
+}
+
+export const addTagToGroup = (tag) => (dispatch) => {
+    dispatch(createAction(TAG_ADDED_TO_GROUP)(tag))
+}
+
+export const removeTagFromGroup = (tagId) => (dispatch) => {
+    dispatch(createAction(TAG_REMOVED_FROM_GROUP)(tagId))
 }
 
 

@@ -86,7 +86,7 @@ export const getRoomBookings = ( term = null, page = 1, perPage = 10, order = 's
         createAction(RECEIVE_ROOM_BOOKINGS),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/bookable-rooms/all/reservations`,
         authErrorHandler,
-        {order, orderDir}
+        {order, orderDir, term}
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }

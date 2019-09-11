@@ -24,6 +24,7 @@
     "name"                : "Name",
     "description"         : "Description",
     "file"                : "File",
+    "logo"                : "Logo",
     "first_name"          : "First Name",
     "last_name"           : "Last Name",
     "member"              : "Member",

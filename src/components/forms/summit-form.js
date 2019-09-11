@@ -14,15 +14,15 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import moment from 'moment-timezone'
-import Swal from "sweetalert2";
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { findElementPos, epochToMomentTimeZone, epochToMoment } from 'openstack-uicore-foundation/lib/methods'
+import { findElementPos, epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/methods'
 import {
     DateTimePicker,
     Input,
     Panel,
     Dropdown,
-    Table
+    Table,
+    UploadInput
 } from 'openstack-uicore-foundation/lib/components'
 import {Exclusive} from 'openstack-uicore-foundation/lib/components'
 
@@ -44,6 +44,8 @@ class SummitForm extends React.Component {
         this.handleSPlanAdd = this.handleSPlanAdd.bind(this);
         this.handleAttributeTypeEdit = this.handleAttributeTypeEdit.bind(this);
         this.handleNewAttributeType = this.handleNewAttributeType.bind(this);
+        this.handleUploadFile = this.handleUploadFile.bind(this);
+        this.handleRemoveFile = this.handleRemoveFile.bind(this);
 
     }
 
@@ -87,6 +89,19 @@ class SummitForm extends React.Component {
         errors[id] = '';
         entity[id] = value;
         this.setState({entity: entity, errors: errors});
+    }
+
+    handleUploadFile(file) {
+        let formData = new FormData();
+        formData.append('file', file);
+        this.props.onLogoAttach(this.state.entity, formData)
+    }
+
+    handleRemoveFile(ev) {
+        let entity = {...this.state.entity};
+
+        entity.logo = '';
+        this.setState({entity:entity});
     }
 
     handleSubmit(ev) {
@@ -195,7 +210,7 @@ class SummitForm extends React.Component {
                         />
                     </div>
                     <div className="col-md-4">
-                        <label> {T.translate("edit_summit.eventbrite_id")} *</label>
+                        <label> {T.translate("edit_summit.eventbrite_id")}</label>
                         <Input
                             className="form-control"
                             error={this.hasErrors('external_summit_id')}
@@ -330,6 +345,20 @@ class SummitForm extends React.Component {
                                 {T.translate("edit_summit.available_on_api")}
                             </label>
                         </div>
+                    </div>
+                </div>
+
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <label> {T.translate("general.logo")} </label>
+                        <UploadInput
+                            value={entity.logo}
+                            handleUpload={this.handleUploadFile}
+                            handleRemove={this.handleRemoveFile}
+                            className="dropzone col-md-6"
+                            multiple={false}
+                            accept="image/*"
+                        />
                     </div>
                 </div>
 

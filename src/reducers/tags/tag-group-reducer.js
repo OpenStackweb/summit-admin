@@ -16,7 +16,9 @@ import
     RECEIVE_TAG_GROUP,
     RESET_TAG_GROUP_FORM,
     UPDATE_TAG_GROUP,
-    TAG_GROUP_ADDED
+    TAG_GROUP_ADDED,
+    TAG_ADDED_TO_GROUP,
+    TAG_REMOVED_FROM_GROUP
 } from '../../actions/tag-actions';
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
@@ -69,6 +71,15 @@ const tagGroupReducer = (state = DEFAULT_STATE, action) => {
             entity.allowed_tags = entity.allowed_tags.map(at => at.tag);
 
             return {...state, entity: entity, errors: {} };
+        }
+        break;
+        case TAG_ADDED_TO_GROUP: {
+            return {...state,  entity: {...state.entity, allowed_tags: [...state.entity.allowed_tags, payload]} };
+        }
+        break;
+        case TAG_REMOVED_FROM_GROUP: {
+            let allowed_tags = state.entity.allowed_tags.filter(t => t.id != payload);
+            return {...state,  entity: {...state.entity, allowed_tags: allowed_tags} };
         }
         break;
         case VALIDATE: {

@@ -75,18 +75,11 @@ class TagGroupForm extends React.Component {
     }
 
     handleAllowedTagLink(value) {
-        let {entity} = this.state;
-        entity.allowed_tags = [...entity.allowed_tags, value];
-
-        this.setState({entity: entity});
+        this.props.onAddTagToGroup(value);
     }
 
     handleAllowedTagUnLink(valueId) {
-        let {entity} = this.state;
-
-        entity.allowed_tags = entity.allowed_tags.filter(at => at.id != valueId);
-
-        this.setState({entity: entity});
+        this.props.onRemoveTagFromGroup(valueId);
     }
 
 
