@@ -243,7 +243,7 @@ class PromocodeForm extends React.Component {
                             </label>
                         </div>
                     </div>
-                    {entity.id !== 0 && entity.email_sent === false &&
+                    {entity.id !== 0 &&
                     <div className="col-md-3">
                         <input type="button" onClick={this.handleSendEmail}
                                className="btn btn-default pull-right" value={T.translate("edit_promocode.send_email")}/>
