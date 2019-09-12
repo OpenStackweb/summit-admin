@@ -443,13 +443,16 @@ export const attachRoomImage = (locationId, entity, file) => (dispatch, getState
 
     let normalizedEntity = normalizeRoomEntity(entity);
 
+    let url = `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}`;
+    url += (entity.class_name == 'SummitVenueRoom') ? `/rooms` : `/bookable-rooms`;
+
     if (entity.id) {
         dispatch(uploadRoomFile(locationId, entity, file));
     } else {
         return postRequest(
             createAction(UPDATE_ROOM),
             createAction(ROOM_ADDED),
-            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/rooms?access_token=${accessToken}`,
+            `${url}?access_token=${accessToken}`,
             normalizedEntity,
             authErrorHandler,
             entity
