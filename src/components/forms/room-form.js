@@ -111,8 +111,11 @@ class RoomForm extends React.Component {
 
     handleRemoveFile(ev) {
         let entity = {...this.state.entity};
+        let {locationId} = this.props;
+        
         entity.image = '';
         this.setState({entity});
+        this.props.onRemoveImage(locationId, entity.id);
     }
 
     render() {

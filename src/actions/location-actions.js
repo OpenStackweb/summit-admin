@@ -63,6 +63,7 @@ export const ROOM_IMAGE_ATTACHED = 'ROOM_IMAGE_ATTACHED';
 export const ROOM_DELETED        = 'ROOM_DELETED';
 export const ATTRIBUTE_REMOVED   = 'ATTRIBUTE_REMOVED';
 export const ATTRIBUTE_ADDED     = 'ATTRIBUTE_ADDED';
+export const ROOM_IMAGE_DELETED  = 'ROOM_IMAGE_DELETED';
 
 export const RECEIVE_LOCATION_IMAGE        = 'RECEIVE_LOCATION_IMAGE';
 export const RESET_LOCATION_IMAGE_FORM     = 'RESET_LOCATION_IMAGE_FORM';
@@ -588,6 +589,27 @@ export const deleteRoom = (locationId, roomId) => (dispatch, getState) => {
         null,
         createAction(ROOM_DELETED)({roomId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/rooms/${roomId}`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const deleteImage = (locationId, roomId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(ROOM_IMAGE_DELETED)({roomId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/rooms/${roomId}/image`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
