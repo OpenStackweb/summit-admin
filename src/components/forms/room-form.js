@@ -112,7 +112,7 @@ class RoomForm extends React.Component {
     handleRemoveFile(ev) {
         let entity = {...this.state.entity};
         let {locationId} = this.props;
-        
+
         entity.image = '';
         this.setState({entity});
         this.props.onRemoveImage(locationId, entity.id);
@@ -129,6 +129,7 @@ class RoomForm extends React.Component {
         ];
 
         let attributeOptions = {
+            title: T.translate("edit_room.attribute_values"),
             valueKey: "id",
             labelKey: "value",
             actions: {
@@ -243,17 +244,6 @@ class RoomForm extends React.Component {
                 </div>
                 }
 
-                {entity.class_name == 'SummitBookableVenueRoom' && entity.id != 0 &&
-                <div className="row form-group">
-                    <div className="col-md-12">
-                        <SimpleLinkList
-                            values={entity.attributes}
-                            columns={attributeColumns}
-                            options={attributeOptions}
-                        />
-                    </div>
-                </div>
-                }
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_room.image")} </label>
@@ -269,6 +259,22 @@ class RoomForm extends React.Component {
                 </div>
                 <br/>
                 <hr/>
+
+                {entity.class_name == 'SummitBookableVenueRoom' && entity.id != 0 &&
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <SimpleLinkList
+                            values={entity.attributes}
+                            columns={attributeColumns}
+                            options={attributeOptions}
+                        />
+                        <br/>
+                        <hr/>
+                    </div>
+                </div>
+                }
+
+
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">

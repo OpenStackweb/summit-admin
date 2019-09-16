@@ -648,7 +648,7 @@ export const addAttributeToRoom = (locationId, roomId, attribute) => (dispatch, 
     return putRequest(
         null,
         createAction(ATTRIBUTE_ADDED)({attribute}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/bookable-rooms/${roomId}/attributes/${attribute.id}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/bookable-rooms/${roomId}/attributes/${attribute.id}`,
         {},
         authErrorHandler
     )(params)(dispatch).then(() => {
@@ -673,7 +673,7 @@ export const removeAttributeFromRoom = (locationId, roomId, attributeId) => (dis
     return deleteRequest(
         null,
         createAction(ATTRIBUTE_REMOVED)({attributeId}),
-        `${apiBaseUrl}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/bookable-rooms/${roomId}/attributes/${attributeId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/bookable-rooms/${roomId}/attributes/${attributeId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

@@ -690,6 +690,7 @@
     "room_saved"          : "Room saved successfully.",
     "room_created"        : "Room created successfully.",
     "image"               : "Image",
+    "attribute_values"    : "Attribute Values",
     "placeholders": {
       "select_floor"  : "Select Floor",
       "select_type"  : "Select Room Type"
