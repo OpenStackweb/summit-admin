@@ -72,13 +72,15 @@ class PurchaseOrderListPage extends React.Component {
         let {currentSummit, purchaseOrders, lastPage, currentPage, term, order, orderDir, totalPurchaseOrders} = this.props;
 
         let columns = [
-            { columnKey: 'member_id', value: T.translate("purchase_order_list.member_id")},
-            { columnKey: 'name', value: T.translate("general.name"), sortable: true },
-            { columnKey: 'email', value: T.translate("general.email") },
-            { columnKey: 'eventbrite_id', value: T.translate("purchase_order_list.eventbrite_id") },
+            { columnKey: 'number', value: T.translate("purchase_order_list.number")},
+            { columnKey: 'owner_id', value: T.translate("purchase_order_list.owner_id")},
+            { columnKey: 'owner_name', value: T.translate("general.name"), sortable: true },
+            { columnKey: 'owner_email', value: T.translate("general.email") },
+            { columnKey: 'company', value: T.translate("purchase_order_list.company") },
             { columnKey: 'bought_date', value: T.translate("purchase_order_list.bought_date") },
-            { columnKey: 'summit_hall_checked_in', value: T.translate("purchase_order_list.summit_hall_checked_in") },
-            { columnKey: 'schedule_count', value: T.translate("purchase_order_list.schedule_count") },
+            { columnKey: 'amount', value: T.translate("purchase_order_list.price") },
+            { columnKey: 'payment_method', value: T.translate("purchase_order_list.payment_method") },
+            { columnKey: 'status', value: T.translate("purchase_order_list.status") },
         ];
 
         let table_options = {

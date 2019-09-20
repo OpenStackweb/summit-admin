@@ -39,8 +39,7 @@ export const DEFAULT_ENTITY = {
     summit_hall_checked_in: 0,
     summit_hall_checked_in_date: '',
     tickets: [],
-    badge_printings: [],
-    answers: []
+    extra_question_answers: []
 }
 
 const DEFAULT_STATE = {

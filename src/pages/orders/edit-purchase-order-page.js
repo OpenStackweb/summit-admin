@@ -14,9 +14,10 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
-import { Breadcrumb } from 'react-breadcrumbs';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getPurchaseOrder } from "../../actions/order-actions";
+import { getPurchaseOrder, savePurchaseOrder, refundPurchaseOrder, deletePurchaseOrder } from "../../actions/order-actions";
+import PurchaseOrderForm from "../../components/forms/purchase-order-form";
+import Swal from "sweetalert2";
 
 //import '../../styles/edit-purchase-order-page.less';
 
@@ -24,35 +25,74 @@ class EditPurchaseOrderPage extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.handleDeleteOrder = this.handleDeleteOrder.bind(this);
+        this.handleRefundOrder = this.handleRefundOrder.bind(this);
+
     }
 
-    componentWillMount () {
-        let new_order_id = this.props.match.params.purchase_order_id;
+    handleDeleteOrder(order) {
+        let {deletePurchaseOrder} = this.props;
 
-        this.props.getPurchaseOrder(new_order_id);
+        Swal.fire({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("edit_purchase_order.remove_warning"),
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: T.translate("general.yes_delete")
+        }).then(function(result){
+            if (result.value) {
+                deletePurchaseOrder(order.id);
+            }
+        });
     }
 
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.purchase_order_id;
-        let newId = newProps.match.params.purchase_order_id;
+    handleRefundOrder(order) {
+        let {refundPurchaseOrder} = this.props;
 
-        if (oldId != newId) {
-            this.props.getPurchaseOrder(newId);
-        }
+        Swal.fire({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("edit_purchase_order.refund_warning"),
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: T.translate("general.yes_delete")
+        }).then(function(result){
+            if (result.value) {
+                refundPurchaseOrder(order.id);
+            }
+        });
     }
 
     render(){
         let {currentSummit, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.id : T.translate("general.new");
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
-                <h3>{title} {T.translate("edit_purchase_order.purchase_order")}</h3>
+                <h3>
+                    {title} {T.translate("edit_purchase_order.purchase_order")}
+                    {entity.id != 0 &&
+                    <div className="pull-right">
+                        <button className="btn btn-sm btn-danger right-space" onClick={this.handleDeleteOrder.bind(entity)}>
+                            {T.translate("edit_purchase_order.delete_order")}
+                        </button>
+                        <button className="btn btn-sm btn-primary" onClick={this.handleRefundOrder.bind(entity)}>
+                            {T.translate("edit_purchase_order.refund")}
+                        </button>
+                    </div>
+                    }
+                </h3>
                 <hr/>
 
-                {`SHOW PURCHASE DETAILS`}
+                <PurchaseOrderForm
+                    history={this.props.history}
+                    currentSummit={currentSummit}
+                    entity={entity}
+                    errors={errors}
+                    onSubmit={this.props.savePurchaseOrder}
+                />
             </div>
         )
     }
@@ -68,5 +108,8 @@ export default connect (
     {
         getSummitById,
         getPurchaseOrder,
+        savePurchaseOrder,
+        refundPurchaseOrder,
+        deletePurchaseOrder
     }
 )(EditPurchaseOrderPage);

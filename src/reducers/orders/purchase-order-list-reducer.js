@@ -11,7 +11,6 @@
  * limitations under the License.
  **/
 
-import moment from 'moment-timezone';
 import
 {
     RECEIVE_PURCHASE_ORDERS,
@@ -19,7 +18,7 @@ import
 } from '../../actions/order-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
-import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
+import {epochToMoment} from "openstack-uicore-foundation/lib/methods";
 
 const DEFAULT_STATE = {
     purchaseOrders          : {},
@@ -47,24 +46,24 @@ const purchaseOrderListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case RECEIVE_PURCHASE_ORDERS: {
             let {current_page, total, last_page} = payload.response;
-            let attendees = payload.response.data.map(a => {
-                let bought_date = Math.max(a.tickets.map(t => {return t.bought_date ? t.bought_date : 0;})) * 1000;
-                bought_date = (bought_date > 0 ? moment(bought_date).format('MMMM Do YYYY, h:mm:ss a') : '-');
+            let purchaseOrders = payload.response.data.map(a => {
+                let bought_date = epochToMoment(a.created).format('MMMM Do YYYY, h:mm:ss a');
 
                 return {
                     id: a.id,
-                    member_id: a.member.id,
-                    name: a.member.first_name + ' ' + a.member.last_name,
-                    email: a.member.email,
-                    eventbrite_id: a.tickets.map(t => t.external_order_id).join(', '),
+                    number: a.number,
+                    owner_id: a.owner_id,
+                    owner_name: a.owner_first_name + ' ' + a.owner_surname,
+                    owner_email: a.owner_email,
+                    company: a.owner_company,
                     bought_date: bought_date,
-                    summit_hall_checked_in: (a.summit_hall_checked_in ? 'Yes' : 'No'),
-                    schedule: a.member.schedule_summit_events,
-                    schedule_count: a.member.schedule_summit_events.length
+                    amount: `$${a.amount}`,
+                    payment_method: a.payment_method,
+                    status: a.status
                 };
             })
 
-            return {...state, attendees: attendees, currentPage: current_page, totalAttendees: total, lastPage: last_page };
+            return {...state, purchaseOrders: purchaseOrders, currentPage: current_page, totalPurchaseOrders: total, lastPage: last_page };
         }
         break;
         default:

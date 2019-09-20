@@ -47,9 +47,15 @@ export const ORDER_EXTRA_QUESTION_ORDER_UPDATED   = 'ORDER_EXTRA_QUESTION_ORDER_
 
 
 
-export const REQUEST_PURCHASE_ORDERS = 'REQUEST_PURCHASE_ORDERS';
-export const RECEIVE_PURCHASE_ORDERS = 'RECEIVE_PURCHASE_ORDERS';
-export const RECEIVE_PURCHASE_ORDER = 'RECEIVE_PURCHASE_ORDER';
+export const REQUEST_PURCHASE_ORDERS    = 'REQUEST_PURCHASE_ORDERS';
+export const RECEIVE_PURCHASE_ORDERS    = 'RECEIVE_PURCHASE_ORDERS';
+export const RECEIVE_PURCHASE_ORDER     = 'RECEIVE_PURCHASE_ORDER';
+export const UPDATE_PURCHASE_ORDER      = 'UPDATE_PURCHASE_ORDER';
+export const PURCHASE_ORDER_UPDATED     = 'PURCHASE_ORDER_UPDATED';
+export const PURCHASE_ORDER_ADDED       = 'PURCHASE_ORDER_ADDED';
+export const PURCHASE_ORDER_DELETED     = 'PURCHASE_ORDER_DELETED';
+export const PURCHASE_ORDER_REFUNDED     = 'PURCHASE_ORDER_REFUNDED';
+export const RESET_PURCHASE_ORDER_FORM  = 'RESET_PURCHASE_ORDER_FORM';
 
 
 
@@ -333,11 +339,11 @@ export const getPurchaseOrders = ( term = null, page = 1, perPage = 10, order = 
     dispatch(startLoading());
 
     if(term){
-        filter.push(`first_name=@${term},last_name=@${term},email=@${term}`);
+        filter.push(`ticket_number=@${term},ticket_owner_email=@${term},ticket_owner_name=@${term},number=@${term},owner_name=@${term},owner_email=@${term},owner_company=@${term}`);
     }
 
     let params = {
-        expand       : 'member, tickets, schedule_summit_events',
+        expand       : 'tickets',
         page         : page,
         per_page     : perPage,
         access_token : accessToken,
@@ -375,7 +381,7 @@ export const getPurchaseOrder = (orderId) => (dispatch, getState) => {
     dispatch(startLoading());
 
     let params = {
-        expand       : 'member, speaker, tickets, rsvp, schedule_summit_events, all_affiliations',
+        expand       : 'extra_question_answers, extra_question_answers.question, extra_question_answers.question.values, tickets, tickets.owner, tickets.owner.member, tickets.ticket_type',
         access_token : accessToken,
     };
 
@@ -389,3 +395,132 @@ export const getPurchaseOrder = (orderId) => (dispatch, getState) => {
         }
     );
 };
+
+
+
+export const resetPurchaseOrderForm = () => (dispatch, getState) => {
+    dispatch(createAction(RESET_PURCHASE_ORDER_FORM)({}));
+};
+
+
+export const savePurchaseOrder = (entity) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    let normalizedEntity = normalizePurchaseOrder(entity);
+
+    if (entity.id) {
+
+        putRequest(
+            createAction(UPDATE_PURCHASE_ORDER),
+            createAction(PURCHASE_ORDER_UPDATED),
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/orders/${entity.id}`,
+            normalizedEntity,
+            authErrorHandler,
+            entity
+        )(params)(dispatch)
+            .then((payload) => {
+                dispatch(showSuccessMessage(T.translate("edit_purchase_order.order_saved")));
+            });
+
+    } else {
+
+        let success_message = {
+            title: T.translate("general.done"),
+            html: T.translate("edit_purchase_order.order_created"),
+            type: 'success'
+        };
+
+        postRequest(
+            createAction(UPDATE_PURCHASE_ORDER),
+            createAction(PURCHASE_ORDER_ADDED),
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/orders`,
+            normalizedEntity,
+            authErrorHandler,
+            entity
+        )(params)(dispatch)
+            .then((payload) => {
+                dispatch(showMessage(
+                    success_message,
+                    () => {
+                        history.push(`/app/summits/${currentSummit.id}/purchase-orders/${payload.response.id}`)
+                    }
+                ));
+            });
+    }
+}
+
+
+export const deletePurchaseOrder = (orderId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    let success_message = {
+        title: T.translate("general.done"),
+        html: T.translate("edit_purchase_order.order_deleted"),
+        type: 'success'
+    };
+
+    return deleteRequest(
+        null,
+        createAction(PURCHASE_ORDER_DELETED)({orderId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/orders/${orderId}`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+            dispatch(showMessage(
+                success_message,
+                () => {
+                    history.push(`/app/summits/${currentSummit.id}/purchase-orders/${payload.response.id}`)
+                }
+            ));
+        }
+    );
+};
+
+export const refundPurchaseOrder = (orderId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(PURCHASE_ORDER_REFUNDED)({orderId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/orders/${orderId}/refund`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+            dispatch(showSuccessMessage(T.translate("edit_purchase_order.order_refunded")));
+        }
+    );
+};
+
+const normalizePurchaseOrder = (entity) => {
+    let normalizedEntity = {...entity};
+
+
+    return normalizedEntity;
+
+}
+
+
+
+

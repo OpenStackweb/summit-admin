@@ -75,6 +75,8 @@ import sponsorReducer from './reducers/sponsors/sponsor-reducer';
 import sponsorshipListReducer from './reducers/sponsors/sponsorship-list-reducer';
 import sponsorshipReducer from './reducers/sponsors/sponsorship-reducer';
 import refundPolicyListReducer from './reducers/refund_policies/refund-policy-list-reducer';
+import ticketReducer from './reducers/tickets/ticket-reducer';
+
 
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
@@ -150,6 +152,7 @@ const reducers = persistCombineReducers(config, {
     currentSponsorshipListState: sponsorshipListReducer,
     currentSponsorshipState: sponsorshipReducer,
     currentRefundPolicyListState: refundPolicyListReducer,
+    currentTicketState: ticketReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

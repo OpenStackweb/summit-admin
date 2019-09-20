@@ -127,7 +127,7 @@ export default class TicketComponent extends React.Component {
                         {tickets.map(t =>
                             <div key={'tix_' + t.id} className="btn-group btn-group-xs ticket-btn">
                                 <a href="" className="ticket btn btn-default" onClick={this.onEdit.bind(this, t)}>
-                                    {t.external_order_id}
+                                    {t.external_order_id || t.number}
                                 </a>
                                 <a href="" className="del-ticket btn btn-danger" onClick={this.onDelete.bind(this, t.id)}>
                                     <i className="fa fa-trash-o"></i>

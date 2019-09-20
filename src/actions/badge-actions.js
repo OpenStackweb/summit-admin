@@ -27,6 +27,11 @@ import {
 } from 'openstack-uicore-foundation/lib/methods';
 
 
+export const BADGE_DELETED              = 'BADGE_DELETED';
+export const FEATURE_BADGE_REMOVED      = 'FEATURE_BADGE_REMOVED';
+export const FEATURE_BADGE_ADDED        = 'FEATURE_BADGE_ADDED';
+
+
 export const REQUEST_BADGE_FEATURES       = 'REQUEST_BADGE_FEATURES';
 export const RECEIVE_BADGE_FEATURES       = 'RECEIVE_BADGE_FEATURES';
 export const RECEIVE_BADGE_FEATURE        = 'RECEIVE_BADGE_FEATURE';
@@ -57,6 +62,76 @@ export const BADGE_ACCESS_LEVEL_ADDED        = 'BADGE_ACCESS_LEVEL_ADDED';
 export const BADGE_ACCESS_LEVEL_REMOVED      = 'BADGE_ACCESS_LEVEL_REMOVED';
 
 
+/***********************  BADGE  ************************************************/
+
+export const deleteBadge = (badgeId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(BADGE_DELETED)({badgeId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badges/${badgeId}`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+            dispatch(showSuccessMessage(T.translate("edit_ticket.badge_deleted")));
+        }
+    );
+};
+
+export const addFeatureToBadge = (ticketId, feature) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return putRequest(
+        null,
+        createAction(FEATURE_BADGE_ADDED)({feature}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets/${ticketId}/badge/current/features/${feature.id}`,
+        {},
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const removeFeatureFromBadge = (ticketId, featureId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(FEATURE_BADGE_REMOVED)({featureId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets/${ticketId}/badge/current/features/${featureId}`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
 
 
 /***********************  BADGE TYPE  ************************************************/

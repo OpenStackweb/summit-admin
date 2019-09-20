@@ -15,10 +15,12 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import { epochToMoment, findElementPos } from 'openstack-uicore-foundation/lib/methods'
-import { MemberInput, DateTimePicker, Input } from 'openstack-uicore-foundation/lib/components'
+import { MemberInput, DateTimePicker, Input, Panel } from 'openstack-uicore-foundation/lib/components'
 import TicketComponent from './ticket-component'
 import RsvpComponent from './rsvp-component'
 import { AffiliationsTable } from '../../tables/affiliationstable'
+import QuestionAnswersInput from '../../inputs/question-answers-input'
+
 
 
 class AttendeeForm extends React.Component {
@@ -27,7 +29,8 @@ class AttendeeForm extends React.Component {
 
         this.state = {
             entity: {...props.entity},
-            errors: props.errors
+            errors: props.errors,
+            showSection: 'main',
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -47,6 +50,14 @@ class AttendeeForm extends React.Component {
             let firstNode = document.getElementById(firstError);
             if (firstNode) window.scrollTo(0, findElementPos(firstNode));
         }
+    }
+
+    toggleSection(section, ev) {
+        let {showSection} = this.state;
+        let newShowSection = (showSection === section) ? 'main' : section;
+        ev.preventDefault();
+
+        this.setState({showSection: newShowSection});
     }
 
     handleChange(ev) {
@@ -98,7 +109,7 @@ class AttendeeForm extends React.Component {
     }
 
     render() {
-        let {entity} = this.state;
+        let {entity, showSection} = this.state;
         let { currentSummit } = this.props;
 
         return (
@@ -206,26 +217,20 @@ class AttendeeForm extends React.Component {
                     <RsvpComponent member={entity.member} onDelete={this.props.onDeleteRsvp} />
                     }
 
+                    <Panel show={showSection == 'extra_questions'} title={T.translate("edit_attendee.extra_questions")}
+                           handleClick={this.toggleSection.bind(this, 'extra_questions')}>
+                        <QuestionAnswersInput id="extra_questions" answers={entity.extra_question_answers} onChange={this.handleChange} />
+                    </Panel>
+
                 </div>
 
 
-                {entity.answers.length > 0 &&
+                {entity.extra_question_answers.length > 0 &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <legend>{T.translate("edit_attendee.answers")}</legend>
-                        {entity.answers.map(ans =>
+                        {entity.extra_question_answers.map(ans =>
                             <div>{ans.value}</div>
-                        )}
-                    </div>
-                </div>
-                }
-
-                {entity.badge_printings.length > 0 &&
-                <div className="row form-group">
-                    <div className="col-md-12">
-                        <legend>{T.translate("edit_attendee.badge_printings")}</legend>
-                        {entity.badge_printings.map(b =>
-                            <div>{b.name}</div>
                         )}
                     </div>
                 </div>

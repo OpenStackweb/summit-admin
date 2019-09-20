@@ -52,6 +52,9 @@ const attendeeListReducer = (state = DEFAULT_STATE, action) => {
                 let bought_date = Math.max(a.tickets.map(t => {return t.bought_date ? t.bought_date : 0;})) * 1000;
                 bought_date = (bought_date > 0 ? moment(bought_date).format('MMMM Do YYYY, h:mm:ss a') : '-');
 
+                let schedule = (a.member && a.member.schedule_summit_events) ? a.member.schedule_summit_events : [];
+                let schedule_count = schedule.length;
+
                 return {
                     id: a.id,
                     member_id: a.member.id,
@@ -60,8 +63,8 @@ const attendeeListReducer = (state = DEFAULT_STATE, action) => {
                     eventbrite_id: a.tickets.map(t => t.external_order_id).join(', '),
                     bought_date: bought_date,
                     summit_hall_checked_in: (a.summit_hall_checked_in ? 'Yes' : 'No'),
-                    schedule: a.member.schedule_summit_events,
-                    schedule_count: a.member.schedule_summit_events.length
+                    schedule: schedule,
+                    schedule_count: schedule_count
                 };
             })
 

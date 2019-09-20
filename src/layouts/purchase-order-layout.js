@@ -18,9 +18,10 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import Restrict from '../routes/restrict';
 
 import PurchaseOrderListPage from '../pages/orders/purchase-order-list-page'
-import EditPurchaseOrderPage from '../pages/orders/edit-purchase-order-page'
+import PurchaseOrderIdLayout from './purchase-order-id-layout'
 
 import NoMatchPage from "../pages/no-match-page";
+import EditTicketPage from "../pages/orders/edit-ticket-page";
 
 
 class PurchaseOrderLayout extends React.Component {
@@ -33,7 +34,8 @@ class PurchaseOrderLayout extends React.Component {
 
                 <Switch>
                     <Route strict exact path={match.url} component={PurchaseOrderListPage}/>
-                    <Route strict exact path={`${match.url}/:purchase_order_id(\\d+)`} component={EditPurchaseOrderPage}/>
+                    <Route strict exact path={`${match.url}/new`} component={PurchaseOrderIdLayout}/>
+                    <Route path={`${match.url}/:purchase_order_id(\\d+)`} component={PurchaseOrderIdLayout} />
                     <Route component={NoMatchPage}/>
                 </Switch>
             </div>

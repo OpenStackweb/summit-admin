@@ -30,6 +30,14 @@ import {
     EVENT_CATEGORY_QUESTION_VALUE_DELETED,
     EVENT_CATEGORY_QUESTION_VALUE_UPDATED
 } from "./event-category-actions";
+import {CHANGE_MEMBER} from "./attendee-actions";
+import {PURCHASE_ORDER_REFUNDED} from "./order-actions";
+
+export const RECEIVE_TICKET             = 'RECEIVE_TICKET';
+export const UPDATE_TICKET              = 'UPDATE_TICKET';
+export const TICKET_UPDATED             = 'TICKET_UPDATED';
+export const TICKET_REFUNDED            = 'TICKET_REFUNDED';
+export const TICKET_MEMBER_REASSIGNED   = 'TICKET_MEMBER_REASSIGNED';
 
 export const REQUEST_TICKET_TYPES       = 'REQUEST_TICKET_TYPES';
 export const RECEIVE_TICKET_TYPES       = 'RECEIVE_TICKET_TYPES';
@@ -43,9 +51,97 @@ export const TICKET_TYPES_SEEDED        = 'TICKET_TYPES_SEEDED';
 
 export const REQUEST_REFUND_POLICIES    = 'REQUEST_REFUND_POLICIES';
 export const RECEIVE_REFUND_POLICIES    = 'RECEIVE_REFUND_POLICIES';
-export const REFUND_POLICY_ADDED    = 'REFUND_POLICY_ADDED';
-export const REFUND_POLICY_UPDATED    = 'REFUND_POLICY_UPDATED';
-export const REFUND_POLICY_DELETED    = 'REFUND_POLICY_DELETED';
+export const REFUND_POLICY_ADDED        = 'REFUND_POLICY_ADDED';
+export const REFUND_POLICY_UPDATED      = 'REFUND_POLICY_UPDATED';
+export const REFUND_POLICY_DELETED      = 'REFUND_POLICY_DELETED';
+
+
+
+
+/**************************   TICKETS   ******************************************/
+
+export const getTicket = (ticketId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let params = {
+        access_token : accessToken,
+        expand: 'badge, badge.features, badge.type, promo_code, ticket_type, owner, owner.member'
+    };
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_TICKET),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets/${ticketId}`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+
+export const reassignTicket = (attendeeId, newMemberId, orderId, ticketId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    let success_message = {
+        title: T.translate("general.done"),
+        html: T.translate("edit_ticket.ticket_reassigned"),
+        type: 'success'
+    };
+
+    putRequest(
+        null,
+        createAction(TICKET_MEMBER_REASSIGNED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}/tickets/${ticketId}/reassign/${newMemberId}`,
+        {},
+        authErrorHandler
+    )(params)(dispatch)
+        .then((payload) => {
+            dispatch(showMessage(
+                success_message,
+                () => { history.push(`/app/summits/${currentSummit.id}/purchase-orders/${orderId}/tickets/${ticketId}`) }
+            ));
+        });
+};
+
+
+export const refundTicket = (ticketId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(TICKET_REFUNDED)({ticketId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets/${ticketId}/refund`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+            dispatch(showSuccessMessage(T.translate("edit_ticket.ticket_refunded")));
+        }
+    );
+};
+
+
+
+/**************************   TICKET TYPES   ******************************************/
 
 
 export const getTicketTypes = ( order = 'name', orderDir = 1 ) => (dispatch, getState) => {
@@ -218,7 +314,7 @@ const normalizeEntity = (entity) => {
 
 
 
-/****************   REFUND POLICIES ******************************/
+/***************************   REFUND POLICIES   ******************************/
 
 export const getRefundPolicies = () => (dispatch, getState) => {
 

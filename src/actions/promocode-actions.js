@@ -291,6 +291,10 @@ const normalizeEntity = (entity) => {
             normalizedEntity.owner_id = entity.owner.id;
     }
 
+    if (!entity.badge_type_id) {
+        delete normalizedEntity['badge_type_id'];
+    }
+
     delete normalizedEntity['owner'];
     delete normalizedEntity['speaker'];
     delete normalizedEntity['sponsor'];

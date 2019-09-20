@@ -79,7 +79,7 @@ class SummitAttendeeListPage extends React.Component {
         let {attendees} = this.props;
         let attendee = attendees.find(a => a.id == attendee_id);
 
-        return attendee.schedule.length > 0;
+        return attendee.schedule_count > 0;
     }
 
     onCloseSchedule() {
