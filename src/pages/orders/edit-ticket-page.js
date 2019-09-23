@@ -16,10 +16,10 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getTicket, refundTicket, reassignTicket } from "../../actions/ticket-actions";
+import { getTicket, refundTicket, reassignTicket, addBadgeToTicket } from "../../actions/ticket-actions";
 import TicketForm from "../../components/forms/ticket-form";
 import BadgeForm from "../../components/forms/badge-form";
-import {getBadgeFeatures, getBadgeTypes, deleteBadge, addFeatureToBadge, removeFeatureFromBadge} from "../../actions/badge-actions";
+import {getBadgeFeatures, getBadgeTypes, deleteBadge, addFeatureToBadge, removeFeatureFromBadge, changeBadgeType} from "../../actions/badge-actions";
 import Swal from "sweetalert2";
 
 //import '../../styles/edit-ticket-page.less';
@@ -29,6 +29,7 @@ class EditTicketPage extends React.Component {
     constructor(props) {
         super(props);
 
+        this.handleAddBadgeToTicket = this.handleAddBadgeToTicket.bind(this);
         this.handleDeleteBadge = this.handleDeleteBadge.bind(this);
         this.handleRefundTicket = this.handleRefundTicket.bind(this);
     }
@@ -39,8 +40,8 @@ class EditTicketPage extends React.Component {
 
         this.props.getTicket(new_ticket_id);
 
-        if (!currentSummit.badge_features.length) this.props.getBadgeFeatures();
-        if (!currentSummit.badge_types.length) this.props.getBadgeTypes()
+        if (!currentSummit.badge_features) this.props.getBadgeFeatures();
+        if (!currentSummit.badge_types) this.props.getBadgeTypes()
     }
 
     componentWillReceiveProps(newProps) {
@@ -52,7 +53,7 @@ class EditTicketPage extends React.Component {
         }
     }
 
-    handleRefundTicket(ticket) {
+    handleRefundTicket(ticket, ev) {
         let {refundTicket} = this.props;
 
         Swal.fire({
@@ -61,7 +62,7 @@ class EditTicketPage extends React.Component {
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
-            confirmButtonText: T.translate("general.yes_delete")
+            confirmButtonText: T.translate("edit_ticket.yes_refund")
         }).then(function(result){
             if (result.value) {
                 refundTicket(ticket.id);
@@ -69,7 +70,7 @@ class EditTicketPage extends React.Component {
         });
     }
 
-    handleDeleteBadge(badge) {
+    handleDeleteBadge(ticketId, ev) {
         let {deleteBadge} = this.props;
 
         Swal.fire({
@@ -81,9 +82,14 @@ class EditTicketPage extends React.Component {
             confirmButtonText: T.translate("general.yes_delete")
         }).then(function(result){
             if (result.value) {
-                deleteBadge(badge.id);
+                deleteBadge(ticketId);
             }
         });
+    }
+
+    handleAddBadgeToTicket(ev) {
+        ev.preventDefault();
+        this.props.addBadgeToTicket(this.props.entity.id);
     }
 
     render(){
@@ -95,7 +101,7 @@ class EditTicketPage extends React.Component {
                 <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
                 <h3>
                     {T.translate("edit_ticket.ticket")}
-                    <button className="btn btn-sm btn-primary pull-right" onClick={this.handleRefundTicket.bind(entity)}>
+                    <button className="btn btn-sm btn-primary pull-right" onClick={this.handleRefundTicket.bind(this, entity)}>
                         {T.translate("edit_ticket.refund_ticket")}
                     </button>
                 </h3>
@@ -112,23 +118,33 @@ class EditTicketPage extends React.Component {
                 <br/>
                 <br/>
 
-                <h3>
-                    {T.translate("edit_ticket.badge")}
-                    <button className="btn btn-sm btn-danger pull-right" onClick={this.handleDeleteBadge.bind(entity.badge)}>
-                        {T.translate("edit_ticket.delete_badge")}
+                {!entity.badge &&
+                    <button className="btn btn-primary" onClick={this.handleAddBadgeToTicket}>
+                        {T.translate("edit_ticket.add_badge")}
                     </button>
-                </h3>
-
-                <hr/>
+                }
 
                 {entity.badge &&
-                <BadgeForm
-                    history={this.props.history}
-                    currentSummit={currentSummit}
-                    entity={entity.badge}
-                    onFeatureLink={this.props.addFeatureToBadge}
-                    onFeatureUnLink={this.props.removeFeatureFromBadge}
-                />
+                    <div>
+                        <h3>
+                            {T.translate("edit_ticket.badge")}
+                            <button className="btn btn-sm btn-danger pull-right" onClick={this.handleDeleteBadge.bind(this, entity.id)}>
+                                {T.translate("edit_ticket.delete_badge")}
+                            </button>
+                        </h3>
+
+                        <hr/>
+
+
+                        <BadgeForm
+                            history={this.props.history}
+                            currentSummit={currentSummit}
+                            entity={entity.badge}
+                            onTypeChange={this.props.changeBadgeType}
+                            onFeatureLink={this.props.addFeatureToBadge}
+                            onFeatureUnLink={this.props.removeFeatureFromBadge}
+                        />
+                    </div>
                 }
             </div>
         )
@@ -151,6 +167,8 @@ export default connect (
         getBadgeFeatures,
         getBadgeTypes,
         addFeatureToBadge,
-        removeFeatureFromBadge
+        removeFeatureFromBadge,
+        changeBadgeType,
+        addBadgeToTicket
     }
 )(EditTicketPage);

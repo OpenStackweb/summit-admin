@@ -38,6 +38,7 @@ export const UPDATE_TICKET              = 'UPDATE_TICKET';
 export const TICKET_UPDATED             = 'TICKET_UPDATED';
 export const TICKET_REFUNDED            = 'TICKET_REFUNDED';
 export const TICKET_MEMBER_REASSIGNED   = 'TICKET_MEMBER_REASSIGNED';
+export const BADGE_ADDED_TO_TICKET      = 'BADGE_ADDED_TO_TICKET';
 
 export const REQUEST_TICKET_TYPES       = 'REQUEST_TICKET_TYPES';
 export const RECEIVE_TICKET_TYPES       = 'RECEIVE_TICKET_TYPES';
@@ -70,7 +71,7 @@ export const getTicket = (ticketId) => (dispatch, getState) => {
 
     let params = {
         access_token : accessToken,
-        expand: 'badge, badge.features, badge.type, promo_code, ticket_type, owner, owner.member'
+        expand: 'badge, badge.features, badge.type, badge.type.access_levels, promo_code, ticket_type, owner, owner.member'
     };
 
     return getRequest(
@@ -111,7 +112,7 @@ export const reassignTicket = (attendeeId, newMemberId, orderId, ticketId) => (d
         .then((payload) => {
             dispatch(showMessage(
                 success_message,
-                () => { history.push(`/app/summits/${currentSummit.id}/purchase-orders/${orderId}/tickets/${ticketId}`) }
+                () => { window.location.reload(); }
             ));
         });
 };
@@ -135,6 +136,28 @@ export const refundTicket = (ticketId) => (dispatch, getState) => {
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
             dispatch(showSuccessMessage(T.translate("edit_ticket.ticket_refunded")));
+        }
+    );
+};
+
+
+export const addBadgeToTicket = (ticketId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return postRequest(
+        null,
+        createAction(BADGE_ADDED_TO_TICKET),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets/${ticketId}/badge`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
         }
     );
 };

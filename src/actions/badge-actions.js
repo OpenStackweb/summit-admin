@@ -30,6 +30,7 @@ import {
 export const BADGE_DELETED              = 'BADGE_DELETED';
 export const FEATURE_BADGE_REMOVED      = 'FEATURE_BADGE_REMOVED';
 export const FEATURE_BADGE_ADDED        = 'FEATURE_BADGE_ADDED';
+export const BADGE_TYPE_CHANGED         = 'BADGE_TYPE_CHANGED';
 
 
 export const REQUEST_BADGE_FEATURES       = 'REQUEST_BADGE_FEATURES';
@@ -64,7 +65,7 @@ export const BADGE_ACCESS_LEVEL_REMOVED      = 'BADGE_ACCESS_LEVEL_REMOVED';
 
 /***********************  BADGE  ************************************************/
 
-export const deleteBadge = (badgeId) => (dispatch, getState) => {
+export const deleteBadge = (ticketId) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -76,12 +77,38 @@ export const deleteBadge = (badgeId) => (dispatch, getState) => {
 
     return deleteRequest(
         null,
-        createAction(BADGE_DELETED)({badgeId}),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badges/${badgeId}`,
+        createAction(BADGE_DELETED)({ticketId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets/${ticketId}/badge/current`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
             dispatch(showSuccessMessage(T.translate("edit_ticket.badge_deleted")));
+        }
+    );
+};
+
+export const changeBadgeType = (badge) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let params = {
+        access_token : accessToken
+    };
+
+    let newBadgeType = currentSummit.badge_types.find(bt => bt.id == badge.type_id);
+
+    return putRequest(
+        null,
+        createAction(BADGE_TYPE_CHANGED)({newBadgeType}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets/${badge.ticket_id}/badge/current/type/${badge.type_id}`,
+        {},
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
         }
     );
 };

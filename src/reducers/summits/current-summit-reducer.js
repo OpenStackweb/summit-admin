@@ -26,6 +26,7 @@ import {
 } from "../../actions/badge-actions";
 
 import { RECEIVE_REFUND_POLICIES } from "../../actions/ticket-actions";
+import {RECEIVE_ORDER_EXTRA_QUESTIONS} from "../../actions/order-actions";
 
 export const DEFAULT_ENTITY = {
     id: 0,
@@ -85,8 +86,10 @@ export const DEFAULT_ENTITY = {
     api_feed_key: '',
     refund_policies: [],
     access_level_types: [],
-    badge_types: [],
-    badge_features: []
+    badge_types: null,
+    badge_features: null,
+    order_extra_questions: null,
+    attendee_extra_questions: null
 }
 
 const DEFAULT_STATE = {
@@ -299,7 +302,16 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, currentSummit: {...state.currentSummit, badge_features: badgeFeatures} };
         }
-            break;
+        break;
+        case RECEIVE_ORDER_EXTRA_QUESTIONS: {
+            let allExtraQuestions = payload.response.data;
+
+            let order_extra_questions = allExtraQuestions.filter(eq => (eq.usage == 'Both' || eq.usage == 'Order'));
+            let attendee_extra_questions = allExtraQuestions.filter(eq => (eq.usage == 'Both' || eq.usage == 'Ticket'));
+
+            return {...state, currentSummit: {...state.currentSummit, order_extra_questions, attendee_extra_questions } };
+        }
+        break;
         case VALIDATE: {
             return {...state,  errors: payload.errors };
         }

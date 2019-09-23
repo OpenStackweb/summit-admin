@@ -31,7 +31,7 @@ class EditPurchaseOrderPage extends React.Component {
 
     }
 
-    handleDeleteOrder(order) {
+    handleDeleteOrder(order, ev) {
         let {deletePurchaseOrder} = this.props;
 
         Swal.fire({
@@ -48,7 +48,7 @@ class EditPurchaseOrderPage extends React.Component {
         });
     }
 
-    handleRefundOrder(order) {
+    handleRefundOrder(order, ev) {
         let {refundPurchaseOrder} = this.props;
 
         Swal.fire({
@@ -57,7 +57,7 @@ class EditPurchaseOrderPage extends React.Component {
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
-            confirmButtonText: T.translate("general.yes_delete")
+            confirmButtonText: T.translate("edit_purchase_order.yes_refund")
         }).then(function(result){
             if (result.value) {
                 refundPurchaseOrder(order.id);
@@ -75,10 +75,10 @@ class EditPurchaseOrderPage extends React.Component {
                     {title} {T.translate("edit_purchase_order.purchase_order")}
                     {entity.id != 0 &&
                     <div className="pull-right">
-                        <button className="btn btn-sm btn-danger right-space" onClick={this.handleDeleteOrder.bind(entity)}>
+                        <button className="btn btn-sm btn-danger right-space" onClick={this.handleDeleteOrder.bind(this, entity)}>
                             {T.translate("edit_purchase_order.delete_order")}
                         </button>
-                        <button className="btn btn-sm btn-primary" onClick={this.handleRefundOrder.bind(entity)}>
+                        <button className="btn btn-sm btn-primary" onClick={this.handleRefundOrder.bind(this, entity)}>
                             {T.translate("edit_purchase_order.refund")}
                         </button>
                     </div>

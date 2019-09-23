@@ -21,17 +21,22 @@ import EditPurchaseOrderPage from '../pages/orders/edit-purchase-order-page'
 import NoMatchPage from "../pages/no-match-page";
 import EditTicketPage from "../pages/orders/edit-ticket-page";
 
-import {resetPurchaseOrderForm, getPurchaseOrder} from "../actions/order-actions";
+import {resetPurchaseOrderForm, getPurchaseOrder, getOrderExtraQuestions} from "../actions/order-actions";
 
 class PurchaseOrderIdLayout extends React.Component {
 
     componentWillMount () {
+        let {currentSummit} = this.props;
         let orderId = this.props.match.params.purchase_order_id;
 
         if (!orderId) {
             this.props.resetPurchaseOrderForm();
         } else {
             this.props.getPurchaseOrder(orderId);
+        }
+
+        if (!currentSummit.order_extra_questions) {
+            this.props.getOrderExtraQuestions();
         }
 
     }
@@ -80,7 +85,8 @@ class PurchaseOrderIdLayout extends React.Component {
 
 }
 
-const mapStateToProps = ({ currentPurchaseOrderState }) => ({
+const mapStateToProps = ({ currentSummitState, currentPurchaseOrderState }) => ({
+    currentSummit : currentSummitState.currentSummit,
     currentPurchaseOrder   : currentPurchaseOrderState.entity
 });
 
@@ -88,7 +94,8 @@ export default Restrict(connect (
     mapStateToProps,
     {
         getPurchaseOrder,
-        resetPurchaseOrderForm
+        resetPurchaseOrderForm,
+        getOrderExtraQuestions
     }
 )(PurchaseOrderIdLayout), 'orders');
 

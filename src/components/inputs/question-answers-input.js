@@ -21,6 +21,16 @@ export default class QuestionAnswersInput extends React.Component {
     constructor(props) {
         super(props);
 
+        let answers = props.questions.map(q => {
+            let answer = props.answers.find(ans => ans.question_id == q.id);
+            let value = answer ? answer.value : '';
+            return ({question_id: q.id, answer: value});
+        });
+
+        this.state = {
+            answers: answers,
+        };
+
         this.handleChange = this.handleChange.bind(this);
         this.getInput = this.getInput.bind(this);
     }
@@ -37,11 +47,11 @@ export default class QuestionAnswersInput extends React.Component {
             value = (ev.target.value == 1);
         }
 
-        let answers = this.props.answers.map(ans => {
-            let newValue = ans.value;
-            if (ans.question.id == id) newValue = value;
+        let answers = this.state.answers.map(ans => {
+            let newValue = ans.answer;
+            if (ans.question_id == id) newValue = value;
 
-            return ({question_id: ans.question.id, answer: newValue})
+            return ({question_id: ans.question_id, answer: newValue})
         });
 
         let newEv = {
@@ -51,11 +61,12 @@ export default class QuestionAnswersInput extends React.Component {
             }
         };
 
+        this.setState({ answers });
+
         this.props.onChange(newEv);
     }
 
-    getInput(answer) {
-        let question = answer.question;
+    getInput(question, answerValue) {
         let questionValues = question.values;
 
         switch(question.type) {
@@ -65,7 +76,7 @@ export default class QuestionAnswersInput extends React.Component {
                         <label> {question.label} </label>
                         <Input
                             id={question.id}
-                            value={answer.value}
+                            value={answerValue}
                             onChange={this.handleChange}
                             className="form-control"
                         />
@@ -77,7 +88,7 @@ export default class QuestionAnswersInput extends React.Component {
                         <label> {question.label} </label>
                         <textarea
                             id={question.id}
-                            value={answer.value}
+                            value={answerValue}
                             onChange={this.handleChange}
                             className="form-control"
                         />
@@ -86,7 +97,7 @@ export default class QuestionAnswersInput extends React.Component {
             case 'CheckBox':
                 return (
                     <div className="form-check abc-checkbox">
-                        <input type="checkbox" id={question.id} checked={answer.value}
+                        <input type="checkbox" id={question.id} checked={answerValue}
                                onChange={this.handleChange} className="form-check-input" />
                         <label className="form-check-label" htmlFor={question.id}>
                             {question.label}
@@ -94,7 +105,7 @@ export default class QuestionAnswersInput extends React.Component {
                     </div>
                 );
             case 'ComboBox':
-                let value = questionValues.find(val => val.id == parseInt(answer.value));
+                let value = answerValue ? questionValues.find(val => val.id == parseInt(answerValue)) : null;
                 return (
                     <div>
                         <label> {question.label} </label>
@@ -112,7 +123,7 @@ export default class QuestionAnswersInput extends React.Component {
                         <label> {question.label} </label>
                         <CheckboxList
                             id={question.id}
-                            value={answer.value}
+                            value={answerValue}
                             options={questionValues}
                             onChange={this.handleChange}
                         />
@@ -124,7 +135,7 @@ export default class QuestionAnswersInput extends React.Component {
                         <label> {question.label} </label>
                         <RadioList
                             id={question.id}
-                            value={answer.value}
+                            value={answerValue}
                             options={questionValues}
                             onChange={this.handleChange}
                         />
@@ -135,18 +146,21 @@ export default class QuestionAnswersInput extends React.Component {
     }
 
     render() {
-
-        let {onChange, answers } = this.props;
+        let { answers } = this.state;
+        let { questions } = this.props;
 
         return (
             <div>
-                {answers.map( ans =>
-                    <div className="row form-group" key={`question_answer_${ans.id}`}>
-                        <div className="col-md-12">
-                            {this.getInput(ans)}
+                {questions.map( q => {
+                    let answer = answers.find(ans => ans.question_id == q.id);
+                    return (
+                        <div className="row form-group" key={`question_answer_${q.id}`}>
+                            <div className="col-md-12">
+                                {this.getInput(q, answer.answer)}
+                            </div>
                         </div>
-                    </div>
-                )}
+                    );
+                })}
             </div>
         );
 

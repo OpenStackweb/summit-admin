@@ -26,10 +26,10 @@ class BadgeForm extends React.Component {
             entity: {...props.entity},
         };
 
+        this.handleChangeBadgeType = this.handleChangeBadgeType.bind(this);
         this.handleFeatureLink = this.handleFeatureLink.bind(this);
         this.handleFeatureUnLink = this.handleFeatureUnLink.bind(this);
         this.queryFeatures = this.queryFeatures.bind(this);
-        this.handleChange = this.handleChange.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -39,16 +39,13 @@ class BadgeForm extends React.Component {
         });
     }
 
-    handleChange(ev) {
+    handleChangeBadgeType(ev) {
         let entity = {...this.state.entity};
         let {value, id} = ev.target;
 
-        if (ev.target.type == 'checkbox') {
-            value = ev.target.checked;
-        }
-
         entity[id] = value;
         this.setState({entity: entity});
+        this.props.onTypeChange(entity);
     }
 
     handleFeatureLink(feature) {

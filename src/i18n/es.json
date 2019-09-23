@@ -873,11 +873,14 @@
     "badge_features"    : "Badge Features",
     "name"              : "Name",
     "refund_ticket"     : "Refund Ticket",
+    "add_badge"         : "Add Badge to this Ticket",
     "delete_badge"      : "Delete Badge",
+    "yes_refund"        : "Yes, refund!",
     "refund_warning"    : "Are you sure you want to refund this ticket?",
     "remove_warning"    : "Are you sure you want to delete this badge?",
     "ticket_refunded"   : "Ticket refunded successfully.",
-    "badge_deleted"     : "Badge deleted successfully."
+    "badge_deleted"     : "Badge deleted successfully.",
+    "ticket_reassigned" : "Ticket reassigned successfully."
   },
   "ticket_type_list": {
     "ticket_types"      : "Ticket Types",
@@ -1106,6 +1109,7 @@
   },
   "purchase_order_list": {
     "purchase_orders"     : "Purchase Orders",
+    "add_order"           : "Add New Order",
     "number"              : "Number",
     "name"                : "Name",
     "owner_id"            : "Owner Id",
@@ -1123,6 +1127,8 @@
   "edit_purchase_order": {
     "purchase_order"            : "Purchase Order",
     "number"                    : "Number",
+    "ticket_type"               : "Ticket Type",
+    "status"                    : "Status",
     "ticket_type_name"          : "Ticket Type",
     "owner_full_name"           : "Owner",
     "owner_email"               : "Email",
@@ -1135,10 +1141,11 @@
     "billing_address_zip_code"  : "Zip Code",
     "billing_address_city"      : "City",
     "billing_address_state"     : "State",
-    "billing_address_country"   : "Country",
+    "billing_address_country_iso_code": "Country",
     "extra_questions"           : "Extra Questions Answers",
     "delete_order"              : "Delete",
     "refund"                    : "Refund",
+    "yes_refund"                : "Yes, refund!",
     "refund_warning"            : "Are you sure you want to refund this order?",
     "remove_warning"            : "Are you sure you want to delete this order?",
     "order_saved"               : "Order saved successfully",

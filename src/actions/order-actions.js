@@ -96,6 +96,7 @@ export const getOrderExtraQuestions = () => (dispatch, getState) => {
         per_page     : 100,
         order        : '+order',
         access_token : accessToken,
+        expand       : 'values'
     };
 
     return getRequest(
@@ -381,7 +382,7 @@ export const getPurchaseOrder = (orderId) => (dispatch, getState) => {
     dispatch(startLoading());
 
     let params = {
-        expand       : 'extra_question_answers, extra_question_answers.question, extra_question_answers.question.values, tickets, tickets.owner, tickets.owner.member, tickets.ticket_type',
+        expand       : 'owner, extra_question_answers, extra_question_answers.question, extra_question_answers.question.values, tickets, tickets.owner, tickets.owner.member, tickets.ticket_type',
         access_token : accessToken,
     };
 
@@ -484,7 +485,7 @@ export const deletePurchaseOrder = (orderId) => (dispatch, getState) => {
             dispatch(showMessage(
                 success_message,
                 () => {
-                    history.push(`/app/summits/${currentSummit.id}/purchase-orders/${payload.response.id}`)
+                    history.push(`/app/summits/${currentSummit.id}/purchase-orders`)
                 }
             ));
         }
@@ -516,6 +517,25 @@ export const refundPurchaseOrder = (orderId) => (dispatch, getState) => {
 const normalizePurchaseOrder = (entity) => {
     let normalizedEntity = {...entity};
 
+    delete(normalizedEntity.amount);
+    delete(normalizedEntity.created);
+    delete(normalizedEntity.discount_amount);
+    delete(normalizedEntity.extra_question_answers);
+    delete(normalizedEntity.hash_creation_date);
+    delete(normalizedEntity.hash);
+    delete(normalizedEntity.id);
+    delete(normalizedEntity.last_edited);
+    delete(normalizedEntity.payment_gateway_cart_id);
+    delete(normalizedEntity.payment_gateway_client_token);
+    delete(normalizedEntity.payment_method);
+    delete(normalizedEntity.raw_amount);
+    delete(normalizedEntity.status);
+    delete(normalizedEntity.taxes_amount);
+
+    if (normalizedEntity.owner != null) {
+        normalizedEntity.owner_id = normalizedEntity.owner.id;
+        delete(normalizedEntity.owner);
+    }
 
     return normalizedEntity;
 

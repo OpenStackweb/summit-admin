@@ -28,6 +28,8 @@ class PurchaseOrderListPage extends React.Component {
         this.handlePageChange = this.handlePageChange.bind(this);
         this.handleSort = this.handleSort.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
+        this.handleNewOrder = this.handleNewOrder.bind(this);
+
 
         this.state = {};
     }
@@ -68,6 +70,11 @@ class PurchaseOrderListPage extends React.Component {
         this.props.getPurchaseOrders(term, page, perPage, order, orderDir);
     }
 
+    handleNewOrder(ev) {
+        let {currentSummit, history} = this.props;
+        history.push(`/app/summits/${currentSummit.id}/purchase-orders/new`);
+    }
+
     render(){
         let {currentSummit, purchaseOrders, lastPage, currentPage, term, order, orderDir, totalPurchaseOrders} = this.props;
 
@@ -103,6 +110,11 @@ class PurchaseOrderListPage extends React.Component {
                             placeholder={T.translate("purchase_order_list.placeholders.search_orders")}
                             onSearch={this.handleSearch}
                         />
+                    </div>
+                    <div className="col-md-6 text-right">
+                        <button className="btn btn-primary" onClick={this.handleNewOrder}>
+                            {T.translate("purchase_order_list.add_order")}
+                        </button>
                     </div>
                 </div>
 

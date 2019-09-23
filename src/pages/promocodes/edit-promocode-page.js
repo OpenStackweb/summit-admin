@@ -24,6 +24,7 @@ import '../../styles/edit-promocode-page.less';
 class EditPromocodePage extends React.Component {
 
     componentWillMount () {
+        let {currentSummit} = this.props;
         let promocodeId = this.props.match.params.promocode_id;
 
         if (!promocodeId) {
@@ -33,8 +34,8 @@ class EditPromocodePage extends React.Component {
         }
 
         this.props.getPromocodeMeta();
-        this.props.getBadgeFeatures();
-        this.props.getBadgeTypes()
+        if (!currentSummit.badge_features) this.props.getBadgeFeatures();
+        if (!currentSummit.badge_types) this.props.getBadgeTypes()
     }
 
     componentWillReceiveProps(newProps) {

@@ -14,8 +14,8 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { Input, Table, Panel, MemberInput } from 'openstack-uicore-foundation/lib/components'
-import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/methods'
+import { Input, Dropdown, Table, Panel, MemberInput } from 'openstack-uicore-foundation/lib/components'
+import { epochToMomentTimeZone, findElementPos } from 'openstack-uicore-foundation/lib/methods'
 import QuestionAnswersInput from '../inputs/question-answers-input'
 
 
@@ -110,12 +110,15 @@ class PurchaseOrderForm extends React.Component {
             }
         };
 
+        let ticket_type_ddl = currentSummit.ticket_types.map(tt => ({label: tt.name, value: tt.id}));
+
         return (
             <form className="purchase-order-form">
                 <input type="hidden" id="id" value={entity.id} />
+                {entity.id != 0 &&
                 <div className="row form-group">
                     <div className="col-md-6">
-                        <label> {T.translate("edit_purchase_order.number")} *</label>
+                        <label> {T.translate("edit_purchase_order.number")}</label>
                         <Input
                             id="number"
                             value={entity.number}
@@ -125,7 +128,25 @@ class PurchaseOrderForm extends React.Component {
                             error={this.hasErrors('number')}
                         />
                     </div>
+                    <div className="col-md-6">
+                        <label> {T.translate("edit_purchase_order.status")}</label><br/>
+                        {entity.status}
+                    </div>
                 </div>
+                }
+                {entity.id == 0 &&
+                <div className="row form-group">
+                    <div className="col-md-6">
+                        <label> {T.translate("edit_purchase_order.ticket_type")}</label>
+                        <Dropdown
+                            id="ticket_type_id"
+                            value={entity.ticket_type_id}
+                            onChange={this.handleChange}
+                            options={ticket_type_ddl}
+                        />
+                    </div>
+                </div>
+                }
                 <div className="row form-group">
                     <div className="col-md-4">
                         <label> {T.translate("edit_purchase_order.owner_email")}</label>
@@ -237,22 +258,30 @@ class PurchaseOrderForm extends React.Component {
                         />
                     </div>
                     <div className="col-md-4">
-                        <label> {T.translate("edit_purchase_order.billing_address_country")}</label>
+                        <label> {T.translate("edit_purchase_order.billing_address_country_iso_code")}</label>
                         <Input
-                            id="billing_address_country"
-                            value={entity.billing_address_country}
+                            id="billing_address_country_iso_code"
+                            value={entity.billing_address_country_iso_code}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('billing_address_country')}
+                            error={this.hasErrors('billing_address_country_iso_code')}
                         />
                     </div>
                 </div>
                 </Panel>
 
-                <Panel show={showSection == 'extra_questions'} title={T.translate("edit_purchase_order.extra_questions")}
+                {entity.id != 0 && currentSummit.order_extra_questions && currentSummit.order_extra_questions.length > 0 &&
+                <Panel show={showSection == 'extra_questions'}
+                       title={T.translate("edit_purchase_order.extra_questions")}
                        handleClick={this.toggleSection.bind(this, 'extra_questions')}>
-                    <QuestionAnswersInput id="extra_questions" answers={entity.extra_question_answers} onChange={this.handleChange} />
+                    <QuestionAnswersInput
+                        id="extra_questions"
+                        answers={entity.extra_question_answers}
+                        questions={currentSummit.order_extra_questions}
+                        onChange={this.handleChange}
+                    />
                 </Panel>
+                }
 
                 {entity.id != 0 &&
                     <Table
@@ -264,7 +293,7 @@ class PurchaseOrderForm extends React.Component {
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">
-                        <input type="button" onClick={this.handleSubmit.bind(this, false)}
+                        <input type="button" onClick={this.handleSubmit.bind(this)}
                                className="btn btn-primary pull-right" value={T.translate("general.save")}/>
                     </div>
                 </div>

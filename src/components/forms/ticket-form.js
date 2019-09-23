@@ -26,6 +26,7 @@ class TicketForm extends React.Component {
             entity: {...props.entity},
         };
 
+        this.handlePromocodeClick = this.handlePromocodeClick.bind(this);
         this.handleOwnerClick = this.handleOwnerClick.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleReassign = this.handleReassign.bind(this);
@@ -54,10 +55,11 @@ class TicketForm extends React.Component {
         this.setState({entity: entity});
     }
 
-    handleReassign(memberId) {
+    handleReassign(ev) {
         let entity = {...this.state.entity};
+        ev.preventDefault();
 
-        this.props.onReassign(entity);
+        this.props.onReassing(entity.owner.id, entity.member.id, entity.order_id, entity.id );
     }
 
 
@@ -68,11 +70,19 @@ class TicketForm extends React.Component {
         history.push(`/app/summits/${currentSummit.id}/attendees/${entity.owner.id}`);
     }
 
+    handlePromocodeClick(ev) {
+        let {currentSummit, entity, history} = this.props;
+
+        ev.preventDefault();
+        history.push(`/app/summits/${currentSummit.id}/promocodes/${entity.promo_code.id}`);
+    }
+
 
     render() {
         let {entity} = this.state;
+        let member = entity.member ? entity.member : entity.owner.member;
 
-        let canReassing = (entity.member_id && entity.member_id != entity.owner.member.id);
+        let canReassing = (entity.member && entity.member.id && entity.member.id != entity.owner.member.id);
 
         return (
             <form className="ticket-form">
@@ -84,8 +94,8 @@ class TicketForm extends React.Component {
                     </div>
                     <div className="col-md-6">
                         <MemberInput
-                            id="member_id"
-                            value={entity.owner.member}
+                            id="member"
+                            value={member}
                             onChange={this.handleChange}
                         />
                     </div>
@@ -116,7 +126,11 @@ class TicketForm extends React.Component {
                     </div>
                     <div className="col-md-4">
                         <label> {T.translate("edit_ticket.promocode")}:&nbsp;</label>
-                        {entity.promocode_name}
+                        {entity.promo_code ? (
+                            <a href="" onClick={this.handlePromocodeClick}>{entity.promocode_name}</a>
+                        ) : (
+                            entity.promocode_name
+                        )}
                     </div>
                 </div>
 
