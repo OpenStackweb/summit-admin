@@ -95,7 +95,12 @@ class RoomForm extends React.Component {
             attributes = [...attributes, ...type.values];
         });
 
-        attributes = attributes.filter(at => at.value.toLowerCase().indexOf(input.toLowerCase()) !== -1)
+        attributes = attributes.map(attr => {
+            let type = attributeTypes.find(at => at.id == attr.type_id);
+            return ({...attr, label: `${type.type}: ${attr.value}`});
+        });
+
+        attributes = attributes.filter(at => at.label.toLowerCase().indexOf(input.toLowerCase()) !== -1);
 
         callback(attributes);
     }
@@ -120,24 +125,32 @@ class RoomForm extends React.Component {
 
     render() {
         let {entity} = this.state;
-        let { allFloors } = this.props;
+        let { allFloors, currentSummit } = this.props;
         let floors_ddl = allFloors.map(f => ({label: f.name, value: f.id}));
 
         let attributeColumns = [
             { columnKey: 'id', value: T.translate("general.id") },
+            { columnKey: 'type_name', value: T.translate("general.type") },
             { columnKey: 'value', value: T.translate("general.value") },
         ];
 
         let attributeOptions = {
             title: T.translate("edit_room.attribute_values"),
             valueKey: "id",
-            labelKey: "value",
+            labelKey: "label",
             actions: {
                 delete: { onClick: this.props.onAttributeUnLink},
                 search: this.queryAttributes,
                 add: { onClick: this.props.onAttributeLink }
             }
         };
+
+        let roomAttributes = entity.attributes.map(attr => {
+            let attributeTypes = currentSummit.meeting_booking_room_allowed_attributes;
+            let type = attributeTypes.find(at => at.id == attr.type_id);
+
+            return ({...attr, label: `${type.type}: ${attr.value}`, type_name: type.type});
+        });
 
         let class_ddl = [
             {label: 'Room', value: 'SummitVenueRoom'},
@@ -264,7 +277,7 @@ class RoomForm extends React.Component {
                 <div className="row form-group">
                     <div className="col-md-12">
                         <SimpleLinkList
-                            values={entity.attributes}
+                            values={roomAttributes}
                             columns={attributeColumns}
                             options={attributeOptions}
                         />

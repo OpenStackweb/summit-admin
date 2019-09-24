@@ -624,6 +624,11 @@ const normalizeRoomEntity = (entity) => {
         delete(normalizedEntity['order']);
     }
 
+    if (!normalizedEntity.floor_id) {
+        delete(normalizedEntity.floor_id);
+        delete(normalizedEntity.floor);
+    }
+
 
     return normalizedEntity;
 
