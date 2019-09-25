@@ -46,11 +46,15 @@ export const DEFAULT_ENTITY = {
     promocode: null,
     ticket_type: null,
     owner: null,
-    applied_taxes: []
+    applied_taxes: [],
+    attendee_first_name: '',
+    attendee_last_name: '',
+    attendee_email: '',
 }
 
 const DEFAULT_STATE = {
     entity      : DEFAULT_ENTITY,
+    errors: {}
 };
 
 const ticketReducer = (state = DEFAULT_STATE, action) => {
@@ -118,7 +122,7 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
         break;
         case BADGE_TYPE_CHANGED: {
             let {newBadgeType} = payload;
-            return {...state, entity: {...state.entity, badge: {...state.entity.badge, type: newBadgeType} } };
+            return {...state, entity: {...state.entity, badge: {...state.entity.badge, type_id: newBadgeType.id} } };
         }
         break;
         case FEATURE_BADGE_REMOVED: {

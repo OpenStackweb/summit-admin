@@ -26,9 +26,19 @@ class EditPurchaseOrderPage extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            refund_amount: 0
+        };
+
         this.handleDeleteOrder = this.handleDeleteOrder.bind(this);
         this.handleRefundOrder = this.handleRefundOrder.bind(this);
+        this.handleRefundChange = this.handleRefundChange.bind(this);
 
+    }
+
+    handleRefundChange(ev) {
+        let value = parseInt(ev.target.value);
+        this.setState({refund_amount: value});
     }
 
     handleDeleteOrder(order, ev) {
@@ -50,6 +60,7 @@ class EditPurchaseOrderPage extends React.Component {
 
     handleRefundOrder(order, ev) {
         let {refundPurchaseOrder} = this.props;
+        let {refund_amount} = this.state;
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -60,13 +71,14 @@ class EditPurchaseOrderPage extends React.Component {
             confirmButtonText: T.translate("edit_purchase_order.yes_refund")
         }).then(function(result){
             if (result.value) {
-                refundPurchaseOrder(order.id);
+                refundPurchaseOrder(order.id, refund_amount);
             }
         });
     }
 
     render(){
         let {currentSummit, entity, errors, match} = this.props;
+        let {refund_amount} = this.state;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
 
         return(
@@ -74,12 +86,19 @@ class EditPurchaseOrderPage extends React.Component {
                 <h3>
                     {title} {T.translate("edit_purchase_order.purchase_order")}
                     {entity.id != 0 &&
-                    <div className="pull-right">
-                        <button className="btn btn-sm btn-danger right-space" onClick={this.handleDeleteOrder.bind(this, entity)}>
-                            {T.translate("edit_purchase_order.delete_order")}
-                        </button>
-                        <button className="btn btn-sm btn-primary" onClick={this.handleRefundOrder.bind(this, entity)}>
+                    <div className="pull-right form-inline">
+                        <input
+                            className="form-control"
+                            type="number"
+                            min="0"
+                            value={refund_amount}
+                            onChange={this.handleRefundChange}
+                        />
+                        <button className="btn btn-sm btn-primary right-space" onClick={this.handleRefundOrder.bind(this, entity)}>
                             {T.translate("edit_purchase_order.refund")}
+                        </button>
+                        <button className="btn btn-sm btn-danger" onClick={this.handleDeleteOrder.bind(this, entity)}>
+                            {T.translate("edit_purchase_order.delete_order")}
                         </button>
                     </div>
                     }

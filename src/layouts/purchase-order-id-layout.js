@@ -35,7 +35,7 @@ class PurchaseOrderIdLayout extends React.Component {
             this.props.getPurchaseOrder(orderId);
         }
 
-        if (!currentSummit.order_extra_questions) {
+        if (!currentSummit.order_only_extra_questions) {
             this.props.getOrderExtraQuestions();
         }
 

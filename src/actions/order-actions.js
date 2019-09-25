@@ -120,6 +120,7 @@ export const getOrderExtraQuestion = (orderExtraQuestionId) => (dispatch, getSta
 
     let params = {
         access_token : accessToken,
+        expand: "values"
     };
 
     return getRequest(
@@ -249,12 +250,6 @@ export const saveOrderExtraQuestionValue = (orderExtraQuestionId, entity) => (di
 
     if (entity.id) {
 
-        let success_message = {
-            title: T.translate("general.done"),
-            html: T.translate("edit_order_extra_question.order_extra_question_value_saved"),
-            type: 'success'
-        };
-
         putRequest(
             createAction(UPDATE_ORDER_EXTRA_QUESTION_VALUE),
             createAction(ORDER_EXTRA_QUESTION_VALUE_UPDATED),
@@ -264,19 +259,10 @@ export const saveOrderExtraQuestionValue = (orderExtraQuestionId, entity) => (di
             entity
         )(params)(dispatch)
             .then((payload) => {
-                dispatch(showMessage(
-                    success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/order-extra-questions/${orderExtraQuestionId}`) }
-                ));
+                dispatch(stopLoading());
             });
 
     } else {
-
-        let success_message = {
-            title: T.translate("general.done"),
-            html: T.translate("edit_order_extra_question.order_extra_question_value_created"),
-            type: 'success'
-        };
 
         postRequest(
             createAction(UPDATE_ORDER_EXTRA_QUESTION_VALUE),
@@ -287,10 +273,7 @@ export const saveOrderExtraQuestionValue = (orderExtraQuestionId, entity) => (di
             entity
         )(params)(dispatch)
             .then((payload) => {
-                dispatch(showMessage(
-                    success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/order-extra-questions/${orderExtraQuestionId}`) }
-                ));
+                dispatch(stopLoading());
             });
     }
 }
@@ -382,7 +365,7 @@ export const getPurchaseOrder = (orderId) => (dispatch, getState) => {
     dispatch(startLoading());
 
     let params = {
-        expand       : 'owner, extra_question_answers, extra_question_answers.question, extra_question_answers.question.values, tickets, tickets.owner, tickets.owner.member, tickets.ticket_type',
+        expand       : 'owner, extra_questions, tickets, tickets.owner, tickets.owner.member, tickets.ticket_type',
         access_token : accessToken,
     };
 
@@ -492,7 +475,7 @@ export const deletePurchaseOrder = (orderId) => (dispatch, getState) => {
     );
 };
 
-export const refundPurchaseOrder = (orderId) => (dispatch, getState) => {
+export const refundPurchaseOrder = (orderId, refundAmount) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -506,6 +489,7 @@ export const refundPurchaseOrder = (orderId) => (dispatch, getState) => {
         null,
         createAction(PURCHASE_ORDER_REFUNDED)({orderId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/orders/${orderId}/refund`,
+        {amount: refundAmount},
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

@@ -89,6 +89,7 @@ export const DEFAULT_ENTITY = {
     badge_types: null,
     badge_features: null,
     order_extra_questions: null,
+    order_only_extra_questions: null,
     attendee_extra_questions: null
 }
 
@@ -306,10 +307,10 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
         case RECEIVE_ORDER_EXTRA_QUESTIONS: {
             let allExtraQuestions = payload.response.data;
 
-            let order_extra_questions = allExtraQuestions.filter(eq => (eq.usage == 'Both' || eq.usage == 'Order'));
+            let order_only_extra_questions = allExtraQuestions.filter(eq => (eq.usage == 'Both' || eq.usage == 'Order'));
             let attendee_extra_questions = allExtraQuestions.filter(eq => (eq.usage == 'Both' || eq.usage == 'Ticket'));
 
-            return {...state, currentSummit: {...state.currentSummit, order_extra_questions, attendee_extra_questions } };
+            return {...state, currentSummit: {...state.currentSummit, order_only_extra_questions, attendee_extra_questions } };
         }
         break;
         case VALIDATE: {

@@ -33,7 +33,7 @@ export const DEFAULT_ENTITY = {
     payment_method: '',
     status: '',
     extra_question_answers: [],
-    tickets: []
+    tickets: [],
 }
 
 const DEFAULT_STATE = {

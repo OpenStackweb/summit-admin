@@ -37,6 +37,7 @@ export const RECEIVE_TICKET             = 'RECEIVE_TICKET';
 export const UPDATE_TICKET              = 'UPDATE_TICKET';
 export const TICKET_UPDATED             = 'TICKET_UPDATED';
 export const TICKET_REFUNDED            = 'TICKET_REFUNDED';
+export const TICKET_MEMBER_ASSIGNED     = 'TICKET_MEMBER_ASSIGNED';
 export const TICKET_MEMBER_REASSIGNED   = 'TICKET_MEMBER_REASSIGNED';
 export const BADGE_ADDED_TO_TICKET      = 'BADGE_ADDED_TO_TICKET';
 
@@ -71,7 +72,7 @@ export const getTicket = (ticketId) => (dispatch, getState) => {
 
     let params = {
         access_token : accessToken,
-        expand: 'badge, badge.features, badge.type, badge.type.access_levels, promo_code, ticket_type, owner, owner.member'
+        expand: 'badge, badge.features, promo_code, ticket_type, owner, owner.member'
     };
 
     return getRequest(
@@ -83,6 +84,30 @@ export const getTicket = (ticketId) => (dispatch, getState) => {
             dispatch(stopLoading());
         }
     );
+};
+
+
+export const assignTicket = (orderId, ticketId, attendee) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    putRequest(
+        null,
+        createAction(TICKET_MEMBER_ASSIGNED),
+        `${window.API_BASE_URL}/api/v1/summits/all/orders/${orderId}/tickets/${ticketId}/attendee`,
+        attendee,
+        authErrorHandler
+    )(params)(dispatch)
+        .then((payload) => {
+            dispatch(stopLoading());
+            window.location.reload();
+        });
 };
 
 
@@ -118,7 +143,7 @@ export const reassignTicket = (attendeeId, newMemberId, orderId, ticketId) => (d
 };
 
 
-export const refundTicket = (ticketId) => (dispatch, getState) => {
+export const refundTicket = (ticketId, refundAmount) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -132,6 +157,7 @@ export const refundTicket = (ticketId) => (dispatch, getState) => {
         null,
         createAction(TICKET_REFUNDED)({ticketId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets/${ticketId}/refund`,
+        {amount: refundAmount},
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -155,6 +181,7 @@ export const addBadgeToTicket = (ticketId) => (dispatch, getState) => {
         null,
         createAction(BADGE_ADDED_TO_TICKET),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets/${ticketId}/badge`,
+        {},
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

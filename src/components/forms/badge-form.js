@@ -72,13 +72,11 @@ class BadgeForm extends React.Component {
     render() {
         let {entity} = this.state;
         let { currentSummit } = this.props;
-        let type_id = 0;
-        let access_levels = 'none';
 
-        if (entity.type) {
-            type_id = entity.type.id;
-            access_levels = entity.type.access_levels.map(al => al.name).join(', ');
-        }
+        if (!currentSummit.badge_types) return (<div></div>);
+
+        let badgeType = currentSummit.badge_types.find(bt => bt.id == entity.type_id);
+        let access_levels =  badgeType.access_levels.map(al => al.name).join(', ');
 
         let featuresColumns = [
             { columnKey: 'name', value: T.translate("edit_ticket.name") },
@@ -105,7 +103,7 @@ class BadgeForm extends React.Component {
                         <label> {T.translate("edit_ticket.type")}</label>
                         <Dropdown
                             id="type_id"
-                            value={type_id}
+                            value={entity.type_id}
                             onChange={this.handleChangeBadgeType}
                             options={badge_type_ddl}
                         />

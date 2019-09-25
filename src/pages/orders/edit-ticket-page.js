@@ -16,11 +16,14 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getTicket, refundTicket, reassignTicket, addBadgeToTicket } from "../../actions/ticket-actions";
+import { getTicket, refundTicket, assignTicket, reassignTicket, addBadgeToTicket } from "../../actions/ticket-actions";
 import TicketForm from "../../components/forms/ticket-form";
 import BadgeForm from "../../components/forms/badge-form";
 import {getBadgeFeatures, getBadgeTypes, deleteBadge, addFeatureToBadge, removeFeatureFromBadge, changeBadgeType} from "../../actions/badge-actions";
 import Swal from "sweetalert2";
+import NoMatchPage from "../no-match-page";
+import { Input } from 'openstack-uicore-foundation/lib/components'
+
 
 //import '../../styles/edit-ticket-page.less';
 
@@ -29,9 +32,14 @@ class EditTicketPage extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            refund_amount: 0
+        };
+
         this.handleAddBadgeToTicket = this.handleAddBadgeToTicket.bind(this);
         this.handleDeleteBadge = this.handleDeleteBadge.bind(this);
         this.handleRefundTicket = this.handleRefundTicket.bind(this);
+        this.handleRefundChange = this.handleRefundChange.bind(this);
     }
 
     componentWillMount () {
@@ -53,8 +61,14 @@ class EditTicketPage extends React.Component {
         }
     }
 
+    handleRefundChange(ev) {
+        let value = parseInt(ev.target.value);
+        this.setState({refund_amount: value});
+    }
+
     handleRefundTicket(ticket, ev) {
         let {refundTicket} = this.props;
+        let {refund_amount} = this.state;
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -65,7 +79,7 @@ class EditTicketPage extends React.Component {
             confirmButtonText: T.translate("edit_ticket.yes_refund")
         }).then(function(result){
             if (result.value) {
-                refundTicket(ticket.id);
+                refundTicket(ticket.id, refund_amount);
             }
         });
     }
@@ -93,17 +107,35 @@ class EditTicketPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors, match} = this.props;
+        let {currentSummit, currentOrder, loading,  entity, errors, match} = this.props;
+        let {refund_amount} = this.state;
+
         let breadcrumb = `...${entity.number.slice(-20)}`;
+
+        if (!entity) return (<div></div>);
+        if (entity.order_id != currentOrder.id && !loading) return (<NoMatchPage />)
 
         return(
             <div className="container">
                 <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
                 <h3>
                     {T.translate("edit_ticket.ticket")}
-                    <button className="btn btn-sm btn-primary pull-right" onClick={this.handleRefundTicket.bind(this, entity)}>
-                        {T.translate("edit_ticket.refund_ticket")}
-                    </button>
+
+                    {entity.status != 'Cancelled' &&
+                    <div className="pull-right form-inline">
+                        <input
+                            className="form-control"
+                            type="number"
+                            min="0"
+                            value={refund_amount}
+                            onChange={this.handleRefundChange}
+                        />
+                        <button className="btn btn-sm btn-primary pull-right"
+                                onClick={this.handleRefundTicket.bind(this, entity)}>
+                            {T.translate("edit_ticket.refund_ticket")}
+                        </button>
+                    </div>
+                    }
                 </h3>
                 <hr/>
 
@@ -111,7 +143,9 @@ class EditTicketPage extends React.Component {
                     history={this.props.history}
                     currentSummit={currentSummit}
                     entity={entity}
+                    errors={errors}
                     onReassing={this.props.reassignTicket}
+                    onAssing={this.props.assignTicket}
                 />
 
                 <br/>
@@ -151,8 +185,10 @@ class EditTicketPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentOrderState, currentTicketState }) => ({
+const mapStateToProps = ({ baseState, currentSummitState, currentPurchaseOrderState, currentTicketState }) => ({
     currentSummit : currentSummitState.currentSummit,
+    currentOrder: currentPurchaseOrderState.entity,
+    loading : baseState.loading,
     ...currentTicketState
 })
 
@@ -162,6 +198,7 @@ export default connect (
         getSummitById,
         getTicket,
         refundTicket,
+        assignTicket,
         reassignTicket,
         deleteBadge,
         getBadgeFeatures,

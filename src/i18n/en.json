@@ -865,6 +865,10 @@
     "badge"             : "Badge",
     "promocode"         : "Promocode",
     "attendee"          : "Attendee",
+    "attendee_first_name" : "Attendee First Name",
+    "attendee_last_name"  : "Attendee Last Name",
+    "attendee_email"      : "Attendee Email",
+    "assign"            : "Assign",
     "reassign"          : "Reassign",
     "qr"                : "QR Code",
     "access_levels"     : "Access Levels",
@@ -1110,6 +1114,7 @@
   "purchase_order_list": {
     "purchase_orders"     : "Purchase Orders",
     "add_order"           : "Add New Order",
+    "no_orders"           : "No orders found.",
     "number"              : "Number",
     "name"                : "Name",
     "owner_id"            : "Owner Id",

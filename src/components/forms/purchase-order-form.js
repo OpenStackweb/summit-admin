@@ -125,7 +125,6 @@ class PurchaseOrderForm extends React.Component {
                             onChange={this.handleChange}
                             className="form-control"
                             disabled
-                            error={this.hasErrors('number')}
                         />
                     </div>
                     <div className="col-md-6">
@@ -270,14 +269,14 @@ class PurchaseOrderForm extends React.Component {
                 </div>
                 </Panel>
 
-                {entity.id != 0 && currentSummit.order_extra_questions && currentSummit.order_extra_questions.length > 0 &&
+                {entity.id != 0 && currentSummit.order_only_extra_questions && currentSummit.order_only_extra_questions.length > 0 &&
                 <Panel show={showSection == 'extra_questions'}
                        title={T.translate("edit_purchase_order.extra_questions")}
                        handleClick={this.toggleSection.bind(this, 'extra_questions')}>
                     <QuestionAnswersInput
                         id="extra_questions"
-                        answers={entity.extra_question_answers}
-                        questions={currentSummit.order_extra_questions}
+                        answers={entity.extra_questions}
+                        questions={currentSummit.order_only_extra_questions}
                         onChange={this.handleChange}
                     />
                 </Panel>

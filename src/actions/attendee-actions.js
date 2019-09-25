@@ -92,7 +92,7 @@ export const getAttendee = (attendeeId) => (dispatch, getState) => {
     dispatch(startLoading());
 
     let params = {
-        expand       : 'member, speaker, tickets, rsvp, schedule_summit_events, all_affiliations',
+        expand       : 'member, speaker, tickets, rsvp, schedule_summit_events, all_affiliations, extra_questions',
         access_token : accessToken,
     };
 
@@ -285,6 +285,9 @@ const normalizeEntity = (entity) => {
     delete normalizedEntity['summit_hall_checked_in_date'];
     delete normalizedEntity['member'];
     delete normalizedEntity['tickets'];
+    delete normalizedEntity['id'];
+    delete normalizedEntity['created'];
+    delete normalizedEntity['last_edited'];
 
     return normalizedEntity;
 

@@ -24,12 +24,14 @@ class TicketForm extends React.Component {
 
         this.state = {
             entity: {...props.entity},
+            errors: props.errors,
         };
 
         this.handlePromocodeClick = this.handlePromocodeClick.bind(this);
         this.handleOwnerClick = this.handleOwnerClick.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleReassign = this.handleReassign.bind(this);
+        this.handleAssign = this.handleAssign.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -62,6 +64,16 @@ class TicketForm extends React.Component {
         this.props.onReassing(entity.owner.id, entity.member.id, entity.order_id, entity.id );
     }
 
+    handleAssign(ev) {
+        let entity = {...this.state.entity};
+        ev.preventDefault();
+
+        let {attendee_first_name, attendee_last_name, attendee_email} = entity;
+        let attendee = {attendee_first_name, attendee_last_name, attendee_email}
+
+        this.props.onAssing(entity.order_id, entity.id, attendee);
+    }
+
 
     handleOwnerClick(ev) {
         let {currentSummit, entity, history} = this.props;
@@ -77,16 +89,26 @@ class TicketForm extends React.Component {
         history.push(`/app/summits/${currentSummit.id}/promocodes/${entity.promo_code.id}`);
     }
 
+    hasErrors(field) {
+        let {errors} = this.state;
+        if(field in errors) {
+            return errors[field];
+        }
+
+        return '';
+    }
+
 
     render() {
         let {entity} = this.state;
-        let member = entity.member ? entity.member : entity.owner.member;
+        let member = entity.member ? entity.member : (entity.owner ? entity.owner.member : null);
 
-        let canReassing = (entity.member && entity.member.id && entity.member.id != entity.owner.member.id);
+        let canReassing = (entity.owner && entity.member && entity.member.id && entity.member.id != entity.owner.member.id);
 
         return (
             <form className="ticket-form">
                 <input type="hidden" id="id" value={entity.id} />
+                {entity.owner &&
                 <div className="row form-group">
                     <div className="col-md-4">
                         <label> {T.translate("edit_ticket.attendee")}:&nbsp;</label>
@@ -105,6 +127,48 @@ class TicketForm extends React.Component {
                         </button>
                     </div>
                 </div>
+                }
+                {!entity.owner &&
+                <div className="row form-group">
+                    <div className="col-md-3">
+                        <label> {T.translate("edit_ticket.attendee_first_name")}:&nbsp;</label>
+                        <Input
+                            id="attendee_first_name"
+                            value={entity.attendee_first_name}
+                            onChange={this.handleChange}
+                            className="form-control"
+                            error={this.hasErrors('attendee_first_name')}
+                        />
+                    </div>
+                    <div className="col-md-3">
+                        <label> {T.translate("edit_ticket.attendee_last_name")}:&nbsp;</label>
+                        <Input
+                            id="attendee_last_name"
+                            value={entity.attendee_last_name}
+                            onChange={this.handleChange}
+                            className="form-control"
+                            error={this.hasErrors('attendee_last_name')}
+                        />
+                    </div>
+                    <div className="col-md-3">
+                        <label> {T.translate("edit_ticket.attendee_email")}:&nbsp;</label>
+                        <Input
+                            id="attendee_email"
+                            value={entity.attendee_email}
+                            onChange={this.handleChange}
+                            className="form-control"
+                            error={this.hasErrors('attendee_email')}
+                        />
+                    </div>
+                    <div className="col-md-2">
+                        <br/>
+
+                        <button onClick={this.handleAssign} className="btn btn-default">
+                            {T.translate("edit_ticket.assign")}
+                        </button>
+                    </div>
+                </div>
+                }
                 <div className="row form-group">
                     <div className="col-md-4">
                         <label> {T.translate("edit_ticket.type")}:&nbsp;</label>

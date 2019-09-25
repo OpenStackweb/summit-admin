@@ -217,12 +217,12 @@ class AttendeeForm extends React.Component {
                     <RsvpComponent member={entity.member} onDelete={this.props.onDeleteRsvp} />
                     }
 
-                    {currentSummit.attendee_extra_questions && currentSummit.attendee_extra_questions.length > 0 &&
+                    {entity.id != 0 && currentSummit.attendee_extra_questions && currentSummit.attendee_extra_questions.length > 0 &&
                     <Panel show={showSection == 'extra_questions'} title={T.translate("edit_attendee.extra_questions")}
                            handleClick={this.toggleSection.bind(this, 'extra_questions')}>
                         <QuestionAnswersInput
                             id="extra_questions"
-                            answers={entity.extra_question_answers}
+                            answers={entity.extra_questions}
                             questions={currentSummit.attendee_extra_questions}
                             onChange={this.handleChange}
                         />
