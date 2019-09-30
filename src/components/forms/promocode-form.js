@@ -14,7 +14,7 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import {findElementPos} from 'openstack-uicore-foundation/lib/methods'
+import { findElementPos, epochToMoment } from 'openstack-uicore-foundation/lib/methods'
 import { Dropdown, SimpleLinkList, DateTimePicker, SpeakerInput, MemberInput, CompanyInput, Input } from 'openstack-uicore-foundation/lib/components'
 import { DiscountTicketTable } from '../tables/dicount-ticket-table';
 
@@ -53,6 +53,7 @@ const EmailRedeemForm = (props) => (
 const BasePCForm = (props) => {
 
     let badge_features_ddl = props.summit.badge_features.map(f => ({label:f.name, value:f.id}));
+    let badge_types_ddl = props.summit.badge_types.map(f => ({label:f.name, value:f.id}));
 
     return (
         <>
@@ -87,7 +88,7 @@ const BasePCForm = (props) => {
                         onChange={props.handleChange}
                         format={{date: "YYYY-MM-DD", time: false}}
                         timezone="UTC"
-                        value={props.entity.valid_since_date}
+                        value={epochToMoment(props.entity.valid_since_date)}
                     />
                 </div>
                 <div className="col-md-4">
@@ -97,7 +98,7 @@ const BasePCForm = (props) => {
                         onChange={props.handleChange}
                         format={{date: "YYYY-MM-DD", time: false}}
                         timezone="UTC"
-                        value={props.entity.valid_until_date}
+                        value={epochToMoment(props.entity.valid_until_date)}
                     />
                 </div>
             </div>
@@ -109,7 +110,7 @@ const BasePCForm = (props) => {
                         value={props.entity.badge_type_id}
                         onChange={props.handleChange}
                         placeholder={T.translate("edit_promocode.placeholders.select_badge_type")}
-                        options={props.summit.badge_types}
+                        options={badge_types_ddl}
                     />
                 </div>
                 <div className="col-md-8">
@@ -124,13 +125,6 @@ const BasePCForm = (props) => {
                     />
                 </div>
             </div>
-            {props.entity.id != 0 &&
-            <SimpleLinkList
-                values={props.entity.badge_features}
-                columns={props.badgeFeatureColumns}
-                options={props.badgeFeatureOptions}
-            />
-            }
         </>
     );
 };
@@ -406,6 +400,10 @@ class PromocodeForm extends React.Component {
             entity.rate = 0;
         }
 
+        if (ev.target.type == 'datetime') {
+            value = value.valueOf() / 1000;
+        }
+
         errors[id] = '';
         entity[id] = value;
         this.setState({entity: entity, errors: errors});
@@ -474,7 +472,9 @@ class PromocodeForm extends React.Component {
 
         if (entity.class_name) {
             let classTypes = allClasses.find(c => c.class_name == entity.class_name).type;
-            promocode_types_ddl = classTypes.map(t => ({label: t, value: t}));
+            if (classTypes) {
+                promocode_types_ddl = classTypes.map(t => ({label: t, value: t}));
+            }
         }
 
 
@@ -509,6 +509,7 @@ class PromocodeForm extends React.Component {
                             disabled={entity.id !== 0}
                         />
                     </div>
+                    {promocode_types_ddl.length > 0 &&
                     <div className="col-md-3">
                         <label> {T.translate("edit_promocode.type")} *</label>
                         <Dropdown
@@ -520,6 +521,7 @@ class PromocodeForm extends React.Component {
                             disabled={entity.id !== 0}
                         />
                     </div>
+                    }
                     <div className="col-md-3">
                         <label> {T.translate("edit_promocode.code")} *</label>
                         <Input
