@@ -15,8 +15,7 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
-import { Input, TextEditor, Dropdown, SimpleLinkList, UploadInput } from 'openstack-uicore-foundation/lib/components'
-
+import { Input, TextEditor, SimpleLinkList, Dropdown, UploadInput } from 'openstack-uicore-foundation/lib/components'
 
 class RoomForm extends React.Component {
     constructor(props) {
@@ -138,6 +137,7 @@ class RoomForm extends React.Component {
             title: T.translate("edit_room.attribute_values"),
             valueKey: "id",
             labelKey: "label",
+            defaultOptions: true,
             actions: {
                 delete: { onClick: this.props.onAttributeUnLink},
                 search: this.queryAttributes,
