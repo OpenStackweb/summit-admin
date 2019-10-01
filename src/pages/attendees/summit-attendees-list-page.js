@@ -133,7 +133,7 @@ class SummitAttendeeListPage extends React.Component {
             { columnKey: 'member_id', value: T.translate("attendee_list.member_id")},
             { columnKey: 'name', value: T.translate("general.name"), sortable: true },
             { columnKey: 'email', value: T.translate("general.email") },
-            { columnKey: 'eventbrite_id', value: T.translate("attendee_list.eventbrite_id") },
+            { columnKey: 'ticket_id', value: T.translate("attendee_list.tickets") },
             { columnKey: 'bought_date', value: T.translate("attendee_list.bought_date") },
             { columnKey: 'summit_hall_checked_in', value: T.translate("attendee_list.summit_hall_checked_in") },
             { columnKey: 'schedule_count', value: T.translate("attendee_list.schedule_count") },

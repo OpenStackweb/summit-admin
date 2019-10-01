@@ -54,13 +54,23 @@ const attendeeListReducer = (state = DEFAULT_STATE, action) => {
 
                 let schedule = (a.member && a.member.schedule_summit_events) ? a.member.schedule_summit_events : [];
                 let schedule_count = schedule.length;
+                let name = 'N/A';
+                let email = 'N/A';
+
+                if (a.member) {
+                    name = `${a.member.first_name} ${a.member.last_name}`;
+                    email = a.member.email;
+                } else {
+                    if (a.email) email = a.email;
+                    if (a.first_name) name = `${a.first_name} ${a.last_name}`;
+                }
 
                 return {
                     id: a.id,
-                    member_id: a.member.id,
-                    name: a.member.first_name + ' ' + a.member.last_name,
-                    email: a.member.email,
-                    eventbrite_id: a.tickets.map(t => t.external_order_id).join(', '),
+                    member_id: (a.member) ? a.member.id : 'N/A',
+                    name: name,
+                    email: email,
+                    ticket_id: a.tickets.map(t => t.external_order_id || `...${t.number.slice(-15)}`).join(', '),
                     bought_date: bought_date,
                     summit_hall_checked_in: (a.summit_hall_checked_in ? 'Yes' : 'No'),
                     schedule: schedule,

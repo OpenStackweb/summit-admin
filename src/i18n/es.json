@@ -399,7 +399,7 @@
     "attendees"               : "Attendees",
     "add_attendee"            : "Add Attendee",
     "member_id"               : "Member Id",
-    "eventbrite_id"           : "Eventbrite Id",
+    "tickets"                 : "Tickets",
     "bought_date"             : "Bought Date",
     "summit_hall_checked_in"  : "Checked In",
     "schedule"                : "Schedule",
