@@ -69,6 +69,10 @@ class AttendeeForm extends React.Component {
             value = ev.target.checked;
         }
 
+        if (ev.target.type == 'number') {
+            value = parseInt(ev.target.value);
+        }
+
         if (ev.target.type == 'datetime') {
             value = value.valueOf() / 1000;
         }
