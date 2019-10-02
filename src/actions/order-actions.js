@@ -304,7 +304,7 @@ export const deleteOrderExtraQuestionValue = (orderExtraQuestionId, orderExtraQu
 const normalizeQuestion = (entity) => {
     let normalizedEntity = {...entity};
 
-
+    normalizedEntity.usage = 'Ticket';
     return normalizedEntity;
 
 }
@@ -520,6 +520,8 @@ const normalizePurchaseOrder = (entity) => {
         normalizedEntity.owner_id = normalizedEntity.owner.id;
         delete(normalizedEntity.owner);
     }
+
+    delete(normalizedEntity.extra_questions);
 
     return normalizedEntity;
 

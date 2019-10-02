@@ -269,7 +269,7 @@ class PurchaseOrderForm extends React.Component {
                 </div>
                 </Panel>
 
-                {entity.id != 0 && currentSummit.order_only_extra_questions && currentSummit.order_only_extra_questions.length > 0 &&
+                {/*{entity.id != 0 && currentSummit.order_only_extra_questions && currentSummit.order_only_extra_questions.length > 0 &&
                 <Panel show={showSection == 'extra_questions'}
                        title={T.translate("edit_purchase_order.extra_questions")}
                        handleClick={this.toggleSection.bind(this, 'extra_questions')}>
@@ -280,7 +280,7 @@ class PurchaseOrderForm extends React.Component {
                         onChange={this.handleChange}
                     />
                 </Panel>
-                }
+                }*/}
 
                 {entity.id != 0 &&
                     <Table

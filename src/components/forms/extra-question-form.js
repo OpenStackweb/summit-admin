@@ -167,7 +167,7 @@ class ExtraQuestionForm extends React.Component {
                             error={this.hasErrors('placeholder')}
                         />
                     </div>
-                    <div className="col-md-3">
+                    {/*<div className="col-md-3">
                         <label> {T.translate("question_form.usage")} *</label>
                         <Dropdown
                             id="usage"
@@ -176,7 +176,7 @@ class ExtraQuestionForm extends React.Component {
                             options={question_usage_ddl}
                             onChange={this.handleChange}
                         />
-                    </div>
+                    </div>*/}
                 </div>
                 <div className="row form-group">
                     <div className="col-md-3 checkboxes-div">

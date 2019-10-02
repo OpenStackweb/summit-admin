@@ -438,7 +438,7 @@
     "event"                       : "Event",
     "created"                     : "Created Date",
     "seat"                        : "Seat",
-    "extra_questions"             : "Extra Questions",
+    "extra_questions"             : "Registration Extra Questions",
     "placeholders": {
       "start_date"            : "Start Date",
       "end_date"              : "End Date",
@@ -1094,7 +1094,7 @@
     "access_level_created"  : "Access Level created successfully"
   },
   "order_extra_question_list": {
-    "order_extra_questions"     : "Order Extra Questions",
+    "order_extra_questions"     : "Registration Extra Questions",
     "class"                     : "Class",
     "label"                     : "Label",
     "name"                      : "Name",
@@ -1104,12 +1104,12 @@
     "remove_question_warning"   : "Are you sure you want to remove question "
   },
   "edit_order_extra_question": {
-    "order_extra_question"                : "Order Extra Question",
-    "order_extra_question_saved"          : "Order Extra Question saved successfully.",
-    "order_extra_question_created"        : "Order Extra Question created successfully.",
+    "order_extra_question"                : "Registration Extra Question",
+    "order_extra_question_saved"          : "Extra Question saved successfully.",
+    "order_extra_question_created"        : "Extra Question created successfully.",
     "remove_value_warning"                : "Are you sure you want to remove value ",
-    "order_extra_question_value_saved"    : "Order Extra Question Value saved successfully.",
-    "order_extra_question_value_created"  : "Order Extra Question Value created successfully."
+    "order_extra_question_value_saved"    : "Extra Question Value saved successfully.",
+    "order_extra_question_value_created"  : "Extra Question Value created successfully."
   },
   "purchase_order_list": {
     "purchase_orders"     : "Purchase Orders",
