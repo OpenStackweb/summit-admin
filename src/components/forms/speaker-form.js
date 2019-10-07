@@ -213,20 +213,19 @@ class SpeakerForm extends React.Component {
                             id="member"
                             value={entity.member}
                             onChange={this.handleChange}
+                            isClearable={true}
                         />
                     </div>
-                    {entity.id != 0 &&
                     <div className="col-md-4">
                         <label> {T.translate("general.email")} </label>
                         <Input
                             className="form-control"
                             id="email"
-                            disabled={true}
+                            disabled={entity.id != 0 || entity.member != null}
                             value={entity.email}
                             onChange={this.handleChange}
                         />
                     </div>
-                    }
                 </div>
                 <div className="row form-group">
                     <div className="col-md-4">

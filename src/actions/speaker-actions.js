@@ -277,7 +277,12 @@ const uploadFile = (entity, file) => (dispatch, getState) => {
 const normalizeEntity = (entity) => {
     let normalizedEntity = {...entity};
 
-    normalizedEntity.member_id = (normalizedEntity.member != null) ? normalizedEntity.member.id : 0;
+    if (normalizedEntity.member != null) {
+        normalizedEntity.member_id = normalizedEntity.member.id;
+        delete(normalizedEntity.email);
+    } else {
+        delete(normalizedEntity.member_id);
+    }
 
     delete normalizedEntity['presentations'];
     delete normalizedEntity['all_presentations'];
