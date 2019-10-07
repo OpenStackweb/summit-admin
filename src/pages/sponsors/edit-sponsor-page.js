@@ -17,7 +17,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
 import SponsorForm from '../../components/forms/sponsor-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getSponsor, resetSponsorForm, saveSponsor, getSponsorships } from "../../actions/sponsor-actions";
+import { getSponsor, resetSponsorForm, saveSponsor, getSponsorships, addMemberToSponsor, removeMemberFromSponsor } from "../../actions/sponsor-actions";
 
 class EditSponsorPage extends React.Component {
 
@@ -63,6 +63,8 @@ class EditSponsorPage extends React.Component {
                     currentSummit={currentSummit}
                     sponsorships={sponsorships}
                     errors={errors}
+                    onAddMember={this.props.addMemberToSponsor}
+                    onRemoveMember={this.props.removeMemberFromSponsor}
                     onSubmit={this.props.saveSponsor}
                 />
                 }
@@ -84,6 +86,8 @@ export default connect (
         getSponsor,
         resetSponsorForm,
         saveSponsor,
+        addMemberToSponsor,
+        removeMemberFromSponsor,
         getSponsorships
     }
 )(EditSponsorPage);

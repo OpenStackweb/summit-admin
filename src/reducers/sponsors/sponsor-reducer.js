@@ -17,7 +17,9 @@ import
     RESET_SPONSOR_FORM,
     UPDATE_SPONSOR,
     SPONSOR_UPDATED,
-    SPONSOR_ADDED
+    SPONSOR_ADDED,
+    MEMBER_ADDED_TO_SPONSOR,
+    MEMBER_REMOVED_FROM_SPONSOR
 } from '../../actions/sponsor-actions';
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
@@ -27,6 +29,7 @@ export const DEFAULT_ENTITY = {
     id              : 0,
     company         : null,
     sponsorship_id  : null,
+    members         : [],
     order           : 0,
 }
 
@@ -71,6 +74,17 @@ const sponsorReducer = (state = DEFAULT_STATE, action) => {
         break;
         case SPONSOR_UPDATED: {
             return state;
+        }
+        break;
+        case MEMBER_ADDED_TO_SPONSOR: {
+            let {memberId} = payload;
+            return {...state, entity: {...state.entity, members: [...state.entity.members, memberId] } };
+        }
+        break;
+        case MEMBER_REMOVED_FROM_SPONSOR: {
+            let {memberId} = payload;
+            let currentMembers = state.members.filter(m => m != memberId);
+            return {...state, entity: {...state.entity, members: currentMembers } };
         }
         break;
         case VALIDATE: {

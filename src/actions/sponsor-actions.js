@@ -26,14 +26,16 @@ import {
     authErrorHandler
 } from 'openstack-uicore-foundation/lib/methods';
 
-export const REQUEST_SPONSORS       = 'REQUEST_SPONSORS';
-export const RECEIVE_SPONSORS       = 'RECEIVE_SPONSORS';
-export const RECEIVE_SPONSOR        = 'RECEIVE_SPONSOR';
-export const RESET_SPONSOR_FORM     = 'RESET_SPONSOR_FORM';
-export const UPDATE_SPONSOR         = 'UPDATE_SPONSOR';
-export const SPONSOR_UPDATED        = 'SPONSOR_UPDATED';
-export const SPONSOR_ADDED          = 'SPONSOR_ADDED';
-export const SPONSOR_DELETED        = 'SPONSOR_DELETED';
+export const REQUEST_SPONSORS               = 'REQUEST_SPONSORS';
+export const RECEIVE_SPONSORS               = 'RECEIVE_SPONSORS';
+export const RECEIVE_SPONSOR                = 'RECEIVE_SPONSOR';
+export const RESET_SPONSOR_FORM             = 'RESET_SPONSOR_FORM';
+export const UPDATE_SPONSOR                 = 'UPDATE_SPONSOR';
+export const SPONSOR_UPDATED                = 'SPONSOR_UPDATED';
+export const SPONSOR_ADDED                  = 'SPONSOR_ADDED';
+export const SPONSOR_DELETED                = 'SPONSOR_DELETED';
+export const MEMBER_ADDED_TO_SPONSOR        = 'MEMBER_ADDED_TO_SPONSOR';
+export const MEMBER_REMOVED_FROM_SPONSOR    = 'MEMBER_REMOVED_FROM_SPONSOR';
 
 export const REQUEST_SPONSORSHIPS       = 'REQUEST_SPONSORSHIPS';
 export const RECEIVE_SPONSORSHIPS       = 'RECEIVE_SPONSORSHIPS';
@@ -103,7 +105,7 @@ export const getSponsor = (sponsorId) => (dispatch, getState) => {
 
     let params = {
         access_token : accessToken,
-        expand       : 'company',
+        expand       : 'company, members',
     };
 
     return getRequest(
@@ -170,7 +172,51 @@ export const saveSponsor = (entity) => (dispatch, getState) => {
                 ));
             });
     }
-}
+};
+
+export const addMemberToSponsor = (sponsorId, memberId) => (dispatch, getState) => {
+    let {loggedUserState, currentSummitState} = getState();
+    let {accessToken} = loggedUserState;
+    let {currentSummit} = currentSummitState;
+
+    let params = {
+        access_token: accessToken,
+    };
+
+    dispatch(startLoading());
+
+    putRequest(
+        null,
+        createAction(MEMBER_ADDED_TO_SPONSOR),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsors/${sponsorId}/users/${memberId}`,
+        {},
+        authErrorHandler
+    )(params)(dispatch)
+        .then((payload) => {
+            dispatch(showSuccessMessage(T.translate("edit_sponsor.member_saved")));
+        });
+};
+
+export const removeMemberFromSponsor = (sponsorId, memberId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(MEMBER_REMOVED_FROM_SPONSOR)({memberId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsors/${sponsorId}/users/${memberId}`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
 
 export const deleteSponsor = (sponsorId) => (dispatch, getState) => {
 
@@ -184,7 +230,7 @@ export const deleteSponsor = (sponsorId) => (dispatch, getState) => {
 
     return deleteRequest(
         null,
-        createAction(SPONSOR_DELETED)({sponsorId}),
+        createAction(SPONSOR_DELETED)({memberId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsors/${sponsorId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
@@ -192,6 +238,8 @@ export const deleteSponsor = (sponsorId) => (dispatch, getState) => {
         }
     );
 };
+
+
 
 
 const normalizeSponsor = (entity) => {

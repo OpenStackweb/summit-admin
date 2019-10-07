@@ -15,7 +15,7 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import { findElementPos, epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/methods'
-import { Input, Dropdown, CompanyInput } from 'openstack-uicore-foundation/lib/components';
+import { Input, Dropdown, CompanyInput, MemberInput } from 'openstack-uicore-foundation/lib/components';
 
 
 class SponsorForm extends React.Component {
@@ -27,6 +27,7 @@ class SponsorForm extends React.Component {
             errors: props.errors
         };
 
+        this.handleChangeMember = this.handleChangeMember.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -62,6 +63,26 @@ class SponsorForm extends React.Component {
         errors[id] = '';
         entity[id] = value;
         this.setState({entity: entity, errors: errors});
+    }
+
+    handleChangeMember(ev) {
+        let {onAddMember, onRemoveMember, entity} = this.props;
+
+        let currentMembers = this.state.entity.members;
+        let newMembers = ev.target.value;
+
+        newMembers.forEach(mem => {
+            if (!currentMembers.includes(mem.id)) {
+                onAddMember(entity.id, mem.id);
+            }
+        });
+
+        currentMembers.forEach(cmem => {
+            if (!newMembers.includes(cmem.id)) {
+                onRemoveMember(entity.id, cmem.id);
+            }
+        });
+
     }
 
     handleSubmit(ev) {
@@ -115,6 +136,19 @@ class SponsorForm extends React.Component {
                         />
                     </div>
                 </div>
+                {entity.id != 0 &&
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <label> {T.translate("general.member")} </label>
+                        <MemberInput
+                            id="members"
+                            value={entity.members}
+                            onChange={this.handleChangeMember}
+                            multi={true}
+                        />
+                    </div>
+                </div>
+                }
 
 
                 <div className="row">
