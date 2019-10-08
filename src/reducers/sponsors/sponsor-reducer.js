@@ -77,13 +77,13 @@ const sponsorReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case MEMBER_ADDED_TO_SPONSOR: {
-            let {memberId} = payload;
-            return {...state, entity: {...state.entity, members: [...state.entity.members, memberId] } };
+            let {member} = payload;
+            return {...state, entity: {...state.entity, members: [...state.entity.members, member] } };
         }
         break;
         case MEMBER_REMOVED_FROM_SPONSOR: {
             let {memberId} = payload;
-            let currentMembers = state.members.filter(m => m != memberId);
+            let currentMembers = state.entity.members.filter(m => m.id != memberId);
             return {...state, entity: {...state.entity, members: currentMembers } };
         }
         break;

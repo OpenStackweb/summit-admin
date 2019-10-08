@@ -174,7 +174,7 @@ export const saveSponsor = (entity) => (dispatch, getState) => {
     }
 };
 
-export const addMemberToSponsor = (sponsorId, memberId) => (dispatch, getState) => {
+export const addMemberToSponsor = (sponsorId, member) => (dispatch, getState) => {
     let {loggedUserState, currentSummitState} = getState();
     let {accessToken} = loggedUserState;
     let {currentSummit} = currentSummitState;
@@ -187,13 +187,13 @@ export const addMemberToSponsor = (sponsorId, memberId) => (dispatch, getState) 
 
     putRequest(
         null,
-        createAction(MEMBER_ADDED_TO_SPONSOR),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsors/${sponsorId}/users/${memberId}`,
+        createAction(MEMBER_ADDED_TO_SPONSOR)({member}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsors/${sponsorId}/users/${member.id}`,
         {},
         authErrorHandler
     )(params)(dispatch)
         .then((payload) => {
-            dispatch(showSuccessMessage(T.translate("edit_sponsor.member_saved")));
+            dispatch(stopLoading());
         });
 };
 
@@ -206,6 +206,8 @@ export const removeMemberFromSponsor = (sponsorId, memberId) => (dispatch, getSt
     let params = {
         access_token : accessToken
     };
+
+    dispatch(startLoading());
 
     return deleteRequest(
         null,

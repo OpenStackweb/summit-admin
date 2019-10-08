@@ -69,17 +69,19 @@ class SponsorForm extends React.Component {
         let {onAddMember, onRemoveMember, entity} = this.props;
 
         let currentMembers = this.state.entity.members;
+        let currentMemberIds = currentMembers.map(m => m.id);
         let newMembers = ev.target.value;
+        let newMemberIds = newMembers.map(m => m.id);
 
         newMembers.forEach(mem => {
-            if (!currentMembers.includes(mem.id)) {
-                onAddMember(entity.id, mem.id);
+            if (!currentMemberIds.includes(mem.id)) {
+                onAddMember(entity.id, mem);
             }
         });
 
-        currentMembers.forEach(cmem => {
-            if (!newMembers.includes(cmem.id)) {
-                onRemoveMember(entity.id, cmem.id);
+        currentMemberIds.forEach(memId => {
+            if (!newMemberIds.includes(memId)) {
+                onRemoveMember(entity.id, memId);
             }
         });
 
