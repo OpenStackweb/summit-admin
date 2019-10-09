@@ -14,6 +14,7 @@
 import TrackFilter from './track-filter'
 import RoomFilter from './room-filter'
 import PublishedFilter from './published-filter'
+import PublishedInFilter from './published-in-filter'
 import StatusFilter from './status-filter'
 import AttendanceFilter from './attendance-filter'
 import MediaFilter from './media-filter'
@@ -22,6 +23,7 @@ export {
     TrackFilter,
     RoomFilter,
     PublishedFilter,
+    PublishedInFilter,
     StatusFilter,
     AttendanceFilter,
     MediaFilter

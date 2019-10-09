@@ -58,7 +58,10 @@ class SmartSpeakerReport extends React.Component {
     buildReportQuery(filters, listFilters) {
         let {currentSummit, sortKey, sortDir} = this.props;
         let {showFields} = this.state;
-        listFilters.summitId = currentSummit.id;
+
+        if (!filters.published_in) {
+            listFilters.summitId = currentSummit.id;
+        }
 
         let query = new Query("speakers", listFilters);
         let reportData = ["id", "title", "fullName"];
@@ -200,4 +203,4 @@ class SmartSpeakerReport extends React.Component {
 }
 
 
-export default wrapReport(SmartSpeakerReport, {pagination: true, filters:['track', 'attendance', 'media']});
+export default wrapReport(SmartSpeakerReport, {pagination: true, filters:['track', 'attendance', 'media', 'published_in']});

@@ -49,7 +49,7 @@ class ReportListPage extends React.Component {
                         </button>
                     </div>
                     <div className="col-md-6">
-                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'speaker_report')}>
+                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'speaker_report#published_in=true')}>
                             {T.translate(`reports.speaker_report`)}
                         </button>
                     </div>
