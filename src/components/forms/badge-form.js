@@ -71,7 +71,7 @@ class BadgeForm extends React.Component {
 
     render() {
         let {entity} = this.state;
-        let { currentSummit } = this.props;
+        let { currentSummit, canPrint } = this.props;
 
         if (!currentSummit.badge_types) return (<div></div>);
 
@@ -108,10 +108,6 @@ class BadgeForm extends React.Component {
                             options={badge_type_ddl}
                         />
                     </div>
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_ticket.qr")}:&nbsp;</label>
-                        {entity.qr_code}
-                    </div>
                 </div>
                 <div className="row form-group">
                     <div className="col-md-12">
@@ -125,7 +121,7 @@ class BadgeForm extends React.Component {
                         {entity.printed_times}
                     </div>
                     <div className="col-md-4">
-                        <button onClick={this.handlePrintBadge} className="btn btn-default">
+                        <button onClick={this.props.onPrintBadge} disabled={!canPrint} className="btn btn-default">
                             {T.translate("edit_ticket.print")}
                         </button>
                     </div>

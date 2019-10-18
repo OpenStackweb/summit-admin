@@ -31,6 +31,7 @@ export const BADGE_DELETED              = 'BADGE_DELETED';
 export const FEATURE_BADGE_REMOVED      = 'FEATURE_BADGE_REMOVED';
 export const FEATURE_BADGE_ADDED        = 'FEATURE_BADGE_ADDED';
 export const BADGE_TYPE_CHANGED         = 'BADGE_TYPE_CHANGED';
+export const PRINT_BADGE                = 'PRINT_BADGE';
 
 
 export const REQUEST_BADGE_FEATURES       = 'REQUEST_BADGE_FEATURES';
@@ -158,6 +159,18 @@ export const removeFeatureFromBadge = (ticketId, featureId) => (dispatch, getSta
             dispatch(stopLoading());
         }
     );
+};
+
+export const printBadge = (ticketId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(createAction(PRINT_BADGE));
+
+    window.open(`https://localhost:8081/summit/${currentSummit.id}/ticket/${ticketId}?access_token=${accessToken}`, '_blank');
+
 };
 
 

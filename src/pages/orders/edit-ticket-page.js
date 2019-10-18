@@ -19,7 +19,7 @@ import { getSummitById }  from '../../actions/summit-actions';
 import { getTicket, refundTicket, saveTicket, reassignTicket, addBadgeToTicket } from "../../actions/ticket-actions";
 import TicketForm from "../../components/forms/ticket-form";
 import BadgeForm from "../../components/forms/badge-form";
-import {getBadgeFeatures, getBadgeTypes, deleteBadge, addFeatureToBadge, removeFeatureFromBadge, changeBadgeType} from "../../actions/badge-actions";
+import {getBadgeFeatures, getBadgeTypes, deleteBadge, addFeatureToBadge, removeFeatureFromBadge, changeBadgeType, printBadge} from "../../actions/badge-actions";
 import Swal from "sweetalert2";
 import NoMatchPage from "../no-match-page";
 import { Input } from 'openstack-uicore-foundation/lib/components'
@@ -36,6 +36,7 @@ class EditTicketPage extends React.Component {
             refund_amount: 0
         };
 
+        this.handlePrintBadge = this.handlePrintBadge.bind(this);
         this.handleAddBadgeToTicket = this.handleAddBadgeToTicket.bind(this);
         this.handleDeleteBadge = this.handleDeleteBadge.bind(this);
         this.handleRefundTicket = this.handleRefundTicket.bind(this);
@@ -59,6 +60,13 @@ class EditTicketPage extends React.Component {
         if (oldId != newId) {
             this.props.getTicket(newId);
         }
+    }
+
+    handlePrintBadge(ev) {
+        let {entity} = this.props;
+        ev.preventDefault();
+
+        this.props.printBadge(entity.id);
     }
 
     handleRefundChange(ev) {
@@ -174,6 +182,8 @@ class EditTicketPage extends React.Component {
                             history={this.props.history}
                             currentSummit={currentSummit}
                             entity={entity.badge}
+                            canPrint={entity.owner && entity.badge}
+                            onPrintBadge={this.handlePrintBadge}
                             onTypeChange={this.props.changeBadgeType}
                             onFeatureLink={this.props.addFeatureToBadge}
                             onFeatureUnLink={this.props.removeFeatureFromBadge}
@@ -206,6 +216,7 @@ export default connect (
         addFeatureToBadge,
         removeFeatureFromBadge,
         changeBadgeType,
-        addBadgeToTicket
+        addBadgeToTicket,
+        printBadge
     }
 )(EditTicketPage);

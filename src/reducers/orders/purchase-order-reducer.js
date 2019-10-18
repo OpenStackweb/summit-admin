@@ -14,7 +14,7 @@
 import
 {
     RECEIVE_PURCHASE_ORDER,
-    RESET_PURCHASE_ORDER_FORM
+    RESET_PURCHASE_ORDER_FORM, UPDATE_PURCHASE_ORDER
 } from '../../actions/order-actions';
 
 
@@ -94,6 +94,9 @@ const purchaseOrderReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  entity: {...entity}, errors: {} };
         }
         break;
+        case UPDATE_PURCHASE_ORDER: {
+            return {...state,  entity: {...payload}, errors: {} };
+        }
         case VALIDATE: {
             return {...state,  errors: payload.errors };
         }
