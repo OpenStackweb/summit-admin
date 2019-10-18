@@ -75,7 +75,7 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
         break;
         case RECEIVE_TICKET: {
             let entity = {...payload.response};
-            let bought_date = epochToMoment(entity.bought_date).format('MMMM Do YYYY, h:mm:ss a');
+            let bought_date = entity.bought_date ? epochToMoment(entity.bought_date).format('MMMM Do YYYY, h:mm:ss a') : null;
             let owner_full_name = '';
             let owner_email = '';
             let promocode_name = 'N/A';

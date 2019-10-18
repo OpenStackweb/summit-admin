@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getTicket, refundTicket, assignTicket, reassignTicket, addBadgeToTicket } from "../../actions/ticket-actions";
+import { getTicket, refundTicket, saveTicket, reassignTicket, addBadgeToTicket } from "../../actions/ticket-actions";
 import TicketForm from "../../components/forms/ticket-form";
 import BadgeForm from "../../components/forms/badge-form";
 import {getBadgeFeatures, getBadgeTypes, deleteBadge, addFeatureToBadge, removeFeatureFromBadge, changeBadgeType} from "../../actions/badge-actions";
@@ -112,7 +112,7 @@ class EditTicketPage extends React.Component {
 
         let breadcrumb = `...${entity.number.slice(-20)}`;
 
-        if (!entity) return (<div></div>);
+        if (!entity || !entity.id) return (<div></div>);
         if (entity.order_id != currentOrder.id && !loading) return (<NoMatchPage />)
 
         return(
@@ -145,7 +145,7 @@ class EditTicketPage extends React.Component {
                     entity={entity}
                     errors={errors}
                     onReassing={this.props.reassignTicket}
-                    onAssing={this.props.assignTicket}
+                    onSaveTicket={this.props.saveTicket}
                 />
 
                 <br/>
@@ -198,7 +198,7 @@ export default connect (
         getSummitById,
         getTicket,
         refundTicket,
-        assignTicket,
+        saveTicket,
         reassignTicket,
         deleteBadge,
         getBadgeFeatures,

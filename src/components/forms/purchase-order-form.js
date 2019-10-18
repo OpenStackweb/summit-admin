@@ -26,7 +26,7 @@ class PurchaseOrderForm extends React.Component {
         this.state = {
             entity: {...props.entity},
             errors: props.errors,
-            showSection: 'main',
+            showSection: 'billing',
         };
 
         this.handleTicketEdit = this.handleTicketEdit.bind(this);
@@ -170,11 +170,11 @@ class PurchaseOrderForm extends React.Component {
                     <div className="col-md-4">
                         <label> {T.translate("edit_purchase_order.owner_surname")}</label>
                         <Input
-                            id="owner_surname"
-                            value={entity.owner_surname}
+                            id="owner_last_name"
+                            value={entity.owner_last_name}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('owner_surname')}
+                            error={this.hasErrors('owner_last_name')}
                         />
                     </div>
                 </div>

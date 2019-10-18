@@ -87,7 +87,7 @@ export const getTicket = (ticketId) => (dispatch, getState) => {
 };
 
 
-export const assignTicket = (orderId, ticketId, attendee) => (dispatch, getState) => {
+export const saveTicket = (orderId, ticket) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -97,11 +97,13 @@ export const assignTicket = (orderId, ticketId, attendee) => (dispatch, getState
         access_token : accessToken,
     };
 
+    let normalizedEntity = normalizeTicket(ticket);
+
     putRequest(
         null,
-        createAction(TICKET_MEMBER_ASSIGNED),
-        `${window.API_BASE_URL}/api/v1/summits/all/orders/${orderId}/tickets/${ticketId}/attendee`,
-        attendee,
+        createAction(TICKET_UPDATED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/orders/${orderId}/tickets/${ticket.id}`,
+        normalizedEntity,
         authErrorHandler
     )(params)(dispatch)
         .then((payload) => {
@@ -189,6 +191,25 @@ export const addBadgeToTicket = (ticketId) => (dispatch, getState) => {
     );
 };
 
+
+const normalizeTicket = (entity) => {
+    let normalizedEntity = {...entity};
+
+    delete(normalizedEntity.id);
+    delete(normalizedEntity.badge);
+    delete(normalizedEntity.ticket_type);
+    delete(normalizedEntity.owner);
+    delete(normalizedEntity.owner_id);
+    delete(normalizedEntity.owner_full_name);
+    delete(normalizedEntity.created);
+    delete(normalizedEntity.last_edited);
+    delete(normalizedEntity.promocode);
+    delete(normalizedEntity.promocode_id);
+    delete(normalizedEntity.promocode_name);
+
+    return normalizedEntity;
+
+}
 
 
 /**************************   TICKET TYPES   ******************************************/

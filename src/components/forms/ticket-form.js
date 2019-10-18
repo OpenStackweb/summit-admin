@@ -68,10 +68,7 @@ class TicketForm extends React.Component {
         let entity = {...this.state.entity};
         ev.preventDefault();
 
-        let {attendee_first_name, attendee_last_name, attendee_email} = entity;
-        let attendee = {attendee_first_name, attendee_last_name, attendee_email}
-
-        this.props.onAssing(entity.order_id, entity.id, attendee);
+        this.props.onSaveTicket(entity.order_id, entity);
     }
 
 
