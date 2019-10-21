@@ -169,7 +169,7 @@ export const printBadge = (ticketId) => (dispatch, getState) => {
 
     dispatch(createAction(PRINT_BADGE));
 
-    window.open(`https://localhost:8081/summit/${currentSummit.id}/ticket/${ticketId}?access_token=${accessToken}`, '_blank');
+    window.open(`${process.env['PRINT_APP_URL']}/summit/${currentSummit.id}/ticket/${ticketId}?access_token=${accessToken}`, '_blank');
 
 };
 
