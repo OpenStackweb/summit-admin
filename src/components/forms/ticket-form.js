@@ -100,7 +100,7 @@ class TicketForm extends React.Component {
         let {entity} = this.state;
         let member = entity.member ? entity.member : (entity.owner ? entity.owner.member : null);
 
-        let canReassing = (entity.owner && entity.member && entity.member.id && entity.member.id != entity.owner.member.id);
+        let canReassing = (entity.owner && entity.member && entity.member.id && entity.member.id != entity.owner.member_id);
 
         return (
             <form className="ticket-form">

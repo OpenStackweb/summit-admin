@@ -86,8 +86,8 @@ class SummitDashboardPage extends React.Component {
                     <hr/>
                     <h4>{T.translate("dashboard.dates")}</h4>
                     <div className="row">
-                        <div className="col-md-3"> {currentSummit.time_zone.name} </div>
-                        <div className="col-md-4"> {this.getFormattedTime(this.state.localtime / 1000)} </div>
+                        <div className="col-md-6"> {currentSummit.time_zone.name} </div>
+                        <div className="col-md-6"> {this.getFormattedTime(this.state.localtime / 1000)} </div>
                     </div>
                     <div className={'row ' + this.getTimeClass(currentSummit.start_date, currentSummit.end_date)}>
                         <div className="col-md-2"> <i className="fa fa-calendar"></i> {T.translate("general.summit")} </div>
