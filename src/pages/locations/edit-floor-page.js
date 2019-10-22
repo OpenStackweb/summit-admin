@@ -18,7 +18,7 @@ import T from "i18n-react/dist/i18n-react";
 import Swal from "sweetalert2";
 import FloorForm from '../../components/forms/floor-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getFloor, resetFloorForm, saveFloor, deleteRoom } from "../../actions/location-actions";
+import { getFloor, resetFloorForm, saveFloor, deleteRoom, attachFloorImage, deleteFloorImage } from "../../actions/location-actions";
 
 class EditFloorPage extends React.Component {
 
@@ -68,7 +68,7 @@ class EditFloorPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, currentLocation, entity, errors, match} = this.props;
+        let {currentSummit, currentLocation, entity, errors, match, attachFloorImage, deleteFloorImage} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
@@ -86,6 +86,8 @@ class EditFloorPage extends React.Component {
                     errors={errors}
                     onSubmit={this.props.saveFloor}
                     onRoomDelete={this.handleRoomDelete}
+                    onAttach={attachFloorImage}
+                    onRemoveImage={deleteFloorImage}
                 />
                 }
             </div>
@@ -106,6 +108,8 @@ export default connect (
         getFloor,
         resetFloorForm,
         saveFloor,
-        deleteRoom
+        deleteRoom,
+        attachFloorImage,
+        deleteFloorImage
     }
 )(EditFloorPage);

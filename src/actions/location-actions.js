@@ -53,6 +53,8 @@ export const UPDATE_FLOOR         = 'UPDATE_FLOOR';
 export const FLOOR_UPDATED        = 'FLOOR_UPDATED';
 export const FLOOR_ADDED          = 'FLOOR_ADDED';
 export const FLOOR_DELETED        = 'FLOOR_DELETED';
+export const FLOOR_IMAGE_ATTACHED = 'FLOOR_IMAGE_ATTACHED';
+export const FLOOR_IMAGE_DELETED  = 'FLOOR_IMAGE_DELETED';
 
 export const RECEIVE_ROOM        = 'RECEIVE_ROOM';
 export const RESET_ROOM_FORM     = 'RESET_ROOM_FORM';
@@ -401,7 +403,7 @@ export const saveFloor = (locationId, entity, continueAdding) => (dispatch, getS
                 ));
             });
     }
-}
+};
 
 export const deleteFloor = (locationId, floorId) => (dispatch, getState) => {
 
@@ -424,6 +426,76 @@ export const deleteFloor = (locationId, floorId) => (dispatch, getState) => {
     );
 };
 
+
+export const attachFloorImage = (locationId, entity, file) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let normalizedEntity = normalizeFloorEntity(entity);
+
+    let url = `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/floors`;
+
+    if (entity.id) {
+        dispatch(uploadFloorFile(locationId, entity, file));
+    } else {
+        return postRequest(
+            createAction(UPDATE_FLOOR),
+            createAction(FLOOR_ADDED),
+            `${url}?access_token=${accessToken}`,
+            normalizedEntity,
+            authErrorHandler,
+            entity
+        )({})(dispatch)
+            .then((payload) => {
+                    dispatch(uploadFloorFile(locationId, payload.response, file));
+                }
+            );
+    }
+};
+
+const uploadFloorFile = (locationId, entity, file) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    postRequest(
+        null,
+        createAction(FLOOR_IMAGE_ATTACHED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/floors/${entity.id}/image?access_token=${accessToken}`,
+        file,
+        authErrorHandler,
+        {image: entity.image}
+    )({})(dispatch)
+        .then(() => {
+            dispatch(stopLoading());
+            history.push(`/app/summits/${currentSummit.id}/locations/${locationId}/floors/${entity.id}`);
+        });
+};
+
+export const deleteFloorImage = (locationId, floorId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(FLOOR_IMAGE_DELETED)({floorId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/floors/${floorId}/image`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
 const normalizeFloorEntity = (entity) => {
     let normalizedEntity = {...entity};
 
@@ -434,55 +506,6 @@ const normalizeFloorEntity = (entity) => {
 
 
 /**************************************** ROOMS *********************************************/
-
-export const attachRoomImage = (locationId, entity, file) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-
-    dispatch(startLoading());
-
-    let normalizedEntity = normalizeRoomEntity(entity);
-
-    let url = `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}`;
-    url += (entity.class_name == 'SummitVenueRoom') ? `/rooms` : `/bookable-rooms`;
-
-    if (entity.id) {
-        dispatch(uploadRoomFile(locationId, entity, file));
-    } else {
-        return postRequest(
-            createAction(UPDATE_ROOM),
-            createAction(ROOM_ADDED),
-            `${url}?access_token=${accessToken}`,
-            normalizedEntity,
-            authErrorHandler,
-            entity
-        )({})(dispatch)
-            .then((payload) => {
-                    dispatch(uploadRoomFile(locationId, payload.response, file));
-                }
-            );
-    }
-}
-
-const uploadRoomFile = (locationId, entity, file) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-
-    postRequest(
-        null,
-        createAction(ROOM_IMAGE_ATTACHED),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/rooms/${entity.id}/image?access_token=${accessToken}`,
-        file,
-        authErrorHandler,
-        {image: entity.image}
-    )({})(dispatch)
-        .then(() => {
-            dispatch(stopLoading());
-            history.push(`/app/summits/${currentSummit.id}/locations/${locationId}/rooms/${entity.id}`);
-        });
-}
 
 
 export const getRoom = (locationId, roomId) => (dispatch, getState) => {
@@ -596,7 +619,56 @@ export const deleteRoom = (locationId, roomId) => (dispatch, getState) => {
     );
 };
 
-export const deleteImage = (locationId, roomId) => (dispatch, getState) => {
+export const attachRoomImage = (locationId, entity, file) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let normalizedEntity = normalizeRoomEntity(entity);
+
+    let url = `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}`;
+    url += (entity.class_name == 'SummitVenueRoom') ? `/rooms` : `/bookable-rooms`;
+
+    if (entity.id) {
+        dispatch(uploadRoomFile(locationId, entity, file));
+    } else {
+        return postRequest(
+            createAction(UPDATE_ROOM),
+            createAction(ROOM_ADDED),
+            `${url}?access_token=${accessToken}`,
+            normalizedEntity,
+            authErrorHandler,
+            entity
+        )({})(dispatch)
+            .then((payload) => {
+                    dispatch(uploadRoomFile(locationId, payload.response, file));
+                }
+            );
+    }
+};
+
+const uploadRoomFile = (locationId, entity, file) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    postRequest(
+        null,
+        createAction(ROOM_IMAGE_ATTACHED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/rooms/${entity.id}/image?access_token=${accessToken}`,
+        file,
+        authErrorHandler,
+        {image: entity.image}
+    )({})(dispatch)
+        .then(() => {
+            dispatch(stopLoading());
+            history.push(`/app/summits/${currentSummit.id}/locations/${locationId}/rooms/${entity.id}`);
+        });
+};
+
+export const deleteRoomImage = (locationId, roomId) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;

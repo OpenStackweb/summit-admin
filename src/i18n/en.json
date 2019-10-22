@@ -671,6 +671,7 @@
     "name"              : "Name",
     "number"            : "Number",
     "description"       : "Description",
+    "image"             : "Image",
     "floor"             : "Floor",
     "floors"            : "Floors",
     "floor_saved"       : "Floor saved successfully.",

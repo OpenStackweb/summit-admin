@@ -14,7 +14,7 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { Input, TextEditor, Panel, Table } from 'openstack-uicore-foundation/lib/components'
+import { Input, TextEditor, Panel, Table, UploadInput } from 'openstack-uicore-foundation/lib/components'
 import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/methods'
 
 
@@ -28,6 +28,8 @@ class FloorForm extends React.Component {
             showRooms: false,
         };
 
+        this.handleUploadFile = this.handleUploadFile.bind(this);
+        this.handleRemoveFile = this.handleRemoveFile.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleRoomEdit = this.handleRoomEdit.bind(this);
@@ -99,6 +101,24 @@ class FloorForm extends React.Component {
         history.push(`/app/summits/${currentSummit.id}/locations/${locationId}/rooms/new`);
     }
 
+    handleUploadFile(file) {
+        let entity = {...this.state.entity};
+        let {locationId} = this.props;
+
+        let formData = new FormData();
+        formData.append('file', file);
+        this.props.onAttach(locationId, entity, formData);
+    }
+
+    handleRemoveFile(ev) {
+        let entity = {...this.state.entity};
+        let {locationId} = this.props;
+
+        entity.image = '';
+        this.setState({entity});
+        this.props.onRemoveImage(locationId, entity.id);
+    }
+
     render() {
         let {entity, showRooms} = this.state;
 
@@ -114,7 +134,9 @@ class FloorForm extends React.Component {
                 edit: {onClick: this.handleRoomEdit},
                 delete: { onClick: this.props.onRoomDelete }
             }
-        }
+        };
+
+        let image_url = entity.image != null ? entity.image.url : '';
 
         return (
             <form className="floor-form">
@@ -153,6 +175,20 @@ class FloorForm extends React.Component {
                         />
                     </div>
                 </div>
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <label> {T.translate("edit_floor.image")} </label>
+                        <UploadInput
+                            value={entity.image}
+                            handleUpload={this.handleUploadFile}
+                            handleRemove={this.handleRemoveFile}
+                            className="dropzone col-md-6"
+                            multiple={false}
+                            accept="image/*"
+                        />
+                    </div>
+                </div>
+                <br/>
 
                 {entity.id != 0 &&
                 <Panel show={showRooms} title={T.translate("edit_location.rooms")}

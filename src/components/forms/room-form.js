@@ -161,7 +161,9 @@ class RoomForm extends React.Component {
             {label: 'USD', value: 'USD'},
             {label: 'EUR', value: 'EUR'},
         ];
+
         let image_url = entity.image != null ? entity.image.url : '';
+
         return (
             <form className="room-form">
                 <input type="hidden" id="id" value={entity.id} />
