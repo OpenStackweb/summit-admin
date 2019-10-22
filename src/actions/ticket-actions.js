@@ -80,8 +80,9 @@ export const getTicket = (ticketId) => (dispatch, getState) => {
         createAction(RECEIVE_TICKET),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets/${ticketId}`,
         authErrorHandler
-    )(params)(dispatch).then(() => {
+    )(params)(dispatch).then((data) => {
             dispatch(stopLoading());
+            return data;
         }
     );
 };

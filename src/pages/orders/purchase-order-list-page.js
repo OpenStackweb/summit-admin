@@ -17,6 +17,8 @@ import T from 'i18n-react/dist/i18n-react';
 import { Pagination } from 'react-bootstrap';
 import { FreeTextSearch, Table } from 'openstack-uicore-foundation/lib/components';
 import { getPurchaseOrders } from "../../actions/order-actions";
+import QrReaderInput from '../../components/inputs/qr-reader-input';
+import { getTicket } from '../../actions/ticket-actions'
 
 
 class PurchaseOrderListPage extends React.Component {
@@ -24,6 +26,7 @@ class PurchaseOrderListPage extends React.Component {
     constructor(props) {
         super(props);
 
+        this.handleQRScan = this.handleQRScan.bind(this);
         this.handleEdit = this.handleEdit.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
         this.handleSort = this.handleSort.bind(this);
@@ -47,6 +50,16 @@ class PurchaseOrderListPage extends React.Component {
         if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
             this.props.getPurchaseOrders();
         }
+    }
+
+    handleQRScan(qrCode) {
+        let {currentSummit, history} = this.props;
+
+        this.props.getTicket(qrCode).then(
+            (data) => {
+                history.push(`/app/summits/${currentSummit.id}/purchase-orders/${data.order_id}/ticket/${data.id}`);
+            }
+        );
     }
 
     handleEdit(purchaseOrderId) {
@@ -111,7 +124,10 @@ class PurchaseOrderListPage extends React.Component {
                             onSearch={this.handleSearch}
                         />
                     </div>
-                    <div className="col-md-6 text-right">
+                    <div className="col-md-2">
+                        <QrReaderInput onScan={this.handleQRScan} />
+                    </div>
+                    <div className="col-md-4 text-right">
                         <button className="btn btn-primary" onClick={this.handleNewOrder}>
                             {T.translate("purchase_order_list.add_order")}
                         </button>
@@ -160,5 +176,6 @@ export default connect (
     mapStateToProps,
     {
         getPurchaseOrders,
+        getTicket
     }
 )(PurchaseOrderListPage);
