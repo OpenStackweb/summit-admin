@@ -82,7 +82,7 @@ export const getTicket = (ticketId) => (dispatch, getState) => {
         authErrorHandler
     )(params)(dispatch).then((data) => {
             dispatch(stopLoading());
-            return data;
+            return data.response;
         }
     );
 };

@@ -57,7 +57,7 @@ class PurchaseOrderListPage extends React.Component {
 
         this.props.getTicket(qrCode).then(
             (data) => {
-                history.push(`/app/summits/${currentSummit.id}/purchase-orders/${data.order_id}/ticket/${data.id}`);
+                history.push(`/app/summits/${currentSummit.id}/purchase-orders/${data.order_id}/tickets/${data.id}`);
             }
         );
     }
