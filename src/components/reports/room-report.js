@@ -15,6 +15,7 @@ import React from 'react'
 import moment from 'moment-timezone'
 import T from 'i18n-react/dist/i18n-react'
 import { Table } from 'openstack-uicore-foundation/lib/components'
+import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/methods'
 const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
 import {groupByDate} from '../../utils/methods'
@@ -77,7 +78,7 @@ class RoomReport extends React.Component {
     }
 
     preProcessData(data, extraData, forExport=false) {
-
+        let {currentSummit} = this.props;
         let flatData = flattenData(data);
 
         let columns = [
@@ -96,9 +97,12 @@ class RoomReport extends React.Component {
 
         let processedData = flatData.map(it => {
 
-            let date = moment(it.startDate).format('dddd Do');
-            let date_simple = moment(it.startDate).format('YYYY-M-D');
-            let time = moment(it.startDate).format('h:mm a') + ' - ' + moment(it.endDate).format('h:mm a');
+            let momentStartDate = moment(it.startDate).tz(currentSummit.time_zone_id);
+            let momentEndDate = moment(it.endDate).tz(currentSummit.time_zone_id);
+
+            let date = momentStartDate.format('dddd Do');
+            let date_simple = momentStartDate.format('YYYY-M-D');
+            let time = momentStartDate.format('h:mm a') + ' - ' + momentEndDate.format('h:mm a');
             let capacity = forExport ? it.location_venueroom_capacity : <div className="text-center">{it.location_venueroom_capacity + ''}</div>;
             let speakers = forExport ? it.speakerCount : <div className="text-center">{it.speakerCount + ''}</div>;
             let head_count = forExport ? it.headCount : <div className="text-center">{it.headCount + ''}</div>;

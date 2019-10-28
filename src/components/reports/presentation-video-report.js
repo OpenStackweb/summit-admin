@@ -59,11 +59,13 @@ class PresentationVideoReport extends React.Component {
     }
 
     preProcessData(data, extraData, forExport=false) {
-
+        let {currentSummit} = this.props;
         let flatData = flattenData(data);
 
         let processedData = flatData.map(it => {
-            let time = moment(it.startDate).format('h:mm a') + ' - ' + moment(it.endDate).format('h:mm a');
+            let momentStartDate = moment(it.startDate).tz(currentSummit.time_zone_id);
+            let momentEndDate = moment(it.endDate).tz(currentSummit.time_zone_id);
+            let time = momentStartDate.format('h:mm a') + ' - ' + momentEndDate.format('h:mm a');
 
             return ({
                 id: it.id,
