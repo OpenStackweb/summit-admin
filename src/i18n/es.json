@@ -206,6 +206,7 @@
     "time_zone"                       : "Time Zone",
     "start_date"                      : "Summit Start",
     "end_date"                        : "Summit End",
+    "reassign_ticket_till_date"       : "Reassign Ticket Limit Date",
     "registration_begin_date"         : "Registration Start",
     "registration_end_date"           : "Registration End",
     "schedule_start_date"             : "Default date to show on schedule page?",

@@ -430,7 +430,7 @@ class SummitForm extends React.Component {
                         </div>
                     </div>
                     <div className="row form-group">
-                        <div className="col-md-6">
+                        <div className="col-md-4">
                             <label> {T.translate("edit_summit.schedule_start_date")} </label>
                             <DateTimePicker
                                 id="schedule_start_date"
@@ -442,7 +442,7 @@ class SummitForm extends React.Component {
                                 error={this.hasErrors('schedule_start_date')}
                             />
                         </div>
-                        <div className="col-md-6">
+                        <div className="col-md-4">
                             <label> {T.translate("edit_summit.start_showing_venues_date")} </label>
                             <DateTimePicker
                                 id="start_showing_venues_date"
@@ -452,6 +452,18 @@ class SummitForm extends React.Component {
                                 timezone={entity.time_zone_id}
                                 value={epochToMomentTimeZone(entity.start_showing_venues_date, entity.time_zone_id)}
                                 error={this.hasErrors('start_showing_venues_date')}
+                            />
+                        </div>
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_summit.reassign_ticket_till_date")} </label>
+                            <DateTimePicker
+                                id="reassign_ticket_till_date"
+                                disabled={!dates_enabled}
+                                onChange={this.handleChange}
+                                format={{date:"YYYY-MM-DD", time: "HH:mm"}}
+                                timezone={entity.reassign_ticket_till_date}
+                                value={epochToMomentTimeZone(entity.reassign_ticket_till_date, entity.time_zone_id)}
+                                error={this.hasErrors('reassign_ticket_till_date')}
                             />
                         </div>
                     </div>

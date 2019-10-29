@@ -49,6 +49,7 @@ export const DEFAULT_ENTITY = {
     presentation_votes_count: 0,
     presentations_submitted_count: 0,
     published_events_count: 0,
+    reassign_ticket_till_date: 0,
     registration_begin_date: 0,
     registration_end_date: 0,
     registration_link: '',
