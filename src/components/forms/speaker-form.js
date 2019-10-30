@@ -109,19 +109,33 @@ class SpeakerForm extends React.Component {
 
     getPresentations(summitId) {
         let presentations = this.state.entity.all_presentations.filter( p => p.summit_id === summitId );
+        let speakerId = this.state.entity.id;
         let {history} = this.props;
 
         return (
             <div>
                 Presentations:
-                {presentations.map(p =>
-                <li key={'pres' + p.id}>
-                    <a href="" onClick={() => {history.push(`/app/summits/${summitId}/events/${p.id}`)}} >
-                        {p.title}
-                    </a>
-                    <i> - {p.status}</i>
-                </li>
-                )}
+                {presentations.map(p => {
+                    let participation = '';
+                    if (p.speakers.includes(speakerId)) {
+                        participation = 'Speaker';
+                    }
+
+                    if (p.moderator_speaker_id == speakerId) {
+                        participation += (participation) ? ' & Moderator' : 'Moderator';
+                    }
+
+                    return (
+                        <li key={'pres' + p.id}>
+                            <a href="" onClick={() => {
+                                history.push(`/app/summits/${summitId}/events/${p.id}`)
+                            }}>
+                                {p.title}
+                            </a>
+                            <i> - {participation}</i>
+                        </li>
+                    );
+                })}
                 <li>
                     <a href="" onClick={() => {history.push(`/app/summits/${summitId}/events/new`)}}>
                         Add new

@@ -288,6 +288,7 @@ const normalizeEntity = (entity) => {
     delete normalizedEntity['all_presentations'];
     delete normalizedEntity['moderated_presentations'];
     delete normalizedEntity['all_moderated_presentations'];
+    delete normalizedEntity['other_presentation_links'];
     delete normalizedEntity['affiliations'];
     delete normalizedEntity['gender'];
     delete normalizedEntity['pic'];

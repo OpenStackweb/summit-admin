@@ -78,6 +78,16 @@ const speakerReducer = (state = DEFAULT_STATE, action) => {
                 }
             }
 
+            if (entity.hasOwnProperty('presentations')) {
+                entity.all_presentations = entity.presentations;
+            }
+
+            if (entity.hasOwnProperty('moderated_presentations')) {
+                entity.all_presentations = [...entity.all_presentations, ...entity.moderated_presentations];
+            }
+
+            entity.all_presentations = entity.all_presentations.filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))===i);
+
             if (entity.hasOwnProperty('affiliations')) {
                 entity.affiliations = entity.affiliations.map(a => {
                     let affiliationTmp = {};
