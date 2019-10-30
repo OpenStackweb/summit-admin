@@ -53,6 +53,8 @@ export const DEFAULT_ENTITY = {
     registration_begin_date: 0,
     registration_end_date: 0,
     registration_link: '',
+    registration_disclaimer_content: '',
+    registration_disclaimer_mandatory: false,
     schedule_event_detail_url: '',
     schedule_page_url: '',
     schedule_start_date: 0,

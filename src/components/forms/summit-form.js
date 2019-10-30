@@ -243,12 +243,12 @@ class SummitForm extends React.Component {
                         />
                     </div>
                     <div className="col-md-4">
-                        <label> {T.translate("edit_summit.registration_link")}</label>
+                        <label> {T.translate("edit_summit.slug")}</label>
                         <Input
                             className="form-control"
-                            error={this.hasErrors('registration_link')}
-                            id="registration_link"
-                            value={entity.registration_link}
+                            error={this.hasErrors('slug')}
+                            id="slug"
+                            value={entity.slug}
                             onChange={this.handleChange}
                         />
                     </div>
@@ -259,38 +259,6 @@ class SummitForm extends React.Component {
                             error={this.hasErrors('dates_label')}
                             id="dates_label"
                             value={entity.dates_label}
-                            onChange={this.handleChange}
-                        />
-                    </div>
-                </div>
-                <div className="row form-group">
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_summit.secondary_registration_link")}</label>
-                        <Input
-                            className="form-control"
-                            error={this.hasErrors('secondary_registration_link')}
-                            id="secondary_registration_link"
-                            value={entity.secondary_registration_link}
-                            onChange={this.handleChange}
-                        />
-                    </div>
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_summit.secondary_registration_label")}</label>
-                        <Input
-                            className="form-control"
-                            error={this.hasErrors('secondary_registration_label')}
-                            id="secondary_registration_label"
-                            value={entity.secondary_registration_label}
-                            onChange={this.handleChange}
-                        />
-                    </div>
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_summit.slug")}</label>
-                        <Input
-                            className="form-control"
-                            error={this.hasErrors('slug')}
-                            id="slug"
-                            value={entity.slug}
                             onChange={this.handleChange}
                         />
                     </div>
@@ -325,6 +293,59 @@ class SummitForm extends React.Component {
                             value={entity.api_feed_key}
                             onChange={this.handleChange}
                         />
+                    </div>
+                </div>
+                <div className="row form-group">
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_summit.registration_link")}</label>
+                        <Input
+                            className="form-control"
+                            error={this.hasErrors('registration_link')}
+                            id="registration_link"
+                            value={entity.registration_link}
+                            onChange={this.handleChange}
+                        />
+                    </div>
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_summit.secondary_registration_link")}</label>
+                        <Input
+                            className="form-control"
+                            error={this.hasErrors('secondary_registration_link')}
+                            id="secondary_registration_link"
+                            value={entity.secondary_registration_link}
+                            onChange={this.handleChange}
+                        />
+                    </div>
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_summit.secondary_registration_label")}</label>
+                        <Input
+                            className="form-control"
+                            error={this.hasErrors('secondary_registration_label')}
+                            id="secondary_registration_label"
+                            value={entity.secondary_registration_label}
+                            onChange={this.handleChange}
+                        />
+                    </div>
+                </div>
+                <div className="row form-group">
+                    <div className="col-md-6">
+                        <label> {T.translate("edit_summit.registration_disclaimer_content")} </label>
+                        <textarea
+                            id="registration_disclaimer_content"
+                            value={entity.registration_disclaimer_content}
+                            onChange={this.handleChange}
+                            className="form-control"
+                        />
+                    </div>
+                    <div className="col-md-6 checkboxes-div">
+                        <div className="form-check abc-checkbox">
+                            <input type="checkbox" id="registration_disclaimer_mandatory"
+                                   checked={entity.registration_disclaimer_mandatory} onChange={this.handleChange}
+                                   className="form-check-input"/>
+                            <label className="form-check-label" htmlFor="registration_disclaimer_mandatory">
+                                {T.translate("edit_summit.registration_disclaimer_mandatory")}
+                            </label>
+                        </div>
                     </div>
                 </div>
                 <div className="row form-group">
