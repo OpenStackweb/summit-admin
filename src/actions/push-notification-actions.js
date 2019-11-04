@@ -34,6 +34,8 @@ export const UPDATE_PUSH_NOTIFICATION         = 'UPDATE_PUSH_NOTIFICATION';
 export const PUSH_NOTIFICATION_UPDATED        = 'PUSH_NOTIFICATION_UPDATED';
 export const PUSH_NOTIFICATION_ADDED          = 'PUSH_NOTIFICATION_ADDED';
 export const PUSH_NOTIFICATION_DELETED        = 'PUSH_NOTIFICATION_DELETED';
+export const PUSH_NOTIFICATION_APPROVED       = 'PUSH_NOTIFICATION_APPROVED';
+export const PUSH_NOTIFICATION_REJECTED       = 'PUSH_NOTIFICATION_REJECTED';
 
 
 export const getPushNotifications = ( page = 1, perPage = 10, order = 'created', orderDir = 1, filters ) => (dispatch, getState) => {
@@ -165,7 +167,7 @@ export const savePushNotification = (entity) => (dispatch, getState) => {
                 ));
             });
     }
-}
+};
 
 export const deletePushNotification = (pushNotificationId) => (dispatch, getState) => {
 
@@ -181,6 +183,52 @@ export const deletePushNotification = (pushNotificationId) => (dispatch, getStat
         null,
         createAction(PUSH_NOTIFICATION_DELETED)({pushNotificationId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/notifications/${pushNotificationId}`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+
+export const approvePushNotification = (pushNotificationId) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    dispatch(startLoading());
+
+    putRequest(
+        null,
+        createAction(PUSH_NOTIFICATION_APPROVED)({pushNotificationId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/notifications/${pushNotificationId}/approve`,
+        {},
+        authErrorHandler
+    )(params)(dispatch)
+        .then((payload) => {
+            dispatch(stopLoading());
+        });
+};
+
+
+export const rejectPushNotification = (pushNotificationId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(PUSH_NOTIFICATION_REJECTED)({pushNotificationId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/notifications/${pushNotificationId}/approve`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

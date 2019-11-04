@@ -15,7 +15,9 @@ import
 {
     RECEIVE_PUSH_NOTIFICATIONS,
     REQUEST_PUSH_NOTIFICATIONS,
-    PUSH_NOTIFICATION_DELETED
+    PUSH_NOTIFICATION_DELETED,
+    PUSH_NOTIFICATION_APPROVED,
+    PUSH_NOTIFICATION_REJECTED
 } from '../../actions/push-notification-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
@@ -60,8 +62,10 @@ const pushNotificationListReducer = (state = DEFAULT_STATE, action) => {
                     id: n.id,
                     created: created,
                     message: n.message,
-                    approved: n.approved ? check : cross,
-                    is_sent: n.is_sent ? check : cross,
+                    approved: n.approved,
+                    is_sent: n.is_sent,
+                    approved_tag: n.approved ? check : cross,
+                    is_sent_tag: n.is_sent ? check : cross,
                     sent_date: sent,
                     priority: n.priority,
                     channel: n.channel,
@@ -74,6 +78,34 @@ const pushNotificationListReducer = (state = DEFAULT_STATE, action) => {
         case PUSH_NOTIFICATION_DELETED: {
             let {pushNotificationId} = payload;
             return {...state, pushNotifications: state.pushNotifications.filter(t => t.id != pushNotificationId)};
+        }
+        break;
+        case PUSH_NOTIFICATION_APPROVED: {
+            let {pushNotificationId} = payload;
+            let check = '<i class="fa fa-check" aria-hidden="true"></i>';
+
+            let pushNotifications = state.pushNotifications.map(p => {
+                if (p.id == pushNotificationId) {
+                    return {...p, approved: true, approved_tag: check};
+                } else {
+                    return p;
+                }
+            });
+            return {...state, pushNotifications: pushNotifications};
+        }
+        break;
+        case PUSH_NOTIFICATION_REJECTED: {
+            let {pushNotificationId} = payload;
+            let cross = '<i class="fa fa-times" aria-hidden="true"></i>';
+
+            let pushNotifications = state.pushNotifications.map(p => {
+                if (p.id == pushNotificationId) {
+                    return {...p, approved: false, approved_tag: cross};
+                } else {
+                    return p;
+                }
+            });
+            return {...state, pushNotifications: pushNotifications};
         }
         break;
         default:

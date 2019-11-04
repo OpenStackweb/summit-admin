@@ -833,6 +833,7 @@
     "push_notification_list"  : "Push Notification List",
     "no_push_notifications"   : "No push notifications found for current search criteria.",
     "add_push_notification"   : "Add Push Notification",
+    "id"                      : "ID",
     "created"                 : "Created",
     "message"                 : "Message",
     "approved"                : "Approved",
@@ -841,6 +842,8 @@
     "priority"                : "Priority",
     "channel"                 : "Channel",
     "remove_warning"          : "Are you sure you want to delete push notification ",
+    "approve_warning"         : "Are you sure you want to approve push notification ",
+    "yes_approve"             : "Yes, approve.",
     "placeholders": {
       "select_channel" : "Select Channel"
     }
