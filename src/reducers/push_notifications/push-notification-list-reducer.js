@@ -51,7 +51,7 @@ const pushNotificationListReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case RECEIVE_PUSH_NOTIFICATIONS: {
-            let { total } = payload.response;
+            let { current_page, total, last_page } = payload.response;
             let pushNotifications = payload.response.data.map(n => {
                 let check = '<i class="fa fa-check" aria-hidden="true"></i>';
                 let cross = '<i class="fa fa-times" aria-hidden="true"></i>';
@@ -72,7 +72,13 @@ const pushNotificationListReducer = (state = DEFAULT_STATE, action) => {
                 };
             })
 
-            return {...state, pushNotifications: pushNotifications, totalPushNotifications: total };
+            return {
+                ...state,
+                pushNotifications: pushNotifications,
+                totalPushNotifications: total,
+                page: current_page,
+                lastPage: last_page,
+            };
         }
         break;
         case PUSH_NOTIFICATION_DELETED: {

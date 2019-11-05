@@ -38,7 +38,7 @@ export const PUSH_NOTIFICATION_APPROVED       = 'PUSH_NOTIFICATION_APPROVED';
 export const PUSH_NOTIFICATION_REJECTED       = 'PUSH_NOTIFICATION_REJECTED';
 
 
-export const getPushNotifications = ( page = 1, perPage = 10, order = 'created', orderDir = 1, filters ) => (dispatch, getState) => {
+export const getPushNotifications = ( page = 1, perPage = 10, order = 'created', orderDir = -1, filters ) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
