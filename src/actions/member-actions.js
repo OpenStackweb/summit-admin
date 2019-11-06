@@ -90,14 +90,13 @@ export const getMembersForEventCSV = ( event ) => (dispatch, getState) => {
     let roomName = (event.location && event.location.venueroom) ? event.location.venueroom.name : 'N/A';
 
     let filename = `Room ${roomName}-Event ${event.id}-Attendees.csv`;
-    let header = `Room ${roomName},${date},${time},${event.title}`;
+    let header = `Room "${roomName}",${date},${time},"${event.title}"`;
 
     dispatch(startLoading());
 
     let params = {
         access_token : accessToken,
-        expand: 'affiliation_name',
-        columns: 'id,first_name,last_name,email,affiliation_name',
+        columns: 'id,first_name,last_name,email,affiliations',
         'filter[]': [`schedule_event_id==${event.id}`]
     };
 
