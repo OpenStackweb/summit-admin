@@ -12,6 +12,7 @@
  **/
 import {
     getRequest,
+    getCSV,
     putRequest,
     postRequest,
     deleteRequest,
@@ -20,14 +21,94 @@ import {
     startLoading,
     showMessage,
     showSuccessMessage,
-    authErrorHandler,
+    authErrorHandler
 } from "openstack-uicore-foundation/lib/methods";
+import moment from "moment-timezone";
 
 
+export const REQUEST_MEMBERS          = 'REQUEST_MEMBERS';
+export const RECEIVE_MEMBERS          = 'RECEIVE_MEMBERS';
 export const AFFILIATION_SAVED        = 'AFFILIATION_SAVED';
 export const AFFILIATION_DELETED      = 'AFFILIATION_DELETED';
 export const AFFILIATION_ADDED        = 'AFFILIATION_ADDED';
-export const ORGANIZATION_ADDED        = 'ORGANIZATION_ADDED';
+export const ORGANIZATION_ADDED       = 'ORGANIZATION_ADDED';
+
+
+export const getMembers = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+    let filter = [];
+
+    dispatch(startLoading());
+
+    if(term){
+        filter.push(`schedule_event_id==${term}`);
+    }
+
+    let params = {
+        page         : page,
+        per_page     : perPage,
+        access_token : accessToken,
+    };
+
+    if(filter.length > 0){
+        params['filter[]']= filter;
+    }
+
+    // order
+    if(order != null && orderDir != null){
+        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        params['order']= `${orderDirSign}${order}`;
+    }
+
+
+    return getRequest(
+        createAction(REQUEST_MEMBERS),
+        createAction(RECEIVE_MEMBERS),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/members`,
+        authErrorHandler,
+        {page, perPage, order, orderDir, term}
+        )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const getMembersForEventCSV = ( event ) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let momentStartDate = moment(event.startDate).tz(currentSummit.time_zone_id);
+    let momentEndDate = moment(event.endDate).tz(currentSummit.time_zone_id);
+
+    let date = momentStartDate.format('dddd Do');
+    let time = momentStartDate.format('h:mm a') + ' - ' + momentEndDate.format('h:mm a');
+    let roomName = (event.location && event.location.venueroom) ? event.location.venueroom.name : 'N/A';
+
+    let filename = `Room ${roomName}-Event ${event.id}-Attendees.csv`;
+    let header = `Room ${roomName},${date},${time},${event.title}`;
+
+    dispatch(startLoading());
+
+    let params = {
+        access_token : accessToken,
+        expand: 'affiliation_name',
+        columns: 'id,first_name,last_name,email,affiliation_name',
+        'filter[]': [`schedule_event_id==${event.id}`]
+    };
+
+
+    dispatch(getCSV(`${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/members/csv`, params, filename, header));
+};
+
+
+
+
+/******************************  AFFILIATIONS **************************************************/
 
 
 export const addOrganization = (organization, callback) => (dispatch, getState) => {

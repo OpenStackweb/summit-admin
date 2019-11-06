@@ -1,4 +1,5 @@
 .env
+.editorconfig
 dist
 .idea
 node_modules

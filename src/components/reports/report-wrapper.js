@@ -7,6 +7,7 @@ import { FreeTextSearch } from 'openstack-uicore-foundation/lib/components'
 import {exportReport, getReport} from "../../actions/report-actions";
 import T from "i18n-react/dist/i18n-react";
 import FragmentParser from "../../utils/fragmen-parser";
+import { getMembersForEventCSV } from '../../actions/member-actions'
 import {TrackFilter, RoomFilter, PublishedFilter, PublishedInFilter, StatusFilter, AttendanceFilter, MediaFilter} from '../filters'
 import ExportData from '../export'
 
@@ -297,7 +298,7 @@ const mapStateToProps = ({ currentSummitState, currentReportState }) => ({
 });
 
 const composedReportWrapper = compose(
-    connect(mapStateToProps, {getReport, exportReport}),
+    connect(mapStateToProps, {getReport, exportReport, getMembersForEventCSV}),
     wrapReport
 )
 

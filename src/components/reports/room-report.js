@@ -27,6 +27,7 @@ class RoomReport extends React.Component {
 
         this.buildReportQuery = this.buildReportQuery.bind(this);
         this.preProcessData = this.preProcessData.bind(this);
+        this.handleAttendeeList = this.handleAttendeeList.bind(this);
 
     }
 
@@ -75,6 +76,15 @@ class RoomReport extends React.Component {
 
     getName() {
         return 'Room Report';
+    }
+
+    handleAttendeeList(eventId) {
+        let {data} = this.props;
+        let event = data.find(ev => ev.id == eventId);
+
+        if (event) {
+            this.props.getMembersForEventCSV(event);
+        }
     }
 
     preProcessData(data, extraData, forExport=false) {
@@ -138,7 +148,16 @@ class RoomReport extends React.Component {
         let report_options = {
             sortCol: sortKey,
             sortDir: sortDir,
-            actions: {}
+            actions: {
+              custom: [
+                {
+                  name: 'list_attendees',
+                  tooltip: 'list attendees',
+                  icon: <i className="fa fa-download"></i>,
+                  onClick: this.handleAttendeeList,
+                }
+              ]
+            }
         };
 
         let {reportData, tableColumns} = this.preProcessData(data, null);
