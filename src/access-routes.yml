@@ -4,6 +4,7 @@ general:
   - administrators
   - summit-front-end-administrators
   - summit-room-administrators
+  - summit-registration-administrators
 
 summit-edit:
   - super-admins
@@ -14,11 +15,13 @@ speakers:
   - super-admins
   - administrators
   - summit-front-end-administrators
+  - summit-registration-administrators
 
 attendees:
   - super-admins
   - administrators
   - summit-front-end-administrators
+  - summit-registration-administrators
 
 events:
   - super-admins
@@ -44,6 +47,7 @@ tickets:
   - super-admins
   - administrators
   - summit-front-end-administrators
+  - summit-registration-administrators
 
 room-occupancy:
   - super-admins
@@ -60,5 +64,10 @@ reports:
   - super-admins
   - administrators
   - summit-front-end-administrators
+
+orders:
+  - administrators
+  - summit-front-end-administrators
+  - summit-registration-administrators
 
 

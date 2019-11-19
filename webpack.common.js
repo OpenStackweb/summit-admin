@@ -8,7 +8,7 @@ module.exports = {
     plugins: [
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
-            title: 'Summit Admin',
+            title: 'Show Admin',
             template: './src/index.ejs'
         }),
         new Dotenv({

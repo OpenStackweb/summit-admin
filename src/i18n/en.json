@@ -62,7 +62,7 @@
     }
   },
   "landing": {
-    "os_summit_admin"     : "OpenStack Summit Admin",
+    "os_summit_admin"     : "Show Admin",
     "sign_out"            : "Sign out",
     "log_in"              : "Log in",
     "not_logged_in"       : "You are not logged in. Please log in to continue:"
@@ -1134,7 +1134,8 @@
   },
   "edit_purchase_order": {
     "purchase_order"            : "Purchase Order",
-    "number"                    : "Number",
+    "number"                    : "Order Number",
+    "ticket_number"             : "Ticket Number",
     "ticket_type"               : "Ticket Type",
     "status"                    : "Status",
     "ticket_type_name"          : "Ticket Type",

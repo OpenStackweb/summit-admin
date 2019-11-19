@@ -1,7 +1,7 @@
 {
   "name": "openstack-summit-admin",
   "version": "1.0.0",
-  "description": "OpenStack Summit Admin App",
+  "description": "Show Admin App",
   "main": "index.js",
   "scripts": {
     "build-dev": "./node_modules/.bin/webpack --config webpack.dev.js",

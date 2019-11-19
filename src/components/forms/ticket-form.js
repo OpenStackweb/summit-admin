@@ -169,7 +169,7 @@ class TicketForm extends React.Component {
                 <div className="row form-group">
                     <div className="col-md-4">
                         <label> {T.translate("edit_ticket.type")}:&nbsp;</label>
-                        {entity.ticket_type.name}
+                        {entity.ticket_type ? entity.ticket_type.name : ''}
                     </div>
                     <div className="col-md-8">
                         <label> {T.translate("edit_ticket.number")}:&nbsp;</label>

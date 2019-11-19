@@ -77,6 +77,7 @@ const purchaseOrderReducer = (state = DEFAULT_STATE, action) => {
             entity.tickets = entity.tickets.map(t => {
                 let owner_full_name = 'N/A';
                 let owner_email = 'N/A';
+                let ticket_type_name = t.ticket_type ? t.ticket_type.name : 'N/A';
 
                 if (t.owner) {
                     owner_email = t.owner.email;
@@ -88,7 +89,7 @@ const purchaseOrderReducer = (state = DEFAULT_STATE, action) => {
                     }
                 }
 
-                return ({...t, ticket_type_name: t.ticket_type.name, owner_full_name, owner_email})
+                return ({...t, ticket_type_name, owner_full_name, owner_email})
             });
 
             return {...state,  entity: {...entity}, errors: {} };
