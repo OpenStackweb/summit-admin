@@ -40,7 +40,7 @@ class RoomReport extends React.Component {
         if (sortKey) {
             let querySortKey = this.translateSortKey(sortKey);
             let order = (sortDir == 1) ? '' : '-';
-            filters.ordering = order + '' + querySortKey;
+            filters.ordering = `${order}${querySortKey},start_date`;
         }
 
         let query = new Query("presentations", listFilters);
@@ -69,6 +69,9 @@ class RoomReport extends React.Component {
             case 'room':
                 sortKey = 'location__venueroom__name';
                 break;
+            case 'time':
+                sortKey = 'start_date';
+                break;
         }
 
         return sortKey;
@@ -93,7 +96,7 @@ class RoomReport extends React.Component {
 
         let columns = [
             { columnKey: 'id', value: 'Id' },
-            { columnKey: 'time', value: 'Time' },
+            { columnKey: 'time', value: 'Time', sortable: true },
             { columnKey: 'code', value: 'Code' },
             { columnKey: 'event', value: 'Event', sortable: true },
             { columnKey: 'room', value: 'Room', sortable: true },
