@@ -482,7 +482,7 @@ class SummitForm extends React.Component {
                                 disabled={!dates_enabled}
                                 onChange={this.handleChange}
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                                timezone={entity.reassign_ticket_till_date}
+                                timezone={entity.time_zone_id}
                                 value={epochToMomentTimeZone(entity.reassign_ticket_till_date, entity.time_zone_id)}
                                 error={this.hasErrors('reassign_ticket_till_date')}
                             />
