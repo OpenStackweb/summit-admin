@@ -25,7 +25,7 @@ class RoomBookingAttributeLayout extends React.Component {
         let { match } = this.props;
         return(
             <div>
-                <Breadcrumb data={{ title: T.translate("room_bookings.room_booking_attributes"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("room_bookings.room_bookings_attributes"), pathname: match.url }} ></Breadcrumb>
                 <Switch>
                     <Route strict exact path={`${match.url}/new`} component={EditRoomBookingAttributePage} />
                     <Route strict exact path={`${match.url}/:attribute_id(\\d+)`} component={EditRoomBookingAttributePage} />
