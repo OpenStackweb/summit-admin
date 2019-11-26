@@ -178,6 +178,7 @@ class EventMaterialForm extends React.Component {
                             handleRemove={this.handleRemoveFile}
                             className="dropzone col-md-6"
                             multiple={false}
+                            maxSize={60 * 1024 * 1024}
                         />
                     </div>
                     <div className="col-md-7 text-center">
