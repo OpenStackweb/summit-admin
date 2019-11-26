@@ -24,7 +24,6 @@ import { AjaxLoader, OPSessionChecker } from "openstack-uicore-foundation/lib/co
 import { getBackURL,onUserAuth, doLogin, doLogout, initLogOut, getUserInfo } from "openstack-uicore-foundation/lib/methods";
 import T from 'i18n-react';
 import CustomErrorPage from "./pages/custom-error-page";
-import ReactTooltip from 'react-tooltip'
 import history from './history'
 import exclusiveSections from 'js-yaml-loader!./exclusive-sections.yml';
 
@@ -76,7 +75,6 @@ class App extends React.PureComponent {
             <Router history={history}>
                 <div>
                     <AjaxLoader show={ this.props.loading } size={ 120 }/>
-                    <ReactTooltip delayShow={10} />
                     {isLoggedUser &&
                     <OPSessionChecker
                         clientId={window.OAUTH2_CLIENT_ID}

@@ -5,6 +5,7 @@ import { DateTimePicker, OrganizationInput } from 'openstack-uicore-foundation/l
 import { epochToMoment, formatEpoch } from 'openstack-uicore-foundation/lib/methods'
 import { addAffiliation, saveAffiliation, deleteAffiliation, addOrganization } from "../../../actions/member-actions"
 import T from "i18n-react/dist/i18n-react";
+import ReactTooltip from "react-tooltip";
 
 import './affiliationstable.css';
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
@@ -279,6 +280,7 @@ class AffiliationsTable extends React.Component {
                         </tr>
                     </tbody>
                 </table>
+                <ReactTooltip delayShow={10} />
             </div>
         );
     }
