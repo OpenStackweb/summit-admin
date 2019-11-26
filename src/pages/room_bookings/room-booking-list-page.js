@@ -74,7 +74,7 @@ class RoomBookingListPage extends React.Component {
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
-            text: T.translate("room_booking_list.delete_booking_warning") + ' ' + roomBooking.owner,
+            text: T.translate("room_booking_list.delete_booking_warning") + ' ' + roomBooking.owner_name,
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
@@ -111,6 +111,8 @@ class RoomBookingListPage extends React.Component {
     handleRefundClick(bookingId) {
         let {roomBookings} = this.props;
         let roomBooking = roomBookings.find(rb => rb.id == bookingId);
+
+        console.log(roomBooking);
 
         this.setState({
             showModal: true,
@@ -155,11 +157,14 @@ class RoomBookingListPage extends React.Component {
         })
 
         let columns = [
+            { columnKey: 'created', value: T.translate("room_booking_list.created"), sortable: true },
             { columnKey: 'room_name', value: T.translate("room_booking_list.room"), sortable: true },
             { columnKey: 'start_datetime', value: T.translate("room_booking_list.start"), sortable: true },
-            { columnKey: 'end_datetime', value: T.translate("room_booking_list.end") },
-            { columnKey: 'owner', value: T.translate("room_booking_list.owner") },
-            { columnKey: 'status', value: T.translate("room_booking_list.status") },
+            { columnKey: 'end_datetime', value: T.translate("room_booking_list.end"), sortable: true },
+            { columnKey: 'owner_name', value: T.translate("room_booking_list.owner"), sortable: true },
+            { columnKey: 'status', value: T.translate("room_booking_list.status"), sortable: true },
+            { columnKey: 'amount_str', value: T.translate("room_booking_list.paid") },
+            { columnKey: 'refunded_amount_str', value: T.translate("room_booking_list.refunded") },
         ];
 
         let table_options = {
@@ -230,14 +235,18 @@ class RoomBookingListPage extends React.Component {
                 {modalBooking &&
                 <Modal show={showModal} onHide={this.onCloseModal} dialogClassName="refund-modal">
                     <Modal.Header closeButton>
-                        <Modal.Title>REFUND {modalBooking.owner} for room {modalBooking.room}</Modal.Title>
+                        <Modal.Title>REFUND {modalBooking.owner_name} for room {modalBooking.room_name}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <form className="room-booking-form">
                             <input type="hidden" id="id" value={modalBooking.id}/>
                             <div className="row">
                                 <div className="col-md-12">
-                                    <label> {T.translate("room_booking_list.amount")}</label>
+                                    <strong>User Payed: </strong>{modalBooking.amount_str} {modalBooking.currency}
+                                </div>
+                                <br />
+                                <div className="col-md-12">
+                                    <label> Refund </label>
                                     <input type="number" min="0" id="amount" value={modalAmount} className="form-control"
                                            onChange={this.handleRefundChange}/>
                                 </div>

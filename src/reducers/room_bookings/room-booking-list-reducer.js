@@ -20,8 +20,7 @@ import
 } from '../../actions/room-booking-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
-import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
-import {epochToMomentTimeZone} from "openstack-uicore-foundation/lib/methods";
+import {epochToMoment} from "openstack-uicore-foundation/lib/methods";
 
 const DEFAULT_STATE = {
     roomBookings        : [],
@@ -51,11 +50,15 @@ const roomBookingListReducer = (state = DEFAULT_STATE, action) => {
             let { current_page, total, last_page } = payload.response;
             let room_bookings = payload.response.data.map(rb => {
                 let ownerName = rb.owner.first_name + ' ' + rb.owner.last_name;
+                let created = epochToMoment(rb.created).format('M/D/YYYY, h:mm:ss a');
                 return {
                     ...rb,
-                    owner: ownerName,
+                    created: created,
+                    owner_name: ownerName,
                     room_name: rb.room.name,
-                    room_id: rb.room.id
+                    room_id: rb.room.id,
+                    amount_str: `$${rb.amount}`,
+                    refunded_amount_str: `$${rb.refunded_amount}`
                 };
             })
 
@@ -68,11 +71,12 @@ const roomBookingListReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case ROOM_BOOKING_REFUNDED: {
-            let {roomBookingId} = payload;
+            let roomBooking = payload.response;
             let roomBookings = [...state.roomBookings];
             roomBookings.forEach(rb => {
-               if (rb.id == roomBookingId) {
+               if (rb.id == roomBooking.id) {
                    rb.status = 'Refunded';
+                   rb.refunded_amount_str = `$${roomBooking.refunded_amount}`
                }
             });
 

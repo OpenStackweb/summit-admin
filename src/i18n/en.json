@@ -772,6 +772,7 @@
   "room_booking_list": {
     "room_booking_list"   : "Room Bookings",
     "no_room_bookings"    : "No Room Bookings Found",
+    "created"             : "Created",
     "room"                : "Room",
     "start"               : "Start",
     "end"                 : "End",
@@ -779,6 +780,8 @@
     "status"              : "Status",
     "refund"              : "Refund",
     "amount"              : "Amount",
+    "paid"                : "Paid",
+    "refunded"            : "Refunded",
     "delete_booking_warning" : "Are you sure you want to delete booking for ",
     "placeholders": {
       "search_bookings" : "Search bookings."

@@ -234,7 +234,7 @@ export const refundRoomBooking = (roomId, roomBookingId, amount) => (dispatch, g
 
     return deleteRequest(
         null,
-        createAction(ROOM_BOOKING_REFUNDED)({roomBookingId}),
+        createAction(ROOM_BOOKING_REFUNDED),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/bookable-rooms/${roomId}/reservations/${roomBookingId}/refund`,
         {amount: amount},
         authErrorHandler
