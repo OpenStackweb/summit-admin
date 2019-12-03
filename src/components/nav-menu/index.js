@@ -134,6 +134,7 @@ class NavMenu extends React.Component {
                 childs: [
                     {name:'sponsor_list', linkUrl:`summits/${summit_id}/sponsors`},
                     {name:'sponsorship_list', linkUrl:`summits/${summit_id}/sponsorships`},
+                    {name:'badge_scans', linkUrl:`summits/${summit_id}/badge-scans`},
                 ]
             },
             {name:'locations', iconClass: 'fa-map-marker', linkUrl:`summits/${summit_id}/locations`, accessRoute: 'locations'},

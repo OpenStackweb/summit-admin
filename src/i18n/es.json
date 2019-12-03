@@ -107,7 +107,8 @@
     "order_extra_questions"   : "Extra Questions",
     "sponsors"                : "Sponsors",
     "sponsor_list"            : "Sponsor List",
-    "sponsorship_list"        : "Sponsorships"
+    "sponsorship_list"        : "Sponsorships",
+    "badge_scans"             : "Badge Scans"
   },
   "schedule": {
     "schedule"                              : "Schedule",
@@ -1213,6 +1214,20 @@
     "sponsorship_created"   : "Sponsorship created successfully",
     "placeholders": {
       "select_size" : "Select a Size"
+    }
+  },
+  "badge_scan_list": {
+    "badge_scans"         : "Badge Scans",
+    "badge_scan_list"     : "Badge Scan List",
+    "no_badge_scans"      : "No badges were scanned for by this sponsor.",
+    "id"                  : "Id",
+    "created"             : "Scanned",
+    "first_name"          : "First Name",
+    "last_name"           : "Last Name",
+    "email"               : "Email",
+    "company_name"        : "Company",
+    "placeholders": {
+      "select_sponsor" : "Select Sponsor"
     }
   }
 }

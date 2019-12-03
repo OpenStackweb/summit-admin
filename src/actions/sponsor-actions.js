@@ -23,7 +23,7 @@ import {
     startLoading,
     showMessage,
     showSuccessMessage,
-    authErrorHandler
+    authErrorHandler, getCSV
 } from 'openstack-uicore-foundation/lib/methods';
 
 export const REQUEST_SPONSORS               = 'REQUEST_SPONSORS';
@@ -46,7 +46,8 @@ export const SPONSORSHIP_UPDATED        = 'SPONSORSHIP_UPDATED';
 export const SPONSORSHIP_ADDED          = 'SPONSORSHIP_ADDED';
 export const SPONSORSHIP_DELETED        = 'SPONSORSHIP_DELETED';
 
-
+export const REQUEST_BADGE_SCANS       = 'REQUEST_BADGE_SCANS';
+export const RECEIVE_BADGE_SCANS       = 'RECEIVE_BADGE_SCANS';
 
 
 /******************  SPONSORS ****************************************/
@@ -89,6 +90,35 @@ export const getSponsors = ( term = null, page = 1, perPage = 10, order = 'order
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsors`,
         authErrorHandler,
         {page, perPage, order, orderDir, term}
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const getSponsorsWithBadgeScans = () => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+    let filter = [];
+
+    dispatch(startLoading());
+
+    let params = {
+        page         : 1,
+        per_page     : 100,
+        expand       : 'company',
+        access_token : accessToken,
+        'filter[]'   : ['badge_scans_count>0'],
+        order        : '+order'
+    };
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_SPONSORS),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsors`,
+        authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
@@ -403,3 +433,79 @@ const normalizeSponsorship = (entity) => {
     return normalizedEntity;
 
 }
+
+
+/******************  BADGE SCANS  ****************************************/
+
+
+export const getBadgeScans = ( sponsorId = null, page = 1, perPage = 10, order = 'attendee_last_name', orderDir = 1 ) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+    let filter = [];
+
+    dispatch(startLoading());
+
+    if(sponsorId){
+        filter.push(`sponsor_id==${sponsorId}`);
+    }
+
+    let params = {
+        page         : page,
+        per_page     : perPage,
+        expand       : 'badge,badge.ticket,badge.ticket.owner,badge.ticket.owner.member',
+        access_token : accessToken,
+    };
+
+    if(filter.length > 0){
+        params['filter[]']= filter;
+    }
+
+    // order
+    if(order != null && orderDir != null){
+        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        params['order']= `${orderDirSign}${order}`;
+    }
+
+
+    return getRequest(
+        createAction(REQUEST_BADGE_SCANS),
+        createAction(RECEIVE_BADGE_SCANS),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-scans`,
+        authErrorHandler,
+        {page, perPage, order, orderDir, sponsorId}
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+
+export const exportBadgeScans = ( sponsor = null, order = 'attendee_last_name', orderDir = 1 ) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+    let filter = [];
+    let filename = sponsor.company.name + '-BadgeScans.csv';
+    let params = {
+        access_token : accessToken,
+        columns      : 'scan_date,attendee_first_name,attendee_last_name,attendee_email,attendee_company',
+    };
+
+    filter.push(`sponsor_id==${sponsor.id}`);
+
+    if(filter.length > 0){
+        params['filter[]']= filter;
+    }
+
+    // order
+    if(order != null && orderDir != null){
+        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        params['order']= `${orderDirSign}${order}`;
+    }
+
+    dispatch(getCSV(`${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-scans/csv`, params, filename));
+
+};

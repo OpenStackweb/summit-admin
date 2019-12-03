@@ -47,6 +47,7 @@ import PurchaseOrderLayout from './purchase-order-layout'
 import OrderExtraQuestionLayout from './order-extra-question-layout'
 import SponsorLayout from './sponsor-layout'
 import SponsorshipLayout from './sponsorship-layout'
+import BadgeScansListPage from '../pages/sponsors/badge-scans-list-page';
 import NoMatchPage from '../pages/no-match-page';
 
 
@@ -115,6 +116,7 @@ class SummitIdLayout extends React.Component {
                     <Route path={`${match.url}/order-extra-questions`} component={OrderExtraQuestionLayout}/>
                     <Route path={`${match.url}/sponsors`} component={SponsorLayout}/>
                     <Route path={`${match.url}/sponsorships`} component={SponsorshipLayout}/>
+                    <Route path={`${match.url}/badge-scans`} component={BadgeScansListPage}/>
                     <Route component={NoMatchPage}/>
                 </Switch>
             </div>
