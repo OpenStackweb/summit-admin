@@ -82,7 +82,7 @@ const BasePCForm = (props) => {
             </div>
             <div className="row form-group">
                 <div className="col-md-4">
-                    <label> {T.translate("edit_promocode.valid_since_date")} *</label>
+                    <label> {T.translate("edit_promocode.valid_from_date")} *</label>
                     <DateTimePicker
                         id="valid_since_date"
                         onChange={props.handleChange}
