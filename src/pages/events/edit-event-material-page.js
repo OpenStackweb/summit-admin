@@ -64,6 +64,7 @@ class EditEventMaterialPage extends React.Component {
                 <EventMaterialForm
                     currentSummit={currentSummit}
                     entity={entity}
+                    event={event}
                     errors={errors}
                     onSubmit={this.props.saveEventMaterial}
                     onSubmitSlide={this.props.saveSlide}

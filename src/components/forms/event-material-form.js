@@ -36,8 +36,11 @@ class EventMaterialForm extends React.Component {
 
     componentWillReceiveProps(nextProps) {
 
+        let name = nextProps.entity.id ? nextProps.entity.name : nextProps.event.title;
+        let description = nextProps.entity.id ? nextProps.entity.description : nextProps.event.description;
+
         this.setState({
-            entity: {...nextProps.entity},
+            entity: {...nextProps.entity, name, description},
             errors: {...nextProps.errors}
         });
 
