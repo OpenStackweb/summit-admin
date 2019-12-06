@@ -12,24 +12,27 @@
  **/
 
 import React from 'react'
-import { Switch, Route, withRouter } from 'react-router-dom';
+import {Switch, Route, withRouter, Redirect} from 'react-router-dom';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
-import NoMatchPage from "../pages/no-match-page";
 import EditRoomBookingAttributePage from "../pages/room_bookings/edit-room-booking-attribute-page";
+import {connect} from "react-redux";
+import {getEvent, resetEventForm} from "../actions/event-actions";
+import {getRsvpTemplates} from "../actions/rsvp-template-actions";
 
 
 class RoomBookingAttributeLayout extends React.Component {
 
     render(){
-        let { match } = this.props;
+        let { match, currentSummit } = this.props;
+
         return(
             <div>
                 <Breadcrumb data={{ title: T.translate("room_bookings.room_bookings_attributes"), pathname: match.url }} ></Breadcrumb>
                 <Switch>
                     <Route strict exact path={`${match.url}/new`} component={EditRoomBookingAttributePage} />
                     <Route strict exact path={`${match.url}/:attribute_id(\\d+)`} component={EditRoomBookingAttributePage} />
-                    <Route component={NoMatchPage}/>
+                    <Redirect to={`/app/summits/${currentSummit.id}`} />
                 </Switch>
             </div>
         );
@@ -37,6 +40,8 @@ class RoomBookingAttributeLayout extends React.Component {
 
 }
 
-export default withRouter(RoomBookingAttributeLayout);
+const mapStateToProps = ({ currentSummitState }) => ({
+    ...currentSummitState
+});
 
-
+export default connect (mapStateToProps, {})(RoomBookingAttributeLayout);

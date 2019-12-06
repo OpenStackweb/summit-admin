@@ -12,24 +12,25 @@
  **/
 
 import React from 'react'
-import { Switch, Route, withRouter } from 'react-router-dom';
+import {Switch, Route, withRouter, Redirect} from 'react-router-dom';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import NoMatchPage from "../pages/no-match-page";
 import EditSelectionPlanPage from "../pages/summits/edit-selection-plan-page";
+import {connect} from "react-redux";
 
 
 class SelectionPlanLayout extends React.Component {
 
     render(){
-        let { match } = this.props;
+        let { match, currentSummit } = this.props;
         return(
             <div>
                 <Breadcrumb data={{ title: T.translate("edit_selection_plan.selection_plans"), pathname: match.url }} ></Breadcrumb>
                 <Switch>
                     <Route strict exact path={`${match.url}/new`} component={EditSelectionPlanPage} />
                     <Route strict exact path={`${match.url}/:selection_plan_id(\\d+)`} component={EditSelectionPlanPage} />
-                    <Route component={NoMatchPage}/>
+                    <Redirect to={`/app/summits/${currentSummit.id}`} />
                 </Switch>
             </div>
         );
@@ -37,6 +38,8 @@ class SelectionPlanLayout extends React.Component {
 
 }
 
-export default withRouter(SelectionPlanLayout);
+const mapStateToProps = ({ currentSummitState }) => ({
+    ...currentSummitState
+});
 
-
+export default connect (mapStateToProps, {})(SelectionPlanLayout);
