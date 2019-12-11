@@ -106,7 +106,7 @@ export const loadSummits = () => (dispatch, getState) => {
         expand: 'none',
         relations: 'none',
         page: 1,
-        per_page: 5
+        per_page: 100 // kludge
     };
 
     getRequest(
