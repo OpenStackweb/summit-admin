@@ -1,51 +1,63 @@
 
 general:
+  - super-admins
   - administrators
   - summit-front-end-administrators
   - summit-room-administrators
 
 summit-edit:
+  - super-admins
   - administrators
   - summit-front-end-administrators
 
 speakers:
+  - super-admins
   - administrators
   - summit-front-end-administrators
 
 attendees:
+  - super-admins
   - administrators
   - summit-front-end-administrators
 
 events:
+  - super-admins
   - administrators
   - summit-front-end-administrators
 
 locations:
+  - super-admins
   - administrators
   - summit-front-end-administrators
 
 rsvp:
+  - super-admins
   - administrators
   - summit-front-end-administrators
 
 push-notifications:
+  - super-admins
   - administrators
   - summit-front-end-administrators
 
 tickets:
+  - super-admins
   - administrators
   - summit-front-end-administrators
 
 room-occupancy:
+  - super-admins
   - administrators
   - summit-front-end-administrators
   - summit-room-administrators
 
 tags:
+  - super-admins
   - administrators
   - summit-front-end-administrators
 
 reports:
+  - super-admins
   - administrators
   - summit-front-end-administrators
 
