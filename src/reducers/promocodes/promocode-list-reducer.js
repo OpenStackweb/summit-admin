@@ -33,7 +33,8 @@ const DEFAULT_STATE = {
     lastPage        : 1,
     perPage         : 10,
     totalPromocodes : 0,
-    allTypes       : ['ALL']
+    allTypes        : ['ALL'],
+    allClasses      : ['ALL']
 };
 
 const promocodeListReducer = (state = DEFAULT_STATE, action) => {
@@ -51,14 +52,15 @@ const promocodeListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case RECEIVE_PROMOCODE_META: {
             let types = [...DEFAULT_STATE.allTypes];
+            let allClasses = [...DEFAULT_STATE.allClasses, ...payload.response];
 
-            payload.response.map(t => {
+            payload.response.forEach(t => {
                 types = types.concat(t.type)
             });
 
             let unique_types = [...new Set( types )];
 
-            return {...state, allTypes: unique_types }
+            return {...state, allTypes: unique_types, allClasses: allClasses }
         }
         break;
         case RECEIVE_PROMOCODES: {

@@ -349,6 +349,12 @@ const SummitPCForm = (props) => (
     </>
 );
 
+const SummitDiscountPCForm = (props) => (
+    <>
+        <DiscountBasePCForm {...props} />
+    </>
+);
+
 
 
 
@@ -608,6 +614,17 @@ class PromocodeForm extends React.Component {
 
                 {entity.class_name == 'SUMMIT_PROMO_CODE' &&
                 <SummitPCForm
+                    entity={entity}
+                    summit={currentSummit}
+                    handleChange={this.handleChange}
+                    badgeFeatureColumns={badgeFeatureColumns}
+                    badgeFeatureOptions={badgeFeatureOptions}
+                    hasErrors={this.hasErrors}
+                />
+                }
+
+                {entity.class_name == 'SUMMIT_DISCOUNT_CODE' &&
+                <SummitDiscountPCForm
                     entity={entity}
                     summit={currentSummit}
                     handleChange={this.handleChange}

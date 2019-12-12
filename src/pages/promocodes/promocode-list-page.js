@@ -123,12 +123,12 @@ class PromocodeListPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, promocodes, lastPage, currentPage, term, order, orderDir, totalPromocodes, allTypes, type} = this.props;
+        let {currentSummit, promocodes, lastPage, currentPage, term, order, orderDir, totalPromocodes, allTypes, allClasses, type} = this.props;
 
         let columns = [
             { columnKey: 'code', value: T.translate("promocode_list.code"), sortable: true },
-            { columnKey: 'type', value: T.translate("promocode_list.type") },
-            { columnKey: 'owner', value: T.translate("promocode_list.owner") },
+            { columnKey: 'class_name', value: T.translate("promocode_list.type") },
+            /*{ columnKey: 'owner', value: T.translate("promocode_list.owner") },*/
             { columnKey: 'owner_email', value: T.translate("promocode_list.owner_email") },
             { columnKey: 'email_sent', value: T.translate("promocode_list.emailed") },
             { columnKey: 'redeemed', value: T.translate("promocode_list.redeemed") },
@@ -147,6 +147,7 @@ class PromocodeListPage extends React.Component {
         if(!currentSummit.id) return(<div></div>);
 
         let promocode_types_ddl = allTypes.map(t => ({label: t, value: t}));
+        let promocode_class_ddl = allClasses.map(c => ({label: c.class_name, value: c.class_name}));
 
         return(
             <div className="container">
