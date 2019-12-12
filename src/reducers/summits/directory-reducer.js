@@ -2,27 +2,32 @@ import { RECEIVE_SUMMITS, SUMMIT_ADDED, SUMMIT_DELETED } from '../../actions/sum
 import{ LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
 
 const DEFAULT_STATE = {
-    items: []
-}
+    summits      : [],
+    currentPage  : 1,
+    lastPage     : 1,
+    perPage      : 5,
+    totalSummits : 1
+};
 
 const directoryReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
         case RECEIVE_SUMMITS: {
-            return {...state, items: action.payload.response.data};
+            let { current_page, total, last_page, data } = payload.response;
+            return {...state, summits: data, currentPage: current_page, lastPage: last_page, totalSummits: total};
         }
         break;
         case SUMMIT_ADDED: {
             let { response } = payload;
 
-            return {...state, items: [...state.items, response]};
+            return {...state, summits: [...state.summits, response]};
         }
         break;
         case SUMMIT_DELETED: {
             let {summitId} = payload;
-            let items = state.items.filter(s => s.id != summitId);
+            let summits = state.summits.filter(s => s.id != summitId);
 
-            return {...state, items: [...items]};
+            return {...state, summits: [...summits]};
         }
         break;
         case LOGOUT_USER: {

@@ -94,7 +94,7 @@ export const setCurrentSummit = (summit) => (dispatch, getState) =>
 
 }
 
-export const loadSummits = () => (dispatch, getState) => {
+export const loadSummits = (page = 1, perPage = 5) => (dispatch, getState) => {
 
     let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
@@ -105,8 +105,8 @@ export const loadSummits = () => (dispatch, getState) => {
         access_token : accessToken,
         expand: 'none',
         relations: 'none',
-        page: 1,
-        per_page: 100 // kludge
+        page: page,
+        per_page: perPage,
     };
 
     getRequest(

@@ -18,6 +18,7 @@ import Swal from "sweetalert2";
 import { loadSummits, setCurrentSummit, deleteSummit } from '../../actions/summit-actions';
 import { formatEpoch } from 'openstack-uicore-foundation/lib/methods';
 import Member from '../../models/member'
+import {Pagination} from "react-bootstrap";
 
 import '../../styles/summit-directory-page.less';
 
@@ -25,11 +26,20 @@ class SummitDirectoryPage extends React.Component {
 
     constructor(props){
         super(props);
+
+        this.handlePageChange = this.handlePageChange.bind(this);
     }
 
     componentWillMount () {
+        let {perPage} = this.props;
+
         this.props.setCurrentSummit(null);
-        this.props.loadSummits();
+        this.props.loadSummits(1, perPage);
+    }
+
+    handlePageChange(page) {
+        let {perPage} = this.props;
+        this.props.loadSummits(page, perPage);
     }
 
     onSelectedSummit(event, summit){
@@ -72,7 +82,7 @@ class SummitDirectoryPage extends React.Component {
     }
 
     render() {
-        let { summits, member } = this.props;
+        let { summits, member, lastPage, currentPage, totalSummits } = this.props;
         let memberObj = new Member(member);
         let orderedSummits = summits.sort(
             (a, b) => (a.start_date < b.start_date ? 1 : (a.start_date > b.start_date ? -1 : 0))
@@ -81,7 +91,7 @@ class SummitDirectoryPage extends React.Component {
 
         return (
             <div className="container">
-                <h3> {T.translate("directory.summits")}</h3>
+                <h3> {T.translate("directory.summits")} ({totalSummits})</h3>
                 {canEditSummit &&
                 <div className={'row'}>
                     <div className="col-md-6 col-md-offset-6 text-right">
@@ -120,6 +130,19 @@ class SummitDirectoryPage extends React.Component {
                         ))}
                         </tbody>
                     </table>
+                    <Pagination
+                        bsSize="medium"
+                        prev
+                        next
+                        first
+                        last
+                        ellipsis
+                        boundaryLinks
+                        maxButtons={10}
+                        items={lastPage}
+                        activePage={currentPage}
+                        onSelect={this.handlePageChange}
+                    />
                 </div>
             </div>
         );
@@ -127,7 +150,7 @@ class SummitDirectoryPage extends React.Component {
 }
 
 const mapStateToProps = ({ directoryState, loggedUserState }) => ({
-    summits : directoryState.items,
+    ...directoryState,
     member: loggedUserState.member
 })
 
