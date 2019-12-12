@@ -1134,6 +1134,8 @@
     "status"              : "Status",
     "tickets"             : "Tickets",
     "no_purchase_orders"  : "No purchase orders found.",
+    "wrong_qr_title"      : "QR Code Error",
+    "wrong_qr_text"       : "Wrong format on QR code.",
     "placeholders": {
       "search_orders"       : "Search by Order #, Buyer, Attendee "
     }
