@@ -66,6 +66,7 @@ reports:
   - summit-front-end-administrators
 
 orders:
+  - super-admins
   - administrators
   - summit-front-end-administrators
   - summit-registration-administrators
