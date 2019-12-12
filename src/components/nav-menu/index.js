@@ -182,7 +182,7 @@ class NavMenu extends React.Component {
 
                 {show &&
                 <div className="separator">
-                    {currentSummit.name} {T.translate('general.summit')}
+                    {currentSummit.name}
                     {canEditSummit &&
                     <a href="" className="edit-summit" onClick={(e) => this.onMenuItemClick(e, `summits/${summit_id}`)}>
                         <i className="fa fa-pencil-square-o"></i>

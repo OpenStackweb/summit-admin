@@ -195,6 +195,8 @@ class SummitForm extends React.Component {
         let room_booking_start = entity.meeting_room_booking_start_time ? epochToMomentTimeZone(entity.meeting_room_booking_start_time, 'UTC') : moment.utc(0);
         let room_booking_end = entity.meeting_room_booking_end_time ? epochToMomentTimeZone(entity.meeting_room_booking_end_time, 'UTC') : moment.utc(0);
 
+        let timezone_error = !dates_enabled ? 'Please choose a timezone first.' : '';
+
         return (
             <form>
                 <input type="hidden" id="id" value={entity.id} />
@@ -532,6 +534,32 @@ class SummitForm extends React.Component {
                 <Exclusive name="room-booking">
                     <Panel show={showSection == 'room-booking'} title={T.translate("edit_summit.room-booking")}
                            handleClick={this.toggleSection.bind(this, 'room-booking')}>
+                        <div className="row form-group">
+                            <div className="col-md-4">
+                                <label> {T.translate("edit_summit.booking_begin_date")} </label>
+                                <DateTimePicker
+                                    id="begin_allow_booking_date"
+                                    onChange={this.handleChange}
+                                    format={{date:"YYYY-MM-DD", time: "HH:mm"}}
+                                    timezone={entity.time_zone_id}
+                                    disabled={!dates_enabled}
+                                    value={epochToMomentTimeZone(entity.begin_allow_booking_date, entity.time_zone_id)}
+                                    error={this.hasErrors('begin_allow_booking_date') || timezone_error}
+                                />
+                            </div>
+                            <div className="col-md-4">
+                                <label> {T.translate("edit_summit.booking_end_date")} </label>
+                                <DateTimePicker
+                                    id="end_allow_booking_date"
+                                    onChange={this.handleChange}
+                                    format={{date:"YYYY-MM-DD", time: "HH:mm"}}
+                                    timezone={entity.time_zone_id}
+                                    disabled={!dates_enabled}
+                                    value={epochToMomentTimeZone(entity.end_allow_booking_date, entity.time_zone_id)}
+                                    error={this.hasErrors('end_allow_booking_date') || timezone_error}
+                                />
+                            </div>
+                        </div>
                         <div className="row form-group">
                             <div className="col-md-4">
                                 <label> {T.translate("room_bookings.meeting_room_booking_start_time")} *</label>

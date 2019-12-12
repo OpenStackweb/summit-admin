@@ -93,7 +93,9 @@ export const DEFAULT_ENTITY = {
     badge_features: null,
     order_extra_questions: null,
     order_only_extra_questions: null,
-    attendee_extra_questions: null
+    attendee_extra_questions: null,
+    begin_allow_booking_date: 0,
+    end_allow_booking_date: 0,
 }
 
 const DEFAULT_STATE = {

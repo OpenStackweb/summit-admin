@@ -226,6 +226,8 @@
     "api_feed_url"                    : "API feed URL",
     "api_feed_key"                    : "API feed key",
     "room-booking"                    : "Room Booking",
+    "booking_begin_date"              : "Open Booking Date",
+    "booking_end_date"                : "Close Booking Date",
     "placeholders": {
       "api_feed_type"                 : "Select API feed type..."
     }
