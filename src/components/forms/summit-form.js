@@ -50,7 +50,6 @@ class SummitForm extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-
         this.setState({
             entity: {...nextProps.entity},
             errors: nextProps.errors
@@ -102,6 +101,7 @@ class SummitForm extends React.Component {
 
         entity.logo = '';
         this.setState({entity:entity});
+        this.props.onLogoDelete();
     }
 
     handleSubmit(ev) {

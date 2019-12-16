@@ -38,7 +38,8 @@ export const UPDATE_SUMMIT            = 'UPDATE_SUMMIT';
 export const SUMMIT_UPDATED           = 'SUMMIT_UPDATED';
 export const SUMMIT_ADDED             = 'SUMMIT_ADDED';
 export const SUMMIT_DELETED           = 'SUMMIT_DELETED';
-export const LOGO_ATTACHED            = 'LOGO_ATTACHED';
+export const SUMMIT_LOGO_ATTACHED     = 'SUMMIT_LOGO_ATTACHED';
+export const SUMMIT_LOGO_DELETED      = 'SUMMIT_LOGO_DELETED';
 
 export const getSummitById = (summitId) => (dispatch, getState) => {
 
@@ -234,17 +235,36 @@ const uploadFile = (entity, file) => (dispatch, getState) => {
 
     postRequest(
         null,
-        createAction(LOGO_ATTACHED),
+        createAction(SUMMIT_LOGO_ATTACHED),
         `${window.API_BASE_URL}/api/v1/summits/${entity.id}/logo`,
         file,
-        authErrorHandler,
-        {logo: entity.logo}
+        authErrorHandler
     )(params)(dispatch)
         .then(() => {
             dispatch(stopLoading());
-            history.push(`/app/summits/${entity.id}`)
         });
-}
+};
+
+export const deleteLogo = () => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(SUMMIT_LOGO_DELETED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/logo`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
 
 
 const normalizeEntity = (entity) => {

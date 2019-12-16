@@ -18,7 +18,7 @@ import Swal from "sweetalert2";
 import { Breadcrumb } from 'react-breadcrumbs';
 import Restrict from '../../routes/restrict'
 import SummitForm from '../../components/forms/summit-form';
-import { getSummitById, resetSummitForm, saveSummit, attachLogo }  from '../../actions/summit-actions';
+import { getSummitById, resetSummitForm, saveSummit, attachLogo, deleteLogo }  from '../../actions/summit-actions';
 import { deleteSelectionPlan } from '../../actions/selection-plan-actions';
 import { deleteRoomBookingAttributeType } from "../../actions/room-booking-actions";
 import '../../styles/edit-summit-page.less';
@@ -73,7 +73,7 @@ class EditSummitPage extends React.Component {
 
 
     render(){
-        let {currentSummit, errors, history} = this.props;
+        let {currentSummit, attachLogo, deleteLogo, errors, history} = this.props;
 
         return(
             <div className="container">
@@ -87,6 +87,7 @@ class EditSummitPage extends React.Component {
                     onSPlanDelete={this.handleSPlanDelete}
                     onAttributeTypeDelete={this.handleAttributeTypeDelete}
                     onLogoAttach={attachLogo}
+                    onLogoDelete={deleteLogo}
                 />
             </div>
         )
@@ -106,6 +107,7 @@ export default Restrict(connect (
         resetSummitForm,
         deleteSelectionPlan,
         deleteRoomBookingAttributeType,
-        attachLogo
+        attachLogo,
+        deleteLogo,
     }
 )(EditSummitPage), 'summit-edit');
