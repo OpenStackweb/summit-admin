@@ -38,7 +38,7 @@ export const DEFAULT_ENTITY = {
     code                    : '',
     email_sent              : false,
     redeemed                : false,
-    quantity_available      : 0,
+    quantity_available      : '',
     quantity_used           : 0,
     valid_since_date        : '',
     valid_until_date        : '',
@@ -46,8 +46,8 @@ export const DEFAULT_ENTITY = {
     badge_features          : [],
     allowed_ticket_types    : [],
     apply_to_all_tix        : true,
-    amount                  : 0,
-    rate                    : 0
+    amount                  : '',
+    rate                    : ''
 }
 
 const DEFAULT_STATE = {

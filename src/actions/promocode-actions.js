@@ -278,17 +278,19 @@ export const exportPromocodes = ( term = null, order = 'code', orderDir = 1, typ
 const normalizeEntity = (entity) => {
     let normalizedEntity = {...entity};
 
-    if (entity.class_name == 'MEMBER_PROMO_CODE') {
+    if (entity.class_name.indexOf('MEMBER_') === 0) {
         if (entity.owner != null)
             normalizedEntity.owner_id = entity.owner.id;
-    } else if (entity.class_name == 'SPEAKER_PROMO_CODE') {
+    } else if (entity.class_name.indexOf('SPEAKER_') === 0) {
         if (entity.speaker != null)
             normalizedEntity.speaker_id = entity.speaker.id;
-    } else if (entity.class_name == 'SPONSOR_PROMO_CODE') {
+    } else if (entity.class_name.indexOf('SPONSOR_') === 0) {
         if (entity.sponsor != null)
             normalizedEntity.sponsor_id = entity.sponsor.id;
         else if (entity.owner != null)
             normalizedEntity.owner_id = entity.owner.id;
+    } else if (entity.class_name.indexOf('SUMMIT_') === 0) {
+
     }
 
     if (!entity.badge_type_id) {

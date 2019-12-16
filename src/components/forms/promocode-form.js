@@ -82,7 +82,7 @@ const BasePCForm = (props) => {
             </div>
             <div className="row form-group">
                 <div className="col-md-4">
-                    <label> {T.translate("edit_promocode.valid_from_date")} *</label>
+                    <label> {T.translate("edit_promocode.valid_from_date")}</label>
                     <DateTimePicker
                         id="valid_since_date"
                         onChange={props.handleChange}
@@ -92,7 +92,7 @@ const BasePCForm = (props) => {
                     />
                 </div>
                 <div className="col-md-4">
-                    <label> {T.translate("edit_promocode.valid_until_date")} *</label>
+                    <label> {T.translate("edit_promocode.valid_until_date")}</label>
                     <DateTimePicker
                         id="valid_until_date"
                         onChange={props.handleChange}
@@ -104,7 +104,7 @@ const BasePCForm = (props) => {
             </div>
             <div className="row form-group">
                 <div className="col-md-4">
-                    <label> {T.translate("edit_promocode.badge_type_id")} *</label>
+                    <label> {T.translate("edit_promocode.badge_type_id")}</label>
                     <Dropdown
                         id="badge_type_id"
                         value={props.entity.badge_type_id}
@@ -114,7 +114,7 @@ const BasePCForm = (props) => {
                     />
                 </div>
                 <div className="col-md-8">
-                    <label> {T.translate("edit_promocode.badge_features")} *</label>
+                    <label> {T.translate("edit_promocode.badge_features")}</label>
                     <Dropdown
                         id="badge_features"
                         value={props.entity.badge_features}
@@ -138,7 +138,7 @@ const GenericBasePCForm = (props) => {
             <BasePCForm {...props} />
             <div className="row form-group">
                 <div className="col-md-6">
-                    <label> {T.translate("edit_promocode.allowed_ticket_types")} *</label>
+                    <label> {T.translate("edit_promocode.allowed_ticket_types")}</label>
                     <Dropdown
                         id="allowed_ticket_types"
                         value={props.entity.allowed_ticket_types}
