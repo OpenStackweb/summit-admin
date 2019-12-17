@@ -568,7 +568,7 @@ class SummitForm extends React.Component {
                                     onChange={this.handleChange}
                                     format={{date: false, time: "HH:mm"}}
                                     defaultValue={0}
-                                    timezone="UTC"
+                                    utc={true}
                                     value={room_booking_start}
                                 />
                             </div>
@@ -579,7 +579,7 @@ class SummitForm extends React.Component {
                                     onChange={this.handleChange}
                                     format={{date: false, time: "HH:mm"}}
                                     defaultValue={0}
-                                    timezone="UTC"
+                                    utc={true}
                                     value={room_booking_end}
                                 />
                             </div>

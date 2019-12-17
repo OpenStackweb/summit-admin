@@ -87,7 +87,8 @@ const BasePCForm = (props) => {
                         id="valid_since_date"
                         onChange={props.handleChange}
                         format={{date: "YYYY-MM-DD", time: false}}
-                        timezone="UTC"
+                        utc={true}
+                        utcOffset={0}
                         value={epochToMoment(props.entity.valid_since_date)}
                     />
                 </div>
@@ -97,7 +98,7 @@ const BasePCForm = (props) => {
                         id="valid_until_date"
                         onChange={props.handleChange}
                         format={{date: "YYYY-MM-DD", time: false}}
-                        timezone="UTC"
+                        utc={true}
                         value={epochToMoment(props.entity.valid_until_date)}
                     />
                 </div>
@@ -261,7 +262,7 @@ const DiscountBasePCForm = (props) => (
         {props.entity.apply_to_all_tix &&
         <div className="row form-group">
             <div className="col-md-4">
-                <label> {T.translate("edit_promocode.amount")} </label>
+                <label> {T.translate("edit_promocode.amount")} ($)</label>
                 <Input
                     id="amount"
                     type="number"
@@ -276,7 +277,7 @@ const DiscountBasePCForm = (props) => (
                 <label> {T.translate("edit_promocode.or")} </label>
             </div>
             <div className="col-md-4">
-                <label> {T.translate("edit_promocode.rate")} </label>
+                <label> {T.translate("edit_promocode.rate")} (% discount)</label>
                 <Input
                     id="rate"
                     type="number"
