@@ -34,6 +34,9 @@ class BadgeTypeForm extends React.Component {
         this.handleAccessLevelLink = this.handleAccessLevelLink.bind(this);
         this.handleAccessLevelUnLink = this.handleAccessLevelUnLink.bind(this);
         this.queryAccessLevels = this.queryAccessLevels.bind(this);
+        this.handleFeatureLink = this.handleFeatureLink.bind(this);
+        this.handleFeatureUnLink = this.handleFeatureUnLink.bind(this);
+        this.queryFeatures = this.queryFeatures.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -102,6 +105,25 @@ class BadgeTypeForm extends React.Component {
         callback(accessLevels);
     }
 
+    handleFeatureLink(feature) {
+        let {entity} = this.state;
+        this.props.onFeatureLink(entity.id, feature);
+    }
+
+    handleFeatureUnLink(featureId) {
+        let {entity} = this.state;
+        this.props.onFeatureUnLink(entity.id, featureId);
+    }
+
+    queryFeatures(input, callback) {
+        let {currentSummit} = this.props;
+        let features = [];
+
+        features = currentSummit.badge_features.filter(f => f.name.toLowerCase().indexOf(input.toLowerCase()) !== -1)
+
+        callback(features);
+    }
+
 
     render() {
         let {entity} = this.state;
@@ -119,6 +141,21 @@ class BadgeTypeForm extends React.Component {
                 search: this.queryAccessLevels,
                 delete: { onClick: this.handleAccessLevelUnLink },
                 add: { onClick: this.handleAccessLevelLink }
+            }
+        };
+
+        let featuresColumns = [
+            { columnKey: 'name', value: T.translate("edit_badge_type.name") },
+        ];
+
+        let featuresOptions = {
+            title: T.translate("edit_badge_type.badge_features"),
+            valueKey: "name",
+            labelKey: "name",
+            actions: {
+                search: this.queryFeatures,
+                delete: { onClick: this.handleFeatureUnLink },
+                add: { onClick: this.handleFeatureLink }
             }
         };
 
@@ -167,6 +204,17 @@ class BadgeTypeForm extends React.Component {
                     options={accessLevelOptions}
                 />
                 }
+
+                <hr />
+                {entity.id != 0 &&
+                <SimpleLinkList
+                    values={entity.badge_features}
+                    columns={featuresColumns}
+                    options={featuresOptions}
+                />
+                }
+
+                <hr />
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">

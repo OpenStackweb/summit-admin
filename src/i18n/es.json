@@ -104,6 +104,7 @@
     "room_bookings"           : "Room Bookings",
     "purchase_orders"         : "Purchase Orders",
     "purchase_order_list"     : "Order List",
+    "ticket_list"             : "Ticket List",
     "order_extra_questions"   : "Extra Questions",
     "sponsors"                : "Sponsors",
     "sponsor_list"            : "Sponsor List",
@@ -193,7 +194,7 @@
   },
   "edit_summit": {
     "name"                            : "Name",
-    "eventbrite_id"                   : "Eventbrite Id",
+    "external_summit_id"              : "External Id",
     "max_submission_allowed_per_user" : "Max. Submissions per User",
     "slug"                            : "Slug",
     "link"                            : "Summit Page Link",
@@ -228,8 +229,12 @@
     "room-booking"                    : "Room Booking",
     "booking_begin_date"              : "Open Booking Date",
     "booking_end_date"                : "Close Booking Date",
+    "external_registration_feed_type" : "Registration Feed Type",
+    "external_registration_feed_api_key" : "Registration Feed API key",
+    "third_party"                     : "Third Party Settings",
     "placeholders": {
-      "api_feed_type"                 : "Select API feed type..."
+      "api_feed_type"                 : "Select API feed type...",
+      "external_registration_feed_type" : "Select Ext. Reg. feed type..."
     }
   },
   "edit_selection_plan": {
@@ -444,7 +449,7 @@
     "event"                       : "Event",
     "created"                     : "Created Date",
     "seat"                        : "Seat",
-    "extra_questions"             : "Extra Questions",
+    "extra_questions"             : "Registration Extra Questions",
     "placeholders": {
       "start_date"            : "Start Date",
       "end_date"              : "End Date",
@@ -862,6 +867,28 @@
     "rsvp_question_value_saved"   : "Rsvp Question Value saved successfully.",
     "rsvp_question_value_created" : "Rsvp Question Value created successfully."
   },
+  "ticket_list": {
+    "ingest"              : "Ingest",
+    "import"              : "Import",
+    "export"              : "Export",
+    "ticket_list"         : "Tickets",
+    "no_tickets"          : "No tickets found.",
+    "number"              : "Number",
+    "ticket_type"         : "Type",
+    "owner_name"          : "Owner",
+    "owner_email"         : "Email",
+    "company"             : "Company",
+    "bought_date"         : "Bought Date",
+    "price"               : "Price",
+    "payment_method"      : "Payment Method",
+    "status"              : "Status",
+    "send_email"          : "Send results to email (optional)",
+    "ingest_tickets"      : "Ingest Tickets from external source",
+    "import_tickets"      : "Import Tickets from csv",
+    "placeholders": {
+      "search_orders"       : "Search by Order #, Buyer, Attendee "
+    }
+  },
   "edit_ticket": {
     "ticket"            : "Ticket",
     "type"              : "Type",
@@ -909,6 +936,7 @@
     "ticket_type"         : "Ticket Type",
     "name"                : "Name",
     "external_id"         : "External Id",
+    "badge_type_id"       : "Badge Type",
     "description"         : "Description",
     "cost"                : "Cost",
     "currency"              : "Currency",
@@ -1060,6 +1088,7 @@
     "template_content"      : "Template Content",
     "default"               : "Is Default",
     "access_levels"         : "Access Levels",
+    "badge_features"        : "Badge Features",
     "badge_type_saved"      : "Badge Type saved successfully",
     "badge_type_created"    : "Badge Type created successfully"
   },

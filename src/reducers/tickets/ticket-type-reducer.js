@@ -27,6 +27,7 @@ export const DEFAULT_ENTITY = {
     id                      : 0,
     name                    : '',
     external_id             : 0,
+    badge_type_id           : 0,
     description             : '',
     cost                    : 0,
     currency                : 'USD',

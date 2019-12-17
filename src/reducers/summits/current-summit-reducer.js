@@ -39,7 +39,6 @@ export const DEFAULT_ENTITY = {
     dates_label: '',
     end_date: 0,
     event_types: [],
-    external_summit_id: '',
     link: '',
     locations: [],
     logo: null,
@@ -88,7 +87,7 @@ export const DEFAULT_ENTITY = {
     api_feed_url: '',
     api_feed_key: '',
     refund_policies: [],
-    access_level_types: [],
+    access_level_types: null,
     badge_types: null,
     badge_features: null,
     order_extra_questions: null,
@@ -96,12 +95,15 @@ export const DEFAULT_ENTITY = {
     attendee_extra_questions: null,
     begin_allow_booking_date: 0,
     end_allow_booking_date: 0,
-}
+    external_summit_id: null,
+    external_registration_feed_type: '',
+    external_registration_feed_api_key: null,
+};
 
 const DEFAULT_STATE = {
     currentSummit: DEFAULT_ENTITY,
     errors: {}
-}
+};
 
 const currentSummitReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action

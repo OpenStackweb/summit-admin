@@ -50,7 +50,6 @@ class BadgeForm extends React.Component {
 
     handleFeatureLink(feature) {
         let {entity} = this.state;
-        console.log(feature);
         this.props.onFeatureLink(entity.ticket_id, feature);
     }
 

@@ -18,11 +18,17 @@ import T from "i18n-react/dist/i18n-react";
 import TicketTypeForm from '../../components/forms/ticket-type-form';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getTicketType, resetTicketTypeForm, saveTicketType } from "../../actions/ticket-actions";
+import { getBadgeTypes } from '../../actions/badge-actions'
 
 class EditTicketTypePage extends React.Component {
 
     componentWillMount () {
+        let {currentSummit} = this.props;
         let ticketTypeId = this.props.match.params.ticket_type_id;
+
+        if(currentSummit !== null) {
+            this.props.getBadgeTypes();
+        }
 
         if (!ticketTypeId) {
             this.props.resetTicketTypeForm();
@@ -32,6 +38,7 @@ class EditTicketTypePage extends React.Component {
     }
 
     componentWillReceiveProps(newProps) {
+        let {currentSummit} = this.props;
         let oldId = this.props.match.params.ticket_type_id;
         let newId = newProps.match.params.ticket_type_id;
 
@@ -41,6 +48,10 @@ class EditTicketTypePage extends React.Component {
             } else {
                 this.props.getTicketType(newId);
             }
+        }
+
+        if (currentSummit.id !== newProps.currentSummit.id || !newProps.currentSummit.badge_types) {
+            this.props.getBadgeTypes();
         }
     }
 
@@ -79,6 +90,7 @@ export default connect (
         getSummitById,
         getTicketType,
         resetTicketTypeForm,
-        saveTicketType
+        saveTicketType,
+        getBadgeTypes
     }
 )(EditTicketTypePage);

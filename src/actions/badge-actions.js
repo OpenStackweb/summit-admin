@@ -60,8 +60,10 @@ export const UPDATE_BADGE_TYPE         = 'UPDATE_BADGE_TYPE';
 export const BADGE_TYPE_UPDATED        = 'BADGE_TYPE_UPDATED';
 export const BADGE_TYPE_ADDED          = 'BADGE_TYPE_ADDED';
 export const BADGE_TYPE_DELETED        = 'BADGE_TYPE_DELETED';
-export const BADGE_ACCESS_LEVEL_ADDED        = 'BADGE_ACCESS_LEVEL_ADDED';
-export const BADGE_ACCESS_LEVEL_REMOVED      = 'BADGE_ACCESS_LEVEL_REMOVED';
+export const BADGE_ACCESS_LEVEL_ADDED       = 'BADGE_ACCESS_LEVEL_ADDED';
+export const BADGE_ACCESS_LEVEL_REMOVED     = 'BADGE_ACCESS_LEVEL_REMOVED';
+export const FEATURE_ADDED_TO_TYPE          = 'FEATURE_ADDED_TO_TYPE';
+export const FEATURE_REMOVED_FROM_TYPE      = 'FEATURE_REMOVED_FROM_TYPE';
 
 
 /***********************  BADGE  ************************************************/
@@ -221,7 +223,7 @@ export const getBadgeType = (badgeTypeId) => (dispatch, getState) => {
 
     let params = {
         access_token : accessToken,
-        expand: 'access_levels'
+        expand: 'access_levels,badge_features'
     };
 
     return getRequest(
@@ -361,12 +363,60 @@ export const removeAccessLevelFromBadgeType = (badgeTypeId, accessLevelId) => (d
     );
 };
 
+export const addFeatureToBadgeType = (badgeTypeId, feature) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return putRequest(
+        null,
+        createAction(FEATURE_ADDED_TO_TYPE)({feature}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-types/${badgeTypeId}/features/${feature.id}`,
+        {},
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const removeFeatureFromBadgeType = (badgeTypeId, featureId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(FEATURE_REMOVED_FROM_TYPE)({featureId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-types/${badgeTypeId}/features/${featureId}`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
 
 const normalizeBadgeType = (entity) => {
     let normalizedEntity = {...entity};
 
     delete(normalizedEntity.id);
     delete(normalizedEntity.access_levels);
+    delete(normalizedEntity.badge_features);
 
     return normalizedEntity;
 

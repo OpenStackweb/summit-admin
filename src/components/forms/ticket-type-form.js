@@ -87,7 +87,11 @@ class TicketTypeForm extends React.Component {
         let {entity} = this.state;
         let { currentSummit } = this.props;
 
+        console.log(currentSummit);
+
         let currency_ddl = currentSummit.supported_currencies.map(i => ({label:i, value:i}));
+
+        let badge_type_ddl = currentSummit.badge_types.map(bt => ({label: bt.name, value: bt.id}));
 
         return (
             <form className="ticket-type-form">
@@ -111,6 +115,15 @@ class TicketTypeForm extends React.Component {
                             id="external_id"
                             value={entity.external_id}
                             onChange={this.handleChange}
+                        />
+                    </div>
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_ticket_type.badge_type_id")}</label>
+                        <Dropdown
+                            id="badge_type_id"
+                            value={entity.badge_type_id}
+                            onChange={this.handleChange}
+                            options={badge_type_ddl}
                         />
                     </div>
                 </div>

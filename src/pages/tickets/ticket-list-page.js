@@ -1,0 +1,275 @@
+/**
+ * Copyright 2018 OpenStack Foundation
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ **/
+
+import React from 'react'
+import { connect } from 'react-redux';
+import T from 'i18n-react/dist/i18n-react';
+import Swal from "sweetalert2";
+import {Dropdown, FreeTextSearch, MemberInput, Table, UploadInput} from 'openstack-uicore-foundation/lib/components';
+import { getSummitById }  from '../../actions/summit-actions';
+import { getTickets, ingestExternalTickets, importTicketsCSV, exportTicketsCSV } from "../../actions/ticket-actions";
+import {Modal, Pagination} from "react-bootstrap";
+import {Breadcrumb} from "react-breadcrumbs";
+
+import '../../styles/ticket-list-page.less';
+
+class TicketListPage extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        this.handleEdit = this.handleEdit.bind(this);
+        this.handleSort = this.handleSort.bind(this);
+        this.handlePageChange = this.handlePageChange.bind(this);
+        this.handleSearch = this.handleSearch.bind(this);
+        this.handleIngestTickets = this.handleIngestTickets.bind(this);
+        this.handleImportTickets = this.handleImportTickets.bind(this);
+        this.handleExportTickets = this.handleExportTickets.bind(this);
+        this.handleUploadFile = this.handleUploadFile.bind(this);
+        this.handleRemoveFile = this.handleRemoveFile.bind(this);
+
+        this.state = {
+            showIngestModal: false,
+            showImportModal: false,
+            importFile: null
+        }
+
+    }
+
+    componentDidMount() {
+        let {currentSummit} = this.props;
+        if(currentSummit !== null) {
+            this.props.getTickets('', 1, 10);
+        }
+    }
+
+    componentWillReceiveProps(newProps) {
+        let {currentSummit} = this.props;
+
+        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
+            this.props.getTickets();
+        }
+    }
+
+    handleSearch(term) {
+        let {order, orderDir, page, perPage} = this.props;
+        this.props.getTickets(term, page, perPage, order, orderDir);
+    }
+
+    handleEdit(ticket_id) {
+        let {currentSummit, history, tickets} = this.props;
+        let ticket = tickets.find(t => t.id == ticket_id);
+        history.push(`/app/summits/${currentSummit.id}/purchase-orders/${ticket.order_id}/tickets/${ticket_id}`);
+    }
+
+    handleSort(index, key, dir, func) {
+        let {term, page, perPage} = this.props;
+        this.props.getTickets(term, page, perPage, key, dir);
+    }
+
+    handlePageChange(page) {
+        let {term, order, orderDir, perPage} = this.props;
+        this.props.getTickets(term, page, perPage, order, orderDir);
+    }
+
+    handleIngestTickets() {
+        let email = this.ingestEmailRef.value;
+        this.setState({showIngestModal: false});
+        this.props.ingestExternalTickets(email);
+    }
+
+    handleImportTickets() {
+        this.setState({showImportModal: false});
+        this.props.importTicketsCSV(this.state.importFile);
+    }
+
+    handleExportTickets() {
+        this.props.exportTicketsCSV();
+    }
+
+    handleUploadFile(file) {
+        let formData = new FormData();
+        formData.append('file', file);
+        this.setState({importFile: file});
+    }
+
+    handleRemoveFile(ev) {
+        this.setState({importFile: null});
+    }
+
+    render(){
+        let {currentSummit, tickets, term, order, orderDir, totalTickets, lastPage, currentPage, match} = this.props;
+        let {showIngestModal, showImportModal, importFile} = this.state;
+
+        let columns = [
+            { columnKey: 'number', value: T.translate("ticket_list.number"), sortable: true },
+            { columnKey: 'ticket_type', value: T.translate("ticket_list.ticket_type") },
+            { columnKey: 'bought_date', value: T.translate("ticket_list.bought_date") },
+            { columnKey: 'owner_name', value: T.translate("ticket_list.owner_name") },
+            { columnKey: 'owner_email', value: T.translate("ticket_list.owner_email") },
+            { columnKey: 'status', value: T.translate("ticket_list.status") }
+        ];
+
+        let table_options = {
+            sortCol: order,
+            sortDir: orderDir,
+            actions: {
+                edit: { onClick: this.handleEdit },
+            }
+        }
+
+        if(!currentSummit.id) return (<div></div>);
+
+        return(
+            <div>
+                <Breadcrumb data={{ title: T.translate("ticket_list.ticket_list"), pathname: match.url }} ></Breadcrumb>
+
+                <div className="container">
+                    <h3> {T.translate("ticket_list.ticket_list")} ({totalTickets})</h3>
+                    <div className={'row'}>
+                        <div className={'col-md-6'}>
+                            <FreeTextSearch
+                                value={term}
+                                placeholder={T.translate("ticket_list.placeholders.search_tickets")}
+                                onSearch={this.handleSearch}
+                            />
+                        </div>
+                        <div className="col-md-6 text-right">
+                            <button className="btn btn-primary right-space" onClick={() => this.setState({showIngestModal:true})}>
+                                {T.translate("ticket_list.ingest")}
+                            </button>
+                            <button className="btn btn-default right-space" onClick={() => this.setState({showImportModal:true})}>
+                                {T.translate("ticket_list.import")}
+                            </button>
+                            <button className="btn btn-default" onClick={this.handleExportTickets}>
+                                {T.translate("ticket_list.export")}
+                            </button>
+                        </div>
+                    </div>
+
+                    {tickets.length == 0 &&
+                    <div>{T.translate("ticket_list.no_tickets")}</div>
+                    }
+
+                    {tickets.length > 0 &&
+                        <div>
+                            <Table
+                                options={table_options}
+                                data={tickets}
+                                columns={columns}
+                                onSort={this.handleSort}
+                            />
+                            <Pagination
+                                bsSize="medium"
+                                prev
+                                next
+                                first
+                                last
+                                ellipsis
+                                boundaryLinks
+                                maxButtons={10}
+                                items={lastPage}
+                                activePage={currentPage}
+                                onSelect={this.handlePageChange}
+                            />
+                        </div>
+                    }
+
+                </div>
+
+                // Ingest Modal
+                <Modal show={showIngestModal} onHide={() => this.setState({showIngestModal:false})} >
+                    <Modal.Header closeButton>
+                        <Modal.Title>{T.translate("ticket_list.ingest_tickets")}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="row">
+                            <div className="col-md-12">
+                                This will trigger the external registration data ingestion from defined feed on Summit
+                                Badge data will not be overwritten unless a promo code is applied
+                            </div>
+                            <br />
+                            <br />
+                            <br />
+                            <div className="col-md-12 ticket-ingest-email-wrapper">
+                                <label>{T.translate("ticket_list.send_email")}</label><br/>
+                                <input
+                                    id="ingest_email"
+                                    className="form-control"
+                                    ref={node => this.ingestEmailRef = node}
+                                />
+                            </div>
+
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <button className="btn btn-primary" onClick={this.handleIngestTickets}>
+                            {T.translate("ticket_list.ingest")}
+                        </button>
+                    </Modal.Footer>
+                </Modal>
+
+                // Import Modal
+                <Modal show={showImportModal} onHide={() => this.setState({showImportModal:false})} >
+                    <Modal.Header closeButton>
+                        <Modal.Title>{T.translate("ticket_list.import_tickets")}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="row">
+                            <div className="col-md-12">
+                                Format must be the following:<br />
+                                <b>id</b>: the id of the ticket<br />
+                                <b>number</b>: the number of the ticket, only if id is not provided<br />
+                                <b>badge_type_id</b>: the id of the badge type<br />
+                                <b>badge_type_name</b>: the name of the badge type, only if id is not provided<br />
+                                <b>badge_features</b>: a list of badge features names to add to the badge delimited by "|" (pipe)<br />
+                            </div>
+                            <div className="col-md-12 ticket-import-upload-wrapper">
+                                <UploadInput
+                                    value={importFile}
+                                    handleUpload={this.handleUploadFile}
+                                    handleRemove={this.handleRemoveFile}
+                                    className="dropzone col-md-6"
+                                    multiple={false}
+                                    accept=".csv"
+                                />
+                            </div>
+
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <button className="btn btn-primary" onClick={this.handleImportTickets}>
+                            {T.translate("ticket_list.ingest")}
+                        </button>
+                    </Modal.Footer>
+                </Modal>
+            </div>
+        )
+    }
+}
+
+const mapStateToProps = ({ currentSummitState, currentTicketListState }) => ({
+    currentSummit   : currentSummitState.currentSummit,
+    ...currentTicketListState
+})
+
+export default connect (
+    mapStateToProps,
+    {
+        getSummitById,
+        getTickets,
+        ingestExternalTickets,
+        importTicketsCSV,
+        exportTicketsCSV,
+    }
+)(TicketListPage);

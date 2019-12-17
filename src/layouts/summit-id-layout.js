@@ -49,6 +49,7 @@ import SponsorLayout from './sponsor-layout'
 import SponsorshipLayout from './sponsorship-layout'
 import BadgeScansListPage from '../pages/sponsors/badge-scans-list-page';
 import NoMatchPage from '../pages/no-match-page';
+import TicketListPage from "../pages/tickets/ticket-list-page";
 
 
 class SummitIdLayout extends React.Component {
@@ -113,6 +114,7 @@ class SummitIdLayout extends React.Component {
                     <Route path={`${match.url}/badge-types`} component={BadgeTypeLayout}/>
                     <Route path={`${match.url}/access-levels`} component={AccessLevelLayout}/>
                     <Route path={`${match.url}/purchase-orders`} component={PurchaseOrderLayout}/>
+                    <Route path={`${match.url}/tickets`} component={TicketListPage}/>
                     <Route path={`${match.url}/order-extra-questions`} component={OrderExtraQuestionLayout}/>
                     <Route path={`${match.url}/sponsors`} component={SponsorLayout}/>
                     <Route path={`${match.url}/sponsorships`} component={SponsorshipLayout}/>

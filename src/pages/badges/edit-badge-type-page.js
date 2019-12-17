@@ -17,11 +17,22 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
 import BadgeTypeForm from '../../components/forms/badge-type-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getAccessLevels, getBadgeType, resetBadgeTypeForm, saveBadgeType, addAccessLevelToBadgeType, removeAccessLevelFromBadgeType } from "../../actions/badge-actions";
+import {
+    getAccessLevels,
+    getBadgeFeatures,
+    getBadgeType,
+    resetBadgeTypeForm,
+    saveBadgeType,
+    addAccessLevelToBadgeType,
+    removeAccessLevelFromBadgeType,
+    addFeatureToBadgeType,
+    removeFeatureFromBadgeType
+} from "../../actions/badge-actions";
 
 class EditBadgeTypePage extends React.Component {
 
     componentWillMount () {
+        let { currentSummit } = this.props;
         let badgeTypeId = this.props.match.params.badge_type_id;
 
         if (!badgeTypeId) {
@@ -30,7 +41,8 @@ class EditBadgeTypePage extends React.Component {
             this.props.getBadgeType(badgeTypeId);
         }
 
-        this.props.getAccessLevels();
+        if (!currentSummit.badge_features) this.props.getBadgeFeatures();
+        if (!currentSummit.access_level_types) this.props.getAccessLevels();
     }
 
     componentWillReceiveProps(newProps) {
@@ -64,6 +76,8 @@ class EditBadgeTypePage extends React.Component {
                     errors={errors}
                     onAccessLevelLink={this.props.addAccessLevelToBadgeType}
                     onAccessLevelUnLink={this.props.removeAccessLevelFromBadgeType}
+                    onFeatureLink={this.props.addFeatureToBadgeType}
+                    onFeatureUnLink={this.props.removeFeatureFromBadgeType}
                     onSubmit={this.props.saveBadgeType}
                 />
                 }
@@ -82,10 +96,13 @@ export default connect (
     {
         getSummitById,
         getAccessLevels,
+        getBadgeFeatures,
         getBadgeType,
         resetBadgeTypeForm,
         saveBadgeType,
         addAccessLevelToBadgeType,
-        removeAccessLevelFromBadgeType
+        removeAccessLevelFromBadgeType,
+        addFeatureToBadgeType,
+        removeFeatureFromBadgeType
     }
 )(EditBadgeTypePage);

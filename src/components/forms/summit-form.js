@@ -175,6 +175,11 @@ class SummitForm extends React.Component {
             {label: 'Vanderpoel', value: 'Vanderpoel'}
         ];
 
+        let external_registration_feed_type_ddl = [
+            {label: 'None', value: ''},
+            {label: 'Eventbrite', value: 'Eventbrite'},
+        ];
+
         let attribute_columns = [
             { columnKey: 'id', value: T.translate("general.id") },
             { columnKey: 'type', value: T.translate("general.type") },
@@ -208,16 +213,6 @@ class SummitForm extends React.Component {
                             error={this.hasErrors('name')}
                             id="name"
                             value={entity.name}
-                            onChange={this.handleChange}
-                        />
-                    </div>
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_summit.eventbrite_id")}</label>
-                        <Input
-                            className="form-control"
-                            error={this.hasErrors('external_summit_id')}
-                            id="external_summit_id"
-                            value={entity.external_summit_id}
                             onChange={this.handleChange}
                         />
                     </div>
@@ -261,38 +256,6 @@ class SummitForm extends React.Component {
                             error={this.hasErrors('dates_label')}
                             id="dates_label"
                             value={entity.dates_label}
-                            onChange={this.handleChange}
-                        />
-                    </div>
-                </div>
-                <div className="row form-group">
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_summit.api_feed_type")}</label>
-                        <Dropdown
-                            id="api_feed_type"
-                            value={entity.api_feed_type}
-                            placeholder={T.translate("edit_summit.placeholders.api_feed_type")}
-                            options={api_feed_type_ddl}
-                            onChange={this.handleChange}
-                        />
-                    </div>
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_summit.api_feed_url")}</label>
-                        <Input
-                            className="form-control"
-                            error={this.hasErrors('api_feed_url')}
-                            id="api_feed_url"
-                            value={entity.api_feed_url}
-                            onChange={this.handleChange}
-                        />
-                    </div>
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_summit.api_feed_key")}</label>
-                        <Input
-                            className="form-control"
-                            error={this.hasErrors('api_feed_key')}
-                            id="api_feed_key"
-                            value={entity.api_feed_key}
                             onChange={this.handleChange}
                         />
                     </div>
@@ -621,6 +584,74 @@ class SummitForm extends React.Component {
                         </div>
                     </Panel>
                 </Exclusive>
+
+                <Panel show={showSection == 'third_party'} title={T.translate("edit_summit.third_party")}
+                       handleClick={this.toggleSection.bind(this, 'third_party')}>
+                    <div className="row form-group">
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_summit.api_feed_type")}</label>
+                            <Dropdown
+                                id="api_feed_type"
+                                value={entity.api_feed_type}
+                                placeholder={T.translate("edit_summit.placeholders.api_feed_type")}
+                                options={api_feed_type_ddl}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_summit.api_feed_url")}</label>
+                            <Input
+                                className="form-control"
+                                error={this.hasErrors('api_feed_url')}
+                                id="api_feed_url"
+                                value={entity.api_feed_url}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_summit.api_feed_key")}</label>
+                            <Input
+                                className="form-control"
+                                error={this.hasErrors('api_feed_key')}
+                                id="api_feed_key"
+                                value={entity.api_feed_key}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                    </div>
+                    <div className="row form-group">
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_summit.external_summit_id")}</label>
+                            <Input
+                                className="form-control"
+                                error={this.hasErrors('external_summit_id')}
+                                id="external_summit_id"
+                                value={entity.external_summit_id}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_summit.external_registration_feed_type")}</label>
+                            <Dropdown
+                                id="external_registration_feed_type"
+                                value={entity.external_registration_feed_type}
+                                placeholder={T.translate("edit_summit.placeholders.external_registration_feed_type")}
+                                options={external_registration_feed_type_ddl}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_summit.external_registration_feed_api_key")}</label>
+                            <Input
+                                className="form-control"
+                                error={this.hasErrors('external_registration_feed_api_key')}
+                                id="external_registration_feed_api_key"
+                                value={entity.external_registration_feed_api_key}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                    </div>
+                </Panel>
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">

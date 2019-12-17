@@ -50,16 +50,20 @@ class EditTicketPage extends React.Component {
         this.props.getTicket(new_ticket_id);
 
         if (!currentSummit.badge_features) this.props.getBadgeFeatures();
-        if (!currentSummit.badge_types) this.props.getBadgeTypes()
+        if (!currentSummit.badge_types) this.props.getBadgeTypes();
     }
 
     componentWillReceiveProps(newProps) {
+        let {currentSummit} = newProps;
         let oldId = this.props.match.params.ticket_id;
         let newId = newProps.match.params.ticket_id;
 
         if (oldId != newId) {
             this.props.getTicket(newId);
         }
+
+        if (!currentSummit.badge_features) this.props.getBadgeFeatures();
+        if (!currentSummit.badge_types) this.props.getBadgeTypes();
     }
 
     handlePrintBadge(ev) {
