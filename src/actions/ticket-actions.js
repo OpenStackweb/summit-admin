@@ -132,7 +132,7 @@ export const ingestExternalTickets = (email) => (dispatch, getState) => {
     );
 };
 
-const importTicketsCSV = (file) => (dispatch, getState) => {
+export const importTicketsCSV = (file) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
@@ -140,6 +140,8 @@ const importTicketsCSV = (file) => (dispatch, getState) => {
     let params = {
         access_token : accessToken
     };
+
+    console.log(file);
 
     postRequest(
         null,

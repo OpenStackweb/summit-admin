@@ -35,8 +35,6 @@ class TicketListPage extends React.Component {
         this.handleIngestTickets = this.handleIngestTickets.bind(this);
         this.handleImportTickets = this.handleImportTickets.bind(this);
         this.handleExportTickets = this.handleExportTickets.bind(this);
-        this.handleUploadFile = this.handleUploadFile.bind(this);
-        this.handleRemoveFile = this.handleRemoveFile.bind(this);
 
         this.state = {
             showIngestModal: false,
@@ -90,21 +88,15 @@ class TicketListPage extends React.Component {
 
     handleImportTickets() {
         this.setState({showImportModal: false});
-        this.props.importTicketsCSV(this.state.importFile);
+        let formData = new FormData();
+        if (this.state.importFile) {
+            formData.append('file', this.state.importFile);
+            this.props.importTicketsCSV(formData);
+        }
     }
 
     handleExportTickets() {
         this.props.exportTicketsCSV();
-    }
-
-    handleUploadFile(file) {
-        let formData = new FormData();
-        formData.append('file', file);
-        this.setState({importFile: file});
-    }
-
-    handleRemoveFile(ev) {
-        this.setState({importFile: null});
     }
 
     render(){
@@ -236,9 +228,9 @@ class TicketListPage extends React.Component {
                             </div>
                             <div className="col-md-12 ticket-import-upload-wrapper">
                                 <UploadInput
-                                    value={importFile}
-                                    handleUpload={this.handleUploadFile}
-                                    handleRemove={this.handleRemoveFile}
+                                    value={importFile && importFile.name}
+                                    handleUpload={(file) => this.setState({importFile: file})}
+                                    handleRemove={() => this.setState({importFile: null})}
                                     className="dropzone col-md-6"
                                     multiple={false}
                                     accept=".csv"
@@ -248,7 +240,7 @@ class TicketListPage extends React.Component {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <button className="btn btn-primary" onClick={this.handleImportTickets}>
+                        <button disabled={!this.state.importFile} className="btn btn-primary" onClick={this.handleImportTickets}>
                             {T.translate("ticket_list.ingest")}
                         </button>
                     </Modal.Footer>
