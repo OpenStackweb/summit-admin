@@ -37,7 +37,7 @@ export const DEFAULT_ENTITY = {
     mandatory           : false,
     printable           : false,
     placeholder         : '',
-    usage               : null,
+    usage               : 'Ticket',
     values              : []
 }
 

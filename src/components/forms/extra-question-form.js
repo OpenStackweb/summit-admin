@@ -97,7 +97,7 @@ class ExtraQuestionForm extends React.Component {
 
         let value_columns = [
             { columnKey: 'value', value: T.translate("question_form.value") },
-            { columnKey: 'label', value: T.translate("question_form.label") }
+            { columnKey: 'label', value: T.translate("question_form.visible_option") }
         ];
 
         let value_options = {
@@ -125,18 +125,18 @@ class ExtraQuestionForm extends React.Component {
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
                     <div className="col-md-3">
-                        <label> {T.translate("question_form.class_name")} *</label>
+                        <label> {T.translate("question_form.question_type")} *</label>
                         <Dropdown
                             id="type"
                             value={entity.type}
-                            placeholder={T.translate("question_form.placeholders.select_class")}
+                            placeholder={T.translate("question_form.placeholders.select_type")}
                             options={question_class_ddl}
                             onChange={this.handleChange}
                             disabled={entity.id !== 0}
                         />
                     </div>
                     <div className="col-md-3">
-                        <label> {T.translate("general.name")} </label>
+                        <label> {T.translate("question_form.question_id")} *</label>
                         <Input
                             id="name"
                             value={entity.name}
@@ -146,7 +146,7 @@ class ExtraQuestionForm extends React.Component {
                         />
                     </div>
                     <div className="col-md-6">
-                        <label> {T.translate("question_form.label")} </label>
+                        <label> {T.translate("question_form.visible_question")} *</label>
                         <Input
                             id="label"
                             value={entity.label}
@@ -158,7 +158,7 @@ class ExtraQuestionForm extends React.Component {
                 </div>
                 <div className="row form-group">
                     <div className="col-md-3">
-                        <label> {T.translate("question_form.placeholder")} </label>
+                        <label> {T.translate("question_form.hint")} </label>
                         <Input
                             id="placeholder"
                             value={entity.placeholder}
@@ -167,7 +167,7 @@ class ExtraQuestionForm extends React.Component {
                             error={this.hasErrors('placeholder')}
                         />
                     </div>
-                    {/*<div className="col-md-3">
+                    <div className="col-md-3">
                         <label> {T.translate("question_form.usage")} *</label>
                         <Dropdown
                             id="usage"
@@ -176,7 +176,7 @@ class ExtraQuestionForm extends React.Component {
                             options={question_usage_ddl}
                             onChange={this.handleChange}
                         />
-                    </div>*/}
+                    </div>
                 </div>
                 <div className="row form-group">
                     <div className="col-md-3 checkboxes-div">

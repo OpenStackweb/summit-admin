@@ -811,9 +811,9 @@
     }
   },
   "question_form": {
-    "class_name"                : "Class",
-    "name"                      : "Name",
-    "label"                     : "Label",
+    "question_type"             : "Question Type",
+    "question_id"               : "Question Id",
+    "visible_question"          : "Visible Question (as appears on site)",
     "is_mandatory"              : "Mandatory ?",
     "is_read_only"              : "Read Only ?",
     "is_country_selector"       : "Country Selector ?",
@@ -823,15 +823,16 @@
     "default_value_id"          : "Default Value",
     "empty_string"              : "Empty String",
     "content"                   : "Content",
-    "placeholder"               : "Placeholder",
+    "hint"                      : "Text Input Hint",
     "usage"                     : "Usage",
     "mandatory"                 : "Mandatory",
     "printable"                 : "Printable",
-    "value"                     : "Value",
+    "value"                     : "Hidden Value",
+    "visible_option"            : "Visible Option (as appears on site)",
     "values"                    : "Values",
     "add_value"                 : "Add Value",
     "placeholders": {
-      "select_class" : "Select a Class",
+      "select_type" : "Select a Type",
       "select_usage" : "Select Usage",
       "select_default" : "Select Default Value"
     }

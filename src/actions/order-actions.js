@@ -304,7 +304,6 @@ export const deleteOrderExtraQuestionValue = (orderExtraQuestionId, orderExtraQu
 const normalizeQuestion = (entity) => {
     let normalizedEntity = {...entity};
 
-    normalizedEntity.usage = 'Ticket';
     return normalizedEntity;
 
 }

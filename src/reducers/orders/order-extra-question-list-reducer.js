@@ -55,6 +55,7 @@ const orderExtraQuestionListReducer = (state = DEFAULT_STATE, action) => {
                 return {
                     id: q.id,
                     name: q.name,
+                    label: q.label,
                     type: q.type,
                     order: parseInt(q.order)
                 };
