@@ -145,28 +145,6 @@ class ExtraQuestionForm extends React.Component {
                             error={this.hasErrors('name')}
                         />
                     </div>
-                    <div className="col-md-6">
-                        <label> {T.translate("question_form.visible_question")} *</label>
-                        <Input
-                            id="label"
-                            value={entity.label}
-                            onChange={this.handleChange}
-                            className="form-control"
-                            error={this.hasErrors('label')}
-                        />
-                    </div>
-                </div>
-                <div className="row form-group">
-                    <div className="col-md-3">
-                        <label> {T.translate("question_form.hint")} </label>
-                        <Input
-                            id="placeholder"
-                            value={entity.placeholder}
-                            onChange={this.handleChange}
-                            className="form-control"
-                            error={this.hasErrors('placeholder')}
-                        />
-                    </div>
                     <div className="col-md-3">
                         <label> {T.translate("question_form.usage")} *</label>
                         <Dropdown
@@ -177,6 +155,31 @@ class ExtraQuestionForm extends React.Component {
                             onChange={this.handleChange}
                         />
                     </div>
+                </div>
+                <div className="row form-group">
+                    <div className="col-md-6">
+                        <label> {T.translate("question_form.visible_question")} *</label>
+                        <Input
+                            id="label"
+                            value={entity.label}
+                            onChange={this.handleChange}
+                            className="form-control"
+                            error={this.hasErrors('label')}
+                        />
+                    </div>
+                    {(entity.type === 'Text' || entity.type === 'TextArea') &&
+                    <div className="col-md-3">
+                        <label> {T.translate("question_form.hint")} </label>
+                        <Input
+                            id="placeholder"
+                            value={entity.placeholder}
+                            onChange={this.handleChange}
+                            className="form-control"
+                            error={this.hasErrors('placeholder')}
+                        />
+                    </div>
+                    }
+
                 </div>
                 <div className="row form-group">
                     <div className="col-md-3 checkboxes-div">

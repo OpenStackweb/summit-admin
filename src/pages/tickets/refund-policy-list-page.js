@@ -66,6 +66,7 @@ class RefundPolicyListPage extends React.Component {
                 <Breadcrumb data={{ title: T.translate("refund_policy_list.refund_policies"), pathname: match.url }} ></Breadcrumb>
                 <div className="container">
                     <h3> {T.translate("refund_policy_list.refund_policies")}</h3>
+                    <p> {T.translate("refund_policy_list.warning")}</p>
                     <div className={'row'}>
                         <div className="col-md-12">
                             <EditableTable

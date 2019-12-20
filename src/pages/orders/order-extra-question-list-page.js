@@ -79,9 +79,9 @@ class OrderExtraQuestionListPage extends React.Component {
         let {currentSummit, orderExtraQuestions, order, orderDir, totalOrderExtraQuestions} = this.props;
 
         let columns = [
-            { columnKey: 'type', value: T.translate("order_extra_question_list.class")},
-            { columnKey: 'label', value: T.translate("order_extra_question_list.label") },
-            { columnKey: 'name', value: T.translate("order_extra_question_list.name") }
+            { columnKey: 'type', value: T.translate("order_extra_question_list.question_type")},
+            { columnKey: 'label', value: T.translate("order_extra_question_list.visible_question") },
+            { columnKey: 'name', value: T.translate("order_extra_question_list.question_id") }
         ];
 
         let table_options = {

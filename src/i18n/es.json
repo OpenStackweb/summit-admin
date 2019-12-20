@@ -96,7 +96,7 @@
     "badge_type_list"         : "Badge Types",
     "taxes"                   : "Taxes",
     "tax_type_list"           : "Tax Types",
-    "refund_policy_list"      : "Refund Policies",
+    "refund_policy_list"      : "Automatic Refund Polices",
     "push_notifications"      : "Push Notifications",
     "room_occupancy"          : "Room Occupancy",
     "tag_groups"              : "Tag Groups",
@@ -812,7 +812,7 @@
   },
   "question_form": {
     "question_type"             : "Question Type",
-    "question_id"               : "Question Id",
+    "question_id"               : "Question Identifier",
     "visible_question"          : "Visible Question (as appears on site)",
     "is_mandatory"              : "Mandatory ?",
     "is_read_only"              : "Read Only ?",
@@ -972,11 +972,12 @@
     "tax_type_created"    : "Tax Type created successfully"
   },
   "refund_policy_list": {
-    "refund_policy_list": "Refund Policy List",
-    "refund_policies"   : "Refund Policies",
-    "name"              : "Name",
-    "rate"              : "Rate (%)",
-    "days_before"       : "Days before event begin"
+    "refund_policy_list" : "Automatic Refund Policy List",
+    "refund_policies"    : "Automatic Refund Policies",
+    "warning"            : "Warning: An automatic refund means refunds will be issued instantly without approval of staff based on the policies below",
+    "name"               : "Name",
+    "rate"               : "Rate (%)",
+    "days_before"        : "Days before event begin"
   },
   "push_notification_list": {
     "push_notifications"      : "Push Notifications",
@@ -1134,9 +1135,9 @@
   },
   "order_extra_question_list": {
     "order_extra_questions"     : "Registration Extra Questions",
-    "class"                     : "Class",
-    "label"                     : "Label",
-    "name"                      : "Name",
+    "question_type"             : "Question Type",
+    "question_id"               : "Question Identifier",
+    "visible_question"          : "Visible Question (as appears on site)",
     "questions"                 : "Questions",
     "add_question"              : "Add Question",
     "no_order_extra_questions"  : "No extra questions found.",
