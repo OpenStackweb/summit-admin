@@ -93,10 +93,11 @@ class QuestionForm extends React.Component {
 
         let value_columns = [
             { columnKey: 'value', value: T.translate("question_form.value") },
-            { columnKey: 'label', value: T.translate("question_form.label") }
+            { columnKey: 'label', value: T.translate("question_form.visible_option") }
         ];
 
         let value_options = {
+            noAlert: true,
             actions: {
                 save: {onClick: onValueSave},
                 delete: {onClick: onValueDelete}
@@ -121,18 +122,18 @@ class QuestionForm extends React.Component {
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
                     <div className="col-md-3">
-                        <label> {T.translate("question_form.class_name")} *</label>
+                        <label> {T.translate("question_form.question_type")} *</label>
                         <Dropdown
                             id="class_name"
                             value={entity.class_name}
-                            placeholder={T.translate("question_form.placeholders.select_class")}
+                            placeholder={T.translate("question_form.placeholders.select_type")}
                             options={question_class_ddl}
                             onChange={this.handleChange}
                             disabled={entity.id !== 0}
                         />
                     </div>
                     <div className="col-md-3">
-                        <label> {T.translate("general.name")} </label>
+                        <label> {T.translate("question_form.question_id")} </label>
                         <Input
                             id="name"
                             value={entity.name}
@@ -142,7 +143,7 @@ class QuestionForm extends React.Component {
                         />
                     </div>
                     <div className="col-md-6">
-                        <label> {T.translate("question_form.label")} </label>
+                        <label> {T.translate("question_form.visible_question")} </label>
                         <Input
                             id="label"
                             value={entity.label}
@@ -167,7 +168,7 @@ class QuestionForm extends React.Component {
                     }
                     {this.shouldShowField('empty_string') &&
                     <div className="col-md-3">
-                        <label> {T.translate("question_form.empty_string")} </label>
+                        <label> {T.translate("question_form.hint")} </label>
                         <Input
                             id="empty_string"
                             value={entity.empty_string}

@@ -67,7 +67,7 @@ class EditOrderExtraQuestionPage extends React.Component {
             confirmButtonText: T.translate("general.yes_delete")
         }).then(function(result){
             if (result.value) {
-                deleteOrderExtraQuestionValue(currentSummit.id, entity.id, valueId);
+                deleteOrderExtraQuestionValue(entity.id, valueId);
             }
         });
     }

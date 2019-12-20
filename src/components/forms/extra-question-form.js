@@ -101,6 +101,7 @@ class ExtraQuestionForm extends React.Component {
         ];
 
         let value_options = {
+            noAlert: true,
             actions: {
                 save: {onClick: onValueSave},
                 delete: {onClick: onValueDelete}

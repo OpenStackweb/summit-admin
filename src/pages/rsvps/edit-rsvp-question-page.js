@@ -36,7 +36,7 @@ class EditRsvpQuestionPage extends React.Component {
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
-            text: T.translate("edit_rsvp_question.remove_value_warning") + ' ' + value.value,
+            text: T.translate("edit_rsvp_question.remove_value_warning") + '  ' + value.value,
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",

@@ -57,6 +57,7 @@
     "done"                : "Done!",
     "email_sent"          : "Email sent successfully.",
     "drag_and_drop"       : "Drag and Drop to sort items.",
+    "remove_warning"      : "Are you sure you want to delete this?",
     "placeholders": {
       "search_speakers"     : "Search Speakers by Name or Email"
     }
