@@ -145,9 +145,8 @@ class AttendeeForm extends React.Component {
                     </div>
                 </div>
 
-                {entity.member != null &&
                 <div>
-                    {entity.member.affiliations &&
+                    { entity.member != null && entity.member.affiliations &&
                     <div className="row form-group">
                         <div className="col-md-12">
                             <legend>{T.translate("edit_attendee.affiliations")}</legend>
@@ -170,12 +169,12 @@ class AttendeeForm extends React.Component {
                     />
                     }
 
-                    {entity.member.hasOwnProperty('rsvp') && entity.member.rsvp.length > 0 &&
+                    { entity.member != null && entity.member.hasOwnProperty('rsvp') && entity.member.rsvp.length > 0 &&
                     <RsvpComponent member={entity.member} onDelete={this.props.onDeleteRsvp} />
                     }
 
                 </div>
-                }
+
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">
