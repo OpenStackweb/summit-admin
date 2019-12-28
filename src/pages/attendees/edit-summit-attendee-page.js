@@ -52,7 +52,7 @@ class EditSummitAttendeePage extends React.Component {
     render(){
         let {currentSummit, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.member.first_name + ' ' + entity.member.last_name : T.translate("general.new");
+        let breadcrumb = (entity.id) ? entity.email : T.translate("general.new");
 
         return(
             <div className="container">
