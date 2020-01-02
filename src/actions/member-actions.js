@@ -199,6 +199,7 @@ export const deleteAffiliation = (ownerId, affiliationId) => (dispatch, getState
         null,
         createAction(AFFILIATION_DELETED)({affiliationId}),
         `${window.API_BASE_URL}/api/v1/members/${ownerId}/affiliations/${affiliationId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

@@ -184,6 +184,7 @@ export const deleteTagGroup = (tagGroupId) => (dispatch, getState) => {
         null,
         createAction(TAG_GROUP_DELETED)({tagGroupId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/track-tag-groups/${tagGroupId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

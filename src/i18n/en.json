@@ -1143,7 +1143,7 @@
     "questions"                 : "Questions",
     "add_question"              : "Add Question",
     "no_order_extra_questions"  : "No extra questions found.",
-    "remove_question_warning"   : "Are you sure you want to remove question "
+    "remove_warning"            : "Are you sure you want to remove question "
   },
   "edit_order_extra_question": {
     "order_extra_question"                : "Registration Extra Question",

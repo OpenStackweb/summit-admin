@@ -243,6 +243,7 @@ export const removeMemberFromSponsor = (sponsorId, memberId) => (dispatch, getSt
         null,
         createAction(MEMBER_REMOVED_FROM_SPONSOR)({memberId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsors/${sponsorId}/users/${memberId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -264,6 +265,7 @@ export const deleteSponsor = (sponsorId) => (dispatch, getState) => {
         null,
         createAction(SPONSOR_DELETED)({memberId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsors/${sponsorId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -419,6 +421,7 @@ export const deleteSponsorship = (sponsorshipId) => (dispatch, getState) => {
         null,
         createAction(SPONSORSHIP_DELETED)({sponsorshipId}),
         `${window.API_BASE_URL}/api/v1/sponsorship-types/${sponsorshipId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

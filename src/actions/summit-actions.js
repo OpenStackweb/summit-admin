@@ -187,6 +187,7 @@ export const deleteSummit = (summitId) => (dispatch, getState) => {
         null,
         createAction(SUMMIT_DELETED)({summitId}),
         `${window.API_BASE_URL}/api/v1/summits/${summitId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -259,6 +260,7 @@ export const deleteLogo = () => (dispatch, getState) => {
         null,
         createAction(SUMMIT_LOGO_DELETED),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/logo`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

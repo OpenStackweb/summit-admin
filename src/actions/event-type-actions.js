@@ -150,6 +150,7 @@ export const deleteEventType = (eventTypeId) => (dispatch, getState) => {
         null,
         createAction(EVENT_TYPE_DELETED)({eventTypeId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/event-types/${eventTypeId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

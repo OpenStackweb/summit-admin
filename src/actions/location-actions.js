@@ -227,6 +227,7 @@ export const deleteLocation = (locationId) => (dispatch, getState) => {
         null,
         createAction(LOCATION_DELETED)({locationId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/${locationId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -419,6 +420,7 @@ export const deleteFloor = (locationId, floorId) => (dispatch, getState) => {
         null,
         createAction(FLOOR_DELETED)({floorId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/floors/${floorId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -489,6 +491,7 @@ export const deleteFloorImage = (locationId, floorId) => (dispatch, getState) =>
         null,
         createAction(FLOOR_IMAGE_DELETED)({floorId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/floors/${floorId}/image`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -612,6 +615,7 @@ export const deleteRoom = (locationId, roomId) => (dispatch, getState) => {
         null,
         createAction(ROOM_DELETED)({roomId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/rooms/${roomId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -682,6 +686,7 @@ export const deleteRoomImage = (locationId, roomId) => (dispatch, getState) => {
         null,
         createAction(ROOM_IMAGE_DELETED)({roomId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/rooms/${roomId}/image`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -751,6 +756,7 @@ export const removeAttributeFromRoom = (locationId, roomId, attributeId) => (dis
         null,
         createAction(ATTRIBUTE_REMOVED)({attributeId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/bookable-rooms/${roomId}/attributes/${attributeId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -859,6 +865,7 @@ export const deleteLocationImage = (locationId, imageId) => (dispatch, getState)
         null,
         createAction(LOCATION_IMAGE_DELETED)({imageId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/${locationId}/images/${imageId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -980,6 +987,7 @@ export const deleteLocationMap = (locationId, mapId) => (dispatch, getState) => 
         null,
         createAction(LOCATION_MAP_DELETED)({mapId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/${locationId}/maps/${mapId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

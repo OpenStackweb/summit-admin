@@ -208,6 +208,7 @@ export const deleteEventCategory = (categoryId) => (dispatch, getState) => {
         null,
         createAction(EVENT_CATEGORY_DELETED)({categoryId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tracks/${categoryId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -371,6 +372,7 @@ export const unlinkQuestionToCategory = (questionId) => (dispatch, getState) => 
         null,
         createAction(EVENT_CATEGORY_QUESTION_DELETED)({questionId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tracks/${currentEventCategory.id}/extra-questions/${questionId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -458,6 +460,7 @@ export const deleteEventCategoryQuestionValue = (questionId, valueId) => (dispat
         null,
         createAction(EVENT_CATEGORY_QUESTION_VALUE_DELETED)({valueId}),
         `${window.API_BASE_URL}/api/v1/track-question-templates/${questionId}/values/${valueId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -607,6 +610,7 @@ export const deleteEventCategoryGroup = (groupId) => (dispatch, getState) => {
         null,
         createAction(EVENT_CATEGORY_GROUP_DELETED)({groupId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/track-groups/${groupId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -654,6 +658,7 @@ export const removeCategoryFromGroup = (groupId, categoryId) => (dispatch, getSt
         null,
         createAction(CATEGORY_REMOVED_FROM_GROUP)({categoryId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/track-groups/${groupId}/tracks/${categoryId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -701,6 +706,7 @@ export const removeAllowedGroupFromGroup = (groupId, allowedGroupId) => (dispatc
         null,
         createAction(GROUP_REMOVED_FROM_GROUP)({allowedGroupId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/track-groups/${groupId}/allowed-groups/${allowedGroupId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

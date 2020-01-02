@@ -215,6 +215,7 @@ export const deleteRoomBooking = (roomBookingId) => (dispatch, getState) => {
         null,
         createAction(ROOM_BOOKING_DELETED)({roomBookingId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/room-bookings/${roomBookingId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -418,6 +419,7 @@ export const deleteRoomBookingAttribute = (attributeTypeId, attributeValueId) =>
         null,
         createAction(ROOM_BOOKING_ATTRIBUTE_DELETED)({attributeTypeId, attributeValueId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/bookable-room-attribute-types/${attributeTypeId}/values/${attributeValueId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

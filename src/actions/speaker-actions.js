@@ -148,6 +148,7 @@ export const deleteSpeaker = (speakerId) => (dispatch, getState) => {
         null,
         createAction(SPEAKER_DELETED)({speakerId}),
         `${window.API_BASE_URL}/api/v1/speakers/${speakerId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -370,6 +371,7 @@ export const deleteAttendance = (attendanceId) => (dispatch, getState) => {
         null,
         createAction(ATTENDANCE_DELETED)({attendanceId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/speakers-assistances/${attendanceId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

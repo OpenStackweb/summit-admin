@@ -208,6 +208,7 @@ export const deletePromocode = (promocodeId) => (dispatch, getState) => {
         null,
         createAction(PROMOCODE_DELETED)({promocodeId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes/${promocodeId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -347,6 +348,7 @@ export const removeBadgeFeatureFromPromocode = (promocodeId, badgeFeatureId) => 
         null,
         createAction(BADGE_FEATURE_REMOVED)({badgeFeatureId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes/${promocodeId}/badge-features/${badgeFeatureId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -420,6 +422,7 @@ export const deleteDiscountTicket = (promocodeId, ticketId) => (dispatch, getSta
         null,
         createAction(DISCOUNT_TICKET_DELETED)({ticketId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes/${promocodeId}/ticket-types/${ticketId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

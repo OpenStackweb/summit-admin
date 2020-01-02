@@ -125,6 +125,7 @@ export const deleteSelectionPlan = (selectionPlanId) => (dispatch, getState) => 
         null,
         createAction(SELECTION_PLAN_DELETED)({selectionPlanId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -172,6 +173,7 @@ export const removeTrackGroupFromSelectionPlan = (selectionPlanId, trackGroupId)
         null,
         createAction(TRACK_GROUP_REMOVED)({trackGroupId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}/track-groups/${trackGroupId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

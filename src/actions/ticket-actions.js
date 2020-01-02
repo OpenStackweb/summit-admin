@@ -444,6 +444,7 @@ export const deleteTicketType = (ticketTypeId) => (dispatch, getState) => {
         null,
         createAction(TICKET_TYPE_DELETED)({ticketTypeId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/ticket-types/${ticketTypeId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -567,6 +568,7 @@ export const deleteRefundPolicy = (refundPolicyId) => (dispatch, getState) => {
         null,
         createAction(REFUND_POLICY_DELETED)({refundPolicyId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/refund-policies/${refundPolicyId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

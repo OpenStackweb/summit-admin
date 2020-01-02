@@ -25,6 +25,7 @@ import {
     showSuccessMessage,
     authErrorHandler
 } from 'openstack-uicore-foundation/lib/methods';
+import Swal from "sweetalert2";
 
 
 export const REQUEST_ORDER_EXTRA_QUESTIONS       = 'REQUEST_ORDER_EXTRA_QUESTIONS';
@@ -203,13 +204,13 @@ export const deleteOrderExtraQuestion = (orderExtraQuestionId) => (dispatch, get
         null,
         createAction(ORDER_EXTRA_QUESTION_DELETED)({orderExtraQuestionId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/order-extra-questions/${orderExtraQuestionId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
     );
 };
-
 
 export const updateOrderExtraQuestionOrder = (questions, questionId, newOrder) => (dispatch, getState) => {
 
@@ -292,6 +293,7 @@ export const deleteOrderExtraQuestionValue = (orderExtraQuestionId, orderExtraQu
         null,
         createAction(ORDER_EXTRA_QUESTION_VALUE_DELETED)({orderExtraQuestionValueId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/order-extra-questions/${orderExtraQuestionId}/values/${orderExtraQuestionValueId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -461,6 +463,7 @@ export const deletePurchaseOrder = (orderId) => (dispatch, getState) => {
         null,
         createAction(PURCHASE_ORDER_DELETED)({orderId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/orders/${orderId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

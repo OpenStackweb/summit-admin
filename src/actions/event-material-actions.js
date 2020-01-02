@@ -200,6 +200,7 @@ export const deleteEventMaterial = (eventMaterialId) => (dispatch, getState) => 
         null,
         createAction(EVENT_MATERIAL_DELETED)({eventMaterialId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/presentations/${event.id}/${slug}/${eventMaterialId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

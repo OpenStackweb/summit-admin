@@ -207,6 +207,7 @@ export const deleteAttendee = (attendeeId) => (dispatch, getState) => {
         null,
         createAction(ATTENDEE_DELETED)({attendeeId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -228,6 +229,7 @@ export const deleteTicket = (attendeeId, ticketId) => (dispatch, getState) => {
         null,
         createAction(TICKET_DELETED)({ticketId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}/tickets/${ticketId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -270,6 +272,7 @@ export const deleteRsvp = (memberId, rsvpId) => (dispatch, getState) => {
         null,
         createAction(RSVP_DELETED)({rsvpId}),
         `${window.API_BASE_URL}/api/v1/members/${memberId}/rsvp/${rsvpId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

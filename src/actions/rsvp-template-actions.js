@@ -186,6 +186,7 @@ export const deleteRsvpTemplate = (rsvpTemplateId) => (dispatch, getState) => {
         null,
         createAction(RSVP_TEMPLATE_DELETED)({rsvpTemplateId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -343,6 +344,7 @@ export const deleteRsvpQuestion = (rsvpTemplateId, rsvpQuestionId) => (dispatch,
         null,
         createAction(RSVP_QUESTION_DELETED)({rsvpQuestionId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${rsvpQuestionId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -479,6 +481,7 @@ export const deleteRsvpQuestionValue = (rsvpTemplateId, rsvpQuestionId, rsvpQues
         null,
         createAction(RSVP_QUESTION_VALUE_DELETED)({rsvpQuestionValueId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}/questions/${rsvpQuestionId}/values/${rsvpQuestionValueId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

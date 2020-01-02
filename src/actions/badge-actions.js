@@ -82,6 +82,7 @@ export const deleteBadge = (ticketId) => (dispatch, getState) => {
         null,
         createAction(BADGE_DELETED)({ticketId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets/${ticketId}/badge/current`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -156,6 +157,7 @@ export const removeFeatureFromBadge = (ticketId, featureId) => (dispatch, getSta
         null,
         createAction(FEATURE_BADGE_REMOVED)({featureId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets/${ticketId}/badge/current/features/${featureId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -309,6 +311,7 @@ export const deleteBadgeType = (badgeTypeId) => (dispatch, getState) => {
         null,
         createAction(BADGE_TYPE_DELETED)({badgeTypeId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-types/${badgeTypeId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -356,6 +359,7 @@ export const removeAccessLevelFromBadgeType = (badgeTypeId, accessLevelId) => (d
         null,
         createAction(BADGE_ACCESS_LEVEL_REMOVED)({accessLevelId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-types/${badgeTypeId}/access-levels/${accessLevelId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -403,6 +407,7 @@ export const removeFeatureFromBadgeType = (badgeTypeId, featureId) => (dispatch,
         null,
         createAction(FEATURE_REMOVED_FROM_TYPE)({featureId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-types/${badgeTypeId}/features/${featureId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -552,6 +557,7 @@ export const deleteBadgeFeature = (badgeFeatureId) => (dispatch, getState) => {
         null,
         createAction(BADGE_FEATURE_DELETED)({badgeFeatureId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-feature-types/${badgeFeatureId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -695,6 +701,7 @@ export const deleteAccessLevel = (accessLevelId) => (dispatch, getState) => {
         null,
         createAction(ACCESS_LEVEL_DELETED)({accessLevelId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/access-level-types/${accessLevelId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

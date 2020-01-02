@@ -183,6 +183,7 @@ export const deletePushNotification = (pushNotificationId) => (dispatch, getStat
         null,
         createAction(PUSH_NOTIFICATION_DELETED)({pushNotificationId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/notifications/${pushNotificationId}`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -229,6 +230,7 @@ export const rejectPushNotification = (pushNotificationId) => (dispatch, getStat
         null,
         createAction(PUSH_NOTIFICATION_REJECTED)({pushNotificationId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/notifications/${pushNotificationId}/approve`,
+        null,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
