@@ -293,7 +293,7 @@ class SummitForm extends React.Component {
                     </div>
                 </div>
                 <div className="row form-group">
-                    <div className="col-md-6">
+                    <div className="col-md-4">
                         <label> {T.translate("edit_summit.registration_disclaimer_content")} </label>
                         <textarea
                             id="registration_disclaimer_content"
@@ -302,7 +302,7 @@ class SummitForm extends React.Component {
                             className="form-control"
                         />
                     </div>
-                    <div className="col-md-6 checkboxes-div">
+                    <div className="col-md-4 checkboxes-div">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="registration_disclaimer_mandatory"
                                    checked={entity.registration_disclaimer_mandatory} onChange={this.handleChange}
@@ -311,6 +311,18 @@ class SummitForm extends React.Component {
                                 {T.translate("edit_summit.registration_disclaimer_mandatory")}
                             </label>
                         </div>
+                    </div>
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_summit.registration_reminder_email_days_interval")}</label>
+                        <Input
+                            type="number"
+                            min="0"
+                            className="form-control"
+                            error={this.hasErrors('registration_reminder_email_days_interval')}
+                            id="registration_reminder_email_days_interval"
+                            value={entity.registration_reminder_email_days_interval}
+                            onChange={this.handleChange}
+                        />
                     </div>
                 </div>
                 <div className="row form-group">
