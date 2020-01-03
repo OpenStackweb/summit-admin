@@ -31,10 +31,8 @@ class SummitDirectoryPage extends React.Component {
     }
 
     componentWillMount () {
-        let {perPage} = this.props;
-
         this.props.setCurrentSummit(null);
-        this.props.loadSummits(1, perPage);
+        this.props.loadSummits();
     }
 
     handlePageChange(page) {

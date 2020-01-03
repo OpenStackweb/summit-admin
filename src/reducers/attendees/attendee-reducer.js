@@ -78,7 +78,7 @@ const attendeeReducer = (state = DEFAULT_STATE, action) => {
                 }
             }
 
-            return {...state,  entity: {...entity}, errors: {} };
+            return {...state,  entity: {...DEFAULT_ENTITY, ...entity}, errors: {} };
         }
         break;
         case ATTENDEE_UPDATED: {

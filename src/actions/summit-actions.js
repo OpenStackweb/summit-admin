@@ -94,7 +94,7 @@ export const setCurrentSummit = (summit) => (dispatch, getState) =>
 
 }
 
-export const loadSummits = (page = 1, perPage = 5) => (dispatch, getState) => {
+export const loadSummits = (page = 1, perPage = 10) => (dispatch, getState) => {
 
     let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
