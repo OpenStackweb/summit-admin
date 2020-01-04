@@ -153,11 +153,11 @@ class AttendeeForm extends React.Component {
                     <div className="col-md-4">
                         <label> {T.translate("edit_attendee.last_name")}</label>
                         <Input
-                            id="last_name"
-                            value={entity.last_name}
+                            id="surname"
+                            value={entity.surname}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('last_name')}
+                            error={this.hasErrors('surname')}
                         />
                     </div>
                     <div className="col-md-4">
