@@ -84,8 +84,8 @@ const purchaseOrderReducer = (state = DEFAULT_STATE, action) => {
 
                     if (t.owner.member) {
                         owner_full_name = `${t.owner.member.first_name} ${t.owner.member.last_name}`;
-                    } else if (t.owner.first_name && t.owner.surname) {
-                        owner_full_name = `${t.owner.first_name} ${t.owner.surname}`;
+                    } else if (t.owner.first_name && t.owner.last_name) {
+                        owner_full_name = `${t.owner.first_name} ${t.owner.last_name}`;
                     }
                 }
 

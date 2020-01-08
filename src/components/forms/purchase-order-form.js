@@ -170,11 +170,11 @@ class PurchaseOrderForm extends React.Component {
                     <div className="col-md-4">
                         <label> {T.translate("edit_purchase_order.owner_surname")}</label>
                         <Input
-                            id="owner_last_name"
-                            value={entity.owner_last_name}
+                            id="owner_surname"
+                            value={entity.owner_surname}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('owner_last_name')}
+                            error={this.hasErrors('owner_surname')}
                         />
                     </div>
                 </div>
