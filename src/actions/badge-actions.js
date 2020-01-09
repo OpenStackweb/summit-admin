@@ -173,7 +173,7 @@ export const printBadge = (ticketId) => (dispatch, getState) => {
 
     dispatch(createAction(PRINT_BADGE));
 
-    window.open(`${process.env['PRINT_APP_URL']}/summit/${currentSummit.slug}/ticket/${ticketId}?access_token=${accessToken}`, '_blank');
+    window.open(`${process.env['PRINT_APP_URL']}/check-in/${currentSummit.slug}/tickets/${ticketId}?access_token=${accessToken}`, '_blank');
 
 };
 
