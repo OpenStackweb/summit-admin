@@ -14,8 +14,8 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { findElementPos, epochToMoment } from 'openstack-uicore-foundation/lib/methods'
-import { Dropdown, SimpleLinkList, DateTimePicker, SpeakerInput, MemberInput, CompanyInput, Input } from 'openstack-uicore-foundation/lib/components'
+import {findElementPos, epochToMomentTimeZone} from 'openstack-uicore-foundation/lib/methods'
+import { Dropdown, DateTimePicker, SpeakerInput, MemberInput, CompanyInput, Input } from 'openstack-uicore-foundation/lib/components'
 import { DiscountTicketTable } from '../tables/dicount-ticket-table';
 
 // FORM DEFS
@@ -82,24 +82,23 @@ const BasePCForm = (props) => {
             </div>
             <div className="row form-group">
                 <div className="col-md-4">
-                    <label> {T.translate("edit_promocode.valid_from_date")}</label>
+                    <label> {T.translate("edit_promocode.valid_from_date")} (00:00 hrs)</label>
                     <DateTimePicker
                         id="valid_since_date"
                         onChange={props.handleChange}
                         format={{date: "YYYY-MM-DD", time: false}}
-                        utc={true}
-                        utcOffset={0}
-                        value={epochToMoment(props.entity.valid_since_date)}
+                        timezone={props.summit.time_zone_id}
+                        value={epochToMomentTimeZone(props.entity.valid_since_date, props.summit.time_zone_id)}
                     />
                 </div>
                 <div className="col-md-4">
-                    <label> {T.translate("edit_promocode.valid_until_date")}</label>
+                    <label> {T.translate("edit_promocode.valid_until_date")} (00:00 hrs)</label>
                     <DateTimePicker
                         id="valid_until_date"
                         onChange={props.handleChange}
                         format={{date: "YYYY-MM-DD", time: false}}
-                        utc={true}
-                        value={epochToMoment(props.entity.valid_until_date)}
+                        timezone={props.summit.time_zone_id}
+                        value={epochToMomentTimeZone(props.entity.valid_until_date, props.summit.time_zone_id)}
                     />
                 </div>
             </div>
