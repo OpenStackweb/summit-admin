@@ -907,6 +907,7 @@
     "attendee_first_name" : "Attendee First Name",
     "attendee_last_name"  : "Attendee Last Name",
     "attendee_email"      : "Attendee Email",
+    "attendee_company"    : "Attendee Company",
     "assign"            : "Assign",
     "reassign"          : "Reassign",
     "qr"                : "QR Code",

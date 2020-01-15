@@ -50,6 +50,7 @@ export const DEFAULT_ENTITY = {
     attendee_first_name: '',
     attendee_last_name: '',
     attendee_email: '',
+    attendee_company: '',
 }
 
 const DEFAULT_STATE = {

@@ -220,7 +220,7 @@ export const saveTicket = (orderId, ticket) => (dispatch, getState) => {
         });
 };
 
-export const reassignTicket = (attendeeId, newMemberId, orderId, ticketId) => (dispatch, getState) => {
+export const reassignTicket = (ticketId, attendeeId, firstName, lastName, email, company ) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -236,11 +236,18 @@ export const reassignTicket = (attendeeId, newMemberId, orderId, ticketId) => (d
         type: 'success'
     };
 
+    let attendee = {
+        attendee_first_name: firstName,
+        attendee_last_name: lastName,
+        attendee_email: email,
+        attendee_company: company,
+    };
+
     putRequest(
         null,
         createAction(TICKET_MEMBER_REASSIGNED),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}/tickets/${ticketId}/reassign/${newMemberId}`,
-        {},
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}/tickets/${ticketId}/reassign`,
+        attendee,
         authErrorHandler
     )(params)(dispatch)
         .then((payload) => {

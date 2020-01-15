@@ -25,6 +25,7 @@ class TicketForm extends React.Component {
         this.state = {
             entity: {...props.entity},
             errors: props.errors,
+            canReassign: false,
         };
 
         this.handlePromocodeClick = this.handlePromocodeClick.bind(this);
@@ -58,17 +59,26 @@ class TicketForm extends React.Component {
     }
 
     handleReassign(ev) {
-        let entity = {...this.state.entity};
         ev.preventDefault();
-
-        this.props.onReassing(entity.owner.id, entity.member.id, entity.order_id, entity.id );
+        this.setState({canReassign: true});
     }
 
     handleAssign(ev) {
-        let entity = {...this.state.entity};
+        let {entity, canReassign} = this.state;
         ev.preventDefault();
 
-        this.props.onSaveTicket(entity.order_id, entity);
+        if (canReassign) {
+            this.props.onReassing(
+                entity.id,
+                entity.owner.id,
+                entity.attendee_first_name,
+                entity.attendee_last_name,
+                entity.attendee_email,
+                entity.attendee_company
+            );
+        } else {
+            this.props.onSaveTicket(entity.order_id, entity);
+        }
     }
 
 
@@ -97,15 +107,13 @@ class TicketForm extends React.Component {
 
 
     render() {
-        let {entity} = this.state;
+        let {entity, canReassign} = this.state;
         let member = entity.member ? entity.member : (entity.owner ? entity.owner.member : null);
-
-        let canReassing = (entity.owner && entity.member && entity.member.id && entity.member.id != entity.owner.member_id);
 
         return (
             <form className="ticket-form">
                 <input type="hidden" id="id" value={entity.id} />
-                {entity.owner &&
+                {!canReassign && entity.owner &&
                 <div className="row form-group">
                     <div className="col-md-4">
                         <label> {T.translate("edit_ticket.attendee")}:&nbsp;</label>
@@ -116,18 +124,19 @@ class TicketForm extends React.Component {
                             id="member"
                             value={member}
                             onChange={this.handleChange}
+                            isDisabled
                         />
                     </div>
                     <div className="col-md-2">
-                        <button onClick={this.handleReassign} className="btn btn-default" disabled={!canReassing}>
+                        <button onClick={this.handleReassign} className="btn btn-default">
                             {T.translate("edit_ticket.reassign")}
                         </button>
                     </div>
                 </div>
                 }
-                {!entity.owner &&
+                {(canReassign || !entity.owner) &&
                 <div className="row form-group">
-                    <div className="col-md-3">
+                    <div className="col-md-2">
                         <label> {T.translate("edit_ticket.attendee_first_name")}:&nbsp;</label>
                         <Input
                             id="attendee_first_name"
@@ -137,7 +146,7 @@ class TicketForm extends React.Component {
                             error={this.hasErrors('attendee_first_name')}
                         />
                     </div>
-                    <div className="col-md-3">
+                    <div className="col-md-2">
                         <label> {T.translate("edit_ticket.attendee_last_name")}:&nbsp;</label>
                         <Input
                             id="attendee_last_name"
@@ -155,6 +164,16 @@ class TicketForm extends React.Component {
                             onChange={this.handleChange}
                             className="form-control"
                             error={this.hasErrors('attendee_email')}
+                        />
+                    </div>
+                    <div className="col-md-3">
+                        <label> {T.translate("edit_ticket.attendee_company")}:&nbsp;</label>
+                        <Input
+                            id="attendee_company"
+                            value={entity.attendee_company}
+                            onChange={this.handleChange}
+                            className="form-control"
+                            error={this.hasErrors('attendee_company')}
                         />
                     </div>
                     <div className="col-md-2">
