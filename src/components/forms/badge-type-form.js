@@ -137,6 +137,7 @@ class BadgeTypeForm extends React.Component {
             title: T.translate("edit_badge_type.access_levels"),
             valueKey: "name",
             labelKey: "name",
+            defaultOptions: true,
             actions: {
                 search: this.queryAccessLevels,
                 delete: { onClick: this.handleAccessLevelUnLink },
@@ -152,6 +153,7 @@ class BadgeTypeForm extends React.Component {
             title: T.translate("edit_badge_type.badge_features"),
             valueKey: "name",
             labelKey: "name",
+            defaultOptions: true,
             actions: {
                 search: this.queryFeatures,
                 delete: { onClick: this.handleFeatureUnLink },

@@ -384,8 +384,9 @@ export const unlinkQuestionToCategory = (questionId) => (dispatch, getState) => 
 export const queryQuestions = _.debounce((input, callback) => {
 
     let accessToken = window.accessToken;
+    let filter = input ? `filter=name=@${input}` : '';
 
-    fetch(`${window.API_BASE_URL}/api/v1/track-question-templates?filter=name=@${input}&order=name&access_token=${accessToken}`)
+    fetch(`${window.API_BASE_URL}/api/v1/track-question-templates?order=name&access_token=${accessToken}&${filter}`)
         .then(fetchResponseHandler)
         .then((json) => {
             let options = [...json.data];

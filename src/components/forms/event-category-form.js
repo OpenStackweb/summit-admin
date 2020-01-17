@@ -116,7 +116,8 @@ class EventCategoryForm extends React.Component {
 
     render() {
         let {entity, showQuestions} = this.state;
-        let { currentSummit } = this.props;
+        let { currentSummit, onQuestionUnLink, onQuestionLink } = this.props;
+        let { handleEditQuestion } = this;
 
         let questionColumns = [
             { columnKey: 'id', value: T.translate("general.id") },
@@ -129,11 +130,12 @@ class EventCategoryForm extends React.Component {
         let questionOptions = {
             valueKey: "id",
             labelKey: "name",
+            defaultOptions: true,
             actions: {
-                edit: {onClick: this.handleEditQuestion},
-                delete: { onClick: this.props.onQuestionUnLink},
+                edit: {onClick: handleEditQuestion},
+                delete: { onClick: onQuestionUnLink},
                 search: queryQuestions,
-                add: { onClick: this.props.onQuestionLink }
+                add: { onClick: onQuestionLink }
             }
         }
 

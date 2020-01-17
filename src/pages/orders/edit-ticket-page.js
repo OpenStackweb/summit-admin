@@ -61,9 +61,6 @@ class EditTicketPage extends React.Component {
         if (oldId != newId) {
             this.props.getTicket(newId);
         }
-
-        //if (!currentSummit.badge_features) this.props.getBadgeFeatures();
-        //if (!currentSummit.badge_types) this.props.getBadgeTypes();
     }
 
     handlePrintBadge(ev) {

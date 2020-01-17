@@ -76,7 +76,7 @@ class EditSummitSpeakerPage extends React.Component {
 }
 
 const mapStateToProps = ({ currentSpeakerState, directoryState }) => ({
-    summits: directoryState.items,
+    summits: directoryState.summits,
     ...currentSpeakerState
 })
 

@@ -17,7 +17,9 @@ import
     RESET_TAX_TYPE_FORM,
     UPDATE_TAX_TYPE,
     TAX_TYPE_UPDATED,
-    TAX_TYPE_ADDED
+    TAX_TYPE_ADDED,
+    TAX_TICKET_ADDED,
+    TAX_TICKET_REMOVED
 } from '../../actions/tax-actions';
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
@@ -72,6 +74,17 @@ const taxTypeReducer = (state = DEFAULT_STATE, action) => {
         break;
         case TAX_TYPE_UPDATED: {
             return state;
+        }
+        break;
+        case TAX_TICKET_ADDED: {
+            let { ticket } = payload;
+            return {...state, entity: {...state.entity, ticket_types:[...state.entity.ticket_types, ticket]}};
+        }
+        break;
+        case TAX_TICKET_REMOVED: {
+            let { ticketId } = payload;
+            let ticketTypes = state.entity.ticket_types.filter(tt => tt.id != ticketId);
+            return {...state, entity: {...state.entity, ticket_types:ticketTypes}};
         }
         break;
         case VALIDATE: {

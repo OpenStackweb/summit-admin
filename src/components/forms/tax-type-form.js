@@ -116,6 +116,7 @@ class TaxTypeForm extends React.Component {
             title: T.translate("edit_tax_type.ticket_types"),
             valueKey: "name",
             labelKey: "name",
+            defaultOptions: true,
             actions: {
                 search: this.queryTickets,
                 delete: { onClick: this.handleTicketUnLink },

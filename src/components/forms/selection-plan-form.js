@@ -111,6 +111,7 @@ class SelectionPlanForm extends React.Component {
             title: T.translate("edit_selection_plan.track_groups"),
             valueKey: "name",
             labelKey: "name",
+            defaultOptions: true,
             actions: {
                 search: (input, callback) => { queryTrackGroups(currentSummit.id, input, callback); },
                 delete: { onClick: this.handleTrackGroupUnLink },

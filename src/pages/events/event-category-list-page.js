@@ -95,7 +95,7 @@ class EventCategoryListPage extends React.Component {
                 edit: {onClick: this.handleEdit},
                 delete: { onClick: this.handleDelete }
             }
-        }
+        };
 
         if(!currentSummit.id) return(<div></div>);
 
@@ -136,9 +136,9 @@ class EventCategoryListPage extends React.Component {
 
 const mapStateToProps = ({ directoryState, currentSummitState, currentEventCategoryListState }) => ({
     currentSummit   : currentSummitState.currentSummit,
-    summits         : directoryState.items,
+    summits         : directoryState.summits,
     ...currentEventCategoryListState
-})
+});
 
 export default connect (
     mapStateToProps,

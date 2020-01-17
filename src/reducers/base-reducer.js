@@ -11,10 +11,10 @@
  * limitations under the License.
  **/
 
-import { START_LOADING, STOP_LOADING, RECEIVE_COUNTRIES, LOGOUT_USER } from "openstack-uicore-foundation/lib/actions";
+import { START_LOADING, STOP_LOADING, RESET_LOADING, RECEIVE_COUNTRIES, LOGOUT_USER } from "openstack-uicore-foundation/lib/actions";
 
 const DEFAULT_STATE = {
-    loading: false,
+    loading: 0,
     countries: []
 }
 
@@ -25,11 +25,17 @@ const baseReducer = (state = DEFAULT_STATE, action) => {
         case LOGOUT_USER:
             return DEFAULT_STATE;
         case START_LOADING: {
-            return {...state, loading: true};
+            //let loadingCount = state.loading + 1;
+            return {...state, loading: 1};
         }
         break;
         case STOP_LOADING: {
-            return {...state, loading: false};
+            //let loadingCount = state.loading <= 1 ? 0 : (state.loading - 1);
+            return {...state, loading: 0};
+        }
+        break;
+        case RESET_LOADING: {
+            return {...state, loading: 0};
         }
         break;
         case RECEIVE_COUNTRIES:

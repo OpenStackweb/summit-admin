@@ -85,6 +85,7 @@ class BadgeForm extends React.Component {
             title: T.translate("edit_ticket.badge_features"),
             valueKey: "name",
             labelKey: "name",
+            defaultOptions: true,
             actions: {
                 search: this.queryFeatures,
                 delete: { onClick: this.handleFeatureUnLink },

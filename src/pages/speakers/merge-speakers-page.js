@@ -153,7 +153,7 @@ class MergeSpeakerPage extends React.Component {
 }
 
 const mapStateToProps = ({ directoryState, currentSpeakerMergeState }) => ({
-    allSummits : directoryState.items,
+    allSummits : directoryState.summits,
     ...currentSpeakerMergeState
 })
 

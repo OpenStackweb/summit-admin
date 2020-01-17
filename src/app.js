@@ -21,7 +21,7 @@ import AuthButton from './components/auth-button'
 import DefaultRoute from './routes/default-route'
 import { connect } from 'react-redux'
 import { AjaxLoader, OPSessionChecker } from "openstack-uicore-foundation/lib/components";
-import { getBackURL,onUserAuth, doLogin, doLogout, initLogOut, getUserInfo } from "openstack-uicore-foundation/lib/methods";
+import { getBackURL,onUserAuth, doLogin, doLogout, initLogOut, getUserInfo, resetLoading } from "openstack-uicore-foundation/lib/methods";
 import T from 'i18n-react';
 import CustomErrorPage from "./pages/custom-error-page";
 import history from './history'
@@ -62,19 +62,22 @@ if (exclusiveSections.hasOwnProperty(process.env['APP_CLIENT_NAME'])) {
 
 class App extends React.PureComponent {
 
+    componentWillMount () {
+        this.props.resetLoading();
+    }
+
     onClickLogin(){
         doLogin(getBackURL());
     }
 
     render() {
-        let { isLoggedUser, onUserAuth, doLogout, getUserInfo, member, backUrl} = this.props;
+        let { isLoggedUser, onUserAuth, doLogout, getUserInfo, member, backUrl, loading} = this.props;
         let profile_pic = member ? member.pic : '';
-
 
         return (
             <Router history={history}>
                 <div>
-                    <AjaxLoader show={ this.props.loading } size={ 120 }/>
+                    <AjaxLoader show={ loading } size={ 120 }/>
                     {isLoggedUser &&
                     <OPSessionChecker
                         clientId={window.OAUTH2_CLIENT_ID}
@@ -107,10 +110,11 @@ const mapStateToProps = ({ loggedUserState, baseState }) => ({
     backUrl: loggedUserState.backUrl,
     member: loggedUserState.member,
     loading : baseState.loading,
-})
+});
 
 export default connect(mapStateToProps, {
     onUserAuth,
     doLogout,
     getUserInfo,
+    resetLoading
 })(App)

@@ -63,13 +63,12 @@ class EditBadgeTypePage extends React.Component {
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
-
         return(
             <div className="container">
                 <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
                 <h3>{title} {T.translate("edit_badge_type.badge_type")}</h3>
                 <hr/>
-                {currentSummit &&
+                {currentSummit && currentSummit.badge_features && currentSummit.access_level_types &&
                 <BadgeTypeForm
                     entity={entity}
                     currentSummit={currentSummit}
@@ -86,8 +85,9 @@ class EditBadgeTypePage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentBadgeTypeState }) => ({
+const mapStateToProps = ({ currentSummitState, currentBadgeTypeState, baseState }) => ({
     currentSummit : currentSummitState.currentSummit,
+    loading: baseState.loading,
     ...currentBadgeTypeState
 })
 
