@@ -38,7 +38,7 @@ class EditTicketTypePage extends React.Component {
     }
 
     componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
+        let {currentSummit} = newProps;
         let oldId = this.props.match.params.ticket_type_id;
         let newId = newProps.match.params.ticket_type_id;
 
@@ -50,7 +50,7 @@ class EditTicketTypePage extends React.Component {
             }
         }
 
-        if (currentSummit.id !== newProps.currentSummit.id || !newProps.currentSummit.badge_types) {
+        if (currentSummit && !currentSummit.badge_types) {
             this.props.getBadgeTypes();
         }
     }
@@ -59,7 +59,6 @@ class EditTicketTypePage extends React.Component {
         let {currentSummit, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
-
 
         return(
             <div className="container">

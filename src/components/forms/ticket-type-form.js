@@ -86,12 +86,8 @@ class TicketTypeForm extends React.Component {
     render() {
         let {entity} = this.state;
         let { currentSummit } = this.props;
-
-        console.log(currentSummit);
-
         let currency_ddl = currentSummit.supported_currencies.map(i => ({label:i, value:i}));
-
-        let badge_type_ddl = currentSummit.badge_types ? currentSummit.badge_types.map(bt => ({label: bt.name, value: bt.id})) : null;
+        let badge_type_ddl = currentSummit.badge_types ? currentSummit.badge_types.map(bt => ({label: bt.name, value: bt.id})) : [];
 
         return (
             <form className="ticket-type-form">
