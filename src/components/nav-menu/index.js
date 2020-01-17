@@ -27,8 +27,9 @@ class NavMenu extends React.Component {
         this.state = {
             subMenuOpen: '',
             menuOpen: false
-        }
+        };
 
+        this.showMenu = this.showMenu.bind(this);
         this.drawMenuItem = this.drawMenuItem.bind(this);
         this.closeMenu = this.closeMenu.bind(this);
         this.isMenuOpen = this.isMenuOpen.bind(this);
@@ -66,9 +67,22 @@ class NavMenu extends React.Component {
         event.preventDefault();
         this.setState({menuOpen: false});
 
-
         history.push(`/app/${url}`);
+    }
 
+    showMenu(item) {
+        let {currentSummit} = this.props;
+        if (!currentSummit) return false;
+        if (currentSummit.id === 0) return false;
+
+        switch (item.name) {
+            case 'attendees':
+                return !!currentSummit.external_registration_feed_type;
+            case 'purchase_orders':
+                return !currentSummit.external_registration_feed_type;
+            default:
+                return true;
+        }
     }
 
     drawMenuItem(item, show, memberObj) {
@@ -103,7 +117,6 @@ class NavMenu extends React.Component {
         let {currentSummit, member} = this.props;
         let memberObj = new Member(member);
         let summit_id = currentSummit.id;
-        let show = (summit_id !== 0);
         let canEditSummit = memberObj.canEditSummit();
 
         const globalItems = [
@@ -181,7 +194,7 @@ class NavMenu extends React.Component {
                     return this.drawMenuItem(it, true, memberObj);
                 })}
 
-                {show &&
+                {currentSummit.id !== 0 &&
                 <div className="separator">
                     {currentSummit.name}
                     {canEditSummit &&
@@ -193,7 +206,8 @@ class NavMenu extends React.Component {
                 }
 
                 {summitItems.map(it => {
-                    return this.drawMenuItem(it, show, memberObj);
+                    let showMenu = this.showMenu(it);
+                    return this.drawMenuItem(it, showMenu, memberObj);
                 })}
 
             </Menu>

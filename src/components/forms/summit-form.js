@@ -611,16 +611,6 @@ class SummitForm extends React.Component {
                             />
                         </div>
                         <div className="col-md-4">
-                            <label> {T.translate("edit_summit.api_feed_url")}</label>
-                            <Input
-                                className="form-control"
-                                error={this.hasErrors('api_feed_url')}
-                                id="api_feed_url"
-                                value={entity.api_feed_url}
-                                onChange={this.handleChange}
-                            />
-                        </div>
-                        <div className="col-md-4">
                             <label> {T.translate("edit_summit.api_feed_key")}</label>
                             <Input
                                 className="form-control"
@@ -630,18 +620,18 @@ class SummitForm extends React.Component {
                                 onChange={this.handleChange}
                             />
                         </div>
-                    </div>
-                    <div className="row form-group">
                         <div className="col-md-4">
-                            <label> {T.translate("edit_summit.external_summit_id")}</label>
+                            <label> {T.translate("edit_summit.api_feed_url")}</label>
                             <Input
                                 className="form-control"
-                                error={this.hasErrors('external_summit_id')}
-                                id="external_summit_id"
-                                value={entity.external_summit_id}
+                                error={this.hasErrors('api_feed_url')}
+                                id="api_feed_url"
+                                value={entity.api_feed_url}
                                 onChange={this.handleChange}
                             />
                         </div>
+                    </div>
+                    <div className="row form-group">
                         <div className="col-md-4">
                             <label> {T.translate("edit_summit.external_registration_feed_type")}</label>
                             <Dropdown
@@ -659,6 +649,16 @@ class SummitForm extends React.Component {
                                 error={this.hasErrors('external_registration_feed_api_key')}
                                 id="external_registration_feed_api_key"
                                 value={entity.external_registration_feed_api_key}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_summit.external_registration_id")}</label>
+                            <Input
+                                className="form-control"
+                                error={this.hasErrors('external_summit_id')}
+                                id="external_summit_id"
+                                value={entity.external_summit_id}
                                 onChange={this.handleChange}
                             />
                         </div>
