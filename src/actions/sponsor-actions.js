@@ -25,6 +25,7 @@ import {
     showSuccessMessage,
     authErrorHandler, getCSV
 } from 'openstack-uicore-foundation/lib/methods';
+import {ORGANIZATION_ADDED} from "./member-actions";
 
 export const REQUEST_SPONSORS               = 'REQUEST_SPONSORS';
 export const RECEIVE_SPONSORS               = 'RECEIVE_SPONSORS';
@@ -36,6 +37,7 @@ export const SPONSOR_ADDED                  = 'SPONSOR_ADDED';
 export const SPONSOR_DELETED                = 'SPONSOR_DELETED';
 export const MEMBER_ADDED_TO_SPONSOR        = 'MEMBER_ADDED_TO_SPONSOR';
 export const MEMBER_REMOVED_FROM_SPONSOR    = 'MEMBER_REMOVED_FROM_SPONSOR';
+export const COMPANY_ADDED                  = 'COMPANY_ADDED';
 
 export const REQUEST_SPONSORSHIPS       = 'REQUEST_SPONSORSHIPS';
 export const RECEIVE_SPONSORSHIPS       = 'RECEIVE_SPONSORSHIPS';
@@ -286,6 +288,29 @@ const normalizeSponsor = (entity) => {
 
 
     return normalizedEntity;
+
+};
+
+export const createCompany = (company, callback) => (dispatch, getState) => {
+    let { loggedUserState } = getState();
+    let { accessToken }     = loggedUserState;
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    dispatch(startLoading());
+
+    postRequest(
+        null,
+        createAction(COMPANY_ADDED),
+        `${window.API_BASE_URL}/api/v1/companies`,
+        {name: company},
+        authErrorHandler
+    )(params)(dispatch).then((payload) => {
+        dispatch(stopLoading());
+        callback(payload.response);
+    });
 
 }
 

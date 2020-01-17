@@ -69,7 +69,7 @@ const sponsorReducer = (state = DEFAULT_STATE, action) => {
                 }
             }
 
-            return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
+            return {...state, entity: {...state.entity, ...entity} };
         }
         break;
         case SPONSOR_UPDATED: {

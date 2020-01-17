@@ -15,7 +15,7 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import { findElementPos, epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/methods'
-import { Input, Dropdown, CompanyInput, MemberInput } from 'openstack-uicore-foundation/lib/components';
+import { Dropdown, CompanyInput, MemberInput } from 'openstack-uicore-foundation/lib/components';
 
 
 class SponsorForm extends React.Component {
@@ -106,7 +106,7 @@ class SponsorForm extends React.Component {
 
     render() {
         let {entity} = this.state;
-        let { currentSummit, sponsorships } = this.props;
+        let { currentSummit, sponsorships, onCreateCompany } = this.props;
 
         let sponsorship_ddl = sponsorships.map(s => ({label: s.name, value: s.id}));
 
@@ -121,6 +121,8 @@ class SponsorForm extends React.Component {
                             value={entity.company}
                             onChange={this.handleChange}
                             summitId={currentSummit.id}
+                            allowCreate
+                            onCreate={onCreateCompany}
                             error={this.hasErrors('company_id')}
                         />
                     </div>
