@@ -127,7 +127,6 @@ export const resetSummitForm = () => (dispatch, getState) => {
 export const saveSummit = (entity) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
-
     dispatch(startLoading());
 
     let normalizedEntity = normalizeEntity(entity);
@@ -312,6 +311,12 @@ const normalizeEntity = (entity) => {
 
     if (!normalizedEntity['meeting_room_booking_slot_length'])
         delete(normalizedEntity['meeting_room_booking_slot_length']);
+
+    if (normalizedEntity['api_feed_type'] === 'none')
+        normalizedEntity['api_feed_type'] = '';
+
+    if (normalizedEntity['external_registration_feed_type'] === 'none')
+        normalizedEntity['external_registration_feed_type'] = '';
 
     return normalizedEntity;
 

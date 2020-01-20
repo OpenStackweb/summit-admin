@@ -134,6 +134,12 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
                 }
             }
 
+            if (!entity.external_registration_feed_type)
+                entity.external_registration_feed_type = 'none';
+
+            if (!entity.api_feed_type)
+                entity.api_feed_type = 'none';
+
             return {...state, currentSummit: {...state.currentSummit, ...entity}, errors: {}};
         }
         break;

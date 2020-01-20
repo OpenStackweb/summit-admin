@@ -170,13 +170,13 @@ class SummitForm extends React.Component {
         }
 
         let api_feed_type_ddl = [
-            {label: 'None', value: ''},
+            {label: 'None', value: 'none'},
             {label: 'Sched', value: 'Sched'},
             {label: 'Vanderpoel', value: 'Vanderpoel'}
         ];
 
         let external_registration_feed_type_ddl = [
-            {label: 'None', value: ''},
+            {label: 'None', value: 'none'},
             {label: 'Eventbrite', value: 'Eventbrite'},
         ];
 
