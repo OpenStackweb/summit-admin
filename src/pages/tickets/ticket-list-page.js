@@ -179,7 +179,6 @@ class TicketListPage extends React.Component {
 
                 </div>
 
-                // Ingest Modal
                 <Modal show={showIngestModal} onHide={() => this.setState({showIngestModal:false})} >
                     <Modal.Header closeButton>
                         <Modal.Title>{T.translate("ticket_list.ingest_tickets")}</Modal.Title>
@@ -211,7 +210,6 @@ class TicketListPage extends React.Component {
                     </Modal.Footer>
                 </Modal>
 
-                // Import Modal
                 <Modal show={showImportModal} onHide={() => this.setState({showImportModal:false})} >
                     <Modal.Header closeButton>
                         <Modal.Title>{T.translate("ticket_list.import_tickets")}</Modal.Title>

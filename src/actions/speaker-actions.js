@@ -24,7 +24,8 @@ import {
     showMessage,
     showSuccessMessage,
     getCSV,
-    authErrorHandler
+    authErrorHandler,
+    escapeFilterValue
 } from 'openstack-uicore-foundation/lib/methods';
 
 export const REQUEST_SPEAKERS       = 'REQUEST_SPEAKERS';
@@ -59,7 +60,8 @@ export const getSpeakers = ( term = null, page = 1, perPage = 10, order = 'id', 
     dispatch(startLoading());
 
     if(term){
-        filter.push(`full_name=@${term},first_name=@${term},last_name=@${term},email=@${term}`);
+        let escapedTerm = escapeFilterValue(term);
+        filter.push(`full_name=@${escapedTerm},first_name=@${escapedTerm},last_name=@${escapedTerm},email=@${escapedTerm}`);
     }
 
     let params = {
@@ -316,7 +318,8 @@ export const getAttendances = ( term = null, page = 1, perPage = 10, order = 'id
     dispatch(startLoading());
 
     if(term){
-        filter.push(`speaker=@${term},speaker_email=@${term},on_site_phone=@${term}`);
+        let escapedTerm = escapeFilterValue(term);
+        filter.push(`speaker=@${escapedTerm},speaker_email=@${escapedTerm},on_site_phone=@${escapedTerm}`);
     }
 
     let req_params = {
@@ -497,7 +500,8 @@ export const exportAttendances = ( term = null, order = 'code', orderDir = 1 ) =
     };
 
     if(term){
-        filter.push(`speaker=@${term},speaker_email=@${term},on_site_phone=@${term}`);
+        let escapedTerm = escapeFilterValue(term);
+        filter.push(`speaker=@${escapedTerm},speaker_email=@${escapedTerm},on_site_phone=@${escapedTerm}`);
     }
 
     if(filter.length > 0){

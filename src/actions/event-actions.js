@@ -26,7 +26,8 @@ import {
     showSuccessMessage,
     epochToMomentTimeZone,
     authErrorHandler,
-    getCSV
+    getCSV,
+    escapeFilterValue
 } from "openstack-uicore-foundation/lib/methods";
 
 export const REQUEST_EVENTS                         = 'REQUEST_EVENTS';
@@ -58,7 +59,8 @@ export const getEvents = ( term = null, page = 1, perPage = 10, order = 'id', or
     dispatch(startLoading());
 
     if(term){
-        filter.push(`title=@${term},abstract=@${term},tags=@${term},speaker=@${term},speaker_email=@${term},id==${term}`);
+        let escapedTerm = escapeFilterValue(term);
+        filter.push(`title=@${escapedTerm},abstract=@${escapedTerm},tags=@${escapedTerm},speaker=@${escapedTerm},speaker_email=@${escapedTerm},id==${escapedTerm}`);
     }
 
     let params = {
@@ -104,7 +106,8 @@ export const getEventsForOccupancy = ( term = null, roomId = null, currentEvents
 
     // search
     if(term){
-        filter.push(`title=@${term},speaker=@${term}`);
+        let escapedTerm = escapeFilterValue(term);
+        filter.push(`title=@${escapedTerm},speaker=@${escapedTerm}`);
     }
 
     // room filter
@@ -490,7 +493,8 @@ export const exportEvents = ( term = null, order = 'id', orderDir = 1 ) => (disp
     };
 
     if(term){
-        filter.push(`title=@${term},abstract=@${term},tags=@${term},speaker=@${term},speaker_email=@${term},id==${term}`);
+        let escapedTerm = escapeFilterValue(term);
+        filter.push(`title=@${escapedTerm},abstract=@${escapedTerm},tags=@${escapedTerm},speaker=@${escapedTerm},speaker_email=@${escapedTerm},id==${escapedTerm}`);
     }
 
     if(filter.length > 0){

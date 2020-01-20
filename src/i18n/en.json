@@ -483,6 +483,7 @@
     "class_name"            : "Class",
     "type"                  : "Type",
     "sponsor"               : "Sponsor",
+    "company"               : "Company",
     "email_sent"            : "Email Sent",
     "redeemed"              : "Redeemed",
     "send_email"            : "Send Email",

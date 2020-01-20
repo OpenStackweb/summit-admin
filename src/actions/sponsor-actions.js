@@ -23,9 +23,10 @@ import {
     startLoading,
     showMessage,
     showSuccessMessage,
-    authErrorHandler, getCSV
+    authErrorHandler,
+    getCSV,
+    escapeFilterValue
 } from 'openstack-uicore-foundation/lib/methods';
-import {ORGANIZATION_ADDED} from "./member-actions";
 
 export const REQUEST_SPONSORS               = 'REQUEST_SPONSORS';
 export const RECEIVE_SPONSORS               = 'RECEIVE_SPONSORS';
@@ -65,7 +66,8 @@ export const getSponsors = ( term = null, page = 1, perPage = 10, order = 'order
     dispatch(startLoading());
 
     if(term){
-        filter.push(`company_name=@${term},sponsorship_name=@${term},sponsorship_size=@${term}`);
+        let escapedTerm = escapeFilterValue(term);
+        filter.push(`company_name=@${escapedTerm},sponsorship_name=@${escapedTerm},sponsorship_size=@${escapedTerm}`);
     }
 
     let params = {

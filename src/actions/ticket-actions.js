@@ -23,16 +23,11 @@ import {
     startLoading,
     showMessage,
     showSuccessMessage,
-    authErrorHandler, getCSV
+    authErrorHandler,
+    getCSV,
+    escapeFilterValue
 } from 'openstack-uicore-foundation/lib/methods';
-import {
-    EVENT_CATEGORY_QUESTION_VALUE_ADDED,
-    EVENT_CATEGORY_QUESTION_VALUE_DELETED,
-    EVENT_CATEGORY_QUESTION_VALUE_UPDATED
-} from "./event-category-actions";
-import {CHANGE_MEMBER} from "./attendee-actions";
-import {PURCHASE_ORDER_REFUNDED} from "./order-actions";
-import {FLOOR_IMAGE_ATTACHED} from "./location-actions";
+
 
 export const REQUEST_TICKETS            = 'REQUEST_TICKETS';
 export const RECEIVE_TICKETS            = 'RECEIVE_TICKETS';
@@ -84,7 +79,8 @@ export const getTickets = ( term = null, page = 1, perPage = 10, order = 'id', o
     };
 
     if(term){
-        filter.push(`number=@${term},owner_email=@${term},owner_name=@${term},owner_company=@${term}`);
+        let escapedTerm = escapeFilterValue(term);
+        filter.push(`number=@${escapedTerm},owner_email=@${escapedTerm},owner_name=@${escapedTerm},owner_company=@${escapedTerm}`);
     }
 
     if(filter.length > 0){

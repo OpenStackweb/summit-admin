@@ -26,7 +26,8 @@ import {
     fetchResponseHandler,
     fetchErrorHandler,
     getCSV,
-    authErrorHandler
+    authErrorHandler,
+    escapeFilterValue
 } from 'openstack-uicore-foundation/lib/methods';
 import _ from "lodash";
 
@@ -68,7 +69,8 @@ export const getRoomBookings = ( term = null, page = 1, perPage = 10, order = 's
     };
 
     if(term){
-        filter.push(`owner_name=@${term},room_name=@${term}`);
+        let escapedTerm = escapeFilterValue(term);
+        filter.push(`owner_name=@${escapedTerm},room_name=@${escapedTerm}`);
     }
 
     if(filter.length > 0){
@@ -105,7 +107,8 @@ export const exportRoomBookings = ( term = null, order = 'start_datetime', order
     };
 
     if(term){
-        filter.push(`owner_name=@${term},room_name=@${term}`);
+        let escapedTerm = escapeFilterValue(term);
+        filter.push(`owner_name=@${escapedTerm},room_name=@${escapedTerm}`);
     }
 
     if(filter.length > 0){

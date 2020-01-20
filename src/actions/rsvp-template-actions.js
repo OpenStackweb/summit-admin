@@ -23,7 +23,8 @@ import {
     startLoading,
     showMessage,
     showSuccessMessage,
-    authErrorHandler
+    authErrorHandler,
+    escapeFilterValue
 } from 'openstack-uicore-foundation/lib/methods';
 
 export const REQUEST_RSVP_TEMPLATES         = 'REQUEST_RSVP_TEMPLATES';
@@ -62,7 +63,8 @@ export const getRsvpTemplates = ( term = null, page = 1, perPage = 10, order = '
     dispatch(startLoading());
 
     if(term){
-        filter.push(`title=@${term}`);
+        let escapedTerm = escapeFilterValue(term);
+        filter.push(`title=@${escapedTerm}`);
     }
 
     let params = {

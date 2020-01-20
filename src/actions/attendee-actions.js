@@ -23,7 +23,8 @@ import {
     startLoading,
     showMessage,
     showSuccessMessage,
-    authErrorHandler
+    authErrorHandler,
+    escapeFilterValue
 } from "openstack-uicore-foundation/lib/methods";
 
 export const REQUEST_ATTENDEES          = 'REQUEST_ATTENDEES';
@@ -50,7 +51,8 @@ export const getAttendees = ( term = null, page = 1, perPage = 10, order = 'id',
     dispatch(startLoading());
 
     if(term){
-        filter.push(`first_name=@${term},last_name=@${term},email=@${term}`);
+        let escapedTerm = escapeFilterValue(term);
+        filter.push(`first_name=@${escapedTerm},last_name=@${escapedTerm},email=@${escapedTerm}`);
     }
 
     let params = {

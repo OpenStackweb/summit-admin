@@ -23,7 +23,8 @@ import {
     startLoading,
     showMessage,
     showSuccessMessage,
-    authErrorHandler
+    authErrorHandler,
+    escapeFilterValue
 } from 'openstack-uicore-foundation/lib/methods';
 import Swal from "sweetalert2";
 
@@ -324,7 +325,8 @@ export const getPurchaseOrders = ( term = null, page = 1, perPage = 10, order = 
     dispatch(startLoading());
 
     if(term){
-        filter.push(`ticket_number=@${term},ticket_owner_email=@${term},ticket_owner_name=@${term},number=@${term},owner_name=@${term},owner_email=@${term},owner_company=@${term}`);
+        let escapedTerm = escapeFilterValue(term);
+        filter.push(`ticket_number=@${escapedTerm},ticket_owner_email=@${escapedTerm},ticket_owner_name=@${escapedTerm},number=@${escapedTerm},owner_name=@${escapedTerm},owner_email=@${escapedTerm},owner_company=@${escapedTerm}`);
     }
 
     let params = {

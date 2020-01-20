@@ -24,7 +24,8 @@ import {
     showMessage,
     showSuccessMessage,
     getCSV,
-    authErrorHandler
+    authErrorHandler,
+    escapeFilterValue
 } from 'openstack-uicore-foundation/lib/methods';
 
 export const REQUEST_PROMOCODES       = 'REQUEST_PROMOCODES';
@@ -82,7 +83,8 @@ export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'cod
     dispatch(startLoading());
 
     if(term){
-        filter.push(`code=@${term},creator=@${term},creator_email=@${term},owner=@${term},owner_email=@${term},speaker=@${term},speaker_email=@${term},sponsor=@${term}`);
+        let escapedTerm = escapeFilterValue(term);
+        filter.push(`code=@${escapedTerm},creator=@${escapedTerm},creator_email=@${escapedTerm},owner=@${escapedTerm},owner_email=@${escapedTerm},speaker=@${escapedTerm},speaker_email=@${escapedTerm},sponsor=@${escapedTerm}`);
     }
 
     if (type != 'ALL') {
@@ -128,7 +130,7 @@ export const getPromocode = (promocodeId) => (dispatch, getState) => {
     dispatch(startLoading());
 
     let params = {
-        expand       : 'owner, sponsor, speaker, tickets, ticket_type',
+        expand       : 'owner,sponsor,sponsor.company,sponsor.sponsorship,speaker,tickets,ticket_type',
         access_token : accessToken,
     };
 
@@ -254,7 +256,8 @@ export const exportPromocodes = ( term = null, order = 'code', orderDir = 1, typ
     };
 
     if(term){
-        filter.push(`code=@${term},creator=@${term},creator_email=@${term},owner=@${term},owner_email=@${term},speaker=@${term},speaker_email=@${term},sponsor=@${term}`);
+        let escapedTerm = escapeFilterValue(term);
+        filter.push(`code=@${escapedTerm},creator=@${escapedTerm},creator_email=@${escapedTerm},owner=@${escapedTerm},owner_email=@${escapedTerm},speaker=@${escapedTerm},speaker_email=@${escapedTerm},sponsor=@${escapedTerm}`);
     }
 
     if (type != 'ALL') {
@@ -288,7 +291,7 @@ const normalizeEntity = (entity) => {
     } else if (entity.class_name.indexOf('SPONSOR_') === 0) {
         if (entity.sponsor != null)
             normalizedEntity.sponsor_id = entity.sponsor.id;
-        else if (entity.owner != null)
+        if (entity.owner != null)
             normalizedEntity.owner_id = entity.owner.id;
     } else if (entity.class_name.indexOf('SUMMIT_') === 0) {
 

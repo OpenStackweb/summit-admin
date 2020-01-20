@@ -20,6 +20,7 @@ import { getSummitById }  from '../../actions/summit-actions';
 import { getPromocode, getPromocodeMeta, resetPromocodeForm, sendEmail, addBadgeFeatureToPromocode, removeBadgeFeatureFromPromocode, savePromocode } from "../../actions/promocode-actions";
 import { getBadgeFeatures, getBadgeTypes } from '../../actions/badge-actions'
 import '../../styles/edit-promocode-page.less';
+import {createCompany} from "../../actions/sponsor-actions";
 
 class EditPromocodePage extends React.Component {
 
@@ -76,6 +77,7 @@ class EditPromocodePage extends React.Component {
                     onSendEmail={this.props.sendEmail}
                     onBadgeFeatureLink={this.props.addBadgeFeatureToPromocode}
                     onBadgeFeatureUnLink={this.props.removeBadgeFeatureFromPromocode}
+                    onCreateCompany={this.props.createCompany}
                     onSubmit={this.props.savePromocode}
                 />
                 }
@@ -99,6 +101,7 @@ export default connect (
         getBadgeTypes,
         resetPromocodeForm,
         sendEmail,
+        createCompany,
         addBadgeFeatureToPromocode,
         removeBadgeFeatureFromPromocode,
         savePromocode,

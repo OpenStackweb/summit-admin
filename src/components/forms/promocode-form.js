@@ -226,12 +226,14 @@ const SponsorBasePCForm = (props) => (
     <>
         <div className="row form-group">
             <div className="col-md-6">
-                <label> {T.translate("edit_promocode.sponsor")} </label>
+                <label> {T.translate("edit_promocode.company")} </label>
                 <CompanyInput
                     id="sponsor"
                     value={props.entity.sponsor}
                     onChange={props.handleChange}
                     summitId={props.summit.id}
+                    allowCreate
+                    onCreate={props.onCreateCompany}
                     error={props.hasErrors('sponsor_id')}
                 />
             </div>
@@ -558,6 +560,7 @@ class PromocodeForm extends React.Component {
                     summit={currentSummit}
                     handleChange={this.handleChange}
                     handleSendEmail={this.handleSendEmail}
+                    onCreateCompany={this.props.onCreateCompany}
                     badgeFeatureColumns={badgeFeatureColumns}
                     badgeFeatureOptions={badgeFeatureOptions}
                     hasErrors={this.hasErrors}
@@ -596,6 +599,7 @@ class PromocodeForm extends React.Component {
                     handleSendEmail={this.handleSendEmail}
                     badgeFeatureColumns={badgeFeatureColumns}
                     badgeFeatureOptions={badgeFeatureOptions}
+                    onCreateCompany={this.props.onCreateCompany}
                     hasErrors={this.hasErrors}
                 />
                 }
