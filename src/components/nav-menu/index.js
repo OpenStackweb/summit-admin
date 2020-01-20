@@ -77,9 +77,9 @@ class NavMenu extends React.Component {
 
         switch (item.name) {
             case 'attendees':
-                return !!currentSummit.external_registration_feed_type;
+                return currentSummit.external_registration_feed_type !== 'none';
             case 'purchase_orders':
-                return !currentSummit.external_registration_feed_type;
+                return currentSummit.external_registration_feed_type === 'none';
             default:
                 return true;
         }
