@@ -137,8 +137,6 @@ export const importTicketsCSV = (file) => (dispatch, getState) => {
         access_token : accessToken
     };
 
-    console.log(file);
-
     postRequest(
         null,
         createAction(TICKETS_IMPORTED),

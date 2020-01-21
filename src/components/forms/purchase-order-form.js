@@ -16,7 +16,7 @@ import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import { Input, Dropdown, Table, Panel, MemberInput } from 'openstack-uicore-foundation/lib/components'
 import { epochToMomentTimeZone, findElementPos } from 'openstack-uicore-foundation/lib/methods'
-import QuestionAnswersInput from '../inputs/question-answers-input'
+import OwnerInput from '../inputs/owner-input'
 
 
 class PurchaseOrderForm extends React.Component {
@@ -62,6 +62,10 @@ class PurchaseOrderForm extends React.Component {
         if (ev.target.type == 'number') {
             value = parseInt(ev.target.value);
         }
+
+        /*if (ev.target.type == 'ownerinput') {
+            value =
+        }*/
 
         errors[id] = '';
         entity[id] = value;
@@ -147,45 +151,12 @@ class PurchaseOrderForm extends React.Component {
                 </div>
                 }
                 <div className="row form-group">
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_purchase_order.owner_email")}</label>
-                        <Input
-                            id="owner_email"
-                            value={entity.owner_email}
-                            onChange={this.handleChange}
-                            className="form-control"
-                            error={this.hasErrors('owner_email')}
-                        />
-                    </div>
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_purchase_order.owner_first_name")}</label>
-                        <Input
-                            id="owner_first_name"
-                            value={entity.owner_first_name}
-                            onChange={this.handleChange}
-                            className="form-control"
-                            error={this.hasErrors('owner_first_name')}
-                        />
-                    </div>
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_purchase_order.owner_surname")}</label>
-                        <Input
-                            id="owner_surname"
-                            value={entity.owner_surname}
-                            onChange={this.handleChange}
-                            className="form-control"
-                            error={this.hasErrors('owner_surname')}
-                        />
-                    </div>
-                </div>
-                <div className="row form-group">
-                    <div className="col-md-6">
-                        <label> {T.translate("general.member")} </label>
-                        <MemberInput
+                    <div className="col-md-12">
+                        <OwnerInput
                             id="owner"
-                            value={entity.owner}
+                            owner={entity.owner}
                             onChange={this.handleChange}
-                            error={this.hasErrors('owner_id')}
+                            errors={{email: this.hasErrors('owner_email'), first_name: this.hasErrors('owner_first_name'), last_name: this.hasErrors('owner_last_name')}}
                         />
                     </div>
                 </div>

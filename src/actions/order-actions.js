@@ -368,7 +368,7 @@ export const getPurchaseOrder = (orderId) => (dispatch, getState) => {
     dispatch(startLoading());
 
     let params = {
-        expand       : 'owner, extra_questions, tickets, tickets.owner, tickets.owner.member, tickets.ticket_type',
+        expand       : 'extra_questions, tickets, tickets.owner, tickets.owner.member, tickets.ticket_type',
         access_token : accessToken,
     };
 
@@ -442,7 +442,7 @@ export const savePurchaseOrder = (entity) => (dispatch, getState) => {
                 ));
             });
     }
-}
+};
 
 
 export const deletePurchaseOrder = (orderId) => (dispatch, getState) => {
@@ -519,11 +519,15 @@ const normalizePurchaseOrder = (entity) => {
     delete(normalizedEntity.raw_amount);
     delete(normalizedEntity.status);
     delete(normalizedEntity.taxes_amount);
+    delete(normalizedEntity.owner_id);
 
     if (normalizedEntity.owner != null) {
-        normalizedEntity.owner_id = normalizedEntity.owner.id;
+        normalizedEntity.owner_email = normalizedEntity.owner.email;
+        normalizedEntity.owner_first_name = normalizedEntity.owner.first_name;
+        normalizedEntity.owner_last_name = normalizedEntity.owner.last_name;
         delete(normalizedEntity.owner);
     }
+
 
     delete(normalizedEntity.extra_questions);
 

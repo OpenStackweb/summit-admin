@@ -25,11 +25,10 @@ export const DEFAULT_ENTITY = {
     id: 0,
     number: '',
     owner_company: '',
-    owner_company_id: 0,
     owner_email: '',
     owner_first_name: '',
-    owner_id: 0,
     owner_last_name: '',
+    owner: {id: 0, first_name: '', last_name: '', email: ''},
     payment_method: '',
     status: '',
     billing_address_1: '',
@@ -67,12 +66,17 @@ const purchaseOrderReducer = (state = DEFAULT_STATE, action) => {
         case RECEIVE_PURCHASE_ORDER: {
             let entity = {...payload.response};
 
-
             for(var key in entity) {
                 if(entity.hasOwnProperty(key)) {
                     entity[key] = (entity[key] == null) ? '' : entity[key] ;
                 }
             }
+
+            entity.owner = {
+                email: entity.owner_email,
+                first_name: entity.owner_first_name,
+                last_name: entity.owner_last_name,
+            };
 
             entity.tickets = entity.tickets.map(t => {
                 let owner_full_name = 'N/A';

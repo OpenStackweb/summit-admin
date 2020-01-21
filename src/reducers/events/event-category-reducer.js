@@ -65,7 +65,6 @@ const eventCategoryReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case UPDATE_EVENT_CATEGORY: {
-            console.log(payload);
             return {...state,  entity: {...payload}, errors: {} };
         }
         break;

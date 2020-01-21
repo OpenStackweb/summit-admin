@@ -112,8 +112,6 @@ class RoomBookingListPage extends React.Component {
         let {roomBookings} = this.props;
         let roomBooking = roomBookings.find(rb => rb.id == bookingId);
 
-        console.log(roomBooking);
-
         this.setState({
             showModal: true,
             modalBooking: roomBooking
