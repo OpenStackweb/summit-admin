@@ -101,6 +101,12 @@ const promocodeReducer = (state = DEFAULT_STATE, action) => {
                 }
             }
 
+            entity.owner = {
+                email: entity.email,
+                first_name: entity.first_name,
+                last_name: entity.last_name,
+            };
+
             entity.apply_to_all_tix = !!(entity.amount || entity.rate);
 
             return {...state, entity: {...DEFAULT_ENTITY, ...entity} };

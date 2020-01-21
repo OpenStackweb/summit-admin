@@ -283,16 +283,22 @@ const normalizeEntity = (entity) => {
     let normalizedEntity = {...entity};
 
     if (entity.class_name.indexOf('MEMBER_') === 0) {
-        if (entity.owner != null)
-            normalizedEntity.owner_id = entity.owner.id;
+        if (entity.owner != null) {
+            normalizedEntity.first_name = entity.owner.first_name;
+            normalizedEntity.last_name = entity.owner.last_name;
+            normalizedEntity.email = entity.owner.email;
+        }
     } else if (entity.class_name.indexOf('SPEAKER_') === 0) {
         if (entity.speaker != null)
             normalizedEntity.speaker_id = entity.speaker.id;
     } else if (entity.class_name.indexOf('SPONSOR_') === 0) {
         if (entity.sponsor != null)
             normalizedEntity.sponsor_id = entity.sponsor.id;
-        if (entity.owner != null)
-            normalizedEntity.owner_id = entity.owner.id;
+        if (entity.owner != null) {
+            normalizedEntity.first_name = entity.owner.first_name;
+            normalizedEntity.last_name = entity.owner.last_name;
+            normalizedEntity.email = entity.owner.email;
+        }
     } else if (entity.class_name.indexOf('SUMMIT_') === 0) {
 
     }
@@ -302,6 +308,7 @@ const normalizeEntity = (entity) => {
     }
 
     delete normalizedEntity['owner'];
+    delete normalizedEntity['owner_id'];
     delete normalizedEntity['speaker'];
     delete normalizedEntity['sponsor'];
 

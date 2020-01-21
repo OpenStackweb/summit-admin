@@ -17,6 +17,7 @@ import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import {findElementPos, epochToMomentTimeZone} from 'openstack-uicore-foundation/lib/methods'
 import { Dropdown, DateTimePicker, SpeakerInput, MemberInput, CompanyInput, Input } from 'openstack-uicore-foundation/lib/components'
 import { DiscountTicketTable } from '../tables/dicount-ticket-table';
+import OwnerInput from "../inputs/owner-input";
 
 // FORM DEFS
 const EmailRedeemForm = (props) => (
@@ -174,7 +175,7 @@ const SpeakerBasePCForm = (props) => (
 
 const MemberBasePCForm = (props) => (
     <>
-        <div className="row form-group">
+        {/*<div className="row form-group">
             <div className="col-md-6">
                 <label> {T.translate("general.member")} </label>
                 <MemberInput
@@ -214,6 +215,16 @@ const MemberBasePCForm = (props) => (
                     value={props.entity.email}
                     onChange={props.handleChange}
                     className="form-control"
+                />
+            </div>
+        </div>*/}
+        <div className="row form-group">
+            <div className="col-md-12">
+                <OwnerInput
+                    id="owner"
+                    owner={props.entity.owner}
+                    onChange={props.handleChange}
+                    errors={{email: props.hasErrors('email'), first_name: props.hasErrors('first_name'), last_name: props.hasErrors('last_name')}}
                 />
             </div>
         </div>
