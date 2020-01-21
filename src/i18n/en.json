@@ -1186,7 +1186,7 @@
     "owner_full_name"           : "Owner",
     "owner_email"               : "Email",
     "owner_first_name"          : "First Name",
-    "owner_surname"             : "Last Name",
+    "owner_last_name"           : "Last Name",
     "owner_company"             : "Company",
     "billing"                   : "Billing Info",
     "billing_address_1"         : "Address 1",

@@ -53,7 +53,7 @@ const purchaseOrderListReducer = (state = DEFAULT_STATE, action) => {
                     id: a.id,
                     number: a.number,
                     owner_id: a.owner_id,
-                    owner_name: a.owner_first_name + ' ' + a.owner_surname,
+                    owner_name: a.owner_first_name + ' ' + a.owner_last_name,
                     owner_email: a.owner_email,
                     company: a.owner_company,
                     bought_date: bought_date,

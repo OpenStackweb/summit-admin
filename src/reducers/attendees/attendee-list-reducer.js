@@ -62,7 +62,7 @@ const attendeeListReducer = (state = DEFAULT_STATE, action) => {
                     email = a.member.email;
                 } else {
                     if (a.email) email = a.email;
-                    if (a.first_name) name = `${a.first_name} ${a.surname}`;
+                    if (a.first_name) name = `${a.first_name} ${a.last_name}`;
                 }
 
                 return {

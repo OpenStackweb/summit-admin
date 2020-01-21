@@ -110,7 +110,7 @@ export default class OwnerInput extends React.Component {
                     />
                 </div>
                 <div className="col-md-4">
-                    <label> {T.translate("edit_purchase_order.owner_surname")}</label>
+                    <label> {T.translate("edit_purchase_order.owner_last_name")}</label>
                     <Input
                         id="last_name"
                         value={owner ? owner.last_name : ''}

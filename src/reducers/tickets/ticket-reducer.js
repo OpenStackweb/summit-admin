@@ -96,8 +96,8 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
 
                 if (entity.owner.member) {
                     owner_full_name = `${entity.owner.member.first_name} ${entity.owner.member.last_name}`;
-                } else if (entity.owner.first_name && entity.owner.surname) {
-                    owner_full_name = `${entity.owner.first_name} ${entity.owner.surname}`;
+                } else if (entity.owner.first_name && entity.owner.last_name) {
+                    owner_full_name = `${entity.owner.first_name} ${entity.owner.last_name}`;
                 }
             }
 

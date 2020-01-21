@@ -93,7 +93,7 @@ class SummitAttendeeListPage extends React.Component {
 
     handleSort(index, key, dir, func) {
         let {term, page, perPage} = this.props;
-        key = (key == 'name') ? 'surname' : key;
+        key = (key == 'name') ? 'last_name' : key;
         this.props.getAttendees(term, page, perPage, key, dir);
     }
 
@@ -140,7 +140,7 @@ class SummitAttendeeListPage extends React.Component {
         ];
 
         let table_options = {
-            sortCol: (order == 'surname') ? 'name' : order,
+            sortCol: (order == 'last_name') ? 'name' : order,
             sortDir: orderDir,
             actions: {
                 edit: {onClick: this.handleEdit},
