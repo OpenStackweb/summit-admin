@@ -72,7 +72,7 @@ class BadgeForm extends React.Component {
         let {entity} = this.state;
         let { currentSummit, canPrint } = this.props;
 
-        if (!currentSummit.badge_types) return (<div></div>);
+        if (!currentSummit.badge_types || !currentSummit.badge_features) return (<div></div>);
 
         let badgeType = currentSummit.badge_types.find(bt => bt.id == entity.type_id);
         let access_levels =  badgeType.access_levels.map(al => al.name).join(', ');
@@ -97,7 +97,7 @@ class BadgeForm extends React.Component {
 
         return (
             <form className="badge-form">
-                <input type="hidden" id="id" value={entity.id} />
+                <input type="hidden" id="badge_id" value={entity.id} />
                 <div className="row form-group">
                     <div className="col-md-4">
                         <label> {T.translate("edit_ticket.type")}</label>

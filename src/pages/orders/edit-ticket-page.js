@@ -121,8 +121,8 @@ class EditTicketPage extends React.Component {
 
         let breadcrumb = `...${entity.number.slice(-20)}`;
 
-        if (!entity || !entity.id) return (<div></div>);
-        if (entity.order_id != currentOrder.id && !loading) return (<NoMatchPage />)
+        if (!entity || !entity.id) return (<div />);
+        if (entity.order_id !== currentOrder.id) return (<div />);
 
         return(
             <div className="container">

@@ -65,19 +65,16 @@ class PurchaseOrderIdLayout extends React.Component {
             <div>
                 <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
                 <Switch>
-                    <Route path={`${match.url}/tickets`} render={
+                    <Route strict exact path={`${match.url}/tickets/:ticket_id(\\d+)`} render={
                         props => (
                             <div>
                                 <Breadcrumb data={{ title: T.translate("purchase_order_list.tickets"), pathname: match.url }} ></Breadcrumb>
-                                <Switch>
-                                    <Route strict exact path={`${props.match.url}/:ticket_id(\\d+)`} component={EditTicketPage} />
-                                    <Route component={NoMatchPage}/>
-                                </Switch>
+                                <EditTicketPage {...props} />
                             </div>
                         )}
                     />
                     <Route strict exact path={match.url} component={EditPurchaseOrderPage} />
-                    <Route component={NoMatchPage}/>
+                    <Route component={NoMatchPage} />
                 </Switch>
             </div>
         );

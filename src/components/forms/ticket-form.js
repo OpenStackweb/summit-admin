@@ -112,7 +112,7 @@ class TicketForm extends React.Component {
 
         return (
             <form className="ticket-form">
-                <input type="hidden" id="id" value={entity.id} />
+                <input type="hidden" id="ticket_id" value={entity.id} />
                 {!canReassign && entity.owner &&
                 <div className="row form-group">
                     <div className="col-md-4">
