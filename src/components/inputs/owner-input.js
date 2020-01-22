@@ -37,7 +37,7 @@ export default class OwnerInput extends React.Component {
         }
 
         let ev = {target: {
-            id: 'owner',
+            id: this.props.id,
             value: theValue,
             type: 'ownerinput'
         }};
@@ -49,7 +49,7 @@ export default class OwnerInput extends React.Component {
         let {value, id} = ev.target;
 
         let newEv = {target: {
-            id: 'owner',
+            id: this.props.id,
             value: this.props.owner,
             type: 'ownerinput'
         }};

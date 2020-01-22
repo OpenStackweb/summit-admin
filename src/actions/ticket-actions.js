@@ -300,9 +300,17 @@ export const addBadgeToTicket = (ticketId) => (dispatch, getState) => {
 const normalizeTicket = (entity) => {
     let normalizedEntity = {...entity};
 
+    // if no owner then we are assigning the tix to someone
+    if (!normalizedEntity.owner && normalizedEntity.attendee) {
+        normalizedEntity.attendee_first_name = normalizedEntity.attendee.first_name;
+        normalizedEntity.attendee_last_name = normalizedEntity.attendee.last_name;
+        normalizedEntity.attendee_email = normalizedEntity.attendee.email;
+    }
+
     delete(normalizedEntity.id);
     delete(normalizedEntity.badge);
     delete(normalizedEntity.ticket_type);
+    delete(normalizedEntity.attendee);
     delete(normalizedEntity.owner);
     delete(normalizedEntity.owner_id);
     delete(normalizedEntity.owner_full_name);

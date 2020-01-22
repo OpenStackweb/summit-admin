@@ -47,9 +47,7 @@ export const DEFAULT_ENTITY = {
     ticket_type: null,
     owner: null,
     applied_taxes: [],
-    attendee_first_name: '',
-    attendee_last_name: '',
-    attendee_email: '',
+    attendee: {},
     attendee_company: '',
 }
 
@@ -77,8 +75,7 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
         case RECEIVE_TICKET: {
             let entity = {...payload.response};
             let bought_date = entity.bought_date ? epochToMoment(entity.bought_date).format('MMMM Do YYYY, h:mm:ss a') : null;
-            let owner_full_name = '';
-            let owner_email = '';
+            let attendee_full_name = 'N/A';
             let promocode_name = 'N/A';
 
             for(var key in entity) {
@@ -92,16 +89,14 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
             }
 
             if (entity.owner) {
-                owner_email = entity.owner.email;
-
-                if (entity.owner.member) {
-                    owner_full_name = `${entity.owner.member.first_name} ${entity.owner.member.last_name}`;
-                } else if (entity.owner.first_name && entity.owner.last_name) {
-                    owner_full_name = `${entity.owner.first_name} ${entity.owner.last_name}`;
+                if (entity.owner.first_name && entity.owner.last_name) {
+                    attendee_full_name = `${entity.owner.first_name} ${entity.owner.last_name}`;
+                } else if (entity.owner.member) {
+                    attendee_full_name = `${entity.owner.member.first_name} ${entity.owner.member.last_name}`;
                 }
             }
 
-            return {...state, entity: {...DEFAULT_ENTITY, ...entity, owner_full_name, owner_email, bought_date, promocode_name} };
+            return {...state, entity: {...DEFAULT_ENTITY, ...entity, attendee_full_name, bought_date, promocode_name} };
         }
         break;
         case TICKET_UPDATED: {

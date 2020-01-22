@@ -16,6 +16,7 @@ import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
 import { Input, Dropdown, SimpleLinkList, MemberInput } from 'openstack-uicore-foundation/lib/components'
+import OwnerInput from "../inputs/owner-input";
 
 
 class TicketForm extends React.Component {
@@ -65,15 +66,16 @@ class TicketForm extends React.Component {
 
     handleAssign(ev) {
         let {entity, canReassign} = this.state;
+        let {owner: prevOwner} = this.props.entity;
         ev.preventDefault();
 
         if (canReassign) {
             this.props.onReassing(
                 entity.id,
-                entity.owner.id,
-                entity.attendee_first_name,
-                entity.attendee_last_name,
-                entity.attendee_email,
+                prevOwner.id,
+                entity.attendee.first_name,
+                entity.attendee.last_name,
+                entity.attendee.email,
                 entity.attendee_company
             );
         } else {
@@ -115,17 +117,17 @@ class TicketForm extends React.Component {
                 <input type="hidden" id="ticket_id" value={entity.id} />
                 {!canReassign && entity.owner &&
                 <div className="row form-group">
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <label> {T.translate("edit_ticket.attendee")}:&nbsp;</label>
-                        <a href="" onClick={this.handleOwnerClick}>{entity.owner_full_name}</a>
+                        <a href="" onClick={this.handleOwnerClick}>{entity.attendee_full_name}</a>
                     </div>
-                    <div className="col-md-6">
-                        <MemberInput
-                            id="member"
-                            value={member}
-                            onChange={this.handleChange}
-                            isDisabled
-                        />
+                    <div className="col-md-3">
+                        <label> {T.translate("edit_ticket.company")}:&nbsp;</label>
+                        <span>{entity.owner.company}</span>
+                    </div>
+                    <div className="col-md-3">
+                        <label> {T.translate("edit_ticket.email")}:&nbsp;</label>
+                        <span>{entity.owner.email}</span>
                     </div>
                     <div className="col-md-2">
                         <button onClick={this.handleReassign} className="btn btn-default">
@@ -136,38 +138,16 @@ class TicketForm extends React.Component {
                 }
                 {(canReassign || !entity.owner) &&
                 <div className="row form-group">
-                    <div className="col-md-2">
-                        <label> {T.translate("edit_ticket.attendee_first_name")}:&nbsp;</label>
-                        <Input
-                            id="attendee_first_name"
-                            value={entity.attendee_first_name}
+                    <div className="col-md-9">
+                        <OwnerInput
+                            id="attendee"
+                            owner={entity.attendee}
                             onChange={this.handleChange}
-                            className="form-control"
-                            error={this.hasErrors('attendee_first_name')}
+                            errors={{email: this.hasErrors('attendee_email'), first_name: this.hasErrors('attendee_first_name'), last_name: this.hasErrors('attendee_last_name')}}
                         />
                     </div>
                     <div className="col-md-2">
-                        <label> {T.translate("edit_ticket.attendee_last_name")}:&nbsp;</label>
-                        <Input
-                            id="attendee_last_name"
-                            value={entity.attendee_last_name}
-                            onChange={this.handleChange}
-                            className="form-control"
-                            error={this.hasErrors('attendee_last_name')}
-                        />
-                    </div>
-                    <div className="col-md-3">
-                        <label> {T.translate("edit_ticket.attendee_email")}:&nbsp;</label>
-                        <Input
-                            id="attendee_email"
-                            value={entity.attendee_email}
-                            onChange={this.handleChange}
-                            className="form-control"
-                            error={this.hasErrors('attendee_email')}
-                        />
-                    </div>
-                    <div className="col-md-3">
-                        <label> {T.translate("edit_ticket.attendee_company")}:&nbsp;</label>
+                        <label> {T.translate("edit_ticket.company")}:&nbsp;</label>
                         <Input
                             id="attendee_company"
                             value={entity.attendee_company}
@@ -176,7 +156,7 @@ class TicketForm extends React.Component {
                             error={this.hasErrors('attendee_company')}
                         />
                     </div>
-                    <div className="col-md-2">
+                    <div className="col-md-1">
                         <br/>
 
                         <button onClick={this.handleAssign} className="btn btn-default">
@@ -186,31 +166,31 @@ class TicketForm extends React.Component {
                 </div>
                 }
                 <div className="row form-group">
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <label> {T.translate("edit_ticket.type")}:&nbsp;</label>
                         {entity.ticket_type ? entity.ticket_type.name : ''}
                     </div>
-                    <div className="col-md-8">
+                    <div className="col-md-9">
                         <label> {T.translate("edit_ticket.number")}:&nbsp;</label>
                         {entity.number}
                     </div>
                 </div>
                 <div className="row form-group">
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_ticket.bought_date")}:&nbsp;</label>
-                        {entity.bought_date}
-                    </div>
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <label> {T.translate("edit_ticket.status")}:&nbsp;</label>
                         {entity.status}
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <label> {T.translate("edit_ticket.promocode")}:&nbsp;</label>
                         {entity.promo_code ? (
                             <a href="" onClick={this.handlePromocodeClick}>{entity.promocode_name}</a>
                         ) : (
                             entity.promocode_name
                         )}
+                    </div>
+                    <div className="col-md-6">
+                        <label> {T.translate("edit_ticket.bought_date")}:&nbsp;</label>
+                        {entity.bought_date}
                     </div>
                 </div>
 

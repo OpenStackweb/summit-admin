@@ -151,7 +151,7 @@ class PurchaseOrderForm extends React.Component {
                 </div>
                 }
                 <div className="row form-group">
-                    <div className="col-md-12">
+                    <div className="col-md-9">
                         <OwnerInput
                             id="owner"
                             owner={entity.owner}
@@ -159,9 +159,7 @@ class PurchaseOrderForm extends React.Component {
                             errors={{email: this.hasErrors('owner_email'), first_name: this.hasErrors('owner_first_name'), last_name: this.hasErrors('owner_last_name')}}
                         />
                     </div>
-                </div>
-                <div className="row form-group">
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <label> {T.translate("edit_purchase_order.owner_company")}</label>
                         <Input
                             id="owner_company"
