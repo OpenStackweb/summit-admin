@@ -19,7 +19,9 @@ import
     UPDATE_PROMOCODE,
     PROMOCODE_UPDATED,
     PROMOCODE_ADDED,
-    EMAIL_SENT
+    EMAIL_SENT,
+    DISCOUNT_TICKET_ADDED,
+    DISCOUNT_TICKET_DELETED
 } from '../../actions/promocode-actions';
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
@@ -34,7 +36,7 @@ export const DEFAULT_ENTITY = {
     last_name               : '',
     email                   : '',
     type                    : '',
-    class_name              : '',
+    class_name              : null,
     code                    : '',
     email_sent              : false,
     redeemed                : false,
@@ -45,6 +47,7 @@ export const DEFAULT_ENTITY = {
     badge_type_id           : 0,
     badge_features          : [],
     allowed_ticket_types    : [],
+    ticket_types_rules      : [],
     apply_to_all_tix        : true,
     amount                  : '',
     rate                    : ''
@@ -114,6 +117,17 @@ const promocodeReducer = (state = DEFAULT_STATE, action) => {
         break;
         case PROMOCODE_UPDATED: {
             return state;
+        }
+        break;
+        case DISCOUNT_TICKET_ADDED: {
+            let ticket = {...payload.response};
+            return {...state, entity: {...state.entity, ticket_types_rules: ticket.ticket_types_rules} };
+        }
+        break;
+        case DISCOUNT_TICKET_DELETED: {
+            let {ticketId} = payload;
+            let ticket_types_rules = state.entity.ticket_types_rules.filter(tr => tr.id != ticketId);
+            return {...state, entity: {...state.entity, ticket_types_rules } };
         }
         break;
         case EMAIL_SENT: {

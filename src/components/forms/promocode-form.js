@@ -175,49 +175,6 @@ const SpeakerBasePCForm = (props) => (
 
 const MemberBasePCForm = (props) => (
     <>
-        {/*<div className="row form-group">
-            <div className="col-md-6">
-                <label> {T.translate("general.member")} </label>
-                <MemberInput
-                    id="owner"
-                    value={props.entity.owner}
-                    onChange={props.handleChange}
-                    error={props.hasErrors('owner_id')}
-                />
-            </div>
-        </div>
-        <div className="row form-group">
-            <div className="or-label col-md-12">{T.translate("edit_promocode.or")}</div>
-            <br/>
-            <div className="col-md-3">
-                <label> {T.translate("general.first_name")} </label>
-                <Input
-                    id="first_name"
-                    value={props.entity.first_name}
-                    onChange={props.handleChange}
-                    className="form-control"
-                    error={props.hasErrors('first_name')}
-                />
-            </div>
-            <div className="col-md-3">
-                <label> {T.translate("general.last_name")} </label>
-                <Input
-                    id="last_name"
-                    value={props.entity.last_name}
-                    onChange={props.handleChange}
-                    className="form-control"
-                />
-            </div>
-            <div className="col-md-3">
-                <label> {T.translate("general.email")} </label>
-                <Input
-                    id="email"
-                    value={props.entity.email}
-                    onChange={props.handleChange}
-                    className="form-control"
-                />
-            </div>
-        </div>*/}
         <div className="row form-group">
             <div className="col-md-12">
                 <OwnerInput
@@ -304,11 +261,18 @@ const DiscountBasePCForm = (props) => (
         </div>
         }
         {!props.entity.apply_to_all_tix &&
-        <DiscountTicketTable
-            ownerId={props.entity.id}
-            data={props.entity.allowed_ticket_types}
-            ticketTypes={props.summit.ticket_types}
-        />
+            <>
+                {props.entity.id !== 0 &&
+                <DiscountTicketTable
+                    ownerId={props.entity.id}
+                    data={props.entity.ticket_types_rules}
+                    ticketTypes={props.summit.ticket_types}
+                />
+                }
+                {props.entity.id === 0 &&
+                <p>Please save the promocode before adding rates to different ticket types</p>
+                }
+            </>
         }
     </>
 );
@@ -436,6 +400,7 @@ class PromocodeForm extends React.Component {
         entity.class_name = value;
         entity.type = null;
         entity.allowed_ticket_types = [];
+        entity.ticket_types_rules = [];
 
         this.setState({entity: entity});
     }

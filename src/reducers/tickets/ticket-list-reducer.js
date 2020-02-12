@@ -55,7 +55,7 @@ const ticketListReducer = (state = DEFAULT_STATE, action) => {
                     id: t.id,
                     number: number,
                     order_id: t.order.id,
-                    ticket_type: t.ticket_type.name,
+                    ticket_type: t.ticket_type ? t.ticket_type.name : 'N/A',
                     bought_date: bought_date,
                     owner_name: t.owner ? t.owner.first_name + ' ' + t.owner.last_name : 'N/A',
                     owner_email: t.owner ? t.owner.email : 'N/A',

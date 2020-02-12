@@ -40,7 +40,6 @@ export const PROMOCODE_DELETED        = 'PROMOCODE_DELETED';
 export const EMAIL_SENT               = 'EMAIL_SENT';
 
 
-export const DISCOUNT_TICKET_UPDATED  = 'DISCOUNT_TICKET_UPDATED';
 export const DISCOUNT_TICKET_ADDED    = 'DISCOUNT_TICKET_ADDED';
 export const DISCOUNT_TICKET_DELETED  = 'DISCOUNT_TICKET_DELETED';
 
@@ -130,7 +129,7 @@ export const getPromocode = (promocodeId) => (dispatch, getState) => {
     dispatch(startLoading());
 
     let params = {
-        expand       : 'owner,sponsor,sponsor.company,sponsor.sponsorship,speaker,tickets,ticket_type',
+        expand       : 'owner,sponsor,sponsor.company,sponsor.sponsorship,speaker,tickets,ticket_type,ticket_types_rules',
         access_token : accessToken,
     };
 
@@ -160,7 +159,7 @@ export const savePromocode = (entity) => (dispatch, getState) => {
 
     if (entity.id) {
 
-        putRequest(
+        return putRequest(
             createAction(UPDATE_PROMOCODE),
             createAction(PROMOCODE_UPDATED),
             `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes/${entity.id}?access_token=${accessToken}`,
@@ -179,7 +178,7 @@ export const savePromocode = (entity) => (dispatch, getState) => {
             type: 'success'
         };
 
-        postRequest(
+        return postRequest(
             createAction(UPDATE_PROMOCODE),
             createAction(PROMOCODE_ADDED),
             `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes?access_token=${accessToken}`,
@@ -307,6 +306,14 @@ const normalizeEntity = (entity) => {
         delete normalizedEntity['badge_type_id'];
     }
 
+    if (!entity.valid_since_date) {
+        delete normalizedEntity['valid_since_date'];
+    }
+
+    if (!entity.valid_until_date) {
+        delete normalizedEntity['valid_until_date'];
+    }
+
     delete normalizedEntity['owner'];
     delete normalizedEntity['owner_id'];
     delete normalizedEntity['speaker'];
@@ -371,43 +378,20 @@ export const removeBadgeFeatureFromPromocode = (promocodeId, badgeFeatureId) => 
 /************************  DICOUNT PROMOCODES **********************************/
 
 
-
-/*export const addDiscountTicket = (promocodeId, ticket) => (dispatch, getState) => {
+export const addDiscountTicket = (ticket) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
     let params = {
-        access_token : accessToken
-    };
-
-    return postRequest(
-        null,
-        createAction(DISCOUNT_TICKET_ADDED),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes/${promocodeId}/ticket-types`,
-        ticket,
-        authErrorHandler
-    )(params)(dispatch).then(
-        (payload) => {
-            dispatch(stopLoading());
-        });
-
-}*/
-
-
-export const saveDiscountTicket = (ticket) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-
-    let params = {
-        access_token : accessToken
+        access_token : accessToken,
+        expand: 'ticket_types_rules'
     };
 
     return putRequest(
         null,
-        createAction(DISCOUNT_TICKET_UPDATED),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes/${ticket.owner_id}/ticket-types/${ticket.id}`,
+        createAction(DISCOUNT_TICKET_ADDED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes/${ticket.owner_id}/ticket-types/${ticket.ticket_type_id}`,
         ticket,
         authErrorHandler
     )(params)(dispatch).then(
@@ -418,7 +402,7 @@ export const saveDiscountTicket = (ticket) => (dispatch, getState) => {
 }
 
 
-export const deleteDiscountTicket = (promocodeId, ticketId) => (dispatch, getState) => {
+export const deleteDiscountTicket = (promocodeId, ticketId, ticketTypeId) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -431,7 +415,7 @@ export const deleteDiscountTicket = (promocodeId, ticketId) => (dispatch, getSta
     return deleteRequest(
         null,
         createAction(DISCOUNT_TICKET_DELETED)({ticketId}),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes/${promocodeId}/ticket-types/${ticketId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes/${promocodeId}/ticket-types/${ticketTypeId}`,
         null,
         authErrorHandler
     )(params)(dispatch).then(() => {
