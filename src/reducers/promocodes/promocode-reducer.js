@@ -121,13 +121,13 @@ const promocodeReducer = (state = DEFAULT_STATE, action) => {
         break;
         case DISCOUNT_TICKET_ADDED: {
             let ticket = {...payload.response};
-            return {...state, entity: {...state.entity, ticket_types_rules: ticket.ticket_types_rules} };
+            return {...state, entity: {...state.entity, ticket_types_rules: ticket.ticket_types_rules, apply_to_all_tix: false} };
         }
         break;
         case DISCOUNT_TICKET_DELETED: {
             let {ticketId} = payload;
             let ticket_types_rules = state.entity.ticket_types_rules.filter(tr => tr.id != ticketId);
-            return {...state, entity: {...state.entity, ticket_types_rules } };
+            return {...state, entity: {...state.entity, ticket_types_rules, apply_to_all_tix: false } };
         }
         break;
         case EMAIL_SENT: {
