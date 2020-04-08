@@ -75,12 +75,13 @@ import sponsorReducer from './reducers/sponsors/sponsor-reducer';
 import sponsorshipListReducer from './reducers/sponsors/sponsorship-list-reducer';
 import sponsorshipReducer from './reducers/sponsors/sponsorship-reducer';
 import refundPolicyListReducer from './reducers/refund_policies/refund-policy-list-reducer';
+import paymentProfileListReducer from './reducers/payment_profiles/payment-profile-list-reducer';
 import ticketListReducer from './reducers/tickets/ticket-list-reducer';
 import ticketReducer from './reducers/tickets/ticket-reducer';
 import badgeScansListReducer from './reducers/sponsors/badge-scans-list-reducer';
 import marketingSettingListReducer from './reducers/marketing/marketing-setting-list-reducer';
 import marketingSettingReducer from './reducers/marketing/marketing-setting-reducer';
-
+import paymentProfileReducer from './reducers/payment_profiles/payment-profile-reducer';
 
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
@@ -90,7 +91,7 @@ import storage from 'redux-persist/es/storage'
 const config = {
     key: 'root',
     storage,
-}
+};
 
 const reducers = persistCombineReducers(config, {
     loggedUserState: loggedUserReducer,
@@ -156,6 +157,8 @@ const reducers = persistCombineReducers(config, {
     currentSponsorshipListState: sponsorshipListReducer,
     currentSponsorshipState: sponsorshipReducer,
     currentRefundPolicyListState: refundPolicyListReducer,
+    currentPaymentProfileListState: paymentProfileListReducer,
+    currentPaymentProfileState: paymentProfileReducer,
     currentTicketListState: ticketListReducer,
     currentTicketState: ticketReducer,
     badgeScansListState: badgeScansListReducer,

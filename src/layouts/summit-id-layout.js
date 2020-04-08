@@ -51,6 +51,7 @@ import BadgeScansListPage from '../pages/sponsors/badge-scans-list-page';
 import NoMatchPage from '../pages/no-match-page';
 import TicketListPage from "../pages/tickets/ticket-list-page";
 import MarketingLayout from "./marketing-layout";
+import PaymentProfileLayout from "./payment-profile-layout";
 
 
 class SummitIdLayout extends React.Component {
@@ -105,6 +106,7 @@ class SummitIdLayout extends React.Component {
                     <Route path={`${match.url}/ticket-types`} component={TicketTypeLayout}/>
                     <Route path={`${match.url}/tax-types`} component={TaxTypeLayout}/>
                     <Route path={`${match.url}/refund-policies`} component={RefundPolicyListPage}/>
+                    <Route path={`${match.url}/payment-profiles`} component={PaymentProfileLayout}/>
                     <Route path={`${match.url}/room-bookings`} component={RoomBookingsLayout}/>
                     <Route path={`${match.url}/push-notifications`} component={PushNotificationLayout}/>
                     <Route path={`${match.url}/room-occupancy`} component={RoomOccupancyLayout}/>

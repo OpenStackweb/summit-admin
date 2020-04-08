@@ -111,7 +111,8 @@
     "sponsor_list"            : "Sponsor List",
     "sponsorship_list"        : "Sponsorships",
     "badge_scans"             : "Badge Scans",
-    "marketing"               : "Marketing Settings"
+    "marketing"               : "Marketing Settings",
+    "payment_profiles_list"   : "Payment Profiles"
   },
   "schedule": {
     "schedule"                              : "Schedule",
@@ -983,6 +984,10 @@
     "name"               : "Name",
     "rate"               : "Rate (%)",
     "days_before"        : "Days before event begin"
+  },
+  "payment_profiles": {
+    "payment_profiles_list"   : "Payment Profiles List",
+    "payment_profiles"        : "Payment Profiles"
   },
   "push_notification_list": {
     "push_notifications"      : "Push Notifications",

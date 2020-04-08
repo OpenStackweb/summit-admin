@@ -57,7 +57,14 @@ export const REFUND_POLICY_ADDED        = 'REFUND_POLICY_ADDED';
 export const REFUND_POLICY_UPDATED      = 'REFUND_POLICY_UPDATED';
 export const REFUND_POLICY_DELETED      = 'REFUND_POLICY_DELETED';
 
-
+export const REQUEST_PAYMENT_PROFILES   = 'REQUEST_PAYMENT_PROFILES';
+export const UPDATE_PAYMENT_PROFILE     = 'UPDATE_PAYMENT_PROFILE';
+export const RECEIVE_PAYMENT_PROFILES   = 'RECEIVE_PAYMENT_PROFILES';
+export const PAYMENT_PROFILE_ADDED      = 'PAYMENT_PROFILE_ADDED';
+export const PAYMENT_PROFILE_UPDATED    = 'PAYMENT_PROFILE_UPDATED';
+export const PAYMENT_PROFILE_DELETED    = 'PAYMENT_PROFILE_DELETED';
+export const RECEIVE_PAYMENT_PROFILE    = 'RECEIVE_PAYMENT_PROFILE';
+export const RESET_PAYMENT_PROFILE_FORM = 'RESET_PAYMENT_PROFILE_FORM';
 
 
 /**************************   TICKETS   ******************************************/
@@ -92,7 +99,6 @@ export const getTickets = ( term = null, page = 1, perPage = 10, order = 'id', o
         let orderDirSign = (orderDir == 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
-
 
     return getRequest(
         createAction(REQUEST_TICKETS),
@@ -584,4 +590,132 @@ export const deleteRefundPolicy = (refundPolicyId) => (dispatch, getState) => {
         }
     );
 
+};
+
+
+/***************************   PAYMENT PROFILES   ******************************/
+
+export const getPaymentProfiles = (page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let params = {
+        page         : page,
+        per_page     : perPage,
+        access_token : accessToken,
+    };
+
+    // order
+    if(order != null && orderDir != null){
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
+        params['order']= `${orderDirSign}${order}`;
+    }
+
+    return getRequest(
+        createAction(REQUEST_PAYMENT_PROFILES),
+        createAction(RECEIVE_PAYMENT_PROFILES),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/payment-gateway-profiles`,
+        authErrorHandler,
+        {page, perPage, order, orderDir}
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const savePaymentProfile = (entity) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    if (entity.id) {
+        putRequest(
+            createAction(UPDATE_PAYMENT_PROFILE),
+            createAction(PAYMENT_PROFILE_UPDATED),
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/payment-gateway-profiles/${entity.id}`,
+            entity,
+            authErrorHandler,
+            entity
+        )(params)(dispatch)
+            .then((payload) => {
+                dispatch(showSuccessMessage(T.translate("edit_payment_profile.payment_profile_saved")));
+            });
+        return;
+    }
+
+    let success_message = {
+        title: T.translate("general.done"),
+        html: T.translate("edit_payment_profile.payment_profile_created"),
+        type: 'success'
+    };
+
+    postRequest(
+            createAction(UPDATE_PAYMENT_PROFILE),
+            createAction(PAYMENT_PROFILE_ADDED),
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/payment-gateway-profiles`,
+            entity,
+            authErrorHandler
+        ) (params)(dispatch)
+        .then((payload) => {
+            dispatch(showMessage(
+                success_message,
+                () => { history.push(`/app/summits/${currentSummit.id}/payment-profiles/${payload.response.id}`) }
+            ));
+        });
+}
+
+export const deletePaymentProfile = (paymentProfileId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(PAYMENT_PROFILE_DELETED)({paymentProfileId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/payment-gateway-profiles/${paymentProfileId}`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const getPaymentProfile = (paymentProfileId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_PAYMENT_PROFILE),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/payment-gateway-profiles/${paymentProfileId}`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const resetPaymentProfileForm = () => (dispatch, getState) => {
+    dispatch(createAction(RESET_PAYMENT_PROFILE_FORM)({}));
 };
