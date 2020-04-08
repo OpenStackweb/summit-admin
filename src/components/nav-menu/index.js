@@ -168,7 +168,8 @@ class NavMenu extends React.Component {
                     {name:'ticket_type_list', linkUrl:`summits/${summit_id}/ticket-types`},
                     {name:'promocode_list', linkUrl:`summits/${summit_id}/promocodes`},
                     {name:'tax_type_list', linkUrl:`summits/${summit_id}/tax-types`},
-                    {name:'refund_policy_list', linkUrl:`summits/${summit_id}/refund-policies`}
+                    {name:'refund_policy_list', linkUrl:`summits/${summit_id}/refund-policies`},
+                    {name:'payment_profiles_list', linkUrl:`summits/${summit_id}/payment-profiles`},
                 ]
             },
             {name: 'badges', iconClass: 'fa-id-card-o', accessRoute: 'badges',
