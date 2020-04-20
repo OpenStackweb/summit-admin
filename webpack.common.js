@@ -11,7 +11,9 @@ module.exports = {
             title: 'Summit Admin',
             template: './src/index.ejs'
         }),
-        new Dotenv()
+        new Dotenv({
+            expand: true
+        })
     ],
     node: {fs: 'empty'},
     module: {
