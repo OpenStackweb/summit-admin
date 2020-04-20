@@ -78,6 +78,8 @@ import refundPolicyListReducer from './reducers/refund_policies/refund-policy-li
 import ticketListReducer from './reducers/tickets/ticket-list-reducer';
 import ticketReducer from './reducers/tickets/ticket-reducer';
 import badgeScansListReducer from './reducers/sponsors/badge-scans-list-reducer';
+import marketingSettingListReducer from './reducers/marketing/marketing-setting-list-reducer';
+import marketingSettingReducer from './reducers/marketing/marketing-setting-reducer';
 
 
 import thunk from 'redux-thunk';
@@ -157,6 +159,8 @@ const reducers = persistCombineReducers(config, {
     currentTicketListState: ticketListReducer,
     currentTicketState: ticketReducer,
     badgeScansListState: badgeScansListReducer,
+    marketingSettingListState: marketingSettingListReducer,
+    marketingSettingState: marketingSettingReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

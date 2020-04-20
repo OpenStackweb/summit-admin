@@ -50,6 +50,7 @@ import SponsorshipLayout from './sponsorship-layout'
 import BadgeScansListPage from '../pages/sponsors/badge-scans-list-page';
 import NoMatchPage from '../pages/no-match-page';
 import TicketListPage from "../pages/tickets/ticket-list-page";
+import MarketingLayout from "./marketing-layout";
 
 
 class SummitIdLayout extends React.Component {
@@ -119,6 +120,7 @@ class SummitIdLayout extends React.Component {
                     <Route path={`${match.url}/sponsors`} component={SponsorLayout}/>
                     <Route path={`${match.url}/sponsorships`} component={SponsorshipLayout}/>
                     <Route path={`${match.url}/badge-scans`} component={BadgeScansListPage}/>
+                    <Route path={`${match.url}/marketing`} component={MarketingLayout}/>
                     <Route component={NoMatchPage}/>
                 </Switch>
             </div>

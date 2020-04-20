@@ -183,6 +183,7 @@ class NavMenu extends React.Component {
             {name: 'room_occupancy', iconClass: 'fa-male', linkUrl:`summits/${summit_id}/room-occupancy`, accessRoute: 'room-occupancy' },
             {name: 'tag_groups', iconClass: 'fa-tags', linkUrl:`summits/${summit_id}/tag-groups`, accessRoute: 'tag-groups' },
             {name: 'reports', iconClass: 'fa-list-ol', linkUrl:`summits/${summit_id}/reports`, accessRoute: 'reports' },
+            {name: 'marketing', iconClass: 'fa-id-card-o', linkUrl:`summits/${summit_id}/marketing`, accessRoute: 'marketing' },
         ];
 
         return (
