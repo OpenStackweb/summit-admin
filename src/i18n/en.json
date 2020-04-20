@@ -110,7 +110,8 @@
     "sponsors"                : "Sponsors",
     "sponsor_list"            : "Sponsor List",
     "sponsorship_list"        : "Sponsorships",
-    "badge_scans"             : "Badge Scans"
+    "badge_scans"             : "Badge Scans",
+    "marketing"               : "Marketing Settings"
   },
   "schedule": {
     "schedule"                              : "Schedule",
@@ -1267,6 +1268,25 @@
     "company_name"        : "Company",
     "placeholders": {
       "select_sponsor" : "Select Sponsor"
+    }
+  },
+  "marketing": {
+    "settings"                : "Marketing Settings",
+    "marketing_setting"       : "Marketing Setting",
+    "setting_list"            : "Settings List",
+    "add_setting"             : "Add setting",
+    "no_settings"             : "No settings found for this search criteria.",
+    "id"                      : "Id",
+    "key"                     : "Key",
+    "type"                    : "Type",
+    "value"                   : "Value",
+    "plain_text"              : "Plain Text",
+    "html"                    : "Html",
+    "file"                    : "File",
+    "delete_setting_warning"  : "Are you sure you want to delete setting ",
+    "placeholders": {
+      "search_settings" : "Search settings",
+      "select_type" : "Select Type"
     }
   }
 }

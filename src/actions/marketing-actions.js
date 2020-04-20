@@ -34,24 +34,40 @@ export const SETTING_UPDATED        = 'SETTING_UPDATED';
 export const SETTING_ADDED          = 'SETTING_ADDED';
 export const SETTING_DELETED        = 'SETTING_DELETED';
 
-export const getMarketingSettings = ( ) => (dispatch, getState) => {
+export const getMarketingSettings = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
+    let filter = [`show_id==${currentSummit.id}`];
 
     dispatch(startLoading());
 
+    if(term){
+        let escapedTerm = escapeFilterValue(term);
+        filter.push(`key=@${escapedTerm}`);
+    }
+
     let params = {
+        page         : page,
+        per_page     : perPage,
         access_token : accessToken,
-        per_page     : 100,
-        page         : 1
     };
+
+    if(filter.length > 0){
+        params['filter[]']= filter;
+    }
+
+    // order
+    if(order != null && orderDir != null){
+        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        params['order']= `${orderDirSign}${order}`;
+    }
 
     return getRequest(
         createAction(REQUEST_SETTINGS),
         createAction(RECEIVE_SETTINGS),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/marketing-settings`,
+        `${window.MARKETING_API_BASE_URL}/api/public/v1/config-values`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -75,7 +91,7 @@ export const getMarketingSetting = (settingId) => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_SETTING),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/marketing-settings/${settingId}`,
+        `${window.MARKETING_API_BASE_URL}/api/public/v1/config-values/${settingId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -102,7 +118,7 @@ export const saveMarketingSetting = (entity) => (dispatch, getState) => {
         putRequest(
             createAction(UPDATE_SETTING),
             createAction(SETTING_UPDATED),
-            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/marketing-settings/${entity.id}`,
+            `${window.MARKETING_API_BASE_URL}/api/v1/config-values/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -121,7 +137,7 @@ export const saveMarketingSetting = (entity) => (dispatch, getState) => {
         postRequest(
             createAction(UPDATE_SETTING),
             createAction(SETTING_ADDED),
-            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/marketing-settings`,
+            `${window.MARKETING_API_BASE_URL}/api/v1/config-values`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -148,7 +164,7 @@ export const deleteSetting = (settingId) => (dispatch, getState) => {
     return deleteRequest(
         null,
         createAction(SETTING_DELETED)({settingId}),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/marketing-settings/${settingId}`,
+        `${window.MARKETING_API_BASE_URL}/api/v1/config-values/${settingId}`,
         null,
         authErrorHandler
     )(params)(dispatch).then(() => {
@@ -161,13 +177,10 @@ export const deleteSetting = (settingId) => (dispatch, getState) => {
 const normalizeEntity = (entity) => {
     let normalizedEntity = {...entity};
 
-    //remove # from color hexa
-    normalizedEntity['color'] = normalizedEntity['color'].substr(1);
-
     delete(normalizedEntity['id']);
     delete(normalizedEntity['created']);
-    delete(normalizedEntity['last_edited']);
-    delete(normalizedEntity['is_default']);
+    delete(normalizedEntity['modified']);
+    delete(normalizedEntity['show_id']);
 
     return normalizedEntity;
 

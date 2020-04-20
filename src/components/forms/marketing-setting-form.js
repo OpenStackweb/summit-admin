@@ -102,10 +102,10 @@ class MarketingSettingForm extends React.Component {
     render() {
         let {entity} = this.state;
         let { currentSummit } = this.props;
-        let event_types_ddl = [
-            {label: 'Plain Text', value: 'text'},
-            {label: 'Html', value: 'html'},
-            {label: 'File', value: 'file'},
+        let setting_types_ddl = [
+            {label: 'Plain Text', value: 'TEXT'},
+            {label: 'Html', value: 'HTML'},
+            {label: 'File', value: 'FILE'},
         ];
 
         return (
@@ -115,27 +115,27 @@ class MarketingSettingForm extends React.Component {
                     <div className="col-md-4">
                         <label> {T.translate("marketing.type")} *</label>
                         <Dropdown
-                            id="class_name"
-                            value={entity.class_name}
+                            id="type"
+                            value={entity.type}
                             placeholder={T.translate("marketing.placeholders.select_type")}
-                            options={event_types_ddl}
+                            options={setting_types_ddl}
                             onChange={this.handleChange}
                             disabled={entity.id !== 0}
                         />
                     </div>
                     <div className="col-md-4">
-                        <label> {T.translate("marketing.name")} *</label>
+                        <label> {T.translate("marketing.key")} *</label>
                         <Input
-                            id="name"
-                            value={entity.name}
+                            id="key"
+                            value={entity.key}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('name')}
+                            error={this.hasErrors('key')}
                         />
                     </div>
                 </div>
                 <div className="row form-group">
-                    {entity.type == 'text' &&
+                    {entity.type == 'TEXT' &&
                     <div className="col-md-4">
                         <label> {T.translate("marketing.plain_text")} *</label>
                         <Input
@@ -147,7 +147,7 @@ class MarketingSettingForm extends React.Component {
                         />
                     </div>
                     }
-                    {entity.type == 'textarea' &&
+                    {entity.type == 'HTML' &&
                     <div className="col-md-4">
                         <label> {T.translate("marketing.html")} *</label>
                         <TextEditor
@@ -158,7 +158,7 @@ class MarketingSettingForm extends React.Component {
                         />
                     </div>
                     }
-                    {entity.type == 'file' &&
+                    {entity.type == 'FILE' &&
                     <div className="col-md-4">
                         <label> {T.translate("marketing.file")} *</label>
                         <UploadInput

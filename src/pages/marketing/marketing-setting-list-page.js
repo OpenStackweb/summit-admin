@@ -82,7 +82,7 @@ class MarketingSettingListPage extends React.Component {
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
-            text: T.translate("marketing.delete_setting_warning") + ' ' + setting.name,
+            text: T.translate("marketing.delete_setting_warning") + ' ' + setting.key,
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
@@ -99,7 +99,7 @@ class MarketingSettingListPage extends React.Component {
 
         let columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
-            { columnKey: 'name', value: T.translate("marketing.name"), sortable: true },
+            { columnKey: 'key', value: T.translate("marketing.key"), sortable: true },
             { columnKey: 'type', value: T.translate("marketing.type") },
             { columnKey: 'value', value: T.translate("marketing.value")},
         ];

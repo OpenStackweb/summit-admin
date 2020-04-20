@@ -52,7 +52,7 @@ class EditMarketingSettingPage extends React.Component {
     render(){
         let {currentSummit, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+        let breadcrumb = (entity.id) ? entity.key : T.translate("general.new");
 
         return(
             <div className="container">

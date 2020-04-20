@@ -1277,7 +1277,7 @@
     "add_setting"             : "Add setting",
     "no_settings"             : "No settings found for this search criteria.",
     "id"                      : "Id",
-    "name"                    : "Name",
+    "key"                     : "Key",
     "type"                    : "Type",
     "value"                   : "Value",
     "plain_text"              : "Plain Text",
