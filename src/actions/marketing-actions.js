@@ -22,8 +22,9 @@ import {
     startLoading,
     showMessage,
     showSuccessMessage,
-    authErrorHandler
+    authErrorHandler, putFile, postFile
 } from 'openstack-uicore-foundation/lib/methods';
+import {LOCATION_IMAGE_ADDED, LOCATION_IMAGE_UPDATED, UPDATE_LOCATION_IMAGE} from "./location-actions";
 
 export const REQUEST_SETTINGS       = 'REQUEST_SETTINGS';
 export const RECEIVE_SETTINGS      = 'RECEIVE_SETTINGS';
@@ -103,17 +104,17 @@ export const resetSettingForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_SETTING_FORM)({}));
 };
 
-export const saveMarketingSetting = (entity) => (dispatch, getState) => {
+export const saveMarketingSetting = (entity, file) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity);
+    let normalizedEntity = normalizeEntity(entity, currentSummit.id);
     let params = { access_token : accessToken };
 
-    if (entity.id) {
+    /*if (entity.id) {
 
         putRequest(
             createAction(UPDATE_SETTING),
@@ -148,6 +149,46 @@ export const saveMarketingSetting = (entity) => (dispatch, getState) => {
                     () => { history.push(`/app/summits/${currentSummit.id}/marketing-settings/${payload.response.id}`) }
                 ));
             });
+    }*/
+
+    if (entity.id) {
+
+        putFile(
+            createAction(UPDATE_SETTING),
+            createAction(SETTING_UPDATED),
+            `${window.MARKETING_API_BASE_URL}/api/v1/config-values/${entity.id}`,
+            file,
+            normalizedEntity,
+            authErrorHandler,
+            entity
+        )(params)(dispatch)
+            .then((payload) => {
+                dispatch(showSuccessMessage(T.translate("marketing.setting_saved")));
+            });
+
+    } else {
+
+        let success_message = {
+            title: T.translate("general.done"),
+            html: T.translate("marketing.setting_created"),
+            type: 'success'
+        };
+
+        postFile(
+            createAction(UPDATE_SETTING),
+            createAction(SETTING_ADDED),
+            `${window.MARKETING_API_BASE_URL}/api/v1/config-values`,
+            file,
+            normalizedEntity,
+            authErrorHandler,
+            entity
+        )(params)(dispatch)
+            .then((payload) => {
+                dispatch(showMessage(
+                    success_message,
+                    () => { history.push(`/app/summits/${currentSummit.id}/marketing/${payload.response.id}`) }
+                ));
+            });
     }
 }
 
@@ -174,13 +215,13 @@ export const deleteSetting = (settingId) => (dispatch, getState) => {
 };
 
 
-const normalizeEntity = (entity) => {
+const normalizeEntity = (entity, summitId) => {
     let normalizedEntity = {...entity};
 
     delete(normalizedEntity['id']);
     delete(normalizedEntity['created']);
     delete(normalizedEntity['modified']);
-    delete(normalizedEntity['show_id']);
+    normalizedEntity.show_id = summitId;
 
     return normalizedEntity;
 

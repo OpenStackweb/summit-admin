@@ -45,8 +45,8 @@ const marketingSettingListReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case RECEIVE_SETTINGS: {
-            let {count} = payload.response;
-            let settings = payload.response.results.map(s => {
+            let {total, last_page, current_page} = payload.response;
+            let settings = payload.response.data.map(s => {
                 return {
                     id: s.id,
                     key: s.key,
@@ -55,7 +55,7 @@ const marketingSettingListReducer = (state = DEFAULT_STATE, action) => {
                 };
             });
 
-            return {...state, settings: settings, currentPage: 1, totalSettings: count, lastPage: 10 };
+            return {...state, settings: settings, currentPage: current_page, totalSettings: total, lastPage: last_page };
         }
         break;
         case SETTING_DELETED: {

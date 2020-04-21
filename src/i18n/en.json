@@ -1284,6 +1284,8 @@
     "html"                    : "Html",
     "file"                    : "File",
     "delete_setting_warning"  : "Are you sure you want to delete setting ",
+    "setting_saved"           : "Setting saved successfully.",
+    "setting_created"         : "Setting created successfully.",
     "placeholders": {
       "search_settings" : "Search settings",
       "select_type" : "Select Type"

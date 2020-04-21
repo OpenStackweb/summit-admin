@@ -67,10 +67,10 @@ class MarketingSettingForm extends React.Component {
     }
 
     handleSubmit(ev) {
-        let entity = {...this.state.entity};
+        let {entity, file} = this.state;
         ev.preventDefault();
 
-        this.props.onSubmit(this.state.entity);
+        this.props.onSubmit(entity, file);
     }
 
     hasErrors(field) {
@@ -84,19 +84,17 @@ class MarketingSettingForm extends React.Component {
 
     handleUploadFile(file) {
         let entity = {...this.state.entity};
-        let {valueField} = this.props;
 
-        entity[valueField] = file.preview;
+        entity.file_preview = file.preview;
 
-        this.setState({file: file, entity:entity});
+        this.setState({file: file, entity: entity});
     }
 
     handleRemoveFile(ev) {
         let entity = {...this.state.entity};
-        let {valueField} = this.props;
 
-        entity[valueField] = '';
-        this.setState({entity:entity});
+        entity.file_preview = '';
+        this.setState({entity: entity});
     }
 
     render() {
@@ -148,7 +146,7 @@ class MarketingSettingForm extends React.Component {
                     </div>
                     }
                     {entity.type == 'HTML' &&
-                    <div className="col-md-4">
+                    <div className="col-md-8">
                         <label> {T.translate("marketing.html")} *</label>
                         <TextEditor
                             id="value"
@@ -159,10 +157,10 @@ class MarketingSettingForm extends React.Component {
                     </div>
                     }
                     {entity.type == 'FILE' &&
-                    <div className="col-md-4">
+                    <div className="col-md-12">
                         <label> {T.translate("marketing.file")} *</label>
                         <UploadInput
-                            value={entity.file}
+                            value={entity.file_preview || entity.file}
                             handleUpload={this.handleUploadFile}
                             handleRemove={this.handleRemoveFile}
                             className="dropzone col-md-6"
