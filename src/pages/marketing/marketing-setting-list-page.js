@@ -16,9 +16,9 @@ import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import Swal from "sweetalert2";
 import { Pagination } from 'react-bootstrap';
-import { FreeTextSearch, Table } from 'openstack-uicore-foundation/lib/components';
+import {FreeTextSearch, SummitDropdown, Table} from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getMarketingSettings, deleteSetting } from "../../actions/marketing-actions";
+import { getMarketingSettings, deleteSetting, cloneMarketingSettings } from "../../actions/marketing-actions";
 
 class MarketingSettingListPage extends React.Component {
 
@@ -31,6 +31,7 @@ class MarketingSettingListPage extends React.Component {
         this.handleSearch = this.handleSearch.bind(this);
         this.handleNewSetting = this.handleNewSetting.bind(this);
         this.handleDeleteSetting = this.handleDeleteSetting.bind(this);
+        this.handleCloneSettings = this.handleCloneSettings.bind(this);
 
         this.state = {
         }
@@ -94,8 +95,25 @@ class MarketingSettingListPage extends React.Component {
         });
     }
 
+    handleCloneSettings(summitId) {
+        let {cloneMarketingSettings} = this.props;
+
+        Swal.fire({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("marketing.clone_settings_warning"),
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: T.translate("marketing.yes_clone")
+        }).then(function(result){
+            if (result.value) {
+                cloneMarketingSettings(summitId);
+            }
+        });
+    }
+
     render(){
-        let {currentSummit, settings, lastPage, currentPage, term, order, orderDir, totalSettings} = this.props;
+        let {currentSummit, summits, settings, lastPage, currentPage, term, order, orderDir, totalSettings} = this.props;
 
         let columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
@@ -126,10 +144,17 @@ class MarketingSettingListPage extends React.Component {
                             onSearch={this.handleSearch}
                         />
                     </div>
-                    <div className="col-md-6 text-right">
+                    <div className="col-md-2 text-right">
                         <button className="btn btn-primary right-space" onClick={this.handleNewSetting}>
                             {T.translate("marketing.add_setting")}
                         </button>
+                    </div>
+                    <div className="col-md-4 text-right">
+                        <SummitDropdown
+                            summits={summits}
+                            onClick={this.handleCloneSettings}
+                            actionLabel={T.translate("marketing.clone_settings")}
+                        />
                     </div>
                 </div>
 
@@ -166,8 +191,9 @@ class MarketingSettingListPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, marketingSettingListState }) => ({
+const mapStateToProps = ({ currentSummitState, directoryState, marketingSettingListState }) => ({
     currentSummit   : currentSummitState.currentSummit,
+    summits         : directoryState.summits,
     ...marketingSettingListState
 })
 
@@ -177,5 +203,6 @@ export default connect (
         getSummitById,
         getMarketingSettings,
         deleteSetting,
+        cloneMarketingSettings
     }
 )(MarketingSettingListPage);

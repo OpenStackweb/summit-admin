@@ -27,49 +27,43 @@ import {
 import {LOCATION_IMAGE_ADDED, LOCATION_IMAGE_UPDATED, UPDATE_LOCATION_IMAGE} from "./location-actions";
 
 export const REQUEST_SETTINGS       = 'REQUEST_SETTINGS';
-export const RECEIVE_SETTINGS      = 'RECEIVE_SETTINGS';
+export const RECEIVE_SETTINGS       = 'RECEIVE_SETTINGS';
 export const RECEIVE_SETTING        = 'RECEIVE_SETTING';
 export const RESET_SETTING_FORM     = 'RESET_SETTING_FORM';
 export const UPDATE_SETTING         = 'UPDATE_SETTING';
 export const SETTING_UPDATED        = 'SETTING_UPDATED';
 export const SETTING_ADDED          = 'SETTING_ADDED';
 export const SETTING_DELETED        = 'SETTING_DELETED';
+export const SETTINGS_CLONED        = 'SETTINGS_CLONED';
 
 export const getMarketingSettings = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
+    let { currentSummitState } = getState();
     let { currentSummit }   = currentSummitState;
-    let filter = [`show_id==${currentSummit.id}`];
 
     dispatch(startLoading());
-
-    if(term){
-        let escapedTerm = escapeFilterValue(term);
-        filter.push(`key=@${escapedTerm}`);
-    }
 
     let params = {
         page         : page,
         per_page     : perPage,
-        access_token : accessToken,
     };
 
-    if(filter.length > 0){
-        params['filter[]']= filter;
+    if(term){
+        params.key__contains= term;
     }
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir == 1) ? '' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
     return getRequest(
         createAction(REQUEST_SETTINGS),
         createAction(RECEIVE_SETTINGS),
-        `${window.MARKETING_API_BASE_URL}/api/public/v1/config-values`,
-        authErrorHandler
+        `${window.MARKETING_API_BASE_URL}/api/public/v1/config-values/all/shows/${currentSummit.id}`,
+        authErrorHandler,
+        {order, orderDir, term}
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
@@ -78,16 +72,9 @@ export const getMarketingSettings = (term = null, page = 1, perPage = 10, order 
 
 export const getMarketingSetting = (settingId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-
     dispatch(startLoading());
 
-    let params = {
-        expand       : '',
-        access_token : accessToken,
-    };
+    let params = {};
 
     return getRequest(
         null,
@@ -113,43 +100,6 @@ export const saveMarketingSetting = (entity, file) => (dispatch, getState) => {
 
     let normalizedEntity = normalizeEntity(entity, currentSummit.id);
     let params = { access_token : accessToken };
-
-    /*if (entity.id) {
-
-        putRequest(
-            createAction(UPDATE_SETTING),
-            createAction(SETTING_UPDATED),
-            `${window.MARKETING_API_BASE_URL}/api/v1/config-values/${entity.id}`,
-            normalizedEntity,
-            authErrorHandler,
-            entity
-        )(params)(dispatch)
-            .then((payload) => {
-                dispatch(showSuccessMessage(T.translate("edit_marketing.setting_saved")));
-            });
-
-    } else {
-        let success_message = {
-            title: T.translate("general.done"),
-            html: T.translate("edit_marketing.setting_created"),
-            type: 'success'
-        };
-
-        postRequest(
-            createAction(UPDATE_SETTING),
-            createAction(SETTING_ADDED),
-            `${window.MARKETING_API_BASE_URL}/api/v1/config-values`,
-            normalizedEntity,
-            authErrorHandler,
-            entity
-        )(params)(dispatch)
-            .then((payload) => {
-                dispatch(showMessage(
-                    success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/marketing-settings/${payload.response.id}`) }
-                ));
-            });
-    }*/
 
     if (entity.id) {
 
@@ -210,6 +160,29 @@ export const deleteSetting = (settingId) => (dispatch, getState) => {
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
+        }
+    );
+};
+
+export const cloneMarketingSettings = (summitId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return postRequest(
+        null,
+        createAction(SETTINGS_CLONED),
+        `${window.MARKETING_API_BASE_URL}/api/v1/config-values/all/shows/${summitId}/clone/${currentSummit.id}`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+            dispatch(getMarketingSettings());
         }
     );
 };

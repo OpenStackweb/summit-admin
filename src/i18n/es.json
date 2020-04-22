@@ -1288,11 +1288,14 @@
     "plain_text"              : "Plain Text",
     "html"                    : "Html",
     "file"                    : "File",
+    "clone_settings"          : "Clone",
     "delete_setting_warning"  : "Are you sure you want to delete setting ",
     "setting_saved"           : "Setting saved successfully.",
     "setting_created"         : "Setting created successfully.",
+    "clone_settings_warning"  : "Do you want to clone all settings from this summit?",
+    "yes_clone"               : "Yes, clone!",
     "placeholders": {
-      "search_settings" : "Search settings",
+      "search_settings" : "Search settings by key",
       "select_type" : "Select Type"
     }
   }
