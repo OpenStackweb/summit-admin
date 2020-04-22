@@ -102,7 +102,7 @@ class MarketingSettingForm extends React.Component {
         let { currentSummit } = this.props;
         let setting_types_ddl = [
             {label: 'Plain Text', value: 'TEXT'},
-            {label: 'Html', value: 'HTML'},
+            {label: 'Html', value: 'TEXTAREA'},
             {label: 'File', value: 'FILE'},
         ];
 
@@ -145,7 +145,7 @@ class MarketingSettingForm extends React.Component {
                         />
                     </div>
                     }
-                    {entity.type == 'HTML' &&
+                    {entity.type == 'TEXTAREA' &&
                     <div className="col-md-8">
                         <label> {T.translate("marketing.html")} *</label>
                         <TextEditor
