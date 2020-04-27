@@ -82,6 +82,9 @@ import badgeScansListReducer from './reducers/sponsors/badge-scans-list-reducer'
 import marketingSettingListReducer from './reducers/marketing/marketing-setting-list-reducer';
 import marketingSettingReducer from './reducers/marketing/marketing-setting-reducer';
 import paymentProfileReducer from './reducers/payment_profiles/payment-profile-reducer';
+import emailTemplateReducer from './reducers/emails/email-template-reducer';
+import emailTemplateListReducer from './reducers/emails/email-template-list-reducer';
+import sentEmailListReducer from './reducers/emails/sent-email-list-reducer';
 
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
@@ -164,6 +167,9 @@ const reducers = persistCombineReducers(config, {
     badgeScansListState: badgeScansListReducer,
     marketingSettingListState: marketingSettingListReducer,
     marketingSettingState: marketingSettingReducer,
+    emailTemplateState: emailTemplateReducer,
+    emailTemplateListState: emailTemplateListReducer,
+    sentEmailListState: sentEmailListReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

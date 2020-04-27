@@ -112,7 +112,10 @@
     "sponsorship_list"        : "Sponsorships",
     "badge_scans"             : "Badge Scans",
     "marketing"               : "Marketing Settings",
-    "payment_profiles_list"   : "Payment Profiles"
+    "payment_profiles_list"   : "Payment Profiles",
+    "emails"                  : "Emails",
+    "email_templates"         : "Templates",
+    "sent_email"              : "Sent Emails"
   },
   "schedule": {
     "schedule"                              : "Schedule",
@@ -1297,6 +1300,38 @@
     "placeholders": {
       "search_settings" : "Search settings by key",
       "select_type" : "Select Type"
+    }
+  },
+  "emails": {
+    "email_templates"           : "Email Templates",
+    "sent"                      : "Sent",
+    "templates"                 : "Templates",
+    "email_template"            : "Email Template",
+    "template_list"             : "Template List",
+    "email_list"                : "Sent Email List",
+    "add_template"              : "Add template",
+    "no_templates"              : "No templates found for this search criteria.",
+    "no_emails"                 : "No emails found for this search criteria.",
+    "id"                        : "Id",
+    "name"                      : "Name",
+    "parent"                    : "Parent",
+    "client"                    : "Client",
+    "max_retries"               : "Max Retries",
+    "from_email"                : "From Email",
+    "to_email"                  : "To Email",
+    "sent_date"                 : "Sent Date",
+    "subject"                   : "Subject",
+    "html_content"              : "Html Content",
+    "plain_text"                : "Plain Text",
+    "delete_template_warning"   : "Are you sure you want to delete template ",
+    "template_saved"            : "Template saved successfully.",
+    "template_created"          : "Template created successfully.",
+    "placeholders": {
+      "search_emails"     : "Search emails",
+      "search_templates"  : "Search templates by name",
+      "select_parent"     : "Select Parent",
+      "select_client"     : "Select Client",
+      "select_template"   : "Select Template"
     }
   }
 }
