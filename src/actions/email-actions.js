@@ -38,15 +38,15 @@ export const REQUEST_EMAILS       = 'REQUEST_EMAILS';
 export const RECEIVE_EMAILS       = 'RECEIVE_EMAILS';
 
 export const getEmailTemplates = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
-
-    let { currentSummitState } = getState();
-    let { currentSummit }   = currentSummitState;
+    let { loggedUserState } = getState();
+    let { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
     let params = {
         page         : page,
         per_page     : perPage,
+        access_token : accessToken
     };
 
     if(term){
@@ -62,7 +62,7 @@ export const getEmailTemplates = (term = null, page = 1, perPage = 10, order = '
     return getRequest(
         createAction(REQUEST_TEMPLATES),
         createAction(RECEIVE_TEMPLATES),
-        `${window.EMAIL_API_BASE_URL}/api/public/v1/templates/all/shows/${currentSummit.id}`,
+        `${window.EMAIL_API_BASE_URL}/api/v1/mail-templates`,
         authErrorHandler,
         {order, orderDir, term}
     )(params)(dispatch).then(() => {
@@ -72,15 +72,17 @@ export const getEmailTemplates = (term = null, page = 1, perPage = 10, order = '
 };
 
 export const getEmailTemplate = (templateId) => (dispatch, getState) => {
+    let { loggedUserState } = getState();
+    let { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
-    let params = {};
+    let params = { access_token : accessToken };
 
     return getRequest(
         null,
         createAction(RECEIVE_TEMPLATE),
-        `${window.EMAIL_API_BASE_URL}/api/public/v1/config-values/${templateId}`,
+        `${window.EMAIL_API_BASE_URL}/api/v1/mail-templates/${templateId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -92,23 +94,21 @@ export const resetTemplateForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_TEMPLATE_FORM)({}));
 };
 
-export const saveEmailTemplate = (entity, file) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
+export const saveEmailTemplate = (entity) => (dispatch, getState) => {
+    let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity, currentSummit.id);
+    let normalizedEntity = normalizeEntity(entity);
     let params = { access_token : accessToken };
 
     if (entity.id) {
 
-        putFile(
+        putRequest(
             createAction(UPDATE_TEMPLATE),
             createAction(TEMPLATE_UPDATED),
-            `${window.EMAIL_API_BASE_URL}/api/v1/config-values/${entity.id}`,
-            file,
+            `${window.EMAIL_API_BASE_URL}/api/v1/mail-templates/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -125,11 +125,10 @@ export const saveEmailTemplate = (entity, file) => (dispatch, getState) => {
             type: 'success'
         };
 
-        postFile(
+        postRequest(
             createAction(UPDATE_TEMPLATE),
             createAction(TEMPLATE_ADDED),
-            `${window.EMAIL_API_BASE_URL}/api/v1/config-values`,
-            file,
+            `${window.EMAIL_API_BASE_URL}/api/v1/mail-templates`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -137,7 +136,7 @@ export const saveEmailTemplate = (entity, file) => (dispatch, getState) => {
             .then((payload) => {
                 dispatch(showMessage(
                     success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/email-templates/${payload.response.id}`) }
+                    () => { history.push(`/app/emails/templates/${payload.response.id}`) }
                 ));
             });
     }
@@ -145,9 +144,8 @@ export const saveEmailTemplate = (entity, file) => (dispatch, getState) => {
 
 export const deleteEmailTemplate = (templateId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
+    let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
 
     let params = {
         access_token : accessToken
@@ -156,7 +154,7 @@ export const deleteEmailTemplate = (templateId) => (dispatch, getState) => {
     return deleteRequest(
         null,
         createAction(TEMPLATE_DELETED)({templateId}),
-        `${window.EMAIL_API_BASE_URL}/api/v1/config-values/${templateId}`,
+        `${window.EMAIL_API_BASE_URL}/api/v1/mail-templates/${templateId}`,
         null,
         authErrorHandler
     )(params)(dispatch).then(() => {
@@ -166,13 +164,12 @@ export const deleteEmailTemplate = (templateId) => (dispatch, getState) => {
 };
 
 
-const normalizeEntity = (entity, summitId) => {
+const normalizeEntity = (entity) => {
     let normalizedEntity = {...entity};
 
     delete(normalizedEntity['id']);
     delete(normalizedEntity['created']);
     delete(normalizedEntity['modified']);
-    normalizedEntity.show_id = summitId;
 
     return normalizedEntity;
 
@@ -187,14 +184,15 @@ const normalizeEntity = (entity, summitId) => {
 
 export const getSentEmails = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
 
-    let { currentSummitState } = getState();
-    let { currentSummit }   = currentSummitState;
+    let { loggedUserState } = getState();
+    let { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
     let params = {
         page         : page,
         per_page     : perPage,
+        access_token : accessToken
     };
 
     if(term){
@@ -210,7 +208,7 @@ export const getSentEmails = (term = null, page = 1, perPage = 10, order = 'id',
     return getRequest(
         createAction(REQUEST_EMAILS),
         createAction(RECEIVE_EMAILS),
-        `${window.EMAIL_API_BASE_URL}/api/public/v1/config-values/all/shows/${currentSummit.id}`,
+        `${window.EMAIL_API_BASE_URL}/api/v1/mails`,
         authErrorHandler,
         {order, orderDir, term}
     )(params)(dispatch).then(() => {

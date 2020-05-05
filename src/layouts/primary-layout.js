@@ -14,13 +14,14 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import { Switch, Route, Redirect } from 'react-router-dom';
+import Restrict from "../routes/restrict";
 import { Breadcrumbs, Breadcrumb } from 'react-breadcrumbs'
 import NavMenu from '../components/nav-menu'
 
 import SummitLayout from './summit-layout';
 import SummitDirectoryPage from '../pages/summits/summit-directory-page';
 import SpeakerLayout from './speaker-layout';
-import Restrict from "../routes/restrict";
+import EmailLayout from "./email-layout";
 
 
 class PrimaryLayout extends React.Component {
@@ -45,6 +46,7 @@ class PrimaryLayout extends React.Component {
                     <Switch>
                         <Route strict exact path="/app/directory" component={SummitDirectoryPage}/>
                         <Route path="/app/speakers" component={SpeakerLayout}/>
+                        <Route path={"/app/emails"} component={EmailLayout}/>
                         <Route path="/app/summits" component={SummitLayout} />
                         <Route render={props => (<Redirect to="/app/directory"/>)}/>
                     </Switch>

@@ -26,6 +26,7 @@ class EmailLayout extends React.Component {
 
     render(){
         let { match, currentSummit } = this.props;
+
         return(
             <div>
                 <Breadcrumb data={{ title: T.translate("emails.email_templates"), pathname: match.url }} ></Breadcrumb>

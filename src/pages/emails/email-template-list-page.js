@@ -37,23 +37,12 @@ class EmailTemplateListPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            this.props.getEmailTemplates();
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
-            this.props.getEmailTemplates();
-        }
+        this.props.getEmailTemplates();
     }
 
     handleEdit(template_id) {
-        let {currentSummit, history} = this.props;
-        history.push(`/app/summits/${currentSummit.id}/emails/templates/${template_id}`);
+        let {history} = this.props;
+        history.push(`/app/emails/templates/${template_id}`);
     }
 
     handlePageChange(page) {
@@ -72,13 +61,15 @@ class EmailTemplateListPage extends React.Component {
     }
 
     handleNewEmailTemplate(ev) {
-        let {currentSummit, history} = this.props;
-        history.push(`/app/summits/${currentSummit.id}/emails/templates/new`);
+        let {history} = this.props;
+        ev.preventDefault();
+
+        history.push(`/app/emails/templates/new`);
     }
 
     handleDeleteEmailTemplate(templateId) {
         let {deleteEmailTemplate, templates} = this.props;
-        let template = templates.find(t => t.id == templateId);
+        let template = templates.find(t => t.id === templateId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -95,7 +86,7 @@ class EmailTemplateListPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, templates, lastPage, currentPage, term, order, orderDir, totalTemplates, match} = this.props;
+        let {templates, lastPage, currentPage, term, order, orderDir, totalTemplates} = this.props;
 
         let columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
@@ -112,8 +103,6 @@ class EmailTemplateListPage extends React.Component {
                 delete: { onClick: this.handleDeleteEmailTemplate }
             }
         }
-
-        if(!currentSummit.id) return(<div></div>);
 
         return(
             <div className="container">
@@ -166,8 +155,7 @@ class EmailTemplateListPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, directoryState, emailTemplateListState }) => ({
-    currentSummit   : currentSummitState.currentSummit,
+const mapStateToProps = ({ directoryState, emailTemplateListState }) => ({
     summits         : directoryState.summits,
     ...emailTemplateListState
 })

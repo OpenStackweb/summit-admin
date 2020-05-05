@@ -34,18 +34,7 @@ class SentEmailListPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            this.props.getSentEmails();
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
-            this.props.getSentEmails();
-        }
+        this.props.getSentEmails();
     }
 
     handlePageChange(page) {
@@ -84,8 +73,6 @@ class SentEmailListPage extends React.Component {
         let templates_ddl = [
             {label: 'template 1', value: 1}
         ];
-
-        if(!currentSummit.id) return(<div></div>);
 
         return(
             <div className="container">
