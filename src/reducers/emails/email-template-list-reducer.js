@@ -49,9 +49,9 @@ const emailTemplateListReducer = (state = DEFAULT_STATE, action) => {
             let templates = payload.response.data.map(s => {
                 return {
                     id: s.id,
-                    key: s.key,
-                    type: s.type,
-                    value: s.value,
+                    identifier: s.identifier,
+                    subject: s.subject,
+                    from_email: s.from_email,
                 };
             });
 

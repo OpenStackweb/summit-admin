@@ -16,6 +16,7 @@ import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import {Dropdown, Input, TextEditor} from 'openstack-uicore-foundation/lib/components'
 import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
+import EmailTemplateInput from '../inputs/email-template-input'
 
 
 class EmailTemplateForm extends React.Component {
@@ -96,19 +97,8 @@ class EmailTemplateForm extends React.Component {
 
     render() {
         let {entity} = this.state;
-        let { currentSummit } = this.props;
-
-        let email_templates_ddl = [
-            {label: 'Template 1', value: 1},
-            {label: 'Template 2', value: 2},
-            {label: 'Template 3', value: 3},
-        ];
-
-        let email_clients_ddl = [
-            {label: 'Client 1', value: 1},
-            {label: 'Client 2', value: 2},
-            {label: 'Client 3', value: 3},
-        ];
+        let { currentSummit, clients } = this.props;
+        let email_clients_ddl = clients ? clients.map(cli => ({label: cli.name, value: cli.id})) : [];
 
         return (
             <form className="email-template-form">
@@ -117,30 +107,31 @@ class EmailTemplateForm extends React.Component {
                     <div className="col-md-4">
                         <label> {T.translate("emails.name")} *</label>
                         <Input
-                            id="name"
-                            value={entity.name}
+                            id="identifier"
+                            value={entity.identifier}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('name')}
+                            error={this.hasErrors('identifier')}
                         />
                     </div>
                     <div className="col-md-4">
                         <label> {T.translate("emails.client")} *</label>
                         <Dropdown
-                            id="client_id"
-                            value={entity.client_id}
+                            id="allowed_clients"
+                            value={entity.allowed_clients}
                             placeholder={T.translate("emails.placeholders.select_client")}
                             options={email_clients_ddl}
                             onChange={this.handleChange}
+                            isMulti
                         />
                     </div>
                     <div className="col-md-4">
                         <label> {T.translate("emails.parent")} *</label>
-                        <Dropdown
-                            id="parent_id"
-                            value={entity.parent_id}
+                        <EmailTemplateInput
+                            id="parent"
+                            value={entity.parent}
+                            ownerId={entity.id}
                             placeholder={T.translate("emails.placeholders.select_parent")}
-                            options={email_templates_ddl}
                             onChange={this.handleChange}
                         />
                     </div>
@@ -191,12 +182,12 @@ class EmailTemplateForm extends React.Component {
                 </div>
                 <div className="row form-group">
                     <div className="col-md-8">
-                        <label> {T.translate("emails.plain_text")} *</label>
+                        <label> {T.translate("emails.plain_content")} *</label>
                         <TextEditor
-                            id="plain_text"
-                            value={entity.plain_text}
+                            id="plain_content"
+                            value={entity.plain_content}
                             onChange={this.handleChange}
-                            error={this.hasErrors('plain_text')}
+                            error={this.hasErrors('plain_content')}
                         />
                     </div>
                 </div>
@@ -204,10 +195,10 @@ class EmailTemplateForm extends React.Component {
                     <div className="col-md-12 submit-buttons">
                         <input type="button" onClick={this.handleSubmit}
                                className="btn btn-primary pull-right" value={T.translate("general.save")} />
-                        <input type="button" onClick={this.handlePreview}
+                        <input type="button" onClick={this.props.onRender} disabled={!entity.id}
                                className="btn btn-primary pull-right" value={T.translate("emails.preview")} />
-                        <input type="button" onClick={this.handleSendTest}
-                               className="btn btn-primary pull-right" value={T.translate("emails.send_test")}/>
+                        {/*<input type="button" onClick={this.handleSendTest}
+                               className="btn btn-primary pull-right" value={T.translate("emails.send_test")}/>*/}
                     </div>
                 </div>
             </form>

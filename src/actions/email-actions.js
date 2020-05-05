@@ -12,6 +12,8 @@
  **/
 import T from "i18n-react/dist/i18n-react";
 import history from '../history'
+import Swal from "sweetalert2";
+import { VALIDATE } from 'openstack-uicore-foundation/lib/actions';
 import {
     getRequest,
     putRequest,
@@ -22,7 +24,10 @@ import {
     startLoading,
     showMessage,
     showSuccessMessage,
-    authErrorHandler, putFile, postFile
+    authErrorHandler,
+    fetchResponseHandler,
+    fetchErrorHandler,
+    escapeFilterValue
 } from 'openstack-uicore-foundation/lib/methods';
 
 export const REQUEST_TEMPLATES       = 'REQUEST_TEMPLATES';
@@ -34,8 +39,14 @@ export const TEMPLATE_UPDATED        = 'TEMPLATE_UPDATED';
 export const TEMPLATE_ADDED          = 'TEMPLATE_ADDED';
 export const TEMPLATE_DELETED        = 'TEMPLATE_DELETED';
 
-export const REQUEST_EMAILS       = 'REQUEST_EMAILS';
-export const RECEIVE_EMAILS       = 'RECEIVE_EMAILS';
+export const REQUEST_EMAILS          = 'REQUEST_EMAILS';
+export const RECEIVE_EMAILS          = 'RECEIVE_EMAILS';
+
+export const REQUEST_EMAIL_CLIENTS   = 'REQUEST_EMAIL_CLIENTS';
+export const RECEIVE_EMAIL_CLIENTS   = 'RECEIVE_EMAIL_CLIENTS';
+
+export const TEMPLATE_RENDER_RECEIVED   = 'TEMPLATE_RENDER_RECEIVED';
+
 
 export const getEmailTemplates = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
     let { loggedUserState } = getState();
@@ -77,7 +88,7 @@ export const getEmailTemplate = (templateId) => (dispatch, getState) => {
 
     dispatch(startLoading());
 
-    let params = { access_token : accessToken };
+    let params = { access_token : accessToken, expand: 'parent' };
 
     return getRequest(
         null,
@@ -110,7 +121,7 @@ export const saveEmailTemplate = (entity) => (dispatch, getState) => {
             createAction(TEMPLATE_UPDATED),
             `${window.EMAIL_API_BASE_URL}/api/v1/mail-templates/${entity.id}`,
             normalizedEntity,
-            authErrorHandler,
+            customErrorHandler,
             entity
         )(params)(dispatch)
             .then((payload) => {
@@ -164,6 +175,28 @@ export const deleteEmailTemplate = (templateId) => (dispatch, getState) => {
 };
 
 
+export const previewEmailTemplate = (templateId) => (dispatch, getState) => {
+
+    let { loggedUserState } = getState();
+    let { accessToken }     = loggedUserState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return putRequest(
+        null,
+        createAction(TEMPLATE_RENDER_RECEIVED),
+        `${window.EMAIL_API_BASE_URL}/api/v1/mail-templates/${templateId}/render`,
+        null,
+        customErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+
 const normalizeEntity = (entity) => {
     let normalizedEntity = {...entity};
 
@@ -171,9 +204,37 @@ const normalizeEntity = (entity) => {
     delete(normalizedEntity['created']);
     delete(normalizedEntity['modified']);
 
+    if (entity.parent) {
+        normalizedEntity.parent = entity.parent.id;
+    }
+
+    if (entity.html_content && entity.html_content.startsWith("<p>")) {
+        normalizedEntity.html_content = entity.html_content.slice(3,-4);
+    }
+
+    if (entity.plain_content && entity.plain_content.startsWith("<p>")) {
+        normalizedEntity.plain_content = entity.plain_content.slice(3,-4);
+    }
+
     return normalizedEntity;
 
-}
+};
+
+
+export const queryTemplates = _.debounce((input, callback) => {
+
+    let accessToken = window.accessToken;
+    input = escapeFilterValue(input);
+
+    fetch(`${window.EMAIL_API_BASE_URL}/api/v1/mail-templates?identifier__contains=${input}&access_token=${accessToken}`)
+        .then(fetchResponseHandler)
+        .then((json) => {
+            let options = [...json.data];
+
+            callback(options);
+        })
+        .catch(fetchErrorHandler);
+}, 500);
 
 
 
@@ -216,3 +277,73 @@ export const getSentEmails = (term = null, page = 1, perPage = 10, order = 'id',
         }
     );
 };
+
+
+/************************************************************************************************************/
+/*                          CLIENTS                                                                     */
+/************************************************************************************************************/
+
+
+export const getAllClients = () => (dispatch, getState) => {
+
+    let { loggedUserState } = getState();
+    let { accessToken }     = loggedUserState;
+
+    dispatch(startLoading());
+
+    let params = {
+        page         : 1,
+        per_page     : 100,
+        access_token : accessToken
+    };
+
+    return getRequest(
+        createAction(REQUEST_EMAIL_CLIENTS),
+        createAction(RECEIVE_EMAIL_CLIENTS),
+        `${window.EMAIL_API_BASE_URL}/api/v1/clients`,
+        authErrorHandler,
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+
+
+
+export const customErrorHandler = (err, res) => (dispatch, state) => {
+    let code = err.status;
+    let msg = '';
+
+    dispatch(stopLoading());
+
+    switch (code) {
+        case 412:
+            if (Array.isArray(err.response.body)) {
+                err.response.body.forEach(er => {
+                    msg += er + '<br>';
+                });
+            } else {
+                for (var [key, value] of Object.entries(err.response.body.non_field_errors)) {
+                    if (isNaN(key)) {
+                        msg += key + ': ';
+                    }
+
+                    msg += value + '<br>';
+                }
+            }
+
+            Swal.fire("Validation error", msg, "warning");
+
+            if (err.response.body.errors) {
+                dispatch({
+                    type: VALIDATE,
+                    payload: {errors: err.response.body.errors}
+                });
+            }
+
+            break;
+        default:
+            dispatch(authErrorHandler(err, res));
+    }
+}

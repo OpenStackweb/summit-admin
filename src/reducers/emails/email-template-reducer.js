@@ -16,7 +16,9 @@ import
     RECEIVE_TEMPLATE,
     RESET_TEMPLATE_FORM,
     UPDATE_TEMPLATE,
-    TEMPLATE_ADDED
+    TEMPLATE_ADDED,
+    RECEIVE_EMAIL_CLIENTS,
+    TEMPLATE_RENDER_RECEIVED
 } from '../../actions/email-actions';
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
@@ -24,15 +26,20 @@ import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 export const DEFAULT_ENTITY = {
     id              : 0,
+    identifier      : '',
     html_content    : '',
     plain_content   : '',
     from_email      : '',
     subject         : '',
     max_retries     : 0,
+    allowed_clients : [],
+    parent          : null,
 };
 
 const DEFAULT_STATE = {
     entity      : DEFAULT_ENTITY,
+    clients     : null,
+    preview     : null,
     errors      : {}
 };
 
@@ -68,6 +75,14 @@ const emailTemplateReducer = (state = DEFAULT_STATE, action) => {
             }
 
             return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
+        }
+        break;
+        case RECEIVE_EMAIL_CLIENTS: {
+            return {...state, clients: payload.response.data };
+        }
+        break;
+        case TEMPLATE_RENDER_RECEIVED: {
+            return {...state, preview: payload.response.html_content };
         }
         break;
         case VALIDATE: {

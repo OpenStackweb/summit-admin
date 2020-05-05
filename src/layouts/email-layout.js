@@ -17,7 +17,6 @@ import T from "i18n-react/dist/i18n-react";
 import {connect} from "react-redux";
 import { Breadcrumb } from 'react-breadcrumbs';
 import Restrict from '../routes/restrict';
-import NoMatchPage from "../pages/no-match-page";
 import EmailTemplateListPage from "../pages/emails/email-template-list-page";
 import EditEmailTemplatePage from "../pages/emails/edit-email-template-page";
 import SentEmailListPage from "../pages/emails/sent-email-list-page";
@@ -34,9 +33,9 @@ class EmailLayout extends React.Component {
                 <Switch>
                     <Route exact strict path={`${match.url}/templates`} component={EmailTemplateListPage}/>
                     <Route strict exact path={`${match.url}/templates/new`} component={EditEmailTemplatePage}/>
-                    <Route path={`${match.url}/templates/:setting_id(\\d+)`} component={EditEmailTemplatePage}/>
+                    <Route path={`${match.url}/templates/:template_id(\\d+)`} component={EditEmailTemplatePage}/>
                     <Route exact strict path={`${match.url}/sent`} component={SentEmailListPage}/>
-                    <Redirect to={`/app/summits/${currentSummit.id}/emails/templates`} />
+                    <Redirect to={`/app/emails/templates`} />
                 </Switch>
             </div>
         );

@@ -17,22 +17,36 @@ import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import EmailTemplateForm from '../../components/forms/email-template-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getEmailTemplate, resetTemplateForm, saveEmailTemplate } from "../../actions/email-actions";
+import { RawHTML } from 'openstack-uicore-foundation/lib/components';
+import { getEmailTemplate, resetTemplateForm, saveEmailTemplate, getAllClients, previewEmailTemplate } from "../../actions/email-actions";
+import {Modal} from "react-bootstrap";
+import QrReader from "react-qr-reader";
 //import '../../styles/edit-email-template-page.less';
 
 class EditEmailTemplatePage extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            showModal: false
+        }
+
+        this.handleRender = this.handleRender.bind(this);
     }
 
     componentWillMount () {
         let templateId = this.props.match.params.template_id;
+        let {clients} = this.props;
 
         if (!templateId) {
             this.props.resetTemplateForm();
         } else {
             this.props.getEmailTemplate(templateId);
+        }
+
+        if (!clients) {
+            this.props.getAllClients();
         }
     }
 
@@ -49,24 +63,40 @@ class EditEmailTemplatePage extends React.Component {
         }
     }
 
+    handleRender() {
+        const {entity, preview} = this.props;
+        this.props.previewEmailTemplate(entity.id).then(() => this.setState({showModal: true}));
+    }
+
     render(){
-        let {currentSummit, entity, errors, match} = this.props;
+        let {currentSummit, entity, errors, match, clients, preview} = this.props;
+        const {showModal} = this.state;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+        let breadcrumb = (entity.id) ? entity.identifier : T.translate("general.new");
 
         return(
             <div className="container">
                 <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
                 <h3>{title} {T.translate("emails.email_template")}</h3>
                 <hr/>
-                {currentSummit &&
                 <EmailTemplateForm
                     currentSummit={currentSummit}
                     entity={entity}
+                    clients={clients}
                     errors={errors}
                     onSubmit={this.props.saveEmailTemplate}
+                    onRender={this.handleRender}
                 />
-                }
+                <Modal show={showModal} onHide={() => {this.setState({showModal: false})}} >
+                    <Modal.Header closeButton>
+                        <Modal.Title>Preview</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div>
+                            <RawHTML>{preview}</RawHTML>
+                        </div>
+                    </Modal.Body>
+                </Modal>
             </div>
 
         )
@@ -85,5 +115,7 @@ export default connect (
         getEmailTemplate,
         resetTemplateForm,
         saveEmailTemplate,
+        getAllClients,
+        previewEmailTemplate
     }
 )(EditEmailTemplatePage);

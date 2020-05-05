@@ -90,9 +90,9 @@ class EmailTemplateListPage extends React.Component {
 
         let columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
-            { columnKey: 'key', value: T.translate("emails.name"), sortable: true },
-            { columnKey: 'type', value: T.translate("emails.subject") },
-            { columnKey: 'value', value: T.translate("emails.from_email")},
+            { columnKey: 'identifier', value: T.translate("emails.name"), sortable: true },
+            { columnKey: 'subject', value: T.translate("emails.subject") },
+            { columnKey: 'from_email', value: T.translate("emails.from_email")},
         ];
 
         let table_options = {
