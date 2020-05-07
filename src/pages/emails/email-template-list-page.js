@@ -73,7 +73,7 @@ class EmailTemplateListPage extends React.Component {
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
-            text: T.translate("emails.delete_template_warning") + ' ' + template.name,
+            text: T.translate("emails.delete_template_warning") + ' ' + template.identifier,
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",

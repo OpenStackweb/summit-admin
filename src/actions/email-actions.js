@@ -175,20 +175,20 @@ export const deleteEmailTemplate = (templateId) => (dispatch, getState) => {
 };
 
 
-export const previewEmailTemplate = (templateId) => (dispatch, getState) => {
+export const previewEmailTemplate = (templateId, json) => (dispatch, getState) => {
 
     let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
 
     let params = {
-        access_token : accessToken
+        access_token : accessToken,
     };
 
     return putRequest(
         null,
         createAction(TEMPLATE_RENDER_RECEIVED),
         `${window.EMAIL_API_BASE_URL}/api/v1/mail-templates/${templateId}/render`,
-        null,
+        {payload: JSON.parse(json)},
         customErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

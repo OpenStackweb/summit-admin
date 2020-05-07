@@ -1324,6 +1324,7 @@
     "html_content"              : "Html Content",
     "plain_content"             : "Plain Content",
     "preview"                   : "Preview",
+    "render"                    : "Render",
     "delete_template_warning"   : "Are you sure you want to delete template ",
     "template_saved"            : "Template saved successfully.",
     "template_created"          : "Template created successfully.",

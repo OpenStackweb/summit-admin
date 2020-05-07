@@ -20,8 +20,8 @@ import { getSummitById }  from '../../actions/summit-actions';
 import { RawHTML } from 'openstack-uicore-foundation/lib/components';
 import { getEmailTemplate, resetTemplateForm, saveEmailTemplate, getAllClients, previewEmailTemplate } from "../../actions/email-actions";
 import {Modal} from "react-bootstrap";
-import QrReader from "react-qr-reader";
-//import '../../styles/edit-email-template-page.less';
+
+import '../../styles/edit-email-template-page.less';
 
 class EditEmailTemplatePage extends React.Component {
 
@@ -33,6 +33,7 @@ class EditEmailTemplatePage extends React.Component {
         }
 
         this.handleRender = this.handleRender.bind(this);
+        this.handlePreview = this.handlePreview.bind(this);
     }
 
     componentWillMount () {
@@ -63,9 +64,13 @@ class EditEmailTemplatePage extends React.Component {
         }
     }
 
-    handleRender() {
-        const {entity, preview} = this.props;
-        this.props.previewEmailTemplate(entity.id).then(() => this.setState({showModal: true}));
+    handleRender(ev) {
+        const {entity} = this.props;
+        this.props.previewEmailTemplate(entity.id, this.jsonRef.value).then(() => this.setState({showModal: true}));
+    }
+
+    handlePreview() {
+        this.setState({showModal: true});
     }
 
     render(){
@@ -75,7 +80,7 @@ class EditEmailTemplatePage extends React.Component {
         let breadcrumb = (entity.id) ? entity.identifier : T.translate("general.new");
 
         return(
-            <div className="container">
+            <div className="container edit-template-page">
                 <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
                 <h3>{title} {T.translate("emails.email_template")}</h3>
                 <hr/>
@@ -85,17 +90,36 @@ class EditEmailTemplatePage extends React.Component {
                     clients={clients}
                     errors={errors}
                     onSubmit={this.props.saveEmailTemplate}
-                    onRender={this.handleRender}
+                    onRender={this.handlePreview}
                 />
-                <Modal show={showModal} onHide={() => {this.setState({showModal: false})}} >
+                <Modal className="preview-email-template-modal" show={showModal} onHide={() => {this.setState({showModal: false})}} >
                     <Modal.Header closeButton>
-                        <Modal.Title>Preview</Modal.Title>
+                        <Modal.Title>{T.translate("emails.preview")}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <div>
-                            <RawHTML>{preview}</RawHTML>
+                        <div className="row">
+                            <div className="col-md-12">
+                                <label> JSON <a href="https://jsonformatter.curiousconcept.com/" target="_blank">format</a></label>
+                                <textarea
+                                    ref={node => this.jsonRef = node}
+                                    className="form-control"
+                                />
+                            </div>
+                            <br />
+                            <br />
+                            <div className="col-md-12">
+                                <label> {T.translate("emails.preview")} </label>
+                                <div className="email-preview">
+                                    {preview && <RawHTML>{preview}</RawHTML>}
+                                </div>
+                            </div>
                         </div>
                     </Modal.Body>
+                    <Modal.Footer>
+                        <button className="btn btn-primary" onClick={this.handleRender}>
+                            {T.translate("emails.render")}
+                        </button>
+                    </Modal.Footer>
                 </Modal>
             </div>
 
