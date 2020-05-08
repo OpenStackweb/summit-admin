@@ -5,7 +5,7 @@ const DEFAULT_STATE = {
     summits      : [],
     currentPage  : 1,
     lastPage     : 1,
-    perPage      : 5,
+    perPage      : 10,
     totalSummits : 1
 };
 
