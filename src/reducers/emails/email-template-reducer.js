@@ -18,7 +18,8 @@ import
     UPDATE_TEMPLATE,
     TEMPLATE_ADDED,
     RECEIVE_EMAIL_CLIENTS,
-    TEMPLATE_RENDER_RECEIVED
+    TEMPLATE_RENDER_RECEIVED,
+    VALIDATE_RENDER
 } from '../../actions/email-actions';
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
@@ -37,10 +38,11 @@ export const DEFAULT_ENTITY = {
 };
 
 const DEFAULT_STATE = {
-    entity      : DEFAULT_ENTITY,
-    clients     : null,
-    preview     : null,
-    errors      : {}
+    entity          : DEFAULT_ENTITY,
+    clients         : null,
+    preview         : null,
+    errors          : {},
+    render_errors   : []
 };
 
 const emailTemplateReducer = (state = DEFAULT_STATE, action) => {
@@ -74,7 +76,7 @@ const emailTemplateReducer = (state = DEFAULT_STATE, action) => {
                 }
             }
 
-            return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
+            return {...state, entity: {...DEFAULT_ENTITY, ...entity}, preview: null };
         }
         break;
         case RECEIVE_EMAIL_CLIENTS: {
@@ -82,7 +84,11 @@ const emailTemplateReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case TEMPLATE_RENDER_RECEIVED: {
-            return {...state, preview: payload.response.html_content };
+            return {...state, preview: payload.response.html_content, render_errors: [] };
+        }
+        break;
+        case VALIDATE_RENDER: {
+            return {...state,  render_errors: payload.errors };
         }
         break;
         case VALIDATE: {

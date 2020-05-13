@@ -29,11 +29,13 @@ class EditEmailTemplatePage extends React.Component {
         super(props);
 
         this.state = {
-            showModal: false
-        }
+            showModal: false,
+            json_preview: ''
+        };
 
         this.handleRender = this.handleRender.bind(this);
         this.handlePreview = this.handlePreview.bind(this);
+        this.handleJsonChange = this.handleJsonChange.bind(this);
     }
 
     componentWillMount () {
@@ -64,9 +66,15 @@ class EditEmailTemplatePage extends React.Component {
         }
     }
 
-    handleRender(ev) {
+    handleJsonChange(ev) {
+        let {value} = ev.target;
+        this.setState({json_preview: value});
+    }
+
+    handleRender() {
         const {entity} = this.props;
-        this.props.previewEmailTemplate(entity.id, this.jsonRef.value).then(() => this.setState({showModal: true}));
+        const {json_preview} = this.state;
+        this.props.previewEmailTemplate(entity.id, json_preview).then(() => this.setState({showModal: true}));
     }
 
     handlePreview() {
@@ -74,14 +82,14 @@ class EditEmailTemplatePage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors, match, clients, preview} = this.props;
-        const {showModal} = this.state;
+        let {currentSummit, entity, errors, match, clients, preview, render_errors} = this.props;
+        const {showModal, json_preview} = this.state;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         let breadcrumb = (entity.id) ? entity.identifier : T.translate("general.new");
 
         return(
             <div className="container edit-template-page">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("emails.email_template")}</h3>
                 <hr/>
                 <EmailTemplateForm
@@ -97,12 +105,20 @@ class EditEmailTemplatePage extends React.Component {
                         <Modal.Title>{T.translate("emails.preview")}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
+                        {render_errors.length > 0 &&
+                        <div className="row">
+                            <div className="col-md-12 error">
+                                {render_errors}
+                            </div>
+                        </div>
+                        }
                         <div className="row">
                             <div className="col-md-12">
                                 <label> JSON <a href="https://jsonformatter.curiousconcept.com/" target="_blank">format</a></label>
                                 <textarea
-                                    ref={node => this.jsonRef = node}
+                                    value={json_preview}
                                     className="form-control"
+                                    onChange={this.handleJsonChange}
                                 />
                             </div>
                             <br />

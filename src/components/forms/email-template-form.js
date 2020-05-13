@@ -30,6 +30,7 @@ class EmailTemplateForm extends React.Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handlePreview = this.handlePreview.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -66,21 +67,22 @@ class EmailTemplateForm extends React.Component {
     }
 
     handleSubmit(ev) {
-        let {entity, file} = this.state;
+        let {entity} = this.state;
         ev.preventDefault();
 
-        this.props.onSubmit(entity, file);
+        this.props.onSubmit(entity);
     }
 
     handlePreview(ev) {
-        let {entity, file} = this.state;
+        let {entity} = this.state;
         ev.preventDefault();
 
-        console.log('Show Preview');
+        this.props.onSubmit(entity, true);
+        this.props.onRender();
     }
 
     handleSendTest(ev) {
-        let {entity, file} = this.state;
+        let {entity} = this.state;
         ev.preventDefault();
 
         console.log('Test Sent');
@@ -171,7 +173,14 @@ class EmailTemplateForm extends React.Component {
                 </div>
                 <div className="row form-group">
                     <div className="col-md-8">
-                        <label> {T.translate("emails.html_content")} *</label>
+                        <label>
+                            {T.translate("emails.html_content")}
+                            {' in '}
+                            <a href="https://opensource.com/sites/default/files/gated-content/osdc_cheatsheet-jinja2.pdf">
+                                jinja format
+                            </a>
+                            {' *'}
+                        </label>
                         <TextEditor
                             id="html_content"
                             value={entity.html_content}
@@ -195,7 +204,7 @@ class EmailTemplateForm extends React.Component {
                     <div className="col-md-12 submit-buttons">
                         <input type="button" onClick={this.handleSubmit}
                                className="btn btn-primary pull-right" value={T.translate("general.save")} />
-                        <input type="button" onClick={this.props.onRender} disabled={!entity.id}
+                        <input type="button" onClick={this.handlePreview} disabled={!entity.id}
                                className="btn btn-primary pull-right" value={T.translate("emails.preview")} />
                         {/*<input type="button" onClick={this.handleSendTest}
                                className="btn btn-primary pull-right" value={T.translate("emails.send_test")}/>*/}

@@ -46,6 +46,7 @@ export const REQUEST_EMAIL_CLIENTS   = 'REQUEST_EMAIL_CLIENTS';
 export const RECEIVE_EMAIL_CLIENTS   = 'RECEIVE_EMAIL_CLIENTS';
 
 export const TEMPLATE_RENDER_RECEIVED   = 'TEMPLATE_RENDER_RECEIVED';
+export const VALIDATE_RENDER            = 'VALIDATE_RENDER';
 
 
 export const getEmailTemplates = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
@@ -105,7 +106,7 @@ export const resetTemplateForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_TEMPLATE_FORM)({}));
 };
 
-export const saveEmailTemplate = (entity) => (dispatch, getState) => {
+export const saveEmailTemplate = (entity, noAlert = false) => (dispatch, getState) => {
     let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
 
@@ -125,7 +126,10 @@ export const saveEmailTemplate = (entity) => (dispatch, getState) => {
             entity
         )(params)(dispatch)
             .then((payload) => {
-                dispatch(showSuccessMessage(T.translate("emails.template_saved")));
+                if (!noAlert)
+                    dispatch(showSuccessMessage(T.translate("emails.template_saved")));
+                else
+                    dispatch(stopLoading());
             });
 
     } else {
@@ -189,11 +193,18 @@ export const previewEmailTemplate = (templateId, json) => (dispatch, getState) =
         createAction(TEMPLATE_RENDER_RECEIVED),
         `${window.EMAIL_API_BASE_URL}/api/v1/mail-templates/${templateId}/render`,
         {payload: JSON.parse(json)},
-        customErrorHandler
+        renderErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
     );
+};
+
+const renderErrorHandler = (err, res) => (dispatch, state) => {
+    dispatch({
+        type: VALIDATE_RENDER,
+        payload: {errors: err.response.body}
+    });
 };
 
 
@@ -338,7 +349,7 @@ export const customErrorHandler = (err, res) => (dispatch, state) => {
             if (err.response.body.errors) {
                 dispatch({
                     type: VALIDATE,
-                    payload: {errors: err.response.body.errors}
+                    payload: {errors: err.response.body}
                 });
             }
 
