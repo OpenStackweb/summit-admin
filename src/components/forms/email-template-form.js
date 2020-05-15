@@ -14,7 +14,7 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import {Dropdown, Input, TextEditor} from 'openstack-uicore-foundation/lib/components'
+import {Dropdown, Input, TextArea} from 'openstack-uicore-foundation/lib/components'
 import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
 import EmailTemplateInput from '../inputs/email-template-input'
 
@@ -172,7 +172,7 @@ class EmailTemplateForm extends React.Component {
                     </div>
                 </div>
                 <div className="row form-group">
-                    <div className="col-md-8">
+                    <div className="col-md-12">
                         <label>
                             {T.translate("emails.html_content")}
                             {' in '}
@@ -181,7 +181,7 @@ class EmailTemplateForm extends React.Component {
                             </a>
                             {' *'}
                         </label>
-                        <TextEditor
+                        <TextArea
                             id="html_content"
                             value={entity.html_content}
                             onChange={this.handleChange}
@@ -192,7 +192,7 @@ class EmailTemplateForm extends React.Component {
                 <div className="row form-group">
                     <div className="col-md-8">
                         <label> {T.translate("emails.plain_content")} *</label>
-                        <TextEditor
+                        <TextArea
                             id="plain_content"
                             value={entity.plain_content}
                             onChange={this.handleChange}

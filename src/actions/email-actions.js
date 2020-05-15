@@ -219,14 +219,6 @@ const normalizeEntity = (entity) => {
         normalizedEntity.parent = entity.parent.id;
     }
 
-    if (entity.html_content && entity.html_content.startsWith("<p>")) {
-        normalizedEntity.html_content = entity.html_content.slice(3,-4);
-    }
-
-    if (entity.plain_content && entity.plain_content.startsWith("<p>")) {
-        normalizedEntity.plain_content = entity.plain_content.slice(3,-4);
-    }
-
     return normalizedEntity;
 
 };
