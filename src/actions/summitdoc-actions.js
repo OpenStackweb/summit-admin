@@ -1,0 +1,176 @@
+/**
+ * Copyright 2018 OpenStack Foundation
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ **/
+import T from "i18n-react/dist/i18n-react";
+import history from '../history'
+import {
+    getRequest,
+    putRequest,
+    postRequest,
+    deleteRequest,
+    createAction,
+    stopLoading,
+    startLoading,
+    showMessage,
+    showSuccessMessage,
+    authErrorHandler, putFile, postFile
+} from 'openstack-uicore-foundation/lib/methods';
+
+export const REQUEST_SUMMITDOCS       = 'REQUEST_SUMMITDOCS';
+export const RECEIVE_SUMMITDOCS       = 'RECEIVE_SUMMITDOCS';
+export const RECEIVE_SUMMITDOC        = 'RECEIVE_SUMMITDOC';
+export const RESET_SUMMITDOC_FORM     = 'RESET_SUMMITDOC_FORM';
+export const UPDATE_SUMMITDOC         = 'UPDATE_SUMMITDOC';
+export const SUMMITDOC_UPDATED        = 'SUMMITDOC_UPDATED';
+export const SUMMITDOC_ADDED          = 'SUMMITDOC_ADDED';
+export const SUMMITDOC_DELETED        = 'SUMMITDOC_DELETED';
+
+export const getSummitDocs = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
+
+    let { currentSummitState } = getState();
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let params = {
+        page         : page,
+        per_page     : perPage,
+    };
+
+    if(term){
+        params.key__contains= term;
+    }
+
+    // order
+    if(order != null && orderDir != null){
+        let orderDirSign = (orderDir == 1) ? '' : '-';
+        params['order']= `${orderDirSign}${order}`;
+    }
+
+    return getRequest(
+        createAction(REQUEST_SUMMITDOCS),
+        createAction(RECEIVE_SUMMITDOCS),
+        `${window.API_BASE_URL}/api/public/v1/summitdocs/all/shows/${currentSummit.id}`,
+        authErrorHandler,
+        {order, orderDir, term}
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const getSummitDoc = (settingId) => (dispatch, getState) => {
+
+    dispatch(startLoading());
+
+    let params = {};
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_SUMMITDOC),
+        `${window.API_BASE_URL}/api/public/v1/config-values/${settingId}`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const resetSummitDocForm = () => (dispatch, getState) => {
+    dispatch(createAction(RESET_SUMMITDOC_FORM)({}));
+};
+
+export const saveSummitDoc = (entity, file) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let normalizedEntity = normalizeEntity(entity, currentSummit.id);
+    let params = { access_token : accessToken };
+
+    if (entity.id) {
+
+        putFile(
+            createAction(UPDATE_SUMMITDOC),
+            createAction(SUMMITDOC_UPDATED),
+            `${window.API_BASE_URL}/api/v1/config-values/${entity.id}`,
+            file,
+            normalizedEntity,
+            authErrorHandler,
+            entity
+        )(params)(dispatch)
+            .then((payload) => {
+                dispatch(showSuccessMessage(T.translate("summitdoc.saved")));
+            });
+
+    } else {
+
+        let success_message = {
+            title: T.translate("general.done"),
+            html: T.translate("summitdoc.created"),
+            type: 'success'
+        };
+
+        postFile(
+            createAction(UPDATE_SUMMITDOC),
+            createAction(SUMMITDOC_ADDED),
+            `${window.API_BASE_URL}/api/v1/config-values`,
+            file,
+            normalizedEntity,
+            authErrorHandler,
+            entity
+        )(params)(dispatch)
+            .then((payload) => {
+                dispatch(showMessage(
+                    success_message,
+                    () => { history.push(`/app/summits/${currentSummit.id}/marketing/${payload.response.id}`) }
+                ));
+            });
+    }
+}
+
+export const deleteSummitDoc = (settingId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(SUMMITDOC_DELETED)({settingId}),
+        `${window.API_BASE_URL}/api/v1/config-values/${settingId}`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+
+const normalizeEntity = (entity, summitId) => {
+    let normalizedEntity = {...entity};
+
+    delete(normalizedEntity['id']);
+    delete(normalizedEntity['created']);
+    delete(normalizedEntity['modified']);
+    normalizedEntity.show_id = summitId;
+
+    return normalizedEntity;
+
+}

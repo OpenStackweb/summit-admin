@@ -115,7 +115,8 @@
     "payment_profiles_list"   : "Payment Profiles",
     "emails"                  : "Emails",
     "email_templates"         : "Templates",
-    "sent_email"              : "Sent Emails"
+    "sent_email"              : "Sent Emails",
+    "summitdocs"              : "Summit Docs"
   },
   "schedule": {
     "schedule"                              : "Schedule",
@@ -1334,6 +1335,26 @@
       "select_parent"     : "Select Parent",
       "select_client"     : "Select Client",
       "select_template"   : "Select Template"
+    }
+  },
+  "summitdoc": {
+    "summitdocs"              : "Summit Docs",
+    "summitdoc"               : "Summit Doc",
+    "list"                    : "Summit Doc List",
+    "add"                     : "Add Summit Doc",
+    "no_items"                : "No items found for this search criteria.",
+    "id"                      : "Id",
+    "name"                    : "Name",
+    "label"                   : "Label",
+    "description"             : "Description",
+    "event_types"             : "Event Types",
+    "file"                    : "File",
+    "delete_warning"          : "Are you sure you want to delete doc ",
+    "saved"                   : "Doc saved successfully.",
+    "created"                 : "Doc created successfully.",
+    "placeholders": {
+      "search" : "Search docs by name",
+      "select_type" : "Select Event Type"
     }
   }
 }
