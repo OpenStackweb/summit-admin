@@ -44,12 +44,12 @@ class EditEmailFlowEventPage extends React.Component {
     render(){
         let {currentSummit, entity, errors, match, history} = this.props;
         let title = T.translate("general.edit")
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+        let breadcrumb = (entity.id) ? entity.flow_name : T.translate("general.new");
 
         return(
             <div className="container">
                 <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
-                <h3>{title} {entity.event_type_name} {T.translate("edit_email_flow_event.email_flow_event")}</h3>
+                <h3>{title} {entity.flow_name} {T.translate("edit_email_flow_event.email_flow_event")}</h3>
                 <hr/>
                 {currentSummit &&
                 <EmailFlowEventForm

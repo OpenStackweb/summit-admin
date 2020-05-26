@@ -119,7 +119,7 @@ export const saveEmailFlowEvent = (entity) => (dispatch, getState) => {
             entity
         )(params)(dispatch)
             .then((payload) => {
-                dispatch(showSuccessMessage(T.translate("edit_email_flow_event.email_flow_event_saved")));
+                dispatch(showSuccessMessage(T.translate("edit_email_flow_event.saved")));
     });
 };
 

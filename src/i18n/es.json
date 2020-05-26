@@ -1371,6 +1371,12 @@
   },
   "edit_email_flow_event": {
     "email_template_identifier": "Email Template (Associated with Event)",
-    "email_flow_event": "Email Event"
+    "email_flow_event": "Email Event",
+    "flow_name": "Flow Name",
+    "event_type": "Event Type",
+    "saved": "Email template Flow saved successfully.",
+    "placeholders": {
+      "select_template" : "Select template"
+    }
   }
 }

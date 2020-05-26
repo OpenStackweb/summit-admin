@@ -17,6 +17,7 @@ import {
     findElementPos
 } from 'openstack-uicore-foundation/lib/methods'
 import { Input} from 'openstack-uicore-foundation/lib/components';
+import EmailTemplateInput from "../inputs/email-template-input";
 
 
 class EmailFlowEventForm extends React.Component {
@@ -85,14 +86,24 @@ class EmailFlowEventForm extends React.Component {
             <form className="email-flow-event-form">
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_email_flow_event.flow_name")} *</label><br />
+                        {entity.flow_name}
+                    </div>
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_email_flow_event.event_type")} *</label><br />
+                        {entity.event_type_name}
+                    </div>
+                </div>
+                <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_email_flow_event.email_template_identifier")} *</label>
-                        <Input
+                        <EmailTemplateInput
                             id="email_template_identifier"
-                            className="form-control"
-                            error={this.hasErrors('email_template_identifier')}
-                            onChange={this.handleChange}
                             value={entity.email_template_identifier}
+                            placeholder={T.translate("edit_email_flow_event.placeholders.select_template")}
+                            onChange={this.handleChange}
+                            plainValue
                         />
                     </div>
                 </div>
