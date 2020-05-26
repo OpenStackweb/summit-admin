@@ -1,0 +1,81 @@
+/**
+ * Copyright 2020 OpenStack Foundation
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ **/
+
+import React from 'react'
+import { connect } from 'react-redux';
+import { Breadcrumb } from 'react-breadcrumbs';
+import T from "i18n-react/dist/i18n-react";
+import EmailFlowEventForm from '../../components/forms/email-flow-event-form';
+import { getSummitById }  from '../../actions/summit-actions';
+import {getEmailFlowEvent, resetEmailFlowEventForm, saveEmailFlowEvent} from '../../actions/email-flows-events-actions';
+
+class EditEmailFlowEventPage extends React.Component {
+
+    componentWillMount () {
+        let { currentSummit } = this.props;
+        let eventId = this.props.match.params.event_id;
+
+        this.props.getEmailFlowEvent(eventId);
+    }
+
+    componentWillReceiveProps(newProps) {
+        let oldId = this.props.match.params.event_id;
+        let newId = newProps.match.params.event_id;
+
+        if (newId != oldId) {
+            if (!newId) {
+                this.props.resetEmailFlowEventForm();
+            } else {
+                this.props.getEmailFlowEvent(newId);
+            }
+        }
+    }
+
+    render(){
+        let {currentSummit, entity, errors, match, history} = this.props;
+        let title = T.translate("general.edit")
+        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+
+        return(
+            <div className="container">
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <h3>{title} {entity.event_type_name} {T.translate("edit_email_flow_event.email_flow_event")}</h3>
+                <hr/>
+                {currentSummit &&
+                <EmailFlowEventForm
+                    entity={entity}
+                    currentSummit={currentSummit}
+                    errors={errors}
+                    onSubmit={this.props.saveEmailFlowEvent}
+                />
+                }
+            </div>
+        )
+    }
+}
+
+const mapStateToProps = ({ currentSummitState, emailFLowEventState, baseState }) => ({
+    currentSummit : currentSummitState.currentSummit,
+    loading: baseState.loading,
+    ...emailFLowEventState
+});
+
+export default connect (
+    mapStateToProps,
+    {
+        getSummitById,
+        getEmailFlowEvent,
+        resetEmailFlowEventForm,
+        saveEmailFlowEvent
+    }
+)(EditEmailFlowEventPage);

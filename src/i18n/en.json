@@ -116,7 +116,8 @@
     "emails"                  : "Emails",
     "email_templates"         : "Templates",
     "sent_email"              : "Sent Emails",
-    "summitdocs"              : "Summit Docs"
+    "summitdocs"              : "Summit Docs",
+    "email_flow_events"       : "Email Events"
   },
   "schedule": {
     "schedule"                              : "Schedule",
@@ -1356,5 +1357,20 @@
       "search" : "Search docs by name",
       "select_type" : "Select Event Type"
     }
+  },
+  "email_flow_event_list": {
+    "email_flow_events": "Email Events",
+    "email_flow_event_list": "Email Events",
+    "event_type_name": "Event",
+    "flow_name": "Flow",
+    "email_template_identifier": "Email Template",
+    "placeholders": {
+      "search" : "Search events by Name, Flow"
+    }
+
+  },
+  "edit_email_flow_event": {
+      "email_template_identifier": "Email Template (Associated with Event)",
+      "email_flow_event": "Email Event"
   }
 }

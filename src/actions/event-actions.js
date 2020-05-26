@@ -80,7 +80,6 @@ export const getEvents = ( term = null, page = 1, perPage = 10, order = 'id', or
         params['order']= `${orderDirSign}${order}`;
     }
 
-
     return getRequest(
         createAction(REQUEST_EVENTS),
         createAction(RECEIVE_EVENTS),

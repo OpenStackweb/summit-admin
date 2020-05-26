@@ -62,7 +62,7 @@ export const getEmailTemplates = (term = null, page = 1, perPage = 10, order = '
     };
 
     if(term){
-        params.key__contains= term;
+        params.identifier__contains= term;
     }
 
     // order

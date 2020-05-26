@@ -191,6 +191,7 @@ class NavMenu extends React.Component {
             {name: 'reports', iconClass: 'fa-list-ol', linkUrl:`summits/${summit_id}/reports`, accessRoute: 'reports' },
             {name: 'marketing', iconClass: 'fa-id-card-o', linkUrl:`summits/${summit_id}/marketing`, accessRoute: 'marketing' },
             {name: 'summitdocs', iconClass: 'fa-file-text', linkUrl:`summits/${summit_id}/summitdocs`, accessRoute: 'summitdocs' },
+            {name: 'email_flow_events', iconClass: 'fa-envelope-o', linkUrl:`summits/${summit_id}/email-flow-events`, accessRoute: 'email-flow-events' },
         ];
 
         return (

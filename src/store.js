@@ -87,6 +87,8 @@ import emailTemplateListReducer from './reducers/emails/email-template-list-redu
 import sentEmailListReducer from './reducers/emails/sent-email-list-reducer';
 import summitDocListReducer from './reducers/summitdoc/summitdoc-list-reducer';
 import summitDocReducer from "./reducers/summitdoc/summitdoc-reducer";
+import emailFlowEventsListReducer from "./reducers/email_flow_events/email-flow-events-list-reducer";
+import emailFlowEventReducer from './reducers/email_flow_events/email-flows-event-reducer'
 
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
@@ -174,6 +176,8 @@ const reducers = persistCombineReducers(config, {
     sentEmailListState: sentEmailListReducer,
     summitDocListState: summitDocListReducer,
     summitDocState: summitDocReducer,
+    emailFlowEventsListState: emailFlowEventsListReducer,
+    emailFLowEventState: emailFlowEventReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
