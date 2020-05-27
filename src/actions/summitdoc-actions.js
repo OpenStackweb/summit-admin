@@ -22,7 +22,7 @@ import {
     startLoading,
     showMessage,
     showSuccessMessage,
-    authErrorHandler, putFile, postFile
+    authErrorHandler, putFile, postFile, escapeFilterValue
 } from 'openstack-uicore-foundation/lib/methods';
 
 export const REQUEST_SUMMITDOCS       = 'REQUEST_SUMMITDOCS';
@@ -36,30 +36,38 @@ export const SUMMITDOC_DELETED        = 'SUMMITDOC_DELETED';
 
 export const getSummitDocs = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
 
-    let { currentSummitState } = getState();
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
+    let filter = [];
 
     dispatch(startLoading());
+
+    if(term){
+        let escapedTerm = escapeFilterValue(term);
+        filter.push(`name=@${escapedTerm}`);
+    }
 
     let params = {
         page         : page,
         per_page     : perPage,
+        access_token : accessToken
     };
 
-    if(term){
-        params.key__contains= term;
+    if(filter.length > 0){
+        params['filter[]']= filter;
     }
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '' : '-';
+        let orderDirSign = (orderDir === 1) ? '' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
     return getRequest(
         createAction(REQUEST_SUMMITDOCS),
         createAction(RECEIVE_SUMMITDOCS),
-        `${window.API_BASE_URL}/api/public/v1/summitdocs/all/shows/${currentSummit.id}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/summit-documents`,
         authErrorHandler,
         {order, orderDir, term}
     )(params)(dispatch).then(() => {
@@ -68,16 +76,21 @@ export const getSummitDocs = (term = null, page = 1, perPage = 10, order = 'id',
     );
 };
 
-export const getSummitDoc = (settingId) => (dispatch, getState) => {
+export const getSummitDoc = (summitDocId) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {};
+    let params = {
+        access_token : accessToken
+    };
 
     return getRequest(
         null,
         createAction(RECEIVE_SUMMITDOC),
-        `${window.API_BASE_URL}/api/public/v1/config-values/${settingId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/summit-documents/${summitDocId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -96,7 +109,7 @@ export const saveSummitDoc = (entity, file) => (dispatch, getState) => {
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity, currentSummit.id);
+    let normalizedEntity = normalizeEntity(entity);
     let params = { access_token : accessToken };
 
     if (entity.id) {
@@ -104,7 +117,7 @@ export const saveSummitDoc = (entity, file) => (dispatch, getState) => {
         putFile(
             createAction(UPDATE_SUMMITDOC),
             createAction(SUMMITDOC_UPDATED),
-            `${window.API_BASE_URL}/api/v1/config-values/${entity.id}`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/summit-documents/${entity.id}`,
             file,
             normalizedEntity,
             authErrorHandler,
@@ -125,7 +138,7 @@ export const saveSummitDoc = (entity, file) => (dispatch, getState) => {
         postFile(
             createAction(UPDATE_SUMMITDOC),
             createAction(SUMMITDOC_ADDED),
-            `${window.API_BASE_URL}/api/v1/config-values`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/summit-documents`,
             file,
             normalizedEntity,
             authErrorHandler,
@@ -134,13 +147,13 @@ export const saveSummitDoc = (entity, file) => (dispatch, getState) => {
             .then((payload) => {
                 dispatch(showMessage(
                     success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/marketing/${payload.response.id}`) }
+                    () => { history.push(`/app/summits/${currentSummit.id}/summitdocs/${payload.response.id}`) }
                 ));
             });
     }
 }
 
-export const deleteSummitDoc = (settingId) => (dispatch, getState) => {
+export const deleteSummitDoc = (summitDocId) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -152,8 +165,8 @@ export const deleteSummitDoc = (settingId) => (dispatch, getState) => {
 
     return deleteRequest(
         null,
-        createAction(SUMMITDOC_DELETED)({settingId}),
-        `${window.API_BASE_URL}/api/v1/config-values/${settingId}`,
+        createAction(SUMMITDOC_DELETED)({summitDocId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/summit-documents/${summitDocId}`,
         null,
         authErrorHandler
     )(params)(dispatch).then(() => {
@@ -163,13 +176,15 @@ export const deleteSummitDoc = (settingId) => (dispatch, getState) => {
 };
 
 
-const normalizeEntity = (entity, summitId) => {
+const normalizeEntity = (entity) => {
     let normalizedEntity = {...entity};
 
     delete(normalizedEntity['id']);
     delete(normalizedEntity['created']);
-    delete(normalizedEntity['modified']);
-    normalizedEntity.show_id = summitId;
+    delete(normalizedEntity['last_edited']);
+    delete(normalizedEntity['file']);
+    delete(normalizedEntity['file_link']);
+    delete(normalizedEntity['has_file']);
 
     return normalizedEntity;
 

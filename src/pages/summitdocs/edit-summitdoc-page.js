@@ -29,10 +29,10 @@ class EditSummitDocPage extends React.Component {
     componentWillMount () {
         let summitDocId = this.props.match.params.summitdoc_id;
 
-        if (!summitDoc) {
+        if (!summitDocId) {
             this.props.resetSummitDocForm();
         } else {
-            this.props.getSummitDoc(summitDoc);
+            this.props.getSummitDoc(summitDocId);
         }
     }
 
@@ -52,7 +52,7 @@ class EditSummitDocPage extends React.Component {
     render(){
         let {currentSummit, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.key : T.translate("general.new");
+        let breadcrumb = (entity.id) ? entity.label : T.translate("general.new");
 
         return(
             <div className="container">

@@ -74,7 +74,7 @@ class SummitDocListPage extends React.Component {
         history.push(`/app/summits/${currentSummit.id}/summitdocs/new`);
     }
 
-    handleDelete(summitDocsId) {
+    handleDelete(summitDocId) {
         let {deleteSummitDoc, summitDocs} = this.props;
         let summitDoc = summitDocs.find(s => s.id == summitDocId);
 
@@ -87,7 +87,7 @@ class SummitDocListPage extends React.Component {
             confirmButtonText: T.translate("general.yes_delete")
         }).then(function(result){
             if (result.value) {
-                deleteSummitDoc(summitDocsId);
+                deleteSummitDoc(summitDocId);
             }
         });
     }
@@ -99,7 +99,7 @@ class SummitDocListPage extends React.Component {
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
             { columnKey: 'label', value: T.translate("summitdoc.label"), sortable: true },
             { columnKey: 'description', value: T.translate("summitdoc.description") },
-            { columnKey: 'event_type', value: T.translate("summitdoc.event_types")},
+            { columnKey: 'event_types_string', value: T.translate("summitdoc.event_types")},
         ];
 
         let table_options = {

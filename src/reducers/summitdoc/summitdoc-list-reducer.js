@@ -52,7 +52,7 @@ const summitDocListReducer = (state = DEFAULT_STATE, action) => {
                     name: s.name,
                     label: s.label,
                     description: s.description,
-                    event_types: s.event_types.map(et => et.name).join(', ')
+                    event_types_string: s.event_types.map(et => et.name).join(', ')
                 };
             });
 

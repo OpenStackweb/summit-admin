@@ -120,11 +120,21 @@ class SummitDocForm extends React.Component {
                         />
                     </div>
                     <div className="col-md-4">
+                        <label> {T.translate("summitdoc.label")} *</label>
+                        <Input
+                            id="label"
+                            value={entity.label}
+                            onChange={this.handleChange}
+                            className="form-control"
+                            error={this.hasErrors('label')}
+                        />
+                    </div>
+                    <div className="col-md-4">
                         <label> {T.translate("summitdoc.event_types")} *</label>
                         <Dropdown
                             id="event_types"
                             value={entity.event_types}
-                            placeholder={T.translate("summitdoc.placeholders.select_event_types")}
+                            placeholder={T.translate("summitdoc.placeholders.select_type")}
                             options={event_types_ddl}
                             onChange={this.handleChange}
                             isMulti
@@ -140,16 +150,6 @@ class SummitDocForm extends React.Component {
                             onChange={this.handleChange}
                             className="form-control"
                             error={this.hasErrors('description')}
-                        />
-                    </div>
-                    <div className="col-md-4">
-                        <label> {T.translate("summitdoc.label")} *</label>
-                        <Input
-                            id="label"
-                            value={entity.label}
-                            onChange={this.handleChange}
-                            className="form-control"
-                            error={this.hasErrors('label')}
                         />
                     </div>
                 </div>
