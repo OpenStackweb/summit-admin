@@ -40,6 +40,6 @@ class SummitDocsLayout extends React.Component {
 
 }
 
-export default Restrict(withRouter(SummitDocsLayout), 'summitdocs');
+export default Restrict(withRouter(SummitDocsLayout), 'general');
 
 

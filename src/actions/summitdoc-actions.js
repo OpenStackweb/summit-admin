@@ -112,6 +112,7 @@ export const saveSummitDoc = (entity, file) => (dispatch, getState) => {
     let normalizedEntity = normalizeEntity(entity);
     let params = { access_token : accessToken };
 
+
     if (entity.id) {
 
         putFile(
@@ -134,6 +135,7 @@ export const saveSummitDoc = (entity, file) => (dispatch, getState) => {
             html: T.translate("summitdoc.created"),
             type: 'success'
         };
+
 
         postFile(
             createAction(UPDATE_SUMMITDOC),
@@ -185,6 +187,11 @@ const normalizeEntity = (entity) => {
     delete(normalizedEntity['file']);
     delete(normalizedEntity['file_link']);
     delete(normalizedEntity['has_file']);
+    delete(normalizedEntity['event_types']);
+
+    if (entity.event_types) {
+        normalizedEntity['event_types[]'] = entity.event_types;
+    }
 
     return normalizedEntity;
 
