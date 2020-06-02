@@ -481,7 +481,22 @@ class EventForm extends React.Component {
                     </div>
                 </div>
                 }
-
+                <Panel show={showSection == 'live'} title={T.translate("edit_event.live")}
+                       handleClick={this.toggleSection.bind(this, 'live')}>
+                    <div className="row form-group">
+                        <div className="col-md-6">
+                            <label> {T.translate("edit_event.streaming_url")}&nbsp;<i className="fa fa-info-circle"
+                                                                                aria-hidden="true" title={T.translate("edit_event.streaming_url_info")}></i></label>
+                            <input className="form-control" id="streaming_url" value={entity.streaming_url} onChange={this.handleChange} />
+                        </div>
+                     </div>
+                    <div className="row form-group">
+                        <div className="col-md-6">
+                            <label> {T.translate("edit_event.etherpad_link")} </label>
+                            <input className="form-control" id="etherpad_link" value={entity.etherpad_link} onChange={this.handleChange} />
+                        </div>
+                    </div>
+                </Panel>
                 <Panel show={showSection == 'rsvp'} title={T.translate("edit_event.rsvp")}
                        handleClick={this.toggleSection.bind(this, 'rsvp')}>
                     <div className="row form-group">

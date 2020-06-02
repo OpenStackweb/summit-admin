@@ -302,6 +302,10 @@
     "add_material"        : "Add Material",
     "display_on_site"     : "Display on site",
     "type"                : "Type",
+    "live"                : "Live Info",
+    "streaming_url"       : "Streaming URL",
+    "streaming_url_info"  : "Streaming URL could be a meeting link (Zoom, Jitsy, and so) OR a HLS/DASH feed (.m3u8/.mpd)",
+    "etherpad_link"       : "EtherPad URL",
     "placeholders": {
       "select_venue"        : "Select a Summit Venue ...",
       "start_date"          : "Start Date",
