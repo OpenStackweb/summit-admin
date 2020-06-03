@@ -61,7 +61,7 @@ export const getEvents = ( term = null, page = 1, perPage = 10, order = 'id', or
 
         let query = `title=@${term},abstract=@${term},tags=@${term},speaker=@${term},speaker_email=@${term}`;
         // only add id if its numeric ...
-        if(Number.isInteger(term))
+        if(!isNaN(term))
             query = `${query},id==${term}`;
 
         filter.push(query);
