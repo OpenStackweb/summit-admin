@@ -58,7 +58,13 @@ export const getEvents = ( term = null, page = 1, perPage = 10, order = 'id', or
     dispatch(startLoading());
 
     if(term){
-        filter.push(`title=@${term},abstract=@${term},tags=@${term},speaker=@${term},speaker_email=@${term},id==${term}`);
+
+        let query = `title=@${term},abstract=@${term},tags=@${term},speaker=@${term},speaker_email=@${term}`;
+        // only add id if its numeric ...
+        if(Number.isInteger(term))
+            query = `${query},id==${term}`;
+
+        filter.push(query);
     }
 
     let params = {
