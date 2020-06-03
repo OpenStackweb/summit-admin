@@ -495,7 +495,13 @@ export const exportEvents = ( term = null, order = 'id', orderDir = 1 ) => (disp
     };
 
     if(term){
-        filter.push(`title=@${term},abstract=@${term},tags=@${term},speaker=@${term},speaker_email=@${term},id==${term}`);
+
+        let query = `title=@${term},abstract=@${term},tags=@${term},speaker=@${term},speaker_email=@${term}`;
+        // only add id if its numeric ...
+        if(!isNaN(term))
+            query = `${query},id==${term}`;
+
+        filter.push(query);
     }
 
     if(filter.length > 0){
