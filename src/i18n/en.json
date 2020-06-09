@@ -304,7 +304,9 @@
     "type"                : "Type",
     "live"                : "Live Info",
     "streaming_url"       : "Streaming URL",
-    "streaming_url_info"  : "Streaming URL could be a meeting link (Zoom, Jitsy, and so) OR a HLS/DASH feed (.m3u8/.mpd)",
+    "meeting_url"         : "Meeting URL",
+    "streaming_url_info"  : "Streaming URL could be a HLS/DASH feed (.m3u8/.mpd)",
+    "meeting_url_info"    : "Meeting URL could be a Zoom, Jitsy, or Google Meet",
     "etherpad_link"       : "EtherPad URL",
     "placeholders": {
       "select_venue"        : "Select a Summit Venue ...",

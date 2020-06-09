@@ -492,6 +492,13 @@ class EventForm extends React.Component {
                      </div>
                     <div className="row form-group">
                         <div className="col-md-6">
+                            <label> {T.translate("edit_event.meeting_url")}&nbsp;<i className="fa fa-info-circle"
+                                                                                      aria-hidden="true" title={T.translate("edit_event.meeting_url_info")}></i></label>
+                            <input className="form-control" id="meeting_url" value={entity.meeting_url} onChange={this.handleChange} />
+                        </div>
+                    </div>
+                    <div className="row form-group">
+                        <div className="col-md-6">
                             <label> {T.translate("edit_event.etherpad_link")} </label>
                             <input className="form-control" id="etherpad_link" value={entity.etherpad_link} onChange={this.handleChange} />
                         </div>
