@@ -107,6 +107,11 @@ class SummitDirectoryPage extends React.Component {
                                 <td className="summit_name"> {summit.name} </td>
                                 <td> {formatEpoch(summit.start_date, 'MMMM Do YYYY')} </td>
                                 <td> {formatEpoch(summit.end_date, 'MMMM Do YYYY')} </td>
+                                <td>
+                                    {summit.invite_only_registration &&
+                                        <span className="badge badge-warning">  {T.translate("directory.invitation_only")}</span>
+                                    }
+                                </td>
                                 <td className="center_text actions">
                                     <a href="" onClick={ (e) => { return this.onSelectedSummit(e, summit) }} className="btn btn-default btn-sm">
                                         {T.translate("directory.select")}

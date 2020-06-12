@@ -177,7 +177,8 @@
     "select"              : "Select",
     "summits"             : "Summits",
     "add_summit"          : "Add Summit",
-    "remove_warning"      : "Are you sure you want to delete summit"
+    "remove_warning"      : "Are you sure you want to delete summit",
+    "invitation_only"     : "Invitation Only"
   },
   "dashboard": {
     "dashboard"           : "Dashboard",
