@@ -54,6 +54,7 @@ import MarketingLayout from "./marketing-layout";
 import PaymentProfileLayout from "./payment-profile-layout";
 import SummitDocsLayout from "./summitdocs-layout";
 import EmailFlowEventLayout from "./email-flow-event-layout";
+import RegistrationInvitationsListPage from "../pages/tickets/registration-invitations-list-page";
 
 class SummitIdLayout extends React.Component {
 
@@ -119,6 +120,7 @@ class SummitIdLayout extends React.Component {
                     <Route path={`${match.url}/access-levels`} component={AccessLevelLayout}/>
                     <Route path={`${match.url}/purchase-orders`} component={PurchaseOrderLayout}/>
                     <Route path={`${match.url}/tickets`} component={TicketListPage}/>
+                    <Route path={`${match.url}/registration-invitations`} component={RegistrationInvitationsListPage}/>
                     <Route path={`${match.url}/order-extra-questions`} component={OrderExtraQuestionLayout}/>
                     <Route path={`${match.url}/sponsors`} component={SponsorLayout}/>
                     <Route path={`${match.url}/sponsorships`} component={SponsorshipLayout}/>

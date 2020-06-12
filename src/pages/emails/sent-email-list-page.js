@@ -58,10 +58,11 @@ class SentEmailListPage extends React.Component {
 
         let columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
-            { columnKey: 'template', value: T.translate("emails.subject"), sortable: true },
-            { columnKey: 'subject', value: T.translate("emails.from_email") },
-            { columnKey: 'subject', value: T.translate("emails.to_email") },
-            { columnKey: 'subject', value: T.translate("emails.sent_date") },
+            { columnKey: 'template', value: T.translate("emails.template"), sortable: true },
+            { columnKey: 'subject', value: T.translate("emails.subject") },
+            { columnKey: 'from_email', value: T.translate("emails.from_email") },
+            { columnKey: 'to_email', value: T.translate("emails.to_email") },
+            { columnKey: 'sent_date', value: T.translate("emails.sent_date") },
         ];
 
         let table_options = {

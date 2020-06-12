@@ -256,7 +256,8 @@ export const getSentEmails = (term = null, page = 1, perPage = 10, order = 'id',
     let params = {
         page         : page,
         per_page     : perPage,
-        access_token : accessToken
+        access_token : accessToken,
+        expand: 'template',
     };
 
     if(term){

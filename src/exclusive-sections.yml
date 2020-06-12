@@ -1,4 +1,4 @@
-# each app name contains the fields that are eclusive for that app only
+# each app name contains the fields that are exclusive for that app only
 
 openstack:
   - nada

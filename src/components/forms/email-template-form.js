@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 OpenStack Foundation
+ * Copyright 2020 OpenStack Foundation
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,10 +14,17 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import {Dropdown, Input, TextArea} from 'openstack-uicore-foundation/lib/components'
+import {Dropdown, Input} from 'openstack-uicore-foundation/lib/components'
 import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
 import EmailTemplateInput from '../inputs/email-template-input'
-
+import CodeMirror from '@uiw/react-codemirror';
+import 'codemirror/keymap/sublime';
+import 'codemirror/theme/monokai.css';
+import 'codemirror/addon/display/autorefresh';
+import 'codemirror/addon/comment/comment';
+import 'codemirror/addon/edit/closebrackets';
+import 'codemirror/addon/edit/matchtags';
+import 'codemirror/addon/edit/closetag';
 
 class EmailTemplateForm extends React.Component {
     constructor(props) {
@@ -31,6 +38,7 @@ class EmailTemplateForm extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handlePreview = this.handlePreview.bind(this);
+        this.handleCodeMirrorChange = this.handleCodeMirrorChange.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -46,6 +54,14 @@ class EmailTemplateForm extends React.Component {
             let firstNode = document.getElementById(firstError);
             if (firstNode) window.scrollTo(0, findElementPos(firstNode));
         }
+    }
+
+    handleCodeMirrorChange(instance, change){
+        let entity = {...this.state.entity};
+        let errors = {...this.state.errors};
+        errors['html_content' ] = '';
+        entity['html_content'] = instance.getValue();
+        this.setState({entity: entity, errors: errors});
     }
 
     handleChange(ev) {
@@ -93,7 +109,6 @@ class EmailTemplateForm extends React.Component {
         if(field in errors) {
             return errors[field];
         }
-
         return '';
     }
 
@@ -181,22 +196,21 @@ class EmailTemplateForm extends React.Component {
                             </a>
                             {' *'}
                         </label>
-                        <TextArea
+                        <CodeMirror
                             id="html_content"
                             value={entity.html_content}
-                            onChange={this.handleChange}
-                            error={this.hasErrors('html_content')}
-                        />
-                    </div>
-                </div>
-                <div className="row form-group">
-                    <div className="col-md-8">
-                        <label> {T.translate("emails.plain_content")} *</label>
-                        <TextArea
-                            id="plain_content"
-                            value={entity.plain_content}
-                            onChange={this.handleChange}
-                            error={this.hasErrors('plain_content')}
+                            onChanges={this.handleCodeMirrorChange}
+                            options={{
+                                theme: 'monokai',
+                                keyMap: 'sublime',
+                                mode: 'html',
+                                tabSize: 2,
+                                lineNumbers: true,
+                                autoCloseBrackets: true,
+                                autoCloseTags: true,
+                                matchTags: {bothTags: true},
+                                extraKeys: {"Ctrl-J": "toMatchingTag"},
+                            }}
                         />
                     </div>
                 </div>

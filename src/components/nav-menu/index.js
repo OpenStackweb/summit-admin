@@ -170,6 +170,7 @@ class NavMenu extends React.Component {
             },
             {name: 'tickets', iconClass: 'fa-ticket', accessRoute: 'tickets',
                 childs: [
+                    {name:'registration_invitation_list', linkUrl:`summits/${summit_id}/registration-invitations`},
                     {name:'ticket_type_list', linkUrl:`summits/${summit_id}/ticket-types`},
                     {name:'promocode_list', linkUrl:`summits/${summit_id}/promocodes`},
                     {name:'tax_type_list', linkUrl:`summits/${summit_id}/tax-types`},
@@ -191,7 +192,7 @@ class NavMenu extends React.Component {
             {name: 'reports', iconClass: 'fa-list-ol', linkUrl:`summits/${summit_id}/reports`, accessRoute: 'reports' },
             {name: 'marketing', iconClass: 'fa-id-card-o', linkUrl:`summits/${summit_id}/marketing`, accessRoute: 'marketing' },
             {name: 'summitdocs', iconClass: 'fa-file-text', linkUrl:`summits/${summit_id}/summitdocs`, accessRoute: 'summitdocs' },
-            {name: 'email_flow_events', iconClass: 'fa-envelope-o', linkUrl:`summits/${summit_id}/email-flow-events`, accessRoute: 'email-flow-events' },
+            {name: 'email_flow_events', iconClass: 'fa-envelope-o   ', linkUrl:`summits/${summit_id}/email-flow-events`, accessRoute: 'email-flow-events' },
         ];
 
         return (

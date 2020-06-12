@@ -49,6 +49,12 @@ tickets:
   - summit-front-end-administrators
   - summit-registration-administrators
 
+registration-invitations:
+  - super-admins
+  - administrators
+  - summit-front-end-administrators
+  - summit-registration-administrators
+
 room-occupancy:
   - super-admins
   - administrators

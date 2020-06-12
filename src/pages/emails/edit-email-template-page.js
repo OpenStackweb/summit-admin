@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 OpenStack Foundation
+ * Copyright 2020 OpenStack Foundation
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -22,6 +22,13 @@ import { getEmailTemplate, resetTemplateForm, saveEmailTemplate, getAllClients, 
 import {Modal} from "react-bootstrap";
 
 import '../../styles/edit-email-template-page.less';
+import CodeMirror from '@uiw/react-codemirror';
+import 'codemirror/keymap/sublime';
+import 'codemirror/theme/monokai.css';
+import 'codemirror/addon/display/autorefresh';
+import 'codemirror/addon/comment/comment';
+import 'codemirror/addon/edit/closebrackets';
+
 
 class EditEmailTemplatePage extends React.Component {
 
@@ -66,9 +73,8 @@ class EditEmailTemplatePage extends React.Component {
         }
     }
 
-    handleJsonChange(ev) {
-        let {value} = ev.target;
-        this.setState({json_preview: value});
+    handleJsonChange(instance, changes) {
+        this.setState({json_preview: instance.getValue()});
     }
 
     handleRender() {
@@ -115,10 +121,17 @@ class EditEmailTemplatePage extends React.Component {
                         <div className="row">
                             <div className="col-md-12">
                                 <label> JSON <a href="https://jsonformatter.curiousconcept.com/" target="_blank">format</a></label>
-                                <textarea
+                                <CodeMirror
                                     value={json_preview}
-                                    className="form-control"
-                                    onChange={this.handleJsonChange}
+                                    onChanges={this.handleJsonChange}
+                                    options={{
+                                        theme: 'monokai',
+                                        keyMap: 'sublime',
+                                        mode: 'jsonld',
+                                        tabSize: 2,
+                                        lineNumbers: true,
+                                        autoCloseBrackets: true
+                                    }}
                                 />
                             </div>
                             <br />

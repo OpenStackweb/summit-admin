@@ -44,17 +44,9 @@ const sentEmailListReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case RECEIVE_EMAILS: {
-            let {total, last_page, current_page} = payload.response;
-            let emails = payload.response.data.map(s => {
-                return {
-                    id: s.id,
-                    key: s.key,
-                    type: s.type,
-                    value: s.value,
-                };
-            });
-
-            return {...state, emails: emails, currentPage: current_page, totalEmails: total, lastPage: last_page };
+            let {total, last_page, current_page, data} = payload.response;
+            data = data.map( m => { return {...m, template: m.template.identifier} } );
+            return {...state, emails: data, currentPage: current_page, totalEmails: total, lastPage: last_page };
         }
         break;
         default:
