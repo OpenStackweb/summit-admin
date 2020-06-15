@@ -32,8 +32,9 @@ export const DEFAULT_ENTITY = {
     plain_content   : '',
     from_email      : '',
     subject         : '',
+    // default values
     max_retries     : 1,
-    active          : true,
+    is_active       : true,
     allowed_clients : [],
     parent          : null,
 

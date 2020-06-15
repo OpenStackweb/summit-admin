@@ -16,7 +16,8 @@ import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import {FreeTextSearch, Table, UploadInput} from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
-import {exportInvitationsCSV, getInvitations, importInvitationsCSV} from "../../actions/registration-invitation-actions";
+import {exportInvitationsCSV, getInvitations, importInvitationsCSV, resendNonAcceptedInvitations}
+from "../../actions/registration-invitation-actions";
 import {Breadcrumb} from "react-breadcrumbs";
 import {Modal, Pagination} from "react-bootstrap";
 
@@ -87,11 +88,12 @@ class RegistrationInvitationsListPage extends React.Component {
     }
 
     handleExportInvitations() {
-        this.props.exportInvitationsCSV();
+        let {term, order, orderDir, showNonAccepted} = this.props;
+        this.props.exportInvitationsCSV(term, order, orderDir, showNonAccepted);
     }
 
     handleResendNonAccepted(){
-
+        this.props.resendNonAcceptedInvitations();
     }
 
     handleChangeNonAccepted() {
@@ -235,5 +237,6 @@ export default connect (
         getInvitations,
         importInvitationsCSV,
         exportInvitationsCSV,
+        resendNonAcceptedInvitations,
     }
 )(RegistrationInvitationsListPage);

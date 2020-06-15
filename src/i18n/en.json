@@ -1399,6 +1399,7 @@
     "ingest": "Ingest Data",
     "resend_non_accepted_invitations": "Resend non Accepted",
     "show_non_accepted": "Show non accepted",
+    "resend_done" : "Emails sent successfully.",
     "placeholders": {
       "search_invitations" : "Search Invitations"
     }

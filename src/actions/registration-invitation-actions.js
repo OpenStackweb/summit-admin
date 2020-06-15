@@ -12,7 +12,6 @@
  **/
 
 import T from "i18n-react/dist/i18n-react";
-import history from '../history'
 import {
     getRequest,
     postRequest,
@@ -21,9 +20,11 @@ import {
     startLoading,
     authErrorHandler,
     getCSV,
-    escapeFilterValue
+    escapeFilterValue,
+    putRequest,
+    deleteRequest,
+    showMessage
 } from 'openstack-uicore-foundation/lib/methods';
-import {RECEIVE_TICKET, TICKETS_IMPORTED} from "./ticket-actions";
 
 export const REQUEST_INVITATIONS = 'REQUEST_INVITATIONS';
 export const RECEIVE_INVITATIONS = 'RECEIVE_INVITATIONS';
@@ -53,8 +54,12 @@ export const getInvitations = ( term = null, page = 1, perPage = 10, order = 'id
         filter.push(`email=@${escapedTerm},first_name=@${escapedTerm},last_name=@${escapedTerm}`);
     }
 
+    if(showNonAccepted){
+        filter.push('is_accepted==false');
+    }
+
     if(filter.length > 0){
-        params['filter[]']= filter;
+        params['filter[]'] = filter;
     }
 
     // order
@@ -97,15 +102,69 @@ export const importInvitationsCSV = (file) => (dispatch, getState) => {
         });
 };
 
-export const exportInvitationsCSV = ( ) => (dispatch, getState) => {
+export const resendNonAcceptedInvitations = () => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    let success_message = {
+        title: T.translate("general.done"),
+        html: T.translate("registration_invitation_list.resend_done"),
+        type: 'success'
+    };
+
+    dispatch(startLoading());
+
+    return putRequest(
+        null,
+        createAction(RECEIVE_INVITATION),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/registration-invitations/all/non-accepted/resend`,
+        authErrorHandler
+    )(params)(dispatch)
+        .then((payload) => {
+            dispatch(showMessage(
+                success_message,
+            ));
+            dispatch(stopLoading());
+            return data.response;
+    });
+
+};
+
+export const exportInvitationsCSV = (term, order, orderDir, showNonAccepted) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
     let filename = currentSummit.name + '-invitations.csv';
+    let filter = [];
+
     let params = {
         access_token : accessToken
     };
+
+    if(term){
+        let escapedTerm = escapeFilterValue(term);
+        filter.push(`email=@${escapedTerm},first_name=@${escapedTerm},last_name=@${escapedTerm}`);
+    }
+
+    if(showNonAccepted){
+        filter.push('is_accepted==false');
+    }
+
+    if(filter.length > 0){
+        params['filter[]'] = filter;
+    }
+
+    // order
+    if(order != null && orderDir != null){
+        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        params['order']= `${orderDirSign}${order}`;
+    }
 
     dispatch(getCSV(`${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/registration-invitations/csv`, params, filename));
 
