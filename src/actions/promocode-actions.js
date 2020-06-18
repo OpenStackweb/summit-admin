@@ -306,12 +306,14 @@ const normalizeEntity = (entity) => {
         delete normalizedEntity['badge_type_id'];
     }
 
-    if (!entity.valid_since_date) {
-        delete normalizedEntity['valid_since_date'];
+    // clear dates
+
+    if (entity.valid_since_date === 0) {
+        normalizedEntity.valid_since_date = "";
     }
 
-    if (!entity.valid_until_date) {
-        delete normalizedEntity['valid_until_date'];
+    if (entity.valid_until_date === 0) {
+        normalizedEntity.valid_until_date = "";
     }
 
     delete normalizedEntity['owner'];

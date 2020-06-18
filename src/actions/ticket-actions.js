@@ -498,6 +498,15 @@ const normalizeEntity = (entity) => {
     if (!normalizedEntity.badge_type_id)
         delete(normalizedEntity.badge_type_id);
 
+    // clear dates
+    if (entity.sales_start_date === 0) {
+        normalizedEntity.sales_start_date = "";
+    }
+
+    if (entity.sales_end_date === 0) {
+        normalizedEntity.sales_end_date = "";
+    }
+
     delete(normalizedEntity.id);
 
     return normalizedEntity;

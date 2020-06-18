@@ -107,12 +107,13 @@ export const loadSummits = (page = 1, perPage = 10) => (dispatch, getState) => {
         relations: 'none',
         page: page,
         per_page: perPage,
+        order: '-id',
     };
 
     getRequest(
         createAction(REQUEST_SUMMITS),
         createAction(RECEIVE_SUMMITS),
-        `${window.API_BASE_URL}/api/v1/summits/all?expand=none&relations=none&access_token=${accessToken}`,
+        `${window.API_BASE_URL}/api/v1/summits/all`,
         authErrorHandler
     )(params)(dispatch, getState).then(() => {
             dispatch(stopLoading());
