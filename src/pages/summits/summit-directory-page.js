@@ -82,15 +82,19 @@ class SummitDirectoryPage extends React.Component {
     render() {
         let { summits, member, lastPage, currentPage, totalSummits } = this.props;
         let memberObj = new Member(member);
+
+
         let orderedSummits = summits.sort(
             (a, b) => (a.start_date < b.start_date ? 1 : (a.start_date > b.start_date ? -1 : 0))
         );
         let canEditSummit =  memberObj.canEditSummit();
+        let canAddSummits = memberObj.canAddSummits();
+        let canDeleteSummits = memberObj.canDeleteSummits();
 
         return (
             <div className="container">
                 <h3> {T.translate("directory.summits")} ({totalSummits})</h3>
-                {canEditSummit &&
+                {canAddSummits &&
                 <div className={'row'}>
                     <div className="col-md-6 col-md-offset-6 text-right">
                         <button className="btn btn-primary right-space" onClick={this.onNewSummit.bind(this)}>
@@ -122,7 +126,7 @@ class SummitDirectoryPage extends React.Component {
                                         {T.translate("general.edit")}
                                     </a>
                                     }
-                                    {canEditSummit &&
+                                    {canDeleteSummits &&
                                     <a href="" onClick={this.onDeleteSummit.bind(this, summit)}
                                        className="btn btn-danger btn-sm">
                                         {T.translate("general.delete")}

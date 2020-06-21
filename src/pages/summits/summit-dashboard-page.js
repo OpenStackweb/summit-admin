@@ -74,7 +74,6 @@ class SummitDashboardPage extends React.Component {
         let memberObj = new Member(member);
         let currentSummitTime = (new Date).getTime();
         let canEditSummit = memberObj.canEditSummit();
-
         if(!currentSummit.id) return(<div></div>);
 
         return (
