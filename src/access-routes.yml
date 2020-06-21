@@ -1,4 +1,8 @@
 
+emails:
+  - super-admins
+  - administrators
+
 general:
   - super-admins
   - administrators
@@ -7,15 +11,21 @@ general:
   - summit-registration-administrators
 
 summit-edit:
+      - super-admins
+      - administrators
+      - summit-front-end-administrators
+
+summit-add:
   - super-admins
   - administrators
-  - summit-front-end-administrators
+
+summit-delete:
+  - super-admins
+  - administrators
 
 speakers:
   - super-admins
   - administrators
-  - summit-front-end-administrators
-  - summit-registration-administrators
 
 attendees:
   - super-admins
@@ -69,7 +79,6 @@ tags:
 reports:
   - super-admins
   - administrators
-  - summit-front-end-administrators
 
 orders:
   - super-admins

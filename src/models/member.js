@@ -39,6 +39,20 @@ class Member {
         return false;
     }
 
+    canAddSummits(){
+        for (var i in this._member.groups) {
+            if (access['summit-add'].includes(this._member.groups[i].code)) return true;
+        }
+        return false;
+    }
+
+    canDeleteSummits(){
+        for (var i in this._member.groups) {
+            if (access['summit-delete'].includes(this._member.groups[i].code)) return true;
+        }
+        return false;
+    }
+
 }
 
 export default Member;
