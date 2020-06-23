@@ -132,7 +132,8 @@ class NavMenu extends React.Component {
                     {name:'sent_email', linkUrl:`emails/sent`},
                 ]
             },
-        ]
+            {name: 'admin_access', iconClass: 'fa-arrow-circle-o-right', linkUrl: 'admin-access'},
+        ];
 
         const summitItems = [
             {name: 'dashboard', iconClass: 'fa-dashboard', linkUrl: `summits/${summit_id}/dashboard`, accessRoute: 'summit-edit'},

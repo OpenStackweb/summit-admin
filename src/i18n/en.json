@@ -118,7 +118,7 @@
     "sent_email"              : "Sent Emails",
     "summitdocs"              : "Summit Docs",
     "email_flow_events"       : "Email Events",
-    "registration_invitation_list": "Registration Invitations"
+    "admin_access"            : "Admin Access Groups"
   },
   "schedule": {
     "schedule"                              : "Schedule",
@@ -177,8 +177,7 @@
     "select"              : "Select",
     "summits"             : "Summits",
     "add_summit"          : "Add Summit",
-    "remove_warning"      : "Are you sure you want to delete summit",
-    "invitation_only"     : "Invitation Only"
+    "remove_warning"      : "Are you sure you want to delete summit"
   },
   "dashboard": {
     "dashboard"           : "Dashboard",
@@ -1372,6 +1371,7 @@
     "event_type_name": "Event",
     "flow_name": "Flow",
     "email_template_identifier": "Email Template",
+    "no_email_flow_events": "No items found for this search criteria.",
     "placeholders": {
       "search" : "Search events by Name, Flow"
     }
@@ -1387,21 +1387,23 @@
       "select_template" : "Select template"
     }
   },
-  "registration_invitation_list": {
-    "email": "Email",
-    "first_name": "First Name",
-    "last_name" : "Last Name",
-    "accepted": "Is Accepted?",
-    "invitation_list": "Invitations",
-    "import": "Import",
-    "export": "Export",
-    "import_invitations": "Import Invitations Data",
-    "ingest": "Ingest Data",
-    "resend_non_accepted_invitations": "Resend non Accepted",
-    "show_non_accepted": "Show non accepted",
-    "resend_done" : "Emails sent successfully.",
+  "admin_access": {
+    "admin_accesses"          : "Admin Access Groups",
+    "admin_access"            : "Admin Access",
+    "admin_access_list"       : "Admin Access Group List",
+    "add"                     : "Add Admin Access Group",
+    "no_results"              : "No items found for this search criteria.",
+    "id"                      : "Id",
+    "title"                   : "Title",
+    "members"                 : "Members",
+    "summits"                 : "Summits",
+    "delete_warning"          : "Are you sure you want to delete group ",
+    "saved"                   : "Admin Access Group saved successfully.",
+    "created"                 : "Admin Access Group created successfully.",
     "placeholders": {
-      "search_invitations" : "Search Invitations"
+      "search" : "Search groups by name",
+      "select_summits" : "Select Summits",
+      "select_members" : "Select Members"
     }
   }
 }

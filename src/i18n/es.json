@@ -117,7 +117,8 @@
     "email_templates"         : "Templates",
     "sent_email"              : "Sent Emails",
     "summitdocs"              : "Summit Docs",
-    "email_flow_events"       : "Email Events"
+    "email_flow_events"       : "Email Events",
+    "admin_access"            : "Admin Access Groups"
   },
   "schedule": {
     "schedule"                              : "Schedule",
@@ -1370,6 +1371,7 @@
     "event_type_name": "Event",
     "flow_name": "Flow",
     "email_template_identifier": "Email Template",
+    "no_email_flow_events": "No items found for this search criteria.",
     "placeholders": {
       "search" : "Search events by Name, Flow"
     }
@@ -1383,6 +1385,25 @@
     "saved": "Email template Flow saved successfully.",
     "placeholders": {
       "select_template" : "Select template"
+    }
+  },
+  "admin_access": {
+    "admin_accesses"          : "Admin Access Groups",
+    "admin_access"            : "Admin Access",
+    "admin_access_list"       : "Admin Access Group List",
+    "add"                     : "Add Admin Access Group",
+    "no_results"              : "No items found for this search criteria.",
+    "id"                      : "Id",
+    "title"                   : "Title",
+    "members"                 : "Members",
+    "summits"                 : "Summits",
+    "delete_warning"          : "Are you sure you want to delete group ",
+    "saved"                   : "Admin Access Group saved successfully.",
+    "created"                 : "Admin Access Group created successfully.",
+    "placeholders": {
+      "search" : "Search groups by name",
+      "select_summits" : "Select Summits",
+      "select_members" : "Select Members"
     }
   }
 }

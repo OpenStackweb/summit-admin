@@ -90,6 +90,8 @@ import summitDocReducer from "./reducers/summitdoc/summitdoc-reducer";
 import emailFlowEventsListReducer from "./reducers/email_flow_events/email-flow-events-list-reducer";
 import emailFlowEventReducer from './reducers/email_flow_events/email-flows-event-reducer'
 import RegistrationInvitationListReducer from './reducers/tickets/registration-invitation-list-reducer';
+import adminAccessListReducer from './reducers/admin_access/admin-access-list-reducer';
+import adminAccessReducer from './reducers/admin_access/admin-access-reducer';
 
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
@@ -180,6 +182,8 @@ const reducers = persistCombineReducers(config, {
     emailFlowEventsListState: emailFlowEventsListReducer,
     emailFLowEventState: emailFlowEventReducer,
     RegistrationInvitationListState: RegistrationInvitationListReducer,
+    adminAccessListState: adminAccessListReducer,
+    adminAccessState: adminAccessReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

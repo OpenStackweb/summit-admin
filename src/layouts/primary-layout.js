@@ -22,6 +22,7 @@ import SummitLayout from './summit-layout';
 import SummitDirectoryPage from '../pages/summits/summit-directory-page';
 import SpeakerLayout from './speaker-layout';
 import EmailLayout from "./email-layout";
+import AdminAccessLayout from "./admin-access-layout";
 
 
 class PrimaryLayout extends React.Component {
@@ -41,12 +42,13 @@ class PrimaryLayout extends React.Component {
                 <main id="page-wrap">
                     <Breadcrumbs className={"breadcrumbs-wrapper " + extraClass} separator="/" />
 
-                    <Breadcrumb data={{ title: <i className="fa fa-home"></i>, pathname: match.url }} ></Breadcrumb>
+                    <Breadcrumb data={{ title: <i className="fa fa-home"></i>, pathname: match.url }} />
 
                     <Switch>
                         <Route strict exact path="/app/directory" component={SummitDirectoryPage}/>
                         <Route path="/app/speakers" component={SpeakerLayout}/>
                         <Route path={"/app/emails"} component={EmailLayout}/>
+                        <Route path={"/app/admin-access"} component={AdminAccessLayout}/>
                         <Route path="/app/summits" component={SummitLayout} />
                         <Route render={props => (<Redirect to="/app/directory"/>)}/>
                     </Switch>
