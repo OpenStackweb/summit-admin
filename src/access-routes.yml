@@ -3,6 +3,10 @@ emails:
   - super-admins
   - administrators
 
+admin-access:
+  - super-admins
+  - administrators
+
 general:
   - super-admins
   - administrators

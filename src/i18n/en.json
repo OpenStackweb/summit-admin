@@ -118,7 +118,8 @@
     "sent_email"              : "Sent Emails",
     "summitdocs"              : "Summit Docs",
     "email_flow_events"       : "Email Events",
-    "admin_access"            : "Admin Access Groups"
+    "admin_access"            : "Admin Access Groups",
+    "registration_invitation_list": "Registration Invitations"
   },
   "schedule": {
     "schedule"                              : "Schedule",
@@ -177,7 +178,8 @@
     "select"              : "Select",
     "summits"             : "Summits",
     "add_summit"          : "Add Summit",
-    "remove_warning"      : "Are you sure you want to delete summit"
+    "remove_warning"      : "Are you sure you want to delete summit",
+    "invitation_only"     : "Invitation Only"
   },
   "dashboard": {
     "dashboard"           : "Dashboard",
@@ -1405,5 +1407,19 @@
       "select_summits" : "Select Summits",
       "select_members" : "Select Members"
     }
+  },
+  "registration_invitation_list": {
+    "email": "Email",
+    "first_name": "First Name",
+    "last_name" : "Last Name",
+    "accepted": "Is Accepted?",
+    "invitation_list": "Invitations",
+    "import": "Import",
+    "export": "Export",
+    "import_invitations": "Import Invitations Data",
+    "ingest": "Ingest Data",
+    "resend_non_accepted_invitations": "Resend non Accepted",
+    "show_non_accepted": "Show non accepted",
+    "resend_done" : "Emails sent successfully."
   }
 }
