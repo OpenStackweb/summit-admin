@@ -268,19 +268,20 @@
     "selection_plan_created"          : "Selection Plan created successfully."
   },
   "edit_event": {
-    "title"               : "Title",
-    "published"           : "Published",
-    "short_description"   : "Short Description / Abstract",
-    "social_summary"      : "Social Summary",
-    "expect_to_learn"     : "What can attendees expect to learn?",
-    "head_count"          : "Head Count",
-    "rsvp_link"           : "RSVP Link",
+    "title"                           : "Title",
+    "published"                       : "Published",
+    "short_description"               : "Short Description / Abstract",
+    "social_summary"                  : "Social Summary",
+    "expect_to_learn"                 : "What can attendees expect to learn?",
+    "head_count"                      : "Head Count",
+    "rsvp_link"                       : "RSVP Link",
     "rsvp"                            : "RSVP",
     "rsvp_max_user_number"            : "RSVP Max",
     "rsvp_max_user_wait_list_number"  : "RSVP Wait Max",
-    "rsvp_template"  : "RSVP Template",
+    "rsvp_template"                   : "RSVP Template",
     "location"                        : "Location",
     "event_type"          : "Event Type",
+    "pic"                 : "Event Picture",
     "track"               : "Track",
     "level"               : "Level",
     "feedback"            : "Feedback",
@@ -357,7 +358,8 @@
     "twitter"             : "Twitter",
     "irc"                 : "Irc",
     "bio"                 : "Bio",
-    "profile_pic"         : "Picture",
+    "profile_pic"         : "Profile Pic",
+    "big_pic"             : "Big Pic",
     "affiliations"        : "Affiliations",
     "speaker_saved"       : "Speaker saved successfully.",
     "speaker_created"     : "Speaker created successfully."
@@ -1422,4 +1424,5 @@
     "show_non_accepted": "Show non accepted",
     "resend_done" : "Emails sent successfully."
   }
+
 }

@@ -44,6 +44,7 @@ export const EVENT_ADDED                            = 'EVENT_ADDED';
 export const EVENT_PUBLISHED                        = 'EVENT_PUBLISHED';
 export const EVENT_DELETED                          = 'EVENT_DELETED';
 export const FILE_ATTACHED                          = 'FILE_ATTACHED';
+export const IMAGE_ATTACHED                         = 'IMAGE_ATTACHED';
 export const RECEIVE_PROXIMITY_EVENTS               = 'RECEIVE_PROXIMITY_EVENTS';
 
 
@@ -387,7 +388,7 @@ export const checkProximityEvents = (event) => (dispatch, getState) => {
     );
 }
 
-export const attachFile = (entity, file) => (dispatch, getState) => {
+export const attachFile = (entity, file, attr) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
@@ -397,6 +398,8 @@ export const attachFile = (entity, file) => (dispatch, getState) => {
     let params = {
         access_token : accessToken
     };
+
+    let uploadFile = attr === 'file' ? uploadFile : uploadImage;
 
     if (entity.id) {
         return dispatch(uploadFile(entity, file));
@@ -434,6 +437,28 @@ const uploadFile = (entity, file) => (dispatch, getState) => {
         .then(() => {
            history.push(`/app/summits/${currentSummit.id}/events/${entity.id}`);
            dispatch(stopLoading());
+        });
+}
+
+const uploadImage = (entity, file) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    postRequest(
+        null,
+        createAction(IMAGE_ATTACHED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/${entity.id}/image`,
+        file,
+        authErrorHandler
+    )(params)(dispatch)
+        .then(() => {
+            history.push(`/app/summits/${currentSummit.id}/events/${entity.id}`);
+            dispatch(stopLoading());
         });
 }
 

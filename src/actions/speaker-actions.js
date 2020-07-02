@@ -38,6 +38,7 @@ export const UPDATE_SPEAKER         = 'UPDATE_SPEAKER';
 export const SPEAKER_UPDATED        = 'SPEAKER_UPDATED';
 export const SPEAKER_ADDED          = 'SPEAKER_ADDED';
 export const PIC_ATTACHED           = 'PIC_ATTACHED';
+export const BIG_PIC_ATTACHED       = 'BIG_PIC_ATTACHED';
 export const MERGE_SPEAKERS         = 'MERGE_SPEAKERS';
 export const SPEAKER_MERGED         = 'SPEAKER_MERGED';
 export const REQUEST_ATTENDANCES    = 'REQUEST_ATTENDANCES';
@@ -233,13 +234,15 @@ export const saveSpeaker = (entity) => (dispatch, getState) => {
     }
 }
 
-export const attachPicture = (entity, file) => (dispatch, getState) => {
+export const attachPicture = (entity, file, picAttr) => (dispatch, getState) => {
     let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
     let normalizedEntity = normalizeEntity(entity);
+
+    let uploadFile = picAttr === 'profile' ? uploadProfilePic : uploadBigPic;
 
     if (entity.id) {
         dispatch(uploadFile(entity, file));
@@ -259,7 +262,7 @@ export const attachPicture = (entity, file) => (dispatch, getState) => {
     }
 }
 
-const uploadFile = (entity, file) => (dispatch, getState) => {
+const uploadProfilePic = (entity, file) => (dispatch, getState) => {
     let { loggedUserState } = getState();
     let { accessToken }     = loggedUserState;
 
@@ -275,7 +278,25 @@ const uploadFile = (entity, file) => (dispatch, getState) => {
             dispatch(stopLoading());
             history.push(`/app/speakers/${entity.id}`)
         });
-}
+};
+
+const uploadBigPic = (entity, file) => (dispatch, getState) => {
+    let { loggedUserState } = getState();
+    let { accessToken }     = loggedUserState;
+
+    postRequest(
+        null,
+        createAction(BIG_PIC_ATTACHED),
+        `${window.API_BASE_URL}/api/v1/speakers/${entity.id}/big-photo?access_token=${accessToken}`,
+        file,
+        authErrorHandler,
+        {pic: entity.pic}
+    )({})(dispatch)
+        .then(() => {
+            dispatch(stopLoading());
+            history.push(`/app/speakers/${entity.id}`)
+        });
+};
 
 const normalizeEntity = (entity) => {
     let normalizedEntity = {...entity};

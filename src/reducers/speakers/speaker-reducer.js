@@ -18,7 +18,8 @@ import
     UPDATE_SPEAKER,
     SPEAKER_UPDATED,
     SPEAKER_ADDED,
-    PIC_ATTACHED
+    PIC_ATTACHED,
+    BIG_PIC_ATTACHED
 } from '../../actions/speaker-actions';
 
 import { AFFILIATION_ADDED, AFFILIATION_DELETED } from '../../actions/member-actions'
@@ -36,6 +37,7 @@ export const DEFAULT_ENTITY = {
     irc: '',
     bio: '',
     pic: '',
+    big_pic: '',
     all_presentations: [],
     registration_codes: [],
     summit_assistances: [],
@@ -119,7 +121,11 @@ const speakerReducer = (state = DEFAULT_STATE, action) => {
         break;
         case PIC_ATTACHED: {
             let pic = state.entity.pic + '?' + new Date().getTime();
-            return {...state, entity: {...state.entity, pic: pic} };;
+            return {...state, entity: {...state.entity, pic: pic} };
+        }
+        case BIG_PIC_ATTACHED: {
+            let pic = state.entity.pic + '?' + new Date().getTime();
+            return {...state, entity: {...state.entity, big_pic: pic} };
         }
         case SPEAKER_UPDATED: {
             return state;

@@ -48,6 +48,7 @@ class EventForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleMaterialEdit = this.handleMaterialEdit.bind(this);
         this.handleNewMaterial = this.handleNewMaterial.bind(this);
+        this.handleUploadPic = this.handleUploadPic.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -97,13 +98,13 @@ class EventForm extends React.Component {
         let formData = new FormData();
         formData.append('file', file);
 
-        this.props.onAttach(entity, formData);
+        this.props.onAttach(entity, formData, 'file');
     }
 
-    handleRemoveFile(ev) {
+    handleRemoveFile(attr) {
         let entity = {...this.state.entity};
 
-        entity.attachment = '';
+        entity[attr] = '';
         this.setState({entity:entity});
     }
 
@@ -190,6 +191,17 @@ class EventForm extends React.Component {
 
         let {currentSummit, entity, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/events/${entity.id}/materials/new`);
+    }
+
+    handleUploadPic(file) {
+        let entity = {...this.state.entity};
+
+        entity.image = file.preview;
+        this.setState({entity:entity});
+
+        let formData = new FormData();
+        formData.append('file', file);
+        this.props.onAttach(this.state.entity, formData, 'profile')
     }
 
     render() {
@@ -473,7 +485,7 @@ class EventForm extends React.Component {
                         <UploadInput
                             value={entity.attachment}
                             handleUpload={this.handleUploadFile}
-                            handleRemove={this.handleRemoveFile}
+                            handleRemove={ev => this.handleRemoveFile('attachment')}
                             className="dropzone col-md-6"
                             multiple={this.props.multi}
                             accept="image/*"
@@ -481,6 +493,19 @@ class EventForm extends React.Component {
                     </div>
                 </div>
                 }
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <label> {T.translate("edit_event.pic")} </label>
+                        <UploadInput
+                            value={entity.image}
+                            handleUpload={this.handleUploadPic}
+                            handleRemove={ev => this.handleRemoveFile('image')}
+                            className="dropzone col-md-6"
+                            multiple={false}
+                            accept="image/*"
+                        />
+                    </div>
+                </div>
                 <Panel show={showSection == 'live'} title={T.translate("edit_event.live")}
                        handleClick={this.toggleSection.bind(this, 'live')}>
                     <div className="row form-group">

@@ -33,7 +33,8 @@ class SpeakerForm extends React.Component {
         this.getAttendance = this.getAttendance.bind(this);
         this.getPromocodes = this.getPromocodes.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        this.handleUploadFile = this.handleUploadFile.bind(this);
+        this.handleUploadPic = this.handleUploadPic.bind(this);
+        this.handleUploadBigPic = this.handleUploadBigPic.bind(this);
         this.handleRemoveFile = this.handleRemoveFile.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.toggleSummit = this.toggleSummit.bind(this);
@@ -72,21 +73,26 @@ class SpeakerForm extends React.Component {
         this.setState({entity: entity, errors: errors});
     }
 
-    handleUploadFile(file) {
+    handleUploadPic(file) {
         let formData = new FormData();
         formData.append('file', file);
-        this.props.onAttach(this.state.entity, formData)
+        this.props.onAttach(this.state.entity, formData, 'profile')
     }
 
-    handleRemoveFile(ev) {
+    handleUploadBigPic(file) {
+        let formData = new FormData();
+        formData.append('file', file);
+        this.props.onAttach(this.state.entity, formData, 'big')
+    }
+
+    handleRemoveFile(picAttr) {
         let entity = {...this.state.entity};
 
-        entity.attachment = '';
+        entity[picAttr] = '';
         this.setState({entity:entity});
     }
 
     handleSubmit(publish, ev) {
-        let entity = {...this.state.entity};
         ev.preventDefault();
 
         this.props.onSubmit(this.state.entity);
@@ -283,12 +289,23 @@ class SpeakerForm extends React.Component {
                 </div>
                 }
                 <div className="row form-group">
-                    <div className="col-md-12">
+                    <div className="col-md-6">
                         <label> {T.translate("edit_speaker.profile_pic")} </label>
                         <UploadInput
                             value={entity.pic}
-                            handleUpload={this.handleUploadFile}
-                            handleRemove={this.handleRemoveFile}
+                            handleUpload={this.handleUploadPic}
+                            handleRemove={ev => this.handleRemoveFile('pic')}
+                            className="dropzone col-md-6"
+                            multiple={false}
+                            accept="image/*"
+                        />
+                    </div>
+                    <div className="col-md-6">
+                        <label> {T.translate("edit_speaker.big_pic")} </label>
+                        <UploadInput
+                            value={entity.big_pic}
+                            handleUpload={this.handleUploadBigPic}
+                            handleRemove={ev => this.handleRemoveFile('big_pic')}
                             className="dropzone col-md-6"
                             multiple={false}
                             accept="image/*"
