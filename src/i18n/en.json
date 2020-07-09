@@ -317,6 +317,7 @@
     "streaming_url_info"  : "Streaming URL could be a HLS/DASH feed (.m3u8/.mpd)",
     "meeting_url_info"    : "Meeting URL could be a Zoom, Jitsy, or Google Meet",
     "etherpad_link"       : "EtherPad URL",
+    "selection_plan"      : "Selection Plan",
     "placeholders": {
       "select_venue"        : "Select a Summit Venue ...",
       "start_date"          : "Start Date",
@@ -324,7 +325,8 @@
       "select_event_type"   : "Select an Event Type ...",
       "select_track"        : "Select a Track ...",
       "select_level"        : "Select a Level ...",
-      "select_rsvp_template": "Select a Template ..."
+      "select_rsvp_template": "Select a Template ...",
+      "select_selection_plan" : "Select a Selection Plan ..."
     }
   },
   "edit_event_material": {

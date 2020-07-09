@@ -31,7 +31,6 @@ import {
 } from 'openstack-uicore-foundation/lib/components'
 
 
-
 class EventForm extends React.Component {
     constructor(props) {
         super(props);
@@ -206,7 +205,7 @@ class EventForm extends React.Component {
 
     render() {
         let {entity, showSection} = this.state;
-        let { currentSummit, levelOpts, typeOpts, trackOpts, locationOpts, rsvpTemplateOpts, history } = this.props;
+        let { currentSummit, levelOpts, typeOpts, trackOpts, locationOpts, rsvpTemplateOpts, selectionPlansOpts, history } = this.props;
 
         let event_types_ddl = typeOpts.map(
             t => {
@@ -231,6 +230,8 @@ class EventForm extends React.Component {
         ];
 
         let levels_ddl = levelOpts.map(l => ({label: l, value: l}));
+
+        let selection_plans_ddl = selectionPlansOpts.map(sp => ({label: sp.name, value: sp.id}));
 
         let rsvp_templates_ddl = rsvpTemplateOpts.map(
             t => {
@@ -397,6 +398,20 @@ class EventForm extends React.Component {
                     </div>
                     }
                 </div>
+                {this.isEventType('PresentationType') &&
+                <div className="row form-group">
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_event.selection_plan")} </label>
+                    <Dropdown
+                        id="selection_plan_id"
+                        value={entity.selection_plan_id}
+                        onChange={this.handleChange}
+                        placeholder={T.translate("edit_event.placeholders.select_selection_plan")}
+                        options={selection_plans_ddl}
+                    />
+                    </div>
+                </div>
+                }
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_event.tags")} </label>
