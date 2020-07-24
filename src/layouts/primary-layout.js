@@ -23,6 +23,7 @@ import SummitDirectoryPage from '../pages/summits/summit-directory-page';
 import SpeakerLayout from './speaker-layout';
 import EmailLayout from "./email-layout";
 import AdminAccessLayout from "./admin-access-layout";
+import MediaFileTypeLayout from "./media-file-type-layout";
 
 
 class PrimaryLayout extends React.Component {
@@ -49,6 +50,7 @@ class PrimaryLayout extends React.Component {
                         <Route path="/app/speakers" component={SpeakerLayout}/>
                         <Route path={"/app/emails"} component={EmailLayout}/>
                         <Route path={"/app/admin-access"} component={AdminAccessLayout}/>
+                        <Route path={"/app/media-file-types"} component={MediaFileTypeLayout}/>
                         <Route path="/app/summits" component={SummitLayout} />
                         <Route render={props => (<Redirect to="/app/directory"/>)}/>
                     </Switch>

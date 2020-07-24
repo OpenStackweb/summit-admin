@@ -119,7 +119,9 @@
     "summitdocs"              : "Summit Docs",
     "email_flow_events"       : "Email Events",
     "admin_access"            : "Admin Access Groups",
-    "registration_invitation_list": "Registration Invitations"
+    "registration_invitation_list": "Registration Invitations",
+    "media_file_types"        : "Media File Types",
+    "media_uploads"           : "Media Upload Types"
   },
   "schedule": {
     "schedule"                              : "Schedule",
@@ -1423,6 +1425,39 @@
     "resend_non_accepted_invitations": "Resend non Accepted",
     "show_non_accepted": "Show non accepted",
     "resend_done" : "Emails sent successfully."
+  },
+  "media_file_type": {
+    "media_file_types"        : "Media File Types",
+    "media_file_type"         : "Media File Type",
+    "media_file_type_list"    : "Media File Type List",
+    "add"                     : "Add Media File Type",
+    "no_results"              : "No items found for this search criteria.",
+    "id"                      : "Id",
+    "name"                    : "Name",
+    "description"             : "Description",
+    "allowed_extensions_input": "Allowed Extensions (comma separated: PDF,DOC,etc)",
+    "allowed_extensions"      : "Allowed Extensions",
+    "delete_warning"          : "Are you sure you want to delete media file type ",
+    "saved"                   : "Media File Type saved successfully.",
+    "created"                 : "Media File Type created successfully.",
+    "placeholders": {
+      "search" : "Search types by name"
+    }
+  },
+  "media_upload": {
+    "media_uploads"        : "Media Upload Types",
+    "media_upload"         : "Media Upload Type",
+    "media_upload_list"    : "Media Upload Type List",
+    "add"                     : "Add Media Upload Type",
+    "no_results"              : "No items found for this search criteria.",
+    "id"                      : "Id",
+    "name"                    : "Name",
+    "description"             : "Description",
+    "delete_warning"          : "Are you sure you want to delete media media type ",
+    "saved"                   : "Media Upload Type saved successfully.",
+    "created"                 : "Media Upload Type created successfully.",
+    "placeholders": {
+      "search" : "Search types by name"
+    }
   }
-
 }

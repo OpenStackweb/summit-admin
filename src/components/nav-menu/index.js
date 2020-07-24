@@ -133,6 +133,7 @@ class NavMenu extends React.Component {
                 ]
             },
             {name: 'admin_access', iconClass: 'fa-arrow-circle-o-right', linkUrl: 'admin-access', accessRoute: 'admin-access'},
+            {name: 'media_file_types', iconClass: 'fa-file-text-o', linkUrl: 'media-file-types', accessRoute: 'admin-access'},
         ];
 
         const summitItems = [
@@ -144,7 +145,8 @@ class NavMenu extends React.Component {
                     {name:'schedule', linkUrl:`summits/${summit_id}/events/schedule`},
                     {name:'event_types', linkUrl:`summits/${summit_id}/event-types`},
                     {name:'event_categories', linkUrl:`summits/${summit_id}/event-categories`},
-                    {name:'event_category_groups', linkUrl:`summits/${summit_id}/event-category-groups`}
+                    {name:'event_category_groups', linkUrl:`summits/${summit_id}/event-category-groups`},
+                    {name:'media_uploads', linkUrl:`summits/${summit_id}/media-uploads`}
                 ]
             },
             {name: 'attendees', iconClass: 'fa-users', linkUrl:`summits/${summit_id}/attendees`, accessRoute: 'attendees' },

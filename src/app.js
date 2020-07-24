@@ -41,9 +41,9 @@ if (language.length > 2) {
     language = language.split("_")[0];
 }
 
-//console.log(`user language is ${language}`);
+// DISABLED language - ONLY ENGLISH
 
-T.setTexts(require(`./i18n/${language}.json`));
+T.setTexts(require(`./i18n/en.json`));
 
 // move all env var to global scope so ui core has access to this
 

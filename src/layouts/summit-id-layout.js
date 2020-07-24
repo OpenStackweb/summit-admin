@@ -55,6 +55,7 @@ import PaymentProfileLayout from "./payment-profile-layout";
 import SummitDocsLayout from "./summitdocs-layout";
 import EmailFlowEventLayout from "./email-flow-event-layout";
 import RegistrationInvitationsListPage from "../pages/tickets/registration-invitations-list-page";
+import MediaUploadLayout from "./media-upload-layout";
 
 class SummitIdLayout extends React.Component {
 
@@ -128,6 +129,7 @@ class SummitIdLayout extends React.Component {
                     <Route path={`${match.url}/marketing`} component={MarketingLayout}/>
                     <Route path={`${match.url}/summitdocs`} component={SummitDocsLayout}/>
                     <Route path={`${match.url}/email-flow-events`} component={EmailFlowEventLayout}/>
+                    <Route path={`${match.url}/media-uploads`} component={MediaUploadLayout}/>
                     <Route component={NoMatchPage}/>
                 </Switch>
             </div>

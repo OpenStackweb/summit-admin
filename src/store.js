@@ -92,6 +92,10 @@ import emailFlowEventReducer from './reducers/email_flow_events/email-flows-even
 import RegistrationInvitationListReducer from './reducers/tickets/registration-invitation-list-reducer';
 import adminAccessListReducer from './reducers/admin_access/admin-access-list-reducer';
 import adminAccessReducer from './reducers/admin_access/admin-access-reducer';
+import mediaFileTypeListReducer from './reducers/media_file_types/media-file-type-list-reducer';
+import mediaFileTypeReducer from './reducers/media_file_types/media-file-type-reducer';
+import mediaUploadListReducer from "./reducers/media_uploads/media-uploads-list-reducer";
+import mediaUploadReducer from "./reducers/media_uploads/media-upload-reducer";
 
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
@@ -184,6 +188,10 @@ const reducers = persistCombineReducers(config, {
     RegistrationInvitationListState: RegistrationInvitationListReducer,
     adminAccessListState: adminAccessListReducer,
     adminAccessState: adminAccessReducer,
+    mediaFileTypeListState: mediaFileTypeListReducer,
+    mediaFileTypeState: mediaFileTypeReducer,
+    mediaUploadListState: mediaUploadListReducer,
+    mediaUploadState: mediaUploadReducer
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
