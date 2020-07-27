@@ -110,7 +110,6 @@ export const getUnScheduleEventsPage =
 
 export const publishEvent = (event, day, startTime, minutes) =>
     (dispatch, getState) => {
-
         let { loggedUserState, currentSummitState, currentScheduleBuilderState } = getState();
         let { accessToken }     = loggedUserState;
         let { currentSummit }   = currentSummitState;
@@ -146,8 +145,10 @@ export const publishEvent = (event, day, startTime, minutes) =>
             }
         )
         .catch(() => {
+
                 if(event.is_published)
                     dispatch(createAction(ERROR_PUBLISH_EVENT)({event}));
+                dispatch(stopLoading());
         });
 
 }

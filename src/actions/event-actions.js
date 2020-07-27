@@ -328,15 +328,14 @@ export const checkProximityEvents = (event) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
-
     let success_message = {
         title: T.translate("general.done"),
         html: T.translate("edit_event.saved_and_published"),
         type: 'success'
     };
 
-    if (event.speakers.length == 0 && (!event.moderator_speaker_id)) {
-        dispatch(showMessage(success_message))
+    if (!event.hasOwnProperty('speakers') || ( event.speakers.length === 0 && (!event.moderator_speaker_id))) {
+        dispatch(showMessage(success_message));
         return;
     }
 
