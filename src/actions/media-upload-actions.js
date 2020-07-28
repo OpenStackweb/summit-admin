@@ -22,7 +22,10 @@ import {
     startLoading,
     showMessage,
     showSuccessMessage,
-    authErrorHandler, escapeFilterValue,
+    authErrorHandler,
+    escapeFilterValue,
+    fetchResponseHandler,
+    fetchErrorHandler,
 } from 'openstack-uicore-foundation/lib/methods';
 
 export const REQUEST_MEDIA_UPLOADS      = 'REQUEST_MEDIA_UPLOADS';
@@ -33,6 +36,9 @@ export const UPDATE_MEDIA_UPLOAD         = 'UPDATE_MEDIA_UPLOAD';
 export const MEDIA_UPLOAD_UPDATED        = 'MEDIA_UPLOAD_UPDATED';
 export const MEDIA_UPLOAD_ADDED          = 'MEDIA_UPLOAD_ADDED';
 export const MEDIA_UPLOAD_DELETED        = 'MEDIA_UPLOAD_DELETED';
+export const MEDIA_UPLOADS_COPIED        = 'MEDIA_UPLOADS_COPIED';
+export const MEDIA_UPLOAD_LINKED         = 'MEDIA_UPLOAD_LINKED';
+export const MEDIA_UPLOAD_UNLINKED       = 'MEDIA_UPLOAD_UNLINKED';
 
 
 export const getMediaUploads = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
@@ -98,6 +104,22 @@ export const getMediaUpload = (mediaUploadId) => (dispatch, getState) => {
     );
 };
 
+export const queryMediaUploads = _.debounce((summitId, input, callback) => {
+
+    let accessToken = window.accessToken;
+    input = escapeFilterValue(input);
+    let filter = encodeURIComponent(`name=@${input}`);
+
+    fetch(`${window.API_BASE_URL}/api/v1/summits/${summitId}/media-upload-types?filter=${filter}&order=name&access_token=${accessToken}&expand=type`)
+        .then(fetchResponseHandler)
+        .then((json) => {
+            let options = [...json.data];
+
+            callback(options);
+        })
+        .catch(fetchErrorHandler);
+}, 500);
+
 export const resetMediaUploadForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_MEDIA_UPLOAD_FORM)({}));
 };
@@ -152,7 +174,49 @@ export const saveMediaUpload = (entity, noAlert = false) => (dispatch, getState)
                 ));
             });
     }
-}
+};
+
+export const linkToPresentationType = (mediaUpload, presentationTypeId) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = { access_token : accessToken };
+
+    dispatch(startLoading());
+
+    putRequest(
+        null,
+        createAction(MEDIA_UPLOAD_LINKED)({mediaUpload}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/media-upload-types/${mediaUpload.id}/presentation-types/${presentationTypeId}`,
+        null,
+        authErrorHandler
+    )(params)(dispatch)
+        .then((payload) => {
+            dispatch(stopLoading());
+        });
+};
+
+export const unlinkFromPresentationType = (mediaUploadId, presentationTypeId) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = { access_token : accessToken };
+
+    dispatch(startLoading());
+
+    deleteRequest(
+        null,
+        createAction(MEDIA_UPLOAD_UNLINKED)({mediaUploadId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/media-upload-types/${mediaUploadId}/presentation-types/${presentationTypeId}`,
+        null,
+        authErrorHandler
+    )(params)(dispatch)
+        .then((payload) => {
+            dispatch(stopLoading());
+        });
+};
 
 export const deleteMediaUpload = (mediaUploadId) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
@@ -173,6 +237,27 @@ export const deleteMediaUpload = (mediaUploadId) => (dispatch, getState) => {
             dispatch(stopLoading());
         }
     );
+};
+
+export const copyMediaUploads = (summitId) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    let params = { access_token : accessToken };
+
+    putRequest(
+        null,
+        createAction(MEDIA_UPLOADS_COPIED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/media-upload-types/clone/${summitId}`,
+        null,
+        authErrorHandler
+    )(params)(dispatch)
+        .then((payload) => {
+            dispatch(stopLoading());
+        });
 };
 
 

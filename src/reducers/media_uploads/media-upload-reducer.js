@@ -19,6 +19,8 @@ import
     MEDIA_UPLOAD_ADDED,
 } from '../../actions/media-upload-actions';
 
+import {RECEIVE_ALL_MEDIA_FILE_TYPES} from "../../actions/media-file-type-actions";
+
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
@@ -26,11 +28,17 @@ export const DEFAULT_ENTITY = {
     id                  : 0,
     name                : '',
     description         : '',
-    allowed_extensions  : '',
+    type_id             : 0,
+    max_size            : 0,
+    is_mandatory        : false,
+    private_storage_type: 'None',
+    public_storage_type : 'None',
+    presentation_types  : []
 };
 
 const DEFAULT_STATE = {
     entity          : DEFAULT_ENTITY,
+    media_file_types: [],
     errors          : {},
 };
 
@@ -49,6 +57,18 @@ const mediaUploadReducer = (state = DEFAULT_STATE, action) => {
         case SET_CURRENT_SUMMIT:
         case RESET_MEDIA_UPLOAD_FORM: {
             return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
+        }
+        break;
+        case RECEIVE_ALL_MEDIA_FILE_TYPES: {
+            let {data} = payload.response;
+            let media_file_types = data.map(mft => {
+                return {
+                    value: mft.id,
+                    label: mft.name,
+                };
+            });
+
+            return {...state,  media_file_types };
         }
         break;
         case UPDATE_MEDIA_UPLOAD: {

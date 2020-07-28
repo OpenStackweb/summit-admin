@@ -114,6 +114,15 @@ class EventCategoryGroupForm extends React.Component {
         return class_name[flag];
     }
 
+    queryMediaUploadTypes(input, callback) {
+        let {currentSummit} = this.props;
+        let features = [];
+
+        features = currentSummit.badge_features.filter(f => f.name.toLowerCase().indexOf(input.toLowerCase()) !== -1)
+
+        callback(features);
+    }
+
     render() {
         let {entity} = this.state;
         let { currentSummit, allClasses } = this.props;

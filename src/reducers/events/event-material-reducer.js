@@ -34,7 +34,8 @@ export const DEFAULT_ENTITY = {
     file                        : null,
     file_link                   : '',
     has_file                    : false,
-    youtube_id                  : ''
+    youtube_id                  : '',
+    media_upload_type_id        : 0,
 }
 
 const DEFAULT_STATE = {
@@ -62,9 +63,7 @@ const eventMaterialReducer = (state = DEFAULT_STATE, action) => {
         case UPDATE_EVENT_MATERIAL: {
             let entity = {...payload};
 
-            if (entity.link) {
-                entity.file_link = '';
-            }
+            if (entity.link) entity.file_link = '';
 
             return {...state,  entity: entity, errors: {} };
         }
@@ -78,11 +77,11 @@ const eventMaterialReducer = (state = DEFAULT_STATE, action) => {
                 }
             }
 
+            entity.file_link = '';
+
             if (entity.has_file) {
                 entity.file_link = entity.link;
                 entity.link = '';
-            } else {
-                entity.file_link = '';
             }
 
             return {...state, entity: {...DEFAULT_ENTITY, ...entity} };

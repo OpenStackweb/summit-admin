@@ -19,6 +19,8 @@ import
     EVENT_TYPE_ADDED
 } from '../../actions/event-type-actions';
 
+import { MEDIA_UPLOAD_UNLINKED, MEDIA_UPLOAD_LINKED } from "../../actions/media-upload-actions";
+
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
@@ -41,6 +43,7 @@ export const DEFAULT_ENTITY = {
     min_moderators              : 0,
     max_moderators              : 0,
     allows_attachment           : false,
+    allowed_media_upload_types  : []
 }
 
 const DEFAULT_STATE = {
@@ -85,10 +88,32 @@ const eventTypeReducer = (state = DEFAULT_STATE, action) => {
                     break;
                 case 'PresentationType':
                     entity.class_name = 'PRESENTATION_TYPE';
+                    entity.allowed_media_upload_types = entity.allowed_media_upload_types
+                        .map(mu => ({
+                            ...mu,
+                            mandatory_text: mu.is_mandatory ? 'Yes' : 'No',
+                            type_name: mu.type.name
+                        }));
                     break;
             }
 
             return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
+        }
+        break;
+        case MEDIA_UPLOAD_LINKED: {
+            let {mediaUpload} = payload;
+
+            mediaUpload.mandatory_text = mediaUpload.is_mandatory ? 'Yes' : 'No';
+            mediaUpload.type_name = mediaUpload.type.name;
+
+            const newMediaUploads = [...state.entity.allowed_media_upload_types, mediaUpload];
+            return {...state, entity: {...state.entity, allowed_media_upload_types: newMediaUploads} };
+        }
+        break;
+        case MEDIA_UPLOAD_UNLINKED: {
+            let {mediaUploadId} = payload;
+            const newMediaUploads = state.entity.allowed_media_upload_types.filter(mu => mu.id !== mediaUploadId);
+            return {...state, entity: {...state.entity, allowed_media_upload_types: newMediaUploads} };
         }
         break;
         case VALIDATE: {

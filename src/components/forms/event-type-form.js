@@ -14,8 +14,9 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { Dropdown, Input } from 'openstack-uicore-foundation/lib/components'
-import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
+import {Dropdown, Input, SimpleLinkList} from 'openstack-uicore-foundation/lib/components'
+import {findElementPos, queryGroups} from 'openstack-uicore-foundation/lib/methods'
+import {queryTemplates} from "../../actions/email-actions";
 
 
 class EventTypeForm extends React.Component {
@@ -29,6 +30,8 @@ class EventTypeForm extends React.Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleMediaUploadUnLink = this.handleMediaUploadUnLink.bind(this);
+        this.handleMediaUploadLink = this.handleMediaUploadLink.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -80,10 +83,38 @@ class EventTypeForm extends React.Component {
         return '';
     }
 
+    handleMediaUploadLink(value) {
+        let {entity} = this.state;
+        this.props.onMediaUploadLink(value, entity.id);
+    }
+
+    handleMediaUploadUnLink(valueId) {
+        let {entity} = this.state;
+        this.props.onMediaUploadUnLink(valueId, entity.id);
+    }
+
     render() {
         let {entity} = this.state;
-        let { currentSummit } = this.props;
+        let { getMediaUploads } = this.props;
         let event_types_ddl = [{label: 'Presentation', value: 'PRESENTATION_TYPE'}, {label: 'Event', value: 'EVENT_TYPE'}];
+
+        let allowedGroupsColumns = [
+            { columnKey: 'name', value: T.translate("general.name") },
+            { columnKey: 'type_name', value: T.translate("general.type") },
+            { columnKey: 'mandatory_text', value: T.translate("media_upload.is_mandatory") },
+            { columnKey: 'max_size', value: T.translate("media_upload.max_size_simple") },
+        ];
+
+        let allowedGroupsOptions = {
+            title: T.translate("edit_event_type.media_upload_types"),
+            valueKey: "id",
+            labelKey: "name",
+            actions: {
+                search: getMediaUploads,
+                delete: { onClick: this.handleMediaUploadUnLink },
+                add: { onClick: this.handleMediaUploadLink }
+            }
+        };
 
         return (
             <form className="event-type-form">
@@ -281,6 +312,21 @@ class EventTypeForm extends React.Component {
                             />
                         </div>
                     </div>
+                    {entity.id !== 0 &&
+                    <>
+                        <hr/>
+                        <div className="row form-group">
+                            <div className="col-md-12">
+                                <SimpleLinkList
+                                    values={entity.allowed_media_upload_types}
+                                    columns={allowedGroupsColumns}
+                                    options={allowedGroupsOptions}
+                                />
+                            </div>
+                        </div>
+                        <hr/>
+                    </>
+                    }
                 </div>
                 }
 

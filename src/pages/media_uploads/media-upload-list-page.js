@@ -16,9 +16,9 @@ import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import Swal from "sweetalert2";
 import { Pagination } from 'react-bootstrap';
-import {FreeTextSearch, Table} from 'openstack-uicore-foundation/lib/components';
+import {FreeTextSearch, SummitDropdown, Table} from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getMediaUploads, deleteMediaUpload } from "../../actions/media-upload-actions";
+import { getMediaUploads, deleteMediaUpload, copyMediaUploads } from "../../actions/media-upload-actions";
 
 class MediaUploadListPage extends React.Component {
 
@@ -31,6 +31,7 @@ class MediaUploadListPage extends React.Component {
         this.handleSearch = this.handleSearch.bind(this);
         this.handleNewMediaUpload = this.handleNewMediaUpload.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
+        this.handleCopyMediaUploads = this.handleCopyMediaUploads.bind(this);
 
         this.state = {
         }
@@ -41,8 +42,8 @@ class MediaUploadListPage extends React.Component {
     }
 
     handleEdit(media_upload_id) {
-        let {history} = this.props;
-        history.push(`/app/media-uploads/${media_upload_id}`);
+        let {history, currentSummit} = this.props;
+        history.push(`/app/summits/${currentSummit.id}/media-uploads/${media_upload_id}`);
     }
 
     handlePageChange(page) {
@@ -61,10 +62,10 @@ class MediaUploadListPage extends React.Component {
     }
 
     handleNewMediaUpload(ev) {
-        let {history} = this.props;
+        let {history, currentSummit} = this.props;
         ev.preventDefault();
 
-        history.push(`/app/media-uploads/new`);
+        history.push(`/app/summits/${currentSummit.id}/media-uploads/new`);
     }
 
     handleDelete(mediaUploadId) {
@@ -85,10 +86,14 @@ class MediaUploadListPage extends React.Component {
         });
     }
 
+    handleCopyMediaUploads(fromSummitId) {
+        this.props.copyMediaUploads(fromSummitId);
+    }
+
     canEdit = (item) => !item.is_system_defined;
 
     render(){
-        let {media_uploads, lastPage, currentPage, term, order, orderDir} = this.props;
+        let {media_uploads, summits, lastPage, currentPage, term, order, orderDir} = this.props;
 
         let columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
@@ -120,6 +125,11 @@ class MediaUploadListPage extends React.Component {
                         <button className="btn btn-primary right-space" onClick={this.handleNewMediaUpload}>
                             {T.translate("media_upload.add")}
                         </button>
+                        <SummitDropdown
+                            summits={summits}
+                            onClick={this.handleCopyMediaUploads}
+                            actionLabel={T.translate("media_upload.copy_media_uploads")}
+                        />
                     </div>
                 </div>
 
@@ -156,7 +166,8 @@ class MediaUploadListPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ directoryState, mediaUploadListState }) => ({
+const mapStateToProps = ({ directoryState, currentSummitState, mediaUploadListState }) => ({
+    currentSummit   : currentSummitState.currentSummit,
     summits         : directoryState.summits,
     ...mediaUploadListState
 })

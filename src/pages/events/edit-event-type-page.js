@@ -19,11 +19,15 @@ import EventTypeForm from '../../components/forms/event-type-form';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getEventType, resetEventTypeForm, saveEventType } from "../../actions/event-type-actions";
 import '../../styles/edit-event-type-page.less';
+import {queryMediaUploads, linkToPresentationType, unlinkFromPresentationType} from "../../actions/media-upload-actions";
 
 class EditEventTypePage extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.getMediaUploads = this.getMediaUploads.bind(this);
+
     }
 
     componentWillMount () {
@@ -49,6 +53,16 @@ class EditEventTypePage extends React.Component {
         }
     }
 
+    getMediaUploads (input, callback) {
+        let { currentSummit } = this.props;
+
+        if (!input) {
+            return Promise.resolve({ options: [] });
+        }
+
+        queryMediaUploads(currentSummit.id, input, callback);
+    }
+
     render(){
         let {currentSummit, entity, errors, match} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
@@ -56,7 +70,7 @@ class EditEventTypePage extends React.Component {
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("edit_event_type.event_type")}</h3>
                 <hr/>
                 {currentSummit &&
@@ -65,6 +79,9 @@ class EditEventTypePage extends React.Component {
                     entity={entity}
                     errors={errors}
                     onSubmit={this.props.saveEventType}
+                    getMediaUploads={this.getMediaUploads}
+                    onMediaUploadLink={this.props.linkToPresentationType}
+                    onMediaUploadUnLink={this.props.unlinkFromPresentationType}
                 />
                 }
             </div>
@@ -85,5 +102,7 @@ export default connect (
         getEventType,
         resetEventTypeForm,
         saveEventType,
+        linkToPresentationType,
+        unlinkFromPresentationType
     }
 )(EditEventTypePage);

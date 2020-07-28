@@ -75,7 +75,7 @@ export const saveEventMaterial = (entity) => (dispatch, getState) => {
     let { currentSummit }   = currentSummitState;
     let eventId             = currentSummitEventState.entity.id
 
-    let slug = entity.class_name == 'PresentationLink' ? 'links' : (entity.class_name == 'PresentationVideo' ? 'videos' : 'slides');
+    let slug = entity.class_name === 'PresentationLink' ? 'links' : (entity.class_name === 'PresentationVideo' ? 'videos' : 'slides');
 
     dispatch(startLoading());
 
@@ -120,7 +120,7 @@ export const saveEventMaterial = (entity) => (dispatch, getState) => {
     }
 }
 
-export const saveSlide = (entity, file) => (dispatch, getState) => {
+export const saveEventMaterialWithFile = (entity, file, slug) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState, currentSummitEventState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
@@ -139,7 +139,7 @@ export const saveSlide = (entity, file) => (dispatch, getState) => {
         putFile(
             createAction(UPDATE_EVENT_MATERIAL),
             createAction(EVENT_MATERIAL_UPDATED),
-            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/presentations/${eventId}/slides/${entity.id}`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/presentations/${eventId}/${slug}/${entity.id}`,
             file,
             normalizedEntity,
             authErrorHandler,
@@ -160,7 +160,7 @@ export const saveSlide = (entity, file) => (dispatch, getState) => {
         postFile(
             createAction(UPDATE_EVENT_MATERIAL),
             createAction(EVENT_MATERIAL_ADDED),
-            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/presentations/${eventId}/slides`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/presentations/${eventId}/${slug}`,
             file,
             normalizedEntity,
             authErrorHandler,
@@ -175,6 +175,7 @@ export const saveSlide = (entity, file) => (dispatch, getState) => {
     }
 }
 
+
 export const deleteEventMaterial = (eventMaterialId) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState, currentSummitEventState } = getState();
@@ -182,6 +183,7 @@ export const deleteEventMaterial = (eventMaterialId) => (dispatch, getState) => 
     let { currentSummit }   = currentSummitState;
     let event               = currentSummitEventState.entity;
     let material            = event.materials.find(m => m.id == eventMaterialId);
+    let slug = '';
 
     if (!material) {
         dispatch(stopLoading());
@@ -189,7 +191,21 @@ export const deleteEventMaterial = (eventMaterialId) => (dispatch, getState) => 
         return;
     }
 
-    let slug = material.class_name == 'PresentationLink' ? 'links' : (material.class_name == 'PresentationVideo' ? 'videos' : 'slides');
+    switch (material.class_name) {
+        case 'PresentationLink':
+            slug = 'links';
+            break;
+        case 'PresentationVideo':
+            slug = 'videos';
+            break;
+        case 'PresentationSlide':
+            slug = 'slides';
+            break;
+        case 'PresentationMediaUpload':
+            slug = 'media-uploads';
+            break;
+    }
+
 
     let params = {
         access_token : accessToken
@@ -212,11 +228,11 @@ export const deleteEventMaterial = (eventMaterialId) => (dispatch, getState) => 
 const normalizeEntity = (entity) => {
     let normalizedEntity = {...entity};
 
-    if (entity.class_name != 'PresentationVideo') {
+    if (entity.class_name !== 'PresentationVideo') {
         delete(normalizedEntity['youtube_id']);
     }
 
-    if (entity.class_name == 'PresentationVideo') {
+    if (entity.class_name === 'PresentationVideo') {
         delete(normalizedEntity['link']);
     }
 

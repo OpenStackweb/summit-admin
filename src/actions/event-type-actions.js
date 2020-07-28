@@ -69,7 +69,7 @@ export const getEventType = (eventTypeId) => (dispatch, getState) => {
     dispatch(startLoading());
 
     let params = {
-        expand       : '',
+        expand       : 'allowed_media_upload_types, allowed_media_upload_types.type',
         access_token : accessToken,
     };
 

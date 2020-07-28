@@ -15,8 +15,9 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
-import { SimpleForm } from 'openstack-uicore-foundation/lib/components';
-import { getMediaUpload, resetMediaUploadForm, saveMediaUpload } from "../../actions/media-upload-actions";
+import MediaUploadForm from '../../components/forms/media-upload-form';
+import { getMediaUpload, resetMediaUploadForm, saveMediaUpload, queryMediaUploads } from "../../actions/media-upload-actions";
+import { getAllMediaFileTypes } from '../../actions/media-file-type-actions';
 
 //import '../../styles/edit-media-upload-page.less';
 
@@ -37,6 +38,8 @@ class EditMediaUploadPage extends React.Component {
         } else {
             this.props.getMediaUpload(mediaUploadId);
         }
+
+        this.props.getAllMediaFileTypes();
     }
 
     componentWillReceiveProps(newProps) {
@@ -53,42 +56,38 @@ class EditMediaUploadPage extends React.Component {
     }
 
     render(){
-        let {entity, errors, match} = this.props;
+        let {entity, errors, match, currentSummit, media_file_types} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
-
-        let fields = [
-            {type: 'text', name: 'name', label: T.translate("media_upload.name")},
-            {type: 'textarea', name: 'description', label: T.translate("media_upload.description")},
-            {type: 'textarea', name: 'allowed_extensions', label: T.translate("media_upload.allowed_extensions_input")},
-        ];
 
         return(
             <div className="container edit-media-uploads-page">
                 <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("media_upload.media_upload")}</h3>
                 <hr/>
-                <SimpleForm
+                <MediaUploadForm
                     entity={entity}
                     errors={errors}
-                    fields={fields}
+                    currentSummit={currentSummit}
+                    mediaFileTypes={media_file_types}
                     onSubmit={this.props.saveMediaUpload}
                 />
             </div>
-
         )
     }
 }
 
-const mapStateToProps = ({ mediaUploadState }) => ({
+const mapStateToProps = ({ mediaUploadState, currentSummitState }) => ({
+    currentSummit: currentSummitState.currentSummit,
     ...mediaUploadState
-})
+});
 
 export default connect (
     mapStateToProps,
     {
         getMediaUpload,
         resetMediaUploadForm,
-        saveMediaUpload
+        saveMediaUpload,
+        getAllMediaFileTypes
     }
 )(EditMediaUploadPage);

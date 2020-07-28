@@ -85,6 +85,7 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
             let links = [];
             let videos = [];
             let slides = [];
+            let media_uploads = [];
 
             for(var key in entity) {
                 if(entity.hasOwnProperty(key)) {
@@ -95,16 +96,36 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
             if (!entity.rsvp_external) entity.rsvp_link = null;
 
             if (entity.links) {
-                links = entity.links.map(l => ({...l, name: l.name ? l.name : l.link, display_on_site_label: l.display_on_site ? 'Yes' : 'No'}));
+                links = entity.links.map(l => ({
+                    ...l, name: l.name ? l.name : l.link,
+                    display_on_site_label: l.display_on_site ? 'Yes' : 'No',
+                }));
             }
             if (entity.videos) {
-                videos = entity.videos.map(v => ({...v, display_on_site_label: v.display_on_site ? 'Yes' : 'No'}));
+                videos = entity.videos.map(v => ({
+                    ...v,
+                    display_on_site_label: v.display_on_site ? 'Yes' : 'No',
+                }));
             }
             if (entity.slides) {
-                slides = entity.slides.map(s => ({...s, display_on_site_label: s.display_on_site ? 'Yes' : 'No'}));
+                slides = entity.slides.map(s => ({
+                    ...s,
+                    display_on_site_label: s.display_on_site ? 'Yes' : 'No',
+                }));
+            }
+            if (entity.media_uploads) {
+                media_uploads = entity.media_uploads.map(mu => {
+                    const type = entity.type.allowed_media_upload_types.find(amu => amu.id === mu.media_upload_type_id);
+                    return {
+                        ...mu,
+                        name: type.name,
+                        description: type.description,
+                        display_on_site_label: mu.display_on_site ? 'Yes' : 'No',
+                    };
+                });
             }
 
-            entity.materials = [...links, ...videos, ...slides];
+            entity.materials = [...media_uploads, ...links, ...videos, ...slides];
 
             return {...state, entity: {...state.entity, ...entity}, errors: {} };
         }
@@ -130,7 +151,14 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
         break;
         case EVENT_MATERIAL_ADDED: {
             let newMaterial = {...payload.response};
+            if (newMaterial.class_name === 'PresentationMediaUpload') {
+                const type = state.entity.type.allowed_media_upload_types.find(amu => amu.id === newMaterial.media_upload_type_id);
+                newMaterial.name = type.name;
+                newMaterial.description = type.description;
+            }
+
             newMaterial.display_on_site_label = (newMaterial.display_on_site) ? 'Yes' : 'No';
+
             let materials = [...state.entity.materials, newMaterial];
 
             return {...state, entity: {...state.entity, materials: materials}, errors: {} };
@@ -139,6 +167,15 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
         case EVENT_MATERIAL_UPDATED: {
             let newMaterial = {...payload.response};
             let oldMaterials = state.entity.materials.filter(m => m.id != newMaterial.id);
+
+            if (newMaterial.class_name === 'PresentationMediaUpload') {
+                const type = state.entity.type.allowed_media_upload_types.find(amu => amu.id === newMaterial.media_upload_type_id);
+                newMaterial.name = type.name;
+                newMaterial.description = type.description;
+            }
+
+            newMaterial.display_on_site_label = (newMaterial.display_on_site) ? 'Yes' : 'No';
+
             let materials = [...oldMaterials, newMaterial];
 
             return {...state, entity: {...state.entity, materials: materials}, errors: {} };

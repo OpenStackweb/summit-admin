@@ -25,8 +25,10 @@ import {
     authErrorHandler, escapeFilterValue,
 } from 'openstack-uicore-foundation/lib/methods';
 
-export const REQUEST_MEDIA_FILE_TYPES      = 'REQUEST_MEDIA_FILE_TYPES';
-export const RECEIVE_MEDIA_FILE_TYPES      = 'RECEIVE_MEDIA_FILE_TYPES';
+export const REQUEST_MEDIA_FILE_TYPES       = 'REQUEST_MEDIA_FILE_TYPES';
+export const RECEIVE_MEDIA_FILE_TYPES       = 'RECEIVE_MEDIA_FILE_TYPES';
+export const REQUEST_ALL_MEDIA_FILE_TYPES   = 'REQUEST_ALL_MEDIA_FILE_TYPES';
+export const RECEIVE_ALL_MEDIA_FILE_TYPES   = 'RECEIVE_ALL_MEDIA_FILE_TYPES';
 export const RECEIVE_MEDIA_FILE_TYPE        = 'RECEIVE_MEDIA_FILE_TYPE';
 export const RESET_MEDIA_FILE_TYPE_FORM     = 'RESET_MEDIA_FILE_TYPE_FORM';
 export const UPDATE_MEDIA_FILE_TYPE         = 'UPDATE_MEDIA_FILE_TYPE';
@@ -69,6 +71,30 @@ export const getMediaFileTypes = (term = null, page = 1, perPage = 10, order = '
         `${window.API_BASE_URL}/api/v1/summit-media-file-types`,
         authErrorHandler,
         {order, orderDir, term}
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const getAllMediaFileTypes = () => (dispatch, getState) => {
+    let { loggedUserState } = getState();
+    let { accessToken }     = loggedUserState;
+
+    dispatch(startLoading());
+
+    let params = {
+        access_token : accessToken,
+        page         : 1,
+        per_page     : 100,
+    };
+
+    return getRequest(
+        createAction(REQUEST_ALL_MEDIA_FILE_TYPES),
+        createAction(RECEIVE_ALL_MEDIA_FILE_TYPES),
+        `${window.API_BASE_URL}/api/v1/summit-media-file-types`,
+        authErrorHandler,
+        {}
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }

@@ -334,6 +334,8 @@
     "link"                   : "Link",
     "slide"                  : "Slide",
     "youtube_id"             : "Youtube Id",
+    "media_upload_type"      : "Media Upload Type",
+    "media_upload_file"      : "Media Upload File",
     "event_material_saved"   : "Material saved successfully.",
     "event_material_created" : "Material created successfully.",
     "placeholders": {
@@ -601,6 +603,7 @@
     "moderator_label"         : "Moderator Label",
     "min_moderators"          : "Min Moderators",
     "max_moderators"          : "Max Moderators",
+    "media_upload_types"      : "Media Upload Types",
     "event_type_saved"   : "Event Type saved successfully.",
     "event_type_created" : "Event Type created successfully.",
     "placeholders": {
@@ -1445,19 +1448,31 @@
     }
   },
   "media_upload": {
-    "media_uploads"        : "Media Upload Types",
-    "media_upload"         : "Media Upload Type",
-    "media_upload_list"    : "Media Upload Type List",
+    "media_uploads"           : "Media Upload Types",
+    "media_upload"            : "Media Upload Type",
+    "media_upload_list"       : "Media Upload Type List",
     "add"                     : "Add Media Upload Type",
     "no_results"              : "No items found for this search criteria.",
     "id"                      : "Id",
     "name"                    : "Name",
     "description"             : "Description",
+    "max_size"                : "Max Size (KB - multiple of 1024)",
+    "max_size_simple"         : "Max Size (KB)",
+    "is_mandatory"            : "Is Mandatory",
+    "type"                    : "File Type",
+    "public_storage_type"     : "Public Storage Type",
+    "private_storage_type"    : "Private Storage Type",
+    "presentation_types"      : "Presentation Types",
+    "copy_media_uploads"      : "Copy Media Uploads",
     "delete_warning"          : "Are you sure you want to delete media media type ",
     "saved"                   : "Media Upload Type saved successfully.",
     "created"                 : "Media Upload Type created successfully.",
     "placeholders": {
-      "search" : "Search types by name"
+      "search"                    : "Search types by name",
+      "select_type"               : "Select File Type",
+      "select_private_storage"    : "Select Public Storage",
+      "select_public_storage"     : "Select Private Storage",
+      "select_presentation_types" : "Select Presentation Types"
     }
   }
 }

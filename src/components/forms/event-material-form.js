@@ -84,8 +84,8 @@ class EventMaterialForm extends React.Component {
         let {entity, file} = this.state;
         ev.preventDefault();
 
-        if (file) {
-            this.props.onSubmitSlide(entity, file);
+        if (file || entity.class_name === 'PresentationMediaUpload') {
+            this.props.onSubmitWithFile(entity, file, entity.class_name);
         } else {
             this.props.onSubmit(entity);
         }
@@ -102,8 +102,18 @@ class EventMaterialForm extends React.Component {
 
     render() {
         let {entity, file} = this.state;
-        let event_materials_ddl = [{label: 'Link', value: 'PresentationLink'}, {label: 'Slide', value: 'PresentationSlide'}, {label: 'Video', value: 'PresentationVideo'}];
-        let filePreview = file ? file.preview : entity.file_link;
+        let filePreview = file ? file.preview : (entity.file_link || entity.private_url || entity.public_url);
+
+        let event_materials_ddl = [
+            {label: 'Link', value: 'PresentationLink'},
+            {label: 'Slide', value: 'PresentationSlide'},
+            {label: 'Video', value: 'PresentationVideo'},
+            {label: 'Media Upload', value: 'PresentationMediaUpload'}
+        ];
+
+        let media_uploads_ddl = this.props.event.type.allowed_media_upload_types.map(mu => ({label: mu.name, value: mu.id}));
+
+        const disableInputs = entity.class_name === 'PresentationMediaUpload';
 
         return (
             <form className="event-material-form">
@@ -121,6 +131,19 @@ class EventMaterialForm extends React.Component {
                             disabled={entity.id !== 0}
                         />
                     </div>
+                    {entity.class_name === 'PresentationMediaUpload' &&
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_event_material.media_upload_type")} *</label>
+                        <Dropdown
+                            id="media_upload_type_id"
+                            value={entity.media_upload_type_id}
+                            placeholder={T.translate("edit_event_material.placeholders.select_type")}
+                            options={media_uploads_ddl}
+                            onChange={this.handleChange}
+                            disabled={entity.id !== 0}
+                        />
+                    </div>
+                    }
                 </div>
                 <div className="row form-group">
                     <div className="col-md-6">
@@ -131,12 +154,13 @@ class EventMaterialForm extends React.Component {
                             onChange={this.handleChange}
                             className="form-control"
                             error={this.hasErrors('name')}
+                            disabled={disableInputs}
                         />
                     </div>
                     <div className="col-md-6 checkboxes-div">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="display_on_site" checked={entity.display_on_site}
-                                   onChange={this.handleChange} className="form-check-input" />
+                                   onChange={this.handleChange} className="form-check-input" disabled={disableInputs}/>
                             <label className="form-check-label" htmlFor="display_on_site">
                                 {T.translate("edit_event_material.display_on_site")}
                             </label>
@@ -144,6 +168,7 @@ class EventMaterialForm extends React.Component {
                     </div>
                 </div>
 
+                {!disableInputs &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_event_material.description")} *</label>
@@ -155,8 +180,8 @@ class EventMaterialForm extends React.Component {
                         />
                     </div>
                 </div>
-
-                {entity.class_name == 'PresentationLink' &&
+                }
+                {entity.class_name === 'PresentationLink' &&
                 <div className="row form-group">
                     <div className="col-md-6">
                         <label> {T.translate("edit_event_material.link")} *</label>
@@ -171,7 +196,7 @@ class EventMaterialForm extends React.Component {
                 </div>
                 }
 
-                {entity.class_name == 'PresentationSlide' &&
+                {entity.class_name === 'PresentationSlide' &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_event_material.slide")} </label>
@@ -201,7 +226,7 @@ class EventMaterialForm extends React.Component {
                 </div>
                 }
 
-                {entity.class_name == 'PresentationVideo' &&
+                {entity.class_name === 'PresentationVideo' &&
                 <div className="row form-group">
                     <div className="col-md-6">
                         <label> {T.translate("edit_event_material.youtube_id")} *</label>
@@ -211,6 +236,22 @@ class EventMaterialForm extends React.Component {
                             onChange={this.handleChange}
                             className="form-control"
                             error={this.hasErrors('youtube_id')}
+                        />
+                    </div>
+                </div>
+                }
+
+                {entity.class_name === 'PresentationMediaUpload' && entity.media_upload_type_id !== 0 &&
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <label> {T.translate("edit_event_material.media_upload_file")} </label>
+                        <UploadInput
+                            value={filePreview}
+                            handleUpload={this.handleUploadFile}
+                            handleRemove={this.handleRemoveFile}
+                            className="dropzone col-md-6"
+                            multiple={false}
+                            maxSize={60 * 1024 * 1024}
                         />
                     </div>
                 </div>

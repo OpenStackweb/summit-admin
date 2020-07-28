@@ -16,7 +16,12 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import EventMaterialForm from '../../components/forms/event-material-form';
-import { getEventMaterial, resetEventMaterialForm, saveEventMaterial, saveSlide } from "../../actions/event-material-actions";
+import {
+    getEventMaterial,
+    resetEventMaterialForm,
+    saveEventMaterial,
+    saveEventMaterialWithFile
+} from "../../actions/event-material-actions";
 //import '../../styles/edit-event-material-page.less';
 
 class EditEventMaterialPage extends React.Component {
@@ -48,6 +53,11 @@ class EditEventMaterialPage extends React.Component {
         }
     }
 
+    saveMaterialFile = (entity, file, materialClass) => {
+        const slug = (materialClass === 'PresentationMediaUpload') ? 'media-uploads' : 'slides';
+        this.props.saveEventMaterialWithFile(entity, file, slug);
+    };
+
     render(){
         let {currentSummit, entity, errors, match, event} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
@@ -67,7 +77,7 @@ class EditEventMaterialPage extends React.Component {
                     event={event}
                     errors={errors}
                     onSubmit={this.props.saveEventMaterial}
-                    onSubmitSlide={this.props.saveSlide}
+                    onSubmitWithFile={this.saveMaterialFile}
                 />
                 }
             </div>
@@ -88,6 +98,6 @@ export default connect (
         getEventMaterial,
         resetEventMaterialForm,
         saveEventMaterial,
-        saveSlide,
+        saveEventMaterialWithFile
     }
 )(EditEventMaterialPage);
