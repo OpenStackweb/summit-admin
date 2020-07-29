@@ -96,6 +96,8 @@ import mediaFileTypeListReducer from './reducers/media_file_types/media-file-typ
 import mediaFileTypeReducer from './reducers/media_file_types/media-file-type-reducer';
 import mediaUploadListReducer from "./reducers/media_uploads/media-uploads-list-reducer";
 import mediaUploadReducer from "./reducers/media_uploads/media-upload-reducer";
+import registrationInvitationReducer from "./reducers/tickets/registration-invitation-reducer";
+
 
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
@@ -191,7 +193,8 @@ const reducers = persistCombineReducers(config, {
     mediaFileTypeListState: mediaFileTypeListReducer,
     mediaFileTypeState: mediaFileTypeReducer,
     mediaUploadListState: mediaUploadListReducer,
-    mediaUploadState: mediaUploadReducer
+    mediaUploadState: mediaUploadReducer,
+    currentRegistrationInvitationState: registrationInvitationReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

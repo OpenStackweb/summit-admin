@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 OpenStack Foundation
+ * Copyright 2020 OpenStack Foundation
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,9 +14,8 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
-import Swal from "sweetalert2";
 import { Pagination } from 'react-bootstrap';
-import {Dropdown, FreeTextSearch, Table} from 'openstack-uicore-foundation/lib/components';
+import { FreeTextSearch, Table} from 'openstack-uicore-foundation/lib/components';
 import { getSentEmails } from "../../actions/email-actions";
 import {Breadcrumb} from "react-breadcrumbs";
 
@@ -71,10 +70,6 @@ class SentEmailListPage extends React.Component {
             actions: {}
         };
 
-        let templates_ddl = [
-            {label: 'template 1', value: 1}
-        ];
-
         return(
             <div className="container">
                 <Breadcrumb data={{ title: T.translate("emails.sent"), pathname: match.url }} ></Breadcrumb>
@@ -86,14 +81,6 @@ class SentEmailListPage extends React.Component {
                             value={term}
                             placeholder={T.translate("emails.placeholders.search_emails")}
                             onSearch={this.handleSearch}
-                        />
-                    </div>
-                    <div className="col-md-4 text-right">
-                        <Dropdown
-                            id="template_filter"
-                            placeholder={T.translate("emails.placeholders.select_template")}
-                            options={templates_ddl}
-                            onChange={this.handleTemplateChange}
                         />
                     </div>
                 </div>

@@ -23,8 +23,9 @@ import {
     escapeFilterValue,
     putRequest,
     deleteRequest,
-    showMessage
+    showMessage, showSuccessMessage
 } from 'openstack-uicore-foundation/lib/methods';
+import history from "../history";
 
 export const REQUEST_INVITATIONS = 'REQUEST_INVITATIONS';
 export const RECEIVE_INVITATIONS = 'RECEIVE_INVITATIONS';
@@ -33,10 +34,19 @@ export const RECEIVE_INVITATION = 'RECEIVE_INVITATION';
 export const SELECT_INVITATION = 'SELECT_INVITATION';
 export const UNSELECT_INVITATION = 'UNSELECT_INVITATION';
 export const CLEAR_ALL_SELECTED_INVITATIONS = 'CLEAR_ALL_SELECTED_INVITATIONS';
+export const RECEIVE_REGISTRATION_INVITATION = 'RECEIVE_REGISTRATION_INVITATION';
+export const RESET_REGISTRATION_INVITATION_FORM = 'RESET_REGISTRATION_INVITATION_FORM';
+export const UPDATE_REGISTRATION_INVITATION = 'UPDATE_REGISTRATION_INVITATION';
+export const REGISTRATION_INVITATION_UPDATED = 'REGISTRATION_INVITATION_UPDATED';
+export const REGISTRATION_INVITATION_ADDED = 'REGISTRATION_INVITATION_ADDED';
+export const REGISTRATION_INVITATION_DELETED = 'REGISTRATION_INVITATION_DELETED';
+export const REGISTRATION_INVITATION_ALL_DELETED = 'REGISTRATION_INVITATION_ALL_DELETED';
+export const SET_CURRENT_FLOW_EVENT = 'SET_CURRENT_FLOW_EVENT';
+export const SET_SELECTED_ALL = 'SET_SELECTED_ALL';
 
 /**************************   INVITATIONS   ******************************************/
 
-export const getInvitations = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1, showNonAccepted = false ) => (dispatch, getState) => {
+export const getInvitations = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1, showNonAccepted = false , showNotSent = false) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -210,4 +220,127 @@ export const clearAllSelectedInvitations = () => (dispatch, getState) => {
     dispatch(createAction(CLEAR_ALL_SELECTED_INVITATIONS)());
 }
 
+export const getRegistrationInvitation = (invitationId) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
 
+    dispatch(startLoading());
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_REGISTRATION_INVITATION),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/registration-invitations/${invitationId}`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const deleteRegistrationInvitation= (invitationId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(REGISTRATION_INVITATION_DELETED)({invitationId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/registration-invitations/${invitationId}`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const deleteAllRegistrationInvitation= () => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(REGISTRATION_INVITATION_ALL_DELETED)({}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/registration-invitations/all`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+
+export const resetRegistrationInvitationForm = () => (dispatch, getState) => {
+    dispatch(createAction(RESET_REGISTRATION_INVITATION_FORM)({}));
+};
+
+export const setCurrentFlowEvent = (value) => (dispatch, getState) => {
+    dispatch(createAction(SET_CURRENT_FLOW_EVENT)(value));
+};
+
+export const setSelectedAll = (value) => (dispatch, getState) => {
+    dispatch(createAction(SET_SELECTED_ALL)(value));
+};
+
+
+export const saveRegistrationInvitation = (entity) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    if (entity.id) {
+        putRequest(
+            createAction(UPDATE_REGISTRATION_INVITATION),
+            createAction(REGISTRATION_INVITATION_UPDATED),
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/registration-invitations/${entity.id}`,
+            entity,
+            authErrorHandler,
+            entity
+        )(params)(dispatch)
+            .then((payload) => {
+                dispatch(showSuccessMessage(T.translate("edit_registration_invitation.registration_invitation_saved")));
+            });
+        return;
+    }
+
+    let success_message = {
+        title: T.translate("general.done"),
+        html: T.translate("edit_registration_invitation.registration_invitation_created"),
+        type: 'success'
+    };
+
+    postRequest(
+        createAction(UPDATE_REGISTRATION_INVITATION),
+        createAction(REGISTRATION_INVITATION_ADDED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/registration-invitations`,
+        entity,
+        authErrorHandler
+    ) (params)(dispatch)
+        .then((payload) => {
+            dispatch(showMessage(
+                success_message,
+                () => { history.push(`/app/summits/${currentSummit.id}/registration-invitations/${payload.response.id}`) }
+            ));
+        });
+};
