@@ -15,11 +15,12 @@ import
 {
     RECEIVE_INVITATIONS,
     REQUEST_INVITATIONS,
+    SELECT_INVITATION,
+    UNSELECT_INVITATION,
+    CLEAR_ALL_SELECTED_INVITATIONS,
 } from '../../actions/registration-invitation-actions';
 
 import {LOGOUT_USER} from 'openstack-uicore-foundation/lib/actions';
-import {SET_CURRENT_SUMMIT} from '../../actions/summit-actions';
-import {epochToMoment} from "openstack-uicore-foundation/lib/methods";
 
 const DEFAULT_STATE = {
     invitations: [],
@@ -30,7 +31,8 @@ const DEFAULT_STATE = {
     lastPage: 1,
     perPage: 10,
     totalInvitations: 0,
-    showNonAccepted: false
+    showNonAccepted: false,
+    selectedInvitationsIds: [],
 };
 
 const RegistrationInvitationListReducer = (state = DEFAULT_STATE, action) => {
@@ -54,6 +56,18 @@ const RegistrationInvitationListReducer = (state = DEFAULT_STATE, action) => {
             return {...state, invitations: data, lastPage: last_page, totalInvitations: total};
         }
             break;
+        case SELECT_INVITATION:{
+            return {...state, selectedInvitationsIds: [...state.selectedInvitationsIds, payload]};
+        }
+        break;
+        case UNSELECT_INVITATION:{
+            return {...state, selectedInvitationsIds: state.selectedInvitationsIds.filter(element => element !== action.payload)};
+        }
+        case CLEAR_ALL_SELECTED_INVITATIONS:
+        {
+            return {...state, selectedInvitationsIds: []};
+        }
+        break;
         default:
             return state;
     }

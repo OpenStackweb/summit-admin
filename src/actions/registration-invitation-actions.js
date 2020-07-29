@@ -30,6 +30,9 @@ export const REQUEST_INVITATIONS = 'REQUEST_INVITATIONS';
 export const RECEIVE_INVITATIONS = 'RECEIVE_INVITATIONS';
 export const INVITATIONS_IMPORTED = 'INVITATIONS_IMPORTED';
 export const RECEIVE_INVITATION = 'RECEIVE_INVITATION';
+export const SELECT_INVITATION = 'SELECT_INVITATION';
+export const UNSELECT_INVITATION = 'UNSELECT_INVITATION';
+export const CLEAR_ALL_SELECTED_INVITATIONS = 'CLEAR_ALL_SELECTED_INVITATIONS';
 
 /**************************   INVITATIONS   ******************************************/
 
@@ -194,5 +197,17 @@ export const getInvitation = (invitationId) => (dispatch, getState) => {
         }
     );
 };
+
+export const selectInvitation = (invitationId) => (dispatch, getState) => {
+    dispatch(createAction(SELECT_INVITATION)(invitationId));
+};
+
+export const unSelectInvitation = (invitationId) => (dispatch, getState) => {
+    dispatch(createAction(UNSELECT_INVITATION)(invitationId));
+};
+
+export const clearAllSelectedInvitations = () => (dispatch, getState) => {
+    dispatch(createAction(CLEAR_ALL_SELECTED_INVITATIONS)());
+}
 
 

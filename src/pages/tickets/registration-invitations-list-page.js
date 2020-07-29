@@ -14,9 +14,10 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
-import {FreeTextSearch, Table, UploadInput} from 'openstack-uicore-foundation/lib/components';
+import {FreeTextSearch, SelectableTable, UploadInput} from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
-import {exportInvitationsCSV, getInvitations, importInvitationsCSV, resendNonAcceptedInvitations}
+import {exportInvitationsCSV, getInvitations, importInvitationsCSV,
+    resendNonAcceptedInvitations, selectInvitation, unSelectInvitation, clearAllSelectedInvitations}
 from "../../actions/registration-invitation-actions";
 import {Breadcrumb} from "react-breadcrumbs";
 import {Modal, Pagination} from "react-bootstrap";
@@ -28,6 +29,8 @@ class RegistrationInvitationsListPage extends React.Component {
         super(props);
 
         this.handleEdit = this.handleEdit.bind(this);
+        this.handleSelected = this.handleSelected.bind(this);
+        this.handleSelectedAll = this.handleSelectedAll.bind(this);
         this.handleSort = this.handleSort.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
@@ -38,7 +41,8 @@ class RegistrationInvitationsListPage extends React.Component {
 
         this.state = {
             showImportModal: false,
-            importFile: null
+            importFile: null,
+            selectedAll: false,
         }
     }
 
@@ -66,6 +70,24 @@ class RegistrationInvitationsListPage extends React.Component {
         let {currentSummit, history, invitations} = this.props;
         let invitation = invitations.find(i => i.id === invitations);
         //history.push(`/app/summits/${currentSummit.id}/purchase-orders/${ticket.order_id}/tickets/${ticket_id}`);
+    }
+
+    handleSelected(invitation_id, isSelected){
+        console.log(`selected invitation ${invitation_id} isSelected ${isSelected}`);
+        if(isSelected){
+            this.props.selectInvitation(invitation_id);
+            return;
+        }
+        this.props.unSelectInvitation(invitation_id);
+    }
+
+    handleSelectedAll(ev){
+        let selectedAll = ev.target.checked;
+        this.setState({...this.state, selectedAll: selectedAll});
+        if(!selectedAll){
+            //clear all selected
+            this.props.clearAllSelectedInvitations();
+        }
     }
 
     handleSort(index, key, dir, func) {
@@ -102,7 +124,8 @@ class RegistrationInvitationsListPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, invitations, term, order, orderDir, totalInvitations, lastPage, currentPage, match, showNonAccepted} = this.props;
+        let {currentSummit, invitations, term, order, orderDir, totalInvitations,
+            lastPage, currentPage, match, showNonAccepted, selectedInvitationsIds} = this.props;
         let {showImportModal, importFile} = this.state;
 
         let columns = [
@@ -114,10 +137,16 @@ class RegistrationInvitationsListPage extends React.Component {
         ];
 
         let table_options = {
+            selectedIds: selectedInvitationsIds,
             sortCol: order,
             sortDir: orderDir,
+            selectedAll: this.state.selectedAll,
             actions: {
-                edit: { onClick: this.handleEdit },
+                edit: {
+                    onClick: this.handleEdit,
+                    onSelected: this.handleSelected,
+                    onSelectedAll: this.handleSelectedAll
+                },
             }
         }
 
@@ -165,7 +194,7 @@ class RegistrationInvitationsListPage extends React.Component {
 
                     {invitations.length > 0 &&
                     <div>
-                        <Table
+                        <SelectableTable
                             options={table_options}
                             data={invitations}
                             columns={columns}
@@ -238,5 +267,8 @@ export default connect (
         importInvitationsCSV,
         exportInvitationsCSV,
         resendNonAcceptedInvitations,
+        selectInvitation,
+        unSelectInvitation,
+        clearAllSelectedInvitations,
     }
 )(RegistrationInvitationsListPage);
