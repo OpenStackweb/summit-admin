@@ -16,6 +16,7 @@ import
     RECEIVE_MEDIA_UPLOADS,
     REQUEST_MEDIA_UPLOADS,
     MEDIA_UPLOAD_DELETED,
+    MEDIA_UPLOADS_COPIED
 } from '../../actions/media-upload-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';

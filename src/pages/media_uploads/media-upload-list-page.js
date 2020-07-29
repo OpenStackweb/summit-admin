@@ -81,7 +81,7 @@ class MediaUploadListPage extends React.Component {
             confirmButtonText: T.translate("general.yes_delete")
         }).then(function(result){
             if (result.value) {
-                deleteMediaUpload(accessId);
+                deleteMediaUpload(mediaUploadId);
             }
         });
     }
@@ -177,6 +177,7 @@ export default connect (
     {
         getSummitById,
         getMediaUploads,
-        deleteMediaUpload
+        deleteMediaUpload,
+        copyMediaUploads
     }
 )(MediaUploadListPage);

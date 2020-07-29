@@ -91,7 +91,7 @@ class MediaUploadForm extends React.Component {
         let presentation_types_ddl = currentSummit.event_types
             .filter(t => t.class_name === 'PresentationType')
             .map(t => ({value: t.id, label: t.name}));
-        
+
         return (
             <form className="media-upload-form">
                 <input type="hidden" id="id" value={entity.id} />

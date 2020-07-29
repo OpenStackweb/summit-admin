@@ -248,15 +248,16 @@ export const copyMediaUploads = (summitId) => (dispatch, getState) => {
 
     let params = { access_token : accessToken };
 
-    putRequest(
+    postRequest(
         null,
         createAction(MEDIA_UPLOADS_COPIED),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/media-upload-types/clone/${summitId}`,
+        `${window.API_BASE_URL}/api/v1/summits/${summitId}/media-upload-types/all/clone/${currentSummit.id}`,
         null,
         authErrorHandler
     )(params)(dispatch)
         .then((payload) => {
             dispatch(stopLoading());
+            dispatch(getMediaUploads());
         });
 };
 

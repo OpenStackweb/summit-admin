@@ -29,6 +29,7 @@ class EventMaterialForm extends React.Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
+        this.handleChangeMUType = this.handleChangeMUType.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleUploadFile = this.handleUploadFile.bind(this);
         this.handleRemoveFile = this.handleRemoveFile.bind(this);
@@ -67,6 +68,20 @@ class EventMaterialForm extends React.Component {
 
         errors[id] = '';
         entity[id] = value;
+        this.setState({entity: entity, errors: errors});
+    }
+
+    handleChangeMUType(ev) {
+        let entity = {...this.state.entity};
+        let errors = {...this.state.errors};
+        let {value} = ev.target;
+
+        let type = this.props.event.type.allowed_media_upload_types.find(mu => mu.id === value);
+
+        errors.media_upload_type_id = '';
+        entity.media_upload_type_id = value;
+        entity.name = type.name;
+
         this.setState({entity: entity, errors: errors});
     }
 
@@ -139,7 +154,7 @@ class EventMaterialForm extends React.Component {
                             value={entity.media_upload_type_id}
                             placeholder={T.translate("edit_event_material.placeholders.select_type")}
                             options={media_uploads_ddl}
-                            onChange={this.handleChange}
+                            onChange={this.handleChangeMUType}
                             disabled={entity.id !== 0}
                         />
                     </div>

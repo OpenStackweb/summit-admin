@@ -118,8 +118,8 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
                     const type = entity.type.allowed_media_upload_types.find(amu => amu.id === mu.media_upload_type_id);
                     return {
                         ...mu,
-                        name: type.name,
-                        description: type.description,
+                        name: type ? type.name : '',
+                        description: type ? type.description : '',
                         display_on_site_label: mu.display_on_site ? 'Yes' : 'No',
                     };
                 });
@@ -153,8 +153,8 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
             let newMaterial = {...payload.response};
             if (newMaterial.class_name === 'PresentationMediaUpload') {
                 const type = state.entity.type.allowed_media_upload_types.find(amu => amu.id === newMaterial.media_upload_type_id);
-                newMaterial.name = type.name;
-                newMaterial.description = type.description;
+                newMaterial.name = type ? type.name : '';
+                newMaterial.description = type ? type.description : '';
             }
 
             newMaterial.display_on_site_label = (newMaterial.display_on_site) ? 'Yes' : 'No';
@@ -170,8 +170,8 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
 
             if (newMaterial.class_name === 'PresentationMediaUpload') {
                 const type = state.entity.type.allowed_media_upload_types.find(amu => amu.id === newMaterial.media_upload_type_id);
-                newMaterial.name = type.name;
-                newMaterial.description = type.description;
+                newMaterial.name = type ? type.name : '';
+                newMaterial.description = type ? type.description : '';
             }
 
             newMaterial.display_on_site_label = (newMaterial.display_on_site) ? 'Yes' : 'No';
