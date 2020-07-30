@@ -41,6 +41,8 @@ export const TEMPLATE_DELETED        = 'TEMPLATE_DELETED';
 
 export const REQUEST_EMAILS          = 'REQUEST_EMAILS';
 export const RECEIVE_EMAILS          = 'RECEIVE_EMAILS';
+export const REQUEST_EMAILS_BY_USER  = 'REQUEST_EMAILS_BY_USER';
+export const RECEIVE_EMAILS_BY_USER  = 'RECEIVE_EMAILS_BY_USER';
 
 export const REQUEST_EMAIL_CLIENTS   = 'REQUEST_EMAIL_CLIENTS';
 export const RECEIVE_EMAIL_CLIENTS   = 'RECEIVE_EMAIL_CLIENTS';
@@ -246,6 +248,34 @@ export const queryTemplates = _.debounce((input, callback) => {
 /************************************************************************************************************/
 
 
+export const getSentEmailsByTemplatesAndEmail = (templates = [], toEmail , page = 1, perPage = 10) => (dispatch, getState) => {
+    let { loggedUserState } = getState();
+    let { accessToken }     = loggedUserState;
+
+    dispatch(startLoading());
+
+    let params = {
+        page         : page,
+        per_page     : perPage,
+        access_token : accessToken,
+        expand: 'template',
+        is_sent: 1,
+        template__identifier__in: templates,
+        to_email__contains:toEmail,
+    };
+
+    return getRequest(
+        createAction(REQUEST_EMAILS_BY_USER),
+        createAction(RECEIVE_EMAILS_BY_USER),
+        `${window.EMAIL_API_BASE_URL}/api/v1/mails`,
+        authErrorHandler,
+        {}
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
 export const getSentEmails = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
 
     let { loggedUserState } = getState();
@@ -258,10 +288,11 @@ export const getSentEmails = (term = null, page = 1, perPage = 10, order = 'id',
         per_page     : perPage,
         access_token : accessToken,
         expand: 'template',
+        is_sent: 1,
     };
 
     if(term){
-        params.key__contains= term;
+        params.term = term;
     }
 
     // order
@@ -311,8 +342,6 @@ export const getAllClients = () => (dispatch, getState) => {
         }
     );
 };
-
-
 
 
 export const customErrorHandler = (err, res) => (dispatch, state) => {

@@ -46,7 +46,8 @@ export const SET_SELECTED_ALL = 'SET_SELECTED_ALL';
 
 /**************************   INVITATIONS   ******************************************/
 
-export const getInvitations = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1, showNonAccepted = false , showNotSent = false) => (dispatch, getState) => {
+export const getInvitations = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1,
+                                showNonAccepted = false , showNotSent = false) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -59,7 +60,6 @@ export const getInvitations = ( term = null, page = 1, perPage = 10, order = 'id
         page         : page,
         per_page     : perPage,
         access_token : accessToken,
-        expand       : 'order,member'
     };
 
     if(term){
@@ -69,6 +69,10 @@ export const getInvitations = ( term = null, page = 1, perPage = 10, order = 'id
 
     if(showNonAccepted){
         filter.push('is_accepted==false');
+    }
+
+    if(showNotSent){
+        filter.push('is_sent==false');
     }
 
     if(filter.length > 0){
@@ -86,7 +90,7 @@ export const getInvitations = ( term = null, page = 1, perPage = 10, order = 'id
         createAction(RECEIVE_INVITATIONS),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/registration-invitations`,
         authErrorHandler,
-        {page, perPage, order, orderDir, term, showNonAccepted}
+        {page, perPage, order, orderDir, term, showNonAccepted, showNotSent}
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
@@ -113,39 +117,6 @@ export const importInvitationsCSV = (file) => (dispatch, getState) => {
             dispatch(stopLoading());
             window.location.reload();
         });
-};
-
-export const resendNonAcceptedInvitations = () => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-
-    let params = {
-        access_token : accessToken
-    };
-
-    let success_message = {
-        title: T.translate("general.done"),
-        html: T.translate("registration_invitation_list.resend_done"),
-        type: 'success'
-    };
-
-    dispatch(startLoading());
-
-    return putRequest(
-        null,
-        createAction(RECEIVE_INVITATION),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/registration-invitations/all/non-accepted/resend`,
-        authErrorHandler
-    )(params)(dispatch)
-        .then((payload) => {
-            dispatch(showMessage(
-                success_message,
-            ));
-            dispatch(stopLoading());
-            return data.response;
-    });
-
 };
 
 export const exportInvitationsCSV = (term, order, orderDir, showNonAccepted) => (dispatch, getState) => {
@@ -236,8 +207,9 @@ export const getRegistrationInvitation = (invitationId) => (dispatch, getState) 
         createAction(RECEIVE_REGISTRATION_INVITATION),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/registration-invitations/${invitationId}`,
         authErrorHandler
-    )(params)(dispatch).then(() => {
+    )(params)(dispatch).then((payload) => {
             dispatch(stopLoading());
+            return payload.response;
         }
     );
 };
@@ -254,7 +226,7 @@ export const deleteRegistrationInvitation= (invitationId) => (dispatch, getState
 
     return deleteRequest(
         null,
-        createAction(REGISTRATION_INVITATION_DELETED)({invitationId}),
+        createAction(REGISTRATION_INVITATION_DELETED)(invitationId),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/registration-invitations/${invitationId}`,
         null,
         authErrorHandler
@@ -285,7 +257,6 @@ export const deleteAllRegistrationInvitation= () => (dispatch, getState) => {
         }
     );
 };
-
 
 export const resetRegistrationInvitationForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_REGISTRATION_INVITATION_FORM)({}));
@@ -344,3 +315,68 @@ export const saveRegistrationInvitation = (entity) => (dispatch, getState) => {
             ));
         });
 };
+
+export const sendEmails = (currentFlowEvent, selectedAll = false , selectedInvitationsIds = [],
+                          term = null, showNonAccepted = false , showNotSent = false) => (dispatch, getState) => {
+
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let filter = [];
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    if(term){
+        let escapedTerm = escapeFilterValue(term);
+        filter.push(`email=@${escapedTerm},first_name=@${escapedTerm},last_name=@${escapedTerm}`);
+    }
+
+    if(showNonAccepted){
+        filter.push('is_accepted==false');
+    }
+
+    if(showNotSent){
+        filter.push('is_sent==false');
+    }
+
+    if(filter.length > 0){
+        params['filter[]'] = filter;
+    }
+
+    let payload =  {
+        email_flow_event : currentFlowEvent
+    };
+
+    if(!selectedAll && selectedInvitationsIds.length > 0){
+        payload['invitations_ids'] = selectedInvitationsIds;
+    }
+
+    dispatch(startLoading());
+
+
+    let success_message = {
+        title: T.translate("general.done"),
+        html: T.translate("registration_invitation_list.resend_done"),
+        type: 'success'
+    };
+
+    return putRequest(
+        null,
+        createAction(RECEIVE_INVITATION),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/registration-invitations/all/send`,
+        payload,
+        authErrorHandler
+    )(params)(dispatch)
+        .then((payload) => {
+            dispatch(showMessage(
+                success_message,
+            ));
+            dispatch(stopLoading());
+            return data.response;
+        });
+
+}

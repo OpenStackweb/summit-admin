@@ -21,7 +21,7 @@ import {
     resendNonAcceptedInvitations, selectInvitation, unSelectInvitation,
     clearAllSelectedInvitations, deleteAllRegistrationInvitation,
     deleteRegistrationInvitation, setCurrentFlowEvent,
-    setSelectedAll
+    setSelectedAll, sendEmails
 }
 from "../../actions/registration-invitation-actions";
 import {Modal, Pagination} from "react-bootstrap";
@@ -48,6 +48,7 @@ class RegistrationInvitationsListPage extends React.Component {
         this.handleSendEmails = this.handleSendEmails.bind(this);
         this.handleChangeFlowEvent = this.handleChangeFlowEvent.bind(this);
         this.handleDeleteAll = this.handleDeleteAll.bind(this);
+        this.handleChangeNoSent = this.handleChangeNoSent.bind(this);
 
         this.state = {
             showImportModal: false,
@@ -126,8 +127,32 @@ class RegistrationInvitationsListPage extends React.Component {
         history.push(`/app/summits/${currentSummit.id}/registration-invitations/new`);
     }
 
-    handleSendEmails(){
+    handleSendEmails(ev){
 
+        ev.stopPropagation();
+        ev.preventDefault();
+
+        let {
+            selectedAll,
+            term,
+            showNonAccepted,
+            showNotSent,
+            selectedInvitationsIds,
+            currentFlowEvent,
+            sendEmails
+        } = this.props;
+
+        if(!currentFlowEvent){
+            Swal.fire("Validation error", T.translate("registration_invitation_list.select_template") , "warning");
+            return false;
+        }
+
+        if(!selectedAll && selectedInvitationsIds.length === 0){
+            Swal.fire("Validation error", T.translate("registration_invitation_list.select_items"), "warning");
+            return false;
+        }
+
+        sendEmails(currentFlowEvent, selectedAll , selectedInvitationsIds, term , showNonAccepted , showNotSent);
     }
 
     handleSelected(invitation_id, isSelected){
@@ -186,9 +211,12 @@ class RegistrationInvitationsListPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, invitations, term, order, orderDir, totalInvitations,
-            lastPage, currentPage, match, showNonAccepted,
-            selectedInvitationsIds, showNotSent, currentFlowEvent, selectedAll
+
+        let { currentSummit, invitations, term, order,
+            orderDir, totalInvitations,
+            lastPage, currentPage, showNonAccepted,
+            selectedInvitationsIds, showNotSent,
+            currentFlowEvent, selectedAll
         } = this.props;
 
         let {showImportModal, importFile} = this.state;
@@ -199,6 +227,7 @@ class RegistrationInvitationsListPage extends React.Component {
             { columnKey: 'first_name', value: T.translate("registration_invitation_list.first_name") },
             { columnKey: 'last_name', value: T.translate("registration_invitation_list.last_name") },
             { columnKey: 'is_accepted', value: T.translate("registration_invitation_list.accepted") },
+            { columnKey: 'is_sent', value: T.translate("registration_invitation_list.sent") },
         ];
 
         let table_options = {
@@ -257,7 +286,7 @@ class RegistrationInvitationsListPage extends React.Component {
                             <div className="form-check abc-checkbox">
                                 <input type="checkbox" id="showNonSent" checked={showNotSent}
                                        className="form-check-input"
-                                       onChange={this.handleChangeNonAccepted}
+                                       onChange={this.handleChangeNoSent}
                                 />
                                 <label className="form-check-label" htmlFor="showNonSent">
                                     {T.translate("registration_invitation_list.show_non_sent")}
@@ -296,7 +325,7 @@ class RegistrationInvitationsListPage extends React.Component {
                     <div>{T.translate("registration_invitation_list.no_invitations")}</div>
                     }
 
-                    {invitations.length > 0 &&
+                    { invitations.length > 0 &&
                     <div>
                         <SelectableTable
                             options={table_options}
@@ -378,5 +407,6 @@ export default connect (
         deleteRegistrationInvitation,
         setCurrentFlowEvent,
         setSelectedAll,
+        sendEmails,
     }
 )(RegistrationInvitationsListPage);

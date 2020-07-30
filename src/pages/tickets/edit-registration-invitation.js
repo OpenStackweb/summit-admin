@@ -20,18 +20,30 @@ import { getRegistrationInvitation ,
     resetRegistrationInvitationForm,
     saveRegistrationInvitation } from "../../actions/registration-invitation-actions";
 import RegistrationInvitationForm from "../../components/forms/registration-invitation-form";
+import {getSentEmailsByTemplatesAndEmail} from '../../actions/email-actions';
+import RegistrationInvitationEmailActivity from "../../components/forms/registration-invitation-email-activity";
 
 class EditRegistrationInvitationPage extends React.Component {
 
-    componentWillMount () {
-        let {currentSummit} = this.props;
+    componentDidMount () {
+        let {currentSummit, getSentEmailsByTemplatesAndEmail} = this.props;
         let registrationInvitationId = this.props.match.params.registration_invitation_id;
 
         if (!registrationInvitationId) {
             this.props.resetRegistrationInvitationForm();
-        } else {
-            this.props.getRegistrationInvitation(registrationInvitationId);
+            return;
         }
+
+        this.props.getRegistrationInvitation(registrationInvitationId).then((payload) => {
+            getSentEmailsByTemplatesAndEmail(
+                [
+                    'SUMMIT_REGISTRATION_INVITE_REGISTRATION',
+                    'SUMMIT_REGISTRATION_REINVITE_REGISTRATION'
+                ],
+                payload.email
+            )
+        });
+
     }
 
     componentWillReceiveProps(newProps) {
@@ -47,8 +59,9 @@ class EditRegistrationInvitationPage extends React.Component {
             }
         }
     }
+
     render(){
-        let {currentSummit, entity, errors, match} = this.props;
+        let {currentSummit, entity, errors, match, emailActivity} = this.props;
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         let breadcrumb = (entity.id) ? entity.id : T.translate("general.new");
 
@@ -64,6 +77,11 @@ class EditRegistrationInvitationPage extends React.Component {
                     currentSummit={currentSummit}
                     onSubmit={this.props.saveRegistrationInvitation}
                 />
+                }
+                { emailActivity.length > 0 &&
+                    <RegistrationInvitationEmailActivity
+                        emailActivity={emailActivity}
+                    />
                 }
             </div>
         )
@@ -82,5 +100,6 @@ export default connect (
         getRegistrationInvitation,
         resetRegistrationInvitationForm,
         saveRegistrationInvitation,
+        getSentEmailsByTemplatesAndEmail
     }
 )(EditRegistrationInvitationPage);

@@ -50,15 +50,15 @@ const RegistrationInvitationListReducer = (state = DEFAULT_STATE, action) => {
         }
             break;
         case REQUEST_INVITATIONS: {
-            let {order, orderDir, page, perPage, term, showNonAccepted} = payload;
+            let {order, orderDir, page, perPage, term, showNonAccepted, showNotSent} = payload;
 
-            return {...state, order, orderDir, currentPage: page, perPage, term, showNonAccepted};
+            return {...state, order, orderDir, currentPage: page, perPage, term, showNonAccepted, showNotSent};
         }
             break;
         case RECEIVE_INVITATIONS: {
             let {total, last_page, data} = payload.response;
             data = data.map(i => {
-                return {...i, is_accepted: i.is_accepted ? "Yes" : "No"}
+                return {...i, is_accepted: i.is_accepted ? "Yes" : "No", is_sent: i.is_sent ? "Yes" : "No", }
             });
             return {...state, invitations: data, lastPage: last_page, totalInvitations: total};
         }
@@ -68,7 +68,7 @@ const RegistrationInvitationListReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case UNSELECT_INVITATION:{
-            return {...state, selectedInvitationsIds: state.selectedInvitationsIds.filter(element => element !== action.payload)};
+            return {...state, selectedInvitationsIds: state.selectedInvitationsIds.filter(element => element !== payload)};
         }
         case CLEAR_ALL_SELECTED_INVITATIONS:
         {
@@ -76,8 +76,7 @@ const RegistrationInvitationListReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case REGISTRATION_INVITATION_DELETED: {
-            let {invitationId} = payload;
-            return {...state, invitations: state.invitations.filter(i => i.id != invitationId)};
+            return {...state, invitations: state.invitations.filter(i => i.id !== payload)};
         }
             break;
         case REGISTRATION_INVITATION_ALL_DELETED: {
@@ -85,13 +84,11 @@ const RegistrationInvitationListReducer = (state = DEFAULT_STATE, action) => {
         }
             break;
         case SET_CURRENT_FLOW_EVENT:{
-            let {currentFlowEvent} = payload;
-            return {...state, currentFlowEvent:currentFlowEvent};
+            return {...state, currentFlowEvent : payload};
         }
         break;
         case SET_SELECTED_ALL:{
-            let {selectedAll} = payload;
-            return {...state, selectedAll:selectedAll};
+            return {...state, selectedAll : payload};
             break;
         }
         default:

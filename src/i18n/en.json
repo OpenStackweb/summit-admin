@@ -1427,6 +1427,7 @@
     "first_name": "First Name",
     "last_name" : "Last Name",
     "accepted": "Is Accepted?",
+    "sent": "Is Sent?",
     "invitation_list": "Invitations",
     "import": "Import",
     "export": "Export",
@@ -1441,6 +1442,9 @@
     "remove_all_warning" : "Are you sure you want to delete all invitations ?.",
     "add_invitation": "Add",
     "delete_all_invitations" : "Delete All",
+    "no_invitations":"No items found for this search criteria.",
+    "select_template": "Select a Email Template to perform the action.",
+    "select_items": "Select at least one invitation to perform the action.",
     "placeholders": {
       "search" : "Search invitations by term"
     }

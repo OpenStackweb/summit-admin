@@ -20,6 +20,10 @@ import
     REGISTRATION_INVITATION_ADDED
 } from '../../actions/registration-invitation-actions';
 
+import {
+    RECEIVE_EMAILS_BY_USER
+} from '../../actions/email-actions';
+
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
@@ -28,11 +32,13 @@ export const DEFAULT_ENTITY = {
     first_name : '',
     last_name : '',
     email : '',
+
 }
 
 const DEFAULT_STATE = {
     entity      : DEFAULT_ENTITY,
-    errors      : {}
+    errors      : {},
+    emailActivity: [],
 };
 
 const registrationInvitationReducer = (state = DEFAULT_STATE, action) => {
@@ -77,6 +83,10 @@ const registrationInvitationReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  errors: payload.errors };
         }
             break;
+        case RECEIVE_EMAILS_BY_USER :{
+            return {...state,  emailActivity: payload.response.data };
+        }
+        break;
         default:
             return state;
     }
