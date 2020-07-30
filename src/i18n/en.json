@@ -247,6 +247,9 @@
     "external_registration_feed_api_key" : "Registration Feed API key",
     "external_registration_id"        : "Registration External Id",
     "third_party"                     : "Third Party Settings",
+    "virtual_event": "Virtual Event Settings",
+    "virtual_site_url": "Virtual Event Site URL",
+    "marketing_site_url": "Marketing Site URL",
     "placeholders": {
       "api_feed_type"                 : "Select API feed type...",
       "external_registration_feed_type" : "Select Ext. Reg. feed type..."

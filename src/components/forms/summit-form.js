@@ -506,6 +506,32 @@ class SummitForm extends React.Component {
                     </div>
                 </Panel>
 
+                <Panel show={showSection == 'virtual_event'} title={T.translate("edit_summit.virtual_event")}
+                       handleClick={this.toggleSection.bind(this, 'virtual_event')}>
+                    <div className="row form-group">
+                        <div className="col-md-6">
+                            <label> {T.translate("edit_summit.virtual_site_url")}</label>
+                            <Input
+                                className="form-control"
+                                error={this.hasErrors('virtual_site_url')}
+                                id="virtual_site_url"
+                                value={entity.virtual_site_url}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                        <div className="col-md-6">
+                            <label> {T.translate("edit_summit.marketing_site_url")}</label>
+                            <Input
+                                className="form-control"
+                                error={this.hasErrors('marketing_site_url')}
+                                id="marketing_site_url"
+                                value={entity.marketing_site_url}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                    </div>
+                </Panel>
+
                 <Exclusive name="room-booking">
                     <Panel show={showSection == 'room-booking'} title={T.translate("edit_summit.room-booking")}
                            handleClick={this.toggleSection.bind(this, 'room-booking')}>

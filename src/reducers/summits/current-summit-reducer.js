@@ -98,6 +98,8 @@ export const DEFAULT_ENTITY = {
     external_summit_id: null,
     external_registration_feed_type: '',
     external_registration_feed_api_key: null,
+    virtual_site_url: null,
+    marketing_site_url: null,
 };
 
 const DEFAULT_STATE = {
