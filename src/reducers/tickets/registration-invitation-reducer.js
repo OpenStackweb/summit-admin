@@ -26,6 +26,7 @@ import {
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
+import {epochToMoment} from "openstack-uicore-foundation/lib/methods";
 
 export const DEFAULT_ENTITY = {
     id: 0,
@@ -55,7 +56,7 @@ const registrationInvitationReducer = (state = DEFAULT_STATE, action) => {
             break;
         case SET_CURRENT_SUMMIT:
         case RESET_REGISTRATION_INVITATION_FORM: {
-            return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
+            return {...state,  entity: {...DEFAULT_ENTITY}, emailActivity:[], errors: {} };
         }
             break;
         case UPDATE_REGISTRATION_INVITATION: {
@@ -72,7 +73,7 @@ const registrationInvitationReducer = (state = DEFAULT_STATE, action) => {
                 }
             }
 
-            return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
+            return {...state, entity: {...DEFAULT_ENTITY, ...entity}, emailActivity:[] };
         }
             break;
         case REGISTRATION_INVITATION_UPDATED: {
@@ -84,7 +85,14 @@ const registrationInvitationReducer = (state = DEFAULT_STATE, action) => {
         }
             break;
         case RECEIVE_EMAILS_BY_USER :{
-            return {...state,  emailActivity: payload.response.data };
+            let data = payload.response.data;
+
+            data = data.map( m => {
+                let sent_date = m.sent_date ? epochToMoment(m.sent_date).format('MMMM Do YYYY, h:mm:ss a') : '';
+                return {...m, template_identifier: m.template.identifier, sent_date: sent_date}
+            });
+
+            return {...state,  emailActivity: data };
         }
         break;
         default:

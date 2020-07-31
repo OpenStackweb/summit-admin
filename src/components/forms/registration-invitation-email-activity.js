@@ -11,38 +11,35 @@
  * limitations under the License.
  **/
 import React from 'react'
+import { Table } from 'openstack-uicore-foundation/lib/components';
+import T from 'i18n-react/dist/i18n-react';
 
 class RegistrationInvitationEmailActivity extends React.Component {
 
     render() {
         let {emailActivity} = this.props;
 
+        if(emailActivity.length === 0) return null;
+
+        let columns = [
+            { columnKey: 'template_identifier', value: T.translate("registration_invitation_mail_activity.template_identifier")},
+            { columnKey: 'subject', value: T.translate("registration_invitation_mail_activity.subject") },
+            { columnKey: 'sent_date', value: T.translate("registration_invitation_mail_activity.sent_date") },
+        ];
+
+        let table_options = {
+            actions:{ }
+        };
+
         return (
             <div>
-            <h2>Email Activity</h2>
+            <h4>{T.translate("registration_invitation_mail_activity.registration_invitation_mail_activity")}</h4>
             <hr/>
-            <table className="table table-striped">
-              <tr>
-                  <th>Template</th>
-                  <th>Subject</th>
-                  <th>Sent Date</th>
-              </tr>
-              {emailActivity.map((entry,i) => {
-                  return (
-                      <tr>
-                          <td>
-                              {entry.template.identifier}
-                          </td>
-                          <td>
-                              {entry.subject}
-                          </td>
-                          <td>
-                              {entry.sent_date}
-                          </td>
-                      </tr>
-                  );
-              })}
-            </table>
+            <Table
+                options={table_options}
+                data={emailActivity}
+                columns={columns}
+            />
             </div>
         );
     }

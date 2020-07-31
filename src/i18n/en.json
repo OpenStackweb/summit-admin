@@ -1449,6 +1449,12 @@
       "search" : "Search invitations by term"
     }
   },
+  "registration_invitation_mail_activity": {
+    "registration_invitation_mail_activity": "Email Activity",
+    "template_identifier":  "Template",
+    "subject" : "Subject",
+    "sent_date" : "Sent Date"
+  },
   "media_file_type": {
     "media_file_types"        : "Media File Types",
     "media_file_type"         : "Media File Type",

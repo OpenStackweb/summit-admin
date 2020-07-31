@@ -254,14 +254,16 @@ export const getSentEmailsByTemplatesAndEmail = (templates = [], toEmail , page 
 
     dispatch(startLoading());
 
+
     let params = {
         page         : page,
         per_page     : perPage,
         access_token : accessToken,
         expand: 'template',
         is_sent: 1,
-        template__identifier__in: templates,
+        template__identifier__in: templates.join(),
         to_email__contains:toEmail,
+        order : '-id',
     };
 
     return getRequest(

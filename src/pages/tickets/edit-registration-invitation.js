@@ -71,18 +71,16 @@ class EditRegistrationInvitationPage extends React.Component {
                 <h3>{title} {T.translate("edit_registration_invitation.registration_invitation")}</h3>
                 <hr/>
                 {currentSummit &&
-                <RegistrationInvitationForm
-                    entity={entity}
-                    errors={errors}
-                    currentSummit={currentSummit}
-                    onSubmit={this.props.saveRegistrationInvitation}
-                />
-                }
-                { emailActivity.length > 0 &&
-                    <RegistrationInvitationEmailActivity
-                        emailActivity={emailActivity}
+                    <RegistrationInvitationForm
+                        entity={entity}
+                        errors={errors}
+                        currentSummit={currentSummit}
+                        onSubmit={this.props.saveRegistrationInvitation}
                     />
                 }
+                <RegistrationInvitationEmailActivity
+                        emailActivity={emailActivity}
+                />
             </div>
         )
     }

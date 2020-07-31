@@ -18,6 +18,7 @@ import
 } from '../../actions/email-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import {epochToMoment} from "openstack-uicore-foundation/lib/methods";
 
 const DEFAULT_STATE = {
     emails          : [],
@@ -45,7 +46,11 @@ const sentEmailListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case RECEIVE_EMAILS: {
             let {total, last_page, current_page, data} = payload.response;
-            data = data.map( m => { return {...m, template: m.template.identifier} } );
+
+            data = data.map( m => {
+                let sent_date = m.sent_date ? epochToMoment(m.sent_date).format('MMMM Do YYYY, h:mm:ss a') : '';
+                return {...m, template: m.template.identifier, sent_date: sent_date}
+            });
             return {...state, emails: data, currentPage: current_page, totalEmails: total, lastPage: last_page };
         }
         break;
