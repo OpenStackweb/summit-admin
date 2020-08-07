@@ -103,7 +103,7 @@ export const getTagGroup = (tagGroupId) => (dispatch, getState) => {
     dispatch(startLoading());
 
     let params = {
-        expand       : 'allowed_tags,tag',
+        expand       : 'allowed_tags, allowed_tags.tag',
         access_token : accessToken,
     };
 
