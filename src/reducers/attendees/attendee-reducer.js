@@ -78,6 +78,10 @@ const attendeeReducer = (state = DEFAULT_STATE, action) => {
                 }
             }
 
+            if (entity.extra_questions) {
+                entity.extra_questions = entity.extra_questions.map(q => ({question_id: q.question_id, answer: q.value}))
+            }
+
             return {...state,  entity: {...DEFAULT_ENTITY, ...entity}, errors: {} };
         }
         break;

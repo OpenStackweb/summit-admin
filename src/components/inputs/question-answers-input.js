@@ -23,9 +23,8 @@ export default class QuestionAnswersInput extends React.Component {
 
         let answers = props.questions.map(q => {
             let defaultValue = (q.type == 'CheckBox') ? 'false' : '';
-
             let answer = props.answers.find(ans => ans.question_id == q.id);
-            let value = answer ? answer.value : defaultValue;
+            let value = answer ? answer.answer : defaultValue;
             return ({question_id: q.id, answer: value});
         });
 
