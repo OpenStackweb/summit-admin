@@ -382,7 +382,6 @@ class SummitForm extends React.Component {
                                 onChange={this.handleChange}
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                                 timezone={entity.time_zone_id}
-                                timeConstraints={{ hours: { min: 7, max: 22}}}
                                 value={epochToMomentTimeZone(entity.start_date, entity.time_zone_id)}
                                 error={this.hasErrors('start_date')}
                             />
@@ -395,7 +394,6 @@ class SummitForm extends React.Component {
                                 onChange={this.handleChange}
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                                 timezone={entity.time_zone_id}
-                                timeConstraints={{ hours: { min: 7, max: 22}}}
                                 value={epochToMomentTimeZone(entity.end_date, entity.time_zone_id)}
                                 error={this.hasErrors('end_date')}
                             />
