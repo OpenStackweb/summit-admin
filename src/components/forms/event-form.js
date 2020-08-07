@@ -231,7 +231,14 @@ class EventForm extends React.Component {
 
         let levels_ddl = levelOpts.map(l => ({label: l, value: l}));
 
-        let selection_plans_ddl = selectionPlansOpts.map(sp => ({label: sp.name, value: sp.id}));
+        let selection_plans_ddl = [];
+
+        if (entity.track_id) {
+            const track = trackOpts.find(t => t.id === entity.track_id);
+            selection_plans_ddl = selectionPlansOpts
+                .filter(sp => sp.track_groups.some(gr => track.track_groups.includes(gr)))
+                .map(sp => ({label: sp.name, value: sp.id}));
+        }
 
         let rsvp_templates_ddl = rsvpTemplateOpts.map(
             t => {

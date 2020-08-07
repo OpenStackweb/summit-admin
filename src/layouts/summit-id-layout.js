@@ -17,7 +17,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
 
-import { getSummitById, resetSummitForm }  from '../actions/summit-actions';
+import { getSummitById, resetSummitForm, getAllSummits }  from '../actions/summit-actions';
 
 import SummitDashboardPage from '../pages/summits/summit-dashboard-page'
 import EditSummitPage from '../pages/summits/edit-summit-page'
@@ -66,6 +66,9 @@ class SummitIdLayout extends React.Component {
             this.props.resetSummitForm();
         } else {
             this.props.getSummitById(summitId);
+
+            // this is needed for summit dropdown, runs on background
+            this.props.getAllSummits();
         }
     }
 
@@ -146,7 +149,8 @@ export default connect (
     mapStateToProps,
     {
         getSummitById,
-        resetSummitForm
+        resetSummitForm,
+        getAllSummits
     }
 )(SummitIdLayout);
 

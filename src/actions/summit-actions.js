@@ -32,6 +32,8 @@ export const REQUEST_SUMMIT           = 'REQUEST_SUMMIT';
 export const RECEIVE_SUMMIT           = 'RECEIVE_SUMMIT';
 export const REQUEST_SUMMITS          = 'REQUEST_SUMMITS';
 export const RECEIVE_SUMMITS          = 'RECEIVE_SUMMITS';
+export const REQUEST_ALL_SUMMITS      = 'REQUEST_ALL_SUMMITS';
+export const RECEIVE_ALL_SUMMITS      = 'RECEIVE_ALL_SUMMITS';
 export const SET_CURRENT_SUMMIT       = 'SET_CURRENT_SUMMIT';
 export const RESET_SUMMIT_FORM        = 'RESET_SUMMIT_FORM';
 export const UPDATE_SUMMIT            = 'UPDATE_SUMMIT';
@@ -119,6 +121,28 @@ export const loadSummits = (page = 1, perPage = 10) => (dispatch, getState) => {
             dispatch(stopLoading());
         }
     );
+}
+
+export const getAllSummits = () => (dispatch, getState) => {
+
+    let { loggedUserState } = getState();
+    let { accessToken }     = loggedUserState;
+
+    let params = {
+        access_token : accessToken,
+        expand: 'none',
+        relations: 'none',
+        page: 1,
+        per_page: 100,
+        order: '-id',
+    };
+
+    getRequest(
+        createAction(REQUEST_ALL_SUMMITS),
+        createAction(RECEIVE_ALL_SUMMITS),
+        `${window.API_BASE_URL}/api/v1/summits/all`,
+        authErrorHandler
+    )(params)(dispatch, getState);
 }
 
 export const resetSummitForm = () => (dispatch, getState) => {
