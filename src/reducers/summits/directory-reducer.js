@@ -1,8 +1,9 @@
-import { RECEIVE_SUMMITS, SUMMIT_ADDED, SUMMIT_DELETED } from '../../actions/summit-actions';
+import {RECEIVE_ALL_SUMMITS, RECEIVE_SUMMITS, SUMMIT_ADDED, SUMMIT_DELETED} from '../../actions/summit-actions';
 import{ LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
 
 const DEFAULT_STATE = {
     summits      : [],
+    allSummits      : [],
     currentPage  : 1,
     lastPage     : 1,
     perPage      : 10,
@@ -15,6 +16,11 @@ const directoryReducer = (state = DEFAULT_STATE, action) => {
         case RECEIVE_SUMMITS: {
             let { current_page, total, last_page, data } = payload.response;
             return {...state, summits: data, currentPage: current_page, lastPage: last_page, totalSummits: total};
+        }
+        break;
+        case RECEIVE_ALL_SUMMITS: {
+            let { data } = payload.response;
+            return {...state, allSummits: data};
         }
         break;
         case SUMMIT_ADDED: {

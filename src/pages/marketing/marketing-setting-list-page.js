@@ -113,7 +113,8 @@ class MarketingSettingListPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, summits, settings, lastPage, currentPage, term, order, orderDir, totalSettings} = this.props;
+        let {currentSummit, allSummits, settings, lastPage, currentPage, term, order, orderDir, totalSettings} = this.props;
+        const summits = allSummits.filter(s => s.id != currentSummit.id);
 
         let columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
@@ -193,7 +194,7 @@ class MarketingSettingListPage extends React.Component {
 
 const mapStateToProps = ({ currentSummitState, directoryState, marketingSettingListState }) => ({
     currentSummit   : currentSummitState.currentSummit,
-    summits         : directoryState.summits,
+    allSummits      : directoryState.allSummits,
     ...marketingSettingListState
 })
 

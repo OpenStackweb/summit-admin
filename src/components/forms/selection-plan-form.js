@@ -142,6 +142,7 @@ class SelectionPlanForm extends React.Component {
                             id="max_submission_allowed_per_user"
                             value={entity.max_submission_allowed_per_user}
                             onChange={this.handleChange}
+                            min={0}
                         />
                     </div>
                     <div className="col-md-3 checkboxes-div">

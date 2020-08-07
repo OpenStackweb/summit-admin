@@ -81,9 +81,8 @@ class EventCategoryListPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, eventCategories, summits} = this.props;
-
-        summits = summits.filter(s => s.id != currentSummit.id);
+        let {currentSummit, eventCategories, allSummits} = this.props;
+        const summits = allSummits.filter(s => s.id != currentSummit.id);
 
         let columns = [
             { columnKey: 'id', value: T.translate("general.id") },
@@ -136,7 +135,7 @@ class EventCategoryListPage extends React.Component {
 
 const mapStateToProps = ({ directoryState, currentSummitState, currentEventCategoryListState }) => ({
     currentSummit   : currentSummitState.currentSummit,
-    summits         : directoryState.summits,
+    allSummits      : directoryState.allSummits,
     ...currentEventCategoryListState
 });
 
