@@ -26,7 +26,7 @@ import T from 'i18n-react';
 import CustomErrorPage from "./pages/custom-error-page";
 import history from './history'
 import exclusiveSections from 'js-yaml-loader!./exclusive-sections.yml';
-
+import IdTokenVerifier from 'idtoken-verifier';
 
 
 // here is set by default user lang as en
@@ -73,8 +73,15 @@ class App extends React.PureComponent {
     }
 
     render() {
-        let { isLoggedUser, onUserAuth, doLogout, getUserInfo, member, backUrl, loading} = this.props;
-        let profile_pic = member ? member.pic : '';
+        let { isLoggedUser, onUserAuth, doLogout, getUserInfo, idToken, backUrl, loading} = this.props;
+
+        let verifier = new IdTokenVerifier({
+            issuer:   window.IDP_BASE_URL,
+            audience: window.OAUTH2_CLIENT_ID
+        });
+        // get user pic from idtoken claims (IDP)
+        let jwt = verifier.decode(idToken);
+        let profile_pic = jwt.payload.picture;
 
         return (
             <Router history={history}>
@@ -111,6 +118,7 @@ const mapStateToProps = ({ loggedUserState, baseState }) => ({
     isLoggedUser: loggedUserState.isLoggedUser,
     backUrl: loggedUserState.backUrl,
     member: loggedUserState.member,
+    idToken:  loggedUserState.idToken,
     loading : baseState.loading,
 });
 
