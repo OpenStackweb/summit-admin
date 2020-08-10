@@ -102,6 +102,7 @@
     "no_empty_spots"                        : "No empty spots found",
     "placeholders": {
       "select_presentation_selection_status": "Select a Selection Status ...",
+      "select_presentation_selection_plan"  : "Select a Selection Plan ...",
       "search_unpublished"                  : "Search for UnPublished Events ...",
       "search_published"                    : "Search for Published Events ...",
       "select_order_by"                     : "Select Order By ...",

@@ -36,6 +36,7 @@ export const CHANGE_CURRENT_LOCATION                      = 'CHANGE_CURRENT_LOCA
 export const CHANGE_CURRENT_EVENT_TYPE                    = 'CHANGE_CURRENT_EVENT_TYPE';
 export const CHANGE_CURRENT_TRACK                         = 'CHANGE_CURRENT_TRACK';
 export const CHANGE_CURRENT_PRESENTATION_SELECTION_STATUS = 'CHANGE_CURRENT_PRESENTATION_SELECTION_STATUS';
+export const CHANGE_CURRENT_PRESENTATION_SELECTION_PLAN   = 'CHANGE_CURRENT_PRESENTATION_SELECTION_PLAN';
 export const CHANGE_CURRENT_UNSCHEDULE_SEARCH_TERM        = 'CHANGE_CURRENT_UNSCHEDULE_SEARCH_TERM';
 export const CHANGE_CURRENT_SCHEDULE_SEARCH_TERM          = 'CHANGE_CURRENT_SCHEDULE_SEARCH_TERM';
 export const CHANGE_CURRENT_ORDER_BY                      = 'CHANGE_CURRENT_ORDER_BY';
@@ -53,6 +54,7 @@ export const getUnScheduleEventsPage =
         event_type_id    = null,
         track_id         = null,
         selection_status = null,
+        selection_plan   = null,
         term             = null,
         order            = null
     ) =>
@@ -73,6 +75,10 @@ export const getUnScheduleEventsPage =
 
         if(selection_status != null){
             filter.push(`selection_status==${selection_status}`);
+        }
+
+        if(selection_plan != null){
+            filter.push(`selection_plan_id==${selection_plan}`);
         }
 
         if(term){
@@ -213,6 +219,15 @@ export const changeCurrentPresentationSelectionStatus = (currentPresentationSele
     dispatch(createAction(CHANGE_CURRENT_PRESENTATION_SELECTION_STATUS)(
         {
             presentationSelectionStatus: currentPresentationSelectionStatus
+        }
+    ));
+}
+
+export const changeCurrentPresentationSelectionPlan = (currentPresentationSelectionPlan) => (dispatch, getState) => {
+
+    dispatch(createAction(CHANGE_CURRENT_PRESENTATION_SELECTION_PLAN)(
+        {
+            presentationSelectionPlan: currentPresentationSelectionPlan
         }
     ));
 }
