@@ -75,13 +75,18 @@ class App extends React.PureComponent {
     render() {
         let { isLoggedUser, onUserAuth, doLogout, getUserInfo, idToken, backUrl, loading} = this.props;
 
-        let verifier = new IdTokenVerifier({
-            issuer:   window.IDP_BASE_URL,
-            audience: window.OAUTH2_CLIENT_ID
-        });
+
         // get user pic from idtoken claims (IDP)
-        let jwt = verifier.decode(idToken);
-        let profile_pic = jwt.payload.picture;
+        let profile_pic = '';
+
+        if(idToken){
+            let verifier = new IdTokenVerifier({
+                issuer:   window.IDP_BASE_URL,
+                audience: window.OAUTH2_CLIENT_ID
+            });
+            let jwt = verifier.decode(idToken);
+            profile_pic = jwt.payload.picture;
+        }
 
         return (
             <Router history={history}>
