@@ -22,6 +22,7 @@ import
     CHANGE_CURRENT_EVENT_TYPE,
     CHANGE_CURRENT_TRACK,
     CHANGE_CURRENT_PRESENTATION_SELECTION_STATUS,
+    CHANGE_CURRENT_PRESENTATION_SELECTION_PLAN,
     CHANGE_CURRENT_UNSCHEDULE_SEARCH_TERM,
     CHANGE_CURRENT_SCHEDULE_SEARCH_TERM,
     UNPUBLISHED_EVENT,
@@ -50,6 +51,7 @@ const DEFAULT_STATE = {
     currentEventType : null,
     currentTrack : null,
     currentPresentationSelectionStatus: null,
+    currentPresentationSelectionPlan: null,
     unScheduleEventsCurrentSearchTerm: null,
     scheduleEventsCurrentSearchTerm: null,
     scheduleEventsSearch: [],
@@ -84,6 +86,11 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
         case CHANGE_CURRENT_PRESENTATION_SELECTION_STATUS: {
             let {presentationSelectionStatus} = payload;
             return {...state, currentPresentationSelectionStatus : presentationSelectionStatus};
+        }
+        break;
+        case CHANGE_CURRENT_PRESENTATION_SELECTION_PLAN: {
+            let {presentationSelectionPlan} = payload;
+            return {...state, currentPresentationSelectionPlan : presentationSelectionPlan};
         }
         break;
         case RECEIVE_EMPTY_SPOTS:{

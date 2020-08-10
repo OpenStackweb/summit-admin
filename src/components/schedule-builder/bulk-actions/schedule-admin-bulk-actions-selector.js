@@ -26,7 +26,7 @@ class ScheduleAdminsBulkActionsSelector extends React.Component {
         let { onSelectAll, bulkOptions } = this.props;
         return (
             <div className="row bulk-actions-selector-container">
-                <div className="col-md-6">
+                <div className="col-md-8">
                     <input type="checkbox" onClick={onSelectAll}/>
                     <select ref={(select) => { this.actionTypeSelect = select; }}>
                         <option value="">{T.translate("published_bulk_actions_selector.options.default")}</option>
@@ -37,7 +37,7 @@ class ScheduleAdminsBulkActionsSelector extends React.Component {
                         }
                     </select>
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-4">
                     <button onClick={this.onPerformBulkAction.bind(this)} title={ T.translate("published_bulk_actions_selector.titles.go")} className="btn btn-default btn-sm">
                         <i className="fa fa-play">&nbsp;{T.translate("published_bulk_actions_selector.buttons.go")}</i>
                     </button>
