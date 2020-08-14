@@ -636,9 +636,7 @@ class ScheduleAdminDashBoard extends React.Component {
         let presentationSelectionStatusOptions = [
             { value : 'selected',            label: 'Selected'            },
             { value : 'accepted',            label: 'Accepted'            },
-            { value : 'alternate',           label: 'Alternate'           },
-            { value : 'lightning-accepted',  label: 'Lightning Accepted'  },
-            { value : 'lightning-alternate', label: 'Lightning Alternate' },
+            { value : 'alternate',           label: 'Alternate'           }
         ];
 
         // selection plan options
