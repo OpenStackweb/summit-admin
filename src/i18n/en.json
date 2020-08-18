@@ -372,7 +372,9 @@
     "big_pic"             : "Big Pic",
     "affiliations"        : "Affiliations",
     "speaker_saved"       : "Speaker saved successfully.",
-    "speaker_created"     : "Speaker created successfully."
+    "speaker_created"     : "Speaker created successfully.",
+    "company" : "Company",
+    "phone_number" : "Phone #"
   },
   "merge_speakers": {
     "merge_speakers"        : "Merge Speakers",
@@ -1421,7 +1423,7 @@
   "edit_email_flow_event": {
     "email_template_identifier": "Email Template (Associated with Event)",
     "email_flow_event": "Email Event",
-    "flow_name": "Flow Name",
+    "flow_name": "eFlow Name",
     "event_type": "Event Type",
     "saved": "Email template Flow saved successfully.",
     "placeholders": {

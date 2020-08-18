@@ -264,11 +264,21 @@ class SpeakerForm extends React.Component {
                 <div className="row form-group">
                     <div className="col-md-4">
                         <label> {T.translate("edit_speaker.twitter")} </label>
-                        <Input className="form-control" id="twitter" value={entity.twitter} onChange={this.handleChange} />
+                        <Input className="form-control" id="twitter" value={decodeURIComponent(entity.twitter)} onChange={this.handleChange} />
                     </div>
                     <div className="col-md-4">
                         <label> {T.translate("edit_speaker.irc")} </label>
                         <Input className="form-control" id="irc" value={entity.irc} onChange={this.handleChange} />
+                    </div>
+                </div>
+                <div className="row form-group">
+                    <div className="col-md-6">
+                        <label> {T.translate("edit_speaker.company")} </label>
+                        <Input className="form-control" id="company" value={entity.company} onChange={this.handleChange} />
+                    </div>
+                    <div className="col-md-6">
+                        <label> {T.translate("edit_speaker.phone_number")} </label>
+                        <Input className="form-control" id="phone_number" value={entity.phone_number} onChange={this.handleChange} />
                     </div>
                 </div>
                 <div className="row form-group">

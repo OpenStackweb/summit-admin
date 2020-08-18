@@ -41,7 +41,9 @@ export const DEFAULT_ENTITY = {
     all_presentations: [],
     registration_codes: [],
     summit_assistances: [],
-    affiliations: []
+    affiliations: [],
+    company: '',
+    phone_number: '',
 }
 
 const DEFAULT_STATE = {
