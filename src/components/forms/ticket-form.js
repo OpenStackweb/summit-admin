@@ -193,6 +193,12 @@ class TicketForm extends React.Component {
                         {entity.bought_date}
                     </div>
                 </div>
+                <div className="row form-group">
+                    <div className="col-md-3">
+                        <label> {T.translate("edit_ticket.paid_amount")}:&nbsp;</label>
+                        {entity.final_amount_formatted}
+                    </div>
+                </div>
 
 
 

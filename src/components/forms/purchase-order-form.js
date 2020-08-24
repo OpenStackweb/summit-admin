@@ -105,7 +105,8 @@ class PurchaseOrderForm extends React.Component {
             { columnKey: 'number', value: T.translate("edit_purchase_order.ticket_number") },
             { columnKey: 'ticket_type_name', value: T.translate("edit_purchase_order.ticket_type_name") },
             { columnKey: 'owner_full_name', value: T.translate("edit_purchase_order.owner_full_name") },
-            { columnKey: 'owner_email', value: T.translate("edit_purchase_order.owner_email") }
+            { columnKey: 'owner_email', value: T.translate("edit_purchase_order.owner_email") },
+            { columnKey: 'final_amount_formatted', value: T.translate("edit_purchase_order.paid_amount_per_tix")}
         ];
 
         let ticket_options = {
@@ -131,9 +132,13 @@ class PurchaseOrderForm extends React.Component {
                             disabled
                         />
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-3">
                         <label> {T.translate("edit_purchase_order.status")}</label><br/>
                         {entity.status}
+                    </div>
+                    <div className="col-md-3">
+                        <label> {T.translate("edit_purchase_order.paid_amount")}</label><br/>
+                        ${entity.amount}
                     </div>
                 </div>
                 }

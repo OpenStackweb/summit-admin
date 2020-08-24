@@ -60,6 +60,7 @@ const ticketListReducer = (state = DEFAULT_STATE, action) => {
                     owner_name: t.owner ? t.owner.first_name + ' ' + t.owner.last_name : 'N/A',
                     owner_email: t.owner ? t.owner.email : 'N/A',
                     status: t.status,
+                    final_amount_formatted: `$${t.final_amount}`
                 };
             })
 
