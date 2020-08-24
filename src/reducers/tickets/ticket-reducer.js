@@ -77,6 +77,7 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
             let bought_date = entity.bought_date ? epochToMoment(entity.bought_date).format('MMMM Do YYYY, h:mm:ss a') : null;
             let attendee_full_name = 'N/A';
             let promocode_name = 'N/A';
+            const final_amount_formatted = `$${entity.final_amount}`;
 
             for(var key in entity) {
                 if(entity.hasOwnProperty(key)) {
@@ -96,7 +97,7 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
                 }
             }
 
-            return {...state, entity: {...DEFAULT_ENTITY, ...entity, attendee_full_name, bought_date, promocode_name} };
+            return {...state, entity: {...DEFAULT_ENTITY, ...entity, attendee_full_name, bought_date, promocode_name, final_amount_formatted} };
         }
         break;
         case TICKET_UPDATED: {
