@@ -22,7 +22,7 @@ import {
     Panel,
     Dropdown,
     Table,
-    UploadInput
+    UploadInput, TextEditor
 } from 'openstack-uicore-foundation/lib/components'
 import {Exclusive} from 'openstack-uicore-foundation/lib/components'
 
@@ -217,6 +217,16 @@ class SummitForm extends React.Component {
                         />
                     </div>
                     <div className="col-md-4">
+                        <label> {T.translate("edit_summit.slug")}</label>
+                        <Input
+                            className="form-control"
+                            error={this.hasErrors('slug')}
+                            id="slug"
+                            value={entity.slug}
+                            onChange={this.handleChange}
+                        />
+                    </div>
+                    <div className="col-md-4">
                         <label> {T.translate("edit_summit.max_submission_allowed_per_user")} *</label>
                         <Input
                             className="form-control"
@@ -239,16 +249,7 @@ class SummitForm extends React.Component {
                             onChange={this.handleChange}
                         />
                     </div>
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_summit.slug")}</label>
-                        <Input
-                            className="form-control"
-                            error={this.hasErrors('slug')}
-                            id="slug"
-                            value={entity.slug}
-                            onChange={this.handleChange}
-                        />
-                    </div>
+
                     <div className="col-md-4">
                         <label> {T.translate("edit_summit.dates_label")}</label>
                         <Input
@@ -259,8 +260,6 @@ class SummitForm extends React.Component {
                             onChange={this.handleChange}
                         />
                     </div>
-                </div>
-                <div className="row form-group">
                     <div className="col-md-4">
                         <label> {T.translate("edit_summit.registration_link")}</label>
                         <Input
@@ -271,6 +270,9 @@ class SummitForm extends React.Component {
                             onChange={this.handleChange}
                         />
                     </div>
+                </div>
+                <div className="row form-group">
+
                     <div className="col-md-4">
                         <label> {T.translate("edit_summit.secondary_registration_link")}</label>
                         <Input
@@ -291,27 +293,6 @@ class SummitForm extends React.Component {
                             onChange={this.handleChange}
                         />
                     </div>
-                </div>
-                <div className="row form-group">
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_summit.registration_disclaimer_content")} </label>
-                        <textarea
-                            id="registration_disclaimer_content"
-                            value={entity.registration_disclaimer_content}
-                            onChange={this.handleChange}
-                            className="form-control"
-                        />
-                    </div>
-                    <div className="col-md-4 checkboxes-div">
-                        <div className="form-check abc-checkbox">
-                            <input type="checkbox" id="registration_disclaimer_mandatory"
-                                   checked={entity.registration_disclaimer_mandatory} onChange={this.handleChange}
-                                   className="form-check-input"/>
-                            <label className="form-check-label" htmlFor="registration_disclaimer_mandatory">
-                                {T.translate("edit_summit.registration_disclaimer_mandatory")}
-                            </label>
-                        </div>
-                    </div>
                     <div className="col-md-4">
                         <label> {T.translate("edit_summit.registration_reminder_email_days_interval")}</label>
                         <Input
@@ -326,7 +307,17 @@ class SummitForm extends React.Component {
                     </div>
                 </div>
                 <div className="row form-group">
-                    <div className="col-md-6 checkboxes-div">
+                    <div className="col-md-4 checkboxes-div">
+                        <div className="form-check abc-checkbox">
+                            <input type="checkbox" id="registration_disclaimer_mandatory"
+                                   checked={entity.registration_disclaimer_mandatory} onChange={this.handleChange}
+                                   className="form-check-input"/>
+                            <label className="form-check-label" htmlFor="registration_disclaimer_mandatory">
+                                {T.translate("edit_summit.registration_disclaimer_mandatory")}
+                            </label>
+                        </div>
+                    </div>
+                    <div className="col-md-4 checkboxes-div">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="active" checked={entity.active}
                                    onChange={this.handleChange} className="form-check-input"/>
@@ -335,7 +326,7 @@ class SummitForm extends React.Component {
                             </label>
                         </div>
                     </div>
-                    <div className="col-md-6 checkboxes-div">
+                    <div className="col-md-4 checkboxes-div">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="available_on_api" checked={entity.available_on_api}
                                    onChange={this.handleChange} className="form-check-input"/>
@@ -345,7 +336,18 @@ class SummitForm extends React.Component {
                         </div>
                     </div>
                 </div>
-
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <label> {T.translate("edit_summit.registration_disclaimer_content")} </label>
+                        {/*<textarea
+                            id="registration_disclaimer_content"
+                            value={entity.registration_disclaimer_content}
+                            onChange={this.handleChange}
+                            className="form-control"
+                        />*/}
+                        <TextEditor id="registration_disclaimer_content" value={entity.registration_disclaimer_content} onChange={this.handleChange} />
+                    </div>
+                </div>
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("general.logo")} </label>
