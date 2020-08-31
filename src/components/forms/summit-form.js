@@ -510,6 +510,28 @@ class SummitForm extends React.Component {
                        handleClick={this.toggleSection.bind(this, 'virtual_event')}>
                     <div className="row form-group">
                         <div className="col-md-6">
+                            <label> {T.translate("edit_summit.marketing_site_url")}</label>
+                            <Input
+                                className="form-control"
+                                error={this.hasErrors('marketing_site_url')}
+                                id="marketing_site_url"
+                                value={entity.marketing_site_url}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                        <div className="col-md-6">
+                            <label> {T.translate("edit_summit.marketing_site_oauth2_client_id")}</label>
+                            <Input
+                                className="form-control"
+                                error={this.hasErrors('marketing_site_oauth2_client_id')}
+                                id="marketing_site_oauth2_client_id"
+                                value={entity.marketing_site_oauth2_client_id}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                    </div>
+                    <div className="row form-group">
+                        <div className="col-md-6">
                             <label> {T.translate("edit_summit.virtual_site_url")}</label>
                             <Input
                                 className="form-control"
@@ -520,12 +542,12 @@ class SummitForm extends React.Component {
                             />
                         </div>
                         <div className="col-md-6">
-                            <label> {T.translate("edit_summit.marketing_site_url")}</label>
+                            <label> {T.translate("edit_summit.virtual_site_oauth2_client_id")}</label>
                             <Input
                                 className="form-control"
-                                error={this.hasErrors('marketing_site_url')}
-                                id="marketing_site_url"
-                                value={entity.marketing_site_url}
+                                error={this.hasErrors('virtual_site_oauth2_client_id')}
+                                id="virtual_site_oauth2_client_id"
+                                value={entity.virtual_site_oauth2_client_id}
                                 onChange={this.handleChange}
                             />
                         </div>
