@@ -253,6 +253,7 @@
     "marketing_site_url": "Marketing Site URL",
     "marketing_site_oauth2_client_id": "Marketing Site OAUTH2 Client ID",
     "virtual_site_oauth2_client_id": "Virtual Event Site OAUTH2 Client ID",
+    "support_email" : "Support Email",
     "placeholders": {
       "api_feed_type"                 : "Select API feed type...",
       "external_registration_feed_type" : "Select Ext. Reg. feed type..."
