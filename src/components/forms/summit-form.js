@@ -46,7 +46,6 @@ class SummitForm extends React.Component {
         this.handleNewAttributeType = this.handleNewAttributeType.bind(this);
         this.handleUploadFile = this.handleUploadFile.bind(this);
         this.handleRemoveFile = this.handleRemoveFile.bind(this);
-
     }
 
     componentWillReceiveProps(nextProps) {
@@ -106,7 +105,6 @@ class SummitForm extends React.Component {
 
     handleSubmit(ev) {
         ev.preventDefault();
-
         this.props.onSubmit(this.state.entity);
     }
 
@@ -149,7 +147,6 @@ class SummitForm extends React.Component {
         let {entity, history} = this.props;
         history.push(`/app/summits/${entity.id}/room-booking-attributes/new`);
     }
-
 
     render() {
         let {entity, showSection} = this.state;
@@ -337,6 +334,18 @@ class SummitForm extends React.Component {
                     </div>
                 </div>
                 <div className="row form-group">
+                    <div className="col-md-6">
+                        <label> {T.translate("edit_summit.support_email")}</label>
+                        <Input
+                            className="form-control"
+                            error={this.hasErrors('support_email')}
+                            id="support_email"
+                            value={entity.support_email}
+                            onChange={this.handleChange}
+                        />
+                    </div>
+                </div>
+                <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_summit.registration_disclaimer_content")} </label>
                         {/*<textarea
@@ -506,7 +515,7 @@ class SummitForm extends React.Component {
                     </div>
                 </Panel>
 
-                <Panel show={showSection == 'virtual_event'} title={T.translate("edit_summit.virtual_event")}
+                <Panel show={showSection === 'virtual_event'} title={T.translate("edit_summit.virtual_event")}
                        handleClick={this.toggleSection.bind(this, 'virtual_event')}>
                     <div className="row form-group">
                         <div className="col-md-6">
