@@ -30,7 +30,7 @@ const fieldNames = [
     {label: 'Social', key: 'socialSummary', simple: true},
     {label: 'Expect to Learn', key: 'expectToLearn', simple: true},
     {label: 'Speakers', key: 'speakerNames', simple: true},
-    {label: 'Company', key: 'speaker_company', simple: false},
+    {label: 'Company', key: 'speakers_currentCompany', simple: false},
     {label: 'Emails', key: 'speakerEmails', simple: true},
     {label: 'Track', key: 'category_title', sortable: true},
     {label: 'Tags', key: 'tagNames', simple: true},
@@ -83,7 +83,7 @@ class SmartPresentationReport extends React.Component {
             reportData.push({"category": category})
         }
 
-        if (showFields.includes("speaker_company")) {
+        if (showFields.includes("speakers_currentCompany")) {
             let speakers = new Query("speakers");
             speakers.find(["currentCompany"]);
             reportData.push({"speakers": speakers})
@@ -126,6 +126,8 @@ class SmartPresentationReport extends React.Component {
         let {showFields} = this.state;
 
         let flatData = flattenData(data);
+
+        console.log(flatData);
 
         let columns = [
             { columnKey: 'id', value: 'Id' },
