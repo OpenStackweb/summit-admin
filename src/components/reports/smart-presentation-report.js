@@ -30,7 +30,7 @@ const fieldNames = [
     {label: 'Social', key: 'socialSummary', simple: true},
     {label: 'Expect to Learn', key: 'expectToLearn', simple: true},
     {label: 'Speakers', key: 'speakerNames', simple: true},
-    {label: 'Company', key: 'speakers_currentCompany', simple: false},
+    {label: 'Company', key: 'speakerCompanies', simple: true},
     {label: 'Emails', key: 'speakerEmails', simple: true},
     {label: 'Track', key: 'category_title', sortable: true},
     {label: 'Tags', key: 'tagNames', simple: true},
@@ -81,12 +81,6 @@ class SmartPresentationReport extends React.Component {
             let category = new Query("category");
             category.find(["id", "code", "title"]);
             reportData.push({"category": category})
-        }
-
-        if (showFields.includes("speakers_currentCompany")) {
-            let speakers = new Query("speakers");
-            speakers.find(["currentCompany"]);
-            reportData.push({"speakers": speakers})
         }
 
         let allSimpleFields = fieldNames.filter(f => f.simple).map(f => f.key);
