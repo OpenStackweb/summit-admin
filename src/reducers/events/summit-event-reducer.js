@@ -29,6 +29,7 @@ import { EVENT_MATERIAL_ADDED, EVENT_MATERIAL_UPDATED, EVENT_MATERIAL_DELETED} f
 
 export const DEFAULT_ENTITY = {
     id: 0,
+    type_id: null,
     title: '',
     description: '',
     social_description: '',
@@ -97,6 +98,7 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
             if (!entity.rsvp_external) entity.rsvp_link = null;
 
             entity.materials = [...media_uploads, ...links, ...videos, ...slides];
+            entity.type_id = entity.type ? entity.type.id : null;
 
             entity.materials.forEach(m => ({
                 ...m,
