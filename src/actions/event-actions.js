@@ -87,8 +87,9 @@ export const getEvents = ( term = null, page = 1, perPage = 10, order = 'id', or
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events`,
         authErrorHandler,
         {order, orderDir, term, summitTZ}
-    )(params)(dispatch).then(() => {
+    )(params)(dispatch).then((data) => {
             dispatch(stopLoading());
+            return data.response;
         }
     );
 };
