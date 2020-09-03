@@ -28,6 +28,7 @@ import { EVENT_MATERIAL_ADDED, EVENT_MATERIAL_UPDATED, EVENT_MATERIAL_DELETED} f
 
 export const DEFAULT_ENTITY = {
     id: 0,
+    type_id: null,
     title: '',
     description: '',
     social_description: '',
@@ -103,6 +104,8 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
             if (entity.slides) {
                 slides = entity.slides.map(s => ({...s, display_on_site_label: s.display_on_site ? 'Yes' : 'No'}));
             }
+            
+            entity.type_id = entity.type ? entity.type.id : null;
 
             entity.materials = [...links, ...videos, ...slides];
 
