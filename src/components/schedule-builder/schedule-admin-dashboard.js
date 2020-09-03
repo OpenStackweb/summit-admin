@@ -282,10 +282,13 @@ class ScheduleAdminDashBoard extends React.Component {
         if(!presentationSelectionStatus) {
             order = 'id';
             this.props.changeCurrentUnScheduleOrderBy(order);
+        } else {
+            order = 'trackchairsel';
+            this.props.changeCurrentUnScheduleOrderBy(order);
         }
 
         this.props.changeCurrentPresentationSelectionStatus(presentationSelectionStatus);
-        this.props.getUnScheduleEventsPage(currentSummit.id, 1, 20, eventTypeId, trackId, presentationSelectionStatus, presentationSelectionPlan, unScheduleEventsCurrentSearchTerm, order);
+        this.props.getUnScheduleEventsPage(currentSummit.id, 1, 20, eventTypeId, trackId, presentationSelectionStatus, currentPresentationSelectionPlan, unScheduleEventsCurrentSearchTerm, order);
     }
 
     onPresentationSelectionPlanChanged(presentationSelectionPlan){
@@ -791,13 +794,11 @@ class ScheduleAdminDashBoard extends React.Component {
                             />
                         </div>
                         <div className="col-md-6">
-                            { currentEventType != null && currentEventType.class_name == "PresentationType" &&
                             <ScheduleAdminPresentationSelectionStatusSelector
                                 presentationSelectionStatus={presentationSelectionStatusOptions}
                                 onPresentationSelectionStatusChanged={this.onPresentationSelectionStatusChanged}
                                 currentValue={currentPresentationSelectionStatus}
                             />
-                            }
                         </div>
                     </div>
                     <div className="row">
@@ -811,13 +812,11 @@ class ScheduleAdminDashBoard extends React.Component {
                             }
                         </div>
                         <div className="col-md-6">
-                            { currentEventType != null && currentEventType.class_name == "PresentationType" &&
                             <ScheduleAdminPresentationSelectionPlanSelector
                                 presentationSelectionPlans={presentationSelectionPlanOptions}
                                 onPresentationSelectionPlanChanged={this.onPresentationSelectionPlanChanged}
                                 currentValue={currentPresentationSelectionPlan}
                             />
-                            }
                         </div>
                     </div>
 
