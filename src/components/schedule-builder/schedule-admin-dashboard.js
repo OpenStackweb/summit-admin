@@ -811,13 +811,14 @@ class ScheduleAdminDashBoard extends React.Component {
                             />
                             }
                         </div>
-                        <div className="col-md-6">
+                        {/* Hide this for OpenStack */}
+                        {/*<div className="col-md-6">
                             <ScheduleAdminPresentationSelectionPlanSelector
                                 presentationSelectionPlans={presentationSelectionPlanOptions}
                                 onPresentationSelectionPlanChanged={this.onPresentationSelectionPlanChanged}
                                 currentValue={currentPresentationSelectionPlan}
                             />
-                        </div>
+                        </div>*/}
                     </div>
 
                     <UnScheduleEventList
