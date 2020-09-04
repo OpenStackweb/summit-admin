@@ -79,8 +79,6 @@ const eventCategoryReducer = (state = DEFAULT_STATE, action) => {
                 }
             }
 
-            entity.color = entity.color ? `#${entity.color}` : '';
-
             return {...state, errors: {}, entity: {...DEFAULT_ENTITY, ...entity} };
         }
         break;

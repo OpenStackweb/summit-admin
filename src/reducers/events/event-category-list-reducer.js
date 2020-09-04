@@ -44,7 +44,7 @@ const eventCategoryListReducer = (state = DEFAULT_STATE, action) => {
                     id: e.id,
                     name: e.name,
                     code: e.code,
-                    color: `<div style="background-color: #${e.color}">&nbsp;</div>`
+                    color: `<div style="background-color: ${e.color}">&nbsp;</div>`
                 };
             }).sort(
                 (a, b) => (a.name > b.name ? 1 : (a.name < b.name ? -1 : 0))
