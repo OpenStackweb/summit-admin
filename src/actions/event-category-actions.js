@@ -219,6 +219,10 @@ export const deleteEventCategory = (categoryId) => (dispatch, getState) => {
 const normalizeEntity = (entity) => {
     let normalizedEntity = {...entity};
 
+    //remove # from color hexa
+    if (normalizedEntity.color)
+        normalizedEntity.color = normalizedEntity.color.substr(1);
+
     normalizedEntity.session_count              = parseInt(entity.session_count);
     normalizedEntity.alternate_count            = parseInt(entity.alternate_count);
     normalizedEntity.lightning_count            = parseInt(entity.lightning_count);

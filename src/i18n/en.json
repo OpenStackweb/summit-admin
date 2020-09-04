@@ -628,12 +628,15 @@
     "no_items"              : "No event categories found.",
     "add_category"          : "Add Event Category",
     "name"                  : "Name",
+    "code"                  : "Code",
+    "color"                 : "Color",
     "delete_warning"        : "Are you sure you want to delete event category "
   },
   "edit_event_category": {
     "event_category"              : "Event Category",
     "name"                        : "Name",
     "code"                        : "Code",
+    "color"                       : "Color",
     "description"                 : "Description",
     "number_sessions"             : "# of Sessions",
     "number_alternates"           : "# of Alternates",

@@ -86,7 +86,9 @@ class EventCategoryListPage extends React.Component {
 
         let columns = [
             { columnKey: 'id', value: T.translate("general.id") },
-            { columnKey: 'name', value: T.translate("event_category_list.name") }
+            { columnKey: 'name', value: T.translate("event_category_list.name") },
+            { columnKey: 'code', value: T.translate("event_category_list.code") },
+            { columnKey: 'color', value: T.translate("event_category_list.color") }
         ];
 
         let table_options = {
@@ -96,7 +98,7 @@ class EventCategoryListPage extends React.Component {
             }
         };
 
-        if(!currentSummit.id) return(<div></div>);
+        if(!currentSummit.id) return null;
 
         return(
             <div className="container">
