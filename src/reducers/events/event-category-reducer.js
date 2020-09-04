@@ -29,6 +29,7 @@ export const DEFAULT_ENTITY = {
     id                          : 0,
     name                        : '',
     code                        : '',
+    color                       : '',
     description                 : '',
     session_count               : 0,
     alternate_count             : 0,
@@ -77,6 +78,8 @@ const eventCategoryReducer = (state = DEFAULT_STATE, action) => {
                     entity[key] = (entity[key] == null) ? '' : entity[key] ;
                 }
             }
+
+            entity.color = entity.color ? `#${entity.color}` : '';
 
             return {...state, errors: {}, entity: {...DEFAULT_ENTITY, ...entity} };
         }

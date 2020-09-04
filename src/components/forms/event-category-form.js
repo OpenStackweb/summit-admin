@@ -163,6 +163,16 @@ class EventCategoryForm extends React.Component {
                             error={this.hasErrors('code')}
                         />
                     </div>
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_event_category.color")} *</label>
+                        <Input
+                            id="color"
+                            type="color"
+                            value={entity.color}
+                            onChange={this.handleChange}
+                            className="form-control"
+                        />
+                    </div>
                 </div>
                 <div className="row form-group">
                     <div className="col-md-12">
