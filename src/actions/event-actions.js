@@ -61,7 +61,13 @@ export const getEvents = ( term = null, page = 1, perPage = 10, order = 'id', or
 
     if(term){
         let escapedTerm = escapeFilterValue(term);
-        filter.push(`title=@${escapedTerm},abstract=@${escapedTerm},tags=@${escapedTerm},speaker=@${escapedTerm},speaker_email=@${escapedTerm},id==${escapedTerm}`);
+        let searchString = `title=@${escapedTerm},abstract=@${escapedTerm},tags=@${escapedTerm},speaker=@${escapedTerm},speaker_email=@${escapedTerm}`;
+
+        if (parseInt(term)) {
+            searchString += `,id==${parseInt(term)}`;
+        }
+
+        filter.push(searchString);
     }
 
     let params = {
