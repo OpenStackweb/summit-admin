@@ -58,13 +58,14 @@ export const getEvents = ( term = null, page = 1, perPage = 10, order = 'id', or
     dispatch(startLoading());
 
     if(term){
+        let escapedTerm = escapeFilterValue(term);
+        let searchString = `title=@${escapedTerm},abstract=@${escapedTerm},tags=@${escapedTerm},speaker=@${escapedTerm},speaker_email=@${escapedTerm}`;
 
-        let query = `title=@${term},abstract=@${term},tags=@${term},speaker=@${term},speaker_email=@${term}`;
-        // only add id if its numeric ...
-        if(!isNaN(term))
-            query = `${query},id==${term}`;
+        if (parseInt(term)) {
+            searchString += `,id==${parseInt(term)}`;
+        }
 
-        filter.push(query);
+        filter.push(searchString);
     }
 
     let params = {
