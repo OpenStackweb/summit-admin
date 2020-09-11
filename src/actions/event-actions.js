@@ -201,22 +201,27 @@ export const getCurrentEventForOccupancy = ( roomId, eventId = null ) => (dispat
 };
 
 export const getEvent = (eventId) => (dispatch, getState) => {
-        let { loggedUserState, currentSummitState } = getState();
-        let { accessToken }     = loggedUserState;
-        let { currentSummit }   = currentSummitState;
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
 
-        if (!currentSummit.id) return;
+    if (!currentSummit.id) return;
 
-        dispatch(startLoading());
-        return getRequest(
-            null,
-            createAction(RECEIVE_EVENT),
-            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/${eventId}?access_token=${accessToken}&expand=speakers,sponsors,groups`,
-            authErrorHandler
-        )({})(dispatch).then(() => {
-                dispatch(stopLoading());
-            }
-        );
+    let params = {
+        access_token: accessToken,
+        expand: 'creator, speakers, moderator, sponsors, groups, type, type.allowed_media_upload_types'
+    };
+
+    dispatch(startLoading());
+    return getRequest(
+        null,
+        createAction(RECEIVE_EVENT),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/${eventId}`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };
 
 export const resetEventForm = () => (dispatch, getState) => {

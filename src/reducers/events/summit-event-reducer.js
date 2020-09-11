@@ -44,7 +44,7 @@ export const DEFAULT_ENTITY = {
     tags: [],
     sponsors: [],
     speakers: [],
-    moderator: {},
+    moderator: null,
     discussion_leader: 0,
     groups: [],
     attachment: '',

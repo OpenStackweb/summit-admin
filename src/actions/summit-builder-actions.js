@@ -82,7 +82,14 @@ export const getUnScheduleEventsPage =
         }
 
         if(term){
-            filter.push(`title=@${term},abstract=@${term},social_summary=@${term},tags=@${term},speaker=@${term},speaker_email=@${term},id==${term}`);
+            let escapedTerm = escapeFilterValue(term);
+            let searchString = `title=@${escapedTerm},abstract=@${escapedTerm},tags=@${escapedTerm},speaker=@${escapedTerm},speaker_email=@${escapedTerm}`;
+
+            if (parseInt(term)) {
+                searchString += `,id==${parseInt(term)}`;
+            }
+
+            filter.push(searchString);
         }
 
         let params = {
@@ -287,17 +294,32 @@ export const unPublishEvent = (event) => (dispatch, getState) => {
 export const searchScheduleEvents = (term) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    let { currentSummit }   = currentSummitState
+    let filter = [];
 
     dispatch(startLoading());
+
+    if(term){
+        let escapedTerm = escapeFilterValue(term);
+        let searchString = `title=@${escapedTerm},abstract=@${escapedTerm},social_summary=@${term},tags=@${escapedTerm},speaker=@${escapedTerm},speaker_email=@${escapedTerm}`;
+
+        if (parseInt(term)) {
+            searchString += `,id==${parseInt(term)}`;
+        }
+
+        filter.push(searchString);
+    }
 
     let params = {
         page         : 1,
         per_page     : ScheduleEventsSearchResultMaxPage,
         access_token : accessToken,
-        filter: `title=@${term},abstract=@${term},social_summary=@${term},tags=@${term},speaker=@${term},speaker_email=@${term},id==${term}`,
         order:'+title,+id'
     };
+
+    if(filter.length > 0){
+        params['filter[]']= filter;
+    }
 
     return getRequest(
         null,
