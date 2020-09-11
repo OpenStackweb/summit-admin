@@ -259,11 +259,13 @@ class EventForm extends React.Component {
             }
         };
 
+        const creator = entity.id ? `${entity.creator.first_name} ${entity.creator.last_name} (${entity.creator.id})` : '';
+
         return (
             <form>
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
-                    <div className="col-md-9">
+                    <div className="col-md-8">
                         <label> {T.translate("edit_event.title")} *</label>
                         <Input
                             className="form-control"
@@ -273,9 +275,13 @@ class EventForm extends React.Component {
                             onChange={this.handleChange}
                         />
                     </div>
-                    <div className="col-md-3 published">
+                    <div className="col-md-2">
+                        <label> {T.translate("edit_event.submitter")} </label>
+                        <div>{creator}</div>
+                    </div>
+                    <div className="col-md-2 published">
                         <label> {T.translate("edit_event.published")} </label>
-                        <div><i className={"fa fa-2x " + (entity.is_published ? 'fa-check' : 'fa-times')}></i></div>
+                        <div><i className={"fa fa-2x " + (entity.is_published ? 'fa-check' : 'fa-times')} /></div>
                     </div>
                 </div>
                 <div className="row form-group">
