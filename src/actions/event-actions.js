@@ -212,7 +212,7 @@ export const getEvent = (eventId) => (dispatch, getState) => {
 
     let params = {
         access_token: accessToken,
-        expand: 'speakers, sponsors, groups, type, type.allowed_media_upload_types'
+        expand: 'creator, speakers, moderator, sponsors, groups, type, type.allowed_media_upload_types'
     };
 
     dispatch(startLoading());

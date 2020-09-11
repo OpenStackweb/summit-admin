@@ -278,6 +278,7 @@
   },
   "edit_event": {
     "title"                           : "Title",
+    "submitter"                       : "Submitter",
     "published"                       : "Published",
     "short_description"               : "Short Description / Abstract",
     "social_summary"                  : "Social Summary",
