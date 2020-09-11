@@ -22,7 +22,8 @@ import {
     startLoading,
     stopLoading,
     deleteRequest,
-    authErrorHandler
+    authErrorHandler,
+    escapeFilterValue
 } from "openstack-uicore-foundation/lib/methods";
 
 export const REQUEST_UNSCHEDULE_EVENTS_PAGE               = 'REQUEST_UNSCHEDULE_EVENTS_PAGE';

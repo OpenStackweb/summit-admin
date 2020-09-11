@@ -26,7 +26,8 @@ import {
     showSuccessMessage,
     epochToMomentTimeZone,
     authErrorHandler,
-    getCSV
+    getCSV,
+    escapeFilterValue
 } from "openstack-uicore-foundation/lib/methods";
 
 export const REQUEST_EVENTS                         = 'REQUEST_EVENTS';
