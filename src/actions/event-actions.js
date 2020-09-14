@@ -280,7 +280,7 @@ export const saveEvent = (entity, publish) => (dispatch, getState) => {
         .then((payload) => {
             if (publish) {
                 normalizedEntity.id = payload.response.id;
-                dispatch(publishEvent(normalizedEntity));
+                dispatch(publishEvent(normalizedEntity, () => { history.push(`/app/summits/${currentSummit.id}/events/${payload.response.id}`) }));
             }
             else
                 dispatch(showMessage(
@@ -311,7 +311,7 @@ export const saveOccupancy = (entity) => (dispatch, getState) => {
 
 }
 
-const publishEvent = (entity) => (dispatch, getState) => {
+const publishEvent = (entity, cb = null) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
@@ -332,11 +332,11 @@ const publishEvent = (entity) => (dispatch, getState) => {
         authErrorHandler
     )(params)(dispatch)
     .then((payload) => {
-        dispatch(checkProximityEvents(entity));
+        dispatch(checkProximityEvents(entity, cb));
     });
 }
 
-export const checkProximityEvents = (event) => (dispatch, getState) => {
+export const checkProximityEvents = (event, cb = null) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
@@ -347,7 +347,7 @@ export const checkProximityEvents = (event) => (dispatch, getState) => {
     };
 
     if (!event.hasOwnProperty('speakers') || ( event.speakers.length === 0 && (!event.moderator_speaker_id))) {
-        dispatch(showMessage(success_message));
+        dispatch(showMessage(success_message, cb));
         return;
     }
 
@@ -389,12 +389,13 @@ export const checkProximityEvents = (event) => (dispatch, getState) => {
                 for(var i in proximity_events) {
                     let prox_event = proximity_events[i];
                     let event_date = epochToMomentTimeZone(prox_event.start_date, currentSummit.time_zone_id).format('M/D h:mm a');
-                    success_message.html += `<small><i>"${prox_event.title}"</i> at ${event_date} in ${prox_event.location.name}</small><br/>`;
+                    let locationName = prox_event.location ? prox_event.location.name : 'TBD';
+                    success_message.html += `<small><i>"${prox_event.title}"</i> at ${event_date} in ${locationName}</small><br/>`;
                 }
             }
 
 
-            dispatch(showMessage(success_message));
+            dispatch(showMessage(success_message, cb));
         }
     );
 }
@@ -487,8 +488,12 @@ const normalizeEntity = (entity) => {
     normalizedEntity.sponsors = normalizedEntity.sponsors.map(s => s.id);
     normalizedEntity.speakers = normalizedEntity.speakers.map(s => s.id);
 
-    if (Object.keys(normalizedEntity.moderator).length > 0)
+    if (normalizedEntity.moderator)
         normalizedEntity.moderator_speaker_id = normalizedEntity.moderator.id;
+    else
+        delete(normalizedEntity.moderator);
+
+    delete(normalizedEntity.creator);
 
     return normalizedEntity;
 
