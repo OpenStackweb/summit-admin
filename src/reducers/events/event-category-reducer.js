@@ -29,6 +29,7 @@ export const DEFAULT_ENTITY = {
     id                          : 0,
     name                        : '',
     code                        : '',
+    color                       : '#DADADA',
     description                 : '',
     session_count               : 0,
     alternate_count             : 0,
@@ -39,7 +40,7 @@ export const DEFAULT_ENTITY = {
     allowed_tags                : [],
     track_groups                : [],
     extra_questions             : []
-}
+};
 
 const DEFAULT_STATE = {
     entity      : DEFAULT_ENTITY,
