@@ -259,7 +259,7 @@ class EventForm extends React.Component {
             }
         };
 
-        const creator = entity.id ? `${entity.creator.first_name} ${entity.creator.last_name} (${entity.creator.id})` : '';
+        const creator = (entity.id && entity.creator) ? `${entity.creator.first_name} ${entity.creator.last_name} (${entity.creator.email})` : 'N/A';
 
         return (
             <form>
