@@ -31,6 +31,7 @@ export const DEFAULT_ENTITY = {
     id: 0,
     type_id: null,
     title: '',
+    creator: null,
     description: '',
     social_description: '',
     attendees_expected_learnt: '',
@@ -105,7 +106,7 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
                 display_on_site_label: m.display_on_site ? 'Yes' : 'No',
             }));
 
-            return {...state, entity: {...state.entity, ...entity}, errors: {} };
+            return {...state, entity: {...DEFAULT_ENTITY, ...entity}, errors: {} };
         }
         break;
         case EVENT_PUBLISHED: {
