@@ -27,6 +27,7 @@ import {
     getCSV,
     escapeFilterValue
 } from 'openstack-uicore-foundation/lib/methods';
+import {ORDER_EMAIL_SENT} from "./order-actions";
 
 
 export const REQUEST_TICKETS            = 'REQUEST_TICKETS';
@@ -40,6 +41,7 @@ export const TICKET_REFUNDED            = 'TICKET_REFUNDED';
 export const TICKET_MEMBER_ASSIGNED     = 'TICKET_MEMBER_ASSIGNED';
 export const TICKET_MEMBER_REASSIGNED   = 'TICKET_MEMBER_REASSIGNED';
 export const BADGE_ADDED_TO_TICKET      = 'BADGE_ADDED_TO_TICKET';
+export const TICKET_EMAIL_SENT = 'TICKET_EMAIL_SENT';
 
 export const REQUEST_TICKET_TYPES       = 'REQUEST_TICKET_TYPES';
 export const RECEIVE_TICKET_TYPES       = 'RECEIVE_TICKET_TYPES';
@@ -68,6 +70,30 @@ export const RESET_PAYMENT_PROFILE_FORM = 'RESET_PAYMENT_PROFILE_FORM';
 
 
 /**************************   TICKETS   ******************************************/
+
+export const reSendTicketEmail = (orderId, ticketId) => (dispatch, getState) => {
+
+    let { loggedUserState } = getState();
+    let { accessToken }     = loggedUserState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    dispatch(startLoading());
+
+    return putRequest(
+        null,
+        createAction(TICKET_EMAIL_SENT)({ticketId}),
+        `${window.API_BASE_URL}/api/v1/summits/all/orders/${orderId}/tickets/${ticketId}/attendee/reinvite`,
+        {},
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+            dispatch(showSuccessMessage(T.translate("edit_ticket.email_resent")));
+        }
+    );
+};
 
 export const getTickets = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
 
