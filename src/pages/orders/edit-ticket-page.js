@@ -16,10 +16,11 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getTicket, refundTicket, saveTicket, reassignTicket, addBadgeToTicket } from "../../actions/ticket-actions";
+import { getTicket, refundTicket, saveTicket, reassignTicket, addBadgeToTicket, reSendTicketEmail } from "../../actions/ticket-actions";
 import TicketForm from "../../components/forms/ticket-form";
 import BadgeForm from "../../components/forms/badge-form";
-import {getBadgeFeatures, getBadgeTypes, deleteBadge, addFeatureToBadge, removeFeatureFromBadge, changeBadgeType, printBadge} from "../../actions/badge-actions";
+import {getBadgeFeatures, getBadgeTypes, deleteBadge, addFeatureToBadge, removeFeatureFromBadge, changeBadgeType,
+    printBadge} from "../../actions/badge-actions";
 import Swal from "sweetalert2";
 import NoMatchPage from "../no-match-page";
 import { Input } from 'openstack-uicore-foundation/lib/components'
@@ -41,6 +42,7 @@ class EditTicketPage extends React.Component {
         this.handleDeleteBadge = this.handleDeleteBadge.bind(this);
         this.handleRefundTicket = this.handleRefundTicket.bind(this);
         this.handleRefundChange = this.handleRefundChange.bind(this);
+        this.handleResendEmail = this.handleResendEmail.bind(this);
     }
 
     componentWillMount () {
@@ -93,6 +95,10 @@ class EditTicketPage extends React.Component {
         });
     }
 
+    handleResendEmail(ticket, ev){
+        this.props.reSendTicketEmail(ticket.order_id, ticket.id);
+    }
+
     handleDeleteBadge(ticketId, ev) {
         let {deleteBadge} = this.props;
 
@@ -130,24 +136,39 @@ class EditTicketPage extends React.Component {
                 <h3>
                     {T.translate("edit_ticket.ticket")}
 
-                    {entity.status != 'Cancelled' &&
-                    <div className="pull-right form-inline">
-                        <input
-                            className="form-control"
-                            type="number"
-                            min="0"
-                            value={refund_amount}
-                            onChange={this.handleRefundChange}
-                        />
-                        <button className="btn btn-sm btn-primary pull-right"
-                                onClick={this.handleRefundTicket.bind(this, entity)}>
-                            {T.translate("edit_ticket.refund_ticket")}
-                        </button>
-                    </div>
-                    }
                 </h3>
-                <hr/>
 
+                <div className="row">
+                    <div className="col-md-6">
+                        {entity.status != 'Cancelled' &&
+                        <div className="pull-left form-inline">
+                            <input
+                                className="form-control"
+                                type="number"
+                                min="0"
+                                value={refund_amount}
+                                onChange={this.handleRefundChange}
+                            />
+                            <button className="btn btn-sm btn-primary pull-right"
+                                    onClick={this.handleRefundTicket.bind(this, entity)}>
+                                {T.translate("edit_ticket.refund_ticket")}
+                            </button>
+                        </div>
+                        }
+                    </div>
+                    <div className="col-md-6">
+                        {entity.status === 'Paid' &&
+                        <div>
+
+                            <button className="btn btn-sm btn-primary left-space"
+                                    onClick={this.handleResendEmail.bind(this, entity)}>
+                                {T.translate("edit_ticket.resend_email")}
+                            </button>
+                        </div>
+                        }
+                    </div>
+                </div>
+                <hr/>
                 <TicketForm
                     history={this.props.history}
                     currentSummit={currentSummit}
@@ -218,6 +239,7 @@ export default connect (
         removeFeatureFromBadge,
         changeBadgeType,
         addBadgeToTicket,
-        printBadge
+        printBadge,
+        reSendTicketEmail,
     }
 )(EditTicketPage);

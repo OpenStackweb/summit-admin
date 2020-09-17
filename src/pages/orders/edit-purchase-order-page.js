@@ -15,7 +15,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import { getSummitById }  from '../../actions/summit-actions';
-import { getPurchaseOrder, savePurchaseOrder, refundPurchaseOrder, deletePurchaseOrder } from "../../actions/order-actions";
+import { getPurchaseOrder, savePurchaseOrder, refundPurchaseOrder, deletePurchaseOrder, reSendOrderEmail } from "../../actions/order-actions";
 import PurchaseOrderForm from "../../components/forms/purchase-order-form";
 import Swal from "sweetalert2";
 
@@ -33,12 +33,16 @@ class EditPurchaseOrderPage extends React.Component {
         this.handleDeleteOrder = this.handleDeleteOrder.bind(this);
         this.handleRefundOrder = this.handleRefundOrder.bind(this);
         this.handleRefundChange = this.handleRefundChange.bind(this);
-
+        this.handleResendEmail = this.handleResendEmail.bind(this);
     }
 
     handleRefundChange(ev) {
         let value = parseInt(ev.target.value);
         this.setState({refund_amount: value});
+    }
+
+    handleResendEmail(order, ev){
+        this.props.reSendOrderEmail(order.id);
     }
 
     handleDeleteOrder(order, ev) {
@@ -100,6 +104,12 @@ class EditPurchaseOrderPage extends React.Component {
                         <button className="btn btn-sm btn-danger" onClick={this.handleDeleteOrder.bind(this, entity)}>
                             {T.translate("edit_purchase_order.delete_order")}
                         </button>
+                        {entity.status === 'Paid' &&
+                        <button className="btn btn-sm btn-primary left-space"
+                                onClick={this.handleResendEmail.bind(this, entity)}>
+                            {T.translate("edit_purchase_order.resend_order_email")}
+                        </button>
+                        }
                     </div>
                     }
                 </h3>
@@ -129,6 +139,7 @@ export default connect (
         getPurchaseOrder,
         savePurchaseOrder,
         refundPurchaseOrder,
-        deletePurchaseOrder
+        deletePurchaseOrder,
+        reSendOrderEmail,
     }
 )(EditPurchaseOrderPage);

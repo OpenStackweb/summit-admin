@@ -58,6 +58,7 @@ export const PURCHASE_ORDER_ADDED       = 'PURCHASE_ORDER_ADDED';
 export const PURCHASE_ORDER_DELETED     = 'PURCHASE_ORDER_DELETED';
 export const PURCHASE_ORDER_REFUNDED     = 'PURCHASE_ORDER_REFUNDED';
 export const RESET_PURCHASE_ORDER_FORM  = 'RESET_PURCHASE_ORDER_FORM';
+export const ORDER_EMAIL_SENT = 'ORDER_EMAIL_SENT';
 
 
 
@@ -498,6 +499,30 @@ export const refundPurchaseOrder = (orderId, refundAmount) => (dispatch, getStat
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
             dispatch(showSuccessMessage(T.translate("edit_purchase_order.order_refunded")));
+        }
+    );
+};
+
+export const reSendOrderEmail = (orderId) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    dispatch(startLoading());
+
+    return putRequest(
+        null,
+        createAction(ORDER_EMAIL_SENT)({orderId}),
+        `${window.API_BASE_URL}/api/v1/summits/all/orders/${orderId}/resend`,
+        {},
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+            dispatch(showSuccessMessage(T.translate("edit_purchase_order.email_resent")));
         }
     );
 };
