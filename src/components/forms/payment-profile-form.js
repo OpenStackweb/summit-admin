@@ -132,6 +132,16 @@ class PaymentProfileForm extends React.Component {
                             &nbsp;<i className="fa fa-info-circle pointable" aria-hidden="true" title={T.translate("edit_payment_profile.info_stripe_test_mode")}></i>
                         </div>
                     </div>
+                    <div className="col-md-4 checkboxes-div">
+                        <div className="form-check abc-checkbox">
+                            <input type="checkbox" id="send_email_receipt" checked={entity.send_email_receipt}
+                                   onChange={this.handleChange} className="form-check-input" />
+                            <label className="form-check-label" htmlFor="send_email_receipt">
+                                {T.translate("edit_payment_profile.send_email_receipt")}
+                            </label>
+                            &nbsp;<i className="fa fa-info-circle pointable" aria-hidden="true" title={T.translate("edit_payment_profile.info_send_email_receipt")}></i>
+                        </div>
+                    </div>
                 </div>
                 <div className="row form-group">
                     <div className="col-md-6">

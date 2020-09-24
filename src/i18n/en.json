@@ -1048,8 +1048,10 @@
     "test_publishable_key" : "Test Publishable Key",
     "info_stripe_keys" : "Get your API keys from your stripe account.",
     "info_stripe_test_mode" : "Place the payment gateway in test mode using test API keys.",
+    "info_send_email_receipt" : "Email Customer about successful payments.",
     "payment_profile_saved"   : "Payment Profile saved successfully.",
-    "payment_profile_created" : "Payment Profile created successfully."
+    "payment_profile_created" : "Payment Profile created successfully.",
+    "send_email_receipt": "Send Stripe Email receipt?"
   },
   "registration_invitations": {
     "registration_invitations_list"   : "InvitationsList",
