@@ -32,7 +32,8 @@ export const DEFAULT_ENTITY = {
     live_secret_key         : '',
     live_publishable_key    : '',
     test_secret_key         : '',
-    test_publishable_key    : ''
+    test_publishable_key    : '',
+    send_email_receipt      : false,
 }
 
 const DEFAULT_STATE = {
