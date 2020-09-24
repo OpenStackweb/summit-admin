@@ -582,6 +582,10 @@
     "published"             : "Published",
     "speakers"              : "Speakers",
     "delete_event_warning"  : "Are you sure you want to delete event",
+    "import"                : "Import",
+    "import_events"         : "Import Events",
+    "ingest"                : "Ingest",
+    "send_speaker_email"    : "Send Speaker Email (Email Flow Event SUMMIT_SUBMISSIONS_IMPORT_EVENT_SPEAKER)",
     "placeholders": {
       "search_events"       : "Search by Id, Title, Abstract, Speaker"
     }

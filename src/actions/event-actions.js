@@ -27,8 +27,10 @@ import {
     epochToMomentTimeZone,
     authErrorHandler,
     getCSV,
-    escapeFilterValue
+    escapeFilterValue, postFile
 } from "openstack-uicore-foundation/lib/methods";
+import {TICKETS_IMPORTED} from "./ticket-actions";
+import {EVENT_MATERIAL_ADDED, UPDATE_EVENT_MATERIAL} from "./event-material-actions";
 
 export const REQUEST_EVENTS                         = 'REQUEST_EVENTS';
 export const RECEIVE_EVENTS                         = 'RECEIVE_EVENTS';
@@ -46,6 +48,7 @@ export const EVENT_DELETED                          = 'EVENT_DELETED';
 export const FILE_ATTACHED                          = 'FILE_ATTACHED';
 export const IMAGE_ATTACHED                         = 'IMAGE_ATTACHED';
 export const RECEIVE_PROXIMITY_EVENTS               = 'RECEIVE_PROXIMITY_EVENTS';
+export const EVENTS_IMPORTED                        = 'EVENTS_IMPORTED';
 
 
 
@@ -551,3 +554,25 @@ export const exportEvents = ( term = null, order = 'id', orderDir = 1 ) => (disp
 
 };
 
+export const importEventsCSV =  (file, send_speaker_email) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    postFile(
+        null,
+        createAction(EVENTS_IMPORTED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/csv`,
+        file,
+        {send_speaker_email:send_speaker_email},
+        authErrorHandler,
+    )(params)(dispatch)
+        .then(() => {
+            dispatch(stopLoading());
+            window.location.reload();
+        });
+};

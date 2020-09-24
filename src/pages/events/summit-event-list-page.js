@@ -15,10 +15,10 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import Swal from "sweetalert2";
-import { Pagination } from 'react-bootstrap';
-import { FreeTextSearch, Table } from 'openstack-uicore-foundation/lib/components';
+import {Modal, Pagination } from 'react-bootstrap';
+import {FreeTextSearch, Table, UploadInput} from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getEvents, deleteEvent, exportEvents } from "../../actions/event-actions";
+import { getEvents, deleteEvent, exportEvents, importEventsCSV } from "../../actions/event-actions";
 
 class SummitEventListPage extends React.Component {
 
@@ -32,9 +32,25 @@ class SummitEventListPage extends React.Component {
         this.handleNewEvent = this.handleNewEvent.bind(this);
         this.handleDeleteEvent = this.handleDeleteEvent.bind(this);
         this.handleExport = this.handleExport.bind(this);
+        this.handleChangeSendSpeakerEmail = this.handleChangeSendSpeakerEmail.bind(this);
+        this.handleImportEvents = this.handleImportEvents.bind(this);
 
         this.state = {
+            showImportModal: false,
+            send_speaker_email:false,
+            importFile:null,
         }
+    }
+
+    handleChangeSendSpeakerEmail(ev){
+        this.setState({...this.state, send_speaker_email: ev.target.checked});
+    }
+
+    handleImportEvents() {
+        if (this.state.importFile) {
+            this.props.importEventsCSV(this.state.importFile, this.state.send_speaker_email);
+        }
+        this.setState({...this.state, showImportModal:false, send_speaker_email:false, importFile: null});
     }
 
     componentDidMount() {
@@ -141,8 +157,11 @@ class SummitEventListPage extends React.Component {
                         <button className="btn btn-primary right-space" onClick={this.handleNewEvent}>
                             {T.translate("event_list.add_event")}
                         </button>
-                        <button className="btn btn-default" onClick={this.handleExport}>
+                        <button className="btn btn-defaul right-space" onClick={this.handleExport}>
                             {T.translate("general.export")}
+                        </button>
+                        <button className="btn btn-default" onClick={() => this.setState({showImportModal:true})}>
+                            {T.translate("event_list.import")}
                         </button>
                     </div>
                 </div>
@@ -175,6 +194,47 @@ class SummitEventListPage extends React.Component {
                 </div>
                 }
 
+                <Modal show={this.state.showImportModal} onHide={() => this.setState({showImportModal:false})} >
+                    <Modal.Header closeButton>
+                        <Modal.Title>{T.translate("event_list.import_events")}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="row">
+                            <div className="col-md-12">
+                                Format must be the following:<br />
+                                (Minimal data required)<br />
+                                * title ( text )<br />
+                                * abstract (text )<br />
+                                * type_id (int) or type (string type name)<br />
+                                * track_id (int) or track ( string track name)<br />
+                            </div>
+                            <div className="col-md-12 ticket-import-upload-wrapper">
+                                <UploadInput
+                                    value={this.state.importFile && this.state.importFile.name}
+                                    handleUpload={(file) => this.setState({importFile: file})}
+                                    handleRemove={() => this.setState({importFile: null})}
+                                    className="dropzone col-md-6"
+                                    multiple={false}
+                                    accept=".csv"
+                                />
+                            </div>
+                            <div className="col-md-12 checkboxes-div">
+                                    <div className="form-check abc-checkbox">
+                                        <input type="checkbox" id="send_speaker_email" checked={this.state.send_speaker_email}
+                                               onChange={this.handleChangeSendSpeakerEmail} className="form-check-input" />
+                                        <label className="form-check-label" htmlFor="send_speaker_email">
+                                            {T.translate("event_list.send_speaker_email")}
+                                        </label>
+                                    </div>
+                            </div>
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <button disabled={!this.state.importFile} className="btn btn-primary" onClick={this.handleImportEvents}>
+                            {T.translate("event_list.ingest")}
+                        </button>
+                    </Modal.Footer>
+                </Modal>
             </div>
         )
     }
@@ -191,6 +251,7 @@ export default connect (
         getSummitById,
         getEvents,
         deleteEvent,
-        exportEvents
+        exportEvents,
+        importEventsCSV,
     }
 )(SummitEventListPage);
