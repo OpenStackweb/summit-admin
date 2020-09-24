@@ -728,8 +728,8 @@ class ScheduleAdminDashBoard extends React.Component {
                         && (emptySpots.length == 0 )
                         &&
                         <ScheduleEventList
-                            startTime={"07:00"}
-                            endTime={"22:00"}
+                            startTime={"00:00"}
+                            endTime={"23:50"}
                             currentSummit={currentSummit}
                             interval={DefaultEventMinutesDuration}
                             currentDay={currentDay}

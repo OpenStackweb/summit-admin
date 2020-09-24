@@ -227,7 +227,7 @@ class ScheduleEventList extends React.Component
                 <div className="col-md-2 no-margin no-padding">
                     {
                         timeSlotsList.map((slot, idx) => (
-                            <TimeSlot timeLabel={slot.format("hh:mm A")} key={idx} id={slot.format("HH_mm")}></TimeSlot>
+                            <TimeSlot timeLabel={slot.format("HH:mm")} key={idx} id={slot.format("HH_mm")}></TimeSlot>
                         ))
                     }
                 </div>
