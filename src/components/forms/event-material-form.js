@@ -78,6 +78,8 @@ class EventMaterialForm extends React.Component {
 
         let type = this.props.event.type.allowed_media_upload_types.find(mu => mu.id === value);
 
+        entity.maxSize = type.max_size * 1024;
+
         errors.media_upload_type_id = '';
         entity.media_upload_type_id = value;
         entity.name = type.name;
@@ -259,14 +261,14 @@ class EventMaterialForm extends React.Component {
                 {entity.class_name === 'PresentationMediaUpload' && entity.media_upload_type_id !== 0 &&
                 <div className="row form-group">
                     <div className="col-md-12">
-                        <label> {T.translate("edit_event_material.media_upload_file")} </label>
+                        <label> {T.translate("edit_event_material.media_upload_file")} {`(max size: ${entity.maxSize/1024/1024}Mb )`}</label>
                         <UploadInput
                             value={filePreview}
                             handleUpload={this.handleUploadFile}
                             handleRemove={this.handleRemoveFile}
                             className="dropzone col-md-6"
                             multiple={false}
-                            maxSize={60 * 1024 * 1024}
+                            maxSize={entity.maxSize}
                         />
                     </div>
                 </div>
