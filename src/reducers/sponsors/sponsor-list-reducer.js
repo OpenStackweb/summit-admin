@@ -16,6 +16,7 @@ import
     RECEIVE_SPONSORS,
     REQUEST_SPONSORS,
     SPONSOR_DELETED,
+    SPONSOR_ORDER_UPDATED
 } from '../../actions/sponsor-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
@@ -53,6 +54,17 @@ const sponsorListReducer = (state = DEFAULT_STATE, action) => {
             });
 
             return {...state, sponsors: sponsors, totalSponsors: total };
+        }
+        break;
+        case SPONSOR_ORDER_UPDATED: {
+            let sponsors = payload.map(s => {
+                let sponsorship_name = (s.sponsorship) ? s.sponsorship.name : '';
+                let company_name = (s.company) ? s.company.name : '';
+
+                return ({...s, sponsorship_name: sponsorship_name, company_name: company_name});
+            });
+
+            return {...state, sponsors: sponsors };
         }
         break;
         case SPONSOR_DELETED: {
