@@ -40,7 +40,9 @@ const fieldNames = [
     {label: 'To Record', key: 'toRecord', simple: true},
     {label: 'Status', key: 'status', simple: true},
     {label: 'Level', key: 'level', simple: true},
-    {label: 'Published', key: 'published', simple: true}
+    {label: 'Published', key: 'published', simple: true},
+    {label: 'Videos', key: 'mediaUploadVideos', simple: true},
+    {label: 'Slides', key: 'mediaUploadSlides', simple: true}
 ];
 
 class SmartPresentationReport extends React.Component {
