@@ -36,6 +36,7 @@ export const UPDATE_SPONSOR                 = 'UPDATE_SPONSOR';
 export const SPONSOR_UPDATED                = 'SPONSOR_UPDATED';
 export const SPONSOR_ADDED                  = 'SPONSOR_ADDED';
 export const SPONSOR_DELETED                = 'SPONSOR_DELETED';
+export const SPONSOR_ORDER_UPDATED          = 'SPONSOR_ORDER_UPDATED';
 export const MEMBER_ADDED_TO_SPONSOR        = 'MEMBER_ADDED_TO_SPONSOR';
 export const MEMBER_REMOVED_FROM_SPONSOR    = 'MEMBER_REMOVED_FROM_SPONSOR';
 export const COMPANY_ADDED                  = 'COMPANY_ADDED';
@@ -56,7 +57,7 @@ export const RECEIVE_BADGE_SCANS       = 'RECEIVE_BADGE_SCANS';
 /******************  SPONSORS ****************************************/
 
 
-export const getSponsors = ( term = null, page = 1, perPage = 10, order = 'order', orderDir = 1 ) => (dispatch, getState) => {
+export const getSponsors = ( term = null, page = 1, perPage = 100, order = 'order', orderDir = 1 ) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -277,7 +278,32 @@ export const deleteSponsor = (sponsorId) => (dispatch, getState) => {
     );
 };
 
+export const updateSponsorOrder = (sponsors, sponsorId, newOrder) => (dispatch, getState) => {
 
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    let sponsor = sponsors.find(s => s.id == sponsorId);
+
+    let normalizedEntity = normalizeSponsor(sponsor);
+
+    putRequest(
+        null,
+        createAction(SPONSOR_ORDER_UPDATED)(sponsors),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsors/${sponsorId}`,
+        normalizedEntity,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+
+}
 
 
 const normalizeSponsor = (entity) => {

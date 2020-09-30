@@ -15,10 +15,10 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import Swal from "sweetalert2";
-import { Table, FreeTextSearch } from 'openstack-uicore-foundation/lib/components';
+import {Table, FreeTextSearch, SortableTable} from 'openstack-uicore-foundation/lib/components';
 import { Pagination } from 'react-bootstrap';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getSponsors, deleteSponsor } from "../../actions/sponsor-actions";
+import { getSponsors, deleteSponsor, updateSponsorOrder } from "../../actions/sponsor-actions";
 
 class SponsorListPage extends React.Component {
 
@@ -27,9 +27,6 @@ class SponsorListPage extends React.Component {
 
         this.handleEdit = this.handleEdit.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
-        this.handlePageChange = this.handlePageChange.bind(this);
-        this.handleSort = this.handleSort.bind(this);
-        this.handleSearch = this.handleSearch.bind(this);
         this.handleNewSponsor = this.handleNewSponsor.bind(this);
 
         this.state = {}
@@ -74,59 +71,38 @@ class SponsorListPage extends React.Component {
         });
     }
 
-    handlePageChange(page) {
-        let {term, order, orderDir, perPage} = this.props;
-        this.props.getSponsors(term, page, perPage, order, orderDir);
-    }
-
-    handleSort(index, key, dir, func) {
-        let {term, page, perPage} = this.props;
-        key = (key == 'name') ? 'last_name' : key;
-        this.props.getSponsors(term, page, perPage, key, dir);
-    }
-
-    handleSearch(term) {
-        let {order, orderDir, page, perPage} = this.props;
-        this.props.getSponsors(term, page, perPage, order, orderDir);
-    }
-
     handleNewSponsor(ev) {
         let {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/sponsors/new`);
     }
 
     render(){
-        let {currentSummit, sponsors, lastPage, currentPage, term, order, orderDir, totalSponsors} = this.props;
+        let {currentSummit, sponsors, totalSponsors} = this.props;
 
         let columns = [
-            { columnKey: 'id', value: T.translate("sponsor_list.id"), sortable: true },
+            { columnKey: 'id', value: T.translate("sponsor_list.id") },
             { columnKey: 'sponsorship_name', value: T.translate("sponsor_list.sponsorship")},
-            { columnKey: 'company_name', value: T.translate("sponsor_list.company") },
-            { columnKey: 'order', value: T.translate("sponsor_list.order"), sortable: true },
+            { columnKey: 'company_name', value: T.translate("sponsor_list.company") }
         ];
 
         let table_options = {
-            sortCol: order,
-            sortDir: orderDir,
             actions: {
                 edit: { onClick: this.handleEdit },
                 delete: { onClick: this.handleDelete }
             }
-        }
+        };
 
-        if(!currentSummit.id) return (<div></div>);
+        if(!currentSummit.id) return (<div />);
+
+        let sortedSponsors = [...sponsors];
+        sortedSponsors.sort(
+            (a, b) => (a.order > b.order ? 1 : (a.order < b.order ? -1 : 0))
+        );
 
         return(
             <div className="container">
                 <h3> {T.translate("sponsor_list.sponsor_list")} ({totalSponsors})</h3>
                 <div className={'row'}>
-                    <div className={'col-md-6'}>
-                        <FreeTextSearch
-                            value={term}
-                            placeholder={T.translate("sponsor_list.placeholders.search_sponsors")}
-                            onSearch={this.handleSearch}
-                        />
-                    </div>
                     <div className="col-md-6 text-right col-md-offset-6">
                         <button className="btn btn-primary right-space" onClick={this.handleNewSponsor}>
                             {T.translate("sponsor_list.add_sponsor")}
@@ -140,25 +116,13 @@ class SponsorListPage extends React.Component {
 
                 {sponsors.length > 0 &&
                 <div>
-                    <Table
+                    <SortableTable
                         options={table_options}
-                        data={sponsors}
+                        data={sortedSponsors}
                         columns={columns}
-                        onSort={this.handleSort}
+                        dropCallback={this.props.updateSponsorOrder}
+                        orderField="order"
                     />
-                    <Pagination
-                        bsSize="medium"
-                        prev
-                        next
-                        first
-                        last
-                        ellipsis
-                        boundaryLinks
-                        maxButtons={10}
-                        items={lastPage}
-                        activePage={currentPage}
-                        onSelect={this.handlePageChange}
-                        />
                 </div>
                 }
 
@@ -177,6 +141,7 @@ export default connect (
     {
         getSummitById,
         getSponsors,
-        deleteSponsor
+        deleteSponsor,
+        updateSponsorOrder
     }
 )(SponsorListPage);
