@@ -97,6 +97,8 @@ import mediaFileTypeReducer from './reducers/media_file_types/media-file-type-re
 import mediaUploadListReducer from "./reducers/media_uploads/media-uploads-list-reducer";
 import mediaUploadReducer from "./reducers/media_uploads/media-upload-reducer";
 import registrationInvitationReducer from "./reducers/tickets/registration-invitation-reducer";
+import companyListReducer from './reducers/companies/company-list-reducer';
+import companyReducer from './reducers/companies/company-reducer';
 
 
 import thunk from 'redux-thunk';
@@ -195,6 +197,8 @@ const reducers = persistCombineReducers(config, {
     mediaUploadListState: mediaUploadListReducer,
     mediaUploadState: mediaUploadReducer,
     currentRegistrationInvitationState: registrationInvitationReducer,
+    currentCompanyListState: companyListReducer,
+    currentCompanyState: companyReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

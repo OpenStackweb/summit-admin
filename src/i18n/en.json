@@ -80,6 +80,7 @@
     "speaker_list"            : "All Speakers",
     "speaker_attendance"      : "Speaker Attendance",
     "merge_speakers"          : "Merge",
+    "companies"               : "Companies",
     "attendees"               : "Attendees",
     "promocodes"              : "Promocodes",
     "promocode_list"          : "Promocodes",
@@ -413,6 +414,44 @@
     "merge_changes"         : "Changes made on: ",
     "placeholders": {
 
+    }
+  },
+  "company_list": {
+    "company_list"           : "Company List",
+    "companies"              : "Companies",
+    "add_company"            : "Add Company",
+    "member_level"           : "Member Level",
+    "delete_company_warning" : "Are you sure you want to delete company",
+    "placeholders": {
+      "search_companies": "Search by Company Name"
+    }
+  },
+  "edit_company": {
+    "company"             : "Company",
+    "name"                : "Name",
+    "description"         : "Description",
+    "overview"            : "Overview",
+    "url"                 : "Url",
+    "display_on_site"     : "Display on Site",
+    "featured"            : "Featured",
+    "city"                : "City",
+    "state"               : "State",
+    "country"             : "Country",
+    "industry"            : "Industry",
+    "products"            : "Products",
+    "contributions"       : "Contributions",
+    "contact_email"       : "Contact Email",
+    "member_level"        : "Member Level",
+    "admin_email"         : "Admin Email",
+    "commitment"          : "Commitment",
+    "commitment_author"   : "Commitment Author",
+    "logo"                : "Logo",
+    "big_logo"            : "Big Logo",
+    "color"               : "Color",
+    "company_saved"       : "Company saved successfully.",
+    "company_created"     : "Company created successfully.",
+    "placeholders": {
+      "select_country": "Select Country"
     }
   },
   "schedule_builder_page":{
