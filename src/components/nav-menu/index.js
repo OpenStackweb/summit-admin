@@ -126,6 +126,7 @@ class NavMenu extends React.Component {
                     {name:'merge_speakers', linkUrl:`speakers/merge`}
                 ]
             },
+            {name: 'companies', iconClass: 'fa fa-copyright', linkUrl: 'companies'},
             {name: 'emails', iconClass: 'fa-envelope-o', accessRoute: 'emails',
                 childs: [
                     {name:'email_templates', linkUrl:`emails/templates`},

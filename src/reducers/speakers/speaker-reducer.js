@@ -126,7 +126,7 @@ const speakerReducer = (state = DEFAULT_STATE, action) => {
             return {...state, entity: {...state.entity, pic: pic} };
         }
         case BIG_PIC_ATTACHED: {
-            let pic = state.entity.pic + '?' + new Date().getTime();
+            let pic = state.entity.big_pic + '?' + new Date().getTime();
             return {...state, entity: {...state.entity, big_pic: pic} };
         }
         case SPEAKER_UPDATED: {
