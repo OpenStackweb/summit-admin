@@ -26,8 +26,8 @@ import attendeeListReducer from './reducers/attendees/attendee-list-reducer';
 import attendeeReducer from './reducers/attendees/attendee-reducer';
 import promocodeListReducer from './reducers/promocodes/promocode-list-reducer';
 import promocodeReducer from './reducers/promocodes/promocode-reducer';
-import speakerAttendanceListReducer from './reducers/speaker_attendance/speaker-attendance-list-reducer';
-import speakerAttendanceReducer from './reducers/speaker_attendance/speaker-attendance-reducer';
+import speakerAttendanceListReducer from './reducers/summit_speakers/speaker-attendance-list-reducer';
+import speakerAttendanceReducer from './reducers/summit_speakers/speaker-attendance-reducer';
 import eventTypeListReducer from './reducers/events/event-type-list-reducer';
 import eventTypeReducer from './reducers/events/event-type-reducer';
 import eventCategoryListReducer from './reducers/events/event-category-list-reducer';
@@ -99,6 +99,7 @@ import mediaUploadReducer from "./reducers/media_uploads/media-upload-reducer";
 import registrationInvitationReducer from "./reducers/tickets/registration-invitation-reducer";
 import companyListReducer from './reducers/companies/company-list-reducer';
 import companyReducer from './reducers/companies/company-reducer';
+import featuredSpeakersReducer from './reducers/summit_speakers/featured-speakers-reducer';
 
 
 import thunk from 'redux-thunk';
@@ -199,6 +200,7 @@ const reducers = persistCombineReducers(config, {
     currentRegistrationInvitationState: registrationInvitationReducer,
     currentCompanyListState: companyListReducer,
     currentCompanyState: companyReducer,
+    featuredSpeakersState: featuredSpeakersReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
