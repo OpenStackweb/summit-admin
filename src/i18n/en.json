@@ -78,7 +78,9 @@
     "new_event"               : "New Event",
     "speakers"                : "Speakers",
     "speaker_list"            : "All Speakers",
+    "summit_speakers"         : "Show Speakers",
     "speaker_attendance"      : "Speaker Attendance",
+    "featured_speakers"       : "Featured Speakers",
     "merge_speakers"          : "Merge",
     "companies"               : "Companies",
     "attendees"               : "Attendees",
@@ -1599,5 +1601,16 @@
     "email_info": "",
     "registration_invitation_created": "Invitation created successfully.",
     "registration_invitation_saved" : "Invitation saved successfully."
+  },
+  "featured_speakers": {
+    "featured_speakers": "Featured Speakers",
+    "title": "Job Title",
+    "pic": "Profile Pic",
+    "big_pic": "Big Pic",
+    "add": "Add Featured Speaker",
+    "no_speakers": "No Featured Speakers found.",
+    "placeholders": {
+      "search_featured_speakers": "Search speakers by Name or Email"
+    }
   }
 }
