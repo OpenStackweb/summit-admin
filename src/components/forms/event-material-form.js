@@ -177,7 +177,7 @@ class EventMaterialForm extends React.Component {
                     <div className="col-md-6 checkboxes-div">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="display_on_site" checked={entity.display_on_site}
-                                   onChange={this.handleChange} className="form-check-input" disabled={disableInputs}/>
+                                   onChange={this.handleChange} className="form-check-input"/>
                             <label className="form-check-label" htmlFor="display_on_site">
                                 {T.translate("edit_event_material.display_on_site")}
                             </label>
