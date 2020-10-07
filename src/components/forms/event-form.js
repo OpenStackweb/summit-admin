@@ -589,6 +589,7 @@ class EventForm extends React.Component {
                                 onChange={this.handleChange}
                                 placeholder={T.translate("edit_event.placeholders.select_rsvp_template")}
                                 options={rsvp_templates_ddl}
+                                clearable
                             />
                         </div>
                     </div>
