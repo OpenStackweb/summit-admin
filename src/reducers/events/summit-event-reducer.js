@@ -19,7 +19,8 @@ import
     EVENT_UPDATED,
     EVENT_ADDED,
     EVENT_PUBLISHED,
-    IMAGE_ATTACHED
+    IMAGE_ATTACHED,
+    IMAGE_DELETED
 } from '../../actions/event-actions';
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
@@ -52,7 +53,8 @@ export const DEFAULT_ENTITY = {
     groups: [],
     attachment: '',
     occupancy: 'EMPTY',
-    materials: []
+    materials: [],
+    image: null
 }
 
 const DEFAULT_STATE = {
@@ -154,7 +156,11 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
             //let image = {...state.entity.image, url:  state.entity.image.url + '?' + new Date().getTime()};
             return {...state, entity: {...state.entity, image: image.url} };
         }
-            break;
+        break;
+        case IMAGE_DELETED: {
+            return {...state, entity: {...state.entity, image: null} };
+        }
+        break;
         case VALIDATE: {
             return {...state,  errors: payload.errors };
         }

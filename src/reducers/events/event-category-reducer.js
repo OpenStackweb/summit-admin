@@ -19,7 +19,9 @@ import
     UPDATE_EVENT_CATEGORY,
     EVENT_CATEGORY_QUESTION_DELETED,
     EVENT_CATEGORY_QUESTION_ADDED,
-    EVENT_CATEGORY_QUESTION_ASSIGNED
+    EVENT_CATEGORY_QUESTION_ASSIGNED,
+    EVENT_CATEGORY_IMAGE_ATTACHED,
+    EVENT_CATEGORY_IMAGE_DELETED
 } from '../../actions/event-category-actions';
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
@@ -39,7 +41,8 @@ export const DEFAULT_ENTITY = {
     chair_visible               : false,
     allowed_tags                : [],
     track_groups                : [],
-    extra_questions             : []
+    extra_questions             : [],
+    image                       : null
 };
 
 const DEFAULT_STATE = {
@@ -101,6 +104,15 @@ const eventCategoryReducer = (state = DEFAULT_STATE, action) => {
             let extra_questions = [...state.entity.extra_questions, entity];
 
             return {...state, entity: { ...state.entity, extra_questions: extra_questions}};
+        }
+        break;
+        case EVENT_CATEGORY_IMAGE_ATTACHED: {
+            let image = {...payload.response};
+            return {...state, entity: {...state.entity, image: image.url} };
+        }
+        break;
+        case EVENT_CATEGORY_IMAGE_DELETED: {
+            return {...state, entity: {...state.entity, image: null} };
         }
         break;
         case VALIDATE: {

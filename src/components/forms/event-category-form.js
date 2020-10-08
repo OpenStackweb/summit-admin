@@ -15,7 +15,15 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import {findElementPos} from 'openstack-uicore-foundation/lib/methods'
-import { Input, TextEditor, TagInput, Panel, Table, SimpleLinkList } from 'openstack-uicore-foundation/lib/components'
+import {
+    Input,
+    TextEditor,
+    TagInput,
+    Panel,
+    Table,
+    SimpleLinkList,
+    UploadInput
+} from 'openstack-uicore-foundation/lib/components'
 import {queryQuestions} from '../../actions/event-category-actions';
 
 
@@ -35,6 +43,8 @@ class EventCategoryForm extends React.Component {
         this.handleTagUnLink = this.handleTagUnLink.bind(this);
         this.handleEditQuestion = this.handleEditQuestion.bind(this);
         this.handleNewQuestion = this.handleNewQuestion.bind(this);
+        this.handleUploadPic = this.handleUploadPic.bind(this);
+        this.handleRemovePic = this.handleRemovePic.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -112,6 +122,26 @@ class EventCategoryForm extends React.Component {
 
         let entity = {...this.state.entity, tags: tags};
         this.setState({entity: entity});
+    }
+
+    handleRemovePic(attr) {
+        let entity = {...this.state.entity};
+        entity[attr] = '';
+
+        this.props.onRemoveImage(entity.id);
+
+        this.setState({entity:entity});
+    }
+
+    handleUploadPic(file) {
+        let entity = {...this.state.entity};
+
+        entity.image = file.preview;
+        this.setState({entity:entity});
+
+        let formData = new FormData();
+        formData.append('file', file);
+        this.props.onUploadImage(this.state.entity, formData);
     }
 
     render() {
@@ -277,6 +307,20 @@ class EventCategoryForm extends React.Component {
                             summitId={currentSummit.id}
                             onChange={this.handleChange}
                             error={this.hasErrors('allowed_tags')}
+                        />
+                    </div>
+                </div>
+
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <label> {T.translate("edit_event_category.pic")} </label>
+                        <UploadInput
+                            value={entity.image}
+                            handleUpload={this.handleUploadPic}
+                            handleRemove={ev => this.handleRemovePic}
+                            className="dropzone col-md-6"
+                            multiple={false}
+                            accept="image/*"
                         />
                     </div>
                 </div>
