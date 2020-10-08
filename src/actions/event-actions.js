@@ -29,8 +29,6 @@ import {
     getCSV,
     escapeFilterValue, postFile
 } from "openstack-uicore-foundation/lib/methods";
-import {TICKETS_IMPORTED} from "./ticket-actions";
-import {EVENT_MATERIAL_ADDED, UPDATE_EVENT_MATERIAL} from "./event-material-actions";
 
 export const REQUEST_EVENTS                         = 'REQUEST_EVENTS';
 export const RECEIVE_EVENTS                         = 'RECEIVE_EVENTS';
@@ -47,6 +45,7 @@ export const EVENT_PUBLISHED                        = 'EVENT_PUBLISHED';
 export const EVENT_DELETED                          = 'EVENT_DELETED';
 export const FILE_ATTACHED                          = 'FILE_ATTACHED';
 export const IMAGE_ATTACHED                         = 'IMAGE_ATTACHED';
+export const IMAGE_DELETED                          = 'IMAGE_DELETED';
 export const RECEIVE_PROXIMITY_EVENTS               = 'RECEIVE_PROXIMITY_EVENTS';
 export const EVENTS_IMPORTED                        = 'EVENTS_IMPORTED';
 
@@ -475,7 +474,28 @@ const uploadImage = (entity, file) => (dispatch, getState) => {
             history.push(`/app/summits/${currentSummit.id}/events/${entity.id}`);
             dispatch(stopLoading());
         });
-}
+};
+
+export const removeImage = (eventId) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(IMAGE_DELETED)({}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/${eventId}/image`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
 
 const normalizeEntity = (entity) => {
     let normalizedEntity = {...entity};

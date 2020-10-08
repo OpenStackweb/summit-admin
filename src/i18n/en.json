@@ -684,6 +684,7 @@
     "code"                        : "Code",
     "color"                       : "Color",
     "description"                 : "Description",
+    "pic"                         : "Image",
     "number_sessions"             : "# of Sessions",
     "number_alternates"           : "# of Alternates",
     "number_lightning"            : "# of Lightning",

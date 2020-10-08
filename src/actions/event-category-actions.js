@@ -27,6 +27,7 @@ import {
     fetchErrorHandler,
     authErrorHandler
 } from "openstack-uicore-foundation/lib/methods";
+import {IMAGE_ATTACHED, IMAGE_DELETED} from "./event-actions";
 
 
 export const REQUEST_EVENT_CATEGORIES      = 'REQUEST_EVENT_CATEGORIES';
@@ -38,6 +39,8 @@ export const EVENT_CATEGORY_UPDATED        = 'EVENT_CATEGORY_UPDATED';
 export const EVENT_CATEGORY_ADDED          = 'EVENT_CATEGORY_ADDED';
 export const EVENT_CATEGORY_DELETED        = 'EVENT_CATEGORY_DELETED';
 export const EVENT_CATEGORIES_SEEDED       = 'EVENT_CATEGORIES_SEEDED';
+export const EVENT_CATEGORY_IMAGE_ATTACHED = 'EVENT_CATEGORY_IMAGE_ATTACHED';
+export const EVENT_CATEGORY_IMAGE_DELETED  = 'EVENT_CATEGORY_IMAGE_DELETED';
 
 
 export const RECEIVE_EVENT_CATEGORY_QUESTION        = 'RECEIVE_EVENT_CATEGORY_QUESTION';
@@ -208,6 +211,49 @@ export const deleteEventCategory = (categoryId) => (dispatch, getState) => {
         null,
         createAction(EVENT_CATEGORY_DELETED)({categoryId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tracks/${categoryId}`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+const uploadImage = (entity, file) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    postRequest(
+        null,
+        createAction(EVENT_CATEGORY_IMAGE_ATTACHED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tracks/${entity.id}/image`,
+        file,
+        authErrorHandler
+    )(params)(dispatch)
+        .then(() => {
+            history.push(`/app/summits/${currentSummit.id}/events/${entity.id}`);
+            dispatch(stopLoading());
+        });
+};
+
+export const removeImage = (eventId) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(EVENT_CATEGORY_IMAGE_DELETED)({}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tracks/${eventId}/image`,
         null,
         authErrorHandler
     )(params)(dispatch).then(() => {
