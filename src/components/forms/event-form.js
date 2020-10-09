@@ -104,6 +104,11 @@ class EventForm extends React.Component {
         let entity = {...this.state.entity};
 
         entity[attr] = '';
+
+        if (attr === 'image') {
+            this.props.onRemoveImage(entity.id);
+        }
+
         this.setState({entity:entity});
     }
 

@@ -17,8 +17,8 @@ import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import Restrict from '../routes/restrict';
 
-import SpeakerAttendanceListPage from '../pages/speaker_attendance/speaker-attendance-list-page';
-import EditSpeakerAttendancePage from '../pages/speaker_attendance/edit-speaker-attendance-page';
+import SpeakerAttendanceListPage from '../pages/summit_speakers/speaker-attendance-list-page';
+import EditSpeakerAttendancePage from '../pages/summit_speakers/edit-speaker-attendance-page';
 import NoMatchPage from "../pages/no-match-page";
 
 

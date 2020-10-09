@@ -56,6 +56,7 @@ import SummitDocsLayout from "./summitdocs-layout";
 import EmailFlowEventLayout from "./email-flow-event-layout";
 import RegistrationInvitationLayout from "./registration-invitation-layout";
 import MediaUploadLayout from "./media-upload-layout";
+import FeaturedSpeakersPage from '../pages/summit_speakers/featured-speakers-page';
 
 class SummitIdLayout extends React.Component {
 
@@ -106,6 +107,7 @@ class SummitIdLayout extends React.Component {
                     <Route path={`${match.url}/event-category-groups`} component={EventCategoryGroupLayout}/>
                     <Route path={`${match.url}/attendees`} component={AttendeeLayout}/>
                     <Route path={`${match.url}/speaker-attendances`} component={SpeakerAttendanceLayout}/>
+                    <Route path={`${match.url}/featured-speakers`} component={FeaturedSpeakersPage}/>
                     <Route path={`${match.url}/locations`} component={LocationLayout}/>
                     <Route path={`${match.url}/rsvp-templates`} component={RsvpTemplateLayout}/>
                     <Route path={`${match.url}/promocodes`} component={PromocodeLayout}/>

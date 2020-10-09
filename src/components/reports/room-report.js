@@ -110,11 +110,14 @@ class RoomReport extends React.Component {
 
         let processedData = flatData.map(it => {
 
-            let momentStartDate = moment(it.startDate).tz(currentSummit.time_zone_id);
-            let momentEndDate = moment(it.endDate).tz(currentSummit.time_zone_id);
+            // 2020-10-19T12:30:00+00:00
+
+            const format = 'YYYY-MM-DDTHH:mm:ss+00:00';
+            let momentStartDate = moment(it.startDate, format).tz(currentSummit.time_zone_id);
+            let momentEndDate = moment(it.endDate, format).tz(currentSummit.time_zone_id);
 
             let date = momentStartDate.format('dddd Do');
-            let date_simple = momentStartDate.format('YYYY-M-D');
+            let date_simple = momentStartDate.valueOf();
             let time = momentStartDate.format('h:mm a') + ' - ' + momentEndDate.format('h:mm a');
             let capacity = forExport ? it.location_venueroom_capacity : <div className="text-center">{it.location_venueroom_capacity + ''}</div>;
             let speakers = forExport ? it.speakerCount : <div className="text-center">{it.speakerCount + ''}</div>;

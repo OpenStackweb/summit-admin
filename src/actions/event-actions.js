@@ -27,7 +27,7 @@ import {
     epochToMomentTimeZone,
     authErrorHandler,
     getCSV,
-    escapeFilterValue
+    escapeFilterValue, postFile
 } from "openstack-uicore-foundation/lib/methods";
 
 export const REQUEST_EVENTS                         = 'REQUEST_EVENTS';
@@ -45,7 +45,9 @@ export const EVENT_PUBLISHED                        = 'EVENT_PUBLISHED';
 export const EVENT_DELETED                          = 'EVENT_DELETED';
 export const FILE_ATTACHED                          = 'FILE_ATTACHED';
 export const IMAGE_ATTACHED                         = 'IMAGE_ATTACHED';
+export const IMAGE_DELETED                          = 'IMAGE_DELETED';
 export const RECEIVE_PROXIMITY_EVENTS               = 'RECEIVE_PROXIMITY_EVENTS';
+export const EVENTS_IMPORTED                        = 'EVENTS_IMPORTED';
 
 
 
@@ -472,7 +474,28 @@ const uploadImage = (entity, file) => (dispatch, getState) => {
             history.push(`/app/summits/${currentSummit.id}/events/${entity.id}`);
             dispatch(stopLoading());
         });
-}
+};
+
+export const removeImage = (eventId) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(IMAGE_DELETED)({}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/${eventId}/image`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
 
 const normalizeEntity = (entity) => {
     let normalizedEntity = {...entity};
@@ -551,3 +574,25 @@ export const exportEvents = ( term = null, order = 'id', orderDir = 1 ) => (disp
 
 };
 
+export const importEventsCSV =  (file, send_speaker_email) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    postFile(
+        null,
+        createAction(EVENTS_IMPORTED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/csv`,
+        file,
+        {send_speaker_email:send_speaker_email},
+        authErrorHandler,
+    )(params)(dispatch)
+        .then(() => {
+            dispatch(stopLoading());
+            window.location.reload();
+        });
+};

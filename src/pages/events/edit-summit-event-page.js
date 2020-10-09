@@ -15,7 +15,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import EventForm from '../../components/forms/event-form';
-import { saveEvent, attachFile, getEvents } from '../../actions/event-actions';
+import { saveEvent, attachFile, getEvents, removeImage } from '../../actions/event-actions';
 import { unPublishEvent } from '../../actions/summit-builder-actions';
 import { deleteEventMaterial } from '../../actions/event-material-actions';
 
@@ -137,6 +137,7 @@ class EditSummitEventPage extends React.Component {
                     onAttach={this.props.attachFile}
                     onUnpublish={this.props.unPublishEvent}
                     onMaterialDelete={this.props.deleteEventMaterial}
+                    onRemoveImage={this.props.removeImage}
                 />
                 }
             </div>
@@ -160,6 +161,7 @@ export default connect (
         attachFile,
         unPublishEvent,
         deleteEventMaterial,
-        getEvents
+        getEvents,
+        removeImage
     }
 )(EditSummitEventPage);

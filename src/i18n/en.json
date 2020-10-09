@@ -78,7 +78,9 @@
     "new_event"               : "New Event",
     "speakers"                : "Speakers",
     "speaker_list"            : "All Speakers",
+    "summit_speakers"         : "Show Speakers",
     "speaker_attendance"      : "Speaker Attendance",
+    "featured_speakers"       : "Featured Speakers",
     "merge_speakers"          : "Merge",
     "companies"               : "Companies",
     "attendees"               : "Attendees",
@@ -621,6 +623,10 @@
     "published"             : "Published",
     "speakers"              : "Speakers",
     "delete_event_warning"  : "Are you sure you want to delete event",
+    "import"                : "Import",
+    "import_events"         : "Import Events",
+    "ingest"                : "Ingest",
+    "send_speaker_email"    : "Send Speaker Email (Email Flow Event SUMMIT_SUBMISSIONS_IMPORT_EVENT_SPEAKER)",
     "placeholders": {
       "search_events"       : "Search by Id, Title, Abstract, Speaker"
     }
@@ -678,6 +684,7 @@
     "code"                        : "Code",
     "color"                       : "Color",
     "description"                 : "Description",
+    "pic"                         : "Image",
     "number_sessions"             : "# of Sessions",
     "number_alternates"           : "# of Alternates",
     "number_lightning"            : "# of Lightning",
@@ -1087,8 +1094,10 @@
     "test_publishable_key" : "Test Publishable Key",
     "info_stripe_keys" : "Get your API keys from your stripe account.",
     "info_stripe_test_mode" : "Place the payment gateway in test mode using test API keys.",
+    "info_send_email_receipt" : "Email Customer about successful payments.",
     "payment_profile_saved"   : "Payment Profile saved successfully.",
-    "payment_profile_created" : "Payment Profile created successfully."
+    "payment_profile_created" : "Payment Profile created successfully.",
+    "send_email_receipt": "Send Stripe Email receipt?"
   },
   "registration_invitations": {
     "registration_invitations_list"   : "InvitationsList",
@@ -1593,5 +1602,16 @@
     "email_info": "",
     "registration_invitation_created": "Invitation created successfully.",
     "registration_invitation_saved" : "Invitation saved successfully."
+  },
+  "featured_speakers": {
+    "featured_speakers": "Featured Speakers",
+    "title": "Job Title",
+    "pic": "Profile Pic",
+    "big_pic": "Big Pic",
+    "add": "Add Featured Speaker",
+    "no_speakers": "No Featured Speakers found.",
+    "placeholders": {
+      "search_featured_speakers": "Search speakers by Name or Email"
+    }
   }
 }
