@@ -30,7 +30,7 @@ const fieldNames = [
     {label: 'Social', key: 'socialSummary', simple: true},
     {label: 'Expect to Learn', key: 'expectToLearn', simple: true},
     {label: 'Speakers', key: 'speakerNames', simple: true},
-    {label: 'Company', key: 'speakers_currentCompany', simple: false},
+    {label: 'Company', key: 'speakerCompanies', simple: false},
     {label: 'Emails', key: 'speakerEmails', simple: true},
     {label: 'Track', key: 'category_title', sortable: true},
     {label: 'Tags', key: 'tagNames', simple: true},
