@@ -1191,6 +1191,7 @@
     "presentation_video_report"     : "Video Output List",
     "speaker_report"                : "Speaker Report",
     "tag_report"                    : "Tag Report",
+    "metrics_report"                : "Metrics Report",
     "export"                        : "Export",
     "placeholders": {
       "search"       : "Search by Title, Abstract, Speaker LastName, Member Email ",
