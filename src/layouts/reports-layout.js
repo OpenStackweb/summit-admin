@@ -28,7 +28,8 @@ import {
     TagReport,
     SingleTagReport,
     SmartSpeakerReport,
-    SmartPresentationReport
+    SmartPresentationReport,
+    MetricsReport
 } from "../components/reports"
 
 
@@ -79,6 +80,7 @@ class ReportsLayout extends React.Component {
                     />
                     <Route strict exact path={`${match.url}/speaker_report`} component={SmartSpeakerReport}/>
                     <Route strict exact path={`${match.url}/presentation_report`} component={SmartPresentationReport}/>
+                    <Route strict exact path={`${match.url}/metrics_report`} component={MetricsReport}/>
                     <Route component={NoMatchPage}/>
                 </Switch>
             </div>
