@@ -50,18 +50,26 @@ const badgeScansListReducer = (state = DEFAULT_STATE, action) => {
         case RECEIVE_BADGE_SCANS: {
             let {current_page, total, last_page} = payload.response;
             let badgeScans = payload.response.data.map(s => {
-                let scanDate = s.scan_date > 0 ? epochToMoment(s.scan_date).format('MMMM Do YYYY, h:mm:ss a') : '-';
+                let scanDate = s.scan_date ? epochToMoment(s.scan_date).format('MMMM Do YYYY, h:mm:ss a') : epochToMoment(s.created).format('MMMM Do YYYY, h:mm:ss a') ;
                 let firstName = '';
                 let lastName = '';
                 let company = '';
                 let email = '';
 
-                if (s.badge && s.badge.ticket && s.badge.ticket.owner) {
+                if (s.hasOwnProperty("badge") && s.badge.ticket && s.badge.ticket.owner) {
                     firstName = s.badge.ticket.owner.member ? s.badge.ticket.owner.member.first_name : s.badge.ticket.owner.first_name;
                     lastName = s.badge.ticket.owner.member ? s.badge.ticket.owner.member.last_name : s.badge.ticket.owner.last_name;
                     email = s.badge.ticket.owner.email;
                     company = s.badge.ticket.owner.company || 'N/A';
                 }
+
+                if(s.hasOwnProperty("attendee_first_name")){
+                    firstName = s.attendee_first_name;
+                    lastName = s.attendee_last_name;
+                    email = s.attendee_email;
+                    company = s.hasOwnProperty("attendee_company") ? s.attendee_company : 'N/A';
+                }
+
                 return {
                     id: s.id,
                     attendee_first_name: firstName,
