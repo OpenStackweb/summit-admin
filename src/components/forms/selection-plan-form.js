@@ -133,7 +133,7 @@ class SelectionPlanForm extends React.Component {
                             value={entity.name}
                         />
                     </div>
-                    <div className="col-md-3">
+                    <div className="col-md-2">
                         <label> {T.translate("edit_selection_plan.max_submissions")}</label>
                         <Input
                             className="form-control"
@@ -145,12 +145,21 @@ class SelectionPlanForm extends React.Component {
                             min={0}
                         />
                     </div>
-                    <div className="col-md-3 checkboxes-div">
+                    <div className="col-md-2 checkboxes-div">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="is_enabled" checked={entity.is_enabled}
                                    onChange={this.handleChange} className="form-check-input" />
                             <label className="form-check-label" htmlFor="is_enabled">
                                 {T.translate("edit_selection_plan.enabled")}
+                            </label>
+                        </div>
+                    </div>
+                    <div className="col-md-2 checkboxes-div">
+                        <div className="form-check abc-checkbox">
+                            <input type="checkbox" id="allow_new_presentations" checked={entity.allow_new_presentations}
+                                   onChange={this.handleChange} className="form-check-input" />
+                            <label className="form-check-label" htmlFor="allow_new_presentations">
+                                {T.translate("edit_selection_plan.allow_new_presentations")}
                             </label>
                         </div>
                     </div>
