@@ -276,6 +276,7 @@
     "track_groups"                    : "Category Groups",
     "description"                     : "Description",
     "max_submissions"                 : "Max Submissions Per User",
+    "allow_new_presentations"         : "Allow New Presentations",
     "selection_plan_saved"            : "Selection Plan saved successfully.",
     "selection_plan_created"          : "Selection Plan created successfully."
   },
