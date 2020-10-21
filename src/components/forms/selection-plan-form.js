@@ -123,7 +123,7 @@ class SelectionPlanForm extends React.Component {
             <form className="selection-plan-form">
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
-                    <div className="col-md-6">
+                    <div className="col-md-4">
                         <label> {T.translate("edit_selection_plan.name")} *</label>
                         <Input
                             id="name"
@@ -133,7 +133,7 @@ class SelectionPlanForm extends React.Component {
                             value={entity.name}
                         />
                     </div>
-                    <div className="col-md-2">
+                    <div className="col-md-3">
                         <label> {T.translate("edit_selection_plan.max_submissions")}</label>
                         <Input
                             className="form-control"
@@ -154,7 +154,7 @@ class SelectionPlanForm extends React.Component {
                             </label>
                         </div>
                     </div>
-                    <div className="col-md-2 checkboxes-div">
+                    <div className="col-md-3 checkboxes-div">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="allow_new_presentations" checked={entity.allow_new_presentations}
                                    onChange={this.handleChange} className="form-check-input" />
