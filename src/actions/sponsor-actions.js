@@ -84,7 +84,7 @@ export const getSponsors = ( term = null, page = 1, perPage = 100, order = 'orde
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -268,7 +268,7 @@ export const deleteSponsor = (sponsorId) => (dispatch, getState) => {
 
     return deleteRequest(
         null,
-        createAction(SPONSOR_DELETED)({memberId}),
+        createAction(SPONSOR_DELETED)({sponsorId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsors/${sponsorId}`,
         null,
         authErrorHandler
@@ -288,7 +288,7 @@ export const updateSponsorOrder = (sponsors, sponsorId, newOrder) => (dispatch, 
         access_token : accessToken
     };
 
-    let sponsor = sponsors.find(s => s.id == sponsorId);
+    let sponsor = sponsors.find(s => s.id === sponsorId);
 
     let normalizedEntity = normalizeSponsor(sponsor);
 
@@ -365,7 +365,7 @@ export const getSponsorships = ( order = 'name', orderDir = 1 ) => (dispatch, ge
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
