@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import EventCategoryForm from '../../components/forms/event-category-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getEventCategory, resetEventCategoryForm, saveEventCategory, linkQuestionToCategory, unlinkQuestionToCategory } from "../../actions/event-category-actions";
+import { getEventCategory, resetEventCategoryForm, saveEventCategory, linkQuestionToCategory, unlinkQuestionToCategory, uploadImage, removeImage } from "../../actions/event-category-actions";
 //import '../../styles/edit-summit-attendee-page.less';
 
 class EditEventCategoryPage extends React.Component {
@@ -43,6 +43,8 @@ class EditEventCategoryPage extends React.Component {
                     onDeleteQuestion={this.props.deleteEventCategoryQuestion}
                     onQuestionLink={this.props.linkQuestionToCategory}
                     onQuestionUnLink={this.props.unlinkQuestionToCategory}
+                    onUploadImage={this.props.uploadImage}
+                    onRemoveImage={this.props.removeImage}
                 />
                 }
             </div>
@@ -63,6 +65,8 @@ export default connect (
         resetEventCategoryForm,
         saveEventCategory,
         linkQuestionToCategory,
-        unlinkQuestionToCategory
+        unlinkQuestionToCategory,
+        uploadImage,
+        removeImage
     }
 )(EditEventCategoryPage);

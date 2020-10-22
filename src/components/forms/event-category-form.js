@@ -124,21 +124,11 @@ class EventCategoryForm extends React.Component {
         this.setState({entity: entity});
     }
 
-    handleRemovePic(attr) {
-        let entity = {...this.state.entity};
-        entity[attr] = '';
-
-        this.props.onRemoveImage(entity.id);
-
-        this.setState({entity:entity});
+    handleRemovePic() {
+        this.props.onRemoveImage(this.state.entity.id);
     }
 
     handleUploadPic(file) {
-        let entity = {...this.state.entity};
-
-        entity.image = file.preview;
-        this.setState({entity:entity});
-
         let formData = new FormData();
         formData.append('file', file);
         this.props.onUploadImage(this.state.entity, formData);
@@ -311,19 +301,21 @@ class EventCategoryForm extends React.Component {
                     </div>
                 </div>
 
+                {entity.id != 0 &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_event_category.pic")} </label>
                         <UploadInput
-                            value={entity.image}
+                            value={entity.icon_url}
                             handleUpload={this.handleUploadPic}
-                            handleRemove={ev => this.handleRemovePic}
+                            handleRemove={ev => this.handleRemovePic()}
                             className="dropzone col-md-6"
                             multiple={false}
                             accept="image/*"
                         />
                     </div>
                 </div>
+                }
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">

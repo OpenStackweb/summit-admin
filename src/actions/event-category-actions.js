@@ -219,7 +219,7 @@ export const deleteEventCategory = (categoryId) => (dispatch, getState) => {
     );
 };
 
-const uploadImage = (entity, file) => (dispatch, getState) => {
+export const uploadImage = (entity, file) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
@@ -231,12 +231,11 @@ const uploadImage = (entity, file) => (dispatch, getState) => {
     postRequest(
         null,
         createAction(EVENT_CATEGORY_IMAGE_ATTACHED),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tracks/${entity.id}/image`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tracks/${entity.id}/icon`,
         file,
         authErrorHandler
     )(params)(dispatch)
         .then(() => {
-            history.push(`/app/summits/${currentSummit.id}/events/${entity.id}`);
             dispatch(stopLoading());
         });
 };
@@ -253,7 +252,7 @@ export const removeImage = (eventId) => (dispatch, getState) => {
     return deleteRequest(
         null,
         createAction(EVENT_CATEGORY_IMAGE_DELETED)({}),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tracks/${eventId}/image`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tracks/${eventId}/icon`,
         null,
         authErrorHandler
     )(params)(dispatch).then(() => {

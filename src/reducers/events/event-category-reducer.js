@@ -42,7 +42,7 @@ export const DEFAULT_ENTITY = {
     allowed_tags                : [],
     track_groups                : [],
     extra_questions             : [],
-    image                       : null
+    icon_url                    : null
 };
 
 const DEFAULT_STATE = {
@@ -108,11 +108,11 @@ const eventCategoryReducer = (state = DEFAULT_STATE, action) => {
         break;
         case EVENT_CATEGORY_IMAGE_ATTACHED: {
             let image = {...payload.response};
-            return {...state, entity: {...state.entity, image: image.url} };
+            return {...state, entity: {...state.entity, icon_url: image.url} };
         }
         break;
         case EVENT_CATEGORY_IMAGE_DELETED: {
-            return {...state, entity: {...state.entity, image: null} };
+            return {...state, entity: {...state.entity, icon_url: null} };
         }
         break;
         case VALIDATE: {
