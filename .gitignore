@@ -1,4 +1,5 @@
-.env
+.env*
+
 .editorconfig
 dist
 .idea
