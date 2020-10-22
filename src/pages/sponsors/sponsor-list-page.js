@@ -43,7 +43,7 @@ class SponsorListPage extends React.Component {
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
             this.props.getSponsors();
         }
     }
@@ -55,11 +55,11 @@ class SponsorListPage extends React.Component {
 
     handleDelete(sponsorId) {
         let {deleteSponsor, sponsors} = this.props;
-        let sponsor = sponsors.find(t => t.id == sponsorId);
+        let sponsor = sponsors.find(s => s.id === sponsorId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
-            text: T.translate("sponsor_list.remove_warning") + ' ' + sponsor.name,
+            text: T.translate("sponsor_list.remove_warning") + ' ' + sponsor.company_name,
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
@@ -110,7 +110,7 @@ class SponsorListPage extends React.Component {
                     </div>
                 </div>
 
-                {sponsors.length == 0 &&
+                {sponsors.length === 0 &&
                 <div>{T.translate("sponsor_list.no_sponsors")}</div>
                 }
 
