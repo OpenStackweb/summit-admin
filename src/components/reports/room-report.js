@@ -113,8 +113,9 @@ class RoomReport extends React.Component {
             // 2020-10-19T12:30:00+00:00
 
             const format = 'YYYY-MM-DDTHH:mm:ss+00:00';
-            let momentStartDate = moment(it.startDate, format).tz(currentSummit.time_zone_id);
-            let momentEndDate = moment(it.endDate, format).tz(currentSummit.time_zone_id);
+            let momentStartDate = moment.tz(it.startDate, format, currentSummit.time_zone_id);
+            let momentEndDate = moment.tz(it.endDate, format).tz(currentSummit.time_zone_id);
+
 
             let date = momentStartDate.format('dddd Do');
             let date_simple = momentStartDate.valueOf();
