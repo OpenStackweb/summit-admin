@@ -63,8 +63,8 @@ class PresentationVideoReport extends React.Component {
         let flatData = flattenData(data);
 
         let processedData = flatData.map(it => {
-            let momentStartDate = moment.tz(it.startDate, currentSummit.time_zone_id);
-            let momentEndDate = moment.tz(it.endDate, currentSummit.time_zone_id);
+            let momentStartDate = moment.tz(it.startDate, 'UTC').tz(currentSummit.time_zone_id);
+            let momentEndDate = moment.tz(it.endDate, 'UTC').tz(currentSummit.time_zone_id);
             let time = momentStartDate.format('h:mm a') + ' - ' + momentEndDate.format('h:mm a');
 
             return ({
