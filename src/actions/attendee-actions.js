@@ -24,8 +24,9 @@ import {
     showMessage,
     showSuccessMessage,
     authErrorHandler,
-    escapeFilterValue
+    escapeFilterValue, getCSV
 } from "openstack-uicore-foundation/lib/methods";
+import {RECEIVE_INVITATION} from "./registration-invitation-actions";
 
 export const REQUEST_ATTENDEES          = 'REQUEST_ATTENDEES';
 export const RECEIVE_ATTENDEES          = 'RECEIVE_ATTENDEES';
@@ -39,9 +40,37 @@ export const ATTENDEE_DELETED           = 'ATTENDEE_DELETED';
 export const TICKET_ADDED               = 'TICKET_ADDED';
 export const TICKET_DELETED             = 'TICKET_DELETED';
 export const RSVP_DELETED               = 'RSVP_DELETED';
+export const SELECT_ATTENDEE = 'SELECT_ATTENDEE';
+export const UNSELECT_ATTENDEE = 'UNSELECT_ATTENDEE';
+export const CLEAR_ALL_SELECTED_ATTENDEES = 'CLEAR_ALL_SELECTED_ATTENDEES';
+export const SET_ATTENDEES_CURRENT_FLOW_EVENT = 'SET_ATTENDEES_CURRENT_FLOW_EVENT';
+export const SET_SELECTED_ALL_ATTENDEES = 'SET_SELECTED_ALL_ATTENDEES';
+export const SEND_ATTENDEES_EMAILS = 'SEND_ATTENDEES_EMAILS';
 
+export const selectAttendee = (attendeeId) => (dispatch, getState) => {
+    dispatch(createAction(SELECT_ATTENDEE)(attendeeId));
+};
 
-export const getAttendees = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
+export const unSelectAttendee = (attendeeId) => (dispatch, getState) => {
+    dispatch(createAction(UNSELECT_ATTENDEE)(attendeeId));
+};
+
+export const clearAllSelectedAttendees = () => (dispatch, getState) => {
+    dispatch(createAction(CLEAR_ALL_SELECTED_ATTENDEES)());
+}
+
+export const setCurrentFlowEvent = (value) => (dispatch, getState) => {
+    dispatch(createAction(SET_ATTENDEES_CURRENT_FLOW_EVENT)(value));
+};
+
+export const setSelectedAll = (value) => (dispatch, getState) => {
+    dispatch(createAction(SET_SELECTED_ALL_ATTENDEES)(value));
+};
+
+export const getAttendees = ( term = null, page = 1, perPage = 10,
+                              order = 'id', orderDir = 1,
+                              statusFilter= null, memberFilter= null
+) => (dispatch, getState) => {
 
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -52,15 +81,26 @@ export const getAttendees = ( term = null, page = 1, perPage = 10, order = 'id',
 
     if(term){
         let escapedTerm = escapeFilterValue(term);
-        filter.push(`first_name=@${escapedTerm},last_name=@${escapedTerm},email=@${escapedTerm}`);
+        filter.push(`first_name=@${escapedTerm},last_name=@${escapedTerm},email=@${escapedTerm},company=@${escapedTerm},ticket_type=@${escapedTerm},badge_type=@${escapedTerm}`);
     }
 
     let params = {
-        expand       : 'member, tickets, schedule_summit_events',
+        expand       : '',
         page         : page,
         per_page     : perPage,
         access_token : accessToken,
     };
+
+    if(statusFilter){
+        filter.push(`status==${statusFilter}`)
+    }
+
+    if(memberFilter){
+        if(memberFilter == 'HAS_MEMBER')
+            filter.push(`has_member==true`)
+        if(memberFilter == 'HAS_NO_MEMBER')
+            filter.push(`has_member==false`)
+    }
 
     if(filter.length > 0){
         params['filter[]']= filter;
@@ -72,17 +112,61 @@ export const getAttendees = ( term = null, page = 1, perPage = 10, order = 'id',
         params['order']= `${orderDirSign}${order}`;
     }
 
-
     return getRequest(
         createAction(REQUEST_ATTENDEES),
         createAction(RECEIVE_ATTENDEES),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/attendees`,
         authErrorHandler,
-        {page, perPage, order, orderDir, term}
+        {page, perPage, order, orderDir, term, statusFilter, memberFilter}
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
     );
+};
+
+
+export const exportAttendees = ( term = null,
+                              order = 'id', orderDir = 1,
+                              statusFilter= null, memberFilter= null
+) => (dispatch, getState) => {
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+    let filter = [];
+    let filename = currentSummit.name + '-Attendees.csv';
+    if(term){
+        let escapedTerm = escapeFilterValue(term);
+        filter.push(`first_name=@${escapedTerm},last_name=@${escapedTerm},email=@${escapedTerm},company=@${escapedTerm},ticket_type=@${escapedTerm},badge_type=@${escapedTerm}`);
+    }
+
+    let params = {
+        expand       : '',
+        access_token : accessToken,
+    };
+
+    if(statusFilter){
+        filter.push(`status==${statusFilter}`)
+    }
+
+    if(memberFilter){
+        if(memberFilter == 'HAS_MEMBER')
+            filter.push(`has_member==true`)
+        if(memberFilter == 'HAS_NO_MEMBER')
+            filter.push(`has_member==false`)
+    }
+
+    if(filter.length > 0){
+        params['filter[]']= filter;
+    }
+
+    // order
+    if(order != null && orderDir != null){
+        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        params['order']= `${orderDirSign}${order}`;
+    }
+
+    dispatch(getCSV(`${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/attendees/csv`, params, filename));
 };
 
 export const getAttendee = (attendeeId) => (dispatch, getState) => {
@@ -94,7 +178,7 @@ export const getAttendee = (attendeeId) => (dispatch, getState) => {
     dispatch(startLoading());
 
     let params = {
-        expand       : 'member, speaker, tickets, rsvp, schedule_summit_events, all_affiliations, extra_questions',
+        expand       : 'member, speaker, tickets, rsvp, schedule_summit_events, all_affiliations, extra_questions, tickets.badge, tickets.badge.type, tickets.promo_code',
         access_token : accessToken,
     };
 
@@ -246,7 +330,8 @@ export const saveTicket = (attendeeId, newTicket) => (dispatch, getState) => {
     let { currentSummit }   = currentSummitState;
 
     let params = {
-        access_token : accessToken
+        access_token : accessToken,
+        expand:'tickets',
     };
 
     postRequest(
@@ -295,5 +380,72 @@ const normalizeEntity = (entity) => {
     delete normalizedEntity['last_edited'];
 
     return normalizedEntity;
-
 }
+
+export const sendEmails = (currentFlowEvent, selectedAll = false , selectedIds = [],
+                           term = null, statusFilter= null, memberFilter= null
+                           ) => (dispatch, getState) => {
+
+
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let filter = [];
+
+    let params = {
+        access_token : accessToken,
+    };
+
+    if(term){
+        let escapedTerm = escapeFilterValue(term);
+        filter.push(`first_name=@${escapedTerm},last_name=@${escapedTerm},email=@${escapedTerm},company=@${escapedTerm},ticket_type=@${escapedTerm},badge_type=@${escapedTerm}`);
+    }
+
+    if(statusFilter){
+        filter.push(`status==${statusFilter}`)
+    }
+
+    if(memberFilter){
+        if(memberFilter == 'HAS_MEMBER')
+            filter.push(`has_member==true`)
+        if(memberFilter == 'HAS_NO_MEMBER')
+            filter.push(`has_member==false`)
+    }
+
+    if(filter.length > 0){
+        params['filter[]']= filter;
+    }
+
+    let payload =  {
+        email_flow_event : currentFlowEvent
+    };
+
+    if(!selectedAll && selectedIds.length > 0){
+        payload['attendees_ids'] = selectedIds;
+    }
+
+    dispatch(startLoading());
+
+    let success_message = {
+        title: T.translate("general.done"),
+        html: T.translate("registration_invitation_list.resend_done"),
+        type: 'success'
+    };
+
+    return putRequest(
+        null,
+        createAction(SEND_ATTENDEES_EMAILS),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/attendees/all/send`,
+        payload,
+        authErrorHandler
+    )(params)(dispatch)
+        .then((payload) => {
+            dispatch(showMessage(
+                success_message,
+            ));
+            dispatch(stopLoading());
+            return payload;
+        });
+}
+
