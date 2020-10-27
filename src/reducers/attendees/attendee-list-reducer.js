@@ -17,20 +17,28 @@ import
     RECEIVE_ATTENDEES,
     REQUEST_ATTENDEES,
     ATTENDEE_DELETED,
+    SELECT_ATTENDEE,
+    UNSELECT_ATTENDEE,
+    CLEAR_ALL_SELECTED_ATTENDEES,
+    SET_ATTENDEES_CURRENT_FLOW_EVENT, SET_SELECTED_ALL_ATTENDEES,
 } from '../../actions/attendee-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
-import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 const DEFAULT_STATE = {
     attendees       : {},
     term            : null,
-    order           : 'name',
+    order           : 'full_name',
     orderDir        : 1,
     currentPage     : 1,
     lastPage        : 1,
     perPage         : 10,
-    totalAttendees  : 0
+    totalAttendees  : 0,
+    selectedIds: [],
+    currentFlowEvent: '',
+    selectedAll: false,
+    statusFilter: null,
+    memberFilter: null,
 };
 
 const attendeeListReducer = (state = DEFAULT_STATE, action) => {
@@ -41,19 +49,13 @@ const attendeeListReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case REQUEST_ATTENDEES: {
-            let {order, orderDir, term} = payload;
-
-            return {...state, order, orderDir, term }
+            let {order, orderDir, term, memberFilter, statusFilter} = payload;
+            return {...state, order, orderDir, term , memberFilter , statusFilter}
         }
         break;
         case RECEIVE_ATTENDEES: {
             let {current_page, total, last_page} = payload.response;
             let attendees = payload.response.data.map(a => {
-                let bought_date = Math.max(a.tickets.map(t => {return t.bought_date ? t.bought_date : 0;})) * 1000;
-                bought_date = (bought_date > 0 ? moment(bought_date).format('MMMM Do YYYY, h:mm:ss a') : '-');
-
-                let schedule = (a.member && a.member.schedule_summit_events) ? a.member.schedule_summit_events : [];
-                let schedule_count = schedule.length;
                 let name = 'N/A';
                 let email = 'N/A';
 
@@ -67,23 +69,42 @@ const attendeeListReducer = (state = DEFAULT_STATE, action) => {
 
                 return {
                     id: a.id,
-                    member_id: (a.member) ? a.member.id : 'N/A',
+                    member_id: (a.member_id) ? a.member_id : 'N/A',
                     name: name,
                     email: email,
-                    ticket_id: a.tickets.map(t => t.external_order_id || `...${t.number.slice(-15)}`).join(', '),
-                    bought_date: bought_date,
-                    summit_hall_checked_in: (a.summit_hall_checked_in ? 'Yes' : 'No'),
-                    schedule: schedule,
-                    schedule_count: schedule_count
+                    company: a.company ? a.company : 'TBD',
+                    status: a.status,
+                    tickets_qty: a.tickets.length ? a.tickets.length : 'N/A',
                 };
             })
 
-            return {...state, attendees: attendees, currentPage: current_page, totalAttendees: total, lastPage: last_page };
+            return {...state, attendees: attendees, currentPage: current_page,
+                    totalAttendees: total, lastPage: last_page};
         }
         break;
         case ATTENDEE_DELETED: {
             let {attendeeId} = payload;
             return {...state, attendees: state.attendees.filter(a => a.id != attendeeId)};
+        }
+        break;
+        case SELECT_ATTENDEE:{
+            return {...state, selectedIds: [...state.selectedIds, payload]};
+        }
+            break;
+        case UNSELECT_ATTENDEE:{
+            return {...state, selectedIds: state.selectedIds.filter(element => element !== payload)};
+        }
+        case CLEAR_ALL_SELECTED_ATTENDEES:
+        {
+            return {...state, selectedIds: []};
+        }
+        case SET_ATTENDEES_CURRENT_FLOW_EVENT:{
+            return {...state, currentFlowEvent : payload};
+        }
+            break;
+        case SET_SELECTED_ALL_ATTENDEES:{
+            return {...state, selectedAll : payload};
+
         }
         break;
         default:

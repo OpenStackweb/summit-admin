@@ -65,15 +65,15 @@ class AttendeeForm extends React.Component {
         let errors = {...this.state.errors};
         let {value, id} = ev.target;
 
-        if (ev.target.type == 'checkbox') {
+        if (ev.target.type === 'checkbox') {
             value = ev.target.checked;
         }
 
-        if (ev.target.type == 'number') {
+        if (ev.target.type === 'number') {
             value = parseInt(ev.target.value);
         }
 
-        if (ev.target.type == 'datetime') {
+        if (ev.target.type === 'datetime') {
             value = value.valueOf() / 1000;
         }
 
@@ -171,7 +171,27 @@ class AttendeeForm extends React.Component {
                         />
                     </div>
                 </div>
-
+                <div className="row form-group">
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_attendee.company")}</label>
+                        <Input
+                            id="company"
+                            value={entity.company}
+                            onChange={this.handleChange}
+                            className="form-control"
+                            error={this.hasErrors('company')}
+                        />
+                    </div>
+                    <div className="col-md-8">
+                        <label> {T.translate("edit_attendee.admin_notes")}</label>
+                        <textarea
+                            id="admin_notes"
+                            value={entity.admin_notes}
+                            onChange={this.handleChange}
+                            className="form-control"
+                        />
+                    </div>
+                </div>
                 <div className="row form-group">
                     <div className="col-md-3 checkboxes-div">
                         <div className="form-check abc-checkbox">
@@ -221,8 +241,8 @@ class AttendeeForm extends React.Component {
                     <RsvpComponent member={entity.member} onDelete={this.props.onDeleteRsvp} />
                     }
 
-                    {entity.id != 0 && currentSummit.attendee_extra_questions && currentSummit.attendee_extra_questions.length > 0 &&
-                    <Panel show={showSection == 'extra_questions'} title={T.translate("edit_attendee.extra_questions")}
+                    {entity.id !== 0 && currentSummit.attendee_extra_questions && currentSummit.attendee_extra_questions.length > 0 &&
+                    <Panel show={showSection === 'extra_questions'} title={T.translate("edit_attendee.extra_questions")}
                            handleClick={this.toggleSection.bind(this, 'extra_questions')}>
                         <QuestionAnswersInput
                             id="extra_questions"

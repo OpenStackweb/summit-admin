@@ -16,10 +16,20 @@ import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import Swal from "sweetalert2";
 import { Pagination } from 'react-bootstrap';
-import { FreeTextSearch, Table } from 'openstack-uicore-foundation/lib/components';
+import {Dropdown, FreeTextSearch, SelectableTable} from 'openstack-uicore-foundation/lib/components';
 import ScheduleModal from "../../components/schedule-modal/index";
-import { getAttendees, deleteAttendee } from "../../actions/attendee-actions";
-
+import { SegmentedControl } from 'segmented-control'
+import {
+    getAttendees,
+    deleteAttendee,
+    selectAttendee,
+    unSelectAttendee,
+    clearAllSelectedAttendees,
+    setCurrentFlowEvent,
+    setSelectedAll,
+    sendEmails,
+    exportAttendees
+} from "../../actions/attendee-actions";
 
 class SummitAttendeeListPage extends React.Component {
 
@@ -35,7 +45,13 @@ class SummitAttendeeListPage extends React.Component {
         this.handleSearch = this.handleSearch.bind(this);
         this.handleNewAttendee = this.handleNewAttendee.bind(this);
         this.handleDeleteAttendee = this.handleDeleteAttendee.bind(this);
-
+        this.handleSelected = this.handleSelected.bind(this);
+        this.handleSelectedAll = this.handleSelectedAll.bind(this);
+        this.handleSendEmails = this.handleSendEmails.bind(this);
+        this.handleChangeFlowEvent = this.handleChangeFlowEvent.bind(this);
+        this.handleSetMemberFilter = this.handleSetMemberFilter.bind(this);
+        this.handleSetStatusFilter = this.handleSetStatusFilter.bind(this);
+        this.handleExport = this.handleExport.bind(this);
         this.state = {
             showModal: false,
             modalTitle: '',
@@ -43,18 +59,85 @@ class SummitAttendeeListPage extends React.Component {
         }
     }
 
+    handleExport(ev) {
+        let {term, order, orderDir, statusFilter, memberFilter} = this.props;
+        ev.preventDefault();
+        this.props.exportAttendees(term, order, orderDir, statusFilter, memberFilter);
+    }
+
+    handleSetMemberFilter(newMemberFilter){
+        let {term, order, page, orderDir, perPage, statusFilter} = this.props;
+        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, newMemberFilter);
+    }
+
+    handleSetStatusFilter(newStatusFilter){
+        let {term, order, page, orderDir, perPage, memberFilter} = this.props;
+        this.props.getAttendees(term, page, perPage, order, orderDir, newStatusFilter, memberFilter);
+    }
+
+    handleChangeFlowEvent(ev){
+        let {value, id} = ev.target;
+        this.props.setCurrentFlowEvent(value);
+    }
+
+    handleSendEmails(ev){
+        ev.stopPropagation();
+        ev.preventDefault();
+
+        let {
+            selectedAll,
+            term,
+            memberFilter,
+            statusFilter,
+            selectedIds,
+            currentFlowEvent,
+            sendEmails
+        } = this.props;
+
+        if(!currentFlowEvent){
+            Swal.fire("Validation error", T.translate("attendee_list.select_template") , "warning");
+            return false;
+        }
+
+        if(!selectedAll && selectedIds.length === 0){
+            Swal.fire("Validation error", T.translate("attendee_list.select_items"), "warning");
+            return false;
+        }
+
+        sendEmails(currentFlowEvent, selectedAll , selectedIds, term, statusFilter, memberFilter);
+    }
+
+    handleSelected(attendee_id, isSelected){
+        if(isSelected){
+            this.props.selectAttendee(attendee_id);
+            return;
+        }
+        this.props.unSelectAttendee(attendee_id);
+    }
+
+    handleSelectedAll(ev){
+        let selectedAll = ev.target.checked;
+        this.props.setSelectedAll(selectedAll);
+        if(!selectedAll){
+            //clear all selected
+            this.props.clearAllSelectedAttendees();
+        }
+    }
+
     componentDidMount() {
         let {currentSummit} = this.props;
         if(currentSummit !== null) {
-            this.props.getAttendees();
+            let {term, order, page, orderDir, perPage, statusFilter, memberFilter} = this.props;
+            this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter);
         }
     }
 
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
-            this.props.getAttendees();
+        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
+            let {term, order, page, orderDir, perPage, statusFilter, memberFilter} = this.props;
+            this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter);
         }
     }
 
@@ -65,7 +148,7 @@ class SummitAttendeeListPage extends React.Component {
 
     handleViewSchedule(attendee_id) {
         let {attendees} = this.props;
-        let attendee = attendees.find(a => a.id == attendee_id);
+        let attendee = attendees.find(a => a.id === attendee_id);
 
         this.setState({
             showModal: true,
@@ -77,7 +160,7 @@ class SummitAttendeeListPage extends React.Component {
     hasSchedule(attendee_id) {
 
         let {attendees} = this.props;
-        let attendee = attendees.find(a => a.id == attendee_id);
+        let attendee = attendees.find(a => a.id === attendee_id);
 
         return attendee.schedule_count > 0;
     }
@@ -87,19 +170,19 @@ class SummitAttendeeListPage extends React.Component {
     }
 
     handlePageChange(page) {
-        let {term, order, orderDir, perPage} = this.props;
-        this.props.getAttendees(term, page, perPage, order, orderDir);
+        let {term, order, orderDir, perPage,  statusFilter, memberFilter} = this.props;
+        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter);
     }
 
     handleSort(index, key, dir, func) {
-        let {term, page, perPage} = this.props;
-        key = (key == 'name') ? 'last_name' : key;
-        this.props.getAttendees(term, page, perPage, key, dir);
+        let {term, page, perPage,  statusFilter, memberFilter} = this.props;
+        key = (key === 'name') ? 'full_name' : key;
+        this.props.getAttendees(term, page, perPage, key, dir, statusFilter, memberFilter);
     }
 
     handleSearch(term) {
-        let {order, orderDir, page, perPage} = this.props;
-        this.props.getAttendees(term, page, perPage, order, orderDir);
+        let {order, orderDir, page, perPage, statusFilter, memberFilter} = this.props;
+        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter);
     }
 
     handleNewAttendee(ev) {
@@ -109,7 +192,7 @@ class SummitAttendeeListPage extends React.Component {
 
     handleDeleteAttendee(attendeeId) {
         let {deleteAttendee, attendees} = this.props;
-        let attendee = attendees.find(a => a.id == attendeeId);
+        let attendee = attendees.find(a => a.id === attendeeId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -126,24 +209,33 @@ class SummitAttendeeListPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, attendees, lastPage, currentPage, term, order, orderDir, totalAttendees} = this.props;
+        let {currentSummit, attendees, lastPage, currentPage,
+            term, order, orderDir, totalAttendees,
+            selectedIds,
+            currentFlowEvent,
+            selectedAll,
+            statusFilter, memberFilter
+        } = this.props;
         let {showModal, modalSchedule, modalTitle} = this.state;
 
         let columns = [
-            { columnKey: 'member_id', value: T.translate("attendee_list.member_id")},
+            { columnKey: 'member_id', value: T.translate("attendee_list.member_id"), sortable: true},
             { columnKey: 'name', value: T.translate("general.name"), sortable: true },
-            { columnKey: 'email', value: T.translate("general.email") },
-            { columnKey: 'ticket_id', value: T.translate("attendee_list.tickets") },
-            { columnKey: 'bought_date', value: T.translate("attendee_list.bought_date") },
-            { columnKey: 'summit_hall_checked_in', value: T.translate("attendee_list.summit_hall_checked_in") },
-            { columnKey: 'schedule_count', value: T.translate("attendee_list.schedule_count") },
+            { columnKey: 'email', value: T.translate("general.email") , sortable: true},
+            { columnKey: 'tickets_qty', value: T.translate("attendee_list.tickets") },
+            { columnKey: 'company', value: T.translate("attendee_list.company") , sortable: true},
+            { columnKey: 'status', value: T.translate("attendee_list.status") , sortable: true},
         ];
 
         let table_options = {
-            sortCol: (order == 'last_name') ? 'name' : order,
+            sortCol: (order === 'last_name') ? 'name' : order,
             sortDir: orderDir,
             actions: {
-                edit: {onClick: this.handleEdit},
+                edit: {
+                    onClick: this.handleEdit,
+                    onSelected: this.handleSelected,
+                    onSelectedAll: this.handleSelectedAll
+                },
                 delete: { onClick: this.handleDeleteAttendee },
                 custom: [
                     {
@@ -154,36 +246,89 @@ class SummitAttendeeListPage extends React.Component {
                         display: this.hasSchedule
                     }
                 ]
-            }
+            },
+            selectedIds: selectedIds,
+            selectedAll: selectedAll,
         }
 
         if(!currentSummit.id) return (<div></div>);
+
+        let flowEventsDDL = [
+            {label: '-- SELECT EMAIL EVENT --', value: ''},
+
+            {label: 'SUMMIT_REGISTRATION__ATTENDEE_TICKET_REGENERATE_HASH', value: 'SUMMIT_REGISTRATION__ATTENDEE_TICKET_REGENERATE_HASH'},
+            {label: 'SUMMIT_REGISTRATION_INVITE_ATTENDEE_TICKET_EDITION', value: 'SUMMIT_REGISTRATION_INVITE_ATTENDEE_TICKET_EDITION'},
+        ];
 
         return(
             <div className="container">
                 <h3> {T.translate("attendee_list.attendee_list")} ({totalAttendees})</h3>
                 <div className={'row'}>
-                    <div className={'col-md-6'}>
+                    <div className={'col-md-8'}>
                         <FreeTextSearch
                             value={term}
                             placeholder={T.translate("attendee_list.placeholders.search_attendees")}
                             onSearch={this.handleSearch}
                         />
                     </div>
-                    <div className="col-md-6 text-right">
-                        <button className="btn btn-primary" onClick={this.handleNewAttendee}>
+                    <div className="col-md-4 text-right">
+                        <button className="btn btn-primary right-space" onClick={this.handleNewAttendee}>
                             {T.translate("attendee_list.add_attendee")}
+                        </button>
+                        <button className="btn btn-default" onClick={this.handleExport}>
+                            {T.translate("general.export")}
+                        </button>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-6">
+                        <SegmentedControl
+                            name="memberFilter"
+                            options={[
+                                { label: "All", value: null, default: memberFilter === null},
+                                { label: "With IDP Account", value: "HAS_MEMBER",default: memberFilter === "HAS_MEMBER" },
+                                { label: "Without IDP Account", value: "HAS_NO_MEMBER",default: memberFilter === "HAS_NO_MEMBER" },
+                            ]}
+                            setValue={newValue => this.handleSetMemberFilter(newValue)}
+                            style={{ width: "100%", height:40, color: '#337ab7' }}
+                        />
+                    </div>
+                    <div className="col-md-6">
+                        <SegmentedControl
+                            name="statusFilter"
+                            options={[
+                                { label: "All", value: null, default: statusFilter === null},
+                                { label: "Complete Questions", value: "Complete",default: statusFilter === "Complete"},
+                                { label: "Incomplete Questions", value: "Incomplete", default: statusFilter === "Incomplete"},
+                            ]}
+                            setValue={newValue => this.handleSetStatusFilter(newValue)}
+                            style={{ width: "100%", height:40, color: '#337ab7' }}
+                        />
+                    </div>
+                </div>
+                {attendees.length === 0 &&
+                <div>{T.translate("attendee_list.no_attendees")}</div>
+                }
+
+                <div className={'row'}>
+                    <div className={'col-md-6'}>
+                        <Dropdown
+                            id="flow_event"
+                            value={currentFlowEvent}
+                            onChange={this.handleChangeFlowEvent}
+                            options={flowEventsDDL}
+                        />
+                    </div>
+                    <div className={'col-md-1'}>
+                        <button className="btn btn-primary right-space" onClick={this.handleSendEmails}>
+                            {T.translate("attendee_list.send_emails")}
                         </button>
                     </div>
                 </div>
 
-                {attendees.length == 0 &&
-                <div>{T.translate("attendee_list.no_attendees")}</div>
-                }
-
                 {attendees.length > 0 &&
                 <div>
-                    <Table
+                    <SelectableTable
                         options={table_options}
                         data={attendees}
                         columns={columns}
@@ -211,7 +356,6 @@ class SummitAttendeeListPage extends React.Component {
                     summit={currentSummit}
                     onClose={this.onCloseSchedule}
                 />
-
             </div>
         )
     }
@@ -226,6 +370,13 @@ export default connect (
     mapStateToProps,
     {
         getAttendees,
-        deleteAttendee
+        deleteAttendee,
+        selectAttendee,
+        unSelectAttendee,
+        clearAllSelectedAttendees,
+        setCurrentFlowEvent,
+        setSelectedAll,
+        sendEmails,
+        exportAttendees,
     }
 )(SummitAttendeeListPage);

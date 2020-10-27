@@ -270,7 +270,6 @@ export const setSelectedAll = (value) => (dispatch, getState) => {
     dispatch(createAction(SET_SELECTED_ALL)(value));
 };
 
-
 export const saveRegistrationInvitation = (entity) => (dispatch, getState) => {
     let { loggedUserState, currentSummitState } = getState();
     let { accessToken }     = loggedUserState;
@@ -357,10 +356,9 @@ export const sendEmails = (currentFlowEvent, selectedAll = false , selectedInvit
 
     dispatch(startLoading());
 
-
     let success_message = {
         title: T.translate("general.done"),
-        html: T.translate("registration_invitation_list.resend_done"),
+        html: T.translate("attendee_list.resend_done"),
         type: 'success'
     };
 
@@ -378,5 +376,4 @@ export const sendEmails = (currentFlowEvent, selectedAll = false , selectedInvit
             dispatch(stopLoading());
             return data.response;
         });
-
 }
