@@ -103,11 +103,12 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
             entity.materials = [...media_uploads, ...links, ...videos, ...slides];
             entity.type_id = entity.type ? entity.type.id : null;
 
-            entity.materials.forEach(m => ({
+            entity.materials = [...entity.materials.map((m) => ({
                 ...m,
-                display_on_site_label: m.display_on_site ? 'Yes' : 'No',
-            }));
-
+                media_upload_type_id : m.media_upload_type.id,
+                display_on_site_label:
+                    m.display_on_site ? 'Yes' : 'No',
+            }))];
             return {...state, entity: {...DEFAULT_ENTITY, ...entity}, errors: {} };
         }
         break;
