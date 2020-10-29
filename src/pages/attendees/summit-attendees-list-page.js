@@ -228,7 +228,7 @@ class SummitAttendeeListPage extends React.Component {
         ];
 
         let table_options = {
-            sortCol: (order === 'last_name') ? 'name' : order,
+            sortCol: (order === 'full_name') ? 'name' : order,
             sortDir: orderDir,
             actions: {
                 edit: {
