@@ -214,7 +214,7 @@ export const getEvent = (eventId) => (dispatch, getState) => {
 
     let params = {
         access_token: accessToken,
-        expand: 'creator, speakers, moderator, sponsors, groups, type, type.allowed_media_upload_types, slides, links, videos, media_uploads, tags'
+        expand: 'creator, speakers, moderator, sponsors, groups, type, type.allowed_media_upload_types, slides, links, videos, media_uploads, tags, media_uploads.media_upload_type'
     };
 
     dispatch(startLoading());
