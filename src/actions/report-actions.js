@@ -96,7 +96,7 @@ export const exportReport = ( query, reportName, grouped, preProcessData=null ) 
         let reportData = [];
 
         if (preProcessData) {
-            let procData = preProcessData(data.results, extraData, true);
+            let procData = preProcessData(data.results || data, extraData, true);
             let labels = procData.tableColumns.map(col => col.value);
             let keys = procData.tableColumns.map(col => col.columnKey);
 
@@ -182,20 +182,24 @@ export const flattenData = (data) => {
 }
 
 export const flattenItem = (flatData, item, idxRef, ctx='') => {
-    for (var property in item) {
-        let flatName = ctx ? ctx+'_'+property : property;
+    if (typeof item != 'object') {
+        flatData[ctx] = item;
+    } else {
+        for (var property in item) {
+            let flatName = ctx ? ctx + '_' + property : property;
 
-        if (item[property] == null) {
-            flatData[flatName] = '';
-        } else if (Array.isArray(item[property]) && item[property].length > 0) {
-            flattenItem(flatData, item[property].shift(), idxRef, flatName);
-            if (item[property].length > 0) {
-                idxRef.idx--; // redo this item
+            if (item[property] == null) {
+                flatData[flatName] = '';
+            } else if (Array.isArray(item[property]) && item[property].length > 0) {
+                flattenItem(flatData, item[property].shift(), idxRef, flatName);
+                if (item[property].length > 0 && typeof item[property] != "string") {
+                    idxRef.idx--; // redo this item
+                }
+            } else if (typeof item[property] == 'object' && typeof item[property] != "string") {
+                flattenItem(flatData, item[property], idxRef, flatName)
+            } else {
+                flatData[flatName] = item[property];
             }
-        } else if (typeof item[property] == 'object') {
-            flattenItem(flatData, item[property], idxRef, flatName)
-        } else {
-            flatData[flatName] = item[property];
         }
     }
 
