@@ -51,6 +51,7 @@ class SummitAttendeeListPage extends React.Component {
         this.handleChangeFlowEvent = this.handleChangeFlowEvent.bind(this);
         this.handleSetMemberFilter = this.handleSetMemberFilter.bind(this);
         this.handleSetStatusFilter = this.handleSetStatusFilter.bind(this);
+        this.handleSetTicketsFilter = this.handleSetTicketsFilter.bind(this);
         this.handleExport = this.handleExport.bind(this);
         this.state = {
             showModal: false,
@@ -60,19 +61,24 @@ class SummitAttendeeListPage extends React.Component {
     }
 
     handleExport(ev) {
-        let {term, order, orderDir, statusFilter, memberFilter} = this.props;
+        let {term, order, orderDir, statusFilter, memberFilter, ticketsFilter} = this.props;
         ev.preventDefault();
-        this.props.exportAttendees(term, order, orderDir, statusFilter, memberFilter);
+        this.props.exportAttendees(term, order, orderDir, statusFilter, memberFilter, ticketsFilter);
     }
 
     handleSetMemberFilter(newMemberFilter){
-        let {term, order, page, orderDir, perPage, statusFilter} = this.props;
-        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, newMemberFilter);
+        let {term, order, page, orderDir, perPage, statusFilter, ticketsFilter} = this.props;
+        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, newMemberFilter, ticketsFilter);
+    }
+
+    handleSetTicketsFilter(newTicketsFilter){
+        let {term, order, page, orderDir, perPage, statusFilter, memberFilter, ticketsFilter} = this.props;
+        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, newTicketsFilter, ticketsFilter);
     }
 
     handleSetStatusFilter(newStatusFilter){
-        let {term, order, page, orderDir, perPage, memberFilter} = this.props;
-        this.props.getAttendees(term, page, perPage, order, orderDir, newStatusFilter, memberFilter);
+        let {term, order, page, orderDir, perPage, memberFilter, ticketsFilter} = this.props;
+        this.props.getAttendees(term, page, perPage, order, orderDir, newStatusFilter, memberFilter, ticketsFilter);
     }
 
     handleChangeFlowEvent(ev){
@@ -89,6 +95,7 @@ class SummitAttendeeListPage extends React.Component {
             term,
             memberFilter,
             statusFilter,
+            ticketsFilter,
             selectedIds,
             currentFlowEvent,
             sendEmails
@@ -104,7 +111,7 @@ class SummitAttendeeListPage extends React.Component {
             return false;
         }
 
-        sendEmails(currentFlowEvent, selectedAll , selectedIds, term, statusFilter, memberFilter);
+        sendEmails(currentFlowEvent, selectedAll , selectedIds, term, statusFilter, memberFilter, ticketsFilter);
     }
 
     handleSelected(attendee_id, isSelected){
@@ -127,8 +134,8 @@ class SummitAttendeeListPage extends React.Component {
     componentDidMount() {
         let {currentSummit} = this.props;
         if(currentSummit !== null) {
-            let {term, order, page, orderDir, perPage, statusFilter, memberFilter} = this.props;
-            this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter);
+            let {term, order, page, orderDir, perPage, statusFilter, memberFilter, ticketsFilter} = this.props;
+            this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter);
         }
     }
 
@@ -136,8 +143,8 @@ class SummitAttendeeListPage extends React.Component {
         let {currentSummit} = this.props;
 
         if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
-            let {term, order, page, orderDir, perPage, statusFilter, memberFilter} = this.props;
-            this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter);
+            let {term, order, page, orderDir, perPage, statusFilter, memberFilter, ticketsFilter} = this.props;
+            this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter);
         }
     }
 
@@ -170,19 +177,19 @@ class SummitAttendeeListPage extends React.Component {
     }
 
     handlePageChange(page) {
-        let {term, order, orderDir, perPage,  statusFilter, memberFilter} = this.props;
-        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter);
+        let {term, order, orderDir, perPage,  statusFilter, memberFilter, ticketsFilter} = this.props;
+        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter);
     }
 
     handleSort(index, key, dir, func) {
-        let {term, page, perPage,  statusFilter, memberFilter} = this.props;
+        let {term, page, perPage,  statusFilter, memberFilter, ticketsFilter} = this.props;
         key = (key === 'name') ? 'full_name' : key;
-        this.props.getAttendees(term, page, perPage, key, dir, statusFilter, memberFilter);
+        this.props.getAttendees(term, page, perPage, key, dir, statusFilter, memberFilter, ticketsFilter);
     }
 
     handleSearch(term) {
-        let {order, orderDir, page, perPage, statusFilter, memberFilter} = this.props;
-        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter);
+        let {order, orderDir, page, perPage, statusFilter, memberFilter, ticketsFilter} = this.props;
+        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter);
     }
 
     handleNewAttendee(ev) {
@@ -209,12 +216,14 @@ class SummitAttendeeListPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, attendees, lastPage, currentPage,
+        let {currentSummit, attendees,
+            lastPage, currentPage,
             term, order, orderDir, totalAttendees,
             selectedIds,
             currentFlowEvent,
             selectedAll,
-            statusFilter, memberFilter
+            statusFilter, memberFilter,
+            ticketsFilter
         } = this.props;
         let {showModal, modalSchedule, modalTitle} = this.state;
 
@@ -255,7 +264,6 @@ class SummitAttendeeListPage extends React.Component {
 
         let flowEventsDDL = [
             {label: '-- SELECT EMAIL EVENT --', value: ''},
-
             {label: 'SUMMIT_REGISTRATION__ATTENDEE_TICKET_REGENERATE_HASH', value: 'SUMMIT_REGISTRATION__ATTENDEE_TICKET_REGENERATE_HASH'},
             {label: 'SUMMIT_REGISTRATION_INVITE_ATTENDEE_TICKET_EDITION', value: 'SUMMIT_REGISTRATION_INVITE_ATTENDEE_TICKET_EDITION'},
         ];
@@ -281,7 +289,7 @@ class SummitAttendeeListPage extends React.Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-md-6">
+                    <div className="col-md-4">
                         <SegmentedControl
                             name="memberFilter"
                             options={[
@@ -290,10 +298,10 @@ class SummitAttendeeListPage extends React.Component {
                                 { label: "Without IDP Account", value: "HAS_NO_MEMBER",default: memberFilter === "HAS_NO_MEMBER" },
                             ]}
                             setValue={newValue => this.handleSetMemberFilter(newValue)}
-                            style={{ width: "100%", height:40, color: '#337ab7' }}
+                            style={{ width: "100%", height:40, color: '#337ab7' , fontSize: '10px' }}
                         />
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-4">
                         <SegmentedControl
                             name="statusFilter"
                             options={[
@@ -302,12 +310,24 @@ class SummitAttendeeListPage extends React.Component {
                                 { label: "Incomplete Questions", value: "Incomplete", default: statusFilter === "Incomplete"},
                             ]}
                             setValue={newValue => this.handleSetStatusFilter(newValue)}
-                            style={{ width: "100%", height:40, color: '#337ab7' }}
+                            style={{ width: "100%", height:40, color: '#337ab7', fontSize: '10px'  }}
+                        />
+                    </div>
+                    <div className="col-md-4">
+                        <SegmentedControl
+                            name="ticketsFilter"
+                            options={[
+                                { label: "All", value: null, default: ticketsFilter === null},
+                                { label: "Has Tickets", value: "HAS_TICKETS",default: ticketsFilter === "HAS_TICKETS" },
+                                { label: "Has No Tickets", value: "HAS_NO_TICKETS",default: ticketsFilter === "HAS_NO_TICKETS" },
+                            ]}
+                            setValue={newValue => this.handleSetTicketsFilter(newValue)}
+                            style={{ width: "100%", height:40, color: '#337ab7', fontSize: '10px' }}
                         />
                     </div>
                 </div>
                 {attendees.length === 0 &&
-                <div>{T.translate("attendee_list.no_attendees")}</div>
+                    <div>{T.translate("attendee_list.no_attendees")}</div>
                 }
 
                 <div className={'row'}>
