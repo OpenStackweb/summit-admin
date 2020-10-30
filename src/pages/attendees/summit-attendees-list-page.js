@@ -318,8 +318,8 @@ class SummitAttendeeListPage extends React.Component {
                             name="ticketsFilter"
                             options={[
                                 { label: "All", value: null, default: ticketsFilter === null},
-                                { label: "Has Tickets", value: "HAS_TICKETS",default: ticketsFilter === "HAS_TICKETS" },
-                                { label: "Has No Tickets", value: "HAS_NO_TICKETS",default: ticketsFilter === "HAS_NO_TICKETS" },
+                                { label: "With Tickets", value: "HAS_TICKETS",default: ticketsFilter === "HAS_TICKETS" },
+                                { label: "Without Tickets", value: "HAS_NO_TICKETS",default: ticketsFilter === "HAS_NO_TICKETS" },
                             ]}
                             setValue={newValue => this.handleSetTicketsFilter(newValue)}
                             style={{ width: "100%", height:40, color: '#337ab7', fontSize: '10px' }}
