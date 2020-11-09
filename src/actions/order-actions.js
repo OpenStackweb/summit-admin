@@ -47,8 +47,6 @@ export const RESET_ORDER_EXTRA_QUESTION_VALUE_FORM  = 'RESET_ORDER_EXTRA_QUESTIO
 export const UPDATE_ORDER_EXTRA_QUESTION_VALUE   = 'UPDATE_ORDER_EXTRA_QUESTION_VALUE';
 export const ORDER_EXTRA_QUESTION_ORDER_UPDATED   = 'ORDER_EXTRA_QUESTION_ORDER_UPDATED';
 
-
-
 export const REQUEST_PURCHASE_ORDERS    = 'REQUEST_PURCHASE_ORDERS';
 export const RECEIVE_PURCHASE_ORDERS    = 'RECEIVE_PURCHASE_ORDERS';
 export const RECEIVE_PURCHASE_ORDER     = 'RECEIVE_PURCHASE_ORDER';
@@ -57,6 +55,7 @@ export const PURCHASE_ORDER_UPDATED     = 'PURCHASE_ORDER_UPDATED';
 export const PURCHASE_ORDER_ADDED       = 'PURCHASE_ORDER_ADDED';
 export const PURCHASE_ORDER_DELETED     = 'PURCHASE_ORDER_DELETED';
 export const PURCHASE_ORDER_REFUNDED     = 'PURCHASE_ORDER_REFUNDED';
+export const PURCHASE_ORDER_CANCEL_REFUND     = 'PURCHASE_ORDER_CANCEL_REFUND';
 export const RESET_PURCHASE_ORDER_FORM  = 'RESET_PURCHASE_ORDER_FORM';
 export const ORDER_EMAIL_SENT = 'ORDER_EMAIL_SENT';
 
@@ -479,6 +478,39 @@ export const deletePurchaseOrder = (orderId) => (dispatch, getState) => {
         }
     );
 };
+
+export const cancelRefundPurchaseOrder = (orderId) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    let success_message = {
+        title: T.translate("general.done"),
+        html: T.translate("edit_purchase_order.order_cancel_refund"),
+        type: 'success'
+    };
+
+    return deleteRequest(
+        null,
+        createAction(PURCHASE_ORDER_CANCEL_REFUND)({orderId}),
+        `${window.API_BASE_URL}/api/v1/summits/all/orders/${orderId}/refund/cancel`,
+        {},
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+            dispatch(showMessage(
+                success_message,
+                () => {
+                    history.push(`/app/summits/${currentSummit.id}/purchase-orders/${orderId}`)
+                }
+            ));
+        }
+    );
+}
 
 export const refundPurchaseOrder = (orderId, refundAmount) => (dispatch, getState) => {
 

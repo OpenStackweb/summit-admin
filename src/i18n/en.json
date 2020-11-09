@@ -1026,7 +1026,11 @@
     "badge_deleted"     : "Badge deleted successfully.",
     "ticket_reassigned" : "Ticket reassigned successfully.",
     "email_resent"      : "Ticket email successfully sent.",
-    "resend_email"      : "Resend Email"
+    "resend_email"      : "Resend Email",
+    "cancel_refund"     : "Cancel Refund",
+    "cancel_refund_warning" : "Are you sure you want to cancel the refund request for this ticket?",
+    "yes_cancel_refund" : "Yes, cancel refund!",
+    "ticket_cancel_refund" : "Ticket refund request cancelled successfully."
   },
   "ticket_type_list": {
     "ticket_types"      : "Ticket Types",
@@ -1342,7 +1346,11 @@
     "order_created"             : "Order created successfully",
     "order_deleted"             : "Order deleted successfully",
     "order_refunded"            : "Order refunded successfully",
-    "email_resent"              : "Order Email Sent successfully"
+    "email_resent"              : "Order Email Sent successfully",
+    "cancel_refund"             : "Cancel Refund",
+    "cancel_refund_warning"     : "Are you sure you want to cancel the refund request for this order?",
+    "yes_cancel_refund"         : "Yes, cancel refund request!",
+    "order_cancel_refund"       : "Cancelled refund request successfully"
   },
   "sponsor_list": {
     "sponsors"         : "Sponsors",
