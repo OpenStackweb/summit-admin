@@ -27,7 +27,7 @@ import {
     getCSV,
     escapeFilterValue
 } from 'openstack-uicore-foundation/lib/methods';
-import {ORDER_EMAIL_SENT} from "./order-actions";
+import {ORDER_EMAIL_SENT, PURCHASE_ORDER_CANCEL_REFUND} from "./order-actions";
 
 
 export const REQUEST_TICKETS            = 'REQUEST_TICKETS';
@@ -38,6 +38,7 @@ export const RECEIVE_TICKET             = 'RECEIVE_TICKET';
 export const UPDATE_TICKET              = 'UPDATE_TICKET';
 export const TICKET_UPDATED             = 'TICKET_UPDATED';
 export const TICKET_REFUNDED            = 'TICKET_REFUNDED';
+export const TICKET_CANCEL_REFUND       = 'TICKET_CANCEL_REFUND';
 export const TICKET_MEMBER_ASSIGNED     = 'TICKET_MEMBER_ASSIGNED';
 export const TICKET_MEMBER_REASSIGNED   = 'TICKET_MEMBER_REASSIGNED';
 export const BADGE_ADDED_TO_TICKET      = 'BADGE_ADDED_TO_TICKET';
@@ -283,6 +284,39 @@ export const reassignTicket = (ticketId, attendeeId, firstName, lastName, email,
             ));
         });
 };
+
+export const cancelRefundTicket = (orderId, ticketId) => (dispatch, getState) => {
+    let { loggedUserState, currentSummitState } = getState();
+    let { accessToken }     = loggedUserState;
+    let { currentSummit }   = currentSummitState;
+
+    let params = {
+        access_token : accessToken
+    };
+
+    let success_message = {
+        title: T.translate("general.done"),
+        html: T.translate("edit_ticket.ticket_cancel_refund"),
+        type: 'success'
+    };
+
+    return deleteRequest(
+        null,
+        createAction(TICKET_CANCEL_REFUND)({orderId}),
+        `${window.API_BASE_URL}/api/v1/summits/all/orders/${orderId}/tickets/${ticketId}/refund/cancel`,
+        {},
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+            dispatch(showMessage(
+                success_message,
+                () => {
+                    history.push(`/app/summits/${currentSummit.id}/purchase-orders/${orderId}`)
+                }
+            ));
+        }
+    );
+}
 
 export const refundTicket = (ticketId, refundAmount) => (dispatch, getState) => {
 
