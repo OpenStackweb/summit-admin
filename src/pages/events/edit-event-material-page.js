@@ -20,8 +20,9 @@ import {
     getEventMaterial,
     resetEventMaterialForm,
     saveEventMaterial,
-    saveEventMaterialWithFile
+    saveEventMaterialWithFile,
 } from "../../actions/event-material-actions";
+
 //import '../../styles/edit-event-material-page.less';
 
 class EditEventMaterialPage extends React.Component {
@@ -53,8 +54,8 @@ class EditEventMaterialPage extends React.Component {
         }
     }
 
-    saveMaterialFile = (entity, file, materialClass) => {
-        const slug = (materialClass === 'PresentationMediaUpload') ? 'media-uploads' : 'slides';
+    saveMaterialFile = (entity, file) => {
+        const slug = 'slides';
         this.props.saveEventMaterialWithFile(entity, file, slug);
     };
 

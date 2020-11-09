@@ -77,6 +77,10 @@ const eventMaterialReducer = (state = DEFAULT_STATE, action) => {
                 }
             }
 
+            if (entity.media_upload_type) {
+                entity.media_upload_type_id = entity.media_upload_type.id;
+            }
+
             entity.file_link = '';
 
             if (entity.has_file) {

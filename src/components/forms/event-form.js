@@ -254,6 +254,7 @@ class EventForm extends React.Component {
         let material_columns = [
             { columnKey: 'class_name', value: T.translate("edit_event.type") },
             { columnKey: 'name', value: T.translate("general.name") },
+            { columnKey: 'filename', value: T.translate("general.file") },
             { columnKey: 'display_on_site_label', value: T.translate("edit_event.display_on_site") }
         ];
 
