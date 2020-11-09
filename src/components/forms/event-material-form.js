@@ -14,8 +14,9 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { Dropdown, Input, UploadInput, TextEditor} from 'openstack-uicore-foundation/lib/components'
+import { Dropdown, Input, UploadInput, UploadInputV2, TextEditor} from 'openstack-uicore-foundation/lib/components'
 import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
+import Swal from "sweetalert2";
 
 
 class EventMaterialForm extends React.Component {
@@ -33,6 +34,8 @@ class EventMaterialForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleUploadFile = this.handleUploadFile.bind(this);
         this.handleRemoveFile = this.handleRemoveFile.bind(this);
+        this.handleRemoveMediaUpload = this.handleRemoveMediaUpload.bind(this);
+        this.onMediaUploadComplete = this.onMediaUploadComplete.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -95,12 +98,40 @@ class EventMaterialForm extends React.Component {
         this.setState({entity: entity, file: null});
     }
 
+    handleRemoveMediaUpload({id, name}) {
+        Swal.fire({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("media_file_type.delete_warning") + ' ' + media_file_type.name,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: T.translate("general.yes_delete")
+        }).then(function(result){
+            if (result.value) {
+                deleteMediaFileType(accessId);
+            }
+        });
+    }
+
+    onMediaUploadComplete(response, id, data){
+        const {entity} = this.state;
+
+        // we just upload a file, then we need to figure we need to create it
+        let {media_type, media_upload } = data;
+
+        if(response){
+            entity.filepath = `${response.path}${response.name}`;
+            entity.filename = response.name;
+            this.setState({entity});
+        }
+    }
+
     handleSubmit(ev) {
         let {entity, file} = this.state;
         ev.preventDefault();
 
-        if (file || entity.class_name === 'PresentationMediaUpload') {
-            this.props.onSubmitWithFile(entity, file, entity.class_name);
+        if (file) {
+            this.props.onSubmitWithFile(entity, file);
         } else {
             this.props.onSubmit(entity);
         }
@@ -117,7 +148,10 @@ class EventMaterialForm extends React.Component {
 
     render() {
         let {entity, file} = this.state;
+        const media_type = entity.media_upload_type;
         let filePreview = file ? file.preview : (entity.file_link || entity.private_url || entity.public_url);
+        let mediaInputValue = entity.filename ? [entity] : [];
+
 
         let event_materials_ddl = [
             {label: 'Link', value: 'PresentationLink'},
@@ -256,17 +290,17 @@ class EventMaterialForm extends React.Component {
                 </div>
                 }
 
-                {entity.class_name === 'PresentationMediaUpload' && entity.media_upload_type_id !== 0 &&
+                {entity.class_name === 'PresentationMediaUpload' && media_type && media_type.type &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_event_material.media_upload_file")} {`(max size: ${entity.media_upload_type.max_size/1024}Mb )`}</label>
-                        <UploadInput
-                            value={filePreview}
-                            handleUpload={this.handleUploadFile}
-                            handleRemove={this.handleRemoveFile}
-                            className="dropzone col-md-6"
-                            multiple={false}
-                            maxSize={entity.media_upload_type.max_size*1024}
+                        <UploadInputV2
+                            id={`media_upload_${media_type.id}`}
+                            onUploadComplete={this.onMediaUploadComplete}
+                            value={mediaInputValue}
+                            mediaType={media_type}
+                            postUrl={`${window.API_BASE_URL}/api/public/v1/files/upload`}
+                            error={this.hasErrors(media_type.name)}
                         />
                     </div>
                 </div>
