@@ -502,12 +502,7 @@ export const cancelRefundPurchaseOrder = (orderId) => (dispatch, getState) => {
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
-            dispatch(showMessage(
-                success_message,
-                () => {
-                    history.push(`/app/summits/${currentSummit.id}/purchase-orders/${orderId}`)
-                }
-            ));
+            dispatch(showMessage(success_message));
         }
     );
 }

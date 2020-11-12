@@ -157,20 +157,21 @@ class EditTicketPage extends React.Component {
 
                 <div className="row">
                     <div className="col-md-6">
-                        {entity.status != 'Cancelled' &&
-                        <div className="pull-left form-inline">
-                            <input
-                                className="form-control"
-                                type="number"
-                                min="0"
-                                value={refund_amount}
-                                onChange={this.handleRefundChange}
-                            />
-                            <button className="btn btn-sm btn-primary pull-right"
-                                    onClick={this.handleRefundTicket.bind(this, entity)}>
-                                {T.translate("edit_ticket.refund_ticket")}
-                            </button>
-                        </div>
+                        {
+                            (entity.status === 'RefundRequested' || entity.status === 'Paid') &&
+                            <div className="pull-left form-inline">
+                                <input
+                                    className="form-control"
+                                    type="number"
+                                    min="0"
+                                    value={refund_amount}
+                                    onChange={this.handleRefundChange}
+                                />
+                                <button className="btn btn-sm btn-primary pull-right"
+                                        onClick={this.handleRefundTicket.bind(this, entity)}>
+                                    {T.translate("edit_ticket.refund_ticket")}
+                                </button>
+                            </div>
                         }
                     </div>
                     <div className="col-md-6">
