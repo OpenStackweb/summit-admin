@@ -107,18 +107,25 @@ class EditPurchaseOrderPage extends React.Component {
             <div className="container">
                 <h3>
                     {title} {T.translate("edit_purchase_order.purchase_order")}
-                    {entity.id != 0 &&
+                    {entity.id !== 0 &&
                     <div className="pull-right form-inline">
-                        <input
+                        {
+                            (entity.status === 'RefundRequested' || entity.status === 'Paid') &&
+                            < input
                             className="form-control"
                             type="number"
                             min="0"
                             value={refund_amount}
                             onChange={this.handleRefundChange}
-                        />
-                        <button className="btn btn-sm btn-primary right-space" onClick={this.handleRefundOrder.bind(this, entity)}>
-                            {T.translate("edit_purchase_order.refund")}
-                        </button>
+                            />
+                        }
+                        {
+                            (entity.status === 'RefundRequested' || entity.status === 'Paid') &&
+                            <button className="btn btn-sm btn-primary right-space"
+                                    onClick={this.handleRefundOrder.bind(this, entity)}>
+                                {T.translate("edit_purchase_order.refund")}
+                            </button>
+                        }
                         {
                             entity.status === 'RefundRequested' &&
                             <button className="btn btn-sm btn-primary right-space" onClick={this.handleCancelRefundOrder.bind(this, entity)}>
@@ -128,7 +135,7 @@ class EditPurchaseOrderPage extends React.Component {
                         <button className="btn btn-sm btn-danger" onClick={this.handleDeleteOrder.bind(this, entity)}>
                             {T.translate("edit_purchase_order.delete_order")}
                         </button>
-                        {entity.status === 'Paid' &&
+                        { entity.status === 'Paid' &&
                         <button className="btn btn-sm btn-primary left-space"
                                 onClick={this.handleResendEmail.bind(this, entity)}>
                             {T.translate("edit_purchase_order.resend_order_email")}

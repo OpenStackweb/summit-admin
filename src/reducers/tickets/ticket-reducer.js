@@ -16,7 +16,7 @@ import {
     UPDATE_TICKET,
     TICKET_UPDATED,
     TICKET_MEMBER_REASSIGNED,
-    BADGE_ADDED_TO_TICKET
+    BADGE_ADDED_TO_TICKET, TICKET_CANCEL_REFUND
 } from '../../actions/ticket-actions';
 import {
     BADGE_DELETED,
@@ -124,7 +124,7 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
         break;
         case FEATURE_BADGE_REMOVED: {
             let {featureId} = payload;
-            let badgeFeatures = state.entity.badge.features.filter(f => f.id != featureId);
+            let badgeFeatures = state.entity.badge.features.filter(f => f.id !== featureId);
             return {...state, entity: {...state.entity, badge: {...state.entity.badge, features: badgeFeatures} } };
         }
         break;
@@ -133,6 +133,10 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
             let badgeFeatures = [...state.entity.badge.features, newBadgeFeature];
 
             return {...state, entity: {...state.entity,  badge: {...state.entity.badge, features: badgeFeatures}} };
+        }
+        case TICKET_CANCEL_REFUND:{
+            let { entity} = state;
+            return {...state,  entity: {...entity, status: 'Paid' }};
         }
         break;
         default:

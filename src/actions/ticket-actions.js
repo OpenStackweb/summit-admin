@@ -27,8 +27,6 @@ import {
     getCSV,
     escapeFilterValue
 } from 'openstack-uicore-foundation/lib/methods';
-import {ORDER_EMAIL_SENT, PURCHASE_ORDER_CANCEL_REFUND} from "./order-actions";
-
 
 export const REQUEST_TICKETS            = 'REQUEST_TICKETS';
 export const RECEIVE_TICKETS            = 'RECEIVE_TICKETS';
@@ -302,18 +300,13 @@ export const cancelRefundTicket = (orderId, ticketId) => (dispatch, getState) =>
 
     return deleteRequest(
         null,
-        createAction(TICKET_CANCEL_REFUND)({orderId}),
+        createAction(TICKET_CANCEL_REFUND)({ticketId}),
         `${window.API_BASE_URL}/api/v1/summits/all/orders/${orderId}/tickets/${ticketId}/refund/cancel`,
         {},
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
-            dispatch(showMessage(
-                success_message,
-                () => {
-                    history.push(`/app/summits/${currentSummit.id}/purchase-orders/${orderId}`)
-                }
-            ));
+            dispatch(showMessage(success_message));
         }
     );
 }
