@@ -102,12 +102,13 @@ class EditSummitEventPage extends React.Component {
 
     render(){
         let {currentSummit, entity, errors, levelOptions, rsvpTemplateOptions} = this.props;
+        const header = !entity.id ? T.translate("general.summit_event") : `${entity.title} - ID ${entity.id}`;
 
         return(
             <div className="container">
                 <h3>
                     <div className="title">
-                        {T.translate("general.summit_event")}
+                        {header}
                     </div>
                     {!!entity.id &&
                     <div className="next">

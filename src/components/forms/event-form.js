@@ -140,11 +140,11 @@ class EventForm extends React.Component {
     handleEventLink(ev) {
         let {entity} = this.state;
         let {currentSummit} = this.props;
-
         ev.preventDefault();
 
-        let event_id = entity.id;
-        let event_detail_url = currentSummit.schedule_event_detail_url.replace(':event_id',event_id).replace(':event_title','');
+        const eventStart = epochToMomentTimeZone(entity.start_date + 300, currentSummit.time_zone_id).format('YYYY-MM-DD,HH:mm:ss');
+
+        let event_detail_url = `${currentSummit.virtual_site_url}event/${entity.id}#now=${eventStart}`;
 
         window.open(event_detail_url, '_blank');
     }
@@ -266,6 +266,7 @@ class EventForm extends React.Component {
         };
 
         const creator = (entity.id && entity.creator) ? `${entity.creator.first_name} ${entity.creator.last_name} (${entity.creator.email})` : 'N/A';
+
 
         return (
             <form>
@@ -628,16 +629,31 @@ class EventForm extends React.Component {
 
                         {entity.is_published &&
                         <div>
-                            <input type="button" onClick={this.handleSubmit.bind(this, true)}
-                                   className="btn btn-success pull-right" value={T.translate("general.save_and_publish")} />
-                            <input type="button" onClick={this.handleUnpublish.bind(this)}
-                                   className="btn btn-danger pull-right" value={T.translate("edit_event.unpublish")}/>
-                            <input type="button"
-                                   onClick={this.handleScheduleLink.bind(this)}
-                                   className="btn btn-default pull-left" value={T.translate("edit_event.go_to_calendar")}/>
-                            <input type="button"
-                                   onClick={this.handleEventLink.bind(this)}
-                                   className="btn btn-default pull-left" value={T.translate("edit_event.view_event")}/>
+                            <input
+                                type="button"
+                                onClick={this.handleSubmit.bind(this, true)}
+                                className="btn btn-success pull-right"
+                                value={T.translate("general.save_and_publish")}
+                            />
+                            <input
+                                type="button"
+                                onClick={this.handleUnpublish.bind(this)}
+                                className="btn btn-danger pull-right"
+                                value={T.translate("edit_event.unpublish")}
+                            />
+                            <input
+                                type="button"
+                                onClick={this.handleScheduleLink.bind(this)}
+                                className="btn btn-default pull-left"
+                                value={T.translate("edit_event.go_to_calendar")}
+                            />
+                            <input
+                                type="button"
+                                onClick={this.handleEventLink.bind(this)}
+                                disabled={!currentSummit.virtual_site_url}
+                                className="btn btn-default pull-left"
+                                value={T.translate("edit_event.view_event")}
+                            />
                         </div>
                         }
 
