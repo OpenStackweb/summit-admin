@@ -14,9 +14,10 @@
 import
 {
     RECEIVE_PURCHASE_ORDER,
-    RESET_PURCHASE_ORDER_FORM, UPDATE_PURCHASE_ORDER
+    RESET_PURCHASE_ORDER_FORM,
+    UPDATE_PURCHASE_ORDER,
+    PURCHASE_ORDER_CANCEL_REFUND
 } from '../../actions/order-actions';
-
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
 import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
@@ -105,6 +106,10 @@ const purchaseOrderReducer = (state = DEFAULT_STATE, action) => {
         }
         case VALIDATE: {
             return {...state,  errors: payload.errors };
+        }
+        case PURCHASE_ORDER_CANCEL_REFUND:{
+            let { entity} = state;
+            return {...state,  entity: {...entity, status: 'Paid' }};
         }
         break;
         default:
