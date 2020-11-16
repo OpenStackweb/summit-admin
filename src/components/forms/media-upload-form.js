@@ -81,10 +81,16 @@ class MediaUploadForm extends React.Component {
         let {entity} = this.state;
         let { currentSummit, mediaFileTypes } = this.props;
 
-        let storage_ddl = [
+        let private_storage_ddl = [
             {value: 'None', label:'None'},
             {value: 'DropBox', label:'DropBox'},
-            {value: 'Swift', label:'Swift'},
+            {value: 'Local', label:'Local'}
+        ];
+
+        let public_storage_ddl = [
+            {value: 'None', label:'None'},
+            {value: 'S3', label:'S3'},
+            //{value: 'Swift', label:'Swift'},
             {value: 'Local', label:'Local'}
         ];
 
@@ -156,7 +162,7 @@ class MediaUploadForm extends React.Component {
                             className="right-space"
                             value={entity.private_storage_type}
                             placeholder={T.translate("media_upload.placeholders.select_private_storage")}
-                            options={storage_ddl}
+                            options={private_storage_ddl}
                             onChange={this.handleChange}
                         />
                     </div>
@@ -167,7 +173,7 @@ class MediaUploadForm extends React.Component {
                             className="right-space"
                             value={entity.public_storage_type}
                             placeholder={T.translate("media_upload.placeholders.select_public_storage")}
-                            options={storage_ddl}
+                            options={public_storage_ddl}
                             onChange={this.handleChange}
                         />
                     </div>
