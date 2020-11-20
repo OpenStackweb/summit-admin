@@ -397,7 +397,7 @@
     "member"                : "Member",
     "name"                  : "Name",
     "email"                 : "Email",
-    "eb_ticket"             : "EventBrite Tickets",
+    "eb_ticket"             : "Tickets",
     "presentations"         : "Presentations",
     "twitter"               : "Twitter",
     "irc"                   : "IRC",
@@ -489,14 +489,20 @@
     "attendees"               : "Attendees",
     "add_attendee"            : "Add Attendee",
     "member_id"               : "Member Id",
-    "tickets"                 : "Tickets",
+    "tickets"                 : "Tickets Qty.",
     "bought_date"             : "Bought Date",
     "summit_hall_checked_in"  : "Checked In",
     "schedule"                : "Schedule",
     "schedule_count"          : "Scheduled",
+    "company"                 : "Company",
+    "status"                  : "Status",
     "delete_attendee_warning" : "Are you sure you want to delete attendee",
+    "send_emails": "Send",
+    "resend_done" : "Emails sent successfully.",
+    "select_template": "Select a Email Template to perform the action.",
+    "select_items": "Select at least one attendee to perform the action.",
     "placeholders": {
-      "search_attendees": "Search Attendees by Name or Email"
+      "search_attendees": "Search Attendees by Name, Email, Company, Ticket Type or Badge Type"
     }
   },
   "edit_attendee": {
@@ -516,9 +522,11 @@
     "remove_ticket_from_attendee" : "Do you really want to remove this ticket from this attendee?",
     "add_ticket"                  : "Add Ticket",
     "ticket_details"              : "Ticket Details",
-    "eb_order_number"             : "Eventbrite Order #",
-    "eb_attendee_id"              : "Eventbrite Attendee Id",
+    "eb_order_number"             : "External Order #",
+    "eb_attendee_id"              : "External Attendee Id",
     "ticket_type"                 : "Ticket Type",
+    "ticket_number"               : "Ticket #",
+    "badge_type"                  : "Badge Type",
     "assign_to_member"            : "Assign to another member",
     "new_ticket"                  : "New Ticket",
     "remove_rsvp_from_attendee"   : "Do you really want to remove this rsvp from this attendee?",
@@ -529,6 +537,10 @@
     "created"                     : "Created Date",
     "seat"                        : "Seat",
     "extra_questions"             : "Registration Extra Questions",
+    "admin_notes"                 : "Notes",
+    "has_idp_account"             : "Has IDP Account?",
+    "has_pending_questions"       : "Has Pending Questions?",
+    "promo_code"                  : "Promo Code",
     "placeholders": {
       "start_date"            : "Start Date",
       "end_date"              : "End Date",
@@ -1014,7 +1026,11 @@
     "badge_deleted"     : "Badge deleted successfully.",
     "ticket_reassigned" : "Ticket reassigned successfully.",
     "email_resent"      : "Ticket email successfully sent.",
-    "resend_email"      : "Resend Email"
+    "resend_email"      : "Resend Email",
+    "cancel_refund"     : "Cancel Refund",
+    "cancel_refund_warning" : "Are you sure you want to cancel the refund request for this ticket?",
+    "yes_cancel_refund" : "Yes, cancel refund!",
+    "ticket_cancel_refund" : "Ticket refund request cancelled successfully."
   },
   "ticket_type_list": {
     "ticket_types"      : "Ticket Types",
@@ -1330,7 +1346,11 @@
     "order_created"             : "Order created successfully",
     "order_deleted"             : "Order deleted successfully",
     "order_refunded"            : "Order refunded successfully",
-    "email_resent"              : "Order Email Sent successfully"
+    "email_resent"              : "Order Email Sent successfully",
+    "cancel_refund"             : "Cancel Refund",
+    "cancel_refund_warning"     : "Are you sure you want to cancel the refund request for this order?",
+    "yes_cancel_refund"         : "Yes, cancel refund request!",
+    "order_cancel_refund"       : "Cancelled refund request successfully"
   },
   "sponsor_list": {
     "sponsors"         : "Sponsors",

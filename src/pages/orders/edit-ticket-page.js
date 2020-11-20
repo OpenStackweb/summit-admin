@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getTicket, refundTicket, saveTicket, reassignTicket, addBadgeToTicket, reSendTicketEmail } from "../../actions/ticket-actions";
+import { getTicket, refundTicket, saveTicket, reassignTicket, addBadgeToTicket, reSendTicketEmail, cancelRefundTicket } from "../../actions/ticket-actions";
 import TicketForm from "../../components/forms/ticket-form";
 import BadgeForm from "../../components/forms/badge-form";
 import {getBadgeFeatures, getBadgeTypes, deleteBadge, addFeatureToBadge, removeFeatureFromBadge, changeBadgeType,
@@ -75,6 +75,23 @@ class EditTicketPage extends React.Component {
     handleRefundChange(ev) {
         let value = parseInt(ev.target.value);
         this.setState({refund_amount: value});
+    }
+
+    handleCancelRefundTicket(ticket, ev){
+        let {cancelRefundTicket} = this.props;
+
+        Swal.fire({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("edit_ticket.cancel_refund_warning"),
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: T.translate("edit_ticket.yes_cancel_refund")
+        }).then(function(result){
+            if (result.value) {
+                cancelRefundTicket(ticket.order_id, ticket.id);
+            }
+        });
     }
 
     handleRefundTicket(ticket, ev) {
@@ -140,23 +157,30 @@ class EditTicketPage extends React.Component {
 
                 <div className="row">
                     <div className="col-md-6">
-                        {entity.status != 'Cancelled' &&
-                        <div className="pull-left form-inline">
-                            <input
-                                className="form-control"
-                                type="number"
-                                min="0"
-                                value={refund_amount}
-                                onChange={this.handleRefundChange}
-                            />
-                            <button className="btn btn-sm btn-primary pull-right"
-                                    onClick={this.handleRefundTicket.bind(this, entity)}>
-                                {T.translate("edit_ticket.refund_ticket")}
-                            </button>
-                        </div>
+                        {
+                            (entity.status === 'RefundRequested' || entity.status === 'Paid') &&
+                            <div className="pull-left form-inline">
+                                <input
+                                    className="form-control"
+                                    type="number"
+                                    min="0"
+                                    value={refund_amount}
+                                    onChange={this.handleRefundChange}
+                                />
+                                <button className="btn btn-sm btn-primary pull-right"
+                                        onClick={this.handleRefundTicket.bind(this, entity)}>
+                                    {T.translate("edit_ticket.refund_ticket")}
+                                </button>
+                            </div>
                         }
                     </div>
                     <div className="col-md-6">
+                        {
+                            entity.status === 'RefundRequested' &&
+                            <button className="btn btn-sm btn-primary right-space" onClick={this.handleCancelRefundTicket.bind(this, entity)}>
+                                {T.translate("edit_ticket.cancel_refund")}
+                            </button>
+                        }
                         {entity.status === 'Paid' &&
                         <div>
 
@@ -241,5 +265,6 @@ export default connect (
         addBadgeToTicket,
         printBadge,
         reSendTicketEmail,
+        cancelRefundTicket,
     }
 )(EditTicketPage);

@@ -15,7 +15,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import { getSummitById }  from '../../actions/summit-actions';
-import { getPurchaseOrder, savePurchaseOrder, refundPurchaseOrder, deletePurchaseOrder, reSendOrderEmail } from "../../actions/order-actions";
+import { getPurchaseOrder, savePurchaseOrder, refundPurchaseOrder, deletePurchaseOrder, reSendOrderEmail, cancelRefundPurchaseOrder } from "../../actions/order-actions";
 import PurchaseOrderForm from "../../components/forms/purchase-order-form";
 import Swal from "sweetalert2";
 
@@ -34,11 +34,29 @@ class EditPurchaseOrderPage extends React.Component {
         this.handleRefundOrder = this.handleRefundOrder.bind(this);
         this.handleRefundChange = this.handleRefundChange.bind(this);
         this.handleResendEmail = this.handleResendEmail.bind(this);
+        this.handleCancelRefundOrder = this.handleCancelRefundOrder.bind(this);
     }
 
     handleRefundChange(ev) {
         let value = parseInt(ev.target.value);
         this.setState({refund_amount: value});
+    }
+
+    handleCancelRefundOrder(order, ev){
+        let {cancelRefundPurchaseOrder} = this.props;
+
+        Swal.fire({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("edit_purchase_order.cancel_refund_warning"),
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: T.translate("edit_purchase_order.yes_cancel_refund")
+        }).then(function(result){
+            if (result.value) {
+                cancelRefundPurchaseOrder(order.id);
+            }
+        });
     }
 
     handleResendEmail(order, ev){
@@ -89,22 +107,35 @@ class EditPurchaseOrderPage extends React.Component {
             <div className="container">
                 <h3>
                     {title} {T.translate("edit_purchase_order.purchase_order")}
-                    {entity.id != 0 &&
+                    {entity.id !== 0 &&
                     <div className="pull-right form-inline">
-                        <input
+                        {
+                            (entity.status === 'RefundRequested' || entity.status === 'Paid') &&
+                            < input
                             className="form-control"
                             type="number"
                             min="0"
                             value={refund_amount}
                             onChange={this.handleRefundChange}
-                        />
-                        <button className="btn btn-sm btn-primary right-space" onClick={this.handleRefundOrder.bind(this, entity)}>
-                            {T.translate("edit_purchase_order.refund")}
-                        </button>
+                            />
+                        }
+                        {
+                            (entity.status === 'RefundRequested' || entity.status === 'Paid') &&
+                            <button className="btn btn-sm btn-primary right-space"
+                                    onClick={this.handleRefundOrder.bind(this, entity)}>
+                                {T.translate("edit_purchase_order.refund")}
+                            </button>
+                        }
+                        {
+                            entity.status === 'RefundRequested' &&
+                            <button className="btn btn-sm btn-primary right-space" onClick={this.handleCancelRefundOrder.bind(this, entity)}>
+                                {T.translate("edit_purchase_order.cancel_refund")}
+                            </button>
+                        }
                         <button className="btn btn-sm btn-danger" onClick={this.handleDeleteOrder.bind(this, entity)}>
                             {T.translate("edit_purchase_order.delete_order")}
                         </button>
-                        {entity.status === 'Paid' &&
+                        { entity.status === 'Paid' &&
                         <button className="btn btn-sm btn-primary left-space"
                                 onClick={this.handleResendEmail.bind(this, entity)}>
                             {T.translate("edit_purchase_order.resend_order_email")}
@@ -141,5 +172,6 @@ export default connect (
         refundPurchaseOrder,
         deletePurchaseOrder,
         reSendOrderEmail,
+        cancelRefundPurchaseOrder
     }
 )(EditPurchaseOrderPage);

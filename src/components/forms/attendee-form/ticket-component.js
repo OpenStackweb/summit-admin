@@ -46,7 +46,6 @@ export default class TicketComponent extends React.Component {
 
     onDelete(ticket_id, ev)  {
         let {onDelete, attendeeId} = this.props;
-
         ev.preventDefault();
         let msg = {
             title: T.translate("general.are_you_sure"),
@@ -57,7 +56,6 @@ export default class TicketComponent extends React.Component {
         Swal.fire(msg).then(function(){
             onDelete(attendeeId, ticket_id);
         });
-
     }
 
     onAdd(ev)  {
@@ -147,16 +145,40 @@ export default class TicketComponent extends React.Component {
                         {editTicket &&
                         <div className="row">
                             <div className="col-md-4">
+                                <label>{T.translate("edit_attendee.ticket_type")}</label><br/>
+                                <div>{summit.ticket_types.find(t => t.id === editTicket.ticket_type_id).name}</div>
+                            </div>
+                            { summit.external_registration_feed_type === 'none' &&
+                            <div className="col-md-4">
+                                <label>{T.translate("edit_attendee.badge_type")}</label><br/>
+                                <div>{editTicket.badge.type.name}</div>
+                            </div>
+                            }
+                            { summit.external_registration_feed_type === 'none' && editTicket.hasOwnProperty("promo_code") &&
+                            <div className="col-md-4">
+                                <label>{T.translate("edit_attendee.promo_code")}</label><br/>
+                                <div>{editTicket.promo_code.code}</div>
+                            </div>
+                            }
+                            { summit.external_registration_feed_type !== 'none' &&
+                            <div className="col-md-4">
                                 <label>{T.translate("edit_attendee.eb_order_number")}</label><br/>
                                 <div>{editTicket.external_order_id}</div>
                             </div>
+                            }
+                            { summit.external_registration_feed_type !== 'none' &&
                             <div className="col-md-4">
                                 <label>{T.translate("edit_attendee.eb_attendee_id")}</label><br/>
                                 <div>{editTicket.external_attendee_id}</div>
                             </div>
-                            <div className="col-md-4">
-                                <label>{T.translate("edit_attendee.ticket_type")}</label><br/>
-                                <div>{summit.ticket_types.find(t => t.id == editTicket.ticket_type_id).name}</div>
+                            }
+                        </div>
+                        }
+                        {editTicket &&
+                        <div className="row">
+                            <div className="col-md-12">
+                                <label>{T.translate("edit_attendee.ticket_number")}</label>
+                                <div>{editTicket.number}</div>
                             </div>
                         </div>
                         }
@@ -184,25 +206,7 @@ export default class TicketComponent extends React.Component {
                     </Modal.Header>
                     <Modal.Body>
                         <div className="row">
-                            <div className="col-md-4">
-                                <label>{T.translate("edit_attendee.eb_order_number")}</label><br/>
-                                <input
-                                    id="external_order_id"
-                                    className="form-control"
-                                    onChange={this.handleTicketChange}
-                                    value={newTicket ? newTicket.external_order_id : ''}
-                                />
-                            </div>
-                            <div className="col-md-4">
-                                <label>{T.translate("edit_attendee.eb_attendee_id")}</label><br/>
-                                <input
-                                    id="external_attendee_id"
-                                    className="form-control"
-                                    onChange={this.handleTicketChange}
-                                    value={newTicket ? newTicket.external_attendee_id : ''}
-                                />
-                            </div>
-                            <div className="col-md-4">
+                            <div className={summit.external_registration_feed_type === 'none' ? 'col-md-6' : 'col-md-4' }>
                                 <label>{T.translate("edit_attendee.ticket_type")}</label>
                                 <Dropdown
                                     id="ticket_type_id"
@@ -212,6 +216,39 @@ export default class TicketComponent extends React.Component {
                                     value={newTicket ? newTicket.ticket_type_id : ''}
                                 />
                             </div>
+                            {summit.external_registration_feed_type === 'none' &&
+                            <div className="col-md-6">
+                                <label>{T.translate("edit_attendee.promo_code")}</label><br/>
+                                <input
+                                    id="promo_code"
+                                    className="form-control"
+                                    onChange={this.handleTicketChange}
+                                    value={newTicket ? newTicket.promo_code : ''}
+                                />
+                            </div>
+                            }
+                            {summit.external_registration_feed_type !== 'none' &&
+                            <div className="col-md-4">
+                                <label>{T.translate("edit_attendee.eb_order_number")}</label><br/>
+                                <input
+                                    id="external_order_id"
+                                    className="form-control"
+                                    onChange={this.handleTicketChange}
+                                    value={newTicket ? newTicket.external_order_id : ''}
+                                />
+                            </div>
+                            }
+                            {summit.external_registration_feed_type !== 'none' &&
+                            <div className="col-md-4">
+                                <label>{T.translate("edit_attendee.eb_attendee_id")}</label><br/>
+                                <input
+                                    id="external_attendee_id"
+                                    className="form-control"
+                                    onChange={this.handleTicketChange}
+                                    value={newTicket ? newTicket.external_attendee_id : ''}
+                                />
+                            </div>
+                            }
                         </div>
                     </Modal.Body>
                     <Modal.Footer>

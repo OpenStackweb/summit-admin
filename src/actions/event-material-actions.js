@@ -75,12 +75,20 @@ export const saveEventMaterial = (entity) => (dispatch, getState) => {
     let { currentSummit }   = currentSummitState;
     let eventId             = currentSummitEventState.entity.id
 
-    let slug = entity.class_name === 'PresentationLink' ? 'links' : (entity.class_name === 'PresentationVideo' ? 'videos' : 'slides');
+    let slug = '';
+
+    if (entity.class_name === 'PresentationLink') slug = 'links';
+    else if (entity.class_name === 'PresentationVideo') slug = 'videos';
+    else if (entity.class_name === 'PresentationSlide') slug = 'slides';
+    else slug = 'media-uploads';
 
     dispatch(startLoading());
 
     let normalizedEntity = normalizeEntity(entity);
-    let params = { access_token : accessToken };
+    let params = {
+        access_token : accessToken,
+        expand: 'media_upload_type, media_upload_type.type'
+    };
 
     if (entity.id) {
 
@@ -130,9 +138,11 @@ export const saveEventMaterialWithFile = (entity, file, slug) => (dispatch, getS
 
     let params = {
         access_token : accessToken,
+        expand: 'media_upload_type, media_upload_type.type'
     };
 
     let normalizedEntity = normalizeEntity(entity);
+
 
     if (entity.id) {
 
@@ -174,7 +184,6 @@ export const saveEventMaterialWithFile = (entity, file, slug) => (dispatch, getS
             });
     }
 }
-
 
 export const deleteEventMaterial = (eventMaterialId) => (dispatch, getState) => {
 
