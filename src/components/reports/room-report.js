@@ -53,7 +53,7 @@ class RoomReport extends React.Component {
         let location = new Query("location");
         location.find([{"venueroom": venueroom}]);
         let results = new Query("results", filters);
-        results.find(["id", "title", "startDate", "endDate", "headCount", "speakerCount", "attendeeCount", {"category": category}, {"location": location}])
+        results.find(["id", "title", "startDate", "endDate", "headCount", "speakerCount", "attendeeCount", "uniqueMetricCount", {"category": category}, {"location": location}])
 
         query.find([{"results": results}, "totalCount"]);
 
@@ -103,8 +103,8 @@ class RoomReport extends React.Component {
             { columnKey: 'venue', value: 'Venue' },
             { columnKey: 'capacity', value: 'Capacity' },
             { columnKey: 'speakers', value: 'Speakers' },
-            { columnKey: 'head_count', value: 'HeadCount' },
-            { columnKey: 'total', value: 'Total' },
+            { columnKey: 'scheduled', value: 'Scheduled' },
+            { columnKey: 'metrics', value: 'Total Metrics' },
         ];
 
 
@@ -122,7 +122,8 @@ class RoomReport extends React.Component {
             let capacity = forExport ? it.location_venueroom_capacity : <div className="text-center">{it.location_venueroom_capacity + ''}</div>;
             let speakers = forExport ? it.speakerCount : <div className="text-center">{it.speakerCount + ''}</div>;
             let head_count = forExport ? it.headCount : <div className="text-center">{it.headCount + ''}</div>;
-            let total = forExport ? it.attendeeCount : <div className="text-center">{it.attendeeCount + ''}</div>;
+            let scheduled = forExport ? it.attendeeCount : <div className="text-center">{it.attendeeCount + ''}</div>;
+            let metrics = forExport ? it.uniqueMetricCount : <div className="text-center">{it.uniqueMetricCount + ''}</div>;
 
             return ({
                 id: it.id,
@@ -136,7 +137,8 @@ class RoomReport extends React.Component {
                 capacity: capacity,
                 speakers: speakers,
                 head_count: head_count,
-                total: total,
+                scheduled: scheduled,
+                metrics: metrics,
             });
         });
 
