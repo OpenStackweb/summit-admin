@@ -42,7 +42,10 @@ const fieldNames = [
     {label: 'Level', key: 'level', simple: true},
     {label: 'Published', key: 'published', simple: true},
     {label: 'Videos', key: 'mediaUploadVideos', simple: true},
-    {label: 'Slides', key: 'mediaUploadSlides', simple: true}
+    {label: 'Slides', key: 'mediaUploadSlides', simple: true},
+    {label: 'Stream URL', key: 'streamingUrl', simple: true},
+    {label: 'Meeting URL', key: 'meetingUrl', simple: true},
+    {label: 'Etherpad URL', key: 'etherpadLink', simple: true},
 ];
 
 class SmartPresentationReport extends React.Component {
@@ -128,8 +131,6 @@ class SmartPresentationReport extends React.Component {
         let {showFields} = this.state;
 
         let flatData = flattenData(data);
-
-        console.log(flatData);
 
         let columns = [
             { columnKey: 'id', value: 'Id' },
