@@ -84,9 +84,7 @@ class SummitDirectoryPage extends React.Component {
         let memberObj = new Member(member);
 
 
-        let orderedSummits = summits.sort(
-            (a, b) => (a.start_date < b.start_date ? 1 : (a.start_date > b.start_date ? -1 : 0))
-        );
+        let orderedSummits = summits.sort((a, b) => b.start_date - a.start_date );
         let canEditSummit =  memberObj.canEditSummit();
         let canAddSummits = memberObj.canAddSummits();
         let canDeleteSummits = memberObj.canDeleteSummits();
@@ -108,6 +106,7 @@ class SummitDirectoryPage extends React.Component {
                         <tbody>
                         {summits && orderedSummits.map((summit,i) => (
                             <tr key={"summit_"+summit.id}>
+                                <td className="summit_id"> {summit.id} </td>
                                 <td className="summit_name"> {summit.name} </td>
                                 <td> {formatEpoch(summit.start_date, 'MMMM Do YYYY')} </td>
                                 <td> {formatEpoch(summit.end_date, 'MMMM Do YYYY')} </td>
