@@ -16,6 +16,7 @@ import moment from 'moment-timezone'
 import {DateTimePicker, Dropdown, Input, Panel, Table} from 'openstack-uicore-foundation/lib/components'
 const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
+import {groupByDate} from '../../utils/methods'
 import {flattenData} from "../../actions/report-actions";
 
 class MetricsReport extends React.Component {
@@ -32,29 +33,23 @@ class MetricsReport extends React.Component {
         this.state = {
             eventType: null,
             fromDate: null,
-            toDate: null
-        }
+            toDate: null,
+        };
+
+        this.memberReport = false;
     }
 
-    buildReportQuery(filters, listFilters) {
-        let {currentSummit, sortKey, sortDir} = this.props;
+    buildMetricsQuery = (filters, listFilters) => {
+        const {currentSummit} = this.props;
         const {fromDate, toDate, eventType} = this.state;
         const overallFilter = [];
         const dateFilter = [];
 
         listFilters.id = currentSummit.id;
-        // filters.limit = 50;
-
-        if (sortKey) {
-            let querySortKey = this.translateSortKey(sortKey);
-            let order = (sortDir == 1) ? '' : '-';
-            filters.ordering = `${order}${querySortKey}`;
-        }
 
         if (eventType) {
             overallFilter.push(`metricType: "${eventType}"`);
         }
-
 
         if (fromDate) {
             overallFilter.push(`fromDate: "${moment(fromDate).format('YYYY-MM-DDTHH:mm:ss+00:00')}"`);
@@ -89,6 +84,51 @@ class MetricsReport extends React.Component {
         query.find(["id", "title", overallMetrics, {"rooms": rooms}, {"sponsors": sponsors}]);
 
         return query;
+    };
+
+    buildMemberQuery = (filters, listFilters) => {
+        let {currentSummit} = this.props;
+        const {fromDate, toDate, eventType} = this.state;
+        const overallFilter = [];
+        const dateFilter = [];
+
+        listFilters.summitId = currentSummit.id;
+        filters.ordering = 'ingress_date';
+        filters.limit = 3000;
+
+        if (eventType) {
+            listFilters.type = eventType;
+        }
+
+        if (fromDate) {
+            listFilters.fromDate = moment(fromDate).format('YYYY-MM-DDTHH:mm:ss+00:00');
+        }
+
+        if (toDate) {
+            listFilters.toDate = moment(toDate).format('YYYY-MM-DDTHH:mm:ss+00:00');
+        }
+
+        let query = new Query("metrics", listFilters);
+        let results = new Query("results", filters);
+        results.find(["type", "ingressDate", "outgressDate", "memberName", "eventName", "sponsorName", "location"]);
+
+        query.find([{"results": results}, "totalCount"]);
+
+        return query;
+    };
+
+    buildReportQuery(filters, listFilters) {
+        let query = null;
+
+        if (listFilters.search) {
+            this.memberReport = true;
+            query = this.buildMemberQuery(filters, listFilters);
+        } else {
+            this.memberReport = false;
+            query = this.buildMetricsQuery(filters, listFilters);
+        }
+
+        return query;
     }
 
     translateSortKey(key) {
@@ -114,50 +154,78 @@ class MetricsReport extends React.Component {
     }
 
     getName() {
-        return 'Metrics Report';
+        return this.memberReport ? 'Member Metrics' : 'Metrics Report';
+    }
+
+    getSearchPlaceholder() {
+        return 'Search by User Email or User Last Name';
     }
 
     preProcessData(data, extraData, forExport=false) {
         let {eventType} = this.state;
         let processedData = [];
+        let columns = [];
 
         if (Array.isArray(data) && data.length === 0) return [];
 
-        let columns = [
-            { columnKey: 'metric', value: 'Metric' }
-        ];
+        if (this.memberReport) {
+            const newData = data.map(d => {
+                const page = d.eventName || d.sponsorName || d.location;
+                return {
+                    type: d.type,
+                    date: moment(d.ingressDate, 'YYYY-MM-DDTHH:mm:ss+00:00').format('dddd Do h:mm a'),
+                    page: page,
+                    member: d.memberName
+                }
 
-        if (eventType === 'EVENT') {
-            processedData = data.rooms.map(rm => {
-                return {...rm, events: rm.events.filter(ev => ev.uniqueMetrics.length)};
-            }).filter(rm => rm.events.length);
+            });
 
-            if (forExport) {
-                processedData = processedData.reduce((result, item) => {
-                    result = [...result, ...item.events];
-                    return result;
-                }, []);
-                processedData = flattenData(processedData);
-                columns = [
-                    { columnKey: 'id', value: 'Event Id' },
-                    { columnKey: 'title', value: 'Event' },
-                    { columnKey: 'uniqueMetrics', value: 'Metric' }
-                ];
-            }
-        } else if (eventType === 'SPONSOR') {
-            processedData = data.sponsors.filter(s => s.uniqueMetrics.length);
+            processedData = groupByDate(newData, "member", "member");
 
-            if (forExport) {
-                processedData = flattenData(processedData);
-                columns = [
-                    { columnKey: 'id', value: 'Id' },
-                    { columnKey: 'companyName', value: 'Sponsor' },
-                    { columnKey: 'uniqueMetrics', value: 'Metric' },
-                ];
-            }
+            columns = [
+                { columnKey: 'type', value: 'Type' },
+                { columnKey: 'page', value: 'Page' },
+                { columnKey: 'date', value: 'Date' }
+            ];
         } else {
-            processedData = data.uniqueMetrics.map(it => ({metric: it}));
+            columns = [
+                { columnKey: 'metric', value: 'Metric' }
+            ];
+
+            if (eventType === 'EVENT') {
+                processedData = data.rooms.map(rm => {
+                    return {...rm, events: rm.events.filter(ev => ev.uniqueMetrics.length)};
+                }).filter(rm => rm.events.length);
+
+                if (forExport) {
+                    processedData = processedData.reduce((result, item) => {
+                        result = [...result, ...item.events];
+                        return result;
+                    }, []);
+                    processedData = flattenData(processedData);
+                    columns = [
+                        { columnKey: 'id', value: 'Event Id' },
+                        { columnKey: 'title', value: 'Event' },
+                        { columnKey: 'uniqueMetrics', value: 'Metric' }
+                    ];
+                }
+            } else if (eventType === 'SPONSOR') {
+                processedData = data.sponsors.filter(s => s.uniqueMetrics.length);
+
+                if (forExport) {
+                    processedData = flattenData(processedData);
+                    columns = [
+                        { columnKey: 'id', value: 'Id' },
+                        { columnKey: 'companyName', value: 'Sponsor' },
+                        { columnKey: 'uniqueMetrics', value: 'Metric' },
+                    ];
+                }
+            } else {
+                processedData = data.uniqueMetrics.map(it => ({metric: it}));
+            }
         }
+
+
 
         return {reportData: processedData, tableColumns: columns};
     }
@@ -188,7 +256,25 @@ class MetricsReport extends React.Component {
             this.setState({showSection: newSection})
         };
 
-        if (eventType === 'SPONSOR') {
+        if (this.memberReport) {
+            tables = Object.entries(data).map(([user, metricData]) => {
+                const sectionId = `section_${user}`;
+
+                return (
+                    <Panel show={showSection === sectionId} title={user}
+                           handleClick={() => toggleSection(sectionId)} key={sectionId}>
+                        <div className="table-responsive">
+                            <Table
+                                options={options}
+                                data={metricData}
+                                columns={tableCols}
+                                onSort={this.props.onSort}
+                            />
+                        </div>
+                    </Panel>
+                );
+            });
+        } else if (eventType === 'SPONSOR') {
             tables = data.map(grp => {
                 const tableData = grp.uniqueMetrics.map(it => ({metric: it}));
                 const name = grp.companyName;

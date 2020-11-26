@@ -217,6 +217,10 @@ const wrapReport = (ReportComponent, specs) => {
             let pageCount = Math.ceil(totalCount / perPage);
             let reportName = this.refs.childCmp ? this.refs.childCmp.getName() : 'report';
             let grouped = specs.hasOwnProperty('grouped') ? true : false;
+            let searchPlaceholder =
+                this.refs.childCmp && this.refs.childCmp.getSearchPlaceholder ?
+                    this.refs.childCmp.getSearchPlaceholder() :
+                    T.translate("reports.placeholders.search");
 
             return (
                 <div className="container large">
@@ -232,7 +236,7 @@ const wrapReport = (ReportComponent, specs) => {
                         <div className={'col-md-6'}>
                             <FreeTextSearch
                                 value={search}
-                                placeholder={T.translate("reports.placeholders.search")}
+                                placeholder={searchPlaceholder}
                                 onSearch={this.handleSearch}
                             />
                         </div>
