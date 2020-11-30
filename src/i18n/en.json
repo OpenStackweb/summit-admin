@@ -327,6 +327,7 @@
     "meeting_url_info"    : "Meeting URL could be a Zoom, Jitsy, or Google Meet",
     "etherpad_link"       : "EtherPad URL",
     "selection_plan"      : "Selection Plan",
+    "delete_material"     : "Are you sure you want to delete event material ",
     "placeholders": {
       "select_venue"        : "Select a Summit Venue ...",
       "start_date"          : "Start Date",
@@ -674,8 +675,8 @@
     "min_moderators"          : "Min Moderators",
     "max_moderators"          : "Max Moderators",
     "media_upload_types"      : "Media Upload Types",
-    "event_type_saved"   : "Event Type saved successfully.",
-    "event_type_created" : "Event Type created successfully.",
+    "event_type_saved"        : "Event Type saved successfully.",
+    "event_type_created"      : "Event Type created successfully.",
     "placeholders": {
       "select_class"     : "Select Class"
     }

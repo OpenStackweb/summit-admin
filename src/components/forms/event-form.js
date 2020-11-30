@@ -14,6 +14,7 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
+import Swal from "sweetalert2";
 import { findElementPos, epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/methods'
 import {
     TextEditor,
@@ -48,6 +49,8 @@ class EventForm extends React.Component {
         this.handleMaterialEdit = this.handleMaterialEdit.bind(this);
         this.handleNewMaterial = this.handleNewMaterial.bind(this);
         this.handleUploadPic = this.handleUploadPic.bind(this);
+        this.handleMaterialDownload = this.handleMaterialDownload.bind(this);
+        this.handleMaterialDelete = this.handleMaterialDelete.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -208,6 +211,30 @@ class EventForm extends React.Component {
         this.props.onAttach(this.state.entity, formData, 'profile')
     }
 
+    handleMaterialDownload(materialId) {
+        let {entity} = this.props;
+        const material = entity.materials.find(m => m.id === materialId);
+        window.open(material.private_url || material.public_url, "_blank");
+    }
+
+    handleMaterialDelete(materialId) {
+        let {entity, onMaterialDelete} = this.props;
+        const material = entity.materials.find(m => m.id === materialId);
+
+        Swal.fire({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("edit_event.delete_material") + ' ' + material.filename,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: T.translate("general.yes_delete")
+        }).then(function(result){
+            if (result.value) {
+                onMaterialDelete(materialId);
+            }
+        });
+    }
+
     render() {
         let {entity, showSection} = this.state;
         let { currentSummit, levelOpts, typeOpts, trackOpts, locationOpts, rsvpTemplateOpts, selectionPlansOpts, history } = this.props;
@@ -261,7 +288,15 @@ class EventForm extends React.Component {
         let material_options = {
             actions: {
                 edit: {onClick: this.handleMaterialEdit},
-                delete: { onClick: this.props.onMaterialDelete }
+                custom: [
+                    {
+                        name: 'download',
+                        tooltip: 'download',
+                        icon: <i className="fa fa-download" />,
+                        onClick: this.handleMaterialDownload,
+                    }
+                ],
+                delete: { onClick: this.handleMaterialDelete },
             }
         };
 
