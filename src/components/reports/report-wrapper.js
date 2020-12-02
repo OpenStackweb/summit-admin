@@ -74,8 +74,6 @@ const wrapReport = (ReportComponent, specs) => {
 
             if (search) {
                 listFilters.search = decodeURIComponent(search);
-                console.log(search);
-                console.log(decodeURIComponent(search));
             }
 
             if (filters) {
