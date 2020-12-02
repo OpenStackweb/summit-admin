@@ -14,7 +14,7 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { Dropdown, Input, UploadInput, UploadInputV2, TextEditor} from 'openstack-uicore-foundation/lib/components'
+import { Dropdown, Input, UploadInputV2, TextEditor} from 'openstack-uicore-foundation/lib/components'
 import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
 import Swal from "sweetalert2";
 
@@ -116,9 +116,6 @@ class EventMaterialForm extends React.Component {
     onMediaUploadComplete(response, id, data){
         const {entity} = this.state;
 
-        // we just upload a file, then we need to figure we need to create it
-        let {media_type, media_upload } = data;
-
         if(response){
             entity.filepath = `${response.path}${response.name}`;
             entity.filename = response.name;
@@ -130,11 +127,7 @@ class EventMaterialForm extends React.Component {
         let {entity, file} = this.state;
         ev.preventDefault();
 
-        if (file) {
-            this.props.onSubmitWithFile(entity, file);
-        } else {
-            this.props.onSubmit(entity);
-        }
+        this.props.onSubmit(entity);
     }
 
     hasErrors(field) {
@@ -163,6 +156,14 @@ class EventMaterialForm extends React.Component {
         let media_uploads_ddl = this.props.event.type.allowed_media_upload_types.map(mu => ({label: mu.name, value: mu.id}));
 
         const disableInputs = entity.class_name === 'PresentationMediaUpload';
+
+        const slideMediaType = {
+            id: 'slide',
+            max_size: 500 * 1024,
+            type: {
+                allowed_extensions: ['ppt', 'ppx', 'pdf']
+            }
+        };
 
         return (
             <form className="event-material-form">
@@ -248,14 +249,14 @@ class EventMaterialForm extends React.Component {
                 {entity.class_name === 'PresentationSlide' &&
                 <div className="row form-group">
                     <div className="col-md-12">
-                        <label> {T.translate("edit_event_material.slide")} </label>
-                        <UploadInput
-                            value={filePreview}
-                            handleUpload={this.handleUploadFile}
-                            handleRemove={this.handleRemoveFile}
-                            className="dropzone col-md-6"
-                            multiple={false}
-                            maxSize={60 * 1024 * 1024}
+                        <label> {T.translate("edit_event_material.slide")} (max size 500Mb)</label>
+                        <UploadInputV2
+                            id="slide"
+                            onUploadComplete={this.onMediaUploadComplete}
+                            value={mediaInputValue}
+                            mediaType={slideMediaType}
+                            postUrl={`${window.API_BASE_URL}/api/public/v1/files/upload`}
+                            error={this.hasErrors("slide")}
                         />
                     </div>
                     <div className="col-md-7 text-center">

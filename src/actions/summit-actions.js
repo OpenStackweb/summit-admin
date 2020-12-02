@@ -109,7 +109,7 @@ export const loadSummits = (page = 1, perPage = 10) => (dispatch, getState) => {
         relations: 'none',
         page: page,
         per_page: perPage,
-        order: '-id',
+        order: '-start_date',
     };
 
     getRequest(
@@ -134,7 +134,7 @@ export const getAllSummits = () => (dispatch, getState) => {
         relations: 'none',
         page: 1,
         per_page: 100,
-        order: '-id',
+        order: '-start_date',
     };
 
     getRequest(

@@ -88,6 +88,12 @@ const eventMaterialReducer = (state = DEFAULT_STATE, action) => {
                 entity.link = '';
             }
 
+            if(entity.file_link) {
+                const filename = entity.file_link.substring(entity.file_link.lastIndexOf("/") + 1, entity.file_link.length);
+                entity.filename = filename;
+                entity.private_url = entity.file_link;
+            }
+
             return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
         }
         break;

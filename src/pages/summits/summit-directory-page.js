@@ -83,8 +83,6 @@ class SummitDirectoryPage extends React.Component {
         let { summits, member, lastPage, currentPage, totalSummits } = this.props;
         let memberObj = new Member(member);
 
-
-        let orderedSummits = summits.sort((a, b) => b.start_date - a.start_date );
         let canEditSummit =  memberObj.canEditSummit();
         let canAddSummits = memberObj.canAddSummits();
         let canDeleteSummits = memberObj.canDeleteSummits();
@@ -104,7 +102,7 @@ class SummitDirectoryPage extends React.Component {
                 <div>
                     <table className="table" id="summit_table">
                         <tbody>
-                        {summits && orderedSummits.map((summit,i) => (
+                        {summits && summits.map((summit,i) => (
                             <tr key={"summit_"+summit.id}>
                                 <td className="summit_id"> {summit.id} </td>
                                 <td className="summit_name"> {summit.name} </td>
