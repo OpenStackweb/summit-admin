@@ -56,11 +56,11 @@ window.OAUTH2_CLIENT_ID         = process.env['OAUTH2_CLIENT_ID'];
 window.SCOPES                   = process.env['SCOPES'];
 window.ALLOWED_USER_GROUPS      = process.env['ALLOWED_USER_GROUPS'];
 window.EXCLUSIVE_SECTIONS       = [];
+window.PUBLIC_STORAGES          = process.env['PUBLIC_STORAGES'] || "S3";
 
 if (exclusiveSections.hasOwnProperty(process.env['APP_CLIENT_NAME'])) {
     window.EXCLUSIVE_SECTIONS = exclusiveSections[process.env['APP_CLIENT_NAME']];
 }
-
 
 class App extends React.PureComponent {
 

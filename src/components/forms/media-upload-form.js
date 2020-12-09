@@ -89,10 +89,14 @@ class MediaUploadForm extends React.Component {
 
         let public_storage_ddl = [
             {value: 'None', label:'None'},
-            {value: 'S3', label:'S3'},
-            //{value: 'Swift', label:'Swift'},
             {value: 'Local', label:'Local'}
         ];
+
+        if(window.PUBLIC_STORAGES.includes("S3"))
+            public_storage_ddl.push({value: 'S3', label:'S3'});
+
+        if(window.PUBLIC_STORAGES.includes("SWIFT"))
+            public_storage_ddl.push({value: 'Swift', label:'Swift'});
 
         let presentation_types_ddl = currentSummit.event_types
             .filter(t => t.class_name === 'PresentationType')
