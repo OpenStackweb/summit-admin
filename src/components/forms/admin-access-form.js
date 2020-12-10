@@ -15,7 +15,7 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import {Input, MemberInput, SummitInput} from 'openstack-uicore-foundation/lib/components'
-import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
+import {scrollToError, hasErrors, shallowEqual, isEmpty} from "../../utils/methods";
 
 class AdminAccessForm extends React.Component {
     constructor(props) {
@@ -30,18 +30,21 @@ class AdminAccessForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const state = {};
+        scrollToError(this.props.errors);
 
-        this.setState({
-            entity: {...nextProps.entity},
-            errors: {...nextProps.errors}
-        });
+        if(prevProps.entity.id !== this.props.entity.id) {
+            state.entity = {...this.props.entity};
+            state.errors = {};
+        }
 
-        //scroll to first error
-        if(Object.keys(nextProps.errors).length > 0) {
-            let firstError = Object.keys(nextProps.errors)[0]
-            let firstNode = document.getElementById(firstError);
-            if (firstNode) window.scrollTo(0, findElementPos(firstNode));
+        if (!shallowEqual(prevProps.errors, this.props.errors)) {
+            state.errors = {...this.props.errors};
+        }
+
+        if (!isEmpty(state)) {
+            this.setState({...this.state, ...state})
         }
     }
 
@@ -52,6 +55,7 @@ class AdminAccessForm extends React.Component {
 
         errors[id] = '';
         entity[id] = value;
+
         this.setState({entity: entity, errors: errors});
     }
 
@@ -62,16 +66,8 @@ class AdminAccessForm extends React.Component {
         this.props.onSubmit(entity);
     }
 
-    hasErrors(field) {
-        let {errors} = this.state;
-        if(field in errors) {
-            return errors[field];
-        }
-        return '';
-    }
-
     render() {
-        let {entity} = this.state;
+        let {entity, errors} = this.state;
 
         return (
             <form className="admin-access-form">
@@ -84,7 +80,7 @@ class AdminAccessForm extends React.Component {
                             value={entity.title}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('title')}
+                            error={hasErrors('title', errors)}
                         />
                     </div>
                     <div className="col-md-4">

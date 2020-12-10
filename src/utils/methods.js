@@ -1,3 +1,5 @@
+import {findElementPos} from "openstack-uicore-foundation/lib/methods";
+
 /**
  * Copyright 2017 OpenStack Foundation
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,4 +34,40 @@ export const groupByDate = function(array, prop, sortBy) {
         });
 
     return grouped_ordered;
+};
+
+export const scrollToError = (errors) => {
+    if(Object.keys(errors).length > 0) {
+        let firstError = Object.keys(errors)[0]
+        let firstNode = document.getElementById(firstError);
+        if (firstNode) window.scrollTo(0, findElementPos(firstNode));
+    }
+};
+
+export const hasErrors = (field, errors) => {
+    if(field in errors) {
+        return errors[field];
+    }
+    return '';
+};
+
+export const shallowEqual = (object1, object2) => {
+    const keys1 = Object.keys(object1);
+    const keys2 = Object.keys(object2);
+
+    if (keys1.length !== keys2.length) {
+        return false;
+    }
+
+    for (let key of keys1) {
+        if (object1[key] !== object2[key]) {
+            return false;
+        }
+    }
+
+    return true;
+};
+
+export const isEmpty = (obj) => {
+    return Object.keys(obj).length === 0;
 };

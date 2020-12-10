@@ -70,9 +70,6 @@ class ScheduleEvent extends React.Component {
             height: nextProps.initialHeight});
     }
 
-    componentWillUpdate(){
-    }
-
     getInlineStyles(isDragging){
         return {
             top: this.state.top,
