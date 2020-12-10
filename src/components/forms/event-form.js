@@ -158,9 +158,14 @@ class EventForm extends React.Component {
         let entity_type = this.props.typeOpts.find(t => t.id == entity.type_id);
 
         types = Array.isArray(types) ? types : [types] ;
-
         return ( types.indexOf(entity_type.class_name) != -1 || types.indexOf(entity_type.name) != -1 );
+    }
 
+    isEventTypeAllowsLevel(){
+        let {entity} = this.state;
+        if (!entity.type_id) return false;
+        let entity_type = this.props.typeOpts.find(t => t.id === entity.type_id);
+        return entity_type.allows_level;
     }
 
     hasErrors(field) {
@@ -413,7 +418,7 @@ class EventForm extends React.Component {
                             error={this.hasErrors('track_id')}
                         />
                     </div>
-                    {this.isEventType('Presentation') &&
+                    {this.isEventTypeAllowsLevel() &&
                     <div className="col-md-4">
                         <label> {T.translate("edit_event.level")} </label>
                         <Dropdown

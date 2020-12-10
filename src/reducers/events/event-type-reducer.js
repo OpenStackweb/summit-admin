@@ -43,6 +43,7 @@ export const DEFAULT_ENTITY = {
     min_moderators              : 0,
     max_moderators              : 0,
     allows_attachment           : false,
+    allows_level                : false,
     allowed_media_upload_types  : []
 }
 

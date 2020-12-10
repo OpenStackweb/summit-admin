@@ -665,6 +665,7 @@
     "are_sponsors_mandatory"  : "Are Sponsors Mandatory?",
     "available_cfp"           : "Should be available on CFP ?",
     "allows_attachment"       : "Allows Attachment?",
+    "allows_level"            : "Allows Level (of difficulty) choice?",
     "use_speakers"            : "Should use Speakers?",
     "are_speakers_mandatory"  : "Are Speakers Mandatory?",
     "min_speakers"            : "Min Speakers",
