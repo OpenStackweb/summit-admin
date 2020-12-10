@@ -31,11 +31,18 @@ import { Input } from 'openstack-uicore-foundation/lib/components'
 class EditTicketPage extends React.Component {
 
     constructor(props) {
+        const {currentSummit, match} = props;
+        const new_ticket_id = match.params.ticket_id;
         super(props);
 
         this.state = {
             refund_amount: 0
         };
+
+        props.getTicket(new_ticket_id);
+
+        if (!currentSummit.badge_features) props.getBadgeFeatures();
+        if (!currentSummit.badge_types) props.getBadgeTypes();
 
         this.handlePrintBadge = this.handlePrintBadge.bind(this);
         this.handleAddBadgeToTicket = this.handleAddBadgeToTicket.bind(this);
@@ -45,28 +52,17 @@ class EditTicketPage extends React.Component {
         this.handleResendEmail = this.handleResendEmail.bind(this);
     }
 
-    componentWillMount () {
-        let {currentSummit} = this.props;
-        let new_ticket_id = this.props.match.params.ticket_id;
-
-        this.props.getTicket(new_ticket_id);
-
-        if (!currentSummit.badge_features) this.props.getBadgeFeatures();
-        if (!currentSummit.badge_types) this.props.getBadgeTypes();
-    }
-
     componentWillReceiveProps(newProps) {
-        let {currentSummit} = newProps;
-        let oldId = this.props.match.params.ticket_id;
-        let newId = newProps.match.params.ticket_id;
+        const oldId = this.props.match.params.ticket_id;
+        const newId = newProps.match.params.ticket_id;
 
-        if (oldId != newId) {
+        if (oldId !== newId) {
             this.props.getTicket(newId);
         }
     }
 
     handlePrintBadge(ev) {
-        let {entity} = this.props;
+        const {entity} = this.props;
         ev.preventDefault();
 
         this.props.printBadge(entity.id);
@@ -149,7 +145,7 @@ class EditTicketPage extends React.Component {
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>
                     {T.translate("edit_ticket.ticket")}
 
@@ -246,7 +242,7 @@ const mapStateToProps = ({ baseState, currentSummitState, currentPurchaseOrderSt
     currentOrder: currentPurchaseOrderState.entity,
     loading : baseState.loading,
     ...currentTicketState
-})
+});
 
 export default connect (
     mapStateToProps,

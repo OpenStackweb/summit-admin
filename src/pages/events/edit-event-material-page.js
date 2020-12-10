@@ -28,16 +28,13 @@ import {
 class EditEventMaterialPage extends React.Component {
 
     constructor(props) {
+        const materialId = props.match.params.material_id;
         super(props);
-    }
-
-    componentWillMount () {
-        let materialId = this.props.match.params.material_id;
 
         if (!materialId) {
-            this.props.resetEventMaterialForm();
+            props.resetEventMaterialForm();
         } else {
-            this.props.getEventMaterial(materialId);
+            props.getEventMaterial(materialId);
         }
     }
 
@@ -45,7 +42,7 @@ class EditEventMaterialPage extends React.Component {
         let oldId = this.props.match.params.material_id;
         let newId = newProps.match.params.material_id;
 
-        if (oldId != newId) {
+        if (oldId !== newId) {
             if (!newId) {
                 this.props.resetEventMaterialForm();
             } else {
@@ -64,11 +61,11 @@ class EditEventMaterialPage extends React.Component {
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
-        if (!event) return(<div></div>);
+        if (!event) return(<div/>);
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("edit_event_material.material")}</h3>
                 <hr/>
                 {currentSummit &&
@@ -91,7 +88,7 @@ const mapStateToProps = ({ currentSummitState, currentEventMaterialState, curren
     currentSummit : currentSummitState.currentSummit,
     event: currentSummitEventState.entity,
     ...currentEventMaterialState
-})
+});
 
 export default connect (
     mapStateToProps,

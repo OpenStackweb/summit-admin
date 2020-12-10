@@ -22,26 +22,23 @@ import { getBadgeFeature, resetBadgeFeatureForm, saveBadgeFeature } from "../../
 class EditBadgeFeaturePage extends React.Component {
 
     constructor(props) {
+        const badgeFeatureId = props.match.params.badge_feature_id;
         super(props);
 
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    componentWillMount () {
-        let badgeFeatureId = this.props.match.params.badge_feature_id;
-
         if (!badgeFeatureId) {
-            this.props.resetBadgeFeatureForm();
+            props.resetBadgeFeatureForm();
         } else {
-            this.props.getBadgeFeature(badgeFeatureId);
+            props.getBadgeFeature(badgeFeatureId);
         }
+
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentWillReceiveProps(newProps) {
         let oldId = this.props.match.params.badge_feature_id;
         let newId = newProps.match.params.badge_feature_id;
 
-        if (newId != oldId) {
+        if (newId !== oldId) {
             if (!newId) {
                 this.props.resetBadgeFeatureForm();
             } else {
@@ -68,7 +65,7 @@ class EditBadgeFeaturePage extends React.Component {
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("edit_badge_feature.badge_feature")}</h3>
                 <hr/>
                 {currentSummit &&
@@ -87,7 +84,7 @@ class EditBadgeFeaturePage extends React.Component {
 const mapStateToProps = ({ currentSummitState, currentBadgeFeatureState }) => ({
     currentSummit : currentSummitState.currentSummit,
     ...currentBadgeFeatureState
-})
+});
 
 export default connect (
     mapStateToProps,

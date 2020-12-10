@@ -21,23 +21,24 @@ import { getSponsor, resetSponsorForm, saveSponsor, getSponsorships, addMemberTo
 
 class EditSponsorPage extends React.Component {
 
-    componentWillMount () {
-        let sponsorId = this.props.match.params.sponsor_id;
+    constructor(props) {
+        const sponsorId = props.match.params.sponsor_id;
+        super(props);
 
         if (!sponsorId) {
-            this.props.resetSponsorForm();
+            props.resetSponsorForm();
         } else {
-            this.props.getSponsor(sponsorId);
+            props.getSponsor(sponsorId);
         }
 
-        this.props.getSponsorships();
+        props.getSponsorships();
     }
 
     componentWillReceiveProps(newProps) {
         let oldId = this.props.match.params.sponsor_id;
         let newId = newProps.match.params.sponsor_id;
 
-        if (newId != oldId) {
+        if (newId !== oldId) {
             if (!newId) {
                 this.props.resetSponsorForm();
             } else {
@@ -54,7 +55,7 @@ class EditSponsorPage extends React.Component {
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("edit_sponsor.sponsor")}</h3>
                 <hr/>
                 {currentSummit &&
@@ -78,7 +79,7 @@ const mapStateToProps = ({ currentSummitState, currentSponsorState, currentSpons
     currentSummit : currentSummitState.currentSummit,
     sponsorships  : currentSponsorshipListState.sponsorships,
     ...currentSponsorState
-})
+});
 
 export default connect (
     mapStateToProps,

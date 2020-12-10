@@ -33,6 +33,9 @@ import 'codemirror/addon/edit/closebrackets';
 class EditEmailTemplatePage extends React.Component {
 
     constructor(props) {
+        const {clients, match} = props;
+        const templateId = match.params.template_id;
+
         super(props);
 
         this.state = {
@@ -40,31 +43,26 @@ class EditEmailTemplatePage extends React.Component {
             json_preview: ''
         };
 
-        this.handleRender = this.handleRender.bind(this);
-        this.handlePreview = this.handlePreview.bind(this);
-        this.handleJsonChange = this.handleJsonChange.bind(this);
-    }
-
-    componentWillMount () {
-        let templateId = this.props.match.params.template_id;
-        let {clients} = this.props;
-
         if (!templateId) {
-            this.props.resetTemplateForm();
+            props.resetTemplateForm();
         } else {
-            this.props.getEmailTemplate(templateId);
+            props.getEmailTemplate(templateId);
         }
 
         if (!clients) {
-            this.props.getAllClients();
+            props.getAllClients();
         }
+
+        this.handleRender = this.handleRender.bind(this);
+        this.handlePreview = this.handlePreview.bind(this);
+        this.handleJsonChange = this.handleJsonChange.bind(this);
     }
 
     componentWillReceiveProps(newProps) {
         let oldId = this.props.match.params.template_id;
         let newId = newProps.match.params.template_id;
 
-        if (oldId != newId) {
+        if (oldId !== newId) {
             if (!newId) {
                 this.props.resetTemplateForm();
             } else {
@@ -159,7 +157,7 @@ class EditEmailTemplatePage extends React.Component {
 const mapStateToProps = ({ currentSummitState, emailTemplateState }) => ({
     currentSummit : currentSummitState.currentSummit,
     ...emailTemplateState
-})
+});
 
 export default connect (
     mapStateToProps,

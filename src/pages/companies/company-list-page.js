@@ -25,6 +25,8 @@ class CompanyListPage extends React.Component {
     constructor(props) {
         super(props);
 
+        props.getCompanies();
+
         this.handleEdit = this.handleEdit.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
@@ -35,10 +37,6 @@ class CompanyListPage extends React.Component {
         this.state = {}
     }
 
-    componentWillMount () {
-        this.props.getCompanies();
-    }
-
     handleEdit(company_id) {
         let {history} = this.props;
         history.push(`/app/companies/${company_id}`);
@@ -46,7 +44,7 @@ class CompanyListPage extends React.Component {
 
     handleDelete(companyId) {
         let {deleteCompany, companies} = this.props;
-        let company = companies.find(s => s.id == companyId);
+        let company = companies.find(s => s.id === companyId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -99,7 +97,7 @@ class CompanyListPage extends React.Component {
                 edit: {onClick: this.handleEdit},
                 delete: {onClick: this.handleDelete}
             }
-        }
+        };
 
         return(
             <div className="container">
@@ -149,7 +147,7 @@ class CompanyListPage extends React.Component {
 
 const mapStateToProps = ({ currentCompanyListState }) => ({
     ...currentCompanyListState
-})
+});
 
 export default connect (
     mapStateToProps,

@@ -29,29 +29,26 @@ import EventCategoryQuestionForm from "../../components/forms/event-category-que
 class EditEventCategoryQuestionPage extends React.Component {
 
     constructor(props) {
+        const eventCategoryQuestionId = props.match.params.category_question_id;
         super(props);
+
+        if (!eventCategoryQuestionId) {
+            props.resetEventCategoryQuestionForm();
+        } else {
+            props.getEventCategoryQuestion(eventCategoryQuestionId);
+        }
+
+        props.getEventCategoryQuestionMeta();
 
         this.handleSaveValue = this.handleSaveValue.bind(this);
         this.handleDeleteValue = this.handleDeleteValue.bind(this);
-    }
-
-    componentWillMount () {
-        let eventCategoryQuestionId = this.props.match.params.category_question_id;
-
-        if (!eventCategoryQuestionId) {
-            this.props.resetEventCategoryQuestionForm();
-        } else {
-            this.props.getEventCategoryQuestion(eventCategoryQuestionId);
-        }
-
-        this.props.getEventCategoryQuestionMeta();
     }
 
     componentWillReceiveProps(newProps) {
         let oldId = this.props.match.params.category_question_id;
         let newId = newProps.match.params.category_question_id;
 
-        if (oldId != newId) {
+        if (oldId !== newId) {
             if (!newId) {
                 this.props.resetEventCategoryQuestionForm();
             } else {
@@ -77,11 +74,11 @@ class EditEventCategoryQuestionPage extends React.Component {
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
-        if (!currentEventCategory.id) return (<div></div>);
+        if (!currentEventCategory.id) return (<div/>);
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("edit_event_category_question.extra_question")}</h3>
                 <hr/>
                 {currentSummit &&
@@ -103,7 +100,7 @@ const mapStateToProps = ({ currentSummitState, currentEventCategoryState, curren
     currentSummit : currentSummitState.currentSummit,
     currentEventCategory: currentEventCategoryState.entity,
     ...currentEventCategoryQuestionState
-})
+});
 
 export default connect (
     mapStateToProps,

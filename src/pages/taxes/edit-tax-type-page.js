@@ -21,13 +21,14 @@ import { getTaxType, resetTaxTypeForm, saveTaxType, addTicketToTaxType, removeTi
 
 class EditTaxTypePage extends React.Component {
 
-    componentWillMount () {
-        let taxTypeId = this.props.match.params.tax_type_id;
+    constructor(props) {
+        const taxTypeId = props.match.params.tax_type_id;
+        super(props);
 
         if (!taxTypeId) {
-            this.props.resetTaxTypeForm();
+            props.resetTaxTypeForm();
         } else {
-            this.props.getTaxType(taxTypeId);
+            props.getTaxType(taxTypeId);
         }
     }
 
@@ -35,7 +36,7 @@ class EditTaxTypePage extends React.Component {
         let oldId = this.props.match.params.tax_type_id;
         let newId = newProps.match.params.tax_type_id;
 
-        if (newId != oldId) {
+        if (newId !== oldId) {
             if (!newId) {
                 this.props.resetTaxTypeForm();
             } else {
@@ -52,7 +53,7 @@ class EditTaxTypePage extends React.Component {
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("edit_tax_type.tax_type")}</h3>
                 <hr/>
                 {currentSummit &&
@@ -73,7 +74,7 @@ class EditTaxTypePage extends React.Component {
 const mapStateToProps = ({ currentSummitState, currentTaxTypeState }) => ({
     currentSummit : currentSummitState.currentSummit,
     ...currentTaxTypeState
-})
+});
 
 export default connect (
     mapStateToProps,

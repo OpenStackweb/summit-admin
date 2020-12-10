@@ -21,14 +21,15 @@ import { getLocationImage, resetLocationImageForm, saveLocationImage } from "../
 
 class EditLocationImagePage extends React.Component {
 
-    componentWillMount () {
-        let {currentLocation} = this.props;
-        let imageId = this.props.match.params.image_id;
+    constructor(props) {
+        const {currentLocation, match} = props;
+        const imageId = match.params.image_id;
+        super(props);
 
         if (imageId != null && currentLocation != null) {
-            this.props.getLocationImage(currentLocation.id, imageId);
+            props.getLocationImage(currentLocation.id, imageId);
         } else {
-            this.props.resetLocationImageForm();
+            props.resetLocationImageForm();
         }
     }
 
@@ -37,7 +38,7 @@ class EditLocationImagePage extends React.Component {
         let oldId = this.props.match.params.image_id;
         let newId = newProps.match.params.image_id;
 
-        if (oldId != newId && currentLocation) {
+        if (oldId !== newId && currentLocation) {
             this.props.getLocationImage(currentLocation.id, newId);
         }
     }
@@ -49,7 +50,7 @@ class EditLocationImagePage extends React.Component {
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("edit_location.image")}</h3>
                 <hr/>
                 {currentSummit &&
@@ -72,7 +73,7 @@ const mapStateToProps = ({ currentSummitState, currentLocationState, currentLoca
     currentSummit : currentSummitState.currentSummit,
     currentLocation : currentLocationState.entity,
     ...currentLocationImageState
-})
+});
 
 export default connect (
     mapStateToProps,

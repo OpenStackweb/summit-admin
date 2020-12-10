@@ -21,21 +21,20 @@ import { getPaymentProfile , resetPaymentProfileForm, savePaymentProfile } from 
 
 class EditPaymentProfilePage extends React.Component {
 
-    componentWillMount () {
-        let {currentSummit} = this.props;
-        let paymentProfileId = this.props.match.params.payment_profile_id;
+    constructor(props) {
+        const paymentProfileId = props.match.params.payment_profile_id;
+        super(props);
 
         if (!paymentProfileId) {
-            this.props.resetPaymentProfileForm();
+            props.resetPaymentProfileForm();
         } else {
-            this.props.getPaymentProfile(paymentProfileId);
+            props.getPaymentProfile(paymentProfileId);
         }
     }
 
     componentWillReceiveProps(newProps) {
-        let {currentSummit} = newProps;
-        let oldId = this.props.match.params.payment_profile_id;
-        let newId = newProps.match.params.payment_profile_id;
+        const oldId = this.props.match.params.payment_profile_id;
+        const newId = newProps.match.params.payment_profile_id;
 
         if (newId !== oldId) {
             if (!newId) {
@@ -47,13 +46,13 @@ class EditPaymentProfilePage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors, match} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+        const {currentSummit, entity, errors, match} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("edit_payment_profile.payment_profile")}</h3>
                 <hr/>
                 {currentSummit &&

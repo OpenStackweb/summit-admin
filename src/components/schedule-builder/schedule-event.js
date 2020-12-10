@@ -64,12 +64,6 @@ class ScheduleEvent extends React.Component {
         return this.state.height;
     }
 
-    componentDidMount() {
-    }
-
-    componentWillMount(){
-    }
-
     componentWillReceiveProps(nextProps){
         this.setState({...this.state,
             top: nextProps.initialTop,

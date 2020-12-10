@@ -24,17 +24,18 @@ import {connect} from "react-redux";
 
 
 class EventIdLayout extends React.Component {
+    constructor(props) {
+        super(props);
 
-    componentWillMount () {
-        let eventId = this.props.match.params.event_id;
+        let eventId = props.match.params.event_id;
 
         if (!eventId) {
-            this.props.resetEventForm();
+            props.resetEventForm();
         } else {
-            this.props.getEvent(eventId);
+            props.getEvent(eventId);
         }
 
-        this.props.getRsvpTemplates();
+        props.getRsvpTemplates();
     }
 
     componentWillReceiveProps(newProps) {

@@ -24,18 +24,15 @@ import { getMediaFileType, resetMediaFileTypeForm, saveMediaFileType } from "../
 class EditMediaFileTypePage extends React.Component {
 
     constructor(props) {
+        const mediaFileTypeId = props.match.params.media_file_type_id;
         super(props);
 
         this.state = {};
-    }
-
-    componentWillMount () {
-        let mediaFileTypeId = this.props.match.params.media_file_type_id;
 
         if (!mediaFileTypeId) {
-            this.props.resetMediaFileTypeForm();
+            props.resetMediaFileTypeForm();
         } else {
-            this.props.getMediaFileType(mediaFileTypeId);
+            props.getMediaFileType(mediaFileTypeId);
         }
     }
 
@@ -82,7 +79,7 @@ class EditMediaFileTypePage extends React.Component {
 
 const mapStateToProps = ({ mediaFileTypeState }) => ({
     ...mediaFileTypeState
-})
+});
 
 export default connect (
     mapStateToProps,

@@ -25,13 +25,15 @@ import NoMatchPage from '../pages/no-match-page';
 
 class RsvpTemplateIdLayout extends React.Component {
 
-    componentWillMount() {
-        let rsvpTemplateId = this.props.match.params.rsvp_template_id;
+    constructor(props) {
+        super(props);
+
+        const rsvpTemplateId = props.match.params.rsvp_template_id;
 
         if (!rsvpTemplateId) {
-            this.props.resetRsvpTemplateForm();
+            props.resetRsvpTemplateForm();
         } else {
-            this.props.getRsvpTemplate(rsvpTemplateId);
+            props.getRsvpTemplate(rsvpTemplateId);
         }
     }
 
@@ -39,7 +41,7 @@ class RsvpTemplateIdLayout extends React.Component {
         let oldId = this.props.match.params.rsvp_template_id;
         let newId = newProps.match.params.rsvp_template_id;
 
-        if (newId != oldId) {
+        if (newId !== oldId) {
             if (!newId) {
                 this.props.resetRsvpTemplateForm();
             } else {
@@ -54,16 +56,16 @@ class RsvpTemplateIdLayout extends React.Component {
         let rsvpTemplateId = match.params.rsvp_template_id;
         let breadcrumb = currentRsvpTemplate.id ? currentRsvpTemplate.title : T.translate("general.new");
 
-        if (rsvpTemplateId && !currentRsvpTemplate.id) return (<div></div>);
+        if (rsvpTemplateId && !currentRsvpTemplate.id) return (<div/>);
 
         return (
             <div>
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <Switch>
                     <Route path={`${match.url}/questions`} render={
                         props => (
                             <div>
-                                <Breadcrumb data={{ title: T.translate("edit_rsvp_template.questions"), pathname: match.url }} ></Breadcrumb>
+                                <Breadcrumb data={{ title: T.translate("edit_rsvp_template.questions"), pathname: match.url }} />
                                 <Switch>
                                     <Route path={`${props.match.url}/:rsvp_question_id(\\d+)`} component={RsvpQuestionLayout} />
                                     <Route exact strict path={`${props.match.url}/new`} component={RsvpQuestionLayout} />
@@ -83,7 +85,7 @@ class RsvpTemplateIdLayout extends React.Component {
 
 const mapStateToProps = ({ currentRsvpTemplateState }) => ({
     currentRsvpTemplate   : currentRsvpTemplateState.entity
-})
+});
 
 export default connect (
     mapStateToProps,

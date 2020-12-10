@@ -24,17 +24,19 @@ import { getRsvpQuestionMeta, getRsvpQuestion, resetRsvpQuestionForm }  from '..
 
 class RsvpQuestionLayout extends React.Component {
 
-    componentWillMount() {
-        let rsvpQuestionId = this.props.match.params.rsvp_question_id;
-        let {currentRsvpTemplate} = this.props;
+    constructor(props) {
+        super(props);
 
-        if (!rsvpQuestionId || rsvpQuestionId == 'new' || !currentRsvpTemplate) {
-            this.props.resetRsvpQuestionForm();
+        const rsvpQuestionId = props.match.params.rsvp_question_id;
+        const {currentRsvpTemplate} = this.props;
+
+        if (!rsvpQuestionId || rsvpQuestionId === 'new' || !currentRsvpTemplate) {
+            props.resetRsvpQuestionForm();
         } else {
-            this.props.getRsvpQuestion(currentRsvpTemplate.id, rsvpQuestionId);
+            props.getRsvpQuestion(currentRsvpTemplate.id, rsvpQuestionId);
         }
 
-        this.props.getRsvpQuestionMeta();
+        props.getRsvpQuestionMeta();
     }
 
     componentWillReceiveProps(newProps) {
@@ -42,8 +44,8 @@ class RsvpQuestionLayout extends React.Component {
         let oldId = this.props.match.params.rsvp_question_id;
         let newId = newProps.match.params.rsvp_question_id;
 
-        if (newId != oldId) {
-            if (newId == 'new') {
+        if (newId !== oldId) {
+            if (newId === 'new') {
                 this.props.resetRsvpQuestionForm();
             } else {
                 this.props.getRsvpQuestion(currentRsvpTemplate.id, newId);
@@ -56,12 +58,12 @@ class RsvpQuestionLayout extends React.Component {
         let rsvpQuestionId = match.params.rsvp_question_id;
         let breadcrumb = entity.id ? entity.name : T.translate("general.new");
 
-        if (!allClasses.length) return (<div></div>);
-        if (rsvpQuestionId && !entity.id) return (<div></div>);
+        if (!allClasses.length) return (<div/>);
+        if (rsvpQuestionId && !entity.id) return (<div/>);
 
         return (
             <div>
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <Switch>
                     <Route strict exact path={match.url} component={EditRsvpQuestionPage}/>
                     <Route component={NoMatchPage}/>
@@ -74,7 +76,7 @@ class RsvpQuestionLayout extends React.Component {
 const mapStateToProps = ({ currentRsvpTemplateState, currentRsvpQuestionState }) => ({
     currentRsvpTemplate   : currentRsvpTemplateState.entity,
     ...currentRsvpQuestionState
-})
+});
 
 export default connect (
     mapStateToProps,

@@ -21,13 +21,14 @@ import '../../styles/edit-company-page.less';
 
 class EditCompanyPage extends React.Component {
 
-    componentWillMount () {
-        let companyId = this.props.match.params.company_id;
+    constructor(props) {
+        const companyId = props.match.params.company_id;
+        super(props);
 
         if (!companyId) {
-            this.props.resetCompanyForm();
+            props.resetCompanyForm();
         } else {
-            this.props.getCompany(companyId);
+            props.getCompany(companyId);
         }
     }
 
@@ -35,7 +36,7 @@ class EditCompanyPage extends React.Component {
         let companyId = this.props.match.params.company_id;
         let newCompanyId = newProps.match.params.company_id;
 
-        if (companyId != newCompanyId) {
+        if (companyId !== newCompanyId) {
             if (!newCompanyId) {
                 this.props.resetCompanyForm();
             } else {
@@ -69,7 +70,7 @@ class EditCompanyPage extends React.Component {
 
 const mapStateToProps = ({ currentCompanyState }) => ({
     ...currentCompanyState
-})
+});
 
 export default connect (
     mapStateToProps,

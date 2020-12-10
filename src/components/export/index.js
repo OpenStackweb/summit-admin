@@ -13,7 +13,6 @@
 
 import React from "react";
 import ReactExport from "react-data-export";
-import FragmentParser from "../../utils/fragmen-parser";
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;

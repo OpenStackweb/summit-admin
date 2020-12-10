@@ -22,21 +22,22 @@ import '../../styles/edit-speaker-attendance-page.less';
 
 class EditSpeakerAttendancePage extends React.Component {
 
-    componentWillMount () {
-        let attendanceId = this.props.match.params.attendance_id;
+    constructor(props) {
+        const attendanceId = props.match.params.attendance_id;
+        super(props);
 
         if (!attendanceId) {
-            this.props.resetAttendanceForm();
+            props.resetAttendanceForm();
         } else {
-            this.props.getAttendance(attendanceId);
+            props.getAttendance(attendanceId);
         }
     }
 
     componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.attendance_id;
-        let newId = newProps.match.params.attendance_id;
+        const oldId = this.props.match.params.attendance_id;
+        const newId = newProps.match.params.attendance_id;
 
-        if (oldId != newId) {
+        if (oldId !== newId) {
             if (!newId) {
                 this.props.resetAttendanceForm();
             } else {
@@ -46,9 +47,9 @@ class EditSpeakerAttendancePage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors, match} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = T.translate("general.new");
+        const {currentSummit, entity, errors, match} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = T.translate("general.new");
 
         if(entity.id) {
             breadcrumb = entity.id;
@@ -60,7 +61,7 @@ class EditSpeakerAttendancePage extends React.Component {
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("edit_speaker_attendance.speaker_attendance")}</h3>
                 <hr/>
                 {currentSummit &&
@@ -81,7 +82,7 @@ class EditSpeakerAttendancePage extends React.Component {
 const mapStateToProps = ({ currentSummitState, currentSpeakerAttendanceState }) => ({
     currentSummit : currentSummitState.currentSummit,
     ...currentSpeakerAttendanceState
-})
+});
 
 export default connect (
     mapStateToProps,

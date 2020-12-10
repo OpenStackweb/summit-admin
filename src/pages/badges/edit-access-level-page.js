@@ -22,26 +22,23 @@ import { getAccessLevel, resetAccessLevelForm, saveAccessLevel } from "../../act
 class EditAccessLevelPage extends React.Component {
 
     constructor(props) {
+        const accessLevelId = props.match.params.access_level_id;
         super(props);
 
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    componentWillMount () {
-        let accessLevelId = this.props.match.params.access_level_id;
-
         if (!accessLevelId) {
-            this.props.resetAccessLevelForm();
+            props.resetAccessLevelForm();
         } else {
-            this.props.getAccessLevel(accessLevelId);
+            props.getAccessLevel(accessLevelId);
         }
+
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentWillReceiveProps(newProps) {
         let oldId = this.props.match.params.access_level_id;
         let newId = newProps.match.params.access_level_id;
 
-        if (newId != oldId) {
+        if (newId !== oldId) {
             if (!newId) {
                 this.props.resetAccessLevelForm();
             } else {
@@ -69,7 +66,7 @@ class EditAccessLevelPage extends React.Component {
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("edit_access_level.access_level")}</h3>
                 <hr/>
                 {currentSummit &&
@@ -88,7 +85,7 @@ class EditAccessLevelPage extends React.Component {
 const mapStateToProps = ({ currentSummitState, currentAccessLevelState }) => ({
     currentSummit : currentSummitState.currentSummit,
     ...currentAccessLevelState
-})
+});
 
 export default connect (
     mapStateToProps,

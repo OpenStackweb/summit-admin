@@ -21,14 +21,15 @@ import { getLocationMap, resetLocationMapForm, saveLocationMap } from "../../act
 
 class EditLocationMapPage extends React.Component {
 
-    componentWillMount () {
-        let {currentLocation} = this.props;
-        let mapId = this.props.match.params.map_id;
+    constructor(props) {
+        const {currentLocation, match} = props;
+        const mapId = match.params.map_id;
+        super(props);
 
         if (!mapId || !currentLocation) {
-            this.props.resetLocationMapForm();
+            props.resetLocationMapForm();
         } else {
-            this.props.getLocationMap(currentLocation.id, mapId);
+            props.getLocationMap(currentLocation.id, mapId);
         }
     }
 
@@ -37,7 +38,7 @@ class EditLocationMapPage extends React.Component {
         let oldId = this.props.match.params.map_id;
         let newId = newProps.match.params.map_id;
 
-        if (oldId != newId && currentLocation) {
+        if (oldId !== newId && currentLocation) {
             this.props.getLocationMap(currentLocation.id, newId);
         }
     }
@@ -49,7 +50,7 @@ class EditLocationMapPage extends React.Component {
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("edit_location.map")}</h3>
                 <hr/>
                 {currentSummit &&
@@ -72,7 +73,7 @@ const mapStateToProps = ({ currentSummitState, currentLocationState, currentLoca
     currentSummit : currentSummitState.currentSummit,
     currentLocation : currentLocationState.entity,
     ...currentLocationMapState
-})
+});
 
 export default connect (
     mapStateToProps,

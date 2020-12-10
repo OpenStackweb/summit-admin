@@ -25,26 +25,24 @@ import {ActionDropdown} from "openstack-uicore-foundation/lib/components";
 class EditTagGroupPage extends React.Component {
 
     constructor(props) {
+        const tagGroupId = props.match.params.tag_group_id;
+
         super(props);
+
+        if (!tagGroupId) {
+            props.resetTagGroupForm();
+        } else {
+            props.getTagGroup(tagGroupId);
+        }
 
         this.handleCopyTagsToCategory = this.handleCopyTagsToCategory.bind(this);
     }
 
-    componentWillMount () {
-        let tagGroupId = this.props.match.params.tag_group_id;
-
-        if (!tagGroupId) {
-            this.props.resetTagGroupForm();
-        } else {
-            this.props.getTagGroup(tagGroupId);
-        }
-    }
-
     componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.tag_group_id;
-        let newId = newProps.match.params.tag_group_id;
+        const oldId = this.props.match.params.tag_group_id;
+        const newId = newProps.match.params.tag_group_id;
 
-        if (oldId != newId) {
+        if (oldId !== newId) {
             if (!newId) {
                 this.props.resetTagGroupForm();
             } else {
@@ -54,20 +52,19 @@ class EditTagGroupPage extends React.Component {
     }
 
     handleCopyTagsToCategory(categoryId) {
-        let {entity} = this.props;
+        const {entity} = this.props;
         this.props.copyAllTagsToCategory(entity.id, categoryId);
     }
 
     render(){
-        let {currentSummit, entity, errors, match} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.label : T.translate("general.new");
-
-        let categoryOptions = currentSummit.tracks.map(c => ({value: c.id, label: c.name}));
+        const {currentSummit, entity, errors, match} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.label : T.translate("general.new");
+        const categoryOptions = currentSummit.tracks.map(c => ({value: c.id, label: c.name}));
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <div className="row">
                     <div className="col-md-8">
                         <h3>{title} {T.translate("edit_tag_group.tag_group")}</h3>
@@ -105,7 +102,7 @@ class EditTagGroupPage extends React.Component {
 const mapStateToProps = ({ currentSummitState, currentTagGroupState }) => ({
     currentSummit : currentSummitState.currentSummit,
     ...currentTagGroupState
-})
+});
 
 export default connect (
     mapStateToProps,

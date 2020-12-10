@@ -17,10 +17,8 @@ import T from 'i18n-react/dist/i18n-react';
 import {FreeTextSearch, SelectableTable, UploadInput, Dropdown} from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
 import {
-    exportInvitationsCSV, getInvitations, importInvitationsCSV,
-    resendNonAcceptedInvitations, selectInvitation, unSelectInvitation,
-    clearAllSelectedInvitations, deleteAllRegistrationInvitation,
-    deleteRegistrationInvitation, setCurrentFlowEvent,
+    exportInvitationsCSV, getInvitations, importInvitationsCSV, selectInvitation, unSelectInvitation,
+    clearAllSelectedInvitations, deleteAllRegistrationInvitation, deleteRegistrationInvitation, setCurrentFlowEvent,
     setSelectedAll, sendEmails
 }
 from "../../actions/registration-invitation-actions";
@@ -41,7 +39,6 @@ class RegistrationInvitationsListPage extends React.Component {
         this.handleSearch = this.handleSearch.bind(this);
         this.handleImportInvitations = this.handleImportInvitations.bind(this);
         this.handleExportInvitations = this.handleExportInvitations.bind(this);
-        this.handleResendNonAccepted = this.handleResendNonAccepted.bind(this);
         this.handleChangeNonAccepted = this.handleChangeNonAccepted.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
         this.handleNewInvitation = this.handleNewInvitation.bind(this);
@@ -194,10 +191,6 @@ class RegistrationInvitationsListPage extends React.Component {
     handleExportInvitations() {
         let {term, order, orderDir, showNonAccepted} = this.props;
         this.props.exportInvitationsCSV(term, order, orderDir, showNonAccepted);
-    }
-
-    handleResendNonAccepted(){
-        this.props.resendNonAcceptedInvitations();
     }
 
     handleChangeNonAccepted() {
@@ -399,7 +392,6 @@ export default connect (
         getInvitations,
         importInvitationsCSV,
         exportInvitationsCSV,
-        resendNonAcceptedInvitations,
         selectInvitation,
         unSelectInvitation,
         clearAllSelectedInvitations,

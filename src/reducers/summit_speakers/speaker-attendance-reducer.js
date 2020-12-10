@@ -17,8 +17,7 @@ import
     RESET_ATTENDANCE_FORM,
     UPDATE_ATTENDANCE,
     ATTENDANCE_UPDATED,
-    ATTENDANCE_ADDED,
-    EMAIL_SENT
+    ATTENDANCE_EMAIL_SENT
 } from '../../actions/speaker-actions';
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
@@ -77,7 +76,7 @@ const speakerAttendanceReducer = (state = DEFAULT_STATE, action) => {
             return state;
         }
         break;
-        case EMAIL_SENT: {
+        case ATTENDANCE_EMAIL_SENT: {
             return {...state, entity: {...state.entity, email_sent: true}};
         }
         break;

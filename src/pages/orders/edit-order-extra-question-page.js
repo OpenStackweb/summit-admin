@@ -23,29 +23,26 @@ import Swal from "sweetalert2";
 class EditOrderExtraQuestionPage extends React.Component {
 
     constructor(props) {
+        const orderExtraQuestionId = props.match.params.order_extra_question_id;
         super(props);
+
+        if (!orderExtraQuestionId) {
+            props.resetOrderExtraQuestionForm();
+        } else {
+            props.getOrderExtraQuestion(orderExtraQuestionId);
+        }
+
+        props.getOrderExtraQuestionMeta();
 
         this.handleValueSave = this.handleValueSave.bind(this);
         this.handleValueDelete = this.handleValueDelete.bind(this);
-    }
-
-    componentWillMount () {
-        let orderExtraQuestionId = this.props.match.params.order_extra_question_id;
-
-        if (!orderExtraQuestionId) {
-            this.props.resetOrderExtraQuestionForm();
-        } else {
-            this.props.getOrderExtraQuestion(orderExtraQuestionId);
-        }
-
-        this.props.getOrderExtraQuestionMeta();
     }
 
     componentWillReceiveProps(newProps) {
         let oldId = this.props.match.params.order_extra_question_id;
         let newId = newProps.match.params.order_extra_question_id;
 
-        if (newId != oldId) {
+        if (newId !== oldId) {
             if (!newId) {
                 this.props.resetOrderExtraQuestionForm();
             } else {
@@ -56,7 +53,7 @@ class EditOrderExtraQuestionPage extends React.Component {
 
     handleValueDelete(valueId) {
         let {deleteOrderExtraQuestionValue, currentSummit, entity} = this.props;
-        let value = entity.values.find(v => v.id == valueId);
+        let value = entity.values.find(v => v.id === valueId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -84,7 +81,7 @@ class EditOrderExtraQuestionPage extends React.Component {
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("edit_order_extra_question.order_extra_question")}</h3>
                 <hr/>
                 {currentSummit &&
@@ -105,7 +102,7 @@ class EditOrderExtraQuestionPage extends React.Component {
 const mapStateToProps = ({ currentSummitState, currentOrderExtraQuestionState }) => ({
     currentSummit : currentSummitState.currentSummit,
     ...currentOrderExtraQuestionState
-})
+});
 
 export default connect (
     mapStateToProps,

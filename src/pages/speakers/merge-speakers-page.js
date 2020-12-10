@@ -25,26 +25,21 @@ import '../../styles/merge-speakers-page.less';
 class MergeSpeakerPage extends React.Component {
 
     constructor(props) {
+        const {speakers} = props;
         super(props);
 
         this.state = {
             selectedFields: {...props.selectedFields},
             canMerge: false
+        };
+
+        if(speakers[0] && speakers[1]) {
+            this.state.canMerge= true;
         }
 
         this.handleChangeSpeaker = this.handleChangeSpeaker.bind(this);
         this.handleSelect = this.handleSelect.bind(this);
         this.handleMerge = this.handleMerge.bind(this);
-    }
-
-    componentWillMount () {
-        let {speakers} = this.props;
-
-        if(speakers[0] && speakers[1]) {
-            this.setState({
-                canMerge: true
-            });
-        }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -74,16 +69,15 @@ class MergeSpeakerPage extends React.Component {
     }
 
     handleMerge(ev) {
-        let selectedFields = {...this.state.selectedFields};
-        let {speakers} = this.props;
-        let props = this.props;
-        let changedFields = [];
+        const selectedFields = {...this.state.selectedFields};
+        const {speakers, mergeSpeakers} = this.props;
+        const changedFields = [];
 
-        for (var key in selectedFields) {
+        for (let key in selectedFields) {
             let field = selectedFields[key];
             selectedFields[key] = speakers[field].id;
 
-            if (field == 0) changedFields.push(key);
+            if (field === 0) changedFields.push(key);
         }
 
         Swal.fire({
@@ -95,19 +89,19 @@ class MergeSpeakerPage extends React.Component {
             confirmButtonText: T.translate("merge_speakers.merge_and_delete")
         }).then(function(result){
             if (result.value) {
-                props.mergeSpeakers(speakers, selectedFields, changedFields);
+                mergeSpeakers(speakers, selectedFields, changedFields);
             }
         });
 
     }
 
     render(){
-        let {allSummits, history, speakers, match} = this.props;
-        let {selectedFields, canMerge} = this.state;
+        const {allSummits, history, speakers, match} = this.props;
+        const {selectedFields, canMerge} = this.state;
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: T.translate("merge_speakers.merge"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("merge_speakers.merge"), pathname: match.url }} />
                 <h3>{T.translate("merge_speakers.merge_speakers")}</h3>
                 <hr/>
                 <div className="row">
@@ -155,7 +149,7 @@ class MergeSpeakerPage extends React.Component {
 const mapStateToProps = ({ directoryState, currentSpeakerMergeState }) => ({
     allSummits : directoryState.summits,
     ...currentSpeakerMergeState
-})
+});
 
 export default connect (
     mapStateToProps,

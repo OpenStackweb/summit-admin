@@ -22,26 +22,27 @@ import '../../styles/edit-summit-speaker-page.less';
 
 class EditSummitSpeakerPage extends React.Component {
 
-    componentWillMount () {
-        let speakerId = this.props.match.params.speaker_id;
-        let {summits} = this.props;
+    constructor(props) {
+        const {summits, match} = props;
+        const speakerId = match.params.speaker_id;
+        super(props);
 
         if (!speakerId) {
-            this.props.resetSpeakerForm();
+            props.resetSpeakerForm();
         } else {
-            this.props.getSpeaker(speakerId);
+            props.getSpeaker(speakerId);
         }
 
-        if (summits.length == 0) {
-            this.props.loadSummits();
+        if (summits.length === 0) {
+            props.loadSummits();
         }
     }
 
     componentWillReceiveProps(newProps) {
-        let speakerId = this.props.match.params.speaker_id;
-        let newSpeakerId = newProps.match.params.speaker_id;
+        const speakerId = this.props.match.params.speaker_id;
+        const newSpeakerId = newProps.match.params.speaker_id;
 
-        if (speakerId != newSpeakerId) {
+        if (speakerId !== newSpeakerId) {
             if (!newSpeakerId) {
                 this.props.resetSpeakerForm();
             } else {
@@ -51,15 +52,15 @@ class EditSummitSpeakerPage extends React.Component {
     }
 
     render(){
-        let {entity, errors, summits, history, saveSpeaker, attachPicture, match, addAffiliation, saveAffiliation, deleteAffiliation} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.first_name+' '+entity.last_name : T.translate("general.new");
+        const {entity, errors, summits, history, saveSpeaker, attachPicture, match} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.first_name+' '+entity.last_name : T.translate("general.new");
 
         if (summits.lenght === 0) return (<div> Hold on...</div>);
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("general.speaker")}</h3>
                 <hr/>
                 <SpeakerForm
@@ -78,7 +79,7 @@ class EditSummitSpeakerPage extends React.Component {
 const mapStateToProps = ({ currentSpeakerState, directoryState }) => ({
     summits: directoryState.summits,
     ...currentSpeakerState
-})
+});
 
 export default connect (
     mapStateToProps,

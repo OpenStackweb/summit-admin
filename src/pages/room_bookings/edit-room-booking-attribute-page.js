@@ -21,13 +21,14 @@ import { getRoomBookingAttributeType, resetRoomBookingAttributeForm, saveRoomBoo
 
 class EditRoomBookingAttributePage extends React.Component {
 
-    componentWillMount () {
-        let attributeId = this.props.match.params.attribute_id;
+    constructor(props) {
+        const attributeId = props.match.params.attribute_id;
+        super(props);
 
         if (!attributeId) {
-            this.props.resetRoomBookingAttributeForm();
+            props.resetRoomBookingAttributeForm();
         } else {
-            this.props.getRoomBookingAttributeType(attributeId);
+            props.getRoomBookingAttributeType(attributeId);
         }
     }
 
@@ -35,7 +36,7 @@ class EditRoomBookingAttributePage extends React.Component {
         let oldId = this.props.match.params.attribute_id;
         let newId = newProps.match.params.attribute_id;
 
-        if (newId != oldId) {
+        if (newId !== oldId) {
             if (!newId) {
                 this.props.resetRoomBookingAttributeForm();
             } else {
@@ -52,7 +53,7 @@ class EditRoomBookingAttributePage extends React.Component {
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("room_bookings.attribute_type")}</h3>
                 <hr/>
                 {currentSummit &&
@@ -72,7 +73,7 @@ class EditRoomBookingAttributePage extends React.Component {
 const mapStateToProps = ({ currentSummitState, currentRoomBookingAttributeTypeState }) => ({
     currentSummit : currentSummitState.currentSummit,
     ...currentRoomBookingAttributeTypeState
-})
+});
 
 export default connect (
     mapStateToProps,

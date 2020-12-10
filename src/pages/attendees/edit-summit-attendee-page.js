@@ -24,21 +24,19 @@ import '../../styles/edit-summit-attendee-page.less';
 class EditSummitAttendeePage extends React.Component {
 
     constructor(props) {
-        super(props);
-    }
+        const {currentSummit, match} = props;
+        const new_attendee_id = match.params.attendee_id;
 
-    componentWillMount () {
-        let {currentSummit} = this.props;
-        let new_attendee_id = this.props.match.params.attendee_id;
+        super(props);
 
         if(!new_attendee_id) {
-            this.props.resetAttendeeForm();
+            props.resetAttendeeForm();
         } else {
-            this.props.getAttendee(new_attendee_id);
+            props.getAttendee(new_attendee_id);
         }
 
         if (!currentSummit.attendee_extra_questions) {
-            this.props.getOrderExtraQuestions();
+            props.getOrderExtraQuestions();
         }
     }
 
@@ -46,7 +44,7 @@ class EditSummitAttendeePage extends React.Component {
         let oldId = this.props.match.params.attendee_id;
         let newId = newProps.match.params.attendee_id;
 
-        if (oldId != newId) {
+        if (oldId !== newId) {
             if(!newId) {
                 this.props.resetAttendeeForm();
             } else {
@@ -62,7 +60,7 @@ class EditSummitAttendeePage extends React.Component {
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("general.attendee")}</h3>
                 <hr/>
                 {currentSummit &&
@@ -86,7 +84,7 @@ class EditSummitAttendeePage extends React.Component {
 const mapStateToProps = ({ currentSummitState, currentAttendeeState }) => ({
     currentSummit : currentSummitState.currentSummit,
     ...currentAttendeeState
-})
+});
 
 export default connect (
     mapStateToProps,

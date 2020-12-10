@@ -21,13 +21,14 @@ import { getPushNotification, resetPushNotificationForm, savePushNotification } 
 
 class EditPushNotificationPage extends React.Component {
 
-    componentWillMount () {
-        let pushNotificationId = this.props.match.params.push_notification_id;
+    constructor(props) {
+        const pushNotificationId = props.match.params.push_notification_id;
+        super(props);
 
         if (!pushNotificationId) {
-            this.props.resetPushNotificationForm();
+            props.resetPushNotificationForm();
         } else {
-            this.props.getPushNotification(pushNotificationId);
+            props.getPushNotification(pushNotificationId);
         }
     }
 
@@ -35,7 +36,7 @@ class EditPushNotificationPage extends React.Component {
         let oldId = this.props.match.params.push_notification_id;
         let newId = newProps.match.params.push_notification_id;
 
-        if (oldId != newId) {
+        if (oldId !== newId) {
             if (!newId) {
                 this.props.resetPushNotificationForm();
             } else {
@@ -51,7 +52,7 @@ class EditPushNotificationPage extends React.Component {
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("edit_push_notification.push_notification")}</h3>
                 <hr/>
                 {currentSummit &&
@@ -75,7 +76,7 @@ const mapStateToProps = ({ currentSummitState, currentPushNotificationListState,
     channels: currentPushNotificationListState.channels,
     platforms: currentPushNotificationListState.platforms,
     ...currentPushNotificationState
-})
+});
 
 export default connect (
     mapStateToProps,

@@ -22,27 +22,28 @@ import { getBadgeTypes } from '../../actions/badge-actions'
 
 class EditTicketTypePage extends React.Component {
 
-    componentWillMount () {
-        let {currentSummit} = this.props;
-        let ticketTypeId = this.props.match.params.ticket_type_id;
+    constructor(props) {
+        const {currentSummit, match} = props;
+        const ticketTypeId = match.params.ticket_type_id;
+        super(props);
 
         if(currentSummit !== null) {
-            this.props.getBadgeTypes();
+            props.getBadgeTypes();
         }
 
         if (!ticketTypeId) {
-            this.props.resetTicketTypeForm();
+            props.resetTicketTypeForm();
         } else {
-            this.props.getTicketType(ticketTypeId);
+            props.getTicketType(ticketTypeId);
         }
     }
 
     componentWillReceiveProps(newProps) {
-        let {currentSummit} = newProps;
-        let oldId = this.props.match.params.ticket_type_id;
-        let newId = newProps.match.params.ticket_type_id;
+        const {currentSummit} = newProps;
+        const oldId = this.props.match.params.ticket_type_id;
+        const newId = newProps.match.params.ticket_type_id;
 
-        if (newId != oldId) {
+        if (newId !== oldId) {
             if (!newId) {
                 this.props.resetTicketTypeForm();
             } else {
@@ -56,13 +57,13 @@ class EditTicketTypePage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors, match} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+        const {currentSummit, entity, errors, match} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("edit_ticket_type.ticket_type")}</h3>
                 <hr/>
                 {currentSummit &&
@@ -81,7 +82,7 @@ class EditTicketTypePage extends React.Component {
 const mapStateToProps = ({ currentSummitState, currentTicketTypeState }) => ({
     currentSummit : currentSummitState.currentSummit,
     ...currentTicketTypeState
-})
+});
 
 export default connect (
     mapStateToProps,

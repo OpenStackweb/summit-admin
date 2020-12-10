@@ -42,14 +42,15 @@ export const BIG_PIC_ATTACHED       = 'BIG_PIC_ATTACHED';
 export const MERGE_SPEAKERS         = 'MERGE_SPEAKERS';
 export const SPEAKER_MERGED         = 'SPEAKER_MERGED';
 
-export const REQUEST_ATTENDANCES    = 'REQUEST_ATTENDANCES';
-export const RECEIVE_ATTENDANCES    = 'RECEIVE_ATTENDANCES';
-export const ATTENDANCE_DELETED     = 'ATTENDANCE_DELETED';
-export const RECEIVE_ATTENDANCE     = 'RECEIVE_ATTENDANCE';
-export const RESET_ATTENDANCE_FORM  = 'RESET_ATTENDANCE_FORM';
-export const UPDATE_ATTENDANCE      = 'UPDATE_ATTENDANCE';
-export const ATTENDANCE_UPDATED     = 'ATTENDANCE_UPDATED';
-export const ATTENDANCE_ADDED       = 'ATTENDANCE_ADDED';
+export const REQUEST_ATTENDANCES        = 'REQUEST_ATTENDANCES';
+export const RECEIVE_ATTENDANCES        = 'RECEIVE_ATTENDANCES';
+export const ATTENDANCE_DELETED         = 'ATTENDANCE_DELETED';
+export const RECEIVE_ATTENDANCE         = 'RECEIVE_ATTENDANCE';
+export const RESET_ATTENDANCE_FORM      = 'RESET_ATTENDANCE_FORM';
+export const UPDATE_ATTENDANCE          = 'UPDATE_ATTENDANCE';
+export const ATTENDANCE_UPDATED         = 'ATTENDANCE_UPDATED';
+export const ATTENDANCE_ADDED           = 'ATTENDANCE_ADDED';
+export const ATTENDANCE_EMAIL_SENT      = 'ATTENDANCE_EMAIL_SENT';
 
 export const REQUEST_FEATURED_SPEAKERS      = 'REQUEST_FEATURED_SPEAKERS';
 export const RECEIVE_FEATURED_SPEAKERS      = 'RECEIVE_FEATURED_SPEAKERS';
@@ -505,7 +506,7 @@ export const sendAttendanceEmail = (attendanceId) => (dispatch, getState) => {
 
     return postRequest(
         null,
-        createAction(EMAIL_SENT),
+        createAction(ATTENDANCE_EMAIL_SENT),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/speakers-assistances/${attendanceId}/mail`,
         null,
         authErrorHandler

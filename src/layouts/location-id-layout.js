@@ -29,16 +29,18 @@ import NoMatchPage from "../pages/no-match-page";
 
 class LocationIdLayout extends React.Component {
 
-    componentWillMount() {
-        let locationId = this.props.match.params.location_id;
+    constructor(props) {
+        super(props);
+
+        const locationId = props.match.params.location_id;
 
         if (!locationId) {
-            this.props.resetLocationForm();
+            props.resetLocationForm();
         } else {
-            this.props.getLocation(locationId);
+            props.getLocation(locationId);
         }
 
-        this.props.getLocationMeta();
+        props.getLocationMeta();
     }
 
     componentWillReceiveProps(newProps) {

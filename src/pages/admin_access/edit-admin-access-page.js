@@ -29,15 +29,13 @@ class EditAdminAccessPage extends React.Component {
         super(props);
 
         this.state = {};
-    }
 
-    componentWillMount () {
-        let accessId = this.props.match.params.access_id;
+        const accessId = props.match.params.access_id;
 
         if (!accessId) {
-            this.props.resetAdminAccessForm();
+            props.resetAdminAccessForm();
         } else {
-            this.props.getAdminAccess(accessId);
+            props.getAdminAccess(accessId);
         }
     }
 
@@ -77,7 +75,7 @@ class EditAdminAccessPage extends React.Component {
 
 const mapStateToProps = ({ adminAccessState }) => ({
     ...adminAccessState
-})
+});
 
 export default connect (
     mapStateToProps,

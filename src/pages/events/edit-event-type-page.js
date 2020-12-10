@@ -24,27 +24,23 @@ import {queryMediaUploads, linkToPresentationType, unlinkFromPresentationType} f
 class EditEventTypePage extends React.Component {
 
     constructor(props) {
+        const eventTypeId = props.match.params.event_type_id;
         super(props);
 
-        this.getMediaUploads = this.getMediaUploads.bind(this);
-
-    }
-
-    componentWillMount () {
-        let eventTypeId = this.props.match.params.event_type_id;
-
         if (!eventTypeId) {
-            this.props.resetEventTypeForm();
+            props.resetEventTypeForm();
         } else {
-            this.props.getEventType(eventTypeId);
+            props.getEventType(eventTypeId);
         }
+
+        this.getMediaUploads = this.getMediaUploads.bind(this);
     }
 
     componentWillReceiveProps(newProps) {
         let oldId = this.props.match.params.event_type_id;
         let newId = newProps.match.params.event_type_id;
 
-        if (oldId != newId) {
+        if (oldId !== newId) {
             if (!newId) {
                 this.props.resetEventTypeForm();
             } else {
@@ -93,7 +89,7 @@ class EditEventTypePage extends React.Component {
 const mapStateToProps = ({ currentSummitState, currentEventTypeState }) => ({
     currentSummit : currentSummitState.currentSummit,
     ...currentEventTypeState
-})
+});
 
 export default connect (
     mapStateToProps,

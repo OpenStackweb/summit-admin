@@ -24,6 +24,9 @@ class SummitSpeakerListPage extends React.Component {
 
     constructor(props) {
         super(props);
+        props.getSpeakers();
+
+        this.state = {}
 
         this.handleEdit = this.handleEdit.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
@@ -31,22 +34,16 @@ class SummitSpeakerListPage extends React.Component {
         this.handleSort = this.handleSort.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.handleNewSpeaker = this.handleNewSpeaker.bind(this);
-
-        this.state = {}
-    }
-
-    componentWillMount () {
-        this.props.getSpeakers();
     }
 
     handleEdit(speaker_id) {
-        let {history} = this.props;
+        const {history} = this.props;
         history.push(`/app/speakers/${speaker_id}`);
     }
 
     handleDelete(speakerId) {
-        let {deleteSpeaker, speakers} = this.props;
-        let speaker = speakers.find(s => s.id == speakerId);
+        const {deleteSpeaker, speakers} = this.props;
+        const speaker = speakers.find(s => s.id === speakerId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -63,44 +60,44 @@ class SummitSpeakerListPage extends React.Component {
     }
 
     handlePageChange(page) {
-        let {term, order, orderDir, perPage} = this.props;
+        const {term, order, orderDir, perPage} = this.props;
         this.props.getSpeakers(term, page, perPage, order, orderDir);
     }
 
     handleSort(index, key, dir, func) {
-        let {term, page, perPage} = this.props;
-        key = (key == 'name') ? 'last_name' : key;
+        const {term, page, perPage} = this.props;
+        key = (key === 'name') ? 'last_name' : key;
         this.props.getSpeakers(term, page, perPage, key, dir);
     }
 
     handleSearch(term) {
-        let {order, orderDir, page, perPage} = this.props;
+        const {order, orderDir, page, perPage} = this.props;
         this.props.getSpeakers(term, page, perPage, order, orderDir);
     }
 
     handleNewSpeaker(ev) {
-        let {history} = this.props;
+        const {history} = this.props;
         history.push(`/app/speakers/new`);
     }
 
     render(){
-        let {speakers, lastPage, currentPage, term, order, orderDir, totalSpeakers } = this.props;
+        const {speakers, lastPage, currentPage, term, order, orderDir, totalSpeakers } = this.props;
 
-        let columns = [
+        const columns = [
             { columnKey: 'id', value: 'Id', sortable: true },
             { columnKey: 'name', value: T.translate("general.name"), sortable: true },
             { columnKey: 'email', value: T.translate("general.email"), sortable: true },
             { columnKey: 'member_id', value: T.translate("speaker_list.member_id") }
         ];
 
-        let table_options = {
-            sortCol: (order == 'last_name') ? 'name' : order,
+        const table_options = {
+            sortCol: (order === 'last_name') ? 'name' : order,
             sortDir: orderDir,
             actions: {
                 edit: {onClick: this.handleEdit},
                 delete: {onClick: this.handleDelete}
             }
-        }
+        };
 
         return(
             <div className="container">
@@ -150,7 +147,7 @@ class SummitSpeakerListPage extends React.Component {
 
 const mapStateToProps = ({ currentSpeakerListState }) => ({
     ...currentSpeakerListState
-})
+});
 
 export default connect (
     mapStateToProps,

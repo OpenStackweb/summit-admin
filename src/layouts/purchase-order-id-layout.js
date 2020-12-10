@@ -25,27 +25,28 @@ import {resetPurchaseOrderForm, getPurchaseOrder, getOrderExtraQuestions} from "
 
 class PurchaseOrderIdLayout extends React.Component {
 
-    componentWillMount () {
-        let {currentSummit} = this.props;
-        let orderId = this.props.match.params.purchase_order_id;
+    constructor(props) {
+        super(props);
+
+        const {currentSummit} = props;
+        const orderId = props.match.params.purchase_order_id;
 
         if (!orderId) {
-            this.props.resetPurchaseOrderForm();
+            props.resetPurchaseOrderForm();
         } else {
-            this.props.getPurchaseOrder(orderId);
+            props.getPurchaseOrder(orderId);
         }
 
         if (!currentSummit.order_only_extra_questions) {
-            this.props.getOrderExtraQuestions();
+            props.getOrderExtraQuestions();
         }
-
     }
 
     componentWillReceiveProps(newProps) {
         let oldId = this.props.match.params.purchase_order_id;
         let newId = newProps.match.params.purchase_order_id;
 
-        if (oldId != newId) {
+        if (oldId !== newId) {
             if (!newId) {
                 this.props.resetPurchaseOrderForm();
             } else {

@@ -25,21 +25,18 @@ import { getAllMediaFileTypes } from '../../actions/media-file-type-actions';
 class EditMediaUploadPage extends React.Component {
 
     constructor(props) {
+        const mediaUploadId = props.match.params.media_upload_id;
         super(props);
 
         this.state = {};
-    }
-
-    componentWillMount () {
-        let mediaUploadId = this.props.match.params.media_upload_id;
 
         if (!mediaUploadId) {
-            this.props.resetMediaUploadForm();
+            props.resetMediaUploadForm();
         } else {
-            this.props.getMediaUpload(mediaUploadId);
+            props.getMediaUpload(mediaUploadId);
         }
 
-        this.props.getAllMediaFileTypes();
+        props.getAllMediaFileTypes();
     }
 
     componentWillReceiveProps(newProps) {

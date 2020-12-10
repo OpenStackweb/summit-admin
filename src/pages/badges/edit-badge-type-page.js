@@ -31,25 +31,26 @@ import {
 
 class EditBadgeTypePage extends React.Component {
 
-    componentWillMount () {
-        let { currentSummit } = this.props;
-        let badgeTypeId = this.props.match.params.badge_type_id;
+    constructor(props) {
+        const { currentSummit, match } = props;
+        const badgeTypeId = match.params.badge_type_id;
+        super(props);
 
         if (!badgeTypeId) {
-            this.props.resetBadgeTypeForm();
+            props.resetBadgeTypeForm();
         } else {
-            this.props.getBadgeType(badgeTypeId);
+            props.getBadgeType(badgeTypeId);
         }
 
-        if (!currentSummit.badge_features) this.props.getBadgeFeatures();
-        if (!currentSummit.access_level_types) this.props.getAccessLevels();
+        if (!currentSummit.badge_features) props.getBadgeFeatures();
+        if (!currentSummit.access_level_types) props.getAccessLevels();
     }
 
     componentWillReceiveProps(newProps) {
         let oldId = this.props.match.params.badge_type_id;
         let newId = newProps.match.params.badge_type_id;
 
-        if (newId != oldId) {
+        if (newId !== oldId) {
             if (!newId) {
                 this.props.resetBadgeTypeForm();
             } else {
@@ -65,7 +66,7 @@ class EditBadgeTypePage extends React.Component {
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("edit_badge_type.badge_type")}</h3>
                 <hr/>
                 {currentSummit && currentSummit.badge_features && currentSummit.access_level_types &&
@@ -89,7 +90,7 @@ const mapStateToProps = ({ currentSummitState, currentBadgeTypeState, baseState 
     currentSummit : currentSummitState.currentSummit,
     loading: baseState.loading,
     ...currentBadgeTypeState
-})
+});
 
 export default connect (
     mapStateToProps,

@@ -24,26 +24,27 @@ import {createCompany} from "../../actions/sponsor-actions";
 
 class EditPromocodePage extends React.Component {
 
-    componentWillMount () {
-        let {currentSummit} = this.props;
-        let promocodeId = this.props.match.params.promocode_id;
+    constructor(props) {
+        const {currentSummit, match} = props;
+        const promocodeId = match.params.promocode_id;
+        super(props);
 
         if (!promocodeId) {
-            this.props.resetPromocodeForm();
+            props.resetPromocodeForm();
         } else {
-            this.props.getPromocode(promocodeId);
+            props.getPromocode(promocodeId);
         }
 
-        this.props.getPromocodeMeta();
-        if (!currentSummit.badge_features) this.props.getBadgeFeatures();
-        if (!currentSummit.badge_types) this.props.getBadgeTypes()
+        props.getPromocodeMeta();
+        if (!currentSummit.badge_features) props.getBadgeFeatures();
+        if (!currentSummit.badge_types) props.getBadgeTypes()
     }
 
     componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.promocode_id;
-        let newId = newProps.match.params.promocode_id;
+        const oldId = this.props.match.params.promocode_id;
+        const newId = newProps.match.params.promocode_id;
 
-        if (oldId != newId) {
+        if (oldId !== newId) {
             if (!newId) {
                 this.props.resetPromocodeForm();
             } else {
@@ -53,17 +54,17 @@ class EditPromocodePage extends React.Component {
     }
 
     render(){
-        let {currentSummit, allTypes, allClasses, entity, errors, match} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.code : T.translate("general.new");
+        const {currentSummit, allTypes, allClasses, entity, errors, match} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.code : T.translate("general.new");
 
         if (!allClasses.length || !currentSummit.badge_features || !currentSummit.badge_types) {
-            return (<div></div>);
+            return (<div/>);
         }
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("edit_promocode.promocode")}</h3>
                 <hr/>
                 {currentSummit &&
@@ -89,7 +90,7 @@ class EditPromocodePage extends React.Component {
 const mapStateToProps = ({ currentSummitState, currentPromocodeState }) => ({
     currentSummit : currentSummitState.currentSummit,
     ...currentPromocodeState
-})
+});
 
 export default connect (
     mapStateToProps,

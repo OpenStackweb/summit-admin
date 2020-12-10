@@ -27,16 +27,14 @@ class SummitDirectoryPage extends React.Component {
     constructor(props){
         super(props);
 
+        props.setCurrentSummit(null);
+        props.loadSummits();
+
         this.handlePageChange = this.handlePageChange.bind(this);
     }
 
-    componentWillMount () {
-        this.props.setCurrentSummit(null);
-        this.props.loadSummits();
-    }
-
     handlePageChange(page) {
-        let {perPage} = this.props;
+        const {perPage} = this.props;
         this.props.loadSummits(page, perPage);
     }
 
@@ -47,21 +45,21 @@ class SummitDirectoryPage extends React.Component {
     }
 
     onEditSummit(summit, ev){
-        let {history} = this.props;
+        const {history} = this.props;
         ev.preventDefault();
 
         history.push(`/app/summits/${summit.id}`);
     }
 
     onNewSummit(ev){
-        let {history} = this.props;
+        const {history} = this.props;
         ev.preventDefault();
 
         history.push(`/app/summits/new`);
     }
 
     onDeleteSummit(summit, ev){
-        let {deleteSummit} = this.props;
+        const {deleteSummit} = this.props;
 
         ev.preventDefault();
 
@@ -80,12 +78,12 @@ class SummitDirectoryPage extends React.Component {
     }
 
     render() {
-        let { summits, member, lastPage, currentPage, totalSummits } = this.props;
-        let memberObj = new Member(member);
+        const { summits, member, lastPage, currentPage, totalSummits } = this.props;
+        const memberObj = new Member(member);
 
-        let canEditSummit =  memberObj.canEditSummit();
-        let canAddSummits = memberObj.canAddSummits();
-        let canDeleteSummits = memberObj.canDeleteSummits();
+        const canEditSummit =  memberObj.canEditSummit();
+        const canAddSummits = memberObj.canAddSummits();
+        const canDeleteSummits = memberObj.canDeleteSummits();
 
         return (
             <div className="container">
@@ -156,7 +154,7 @@ class SummitDirectoryPage extends React.Component {
 const mapStateToProps = ({ directoryState, loggedUserState }) => ({
     ...directoryState,
     member: loggedUserState.member
-})
+});
 
 export default connect (
     mapStateToProps,

@@ -20,22 +20,23 @@ import { getSummitById }  from '../../actions/summit-actions';
 import { getSelectionPlan, resetSelectionPlanForm, saveSelectionPlan, addTrackGroupToSelectionPlan, removeTrackGroupFromSelectionPlan } from "../../actions/selection-plan-actions";
 
 class EditSelectionPlanPage extends React.Component {
-
-    componentWillMount () {
-        let selectionPlanId = this.props.match.params.selection_plan_id;
+    constructor(props) {
+        const selectionPlanId = props.match.params.selection_plan_id;
+        super(props);
 
         if (!selectionPlanId) {
-            this.props.resetSelectionPlanForm();
+            props.resetSelectionPlanForm();
         } else {
-            this.props.getSelectionPlan(selectionPlanId);
+            props.getSelectionPlan(selectionPlanId);
         }
+
     }
 
     componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.selection_plan_id;
-        let newId = newProps.match.params.selection_plan_id;
+        const oldId = this.props.match.params.selection_plan_id;
+        const newId = newProps.match.params.selection_plan_id;
 
-        if (oldId != newId) {
+        if (oldId !== newId) {
             if (!newId) {
                 this.props.resetSelectionPlanForm();
             } else {
@@ -45,14 +46,14 @@ class EditSelectionPlanPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors, match} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+        const {currentSummit, entity, errors, match} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("edit_selection_plan.selection_plan")}</h3>
                 <hr/>
                 <SelectionPlanForm
@@ -71,7 +72,7 @@ class EditSelectionPlanPage extends React.Component {
 const mapStateToProps = ({ currentSummitState, currentSelectionPlanState }) => ({
     currentSummit : currentSummitState.currentSummit,
     ...currentSelectionPlanState
-})
+});
 
 export default connect (
     mapStateToProps,

@@ -21,21 +21,22 @@ import { getSponsorship, resetSponsorshipForm, saveSponsorship } from "../../act
 
 class EditSponsorshipPage extends React.Component {
 
-    componentWillMount () {
-        let sponsorshipId = this.props.match.params.sponsorship_id;
+    constructor(props) {
+        const sponsorshipId = props.match.params.sponsorship_id;
+        super(props);
 
         if (!sponsorshipId) {
-            this.props.resetSponsorshipForm();
+            props.resetSponsorshipForm();
         } else {
-            this.props.getSponsorship(sponsorshipId);
+            props.getSponsorship(sponsorshipId);
         }
     }
 
     componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.sponsorship_id;
-        let newId = newProps.match.params.sponsorship_id;
+        const oldId = this.props.match.params.sponsorship_id;
+        const newId = newProps.match.params.sponsorship_id;
 
-        if (newId != oldId) {
+        if (newId !== oldId) {
             if (!newId) {
                 this.props.resetSponsorshipForm();
             } else {
@@ -45,14 +46,14 @@ class EditSponsorshipPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors, match, history} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+        const {currentSummit, entity, errors, match, history} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("edit_sponsorship.sponsorship")}</h3>
                 <hr/>
                 {currentSummit &&
@@ -71,7 +72,7 @@ class EditSponsorshipPage extends React.Component {
 const mapStateToProps = ({ currentSummitState, currentSponsorshipState }) => ({
     currentSummit : currentSummitState.currentSummit,
     ...currentSponsorshipState
-})
+});
 
 export default connect (
     mapStateToProps,

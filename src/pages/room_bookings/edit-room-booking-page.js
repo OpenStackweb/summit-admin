@@ -21,21 +21,22 @@ import RoomBookingForm from "../../components/forms/room-booking-form";
 
 class EditRoomBookingPage extends React.Component {
 
-    componentWillMount () {
-        let roomBookingId = this.props.match.params.room_booking_id;
+    constructor(props) {
+        const roomBookingId = props.match.params.room_booking_id;
+        super(props);
 
         if (!roomBookingId) {
-            this.props.resetRoomBookingForm();
+            props.resetRoomBookingForm();
         } else {
-            this.props.getRoomBooking(roomBookingId);
+            props.getRoomBooking(roomBookingId);
         }
     }
 
     componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.room_booking_id;
-        let newId = newProps.match.params.room_booking_id;
+        const oldId = this.props.match.params.room_booking_id;
+        const newId = newProps.match.params.room_booking_id;
 
-        if (newId != oldId) {
+        if (newId !== oldId) {
             if (!newId) {
                 this.props.resetRoomBookingForm();
             } else {
@@ -45,19 +46,14 @@ class EditRoomBookingPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors, match} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let fields = [
-            {type: 'text', name: 'name', label: T.translate("edit_room_booking.name")},
-            {type: 'text', name: 'external_id', label: T.translate("edit_room_booking.external_id")},
-            {type: 'textarea', name: 'description', label: T.translate("edit_room_booking.description")}
-        ];
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+        const {currentSummit, entity, errors, match} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("edit_room_booking.room_booking")}</h3>
                 <hr/>
                 {currentSummit &&
@@ -77,7 +73,7 @@ class EditRoomBookingPage extends React.Component {
 const mapStateToProps = ({ currentSummitState, currentRoomBookingState }) => ({
     currentSummit : currentSummitState.currentSummit,
     ...currentRoomBookingState
-})
+});
 
 export default connect (
     mapStateToProps,

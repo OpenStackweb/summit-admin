@@ -22,24 +22,19 @@ class EventTypeListPage extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {};
+        props.getEventTypes();
 
         this.handleEdit = this.handleEdit.bind(this);
         this.handleNew = this.handleNew.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
         this.isNotDefault = this.isNotDefault.bind(this);
-
-        this.state = {
-        }
-    }
-
-    componentWillMount() {
-        this.props.getEventTypes();
     }
 
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
             this.props.getEventTypes();
         }
     }
@@ -56,7 +51,7 @@ class EventTypeListPage extends React.Component {
 
     handleDelete(eventTypeId) {
         let {deleteEventType, eventTypes} = this.props;
-        let eventType = eventTypes.find(e => e.id == eventTypeId);
+        let eventType = eventTypes.find(e => e.id === eventTypeId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -74,7 +69,7 @@ class EventTypeListPage extends React.Component {
 
     isNotDefault(eventTypeId) {
         let {eventTypes} = this.props;
-        let eventType = eventTypes.find(e => e.id == eventTypeId);
+        let eventType = eventTypes.find(e => e.id === eventTypeId);
 
         return !eventType.is_default;
     }
@@ -94,7 +89,7 @@ class EventTypeListPage extends React.Component {
             }
         }
 
-        if(!currentSummit.id) return(<div></div>);
+        if(!currentSummit.id) return(<div/>);
 
         return(
             <div className="container">
@@ -111,7 +106,7 @@ class EventTypeListPage extends React.Component {
                     </div>
                 </div>
 
-                {eventTypes.length == 0 &&
+                {eventTypes.length === 0 &&
                 <div>{T.translate("event_type_list.no_items")}</div>
                 }
 
@@ -133,7 +128,7 @@ class EventTypeListPage extends React.Component {
 const mapStateToProps = ({ currentSummitState, currentEventTypeListState }) => ({
     currentSummit   : currentSummitState.currentSummit,
     ...currentEventTypeListState
-})
+});
 
 export default connect (
     mapStateToProps,

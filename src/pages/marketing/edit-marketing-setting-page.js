@@ -23,16 +23,13 @@ import '../../styles/edit-marketing-setting-page.less';
 class EditMarketingSettingPage extends React.Component {
 
     constructor(props) {
+        const settingId = props.match.params.setting_id;
         super(props);
-    }
-
-    componentWillMount () {
-        let settingId = this.props.match.params.setting_id;
 
         if (!settingId) {
-            this.props.resetSettingForm();
+            props.resetSettingForm();
         } else {
-            this.props.getMarketingSetting(settingId);
+            props.getMarketingSetting(settingId);
         }
     }
 
@@ -40,7 +37,7 @@ class EditMarketingSettingPage extends React.Component {
         let oldId = this.props.match.params.setting_id;
         let newId = newProps.match.params.setting_id;
 
-        if (oldId != newId) {
+        if (oldId !== newId) {
             if (!newId) {
                 this.props.resetSettingForm();
             } else {
@@ -56,7 +53,7 @@ class EditMarketingSettingPage extends React.Component {
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("marketing.marketing_setting")}</h3>
                 <hr/>
                 {currentSummit &&
@@ -76,7 +73,7 @@ class EditMarketingSettingPage extends React.Component {
 const mapStateToProps = ({ currentSummitState, marketingSettingState }) => ({
     currentSummit : currentSummitState.currentSummit,
     ...marketingSettingState
-})
+});
 
 export default connect (
     mapStateToProps,

@@ -21,18 +21,19 @@ import {getEmailFlowEvent, resetEmailFlowEventForm, saveEmailFlowEvent} from '..
 
 class EditEmailFlowEventPage extends React.Component {
 
-    componentWillMount () {
-        let { currentSummit } = this.props;
-        let eventId = this.props.match.params.event_id;
+    constructor(props) {
+        const { currentSummit, match } = props;
+        const eventId = match.params.event_id;
+        super(props);
 
-        this.props.getEmailFlowEvent(eventId);
+        props.getEmailFlowEvent(eventId);
     }
 
     componentWillReceiveProps(newProps) {
         let oldId = this.props.match.params.event_id;
         let newId = newProps.match.params.event_id;
 
-        if (newId != oldId) {
+        if (newId !== oldId) {
             if (!newId) {
                 this.props.resetEmailFlowEventForm();
             } else {
@@ -48,7 +49,7 @@ class EditEmailFlowEventPage extends React.Component {
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {entity.flow_name} {T.translate("edit_email_flow_event.email_flow_event")}</h3>
                 <hr/>
                 {currentSummit &&

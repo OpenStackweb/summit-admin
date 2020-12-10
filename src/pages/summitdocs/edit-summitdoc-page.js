@@ -23,24 +23,21 @@ import { getSummitDoc, resetSummitDocForm, saveSummitDoc } from "../../actions/s
 class EditSummitDocPage extends React.Component {
 
     constructor(props) {
+        const summitDocId = props.match.params.summitdoc_id;
         super(props);
-    }
-
-    componentWillMount () {
-        let summitDocId = this.props.match.params.summitdoc_id;
 
         if (!summitDocId) {
-            this.props.resetSummitDocForm();
+            props.resetSummitDocForm();
         } else {
-            this.props.getSummitDoc(summitDocId);
+            props.getSummitDoc(summitDocId);
         }
     }
 
     componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.summitdoc_id;
-        let newId = newProps.match.params.summitdoc_id;
+        const oldId = this.props.match.params.summitdoc_id;
+        const newId = newProps.match.params.summitdoc_id;
 
-        if (oldId != newId) {
+        if (oldId !== newId) {
             if (!newId) {
                 this.props.resetSummitDocForm();
             } else {
@@ -50,13 +47,13 @@ class EditSummitDocPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors, match} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.label : T.translate("general.new");
+        const {currentSummit, entity, errors, match} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.label : T.translate("general.new");
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("summitdoc.summitdoc")}</h3>
                 <hr/>
                 {currentSummit &&
@@ -76,7 +73,7 @@ class EditSummitDocPage extends React.Component {
 const mapStateToProps = ({ currentSummitState, summitDocState }) => ({
     currentSummit : currentSummitState.currentSummit,
     ...summitDocState
-})
+});
 
 export default connect (
     mapStateToProps,

@@ -64,8 +64,9 @@ if (exclusiveSections.hasOwnProperty(process.env['APP_CLIENT_NAME'])) {
 
 class App extends React.PureComponent {
 
-    componentWillMount () {
-        this.props.resetLoading();
+    constructor(props) {
+        super(props);
+        props.resetLoading();
     }
 
     onClickLogin(){

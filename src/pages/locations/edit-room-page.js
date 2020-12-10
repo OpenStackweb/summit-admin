@@ -22,17 +22,14 @@ import { getLocation, getRoom, resetRoomForm, saveRoom, addAttributeToRoom, remo
 class EditRoomPage extends React.Component {
 
     constructor(props) {
+        const {currentLocation, match} = props;
+        const roomId = match.params.room_id;
         super(props);
-    }
-
-    componentWillMount () {
-        let {currentLocation} = this.props;
-        let roomId = this.props.match.params.room_id;
 
         if (!roomId || !currentLocation) {
-            this.props.resetRoomForm();
+            props.resetRoomForm();
         } else {
-            this.props.getRoom(currentLocation.id, roomId);
+            props.getRoom(currentLocation.id, roomId);
         }
     }
 
@@ -41,7 +38,7 @@ class EditRoomPage extends React.Component {
         let oldId = this.props.match.params.room_id;
         let newId = newProps.match.params.room_id;
 
-        if (oldId != newId && currentLocation) {
+        if (oldId !== newId && currentLocation) {
             this.props.getRoom(currentLocation.id, newId);
         }
     }
@@ -53,7 +50,7 @@ class EditRoomPage extends React.Component {
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("edit_room.room")}</h3>
                 <hr/>
                 {currentSummit &&
@@ -81,7 +78,7 @@ const mapStateToProps = ({ currentSummitState, currentRoomState, currentLocation
     currentLocation : currentLocationState.entity,
     allFloors: currentLocationState.entity.floors,
     ...currentRoomState
-})
+});
 
 export default connect (
     mapStateToProps,

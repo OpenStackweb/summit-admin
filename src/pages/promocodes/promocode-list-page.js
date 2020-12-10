@@ -25,6 +25,8 @@ class PromocodeListPage extends React.Component {
     constructor(props) {
         super(props);
 
+        props.getPromocodeMeta();
+
         this.handleEdit = this.handleEdit.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
         this.isNotRedeemed = this.isNotRedeemed.bind(this);
@@ -39,12 +41,8 @@ class PromocodeListPage extends React.Component {
 
     }
 
-    componentWillMount () {
-        this.props.getPromocodeMeta();
-    }
-
     componentDidMount() {
-        let {currentSummit} = this.props;
+        const {currentSummit} = this.props;
         if(currentSummit !== null) {
             this.props.getPromocodes();
         }
@@ -53,7 +51,7 @@ class PromocodeListPage extends React.Component {
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
             this.props.getPromocodes();
         }
     }
@@ -72,7 +70,7 @@ class PromocodeListPage extends React.Component {
 
     handleDelete(promocodeId) {
         let {deletePromocode, promocodes} = this.props;
-        let promocode = promocodes.find(p => p.id == promocodeId);
+        let promocode = promocodes.find(p => p.id === promocodeId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -91,9 +89,9 @@ class PromocodeListPage extends React.Component {
     isNotRedeemed(promocodeId) {
 
         let {promocodes} = this.props;
-        let promocode = promocodes.find(a => a.id == promocodeId);
+        let promocode = promocodes.find(a => a.id === promocodeId);
 
-        return (promocode.redeemed == 'No');
+        return (promocode.redeemed === 'No');
     }
 
     handlePageChange(page) {
@@ -108,7 +106,7 @@ class PromocodeListPage extends React.Component {
 
     handleSort(index, key, dir, func) {
         let {term, page, perPage, type} = this.props;
-        key = (key == 'name') ? 'last_name' : key;
+        key = (key === 'name') ? 'last_name' : key;
         this.props.getPromocodes(term, page, perPage, key, dir, type);
     }
 
@@ -144,10 +142,9 @@ class PromocodeListPage extends React.Component {
             }
         }
 
-        if(!currentSummit.id) return(<div></div>);
+        if(!currentSummit.id) return(<div />);
 
         let promocode_types_ddl = allTypes.map(t => ({label: t, value: t}));
-        let promocode_class_ddl = allClasses.map(c => ({label: c.class_name, value: c.class_name}));
 
         return(
             <div className="container">
@@ -180,7 +177,7 @@ class PromocodeListPage extends React.Component {
                     </div>
                 </div>
 
-                {promocodes.length == 0 &&
+                {promocodes.length === 0 &&
                 <div>{T.translate("promocode_list.no_promocodes")}</div>
                 }
 
@@ -216,7 +213,7 @@ class PromocodeListPage extends React.Component {
 const mapStateToProps = ({ currentSummitState, currentPromocodeListState }) => ({
     currentSummit   : currentSummitState.currentSummit,
     ...currentPromocodeListState
-})
+});
 
 export default connect (
     mapStateToProps,

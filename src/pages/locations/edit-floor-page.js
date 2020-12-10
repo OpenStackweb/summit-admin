@@ -23,20 +23,17 @@ import { getFloor, resetFloorForm, saveFloor, deleteRoom, attachFloorImage, dele
 class EditFloorPage extends React.Component {
 
     constructor(props) {
+        const {currentLocation, match} = props;
+        const floorId = match.params.floor_id;
         super(props);
 
-        this.handleRoomDelete = this.handleRoomDelete.bind(this);
-    }
-
-    componentWillMount () {
-        let {currentLocation} = this.props;
-        let floorId = this.props.match.params.floor_id;
-
-        if(!floorId || !currentLocation) {
-            this.props.resetFloorForm();
+        if (!floorId || !currentLocation) {
+            props.resetFloorForm();
         } else {
-            this.props.getFloor(currentLocation.id, floorId);
+            props.getFloor(currentLocation.id, floorId);
         }
+
+        this.handleRoomDelete = this.handleRoomDelete.bind(this);
     }
 
     componentWillReceiveProps(newProps) {
@@ -44,14 +41,14 @@ class EditFloorPage extends React.Component {
         let oldId = this.props.match.params.floor_id;
         let newId = newProps.match.params.floor_id;
 
-        if (oldId != newId && currentLocation) {
+        if (oldId !== newId && currentLocation) {
             this.props.getFloor(currentLocation.id, newId);
         }
     }
 
     handleRoomDelete(roomId) {
         let {deleteRoom, entity, currentLocation} = this.props;
-        let room = entity.rooms.find(r => r.id == roomId);
+        let room = entity.rooms.find(r => r.id === roomId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -74,7 +71,7 @@ class EditFloorPage extends React.Component {
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("edit_floor.floor")}</h3>
                 <hr/>
                 {currentSummit &&
@@ -99,7 +96,7 @@ const mapStateToProps = ({ currentSummitState, currentLocationState, currentFloo
     currentSummit : currentSummitState.currentSummit,
     currentLocation : currentLocationState.entity,
     ...currentFloorState
-})
+});
 
 export default connect (
     mapStateToProps,

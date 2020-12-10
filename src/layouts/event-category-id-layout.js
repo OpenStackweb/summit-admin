@@ -25,13 +25,15 @@ import {getEventCategory, resetEventCategoryForm} from "../actions/event-categor
 
 class EventCategoryIdLayout extends React.Component {
 
-    componentWillMount () {
-        let eventCategoryId = this.props.match.params.event_category_id;
+    constructor(props) {
+        super(props);
+
+        const eventCategoryId = props.match.params.event_category_id;
 
         if (!eventCategoryId) {
-            this.props.resetEventCategoryForm();
+            props.resetEventCategoryForm();
         } else {
-            this.props.getEventCategory(eventCategoryId);
+            props.getEventCategory(eventCategoryId);
         }
     }
 
