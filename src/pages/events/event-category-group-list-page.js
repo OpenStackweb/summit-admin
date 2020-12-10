@@ -38,7 +38,7 @@ class EventCategoryGroupListPage extends React.Component {
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
             this.props.getEventCategoryGroups();
         }
     }
@@ -55,7 +55,7 @@ class EventCategoryGroupListPage extends React.Component {
 
     handleDelete(groupId) {
         let {deleteEventCategoryGroup, eventCategoryGroups} = this.props;
-        let group = eventCategoryGroups.find(g => g.id == groupId);
+        let group = eventCategoryGroups.find(g => g.id === groupId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -89,7 +89,7 @@ class EventCategoryGroupListPage extends React.Component {
             }
         }
 
-        if(!currentSummit.id) return(<div></div>);
+        if(!currentSummit.id) return(<div />);
 
         return(
             <div className="container">
@@ -102,7 +102,7 @@ class EventCategoryGroupListPage extends React.Component {
                     </div>
                 </div>
 
-                {eventCategoryGroups.length == 0 &&
+                {eventCategoryGroups.length === 0 &&
                 <div>{T.translate("event_category_group_list.no_items")}</div>
                 }
 

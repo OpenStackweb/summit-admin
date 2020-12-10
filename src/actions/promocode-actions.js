@@ -86,7 +86,7 @@ export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'cod
         filter.push(`code=@${escapedTerm},creator=@${escapedTerm},creator_email=@${escapedTerm},owner=@${escapedTerm},owner_email=@${escapedTerm},speaker=@${escapedTerm},speaker_email=@${escapedTerm},sponsor=@${escapedTerm}`);
     }
 
-    if (type != 'ALL') {
+    if (type !== 'ALL') {
         filter.push(`type==${type}`);
     }
 
@@ -103,7 +103,7 @@ export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'cod
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -259,7 +259,7 @@ export const exportPromocodes = ( term = null, order = 'code', orderDir = 1, typ
         filter.push(`code=@${escapedTerm},creator=@${escapedTerm},creator_email=@${escapedTerm},owner=@${escapedTerm},owner_email=@${escapedTerm},speaker=@${escapedTerm},speaker_email=@${escapedTerm},sponsor=@${escapedTerm}`);
     }
 
-    if (type != 'ALL') {
+    if (type !== 'ALL') {
         filter.push(`type==${type}`);
     }
 
@@ -269,7 +269,7 @@ export const exportPromocodes = ( term = null, order = 'code', orderDir = 1, typ
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 

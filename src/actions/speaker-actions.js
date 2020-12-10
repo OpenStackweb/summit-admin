@@ -84,7 +84,7 @@ export const getSpeakers = ( term = null, page = 1, perPage = 10, order = 'id', 
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -370,7 +370,7 @@ export const getAttendances = ( term = null, page = 1, perPage = 10, order = 'id
 
     // order
     if(order != null && orderDir != null){
-        orderDir = (orderDir == '1') ? '+' : '-';
+        orderDir = (orderDir === '1') ? '+' : '-';
         params['order']= `${orderDir}${order}`;
     }
 
@@ -539,7 +539,7 @@ export const exportAttendances = ( term = null, order = 'code', orderDir = 1 ) =
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -596,7 +596,7 @@ export const getFeaturedSpeakers = ( term = null, page = 1, perPage = 10, order 
 
     // order
     if(order != null && orderDir != null){
-        orderDir = (orderDir == '1') ? '+' : '-';
+        orderDir = (orderDir === '1') ? '+' : '-';
         params['order']= `${orderDir}${order}`;
     }
 

@@ -239,7 +239,7 @@ class RegistrationInvitationsListPage extends React.Component {
             }
         }
 
-        if(!currentSummit.id) return (<div></div>);
+        if(!currentSummit.id) return (<div />);
 
         let flowEventsDDL = [
             {label: '-- SELECT EMAIL EVENT --', value: ''},
@@ -314,7 +314,7 @@ class RegistrationInvitationsListPage extends React.Component {
                         </div>
                     </div>
 
-                    {invitations.length == 0 &&
+                    {invitations.length === 0 &&
                     <div>{T.translate("registration_invitation_list.no_invitations")}</div>
                     }
 

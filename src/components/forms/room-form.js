@@ -14,8 +14,8 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
 import { Input, TextEditor, SimpleLinkList, Dropdown, UploadInput } from 'openstack-uicore-foundation/lib/components'
+import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 
 class RoomForm extends React.Component {
     constructor(props) {
@@ -33,18 +33,21 @@ class RoomForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const state = {};
+        scrollToError(this.props.errors);
 
-        this.setState({
-            entity: {...nextProps.entity},
-            errors: {...nextProps.errors}
-        });
+        if(prevProps.entity.id !== this.props.entity.id) {
+            state.entity = {...this.props.entity};
+            state.errors = {};
+        }
 
-        //scroll to first error
-        if(Object.keys(nextProps.errors).length > 0) {
-            let firstError = Object.keys(nextProps.errors)[0]
-            let firstNode = document.getElementById(firstError);
-            if (firstNode) window.scrollTo(0, findElementPos(firstNode));
+        if (!shallowEqual(prevProps.errors, this.props.errors)) {
+            state.errors = {...this.props.errors};
+        }
+
+        if (!isEmpty(state)) {
+            this.setState({...this.state, ...state})
         }
     }
 
@@ -53,11 +56,11 @@ class RoomForm extends React.Component {
         let errors = {...this.state.errors};
         let {value, id} = ev.target;
 
-        if (ev.target.type == 'number') {
+        if (ev.target.type === 'number') {
             value = parseInt(ev.target.value);
         }
 
-        if (ev.target.type == 'checkbox') {
+        if (ev.target.type === 'checkbox') {
             value = ev.target.checked;
         }
 
@@ -94,7 +97,7 @@ class RoomForm extends React.Component {
         });
 
         attributes = attributes.map(attr => {
-            let type = attributeTypes.find(at => at.id == attr.type_id);
+            let type = attributeTypes.find(at => at.id === attr.type_id);
             return ({...attr, label: `${type.type}: ${attr.value}`});
         });
 
@@ -146,7 +149,7 @@ class RoomForm extends React.Component {
 
         let roomAttributes = entity.attributes.map(attr => {
             let attributeTypes = currentSummit.meeting_booking_room_allowed_attributes;
-            let type = attributeTypes.find(at => at.id == attr.type_id);
+            let type = attributeTypes.find(at => at.id === attr.type_id);
 
             return ({...attr, label: `${type.type}: ${attr.value}`, type_name: type.type});
         });
@@ -171,7 +174,7 @@ class RoomForm extends React.Component {
                         <label> {T.translate("edit_room.type")} *</label>
                         <Dropdown
                             id="class_name"
-                            disabled={entity.id != 0}
+                            disabled={entity.id !== 0}
                             value={entity.class_name}
                             onChange={this.handleChange}
                             placeholder={T.translate("edit_room.placeholders.select_type")}
@@ -233,7 +236,7 @@ class RoomForm extends React.Component {
                     </div>
                 </div>
 
-                {entity.class_name == 'SummitBookableVenueRoom' &&
+                {entity.class_name === 'SummitBookableVenueRoom' &&
                 <div className="row form-group">
                     <div className="col-md-4">
                         <label> {T.translate("edit_room.slot_cost")}</label>
@@ -274,7 +277,7 @@ class RoomForm extends React.Component {
                 <br/>
                 <hr/>
 
-                {entity.class_name == 'SummitBookableVenueRoom' && entity.id != 0 &&
+                {entity.class_name === 'SummitBookableVenueRoom' && entity.id !== 0 &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <SimpleLinkList

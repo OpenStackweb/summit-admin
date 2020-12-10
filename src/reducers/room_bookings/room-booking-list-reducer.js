@@ -67,14 +67,14 @@ const roomBookingListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case ROOM_BOOKING_DELETED: {
             let {roomBookingId} = payload;
-            return {...state, roomBookings: state.roomBookings.filter(rb => rb.id != roomBookingId)};
+            return {...state, roomBookings: state.roomBookings.filter(rb => rb.id !== roomBookingId)};
         }
         break;
         case ROOM_BOOKING_REFUNDED: {
             let roomBooking = payload.response;
             let roomBookings = [...state.roomBookings];
             roomBookings.forEach(rb => {
-               if (rb.id == roomBooking.id) {
+               if (rb.id === roomBooking.id) {
                    rb.status = 'Refunded';
                    rb.refunded_amount_str = `$${roomBooking.refunded_amount}`
                }

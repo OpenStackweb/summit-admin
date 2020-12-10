@@ -15,7 +15,7 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import { Input, TextEditor, Panel, Table, UploadInput } from 'openstack-uicore-foundation/lib/components'
-import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/methods'
+import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 
 
 class FloorForm extends React.Component {
@@ -36,18 +36,21 @@ class FloorForm extends React.Component {
         this.handleNewRoom = this.handleNewRoom.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const state = {};
+        scrollToError(this.props.errors);
 
-        this.setState({
-            entity: {...nextProps.entity},
-            errors: {...nextProps.errors}
-        });
+        if(prevProps.entity.id !== this.props.entity.id) {
+            state.entity = {...this.props.entity};
+            state.errors = {};
+        }
 
-        //scroll to first error
-        if(Object.keys(nextProps.errors).length > 0) {
-            let firstError = Object.keys(nextProps.errors)[0]
-            let firstNode = document.getElementById(firstError);
-            if (firstNode) window.scrollTo(0, findElementPos(firstNode));
+        if (!shallowEqual(prevProps.errors, this.props.errors)) {
+            state.errors = {...this.props.errors};
+        }
+
+        if (!isEmpty(state)) {
+            this.setState({...this.state, ...state})
         }
     }
 
@@ -56,7 +59,7 @@ class FloorForm extends React.Component {
         let errors = {...this.state.errors};
         let {value, id} = ev.target;
 
-        if (ev.target.type == 'number') {
+        if (ev.target.type === 'number') {
             value = parseInt(ev.target.value);
         }
 
@@ -190,7 +193,7 @@ class FloorForm extends React.Component {
                 </div>
                 <br/>
 
-                {entity.id != 0 &&
+                {entity.id !== 0 &&
                 <Panel show={showRooms} title={T.translate("edit_location.rooms")}
                                      handleClick={this.toggleRooms.bind(this)}>
                     <button className="btn btn-primary pull-right left-space" onClick={this.handleNewRoom}>

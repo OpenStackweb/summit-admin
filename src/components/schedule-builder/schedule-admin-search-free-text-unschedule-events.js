@@ -58,10 +58,10 @@ class ScheduleAdminSearchFreeTextUnScheduleEvents extends React.Component {
                         />
                         <span className="input-group-btn" style={{width: 5 +'%'}}>
                             <button onClick={this.onSearchClick} className="btn btn-default btn-global-search unpublished_filter_button" title={T.translate("general.search")}>
-                                <i className="fa fa-search"></i>
+                                <i className="fa fa-search"/>
                             </button>
                             <button onClick={this.onClearClick} className="btn btn-default btn-global-search-clear" title={T.translate("general.clear")}>
-                                <i className="fa fa-times"></i>
+                                <i className="fa fa-times"/>
                             </button>
                         </span>
                     </div>

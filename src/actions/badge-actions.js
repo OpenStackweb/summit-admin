@@ -103,7 +103,7 @@ export const changeBadgeType = (badge) => (dispatch, getState) => {
         access_token : accessToken
     };
 
-    let newBadgeType = currentSummit.badge_types.find(bt => bt.id == badge.type_id);
+    let newBadgeType = currentSummit.badge_types.find(bt => bt.id === badge.type_id);
 
     return putRequest(
         null,
@@ -198,7 +198,7 @@ export const getBadgeTypes = ( order = 'name', orderDir = 1 ) => (dispatch, getS
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -448,7 +448,7 @@ export const getBadgeFeatures = ( order = 'name', orderDir = 1 ) => (dispatch, g
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -592,7 +592,7 @@ export const getAccessLevels = ( order = 'name', orderDir = 1 ) => (dispatch, ge
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 

@@ -38,7 +38,7 @@ class EditRsvpTemplatePage extends React.Component {
 
     handleDeleteQuestion(rsvpQuestionId) {
         let {deleteRsvpQuestion, entity} = this.props;
-        let question = entity.questions.find(q => q.id == rsvpQuestionId);
+        let question = entity.questions.find(q => q.id === rsvpQuestionId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),

@@ -144,7 +144,7 @@ const speakerReducer = (state = DEFAULT_STATE, action) => {
         break;
         case AFFILIATION_DELETED: {
             let {affiliationId} = payload;
-            let affiliations = state.entity.affiliations.filter(a => a.id != affiliationId);
+            let affiliations = state.entity.affiliations.filter(a => a.id !== affiliationId);
             return {...state, entity: {...state.entity, affiliations: affiliations}};
         }
         break;

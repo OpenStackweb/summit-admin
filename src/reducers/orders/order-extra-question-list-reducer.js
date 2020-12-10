@@ -20,7 +20,6 @@ import
 } from '../../actions/order-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
-import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 const DEFAULT_STATE = {
     orderExtraQuestions         : [],
@@ -66,7 +65,7 @@ const orderExtraQuestionListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case ORDER_EXTRA_QUESTION_DELETED: {
             let {orderExtraQuestionId} = payload;
-            return {...state, orderExtraQuestions: state.orderExtraQuestions.filter(t => t.id != orderExtraQuestionId)};
+            return {...state, orderExtraQuestions: state.orderExtraQuestions.filter(t => t.id !== orderExtraQuestionId)};
         }
         break;
         default:

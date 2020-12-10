@@ -14,8 +14,8 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
 import { Dropdown, Input, EditableTable } from 'openstack-uicore-foundation/lib/components'
+import {isEmpty, scrollToError, shallowEqual, hasErrors} from "../../utils/methods";
 
 
 class ExtraQuestionForm extends React.Component {
@@ -31,27 +31,30 @@ class ExtraQuestionForm extends React.Component {
         this.handleSubmit       = this.handleSubmit.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const state = {};
+        scrollToError(this.props.errors);
 
-        this.setState({
-            entity: {...nextProps.entity},
-            errors: {...nextProps.errors}
-        });
+        if(prevProps.entity.id !== this.props.entity.id) {
+            state.entity = {...this.props.entity};
+            state.errors = {};
+        }
 
-        //scroll to first error
-        if(Object.keys(nextProps.errors).length > 0) {
-            let firstError = Object.keys(nextProps.errors)[0]
-            let firstNode = document.getElementById(firstError);
-            if (firstNode) window.scrollTo(0, findElementPos(firstNode));
+        if (!shallowEqual(prevProps.errors, this.props.errors)) {
+            state.errors = {...this.props.errors};
+        }
+
+        if (!isEmpty(state)) {
+            this.setState({...this.state, ...state})
         }
     }
 
     handleChange(ev) {
-        let entity = {...this.state.entity};
-        let errors = {...this.state.errors};
+        const entity = {...this.state.entity};
+        const errors = {...this.state.errors};
         let {value, id} = ev.target;
 
-        if (ev.target.type == 'checkbox') {
+        if (ev.target.type === 'checkbox') {
             value = ev.target.checked;
         }
 
@@ -61,57 +64,40 @@ class ExtraQuestionForm extends React.Component {
     }
 
     handleSubmit(ev) {
-        let entity = {...this.state.entity};
-
         ev.preventDefault();
-
         this.props.onSubmit(this.state.entity);
     }
 
-    hasErrors(field) {
-        let {errors} = this.state;
-        if(field in errors) {
-            return errors[field];
-        }
-
-        return '';
-    }
-
     shouldShowField(field){
-        let {entity} = this.state;
+        const {entity} = this.state;
         if (!entity.type) return false;
-        let entity_type = this.props.questionClasses.find(c => c.type == entity.type);
+        const entity_type = this.props.questionClasses.find(c => c.type === entity.type);
 
         return (entity_type.hasOwnProperty(field) && entity_type[field]);
     }
 
     render() {
-        let {entity} = this.state;
-        let { onValueDelete, onValueSave, questionClasses } = this.props;
-        let question_class_ddl = questionClasses.map(c => ({label: c.type, value: c.type}));
-        let question_usage_ddl = [
+        const {entity, errors} = this.state;
+        const { onValueDelete, onValueSave, questionClasses } = this.props;
+        const question_class_ddl = questionClasses.map(c => ({label: c.type, value: c.type}));
+        const question_usage_ddl = [
             {label: 'Order', value: 'Order'},
             {label: 'Ticket', value: 'Ticket'},
             {label: 'Both', value: 'Both'}
         ];
 
-        let value_columns = [
+        const value_columns = [
             { columnKey: 'value', value: T.translate("question_form.value") },
             { columnKey: 'label', value: T.translate("question_form.visible_option") }
         ];
 
-        let value_options = {
+        const value_options = {
             noAlert: true,
             actions: {
                 save: {onClick: onValueSave},
                 delete: {onClick: onValueDelete}
             }
-        }
-
-        let question_values_ddl = [];
-        if (entity.values.length > 0) {
-            question_values_ddl = entity.values.map(v => ({label: v.value, value: v.id}));
-        }
+        };
 
         let sortedValues = [];
         if (this.shouldShowField('values')) {
@@ -143,7 +129,7 @@ class ExtraQuestionForm extends React.Component {
                             value={entity.name}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('name')}
+                            error={hasErrors('name', errors)}
                         />
                     </div>
                     <div className="col-md-3">
@@ -165,7 +151,7 @@ class ExtraQuestionForm extends React.Component {
                             value={entity.label}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('label')}
+                            error={hasErrors('label', errors)}
                         />
                     </div>
                     {(entity.type === 'Text' || entity.type === 'TextArea') &&
@@ -176,7 +162,7 @@ class ExtraQuestionForm extends React.Component {
                             value={entity.placeholder}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('placeholder')}
+                            error={hasErrors('placeholder', errors)}
                         />
                     </div>
                     }
@@ -204,7 +190,7 @@ class ExtraQuestionForm extends React.Component {
                 </div>
 
 
-                {this.shouldShowField('values') && entity.id != 0 &&
+                {this.shouldShowField('values') && entity.id !== 0 &&
                 <div className="row">
                     <div className="col-md-12">
                         <EditableTable

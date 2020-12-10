@@ -14,17 +14,16 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import {findElementPos} from 'openstack-uicore-foundation/lib/methods'
 import {
     Input,
     TextEditor,
     TagInput,
     Panel,
-    Table,
     SimpleLinkList,
     UploadInput
 } from 'openstack-uicore-foundation/lib/components'
 import {queryQuestions} from '../../actions/event-category-actions';
+import {isEmpty, scrollToError, shallowEqual, hasErrors} from "../../utils/methods";
 
 
 class EventCategoryForm extends React.Component {
@@ -47,27 +46,30 @@ class EventCategoryForm extends React.Component {
         this.handleRemovePic = this.handleRemovePic.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const state = {};
+        scrollToError(this.props.errors);
 
-        this.setState({
-            entity: {...nextProps.entity},
-            errors: {...nextProps.errors}
-        });
+        if(prevProps.entity.id !== this.props.entity.id) {
+            state.entity = {...this.props.entity};
+            state.errors = {};
+        }
 
-        //scroll to first error
-        if(Object.keys(nextProps.errors).length > 0) {
-            let firstError = Object.keys(nextProps.errors)[0]
-            let firstNode = document.getElementById(firstError);
-            if (firstNode) window.scrollTo(0, findElementPos(firstNode));
+        if (!shallowEqual(prevProps.errors, this.props.errors)) {
+            state.errors = {...this.props.errors};
+        }
+
+        if (!isEmpty(state)) {
+            this.setState({...this.state, ...state})
         }
     }
 
     handleChange(ev) {
-        let entity = {...this.state.entity};
-        let errors = {...this.state.errors};
+        const entity = {...this.state.entity};
+        const errors = {...this.state.errors};
         let {value, id} = ev.target;
 
-        if (ev.target.type == 'checkbox') {
+        if (ev.target.type === 'checkbox') {
             value = ev.target.checked;
         }
 
@@ -77,19 +79,8 @@ class EventCategoryForm extends React.Component {
     }
 
     handleSubmit(ev) {
-        let entity = {...this.state.entity};
         ev.preventDefault();
-
         this.props.onSubmit(this.state.entity);
-    }
-
-    hasErrors(field) {
-        let {errors} = this.state;
-        if(field in errors) {
-            return errors[field];
-        }
-
-        return '';
     }
 
     toggleQuestions(ev) {
@@ -98,19 +89,18 @@ class EventCategoryForm extends React.Component {
     }
 
     handleEditQuestion(questionId) {
-        let {currentSummit, entity, history} = this.props;
+        const {currentSummit, entity, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/event-categories/${entity.id}/questions/${questionId}`);
     }
 
     handleNewQuestion(ev) {
-        let {currentSummit, entity, history} = this.props;
-
+        const {currentSummit, entity, history} = this.props;
         ev.preventDefault();
         history.push(`/app/summits/${currentSummit.id}/event-categories/${entity.id}/questions/new`);
     }
 
     handleTagLink(value) {
-        let tags = [...this.state.entity.tags];
+        const tags = [...this.state.entity.tags];
         tags.push(value);
 
         let entity = {...this.state.entity, tags: tags};
@@ -118,9 +108,8 @@ class EventCategoryForm extends React.Component {
     }
 
     handleTagUnLink(value) {
-        let tags = this.state.entity.tags.filter(t => t.id != value);
-
-        let entity = {...this.state.entity, tags: tags};
+        const tags = this.state.entity.tags.filter(t => t.id !== value);
+        const entity = {...this.state.entity, tags: tags};
         this.setState({entity: entity});
     }
 
@@ -129,17 +118,17 @@ class EventCategoryForm extends React.Component {
     }
 
     handleUploadPic(file) {
-        let formData = new FormData();
+        const formData = new FormData();
         formData.append('file', file);
         this.props.onUploadImage(this.state.entity, formData);
     }
 
     render() {
-        let {entity, showQuestions} = this.state;
-        let { currentSummit, onQuestionUnLink, onQuestionLink } = this.props;
-        let { handleEditQuestion } = this;
+        const {entity, showQuestions, errors} = this.state;
+        const { currentSummit, onQuestionUnLink, onQuestionLink } = this.props;
+        const { handleEditQuestion } = this;
 
-        let questionColumns = [
+        const questionColumns = [
             { columnKey: 'id', value: T.translate("general.id") },
             { columnKey: 'class_name', value: T.translate("edit_event_category_question.class") },
             { columnKey: 'name', value: T.translate("edit_event_category_question.name") },
@@ -147,7 +136,7 @@ class EventCategoryForm extends React.Component {
             { columnKey: 'is_mandatory', value: T.translate("edit_event_category_question.mandatory") }
         ];
 
-        let questionOptions = {
+        const questionOptions = {
             valueKey: "id",
             labelKey: "name",
             defaultOptions: true,
@@ -157,7 +146,7 @@ class EventCategoryForm extends React.Component {
                 search: queryQuestions,
                 add: { onClick: onQuestionLink }
             }
-        }
+        };
 
         return (
             <form className="event-type-form">
@@ -170,7 +159,7 @@ class EventCategoryForm extends React.Component {
                             value={entity.name}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('name')}
+                            error={hasErrors('name', errors)}
                         />
                     </div>
                     <div className="col-md-4">
@@ -180,7 +169,7 @@ class EventCategoryForm extends React.Component {
                             value={entity.code}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('code')}
+                            error={hasErrors('code', errors)}
                         />
                     </div>
                     <div className="col-md-4">
@@ -201,7 +190,7 @@ class EventCategoryForm extends React.Component {
                             id="description"
                             value={entity.description}
                             onChange={this.handleChange}
-                            error={this.hasErrors('description')}
+                            error={hasErrors('description', errors)}
                         />
                     </div>
                 </div>
@@ -214,7 +203,7 @@ class EventCategoryForm extends React.Component {
                             value={entity.session_count}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('session_count')}
+                            error={hasErrors('session_count', errors)}
                         />
                     </div>
                     <div className="col-md-3">
@@ -225,7 +214,7 @@ class EventCategoryForm extends React.Component {
                             value={entity.alternate_count}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('alternate_count')}
+                            error={hasErrors('alternate_count', errors)}
                         />
                     </div>
                     <div className="col-md-3">
@@ -236,7 +225,7 @@ class EventCategoryForm extends React.Component {
                             value={entity.lightning_count}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('lightning_count')}
+                            error={hasErrors('lightning_count', errors)}
                         />
                     </div>
                     <div className="col-md-3">
@@ -247,7 +236,7 @@ class EventCategoryForm extends React.Component {
                             value={entity.lightning_alternate_count}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('lightning_alternate_count')}
+                            error={hasErrors('lightning_alternate_count', errors)}
                         />
                     </div>
                 </div>
@@ -273,7 +262,7 @@ class EventCategoryForm extends React.Component {
                 </div>
 
                 <hr />
-                {entity.id != 0 &&
+                {entity.id !== 0 &&
                 <Panel show={showQuestions} title={T.translate("edit_event_category.questions")}
                        handleClick={this.toggleQuestions.bind(this)}>
                     <button className="btn btn-primary pull-right left-space" onClick={this.handleNewQuestion}>
@@ -296,12 +285,12 @@ class EventCategoryForm extends React.Component {
                             value={entity.allowed_tags}
                             summitId={currentSummit.id}
                             onChange={this.handleChange}
-                            error={this.hasErrors('allowed_tags')}
+                            error={hasErrors('allowed_tags', errors)}
                         />
                     </div>
                 </div>
 
-                {entity.id != 0 &&
+                {entity.id !== 0 &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_event_category.pic")} </label>

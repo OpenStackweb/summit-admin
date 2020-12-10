@@ -122,7 +122,7 @@ class AdminAccessListPage extends React.Component {
                     </div>
                 </div>
 
-                {admin_accesses.length == 0 &&
+                {admin_accesses.length === 0 &&
                 <div>{T.translate("admin_access.no_results")}</div>
                 }
 

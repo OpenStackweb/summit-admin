@@ -66,7 +66,7 @@ const eventListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case EVENT_DELETED: {
             let {eventId} = payload;
-            return {...state, events: state.events.filter(e => e.id != eventId)};
+            return {...state, events: state.events.filter(e => e.id !== eventId)};
         }
         break;
         default:

@@ -105,7 +105,7 @@ const orderExtraQuestionReducer = (state = DEFAULT_STATE, action) => {
         break;
         case ORDER_EXTRA_QUESTION_VALUE_UPDATED: {
             let entity = {...payload.response};
-            let values_tmp = state.entity.values.filter(v => v.id != entity.id);
+            let values_tmp = state.entity.values.filter(v => v.id !== entity.id);
             let values = [...values_tmp, entity];
 
             values.sort((a, b) => (a.order > b.order ? 1 : (a.order < b.order ? -1 : 0)));
@@ -115,7 +115,7 @@ const orderExtraQuestionReducer = (state = DEFAULT_STATE, action) => {
         break;
         case ORDER_EXTRA_QUESTION_VALUE_DELETED: {
             let {orderExtraQuestionValueId} = payload;
-            return {...state, entity: {...state.entity, values: state.entity.values.filter(v => v.id != orderExtraQuestionValueId)}};
+            return {...state, entity: {...state.entity, values: state.entity.values.filter(v => v.id !== orderExtraQuestionValueId)}};
         }
         break;
         case VALIDATE: {

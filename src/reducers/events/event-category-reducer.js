@@ -87,7 +87,7 @@ const eventCategoryReducer = (state = DEFAULT_STATE, action) => {
         break;
         case EVENT_CATEGORY_QUESTION_DELETED: {
             let {questionId} = payload;
-            let extra_questions = state.entity.extra_questions.filter(eq => eq.id != questionId);
+            let extra_questions = state.entity.extra_questions.filter(eq => eq.id !== questionId);
 
             return {...state, entity: { ...state.entity, extra_questions: extra_questions}};
         }

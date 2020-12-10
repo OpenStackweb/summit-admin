@@ -15,8 +15,8 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import { TextEditor, MemberInput, UploadInput, Input, Panel } from 'openstack-uicore-foundation/lib/components';
-import { findElementPos } from 'openstack-uicore-foundation/lib/methods';
 import { AffiliationsTable } from '../tables/affiliationstable';
+import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 
 
 class SpeakerForm extends React.Component {
@@ -40,18 +40,21 @@ class SpeakerForm extends React.Component {
         this.toggleSummit = this.toggleSummit.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const state = {};
+        scrollToError(this.props.errors);
 
-        this.setState({
-            entity: {...nextProps.entity},
-            errors: {...nextProps.errors}
-        });
+        if(prevProps.entity.id !== this.props.entity.id) {
+            state.entity = {...this.props.entity};
+            state.errors = {};
+        }
 
-        //scroll to first error
-        if(Object.keys(nextProps.errors).length > 0) {
-            let firstError = Object.keys(nextProps.errors)[0]
-            let firstNode = document.getElementById(firstError);
-            if (firstNode) window.scrollTo(0, findElementPos(firstNode));
+        if (!shallowEqual(prevProps.errors, this.props.errors)) {
+            state.errors = {...this.props.errors};
+        }
+
+        if (!isEmpty(state)) {
+            this.setState({...this.state, ...state})
         }
     }
 
@@ -60,11 +63,11 @@ class SpeakerForm extends React.Component {
         let errors = {...this.state.errors};
         let {value, id} = ev.target;
 
-        if (ev.target.type == 'checkbox') {
+        if (ev.target.type === 'checkbox') {
             value = ev.target.checked;
         }
 
-        if (ev.target.type == 'memberinput') {
+        if (ev.target.type === 'memberinput') {
             entity.email = '';
         }
 
@@ -127,7 +130,7 @@ class SpeakerForm extends React.Component {
                         participation = 'Speaker';
                     }
 
-                    if (p.moderator_speaker_id == speakerId) {
+                    if (p.moderator_speaker_id === speakerId) {
                         participation += (participation) ? ' & Moderator' : 'Moderator';
                     }
 
@@ -155,7 +158,7 @@ class SpeakerForm extends React.Component {
         let assistances = this.state.entity.summit_assistances.filter( a => a.summit_id === summitId );
         let {history} = this.props;
 
-        if (assistances.length == 0) return (<div></div>);
+        if (assistances.length === 0) return (<div />);
 
         return (
             <div>
@@ -241,7 +244,7 @@ class SpeakerForm extends React.Component {
                         <Input
                             className="form-control"
                             id="email"
-                            disabled={entity.id != 0 || entity.member != null}
+                            disabled={entity.id !== 0 || entity.member != null}
                             value={entity.email}
                             onChange={this.handleChange}
                         />
@@ -287,7 +290,7 @@ class SpeakerForm extends React.Component {
                         <TextEditor id="bio" value={entity.bio} onChange={this.handleChange} />
                     </div>
                 </div>
-                {entity.id != 0 && entity.member != null &&
+                {entity.id !== 0 && entity.member != null &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_speaker.affiliations")} </label>
@@ -324,8 +327,8 @@ class SpeakerForm extends React.Component {
                 </div>
                 <br/>
                 <hr/>
-                { entity.id != 0 && lastSummits.map(s =>
-                    <Panel key={'last-summits-' + s.id} className="summit-data" show={showSummit == s.id} title={s.name} handleClick={this.toggleSummit.bind(this, s.id)} >
+                { entity.id !== 0 && lastSummits.map(s =>
+                    <Panel key={'last-summits-' + s.id} className="summit-data" show={showSummit === s.id} title={s.name} handleClick={this.toggleSummit.bind(this, s.id)} >
                         {this.getPresentations(s.id)}
                         {this.getAttendance(s.id)}
                         {this.getPromocodes(s.id)}

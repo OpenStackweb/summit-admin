@@ -76,7 +76,7 @@ class SummitDocListPage extends React.Component {
 
     handleDelete(summitDocId) {
         let {deleteSummitDoc, summitDocs} = this.props;
-        let summitDoc = summitDocs.find(s => s.id == summitDocId);
+        let summitDoc = summitDocs.find(s => s.id === summitDocId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -111,7 +111,7 @@ class SummitDocListPage extends React.Component {
             }
         }
 
-        if(!currentSummit.id) return(<div></div>);
+        if(!currentSummit.id) return(<div />);
 
         return(
             <div className="container">
@@ -131,7 +131,7 @@ class SummitDocListPage extends React.Component {
                     </div>
                 </div>
 
-                {summitDocs.length == 0 &&
+                {summitDocs.length === 0 &&
                 <div>{T.translate("summitdoc.no_items")}</div>
                 }
 

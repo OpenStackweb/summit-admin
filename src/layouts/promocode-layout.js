@@ -28,7 +28,7 @@ class PromocodeLayout extends React.Component {
         let { match } = this.props;
         return(
             <div>
-                <Breadcrumb data={{ title: T.translate("promocode_list.promocodes"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("promocode_list.promocodes"), pathname: match.url }} />
 
                 <Switch>
                     <Route strict exact path={match.url} component={PromocodeListPage}/>

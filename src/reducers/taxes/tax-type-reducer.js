@@ -83,7 +83,7 @@ const taxTypeReducer = (state = DEFAULT_STATE, action) => {
         break;
         case TAX_TICKET_REMOVED: {
             let { ticketId } = payload;
-            let ticketTypes = state.entity.ticket_types.filter(tt => tt.id != ticketId);
+            let ticketTypes = state.entity.ticket_types.filter(tt => tt.id !== ticketId);
             return {...state, entity: {...state.entity, ticket_types:ticketTypes}};
         }
         break;

@@ -13,7 +13,6 @@
 
 import
 {
-    REQUEST_UNSCHEDULE_EVENTS_PAGE,
     RECEIVE_UNSCHEDULE_EVENTS_PAGE,
     REQUEST_PUBLISH_EVENT,
     CHANGE_CURRENT_DAY,
@@ -131,7 +130,7 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
         break;
         case CHANGE_CURRENT_SCHEDULE_SEARCH_TERM:{
             let {term}               = payload;
-            let scheduleEventsSearch = (term == null || term == '') ? [] : state.scheduleEventsSearch;
+            let scheduleEventsSearch = (term == null || term === '') ? [] : state.scheduleEventsSearch;
             return {...state, scheduleEventsSearch, scheduleEventsCurrentSearchTerm : term };
         }
         break;

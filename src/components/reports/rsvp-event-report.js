@@ -12,7 +12,6 @@
  **/
 
 import React from 'react'
-import T from 'i18n-react/dist/i18n-react'
 import { Table } from 'openstack-uicore-foundation/lib/components'
 const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
@@ -41,7 +40,7 @@ class RsvpEventReport extends React.Component {
 
         if (sortKey) {
             let querySortKey = this.translateSortKey(sortKey);
-            let order = (sortDir == 1) ? '' : '-';
+            let order = (sortDir === 1) ? '' : '-';
             filters.ordering = order + '' + querySortKey;
         }
 
@@ -96,18 +95,18 @@ class RsvpEventReport extends React.Component {
                 let questionLabel = '';
 
                 if (a.question) {
-                    let question = questions.find(q => q.id == a.question.id);
+                    let question = questions.find(q => q.id === a.question.id);
                     questionLabel = question.label;
 
                     if(question.hasOwnProperty("values")) {
                         value = a.value.split(',').map(v => {
-                            let qValue = question.values.find(qv => qv.id == v);
+                            let qValue = question.values.find(qv => qv.id === v);
                             return qValue.value
                         }).join(', ');
                     }
                 }
 
-                if (idx == 0) {
+                if (idx === 0) {
                     columns.push({columnKey: 'question_' + idxA, value: questionLabel});
                 }
 
@@ -130,7 +129,7 @@ class RsvpEventReport extends React.Component {
         let {data, extraData, totalCount, sortKey, sortDir} = this.props;
         let storedDataName = this.props.name;
 
-        if (!extraData || !data || storedDataName != this.getName()) return (<div></div>)
+        if (!extraData || !data || storedDataName !== this.getName()) return (<div />)
 
         let report_options = {
             sortCol: sortKey,

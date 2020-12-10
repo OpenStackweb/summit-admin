@@ -12,7 +12,7 @@
  **/
 
 import React from 'react'
-import {Switch, Route, withRouter, Redirect} from 'react-router-dom';
+import {Switch, Route, Redirect} from 'react-router-dom';
 import T from "i18n-react/dist/i18n-react";
 import {connect} from "react-redux";
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -28,7 +28,7 @@ class EmailLayout extends React.Component {
 
         return(
             <div>
-                <Breadcrumb data={{ title: T.translate("emails.email_templates"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("emails.email_templates"), pathname: match.url }} />
 
                 <Switch>
                     <Route exact strict path={`${match.url}/templates`} component={EmailTemplateListPage}/>

@@ -92,7 +92,7 @@ const roomReducer = (state = DEFAULT_STATE, action) => {
         break;
         case ATTRIBUTE_REMOVED: {
             let {attributeId} = payload;
-            let attributes = state.entity.attributes.filter(at => at.id != attributeId);
+            let attributes = state.entity.attributes.filter(at => at.id !== attributeId);
             return {...state, entity: {...state.entity, attributes: attributes} };
         }
         break;

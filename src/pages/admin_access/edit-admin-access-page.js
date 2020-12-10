@@ -18,7 +18,6 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import AdminAccessForm from '../../components/forms/admin-access-form';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getAdminAccess, resetAdminAccessForm, saveAdminAccess } from "../../actions/admin-access-actions";
-import {Modal} from "react-bootstrap";
 
 //import '../../styles/edit-admin-access-page.less';
 

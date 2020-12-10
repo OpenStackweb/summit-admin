@@ -15,7 +15,7 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import { Input, EditableTable } from 'openstack-uicore-foundation/lib/components'
-import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/methods'
+import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 
 
 class RoomBookingAttributeForm extends React.Component {
@@ -32,18 +32,29 @@ class RoomBookingAttributeForm extends React.Component {
         this.handleDeleteAttribute = this.handleDeleteAttribute.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const state = {};
+        scrollToError(this.props.errors);
 
-        this.setState({
-            entity: {...nextProps.entity},
-        });
+        if(prevProps.entity.id !== this.props.entity.id) {
+            state.entity = {...this.props.entity};
+            state.errors = {};
+        }
+
+        if (!shallowEqual(prevProps.errors, this.props.errors)) {
+            state.errors = {...this.props.errors};
+        }
+
+        if (!isEmpty(state)) {
+            this.setState({...this.state, ...state})
+        }
     }
 
     handleChange(ev) {
         let entity = {...this.state.entity};
         let {value, id} = ev.target;
 
-        if (ev.target.type == 'number') {
+        if (ev.target.type === 'number') {
             value = parseInt(ev.target.value);
         }
 
@@ -98,7 +109,7 @@ class RoomBookingAttributeForm extends React.Component {
                     </div>
                 </div>
 
-                {entity.id != 0 &&
+                {entity.id !== 0 &&
                 <div className="row">
                     <div className="col-md-12">
                         <label> {T.translate("general.values")} *</label>

@@ -14,8 +14,8 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
 import { Dropdown, Input, EditableTable } from 'openstack-uicore-foundation/lib/components'
+import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 
 
 class QuestionForm extends React.Component {
@@ -31,18 +31,21 @@ class QuestionForm extends React.Component {
         this.handleSubmit       = this.handleSubmit.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const state = {};
+        scrollToError(this.props.errors);
 
-        this.setState({
-            entity: {...nextProps.entity},
-            errors: {...nextProps.errors}
-        });
+        if(prevProps.entity.id !== this.props.entity.id) {
+            state.entity = {...this.props.entity};
+            state.errors = {};
+        }
 
-        //scroll to first error
-        if(Object.keys(nextProps.errors).length > 0) {
-            let firstError = Object.keys(nextProps.errors)[0]
-            let firstNode = document.getElementById(firstError);
-            if (firstNode) window.scrollTo(0, findElementPos(firstNode));
+        if (!shallowEqual(prevProps.errors, this.props.errors)) {
+            state.errors = {...this.props.errors};
+        }
+
+        if (!isEmpty(state)) {
+            this.setState({...this.state, ...state})
         }
     }
 
@@ -51,7 +54,7 @@ class QuestionForm extends React.Component {
         let errors = {...this.state.errors};
         let {value, id} = ev.target;
 
-        if (ev.target.type == 'checkbox') {
+        if (ev.target.type === 'checkbox') {
             value = ev.target.checked;
         }
 
@@ -81,7 +84,7 @@ class QuestionForm extends React.Component {
     shouldShowField(field){
         let {entity} = this.state;
         if (!entity.class_name) return false;
-        let entity_type = this.props.questionClasses.find(c => c.class_name == entity.class_name);
+        let entity_type = this.props.questionClasses.find(c => c.class_name === entity.class_name);
 
         return (entity_type.hasOwnProperty(field) && entity_type[field]);
     }
@@ -260,7 +263,7 @@ class QuestionForm extends React.Component {
                     }
                 </div>
 
-                {this.shouldShowField('values') && entity.id != 0 &&
+                {this.shouldShowField('values') && entity.id !== 0 &&
                 <div className="row">
                     <div className="col-md-12">
                         <EditableTable

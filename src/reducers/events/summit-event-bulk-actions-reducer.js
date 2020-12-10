@@ -75,7 +75,7 @@ const summitEventBulkActionReducer = (state = DEFAULT_STATE, action) => {
             let { eventId, mutator }   = payload;
             let { eventOnBulkEdition } = state;
             eventOnBulkEdition = eventOnBulkEdition.map(event => {
-                return event.id == eventId ? mutator(event) : event
+                return event.id === eventId ? mutator(event) : event
             });
             return { ... state, eventOnBulkEdition}
             break;

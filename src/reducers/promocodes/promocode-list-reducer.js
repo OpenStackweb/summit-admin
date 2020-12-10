@@ -11,7 +11,6 @@
  * limitations under the License.
  **/
 
-import moment from 'moment-timezone';
 import
 {
     RECEIVE_PROMOCODES,
@@ -21,7 +20,6 @@ import
 } from '../../actions/promocode-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
-import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 const DEFAULT_STATE = {
     promocodes       : [],
@@ -115,7 +113,7 @@ const promocodeListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case PROMOCODE_DELETED: {
             let {promocodeId} = payload;
-            return {...state, promocodes: state.promocodes.filter(p => p.id != promocodeId)};
+            return {...state, promocodes: state.promocodes.filter(p => p.id !== promocodeId)};
         }
         break;
         default:

@@ -78,7 +78,7 @@ const tagGroupReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case TAG_REMOVED_FROM_GROUP: {
-            let allowed_tags = state.entity.allowed_tags.filter(t => t.id != payload);
+            let allowed_tags = state.entity.allowed_tags.filter(t => t.id !== payload);
             return {...state,  entity: {...state.entity, allowed_tags: allowed_tags} };
         }
         break;

@@ -13,7 +13,7 @@
 
 import React from 'react'
 import moment from 'moment-timezone'
-import {DateTimePicker, Dropdown, Input, Panel, Table} from 'openstack-uicore-foundation/lib/components'
+import {DateTimePicker, Dropdown, Panel, Table} from 'openstack-uicore-foundation/lib/components'
 const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
 import {groupByDate} from '../../utils/methods'
@@ -349,7 +349,7 @@ class MetricsReport extends React.Component {
         let storedDataName = this.props.name;
         const {eventType} = this.state;
 
-        if (!data || ( Array.isArray(data) && !data.length ) || storedDataName != this.getName()) return (<div></div>);
+        if (!data || ( Array.isArray(data) && !data.length ) || storedDataName !== this.getName()) return (<div />);
 
         let report_options = {
             sortCol: sortKey,

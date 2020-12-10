@@ -22,8 +22,6 @@ import BadgeForm from "../../components/forms/badge-form";
 import {getBadgeFeatures, getBadgeTypes, deleteBadge, addFeatureToBadge, removeFeatureFromBadge, changeBadgeType,
     printBadge} from "../../actions/badge-actions";
 import Swal from "sweetalert2";
-import NoMatchPage from "../no-match-page";
-import { Input } from 'openstack-uicore-foundation/lib/components'
 
 
 //import '../../styles/edit-ticket-page.less';

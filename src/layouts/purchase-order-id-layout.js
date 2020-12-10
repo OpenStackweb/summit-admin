@@ -13,7 +13,7 @@
 
 import React from 'react'
 import {connect} from "react-redux";
-import { Switch, Route, withRouter } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import Restrict from '../routes/restrict';
@@ -60,16 +60,16 @@ class PurchaseOrderIdLayout extends React.Component {
         let orderId = match.params.purchase_order_id;
         let breadcrumb = currentPurchaseOrder.id ? `...${currentPurchaseOrder.number.slice(-20)}` : T.translate("general.new");
 
-        if (orderId && !currentPurchaseOrder.id) return (<div></div>);
+        if (orderId && !currentPurchaseOrder.id) return (<div />);
 
         return (
             <div>
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <Switch>
                     <Route strict exact path={`${match.url}/tickets/:ticket_id(\\d+)`} render={
                         props => (
                             <div>
-                                <Breadcrumb data={{ title: T.translate("purchase_order_list.tickets"), pathname: match.url }} ></Breadcrumb>
+                                <Breadcrumb data={{ title: T.translate("purchase_order_list.tickets"), pathname: match.url }} />
                                 <EditTicketPage {...props} />
                             </div>
                         )}

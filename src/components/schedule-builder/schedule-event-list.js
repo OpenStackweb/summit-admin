@@ -68,7 +68,7 @@ class TimeSlotContainer extends React.Component {
                 position: 'relative',
                 width: '100%',
                 height: `${container_height}px`
-            }}></div>;
+            }}/>;
         }
 
         return minutesContainers;
@@ -227,7 +227,7 @@ class ScheduleEventList extends React.Component
                 <div className="col-md-2 no-margin no-padding">
                     {
                         timeSlotsList.map((slot, idx) => (
-                            <TimeSlot timeLabel={slot.format("HH:mm")} key={idx} id={slot.format("HH_mm")}></TimeSlot>
+                            <TimeSlot timeLabel={slot.format("HH:mm")} key={idx} id={slot.format("HH_mm")} />
                         ))
                     }
                 </div>

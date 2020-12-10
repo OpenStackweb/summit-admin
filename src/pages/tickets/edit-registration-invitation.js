@@ -26,7 +26,7 @@ import RegistrationInvitationEmailActivity from "../../components/forms/registra
 class EditRegistrationInvitationPage extends React.Component {
 
     componentDidMount () {
-        let {currentSummit, getSentEmailsByTemplatesAndEmail} = this.props;
+        let {getSentEmailsByTemplatesAndEmail} = this.props;
         let registrationInvitationId = this.props.match.params.registration_invitation_id;
 
         if (!registrationInvitationId) {
@@ -47,7 +47,6 @@ class EditRegistrationInvitationPage extends React.Component {
     }
 
     componentWillReceiveProps(newProps) {
-        let {currentSummit} = newProps;
         let oldId = this.props.match.params.registration_invitation_id;
         let newId = newProps.match.params.registration_invitation_id;
 
@@ -67,7 +66,7 @@ class EditRegistrationInvitationPage extends React.Component {
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("edit_registration_invitation.registration_invitation")}</h3>
                 <hr/>
                 {currentSummit &&

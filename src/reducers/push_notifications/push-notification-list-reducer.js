@@ -21,7 +21,6 @@ import
 } from '../../actions/push-notification-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
-import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 import moment from 'moment-timezone';
 
 
@@ -53,8 +52,8 @@ const pushNotificationListReducer = (state = DEFAULT_STATE, action) => {
         case RECEIVE_PUSH_NOTIFICATIONS: {
             let { current_page, total, last_page } = payload.response;
             let pushNotifications = payload.response.data.map(n => {
-                let check = '<i class="fa fa-check" aria-hidden="true"></i>';
-                let cross = '<i class="fa fa-times" aria-hidden="true"></i>';
+                let check = '<i class="fa fa-check" aria-hidden="true"/>';
+                let cross = '<i class="fa fa-times" aria-hidden="true"/>';
                 let created = (n.created ? moment(n.created * 1000).format('M/D h:mma') : 'No');
                 let sent = (n.sent_date ? moment(n.sent_date * 1000).format('M/D h:mma') : 'No');
 
@@ -83,15 +82,15 @@ const pushNotificationListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case PUSH_NOTIFICATION_DELETED: {
             let {pushNotificationId} = payload;
-            return {...state, pushNotifications: state.pushNotifications.filter(t => t.id != pushNotificationId)};
+            return {...state, pushNotifications: state.pushNotifications.filter(t => t.id !== pushNotificationId)};
         }
         break;
         case PUSH_NOTIFICATION_APPROVED: {
             let {pushNotificationId} = payload;
-            let check = '<i class="fa fa-check" aria-hidden="true"></i>';
+            let check = '<i class="fa fa-check" aria-hidden="true"/>';
 
             let pushNotifications = state.pushNotifications.map(p => {
-                if (p.id == pushNotificationId) {
+                if (p.id === pushNotificationId) {
                     return {...p, approved: true, approved_tag: check};
                 } else {
                     return p;
@@ -102,10 +101,10 @@ const pushNotificationListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case PUSH_NOTIFICATION_REJECTED: {
             let {pushNotificationId} = payload;
-            let cross = '<i class="fa fa-times" aria-hidden="true"></i>';
+            let cross = '<i class="fa fa-times" aria-hidden="true"/>';
 
             let pushNotifications = state.pushNotifications.map(p => {
-                if (p.id == pushNotificationId) {
+                if (p.id === pushNotificationId) {
                     return {...p, approved: false, approved_tag: cross};
                 } else {
                     return p;

@@ -46,7 +46,7 @@ class EmailFlowEventListPage extends React.Component {
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
             this.props.getEmailFlowEvents();
         }
     }
@@ -82,7 +82,7 @@ class EmailFlowEventListPage extends React.Component {
             }
         }
 
-        if(!currentSummit.id) return (<div></div>);
+        if(!currentSummit.id) return (<div />);
 
         return(
             <div className="container">
@@ -97,7 +97,7 @@ class EmailFlowEventListPage extends React.Component {
                     </div>
                 </div>
 
-                {emailFlowEvents.length == 0 &&
+                {emailFlowEvents.length === 0 &&
                 <div>{T.translate("email_flow_event_list.no_email_flow_events")}</div>
                 }
 

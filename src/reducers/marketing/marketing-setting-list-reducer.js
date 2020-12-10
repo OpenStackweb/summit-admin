@@ -60,7 +60,7 @@ const marketingSettingListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case SETTING_DELETED: {
             let {settingId} = payload;
-            return {...state, settings: state.settings.filter(s => s.id != settingId)};
+            return {...state, settings: state.settings.filter(s => s.id !== settingId)};
         }
         break;
         default:

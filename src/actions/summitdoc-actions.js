@@ -14,8 +14,6 @@ import T from "i18n-react/dist/i18n-react";
 import history from '../history'
 import {
     getRequest,
-    putRequest,
-    postRequest,
     deleteRequest,
     createAction,
     stopLoading,

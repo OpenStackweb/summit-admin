@@ -19,7 +19,6 @@ import
 } from '../../actions/speaker-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
-import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 import {formatEpoch} from 'openstack-uicore-foundation/lib/methods'
 
 const DEFAULT_STATE = {
@@ -69,7 +68,7 @@ const speakerAttendanceListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case ATTENDANCE_DELETED: {
             let {attendanceId} = payload;
-            return {...state, attendances: state.attendances.filter(a => a.id != attendanceId)};
+            return {...state, attendances: state.attendances.filter(a => a.id !== attendanceId)};
         }
         break;
         default:

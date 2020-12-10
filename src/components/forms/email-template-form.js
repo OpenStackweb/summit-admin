@@ -15,7 +15,6 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import {Dropdown, Input} from 'openstack-uicore-foundation/lib/components'
-import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
 import EmailTemplateInput from '../inputs/email-template-input'
 import CodeMirror from '@uiw/react-codemirror';
 import 'codemirror/keymap/sublime';
@@ -25,6 +24,7 @@ import 'codemirror/addon/comment/comment';
 import 'codemirror/addon/edit/closebrackets';
 import 'codemirror/addon/edit/matchtags';
 import 'codemirror/addon/edit/closetag';
+import {isEmpty, scrollToError, shallowEqual, hasErrors} from "../../utils/methods";
 
 class EmailTemplateForm extends React.Component {
     constructor(props) {
@@ -41,39 +41,42 @@ class EmailTemplateForm extends React.Component {
         this.handleCodeMirrorChange = this.handleCodeMirrorChange.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const state = {};
+        scrollToError(this.props.errors);
 
-        this.setState({
-            entity: {...nextProps.entity},
-            errors: {...nextProps.errors}
-        });
+        if(prevProps.entity.id !== this.props.entity.id) {
+            state.entity = {...this.props.entity};
+            state.errors = {};
+        }
 
-        //scroll to first error
-        if(Object.keys(nextProps.errors).length > 0) {
-            let firstError = Object.keys(nextProps.errors)[0]
-            let firstNode = document.getElementById(firstError);
-            if (firstNode) window.scrollTo(0, findElementPos(firstNode));
+        if (!shallowEqual(prevProps.errors, this.props.errors)) {
+            state.errors = {...this.props.errors};
+        }
+
+        if (!isEmpty(state)) {
+            this.setState({...this.state, ...state})
         }
     }
 
     handleCodeMirrorChange(instance, change){
-        let entity = {...this.state.entity};
-        let errors = {...this.state.errors};
+        const entity = {...this.state.entity};
+        const errors = {...this.state.errors};
         errors['html_content' ] = '';
         entity['html_content'] = instance.getValue();
         this.setState({entity: entity, errors: errors});
     }
 
     handleChange(ev) {
-        let entity = {...this.state.entity};
-        let errors = {...this.state.errors};
+        const entity = {...this.state.entity};
+        const errors = {...this.state.errors};
         let {value, id} = ev.target;
 
-        if (ev.target.type == 'checkbox') {
+        if (ev.target.type === 'checkbox') {
             value = ev.target.checked;
         }
 
-        if (ev.target.type == 'number') {
+        if (ev.target.type === 'number') {
             value = parseInt(ev.target.value);
         }
 
@@ -83,39 +86,24 @@ class EmailTemplateForm extends React.Component {
     }
 
     handleSubmit(ev) {
-        let {entity} = this.state;
+        const {entity} = this.state;
         ev.preventDefault();
 
         this.props.onSubmit(entity);
     }
 
     handlePreview(ev) {
-        let {entity} = this.state;
+        const {entity} = this.state;
         ev.preventDefault();
 
         this.props.onSubmit(entity, true);
         this.props.onRender();
     }
 
-    handleSendTest(ev) {
-        let {entity} = this.state;
-        ev.preventDefault();
-
-        console.log('Test Sent');
-    }
-
-    hasErrors(field) {
-        let {errors} = this.state;
-        if(field in errors) {
-            return errors[field];
-        }
-        return '';
-    }
-
     render() {
-        let {entity} = this.state;
-        let { currentSummit, clients } = this.props;
-        let email_clients_ddl = clients ? clients.map(cli => ({label: cli.name, value: cli.id})) : [];
+        const {entity, errors} = this.state;
+        const { clients } = this.props;
+        const email_clients_ddl = clients ? clients.map(cli => ({label: cli.name, value: cli.id})) : [];
 
         return (
             <form className="email-template-form">
@@ -128,7 +116,7 @@ class EmailTemplateForm extends React.Component {
                             value={entity.identifier}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('identifier')}
+                            error={hasErrors('identifier', errors)}
                         />
                     </div>
                     <div className="col-md-4">
@@ -161,7 +149,7 @@ class EmailTemplateForm extends React.Component {
                             value={entity.from_email}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('from_email')}
+                            error={hasErrors('from_email', errors)}
                         />
                     </div>
                     <div className="col-md-4">
@@ -171,7 +159,7 @@ class EmailTemplateForm extends React.Component {
                             value={entity.subject}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('subject')}
+                            error={hasErrors('subject', errors)}
                         />
                     </div>
                     <div className="col-md-4">
@@ -182,7 +170,7 @@ class EmailTemplateForm extends React.Component {
                             value={entity.max_retries}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('max_retries')}
+                            error={hasErrors('max_retries', errors)}
                         />
                     </div>
                 </div>

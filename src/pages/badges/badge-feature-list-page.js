@@ -43,7 +43,7 @@ class BadgeFeatureListPage extends React.Component {
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
             this.props.getBadgeFeatures();
         }
     }
@@ -55,7 +55,7 @@ class BadgeFeatureListPage extends React.Component {
 
     handleDelete(badgeFeatureId) {
         let {deleteBadgeFeature, badgeFeatures} = this.props;
-        let badgeFeature = badgeFeatures.find(t => t.id == badgeFeatureId);
+        let badgeFeature = badgeFeatures.find(t => t.id === badgeFeatureId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -98,7 +98,7 @@ class BadgeFeatureListPage extends React.Component {
             }
         }
 
-        if(!currentSummit.id) return (<div></div>);
+        if(!currentSummit.id) return (<div/>);
 
         return(
             <div className="container">
@@ -111,7 +111,7 @@ class BadgeFeatureListPage extends React.Component {
                     </div>
                 </div>
 
-                {badgeFeatures.length == 0 &&
+                {badgeFeatures.length === 0 &&
                 <div>{T.translate("badge_feature_list.no_badge_features")}</div>
                 }
 

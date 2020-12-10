@@ -54,7 +54,7 @@ const companyListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case COMPANY_DELETED: {
             let {companyId} = payload;
-            return {...state, companies: state.companies.filter(s => s.id != companyId)};
+            return {...state, companies: state.companies.filter(s => s.id !== companyId)};
         }
         break;
         default:

@@ -14,7 +14,7 @@ export default class DiscountTicketActionsTableCell extends React.Component {
             <td className="actions">
                 {'delete' in actions &&
                 <a href="" onClick={this.onDelete.bind(this,id)} data-tip="delete" >
-                    <i className="fa fa-trash-o"></i>
+                    <i className="fa fa-trash-o"/>
                 </a>
                 }
             </td>

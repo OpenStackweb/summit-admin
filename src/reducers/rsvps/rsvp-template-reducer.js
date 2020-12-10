@@ -100,7 +100,7 @@ const rsvpTemplateReducer = (state = DEFAULT_STATE, action) => {
         break;
         case RSVP_QUESTION_UPDATED: {
             let entity = {...payload.response};
-            let questions_tmp = state.entity.questions.filter(q => q.id != entity.id);
+            let questions_tmp = state.entity.questions.filter(q => q.id !== entity.id);
             let questions = [...questions_tmp, entity];
 
             questions.sort((a, b) => (a.order > b.order ? 1 : (a.order < b.order ? -1 : 0)));
@@ -110,7 +110,7 @@ const rsvpTemplateReducer = (state = DEFAULT_STATE, action) => {
         break;
         case RSVP_QUESTION_DELETED: {
             let {rsvpQuestionId} = payload;
-            return {...state, entity: {...state.entity, questions: state.entity.questions.filter(q => q.id != rsvpQuestionId)}};
+            return {...state, entity: {...state.entity, questions: state.entity.questions.filter(q => q.id !== rsvpQuestionId)}};
         }
         break;
         case VALIDATE: {

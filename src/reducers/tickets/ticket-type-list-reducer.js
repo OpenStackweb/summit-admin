@@ -20,7 +20,6 @@ import
 } from '../../actions/ticket-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
-import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 const DEFAULT_STATE = {
     ticketTypes         : [],
@@ -72,7 +71,7 @@ const ticketTypeListReducer = (state = DEFAULT_STATE, action) => {
             break;
         case TICKET_TYPE_DELETED: {
             let {ticketTypeId} = payload;
-            return {...state, ticketTypes: state.ticketTypes.filter(t => t.id != ticketTypeId)};
+            return {...state, ticketTypes: state.ticketTypes.filter(t => t.id !== ticketTypeId)};
         }
         break;
         default:

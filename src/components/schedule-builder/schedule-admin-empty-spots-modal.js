@@ -72,7 +72,7 @@ class ScheduleAdminEmptySpotsModal extends React.Component {
 
     getValidationDateFrom(){
         let { dateFrom } = this. state;
-        let isValid = dateFrom != null && dateFrom != '';
+        let isValid = dateFrom != null && dateFrom !== '';
         this.validationState = { ... this.validationState, dateFrom: isValid};
         return isValid ? 'success' : 'warning';
     }
@@ -84,7 +84,7 @@ class ScheduleAdminEmptySpotsModal extends React.Component {
 
     getValidationDateTo(){
         let { dateTo, dateFrom } = this. state;
-        let isValid = dateTo != null && dateTo != '' && ( dateFrom != null && dateTo.isAfter(dateFrom));
+        let isValid = dateTo != null && dateTo !== '' && ( dateFrom != null && dateTo.isAfter(dateFrom));
         this.validationState = { ... this.validationState, dateTo: isValid};
         return isValid ? 'success' : 'warning';
     }
@@ -122,7 +122,7 @@ class ScheduleAdminEmptySpotsModal extends React.Component {
         let venues = [];
         for(let i = 0; i < currentSummit.locations.length; i++) {
             let location = currentSummit.locations[i];
-            if (location.class_name != "SummitVenue") continue;
+            if (location.class_name !== "SummitVenue") continue;
             let option = { value : location, label: location.name };
             venues.push(option);
             if(!location.hasOwnProperty('rooms')) continue;

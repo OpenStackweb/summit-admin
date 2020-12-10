@@ -46,7 +46,7 @@ class SpeakerAttendanceListPage extends React.Component {
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit != null && currentSummit.id !== newProps.currentSummit.id) {
             this.props.getAttendances();
         }
     }
@@ -73,7 +73,7 @@ class SpeakerAttendanceListPage extends React.Component {
 
     handleDeleteAttendance(attendanceId) {
         let {deleteAttendance, attendances} = this.props;
-        let attendance = attendances.find(a => a.id == attendanceId);
+        let attendance = attendances.find(a => a.id === attendanceId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -92,9 +92,9 @@ class SpeakerAttendanceListPage extends React.Component {
     isNotConfirmed(attendanceId) {
 
         let {attendances} = this.props;
-        let attendance = attendances.find(a => a.id == attendanceId);
+        let attendance = attendances.find(a => a.id === attendanceId);
 
-        return (attendance.is_confirmed == 'No');
+        return (attendance.is_confirmed === 'No');
     }
 
     handleExport(ev) {
@@ -131,7 +131,7 @@ class SpeakerAttendanceListPage extends React.Component {
             }
         }
 
-        if(!currentSummit.id) return(<div></div>);
+        if(!currentSummit.id) return(<div />);
 
         return(
             <div className="container">
@@ -154,7 +154,7 @@ class SpeakerAttendanceListPage extends React.Component {
                     </div>
                 </div>
 
-                {attendances.length == 0 &&
+                {attendances.length === 0 &&
                 <div>{T.translate("speaker_attendance_list.no_attendances")}</div>
                 }
 

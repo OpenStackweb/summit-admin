@@ -27,7 +27,7 @@ class RegistrationInvitationLayout extends React.Component {
         let { match } = this.props;
         return(
             <div>
-                <Breadcrumb data={{ title: T.translate("registration_invitations.registration_invitations"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("registration_invitations.registration_invitations"), pathname: match.url }} />
                 <Switch>
                     <Route strict exact path={match.url} component={RegistrationInvitationsListPage}/>
                     <Route strict exact path={`${match.url}/new`} component={EditRegistrationInvitationPage}/>

@@ -54,15 +54,15 @@ export const getPushNotifications = ( page = 1, perPage = 10, order = 'created',
     };
 
     if (filters) {
-        if (filters.approved_filter != 'ALL') {
+        if (filters.approved_filter !== 'ALL') {
             filter.push(`approved==${filters.approved_filter}`);
         }
 
-        if (filters.sent_filter != 'ALL') {
+        if (filters.sent_filter !== 'ALL') {
             filter.push(`is_sent==${filters.sent_filter}`);
         }
 
-        if (filters.channel_filter != 'ALL') {
+        if (filters.channel_filter !== 'ALL') {
             filter.push(`channel==${filters.channel_filter}`);
         }
     }
@@ -73,7 +73,7 @@ export const getPushNotifications = ( page = 1, perPage = 10, order = 'created',
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 

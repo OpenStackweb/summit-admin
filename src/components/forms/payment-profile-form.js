@@ -13,10 +13,8 @@
 
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
-import {
-    findElementPos,
-} from 'openstack-uicore-foundation/lib/methods'
 import { Input, Dropdown } from 'openstack-uicore-foundation/lib/components';
+import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 
 class PaymentProfileForm extends React.Component {
 
@@ -32,18 +30,21 @@ class PaymentProfileForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const state = {};
+        scrollToError(this.props.errors);
 
-        this.setState({
-            entity: {...nextProps.entity},
-            errors: {...nextProps.errors}
-        });
+        if(prevProps.entity.id !== this.props.entity.id) {
+            state.entity = {...this.props.entity};
+            state.errors = {};
+        }
 
-        //scroll to first error
-        if(Object.keys(nextProps.errors).length > 0) {
-            let firstError = Object.keys(nextProps.errors)[0]
-            let firstNode = document.getElementById(firstError);
-            if (firstNode) window.scrollTo(0, findElementPos(firstNode));
+        if (!shallowEqual(prevProps.errors, this.props.errors)) {
+            state.errors = {...this.props.errors};
+        }
+
+        if (!isEmpty(state)) {
+            this.setState({...this.state, ...state})
         }
     }
 
@@ -52,11 +53,11 @@ class PaymentProfileForm extends React.Component {
         let errors = {...this.state.errors};
         let {value, id} = ev.target;
 
-        if (ev.target.type == 'checkbox') {
+        if (ev.target.type === 'checkbox') {
             value = ev.target.checked;
         }
 
-        if (ev.target.type == 'datetime') {
+        if (ev.target.type === 'datetime') {
             value = value.valueOf() / 1000;
         }
 
@@ -129,7 +130,7 @@ class PaymentProfileForm extends React.Component {
                             <label className="form-check-label" htmlFor="test_mode_enabled">
                                 {T.translate("edit_payment_profile.test_mode_enabled")}
                             </label>
-                            &nbsp;<i className="fa fa-info-circle pointable" aria-hidden="true" title={T.translate("edit_payment_profile.info_stripe_test_mode")}></i>
+                            &nbsp;<i className="fa fa-info-circle pointable" aria-hidden="true" title={T.translate("edit_payment_profile.info_stripe_test_mode")}/>
                         </div>
                     </div>
                     <div className="col-md-4 checkboxes-div">
@@ -139,14 +140,14 @@ class PaymentProfileForm extends React.Component {
                             <label className="form-check-label" htmlFor="send_email_receipt">
                                 {T.translate("edit_payment_profile.send_email_receipt")}
                             </label>
-                            &nbsp;<i className="fa fa-info-circle pointable" aria-hidden="true" title={T.translate("edit_payment_profile.info_send_email_receipt")}></i>
+                            &nbsp;<i className="fa fa-info-circle pointable" aria-hidden="true" title={T.translate("edit_payment_profile.info_send_email_receipt")}/>
                         </div>
                     </div>
                 </div>
                 <div className="row form-group">
                     <div className="col-md-6">
                         <label> {T.translate("edit_payment_profile.live_secret_key")}</label>
-                        &nbsp;<i className="fa fa-info-circle" aria-hidden="true" title={T.translate("edit_payment_profile.info_stripe_keys")}></i>
+                        &nbsp;<i className="fa fa-info-circle" aria-hidden="true" title={T.translate("edit_payment_profile.info_stripe_keys")}/>
                         <Input
                             id="live_secret_key"
                             className="form-control"
@@ -157,7 +158,7 @@ class PaymentProfileForm extends React.Component {
                     </div>
                     <div className="col-md-6">
                         <label> {T.translate("edit_payment_profile.live_publishable_key")}</label>
-                        &nbsp;<i className="fa fa-info-circle" aria-hidden="true" title={T.translate("edit_payment_profile.info_stripe_keys")}></i>
+                        &nbsp;<i className="fa fa-info-circle" aria-hidden="true" title={T.translate("edit_payment_profile.info_stripe_keys")}/>
                         <Input
                             id="live_publishable_key"
                             className="form-control"
@@ -170,7 +171,7 @@ class PaymentProfileForm extends React.Component {
                 <div className="row form-group">
                     <div className="col-md-6">
                         <label> {T.translate("edit_payment_profile.test_secret_key")}</label>
-                        &nbsp;<i className="fa fa-info-circle" aria-hidden="true" title={T.translate("edit_payment_profile.info_stripe_keys")}></i>
+                        &nbsp;<i className="fa fa-info-circle" aria-hidden="true" title={T.translate("edit_payment_profile.info_stripe_keys")}/>
                         <Input
                             id="test_secret_key"
                             className="form-control"
@@ -181,7 +182,7 @@ class PaymentProfileForm extends React.Component {
                     </div>
                     <div className="col-md-6">
                         <label> {T.translate("edit_payment_profile.test_publishable_key")}</label>
-                        &nbsp;<i className="fa fa-info-circle" aria-hidden="true" title={T.translate("edit_payment_profile.info_stripe_keys")}></i>
+                        &nbsp;<i className="fa fa-info-circle" aria-hidden="true" title={T.translate("edit_payment_profile.info_stripe_keys")}/>
                         <Input
                             id="test_publishable_key"
                             className="form-control"

@@ -13,7 +13,7 @@
 
 import React from 'react'
 import { connect } from 'react-redux';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
 
@@ -77,7 +77,7 @@ class SummitIdLayout extends React.Component {
         let oldId = this.props.match.params.summit_id;
         let newId = newProps.match.params.summit_id;
 
-        if (newId != oldId) {
+        if (newId !== oldId) {
             if (!newId) {
                 this.props.resetSummitForm();
             } else {
@@ -91,11 +91,11 @@ class SummitIdLayout extends React.Component {
         let summitId = this.props.match.params.summit_id;
         let breadcrumb = currentSummit.id ? currentSummit.name : T.translate("general.new_summit");
 
-        if (!currentSummit.id || summitId != currentSummit.id) return (<div></div>);
+        if (!currentSummit.id || parseInt(summitId) !== currentSummit.id) return (<div />);
 
         return(
             <div>
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
 
                 <Switch>
                     <Route strict exact path={`${match.url}/dashboard`} component={SummitDashboardPage} />

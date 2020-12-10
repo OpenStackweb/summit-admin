@@ -25,8 +25,8 @@ class ScheduleAdminEmptySpotsList extends React.Component
         let lastLocation    = null;
         let idx             = 1;
         for(let spot of emptySpots){
-            if(lastLocation == null || lastLocation.id != spot.location_id) {
-                lastLocation = currentSummit.locations.filter((location) => location.id == spot.location_id).shift();
+            if(lastLocation == null || lastLocation.id !== spot.location_id) {
+                lastLocation = currentSummit.locations.filter((location) => location.id === spot.location_id).shift();
                 emptySpotsItems.push(<li key={idx} className="empty-spot-location"><h2>{ lastLocation.name }</h2></li>)
                 ++idx;
             }

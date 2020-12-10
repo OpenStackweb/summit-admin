@@ -60,7 +60,7 @@ const emailTemplateListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case TEMPLATE_DELETED: {
             let {templateId} = payload;
-            return {...state, templates: state.templates.filter(s => s.id != templateId)};
+            return {...state, templates: state.templates.filter(s => s.id !== templateId)};
         }
         break;
         default:

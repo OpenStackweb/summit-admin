@@ -21,7 +21,6 @@ import
 } from '../../actions/ticket-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
-import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 const DEFAULT_STATE = {
     refundPolicies          : [],
@@ -58,7 +57,7 @@ const refundPolicyListReducer = (state = DEFAULT_STATE, action) => {
         case REFUND_POLICY_UPDATED: {
             let updatedEntity = {...payload.response};
             let refundPolicies = state.refundPolicies.map( rp => {
-                if (rp.id == updatedEntity.id) return updatedEntity;
+                if (rp.id === updatedEntity.id) return updatedEntity;
                 return rp;
             });
 
@@ -67,7 +66,7 @@ const refundPolicyListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case REFUND_POLICY_DELETED: {
             let {refundPolicyId} = payload;
-            return {...state, refundPolicies: state.refundPolicies.filter(t => t.id != refundPolicyId)};
+            return {...state, refundPolicies: state.refundPolicies.filter(t => t.id !== refundPolicyId)};
         }
         break;
         default:

@@ -15,8 +15,7 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import {Dropdown, Input, SimpleLinkList} from 'openstack-uicore-foundation/lib/components'
-import {findElementPos, queryGroups} from 'openstack-uicore-foundation/lib/methods'
-import {queryTemplates} from "../../actions/email-actions";
+import {isEmpty, scrollToError, shallowEqual, hasErrors} from "../../utils/methods";
 
 
 class EventTypeForm extends React.Component {
@@ -34,31 +33,34 @@ class EventTypeForm extends React.Component {
         this.handleMediaUploadLink = this.handleMediaUploadLink.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const state = {};
+        scrollToError(this.props.errors);
 
-        this.setState({
-            entity: {...nextProps.entity},
-            errors: {...nextProps.errors}
-        });
+        if(prevProps.entity.id !== this.props.entity.id) {
+            state.entity = {...this.props.entity};
+            state.errors = {};
+        }
 
-        //scroll to first error
-        if(Object.keys(nextProps.errors).length > 0) {
-            let firstError = Object.keys(nextProps.errors)[0]
-            let firstNode = document.getElementById(firstError);
-            if (firstNode) window.scrollTo(0, findElementPos(firstNode));
+        if (!shallowEqual(prevProps.errors, this.props.errors)) {
+            state.errors = {...this.props.errors};
+        }
+
+        if (!isEmpty(state)) {
+            this.setState({...this.state, ...state})
         }
     }
 
     handleChange(ev) {
-        let entity = {...this.state.entity};
-        let errors = {...this.state.errors};
+        const entity = {...this.state.entity};
+        const errors = {...this.state.errors};
         let {value, id} = ev.target;
 
-        if (ev.target.type == 'checkbox') {
+        if (ev.target.type === 'checkbox') {
             value = ev.target.checked;
         }
 
-        if (ev.target.type == 'number') {
+        if (ev.target.type === 'number') {
             value = parseInt(ev.target.value);
         }
 
@@ -68,44 +70,34 @@ class EventTypeForm extends React.Component {
     }
 
     handleSubmit(ev) {
-        let entity = {...this.state.entity};
         ev.preventDefault();
 
         this.props.onSubmit(this.state.entity);
     }
 
-    hasErrors(field) {
-        let {errors} = this.state;
-        if(field in errors) {
-            return errors[field];
-        }
-
-        return '';
-    }
-
     handleMediaUploadLink(value) {
-        let {entity} = this.state;
+        const {entity} = this.state;
         this.props.onMediaUploadLink(value, entity.id);
     }
 
     handleMediaUploadUnLink(valueId) {
-        let {entity} = this.state;
+        const {entity} = this.state;
         this.props.onMediaUploadUnLink(valueId, entity.id);
     }
 
     render() {
-        let {entity} = this.state;
-        let { getMediaUploads } = this.props;
-        let event_types_ddl = [{label: 'Presentation', value: 'PRESENTATION_TYPE'}, {label: 'Event', value: 'EVENT_TYPE'}];
+        const {entity, errors} = this.state;
+        const { getMediaUploads } = this.props;
+        const event_types_ddl = [{label: 'Presentation', value: 'PRESENTATION_TYPE'}, {label: 'Event', value: 'EVENT_TYPE'}];
 
-        let allowedGroupsColumns = [
+        const allowedGroupsColumns = [
             { columnKey: 'name', value: T.translate("general.name") },
             { columnKey: 'type_name', value: T.translate("general.type") },
             { columnKey: 'mandatory_text', value: T.translate("media_upload.is_mandatory") },
             { columnKey: 'max_size', value: T.translate("media_upload.max_size_simple") },
         ];
 
-        let allowedGroupsOptions = {
+        const allowedGroupsOptions = {
             title: T.translate("edit_event_type.media_upload_types"),
             valueKey: "id",
             labelKey: "name",
@@ -132,7 +124,7 @@ class EventTypeForm extends React.Component {
                         />
                     </div>
 
-                    {entity.class_name == 'PRESENTATION_TYPE' &&
+                    {entity.class_name === 'PRESENTATION_TYPE' &&
                     <div className="col-md-4 checkboxes-div">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="should_be_available_on_cfp" checked={entity.should_be_available_on_cfp}
@@ -143,7 +135,7 @@ class EventTypeForm extends React.Component {
                         </div>
                     </div>
                     }
-                    {entity.class_name == 'EVENT_TYPE' &&
+                    {entity.class_name === 'EVENT_TYPE' &&
                     <div className="col-md-4 checkboxes-div">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="allows_attachment" checked={entity.allows_attachment}
@@ -172,7 +164,7 @@ class EventTypeForm extends React.Component {
                             value={entity.name}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('name')}
+                            error={hasErrors('name', errors)}
                         />
                     </div>
                     <div className="col-md-4">
@@ -183,7 +175,7 @@ class EventTypeForm extends React.Component {
                             value={entity.color}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('color')}
+                            error={hasErrors('color', errors)}
                         />
                     </div>
                 </div>
@@ -217,7 +209,7 @@ class EventTypeForm extends React.Component {
                     </div>
                 </div>
 
-                {entity.class_name == 'PRESENTATION_TYPE' &&
+                {entity.class_name === 'PRESENTATION_TYPE' &&
                 <div>
                     <hr/>
                     <div className="row form-group checkboxes-div">
@@ -250,7 +242,7 @@ class EventTypeForm extends React.Component {
                                 value={entity.min_speakers}
                                 onChange={this.handleChange}
                                 className="form-control"
-                                error={this.hasErrors('min_speakers')}
+                                error={hasErrors('min_speakers', errors)}
                             />
                         </div>
                         <div className="col-md-4">
@@ -261,7 +253,7 @@ class EventTypeForm extends React.Component {
                                 value={entity.max_speakers}
                                 onChange={this.handleChange}
                                 className="form-control"
-                                error={this.hasErrors('max_speakers')}
+                                error={hasErrors('max_speakers', errors)}
                             />
                         </div>
                     </div>
@@ -295,7 +287,7 @@ class EventTypeForm extends React.Component {
                                 value={entity.moderator_label}
                                 onChange={this.handleChange}
                                 className="form-control"
-                                error={this.hasErrors('moderator_label')}
+                                error={hasErrors('moderator_label', errors)}
                             />
                         </div>
                         <div className="col-md-4">
@@ -306,7 +298,7 @@ class EventTypeForm extends React.Component {
                                 value={entity.min_moderators}
                                 onChange={this.handleChange}
                                 className="form-control"
-                                error={this.hasErrors('min_moderators')}
+                                error={hasErrors('min_moderators', errors)}
                             />
                         </div>
                         <div className="col-md-4">
@@ -317,7 +309,7 @@ class EventTypeForm extends React.Component {
                                 value={entity.max_moderators}
                                 onChange={this.handleChange}
                                 className="form-control"
-                                error={this.hasErrors('max_moderators')}
+                                error={hasErrors('max_moderators', errors)}
                             />
                         </div>
                     </div>

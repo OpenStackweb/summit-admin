@@ -53,10 +53,10 @@ export default class AffiliationsActionsTableCell extends React.Component {
             return (
                 <td className="actions">
                     <a href="" onClick={this.onSave.bind(this,id)} data-tip="save" >
-                        <i className="fa fa-floppy-o"></i>
+                        <i className="fa fa-floppy-o"/>
                     </a>
                     <a href="" onClick={this.onCancel.bind(this,id)} data-tip="cancel" >
-                        <i className="fa fa-times"></i>
+                        <i className="fa fa-times"/>
                     </a>
                 </td>
             );
@@ -65,12 +65,12 @@ export default class AffiliationsActionsTableCell extends React.Component {
                 <td className="actions">
                     {'edit' in actions &&
                         <a href="" onClick={this.onEdit.bind(this,id)} data-tip="edit" >
-                            <i className="fa fa-pencil-square-o"></i>
+                            <i className="fa fa-pencil-square-o"/>
                         </a>
                     }
                     {'delete' in actions &&
                         <a href="" onClick={this.onDelete.bind(this,id)} data-tip="delete" >
-                            <i className="fa fa-trash-o"></i>
+                            <i className="fa fa-trash-o"/>
                         </a>
                     }
                 </td>

@@ -63,10 +63,10 @@ class CurrentEventOccupancyPage extends React.Component {
         ev.preventDefault();
 
         if (add) {
-            if (event.occupancy == 'FULL') return;
+            if (event.occupancy === 'FULL') return;
             event.occupancy = values[key + 1];
         } else {
-            if (event.occupancy == 'EMPTY') return;
+            if (event.occupancy === 'EMPTY') return;
             event.occupancy = values[key - 1];
         }
 
@@ -81,7 +81,7 @@ class CurrentEventOccupancyPage extends React.Component {
         if (!currentEvent.id) {
             return (
                 <div className="currentEventView text-center">
-                    <Breadcrumb data={{ title: match.params.room_id, pathname: match.url }} ></Breadcrumb>
+                    <Breadcrumb data={{ title: match.params.room_id, pathname: match.url }}/>
                     <div>{T.translate("room_occupancy.no_current_event")}</div>
                 </div>
             );
@@ -89,7 +89,7 @@ class CurrentEventOccupancyPage extends React.Component {
 
         return(
             <div className="currentEventView text-center">
-                <Breadcrumb data={{ title: currentEvent.room, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: currentEvent.room, pathname: match.url }}/>
 
                 <div className="container">
                     <h3>{currentEvent.title}</h3>
@@ -105,11 +105,11 @@ class CurrentEventOccupancyPage extends React.Component {
 
                     <div className="form-inline occupancy">
                         <button className="btn btn-default" onClick={this.changeOccupancy.bind(this, currentEvent, true)}>
-                            <i className="fa fa-plus"></i>
+                            <i className="fa fa-plus"/>
                         </button>
                         <span>{currentEvent.occupancy}</span>
                         <button className="btn btn-default" onClick={this.changeOccupancy.bind(this, currentEvent, false)}>
-                            <i className="fa fa-minus"></i>
+                            <i className="fa fa-minus"/>
                         </button>
                     </div>
 

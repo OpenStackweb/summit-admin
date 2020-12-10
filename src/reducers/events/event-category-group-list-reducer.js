@@ -41,7 +41,7 @@ const eventCategoryGroupListReducer = (state = DEFAULT_STATE, action) => {
                     id: e.id,
                     name: e.name,
                     color: `<div style="background-color: ${e.color}">&nbsp;</div>`,
-                    type: (e.class_name == 'PresentationCategoryGroup') ? 'Public' : 'Private',
+                    type: (e.class_name === 'PresentationCategoryGroup') ? 'Public' : 'Private',
                     categories: e.tracks.map(c => c.name).join(', ')
                 };
             })
@@ -51,7 +51,7 @@ const eventCategoryGroupListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case EVENT_CATEGORY_GROUP_DELETED: {
             let {groupId} = payload;
-            return {...state, eventCategoryGroups: state.eventCategoryGroups.filter(g => g.id != groupId)};
+            return {...state, eventCategoryGroups: state.eventCategoryGroups.filter(g => g.id !== groupId)};
         }
         break;
         default:

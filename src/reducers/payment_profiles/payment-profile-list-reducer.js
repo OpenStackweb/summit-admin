@@ -21,7 +21,6 @@ import
 } from '../../actions/ticket-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
-import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 const DEFAULT_STATE = {
     paymentProfiles         : [],
@@ -57,7 +56,7 @@ const paymentProfileListReducer = (state = DEFAULT_STATE, action) => {
         case PAYMENT_PROFILE_UPDATED: {
             let updatedEntity = {...payload.response};
             let paymentProfiles = state.paymentProfiles.map( pp => {
-                if (pp.id == updatedEntity.id) return updatedEntity;
+                if (pp.id === updatedEntity.id) return updatedEntity;
                 return pp;
             });
 
@@ -66,7 +65,7 @@ const paymentProfileListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case PAYMENT_PROFILE_DELETED: {
             let {paymentProfileId} = payload;
-            return {...state, paymentProfiles: state.paymentProfiles.filter(pp => pp.id != paymentProfileId)};
+            return {...state, paymentProfiles: state.paymentProfiles.filter(pp => pp.id !== paymentProfileId)};
         }
         break;
         default:

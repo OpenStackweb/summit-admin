@@ -53,7 +53,6 @@ import ScheduleAdminSearchFreeTextUnScheduleEvents from './schedule-admin-search
 import ScheduleAdminSearchFreeTextScheduleEvents from './schedule-admin-search-free-text-schedule-events';
 import ScheduleAdminScheduleEventsSearchResults from './schedule-admin-schedule-events-search-results';
 import ScheduleAdminOrderSelector from './schedule-admin-order-selector';
-import { withRouter } from 'react-router';
 import T from "i18n-react/dist/i18n-react";
 import moment from 'moment-timezone';
 import FragmentParser from '../../utils/fragmen-parser';
@@ -116,11 +115,11 @@ class ScheduleAdminDashBoard extends React.Component {
                     filters['currentDay'] = value;
                     break;
                 case 'location_id':
-                    let location = currentSummit.locations.filter((location) => location.id == value).shift()
+                    let location = currentSummit.locations.filter((location) => location.id === value).shift()
                     if(location) {
                         filters['currentLocation'] = location;
                     }
-                    if(value == 0){ //special case TBD location
+                    if(value === 0){ //special case TBD location
                         filters['currentLocation'] = {id : 0, name : 'TBD'};
                     }
                     break;
@@ -143,8 +142,8 @@ class ScheduleAdminDashBoard extends React.Component {
         let { currentSummit, currentEventType, currentTrack, currentPresentationSelectionStatus, currentPresentationSelectionPlan, currentDay, currentLocation, scheduleEventsCurrentSearchTerm, currentUnScheduleOrderBy } = this.props;
         if(!currentSummit.id) return;
 
-        let eventTypeId = currentEventType == null ? null : currentEventType.id;
-        let trackId     = currentTrack == null ? null : currentTrack.id;
+        let eventTypeId = currentEventType === null ? null : currentEventType.id;
+        let trackId     = currentTrack === null ? null : currentTrack.id;
         this.props.getUnScheduleEventsPage(currentSummit.id, 1, 20, eventTypeId, trackId, currentPresentationSelectionStatus, currentPresentationSelectionPlan,'', currentUnScheduleOrderBy);
 
         if(this.filters.hasOwnProperty('currentScheduleEventsSearchTerm')) {
@@ -164,7 +163,7 @@ class ScheduleAdminDashBoard extends React.Component {
         }
 
 
-        if(window.location.hash == '' && currentDay != null && currentLocation != null){
+        if(window.location.hash === '' && currentDay != null && currentLocation != null){
             this.byPassHashRefresh = true;
             this.fragmentParser.setParam('day', currentDay);
             this.fragmentParser.setParam('location_id', currentLocation.id);
@@ -255,7 +254,7 @@ class ScheduleAdminDashBoard extends React.Component {
         let eventTypeId = eventType == null ? null : eventType.id;
         let selectionStatus = currentPresentationSelectionStatus;
         let order = currentUnScheduleOrderBy;
-        if (!eventType || eventType.class_name != "PresentationType") {
+        if (!eventType || eventType.class_name !== "PresentationType") {
             selectionStatus = null;
             order = 'id';
             this.props.changeCurrentPresentationSelectionStatus(selectionStatus);
@@ -502,8 +501,8 @@ class ScheduleAdminDashBoard extends React.Component {
 
     onSelectedBulkActionPublished(bulkAction){
         let {selectedPublishedEvents, performBulkAction} = this.props;
-        if(selectedPublishedEvents.length == 0) return;
-        if(bulkAction == BulkActionUnPublish){
+        if(selectedPublishedEvents.length === 0) return;
+        if(bulkAction === BulkActionUnPublish){
             Swal.fire({
                 title: T.translate("schedule_builder_page.titles.bulk_unpublish_confirmation"),
                 text: T.translate("schedule_builder_page.messages.bulk_unpublish_confirmation"),
@@ -525,7 +524,7 @@ class ScheduleAdminDashBoard extends React.Component {
 
     onSelectedBulkActionUnPublished(bulkAction){
         let {selectedUnPublishedEvents, performBulkAction} = this.props;
-        if(selectedUnPublishedEvents.length == 0) return;
+        if(selectedUnPublishedEvents.length === 0) return;
         performBulkAction(selectedUnPublishedEvents, bulkAction, false);
     }
 
@@ -554,7 +553,7 @@ class ScheduleAdminDashBoard extends React.Component {
             selectedUnPublishedEvents,
         } = this.props;
 
-        if(!currentSummit.id) return(<div></div>);
+        if(!currentSummit.id) return(<div />);
 
 
         // parse summits dates
@@ -570,7 +569,7 @@ class ScheduleAdminDashBoard extends React.Component {
 
         do{
             let option = { value: currentAuxDay.format("YYYY-MM-DD") , label: currentAuxDay.format('dddd Do , MMMM YYYY') };
-            if(currentDay != null && currentAuxDay.format("YYYY-MM-DD") == currentDay)
+            if(currentDay != null && currentAuxDay.format("YYYY-MM-DD") === currentDay)
                 currentDaySelectorItem = option;
             days.push(option);
             currentAuxDay = currentAuxDay.clone();
@@ -590,21 +589,21 @@ class ScheduleAdminDashBoard extends React.Component {
             tbdOption
         ];
 
-        if(currentLocation != null && TBALocation.id == currentLocation.id){
+        if(currentLocation != null && TBALocation.id === currentLocation.id){
             currentVenueSelectorItem = tbdOption;
         }
 
         for(let i = 0; i < currentSummit.locations.length; i++) {
             let location = currentSummit.locations[i];
-            if (location.class_name != "SummitVenue") continue;
+            if (location.class_name !== "SummitVenue") continue;
             let option = { value : location, label: location.name };
-            if(currentLocation != null && location.id == currentLocation.id)
+            if(currentLocation != null && location.id === currentLocation.id)
                 currentVenueSelectorItem = option;
             venues.push(option);
             if(!location.hasOwnProperty('rooms')) continue;
             for(let j = 0; j < location.rooms.length ; j++){
                 let subOption = { value : location.rooms[j] , label: location.rooms[j].name};
-                if(currentLocation != null && location.rooms[j].id == currentLocation.id)
+                if(currentLocation != null && location.rooms[j].id === currentLocation.id)
                     currentVenueSelectorItem = subOption;
                 venues.push(subOption);
             }
@@ -617,7 +616,7 @@ class ScheduleAdminDashBoard extends React.Component {
         for(let i = 0; i < currentSummit.event_types.length; i++) {
             let event_type = currentSummit.event_types[i];
             let option = { value : event_type, label: event_type.name };
-            if(currentEventType != null && currentEventType.id == event_type.id)
+            if(currentEventType != null && currentEventType.id === event_type.id)
                 currentEventTypeSelectorItem = option;
             eventTypes.push(option);
         }
@@ -629,7 +628,7 @@ class ScheduleAdminDashBoard extends React.Component {
         for(let i = 0; i < currentSummit.tracks.length; i++) {
             let track = currentSummit.tracks[i];
             let option = { value : track, label: track.name };
-            if(currentTrack != null && currentTrack.id == track.id)
+            if(currentTrack != null && currentTrack.id === track.id)
                 currentTrackSelectorItem = option;
             tracks.push(option);
         }
@@ -690,7 +689,7 @@ class ScheduleAdminDashBoard extends React.Component {
                             onClickSpot={this.onClickSpot}
                         />
                     }
-                    {emptySpots.length == 0 && searchingEmpty &&
+                    {emptySpots.length === 0 && searchingEmpty &&
                         <Modal show={true} onHide={this.onClearClick}>
                             <Modal.Header closeButton>
                                 <Modal.Title>{T.translate("empty_spots_modal.find_empty_spots")}</Modal.Title>
@@ -702,18 +701,18 @@ class ScheduleAdminDashBoard extends React.Component {
                     }
 
                     {
-                        ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm == '' ) &&
-                        (emptySpots.length == 0 ) &&
+                        ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm === '' ) &&
+                        (emptySpots.length === 0 ) &&
                         <ScheduleAdminDaySelector onDayChanged={this.onDayChanged} days={days}
                                                   currentValue={currentDaySelectorItem}/>
                     }
-                    { ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm == '' ) &&
-                        ( emptySpots.length == 0 ) &&
+                    { ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm === '' ) &&
+                        ( emptySpots.length === 0 ) &&
                         <ScheduleAdminVenueSelector onVenueChanged={this.onVenueChanged}
                                                     venues={venues} currentValue={currentVenueSelectorItem} />
                     }
-                    { ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm == '' )
-                      && ( emptySpots.length == 0 )
+                    { ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm === '' )
+                      && ( emptySpots.length === 0 )
                       && ( scheduleEvents.length > 0)
                       && <ScheduleAdminsBulkActionsSelector
                             bulkOptions={bulkOptionsPublished}
@@ -722,10 +721,10 @@ class ScheduleAdminDashBoard extends React.Component {
                          >
                          </ScheduleAdminsBulkActionsSelector>
                     }
-                    { ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm == '' )
+                    { ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm === '' )
                         && currentDay != null
                         && currentLocation != null
-                        && (emptySpots.length == 0 )
+                        && (emptySpots.length === 0 )
                         &&
                         <ScheduleEventList
                             startTime={"00:00"}
@@ -751,9 +750,9 @@ class ScheduleAdminDashBoard extends React.Component {
                         onEditEvent={this.onEditEvent}
                     />
                     {
-                        ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm == '' ) &&
+                        ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm === '' ) &&
                         (currentDay == null || currentLocation == null) &&
-                        (emptySpots.length == 0 ) &&
+                        (emptySpots.length === 0 ) &&
                         <p className="empty-list-message">{T.translate("errors.empty_list_schedule_events")}</p>
                     }
                 </div>

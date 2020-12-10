@@ -43,7 +43,7 @@ class TaxTypeListPage extends React.Component {
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
             this.props.getTaxTypes();
         }
     }
@@ -55,7 +55,7 @@ class TaxTypeListPage extends React.Component {
 
     handleDelete(taxTypeId) {
         let {deleteTaxType, taxTypes} = this.props;
-        let taxType = taxTypes.find(t => t.id == taxTypeId);
+        let taxType = taxTypes.find(t => t.id === taxTypeId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -98,7 +98,7 @@ class TaxTypeListPage extends React.Component {
             }
         }
 
-        if(!currentSummit.id) return (<div></div>);
+        if(!currentSummit.id) return (<div />);
 
         return(
             <div className="container">
@@ -111,7 +111,7 @@ class TaxTypeListPage extends React.Component {
                     </div>
                 </div>
 
-                {taxTypes.length == 0 &&
+                {taxTypes.length === 0 &&
                 <div>{T.translate("tax_type_list.no_tax_types")}</div>
                 }
 

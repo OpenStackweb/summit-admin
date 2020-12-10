@@ -20,7 +20,6 @@ import Restrict from '../routes/restrict';
 
 import ScheduleBuilderPage from '../pages/events/schedule-builder-page';
 import SummitEventListPage from '../pages/events/summit-event-list-page';
-import EditSummitEventPage from '../pages/events/edit-summit-event-page'
 import EventIdLayout from './event-id-layout';
 import SummitEventsBulkActionsPage from '../pages/events/summit-events-bulk-actions-page';
 import NoMatchPage from "../pages/no-match-page";
@@ -32,7 +31,7 @@ class EventLayout extends React.Component {
         let { match } = this.props;
         return(
             <div>
-                <Breadcrumb data={{ title: T.translate("event_list.events"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("event_list.events"), pathname: match.url }} />
 
                 <Switch>
                     <Route exact strict path={match.url} component={SummitEventListPage}/>

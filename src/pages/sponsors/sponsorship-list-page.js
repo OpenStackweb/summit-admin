@@ -43,7 +43,7 @@ class SponsorshipListPage extends React.Component {
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
             this.props.getSponsorships();
         }
     }
@@ -55,7 +55,7 @@ class SponsorshipListPage extends React.Component {
 
     handleDelete(sponsorshipId) {
         let {deleteSponsorship, sponsorships} = this.props;
-        let sponsorship = sponsorships.find(t => t.id == sponsorshipId);
+        let sponsorship = sponsorships.find(t => t.id === sponsorshipId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -98,7 +98,7 @@ class SponsorshipListPage extends React.Component {
             }
         }
 
-        if(!currentSummit.id) return (<div></div>);
+        if(!currentSummit.id) return (<div />);
 
         return(
             <div className="container">
@@ -111,7 +111,7 @@ class SponsorshipListPage extends React.Component {
                     </div>
                 </div>
 
-                {sponsorships.length == 0 &&
+                {sponsorships.length === 0 &&
                 <div>{T.translate("sponsorship_list.no_sponsorships")}</div>
                 }
 

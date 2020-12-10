@@ -11,7 +11,6 @@
  * limitations under the License.
  **/
 import React from 'react';
-import PropTypes from 'prop-types';
 import { DraggableItemTypes } from './draggable-items-types';
 import {DropTarget } from 'react-dnd';
 import { PixelsPerMinute, DefaultEventMinutesDuration } from '../../utils/constants';
@@ -22,7 +21,7 @@ const ScheduleEventTimeSlotTarget = {
         let subEvent   = monitor.getItem();
         let eventModel = new SummitEvent(subEvent);
         let { event, height, currentDay, timeSlot} = props;
-        if(subEvent.id == event.id) return false;
+        if(subEvent.id === event.id) return false;
         let minHeight = ( PixelsPerMinute * DefaultEventMinutesDuration);
         if(height !== minHeight) return false;
         if(eventModel.hasChilds()) return false;

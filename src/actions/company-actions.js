@@ -65,7 +65,7 @@ export const getCompanies = ( term = null, page = 1, perPage = 10, order = 'id',
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 

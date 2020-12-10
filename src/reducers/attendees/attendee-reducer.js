@@ -18,13 +18,12 @@ import
     RESET_ATTENDEE_FORM,
     UPDATE_ATTENDEE,
     ATTENDEE_UPDATED,
-    ATTENDEE_ADDED,
     TICKET_ADDED,
     TICKET_DELETED,
     RSVP_DELETED
 } from '../../actions/attendee-actions';
 
-import {AFFILIATION_ADDED, AFFILIATION_DELETED, AFFILIATION_SAVED} from "../../actions/member-actions";
+import {AFFILIATION_ADDED, AFFILIATION_DELETED} from "../../actions/member-actions";
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
@@ -102,7 +101,7 @@ const attendeeReducer = (state = DEFAULT_STATE, action) => {
         break;
         case TICKET_DELETED: {
             let {ticketId} = payload;
-            return {...state, entity: {...state.entity, tickets: state.entity.tickets.filter(t => t.id != ticketId)}};
+            return {...state, entity: {...state.entity, tickets: state.entity.tickets.filter(t => t.id !== ticketId)}};
         }
         break;
         case RSVP_DELETED: {
@@ -114,7 +113,7 @@ const attendeeReducer = (state = DEFAULT_STATE, action) => {
                     ...state.entity,
                     member: {
                         ...state.entity.member,
-                        rsvp: state.entity.member.rsvp.filter(r => r.id != rsvpId)
+                        rsvp: state.entity.member.rsvp.filter(r => r.id !== rsvpId)
                     }
                 }
             };
@@ -143,7 +142,7 @@ const attendeeReducer = (state = DEFAULT_STATE, action) => {
         case AFFILIATION_DELETED: {
             let {affiliationId} = payload;
             if (state.entity.member && state.entity.member.hasOwnProperty('affiliations')) {
-                let affiliations = state.entity.member.affiliations.filter(a => a.id != affiliationId);
+                let affiliations = state.entity.member.affiliations.filter(a => a.id !== affiliationId);
 
                 return {
                     ...state,

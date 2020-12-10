@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import MediaUploadForm from '../../components/forms/media-upload-form';
-import { getMediaUpload, resetMediaUploadForm, saveMediaUpload, queryMediaUploads } from "../../actions/media-upload-actions";
+import { getMediaUpload, resetMediaUploadForm, saveMediaUpload } from "../../actions/media-upload-actions";
 import { getAllMediaFileTypes } from '../../actions/media-file-type-actions';
 
 //import '../../styles/edit-media-upload-page.less';

@@ -24,9 +24,7 @@ import {
     FEATURE_BADGE_ADDED,
     FEATURE_BADGE_REMOVED
 } from '../../actions/badge-actions'
-import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
-import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
-
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
 import {epochToMoment} from "openstack-uicore-foundation/lib/methods";
 
 export const DEFAULT_ENTITY = {

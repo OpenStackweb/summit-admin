@@ -17,7 +17,6 @@ import
     RESET_EVENT_CATEGORY_QUESTION_FORM,
     UPDATE_EVENT_CATEGORY_QUESTION,
     RECEIVE_EVENT_CATEGORY_QUESTION_META,
-    EVENT_CATEGORY_QUESTION_ADDED,
     UPDATE_EVENT_CATEGORY_QUESTION_VALUE,
     EVENT_CATEGORY_QUESTION_VALUE_ADDED,
     EVENT_CATEGORY_QUESTION_VALUE_UPDATED,
@@ -94,7 +93,7 @@ const eventCategoryQuestionReducer = (state = DEFAULT_STATE, action) => {
         break;
         case EVENT_CATEGORY_QUESTION_VALUE_UPDATED: {
             let newValue = {...payload.response};
-            let oldValues = state.entity.values.filter(v => v.id != newValue.id);
+            let oldValues = state.entity.values.filter(v => v.id !== newValue.id);
             let values = [...oldValues, newValue];
 
             return {...state, entity: {...state.entity, values: values}, errors: {} };
@@ -109,7 +108,7 @@ const eventCategoryQuestionReducer = (state = DEFAULT_STATE, action) => {
         break;
         case EVENT_CATEGORY_QUESTION_VALUE_DELETED: {
             let {valueId} = payload;
-            let values = state.entity.values.filter(v => v.id != valueId);
+            let values = state.entity.values.filter(v => v.id !== valueId);
 
             return {...state, entity: {...state.entity, values: values}};
         }

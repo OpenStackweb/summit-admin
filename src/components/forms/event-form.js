@@ -15,7 +15,7 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import Swal from "sweetalert2";
-import { findElementPos, epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/methods'
+import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/methods'
 import {
     TextEditor,
     Dropdown,
@@ -30,6 +30,7 @@ import {
     Panel,
     Table
 } from 'openstack-uicore-foundation/lib/components'
+import {isEmpty, scrollToError, shallowEqual, hasErrors} from "../../utils/methods";
 
 
 class EventForm extends React.Component {
@@ -53,36 +54,39 @@ class EventForm extends React.Component {
         this.handleMaterialDelete = this.handleMaterialDelete.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const state = {};
+        scrollToError(this.props.errors);
 
-        this.setState({
-            entity: {...nextProps.entity},
-            errors: nextProps.errors
-        });
+        if(prevProps.entity.id !== this.props.entity.id) {
+            state.entity = {...this.props.entity};
+            state.errors = {};
+        }
 
-        //scroll to first error
-        if(Object.keys(nextProps.errors).length > 0) {
-            let firstError = Object.keys(nextProps.errors)[0]
-            let firstNode = document.getElementById(firstError);
-            if (firstNode) window.scrollTo(0, findElementPos(firstNode));
+        if (!shallowEqual(prevProps.errors, this.props.errors)) {
+            state.errors = {...this.props.errors};
+        }
+
+        if (!isEmpty(state)) {
+            this.setState({...this.state, ...state})
         }
     }
 
     handleChange(ev) {
-        let entity = {...this.state.entity};
-        let {errors} = this.state;
+        const entity = {...this.state.entity};
+        const {errors} = this.state;
         let {value, id} = ev.target;
 
-        if (ev.target.type == 'radio') {
+        if (ev.target.type === 'radio') {
             id = ev.target.name;
-            value = (ev.target.value == 1);
+            value = (ev.target.value === 1);
         }
 
-        if (ev.target.type == 'checkbox') {
+        if (ev.target.type === 'checkbox') {
             value = ev.target.checked;
         }
 
-        if (ev.target.type == 'datetime') {
+        if (ev.target.type === 'datetime') {
             value = value.valueOf() / 1000;
         }
 
@@ -92,19 +96,19 @@ class EventForm extends React.Component {
     }
 
     handleUploadFile(file) {
-        let entity = {...this.state.entity};
+        const entity = {...this.state.entity};
 
         entity.attachment = file.preview;
         this.setState({entity:entity});
 
-        let formData = new FormData();
+        const formData = new FormData();
         formData.append('file', file);
 
         this.props.onAttach(entity, formData, 'file');
     }
 
     handleRemoveFile(attr) {
-        let entity = {...this.state.entity};
+        const entity = {...this.state.entity};
 
         entity[attr] = '';
 
@@ -116,7 +120,7 @@ class EventForm extends React.Component {
     }
 
     handleSubmit(publish, ev) {
-        let entity = {...this.state.entity};
+        const entity = {...this.state.entity};
         ev.preventDefault();
 
         this.props.onSubmit(entity, publish);
@@ -128,102 +132,93 @@ class EventForm extends React.Component {
     }
 
     handleScheduleLink(ev) {
-        let {entity} = this.state;
-        let {currentSummit, history} = this.props;
+        const {entity} = this.state;
+        const {currentSummit, history} = this.props;
 
         ev.preventDefault();
 
-        let start_date = epochToMomentTimeZone(entity.start_date, currentSummit.time_zone_id).format('YYYY-MM-DD');
-        let location_id = entity.location_id;
-        let event_id = entity.id;
+        const start_date = epochToMomentTimeZone(entity.start_date, currentSummit.time_zone_id).format('YYYY-MM-DD');
+        const location_id = entity.location_id;
+        const event_id = entity.id;
 
         history.push(`/app/summits/${currentSummit.id}/events/schedule#location_id=${location_id}&day=${start_date}&event=${event_id}`);
     }
 
     handleEventLink(ev) {
-        let {entity} = this.state;
-        let {currentSummit} = this.props;
+        const {entity} = this.state;
+        const {currentSummit} = this.props;
         ev.preventDefault();
 
         const eventStart = epochToMomentTimeZone(entity.start_date + 300, currentSummit.time_zone_id).format('YYYY-MM-DD,HH:mm:ss');
 
-        let event_detail_url = `${currentSummit.virtual_site_url}event/${entity.id}#now=${eventStart}`;
+        const event_detail_url = `${currentSummit.virtual_site_url}event/${entity.id}#now=${eventStart}`;
 
         window.open(event_detail_url, '_blank');
     }
 
     isEventType(types) {
-        let {entity} = this.state;
+        const {entity} = this.state;
         if (!entity.type_id) return false;
-        let entity_type = this.props.typeOpts.find(t => t.id == entity.type_id);
+        const entity_type = this.props.typeOpts.find(t => t.id === entity.type_id);
 
         types = Array.isArray(types) ? types : [types] ;
-        return ( types.indexOf(entity_type.class_name) != -1 || types.indexOf(entity_type.name) != -1 );
+        return ( types.indexOf(entity_type.class_name) !== -1 || types.indexOf(entity_type.name) !== -1 );
     }
 
     isEventTypeAllowsLevel(){
-        let {entity} = this.state;
+        const {entity} = this.state;
         if (!entity.type_id) return false;
-        let entity_type = this.props.typeOpts.find(t => t.id === entity.type_id);
+        const entity_type = this.props.typeOpts.find(t => t.id === entity.type_id);
         return entity_type.allows_level;
     }
 
-    hasErrors(field) {
-        let {errors} = this.state;
-        if(field in errors) {
-            return errors[field];
-        }
-
-        return '';
-    }
-
     shouldShowField(flag){
-        let {entity} = this.state;
+        const {entity} = this.state;
         if (!entity.type_id) return false;
-        let entity_type = this.props.typeOpts.find(t => t.id == entity.type_id);
+        const entity_type = this.props.typeOpts.find(t => t.id === entity.type_id);
 
         return entity_type[flag];
     }
 
     toggleSection(section, ev) {
-        let {showSection} = this.state;
-        let newShowSection = (showSection === section) ? 'main' : section;
+        const {showSection} = this.state;
+        const newShowSection = (showSection === section) ? 'main' : section;
         ev.preventDefault();
 
         this.setState({showSection: newShowSection});
     }
 
     handleMaterialEdit(materialId) {
-        let {currentSummit, entity, history} = this.props;
+        const {currentSummit, entity, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/events/${entity.id}/materials/${materialId}`);
     }
 
     handleNewMaterial(ev) {
         ev.preventDefault();
 
-        let {currentSummit, entity, history} = this.props;
+        const {currentSummit, entity, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/events/${entity.id}/materials/new`);
     }
 
     handleUploadPic(file) {
-        let entity = {...this.state.entity};
+        const entity = {...this.state.entity};
 
         entity.image = file.preview;
         this.setState({entity:entity});
 
-        let formData = new FormData();
+        const formData = new FormData();
         formData.append('file', file);
         this.props.onAttach(this.state.entity, formData, 'profile')
     }
 
     handleMaterialDownload(materialId) {
-        let {entity} = this.props;
+        const {entity} = this.props;
         const material = entity.materials.find(m => m.id === materialId);
         window.open(material.private_url || material.public_url, "_blank");
     }
 
     handleMaterialDelete(materialId) {
-        let {entity, onMaterialDelete} = this.props;
+        const {entity, onMaterialDelete} = this.props;
         const material = entity.materials.find(m => m.id === materialId);
 
         Swal.fire({
@@ -241,19 +236,19 @@ class EventForm extends React.Component {
     }
 
     render() {
-        let {entity, showSection} = this.state;
-        let { currentSummit, levelOpts, typeOpts, trackOpts, locationOpts, rsvpTemplateOpts, selectionPlansOpts, history } = this.props;
+        const {entity, showSection, errors} = this.state;
+        const { currentSummit, levelOpts, typeOpts, trackOpts, locationOpts, rsvpTemplateOpts, selectionPlansOpts, history } = this.props;
 
-        let event_types_ddl = typeOpts.map(
+        const event_types_ddl = typeOpts.map(
             t => {
                 let disabled = (entity.id) ? !this.isEventType(t.class_name) : false;
                 return {label: t.name, value: t.id, type: t.class_name, disabled: disabled}
             }
         );
 
-        let tracks_ddl = trackOpts.map(t => ({label: t.name, value: t.id}));
+        const tracks_ddl = trackOpts.map(t => ({label: t.name, value: t.id}));
 
-        let venues = locationOpts.filter(v => (v.class_name == 'SummitVenue')).map(l => {
+        const venues = locationOpts.filter(v => (v.class_name === 'SummitVenue')).map(l => {
             let options = [];
             if (l.rooms) {
                 options = l.rooms.map(r => ({label: r.name, value: r.id}) );
@@ -261,12 +256,12 @@ class EventForm extends React.Component {
             return {label: l.name, value: l.id, options: options};
         });
 
-        let locations_ddl = [
+        const locations_ddl = [
             {label: 'TBD', value: 0},
             ...venues
         ];
 
-        let levels_ddl = levelOpts.map(l => ({label: l, value: l}));
+        const levels_ddl = levelOpts.map(l => ({label: l, value: l}));
 
         let selection_plans_ddl = [];
 
@@ -277,20 +272,20 @@ class EventForm extends React.Component {
                 .map(sp => ({label: sp.name, value: sp.id}));
         }
 
-        let rsvp_templates_ddl = rsvpTemplateOpts.map(
+        const rsvp_templates_ddl = rsvpTemplateOpts.map(
             t => {
                 return {label: t.title, value: t.id}
             }
         );
 
-        let material_columns = [
+        const material_columns = [
             { columnKey: 'class_name', value: T.translate("edit_event.type") },
             { columnKey: 'name', value: T.translate("general.name") },
             { columnKey: 'filename', value: T.translate("general.file") },
             { columnKey: 'display_on_site_label', value: T.translate("edit_event.display_on_site") }
         ];
 
-        let material_options = {
+        const material_options = {
             actions: {
                 edit: {onClick: this.handleMaterialEdit},
                 custom: [
@@ -316,7 +311,7 @@ class EventForm extends React.Component {
                         <label> {T.translate("edit_event.title")} *</label>
                         <Input
                             className="form-control"
-                            error={this.hasErrors('title')}
+                            error={hasErrors('title', errors)}
                             id="title"
                             value={entity.title}
                             onChange={this.handleChange}
@@ -338,7 +333,7 @@ class EventForm extends React.Component {
                             id="description"
                             value={entity.description}
                             onChange={this.handleChange}
-                            error={this.hasErrors('description')}
+                            error={hasErrors('description', errors)}
                         />
                     </div>
                 </div>
@@ -365,7 +360,7 @@ class EventForm extends React.Component {
                             options={locations_ddl}
                             placeholder={T.translate("edit_event.placeholders.select_venue")}
                             onChange={this.handleChange}
-                            error={this.hasErrors('location_id')}
+                            error={hasErrors('location_id', errors)}
                         />
                     </div>
                     <div className="col-md-4" style={{paddingTop: '24px'}}>
@@ -377,7 +372,7 @@ class EventForm extends React.Component {
                             value={epochToMomentTimeZone(entity.start_date, currentSummit.time_zone_id)}
                             inputProps={{placeholder: T.translate("edit_event.placeholders.start_date")}}
                             timezone={currentSummit.time_zone_id}
-                            error={this.hasErrors('start_date')}
+                            error={hasErrors('start_date', errors)}
                             viewDate={epochToMomentTimeZone(currentSummit.start_date, currentSummit.time_zone_id)}
                         />
                     </div>
@@ -390,7 +385,7 @@ class EventForm extends React.Component {
                             value={epochToMomentTimeZone(entity.end_date, currentSummit.time_zone_id)}
                             inputProps={{placeholder: T.translate("edit_event.placeholders.end_date")}}
                             timezone={currentSummit.time_zone_id}
-                            error={this.hasErrors('end_date')}
+                            error={hasErrors('end_date', errors)}
                             viewDate={epochToMomentTimeZone(currentSummit.start_date, currentSummit.time_zone_id)}
                         />
                     </div>
@@ -404,7 +399,7 @@ class EventForm extends React.Component {
                             onChange={this.handleChange}
                             placeholder={T.translate("edit_event.placeholders.select_event_type")}
                             options={event_types_ddl}
-                            error={this.hasErrors('type_id')}
+                            error={hasErrors('type_id', errors)}
                         />
                     </div>
                     <div className="col-md-4">
@@ -415,7 +410,7 @@ class EventForm extends React.Component {
                             onChange={this.handleChange}
                             placeholder={T.translate("edit_event.placeholders.select_track")}
                             options={tracks_ddl}
-                            error={this.hasErrors('track_id')}
+                            error={hasErrors('track_id', errors)}
                         />
                     </div>
                     {this.isEventTypeAllowsLevel() &&
@@ -480,7 +475,7 @@ class EventForm extends React.Component {
                             value={entity.tags}
                             summitId={currentSummit.id}
                             onChange={this.handleChange}
-                            error={this.hasErrors('tags')}
+                            error={hasErrors('tags', errors)}
                         />
                     </div>
                 </div>
@@ -581,7 +576,7 @@ class EventForm extends React.Component {
                         />
                     </div>
                 </div>
-                <Panel show={showSection == 'live'} title={T.translate("edit_event.live")}
+                <Panel show={showSection === 'live'} title={T.translate("edit_event.live")}
                        handleClick={this.toggleSection.bind(this, 'live')}>
                     <div className="row form-group">
                         <div className="col-md-6">
@@ -607,7 +602,7 @@ class EventForm extends React.Component {
                         </div>
                     </div>
                 </Panel>
-                <Panel show={showSection == 'rsvp'} title={T.translate("edit_event.rsvp")}
+                <Panel show={showSection === 'rsvp'} title={T.translate("edit_event.rsvp")}
                        handleClick={this.toggleSection.bind(this, 'rsvp')}>
                     <div className="row form-group">
                         <div className="col-md-4">
@@ -642,8 +637,8 @@ class EventForm extends React.Component {
                     </div>
                 </Panel>
 
-                {entity.id != 0 &&
-                <Panel show={showSection == 'materials'} title={T.translate("edit_event.materials")}
+                {entity.id !== 0 &&
+                <Panel show={showSection === 'materials'} title={T.translate("edit_event.materials")}
                        handleClick={this.toggleSection.bind(this, 'materials')}>
                     <button className="btn btn-primary pull-right left-space" onClick={this.handleNewMaterial}>
                         {T.translate("edit_event.add_material")}

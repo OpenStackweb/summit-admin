@@ -27,7 +27,7 @@ class ScheduleAdminDaySelector extends React.Component {
 
     render(){
         let { days, currentValue } = this.props;
-        let theValue = days.find(op => op.value == currentValue);
+        let theValue = days.find(op => op.value === currentValue);
 
         return (
             <Select

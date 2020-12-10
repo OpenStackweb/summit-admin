@@ -77,7 +77,7 @@ const roomOccupancyReducer = (state = DEFAULT_STATE, action) => {
             let currentEvent = {};
             let payloadEvent = null;
 
-            if (payload.response.hasOwnProperty('data') && payload.response.data.length == 1) {
+            if (payload.response.hasOwnProperty('data') && payload.response.data.length === 1) {
                 payloadEvent = payload.response.data[0];
             } else if (payload.response.hasOwnProperty('id')){
                 payloadEvent = {... payload.response};
@@ -103,11 +103,11 @@ const roomOccupancyReducer = (state = DEFAULT_STATE, action) => {
             let currentEvent = state.currentEvent;
 
             let events = state.events.map( e => {
-                if (e.id == updatedEvent.id) return updatedEvent;
+                if (e.id === updatedEvent.id) return updatedEvent;
                 else return e;
             });
 
-            if(currentEvent.id == updatedEvent.id) {
+            if(currentEvent.id === updatedEvent.id) {
                 currentEvent = {...updatedEvent};
             }
 

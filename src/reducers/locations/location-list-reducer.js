@@ -20,7 +20,6 @@ import
 } from '../../actions/location-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
-import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 const DEFAULT_STATE = {
     locations       : [],
@@ -70,7 +69,7 @@ const locationListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case LOCATION_DELETED: {
             let {locationId} = payload;
-            return {...state, locations: state.locations.filter(l => l.id != locationId)};
+            return {...state, locations: state.locations.filter(l => l.id !== locationId)};
         }
         break;
         default:

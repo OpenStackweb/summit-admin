@@ -88,7 +88,7 @@ const badgeTypeReducer = (state = DEFAULT_STATE, action) => {
         break;
         case BADGE_ACCESS_LEVEL_REMOVED: {
             let {accessLevelId} = payload;
-            let accessLevels = state.entity.access_levels.filter(a => a.id != accessLevelId);
+            let accessLevels = state.entity.access_levels.filter(a => a.id !== accessLevelId);
             return {...state, entity: {...state.entity, access_levels: accessLevels} };
         }
         break;
@@ -101,7 +101,7 @@ const badgeTypeReducer = (state = DEFAULT_STATE, action) => {
         break;
         case FEATURE_REMOVED_FROM_TYPE: {
             let {featureId} = payload;
-            let badgeFeatures = state.entity.badge_features.filter(f => f.id != featureId);
+            let badgeFeatures = state.entity.badge_features.filter(f => f.id !== featureId);
             return {...state, entity: {...state.entity, badge_features: badgeFeatures} };
         }
         break;

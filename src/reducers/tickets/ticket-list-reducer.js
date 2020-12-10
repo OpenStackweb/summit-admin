@@ -18,7 +18,6 @@ import
 } from '../../actions/ticket-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
-import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 import {epochToMoment} from "openstack-uicore-foundation/lib/methods";
 
 const DEFAULT_STATE = {

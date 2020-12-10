@@ -12,7 +12,7 @@
  **/
 
 import React from 'react'
-import { Switch, Route, withRouter } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import EditSummitEventPage from '../pages/events/edit-summit-event-page';
@@ -42,7 +42,7 @@ class EventIdLayout extends React.Component {
         let oldId = this.props.match.params.event_id;
         let newId = newProps.match.params.event_id;
 
-        if (oldId != newId) {
+        if (oldId !== newId) {
             if (!newId) {
                 this.props.resetEventForm();
             } else {
@@ -56,18 +56,18 @@ class EventIdLayout extends React.Component {
         let eventId = this.props.match.params.event_id;
         let breadcrumb = entity.id ? entity.title : T.translate("general.new");
 
-        if(eventId && entity.id != eventId) return(<div></div>);
+        if(eventId && entity.id !== parseInt(eventId)) return(<div />);
 
         return(
             <div>
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
 
                 <Switch>
                     <Route exact strict path={match.url} component={EditSummitEventPage}/>
                     <Route path={`${match.url}/materials`} render={
                         props => (
                             <div>
-                                <Breadcrumb data={{ title: T.translate("edit_event.materials"), pathname: match.url }} ></Breadcrumb>
+                                <Breadcrumb data={{ title: T.translate("edit_event.materials"), pathname: match.url }} />
                                 <Switch>
                                     <Route strict exact path={`${props.match.url}/new`} component={EditEventMaterialPage} />
                                     <Route strict exact path={`${props.match.url}/:material_id`} component={EditEventMaterialPage} />

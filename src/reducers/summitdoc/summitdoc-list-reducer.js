@@ -61,7 +61,7 @@ const summitDocListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case SUMMITDOC_DELETED: {
             let {summitDocId} = payload;
-            return {...state, summitDocs: state.summitDocs.filter(s => s.id != summitDocId)};
+            return {...state, summitDocs: state.summitDocs.filter(s => s.id !== summitDocId)};
         }
         break;
         default:

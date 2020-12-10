@@ -16,7 +16,6 @@ import
     RECEIVE_EVENT_MATERIAL,
     RESET_EVENT_MATERIAL_FORM,
     UPDATE_EVENT_MATERIAL,
-    EVENT_MATERIAL_ADDED
 } from '../../actions/event-material-actions';
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';

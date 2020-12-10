@@ -20,7 +20,6 @@ import
 } from '../../actions/sponsor-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
-import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 const DEFAULT_STATE = {
     sponsors            : [],
@@ -69,7 +68,7 @@ const sponsorListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case SPONSOR_DELETED: {
             let {sponsorId} = payload;
-            return {...state, sponsors: state.sponsors.filter(t => t.id != sponsorId)};
+            return {...state, sponsors: state.sponsors.filter(t => t.id !== sponsorId)};
         }
         break;
         default:

@@ -13,7 +13,7 @@
 import React from 'react';
 import ReactDOM    from 'react-dom';
 import { DraggableItemTypes } from './draggable-items-types';
-import { DragSource, DropTarget } from 'react-dnd';
+import { DragSource } from 'react-dnd';
 import {Popover, OverlayTrigger} from 'react-bootstrap';
 import { RawHTML } from 'openstack-uicore-foundation/lib/components';
 
@@ -132,11 +132,11 @@ class ScheduleEvent extends React.Component {
         let newHeight = height;
         let newTop    = top;
 
-        if(resizeInfo.type == RESIZING_DIR_SOUTH) {
+        if(resizeInfo.type === RESIZING_DIR_SOUTH) {
             newHeight = height + deltaY;
         }
 
-        if(resizeInfo.type == RESIZING_DIR_NORTH){
+        if(resizeInfo.type === RESIZING_DIR_NORTH){
             if(deltaY < 0){
                 newTop = top - Math.abs(deltaY);
                 newHeight = height + Math.abs(deltaY);
@@ -250,8 +250,8 @@ class ScheduleEvent extends React.Component {
                                 </div>
                             </div>
                             <div className="event-actions">
-                                <i className="fa fa-minus-circle unpublish-event-btn" aria-hidden="true" title="unpublish event" onClick={this.onClickUnPublish.bind(this)}></i>
-                                <i className="fa fa-pencil-square-o edit-published-event-btn" title="edit event" aria-hidden="true" onClick={this.onClickEdit.bind(this)}></i>
+                                <i className="fa fa-minus-circle unpublish-event-btn" aria-hidden="true" title="unpublish event" onClick={this.onClickUnPublish.bind(this)}/>
+                                <i className="fa fa-pencil-square-o edit-published-event-btn" title="edit event" aria-hidden="true" onClick={this.onClickEdit.bind(this)}/>
                             </div>
                         </div>
                     </div>

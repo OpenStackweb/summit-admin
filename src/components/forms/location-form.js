@@ -14,7 +14,6 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
 import {
     Dropdown,
     CountryDropdown,
@@ -24,6 +23,7 @@ import {
     Panel,
     GMap
 } from 'openstack-uicore-foundation/lib/components'
+import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 
 
 class LocationForm extends React.Component {
@@ -52,18 +52,21 @@ class LocationForm extends React.Component {
         this.handleMapClick         = this.handleMapClick.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const state = {};
+        scrollToError(this.props.errors);
 
-        this.setState({
-            entity: {...nextProps.entity},
-            errors: {...nextProps.errors}
-        });
+        if(prevProps.entity.id !== this.props.entity.id) {
+            state.entity = {...this.props.entity};
+            state.errors = {};
+        }
 
-        //scroll to first error
-        if(Object.keys(nextProps.errors).length > 0) {
-            let firstError = Object.keys(nextProps.errors)[0]
-            let firstNode = document.getElementById(firstError);
-            if (firstNode) window.scrollTo(0, findElementPos(firstNode));
+        if (!shallowEqual(prevProps.errors, this.props.errors)) {
+            state.errors = {...this.props.errors};
+        }
+
+        if (!isEmpty(state)) {
+            this.setState({...this.state, ...state})
         }
     }
 
@@ -72,7 +75,7 @@ class LocationForm extends React.Component {
         let errors = {...this.state.errors};
         let {value, id} = ev.target;
 
-        if (ev.target.type == 'checkbox') {
+        if (ev.target.type === 'checkbox') {
             value = ev.target.checked;
         }
 
@@ -102,7 +105,7 @@ class LocationForm extends React.Component {
         let {class_name} = this.state.entity;
         if (!class_name) return false;
 
-        let location_class = this.props.allClasses.find(c => c.class_name == class_name);
+        let location_class = this.props.allClasses.find(c => c.class_name === class_name);
 
         return location_class.hasOwnProperty(component);
     }
@@ -362,7 +365,7 @@ class LocationForm extends React.Component {
                 </div>
 
                 {this.display('address_1') &&
-                <Panel show={showSection == 'address'} title={T.translate("edit_location.address")}
+                <Panel show={showSection === 'address'} title={T.translate("edit_location.address")}
                        handleClick={this.toggleSection.bind(this, 'address')}>
                     <div className="row form-group">
                         <div className="col-md-4">
@@ -430,8 +433,8 @@ class LocationForm extends React.Component {
                 </Panel>
                 }
 
-                {this.display('floors') && entity.id != 0 &&
-                <Panel show={showSection == 'floors'} title={T.translate("edit_location.floors")}
+                {this.display('floors') && entity.id !== 0 &&
+                <Panel show={showSection === 'floors'} title={T.translate("edit_location.floors")}
                        handleClick={this.toggleSection.bind(this, 'floors')}>
                     <button className="btn btn-primary pull-right" onClick={this.handleNewFloor}>
                         {T.translate("edit_location.add_floor")}
@@ -444,8 +447,8 @@ class LocationForm extends React.Component {
                 </Panel>
                 }
 
-                {this.display('rooms') && entity.id != 0 &&
-                <Panel show={showSection == 'rooms'} id="rooms" title={T.translate("edit_location.rooms")}
+                {this.display('rooms') && entity.id !== 0 &&
+                <Panel show={showSection === 'rooms'} id="rooms" title={T.translate("edit_location.rooms")}
                        handleClick={this.toggleSection.bind(this, 'rooms')}>
                     <button className="btn btn-primary pull-right" onClick={this.handleNewRoom}>
                         {T.translate("edit_location.add_room")}
@@ -458,8 +461,8 @@ class LocationForm extends React.Component {
                 </Panel>
                 }
 
-                {this.display('images') && entity.id != 0 &&
-                <Panel show={showSection == 'images'} title={T.translate("edit_location.images")}
+                {this.display('images') && entity.id !== 0 &&
+                <Panel show={showSection === 'images'} title={T.translate("edit_location.images")}
                        handleClick={this.toggleSection.bind(this, 'images')}>
                     <div className="row form-group">
                         <div className="col-md-12">

@@ -14,9 +14,9 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { Input, Dropdown, Table, Panel, MemberInput } from 'openstack-uicore-foundation/lib/components'
-import { epochToMomentTimeZone, findElementPos } from 'openstack-uicore-foundation/lib/methods'
+import { Input, Dropdown, Table, Panel } from 'openstack-uicore-foundation/lib/components'
 import OwnerInput from '../inputs/owner-input'
+import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 
 
 class PurchaseOrderForm extends React.Component {
@@ -34,18 +34,21 @@ class PurchaseOrderForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const state = {};
+        scrollToError(this.props.errors);
 
-        this.setState({
-            entity: {...nextProps.entity},
-            errors: {...nextProps.errors}
-        });
+        if(prevProps.entity.id !== this.props.entity.id) {
+            state.entity = {...this.props.entity};
+            state.errors = {};
+        }
 
-        //scroll to first error
-        if(Object.keys(nextProps.errors).length > 0) {
-            let firstError = Object.keys(nextProps.errors)[0]
-            let firstNode = document.getElementById(firstError);
-            if (firstNode) window.scrollTo(0, findElementPos(firstNode));
+        if (!shallowEqual(prevProps.errors, this.props.errors)) {
+            state.errors = {...this.props.errors};
+        }
+
+        if (!isEmpty(state)) {
+            this.setState({...this.state, ...state})
         }
     }
 
@@ -59,7 +62,7 @@ class PurchaseOrderForm extends React.Component {
         let errors = {...this.state.errors};
         let {value, id} = ev.target;
 
-        if (ev.target.type == 'number') {
+        if (ev.target.type === 'number') {
             value = parseInt(ev.target.value);
         }
 
@@ -120,7 +123,7 @@ class PurchaseOrderForm extends React.Component {
         return (
             <form className="purchase-order-form">
                 <input type="hidden" id="id" value={entity.id} />
-                {entity.id != 0 &&
+                {entity.id !== 0 &&
                 <div className="row form-group">
                     <div className="col-md-6">
                         <label> {T.translate("edit_purchase_order.number")}</label>
@@ -142,7 +145,7 @@ class PurchaseOrderForm extends React.Component {
                     </div>
                 </div>
                 }
-                {entity.id == 0 &&
+                {entity.id === 0 &&
                 <div className="row form-group">
                     <div className="col-md-6">
                         <label> {T.translate("edit_purchase_order.ticket_type")}</label>
@@ -175,7 +178,7 @@ class PurchaseOrderForm extends React.Component {
                         />
                     </div>
                 </div>
-                <Panel show={showSection == 'billing'} title={T.translate("edit_purchase_order.billing")}
+                <Panel show={showSection === 'billing'} title={T.translate("edit_purchase_order.billing")}
                        handleClick={this.toggleSection.bind(this, 'billing')}>
                 <div className="row form-group">
                     <div className="col-md-4">
@@ -256,7 +259,7 @@ class PurchaseOrderForm extends React.Component {
                 </Panel>
                 }*/}
 
-                {entity.id != 0 &&
+                {entity.id !== 0 &&
                     <Table
                         options={ticket_options}
                         data={entity.tickets}

@@ -75,11 +75,11 @@ class SummitEventsBulkActionsPage extends React.Component {
             updateEventsEndDateLocal,
         } = this.props;
 
-        if(!currentSummit.id) return(<div></div>);
+        if(!currentSummit.id) return(<div />);
 
         return (
             <div>
-                <Breadcrumb data={{ title: T.translate("bulk_actions_page.bulk_actions"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("bulk_actions_page.bulk_actions"), pathname: match.url }} />
 
                 <div className="bulk-actions-editor-container">
                     <h2>{T.translate("bulk_actions_page.title")}</h2>
@@ -97,7 +97,7 @@ class SummitEventsBulkActionsPage extends React.Component {
                         updateEventsStartDateLocal={updateEventsStartDateLocal}
                         updateEventsEndDateLocal={updateEventsEndDateLocal}
                         history={this.props.history}
-                    ></SummitEventBulkEditorForm>
+                    />
                 </div>
             </div>
         );

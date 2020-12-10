@@ -79,7 +79,7 @@ export const getRsvpTemplates = ( term = null, page = 1, perPage = 10, order = '
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -220,7 +220,7 @@ export const updateQuestionsOrder = (questions, templateId, questionId, newOrder
         access_token : accessToken
     };
 
-    let question = questions.find(q => q.id == questionId);
+    let question = questions.find(q => q.id === questionId);
 
     putRequest(
         null,
@@ -368,7 +368,7 @@ export const updateQuestionValuesOrder = (values, templateId, questionId, valueI
         access_token : accessToken
     };
 
-    let value = values.find(v => v.id == valueId);
+    let value = values.find(v => v.id === valueId);
 
     putRequest(
         null,

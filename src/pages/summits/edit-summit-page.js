@@ -15,7 +15,6 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import Swal from "sweetalert2";
-import { Breadcrumb } from 'react-breadcrumbs';
 import Restrict from '../../routes/restrict'
 import SummitForm from '../../components/forms/summit-form';
 import { getSummitById, resetSummitForm, saveSummit, attachLogo, deleteLogo }  from '../../actions/summit-actions';
@@ -37,7 +36,7 @@ class EditSummitPage extends React.Component {
 
     handleSPlanDelete(selectionPlanId) {
         let {currentSummit, deleteSelectionPlan} = this.props;
-        let selectionPlan = currentSummit.selection_plans.find(sp => sp.id == selectionPlanId);
+        let selectionPlan = currentSummit.selection_plans.find(sp => sp.id === selectionPlanId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -55,7 +54,7 @@ class EditSummitPage extends React.Component {
 
     handleAttributeTypeDelete(attributeTypeId) {
         let {deleteRoomBookingAttributeType, currentSummit} = this.props;
-        let roomBookingType = currentSummit.meeting_booking_room_allowed_attributes.find(rb => rb.id == attributeTypeId);
+        let roomBookingType = currentSummit.meeting_booking_room_allowed_attributes.find(rb => rb.id === attributeTypeId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),

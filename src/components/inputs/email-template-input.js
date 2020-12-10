@@ -57,7 +57,7 @@ export default class EmailTemplateInput extends React.Component {
 
     render() {
         let {error, value, onChange, id, multi, plainValue, ...rest} = this.props;
-        let has_error = ( this.props.hasOwnProperty('error') && error != '' );
+        let has_error = ( this.props.hasOwnProperty('error') && error !== '' );
 
         // we need to map into value/label because of a bug in react-select 2
         // https://github.com/JedWatson/react-select/issues/2998

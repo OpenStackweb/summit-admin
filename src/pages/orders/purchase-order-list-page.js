@@ -48,7 +48,7 @@ class PurchaseOrderListPage extends React.Component {
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
             this.props.getPurchaseOrders();
         }
     }
@@ -80,7 +80,7 @@ class PurchaseOrderListPage extends React.Component {
 
     handleSort(index, key, dir, func) {
         let {term, page, perPage} = this.props;
-        key = (key == 'name') ? 'last_name' : key;
+        key = (key === 'name') ? 'last_name' : key;
         this.props.getPurchaseOrders(term, page, perPage, key, dir);
     }
 
@@ -110,14 +110,14 @@ class PurchaseOrderListPage extends React.Component {
         ];
 
         let table_options = {
-            sortCol: (order == 'last_name') ? 'name' : order,
+            sortCol: (order === 'last_name') ? 'name' : order,
             sortDir: orderDir,
             actions: {
                 edit: {onClick: this.handleEdit},
             }
         }
 
-        if(!currentSummit.id) return (<div></div>);
+        if(!currentSummit.id) return (<div />);
 
         return(
             <div className="container large">
@@ -140,7 +140,7 @@ class PurchaseOrderListPage extends React.Component {
                     </div>
                 </div>
 
-                {purchaseOrders.length == 0 &&
+                {purchaseOrders.length === 0 &&
                 <div>{T.translate("purchase_order_list.no_orders")}</div>
                 }
 

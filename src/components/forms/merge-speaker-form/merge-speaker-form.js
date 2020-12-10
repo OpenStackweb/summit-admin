@@ -12,7 +12,6 @@
  **/
 
 import React from 'react'
-import T from 'i18n-react/dist/i18n-react'
 import SelectableMergeRow from './selectable-merge-row'
 import MergeableMergeRow from './mergeable-merge-row'
 
@@ -77,7 +76,7 @@ class MergeSpeakerForm extends React.Component {
 
     handlePresentationLink(summitId, event_id, ev) {
         let {allSummits} = this.props;
-        let summit = allSummits.find(s => s.id == summitId);
+        let summit = allSummits.find(s => s.id === summitId);
 
         let event_detail_url = summit.schedule_event_detail_url.replace(':event_id',event_id).replace(':event_title','');
 

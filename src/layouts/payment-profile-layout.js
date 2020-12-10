@@ -28,7 +28,7 @@ class PaymentProfileLayout extends React.Component {
         let { match } = this.props;
         return(
             <div>
-                <Breadcrumb data={{ title: T.translate("payment_profiles.payment_profiles"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("payment_profiles.payment_profiles"), pathname: match.url }} />
                 <Switch>
                     <Route strict exact path={match.url} component={PaymentProfileListPage}/>
                     <Route strict exact path={`${match.url}/new`} component={EditPaymentProfilePage}/>

@@ -46,7 +46,7 @@ class FeaturedSpeakersPage extends React.Component {
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
             this.props.getFeaturedSpeakers();
         }
     }
@@ -140,7 +140,7 @@ class FeaturedSpeakersPage extends React.Component {
                     </div>
                 </div>
 
-                {speakers.length == 0 &&
+                {speakers.length === 0 &&
                 <div>{T.translate("featured_speakers.no_speakers")}</div>
                 }
 

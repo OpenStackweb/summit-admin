@@ -12,7 +12,6 @@
  **/
 
 import React from 'react'
-import T from 'i18n-react/dist/i18n-react'
 import { Table } from 'openstack-uicore-foundation/lib/components'
 const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
@@ -37,7 +36,7 @@ class TagReport extends React.Component {
 
         if (sortKey) {
             let querySortKey = this.translateSortKey(sortKey);
-            let order = (sortDir == 1) ? '' : '-';
+            let order = (sortDir === 1) ? '' : '-';
             filters.ordering = order + '' + querySortKey;
         }
 
@@ -85,7 +84,7 @@ class TagReport extends React.Component {
         let {data, extraData, totalCount, sortKey, sortDir} = this.props;
         let storedDataName = this.props.name;
 
-        if (!data || storedDataName != this.getName()) return (<div></div>)
+        if (!data || storedDataName !== this.getName()) return (<div />)
 
         let report_options = {
             sortCol: sortKey,

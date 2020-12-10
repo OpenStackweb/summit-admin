@@ -28,7 +28,7 @@ class PushNotificationLayout extends React.Component {
         let { match } = this.props;
         return(
             <div>
-                <Breadcrumb data={{ title: T.translate("push_notification_list.push_notifications"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("push_notification_list.push_notifications"), pathname: match.url }} />
 
                 <Switch>
                     <Route strict exact path={match.url} component={PushNotificationListPage}/>

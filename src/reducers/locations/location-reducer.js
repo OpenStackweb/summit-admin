@@ -111,7 +111,7 @@ const locationReducer = (state = DEFAULT_STATE, action) => {
                     return parseInt(a.number) - parseInt(b.number)
                 });
                 entity.rooms = entity.rooms.map(r => {
-                    let floor = entity.floors.find(f => f.id == r.floor_id);
+                    let floor = entity.floors.find(f => f.id === r.floor_id);
                     let floor_name = floor ? floor.name : 'N/A';
 
                     return {...r, floor_name: floor_name}
@@ -156,18 +156,18 @@ const locationReducer = (state = DEFAULT_STATE, action) => {
         break;
         case FLOOR_UPDATED: {
             let { response } = payload;
-            let floors = state.entity.floors.filter(f => f.id != response.id);
+            let floors = state.entity.floors.filter(f => f.id !== response.id);
             return {...state, entity: {...state.entity, floors: [...floors, response] }};
         }
         break;
         case FLOOR_DELETED: {
             let {floorId} = payload;
-            return {...state, entity: {...state.entity, floors: state.entity.floors.filter(f => f.id != floorId)}};
+            return {...state, entity: {...state.entity, floors: state.entity.floors.filter(f => f.id !== floorId)}};
         }
         break;
         case ROOM_ADDED: {
             let { response } = payload;
-            let floor = state.entity.floors.find(f => f.id == response.floor_id);
+            let floor = state.entity.floors.find(f => f.id === response.floor_id);
             response.floor_name = floor ? floor.name : 'N/A';
 
             return {...state, entity: {...state.entity, rooms: [...state.entity.rooms, response] }};
@@ -175,17 +175,17 @@ const locationReducer = (state = DEFAULT_STATE, action) => {
         break;
         case ROOM_DELETED: {
             let {roomId} = payload;
-            return {...state, entity: {...state.entity, rooms: state.entity.rooms.filter(r => r.id != roomId)}};
+            return {...state, entity: {...state.entity, rooms: state.entity.rooms.filter(r => r.id !== roomId)}};
         }
         break;
         case LOCATION_IMAGE_DELETED: {
             let {imageId} = payload;
-            return {...state, entity: {...state.entity, images: state.entity.images.filter(i => i.id != imageId)}};
+            return {...state, entity: {...state.entity, images: state.entity.images.filter(i => i.id !== imageId)}};
         }
         break;
         case LOCATION_MAP_DELETED: {
             let {mapId} = payload;
-            return {...state, entity: {...state.entity, maps: state.entity.maps.filter(m => m.id != mapId)}};
+            return {...state, entity: {...state.entity, maps: state.entity.maps.filter(m => m.id !== mapId)}};
         }
         break;
         case VALIDATE: {

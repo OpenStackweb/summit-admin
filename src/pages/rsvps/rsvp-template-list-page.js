@@ -46,7 +46,7 @@ class RsvpTemplateListPage extends React.Component {
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
             this.props.getRsvpTemplates();
         }
     }
@@ -58,7 +58,7 @@ class RsvpTemplateListPage extends React.Component {
 
     handleDelete(rsvpTemplateId) {
         let {deleteRsvpTemplate, rsvpTemplates} = this.props;
-        let rsvpTemplate = rsvpTemplates.find(r => r.id == rsvpTemplateId);
+        let rsvpTemplate = rsvpTemplates.find(r => r.id === rsvpTemplateId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -111,7 +111,7 @@ class RsvpTemplateListPage extends React.Component {
             }
         }
 
-        if(!currentSummit.id) return (<div></div>);
+        if(!currentSummit.id) return (<div />);
 
         return(
             <div className="container">
@@ -131,7 +131,7 @@ class RsvpTemplateListPage extends React.Component {
                     </div>
                 </div>
 
-                {rsvpTemplates.length == 0 &&
+                {rsvpTemplates.length === 0 &&
                 <div>{T.translate("rsvp_template_list.no_items")}</div>
                 }
 

@@ -18,7 +18,7 @@ class ScheduleAdminsBulkActionsSelector extends React.Component {
 
     onPerformBulkAction(){
         let selectedBulkAction = this.actionTypeSelect.value;
-        if(selectedBulkAction == '') return;
+        if(selectedBulkAction === '') return;
         this.props.onSelectedBulkAction(selectedBulkAction);
     }
 

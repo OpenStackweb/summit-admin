@@ -43,7 +43,7 @@ class EventCategoryListPage extends React.Component {
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit != null && currentSummit.id !== newProps.currentSummit.id) {
             this.props.getEventCategories();
         }
     }
@@ -64,7 +64,7 @@ class EventCategoryListPage extends React.Component {
 
     handleDelete(categoryId) {
         let {deleteEventCategory, eventCategories} = this.props;
-        let category = eventCategories.find(c => c.id == categoryId);
+        let category = eventCategories.find(c => c.id === categoryId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -82,7 +82,7 @@ class EventCategoryListPage extends React.Component {
 
     render(){
         let {currentSummit, eventCategories, allSummits} = this.props;
-        const summits = allSummits.filter(s => s.id != currentSummit.id);
+        const summits = allSummits.filter(s => s.id !== currentSummit.id);
 
         let columns = [
             { columnKey: 'id', value: T.translate("general.id") },
@@ -116,7 +116,7 @@ class EventCategoryListPage extends React.Component {
                     </div>
                 </div>
 
-                {eventCategories.length == 0 &&
+                {eventCategories.length === 0 &&
                 <div>{T.translate("event_category_list.no_items")}</div>
                 }
 

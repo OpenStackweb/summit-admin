@@ -36,7 +36,7 @@ class EditEventCategoryGroupPage extends React.Component {
     }
 
     componentDidMount () {
-        let {entity, allClasses} = this.props;
+        let {allClasses} = this.props;
         let groupId = this.props.match.params.group_id;
 
         if (!groupId) {
@@ -45,7 +45,7 @@ class EditEventCategoryGroupPage extends React.Component {
             this.props.getEventCategoryGroup(groupId);
         }
 
-        if(allClasses.length == 0){
+        if(allClasses.length === 0){
             this.props.getEventCategoryGroupMeta();
         }
     }
@@ -54,7 +54,7 @@ class EditEventCategoryGroupPage extends React.Component {
         let oldId = this.props.match.params.group_id;
         let newId = newProps.match.params.group_id;
 
-        if (oldId != newId) {
+        if (oldId !== newId) {
             if (!newId) {
                 this.props.resetEventCategoryGroupForm();
             } else {
@@ -68,11 +68,11 @@ class EditEventCategoryGroupPage extends React.Component {
         let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
-        if (!allClasses.length) return (<div></div>);
+        if (!allClasses.length) return (<div />);
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("edit_event_category_group.event_category_group")}</h3>
                 <hr/>
                 {currentSummit &&

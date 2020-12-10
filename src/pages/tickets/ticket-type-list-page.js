@@ -44,7 +44,7 @@ class TicketTypeListPage extends React.Component {
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
             this.props.getTicketTypes();
         }
     }
@@ -62,7 +62,7 @@ class TicketTypeListPage extends React.Component {
 
     handleDelete(ticketTypeId) {
         let {deleteTicketType, ticketTypes} = this.props;
-        let ticketType = ticketTypes.find(t => t.id == ticketTypeId);
+        let ticketType = ticketTypes.find(t => t.id === ticketTypeId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -104,7 +104,7 @@ class TicketTypeListPage extends React.Component {
             }
         }
 
-        if(!currentSummit.id) return (<div></div>);
+        if(!currentSummit.id) return (<div />);
 
         return(
             <div className="container">
@@ -120,7 +120,7 @@ class TicketTypeListPage extends React.Component {
                     </div>
                 </div>
 
-                {ticketTypes.length == 0 &&
+                {ticketTypes.length === 0 &&
                 <div>{T.translate("ticket_type_list.no_ticket_types")}</div>
                 }
 

@@ -20,7 +20,6 @@ import
 } from '../../actions/sponsor-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
-import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 const DEFAULT_STATE = {
     badgeScans      : [],

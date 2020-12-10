@@ -23,13 +23,10 @@ import {
     startLoading,
     showMessage,
     showSuccessMessage,
-    fetchResponseHandler,
-    fetchErrorHandler,
     getCSV,
     authErrorHandler,
     escapeFilterValue
 } from 'openstack-uicore-foundation/lib/methods';
-import _ from "lodash";
 
 export const REQUEST_ROOM_BOOKINGS              = 'REQUEST_ROOM_BOOKINGS';
 export const RECEIVE_ROOM_BOOKINGS              = 'RECEIVE_ROOM_BOOKINGS';
@@ -79,7 +76,7 @@ export const getRoomBookings = ( term = null, page = 1, perPage = 10, order = 's
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -117,7 +114,7 @@ export const exportRoomBookings = ( term = null, order = 'start_datetime', order
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 

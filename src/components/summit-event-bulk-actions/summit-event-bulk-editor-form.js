@@ -14,7 +14,7 @@ import React from 'react'
 import SummitEventBulkEditorItem from './summit-event-bulk-editor-item'
 import T from 'i18n-react/dist/i18n-react'
 import Swal from "sweetalert2";
-import { DateTimePicker, Dropdown } from 'openstack-uicore-foundation/lib/components'
+import { DateTimePicker } from 'openstack-uicore-foundation/lib/components'
 import ScheduleAdminVenueSelector from '../schedule-builder/schedule-admin-venue-selector';
 import ScheduleAdminEventTypeSelector from '../schedule-builder/schedule-admin-event-type-selector';
 import moment from "moment-timezone";
@@ -133,7 +133,7 @@ class SummitEventBulkEditorForm extends React.Component
 
         for(let i = 0; i < currentSummit.locations.length; i++) {
             let location = currentSummit.locations[i];
-            if (location.class_name != "SummitVenue") continue;
+            if (location.class_name !== "SummitVenue") continue;
             let option = { value : location, label: location.name };
             venuesOptions.push(option);
             if(!location.hasOwnProperty('rooms')) continue;
@@ -143,22 +143,22 @@ class SummitEventBulkEditorForm extends React.Component
             }
         }
 
-        let currentBulkLocation = venuesOptions.filter((option) =>  this.state.currentBulkLocation != null && option.value.id == this.state.currentBulkLocation.id).shift();
+        let currentBulkLocation = venuesOptions.filter((option) =>  this.state.currentBulkLocation != null && option.value.id === this.state.currentBulkLocation.id).shift();
         let typesOptions = [];
         let currentBulkType = null;
 
         // all events same type
-        let eventsTypeArray = events.map(et => currentSummit.event_types.find(e => e.id == et.type_id));
+        let eventsTypeArray = events.map(et => currentSummit.event_types.find(e => e.id === et.type_id));
         let canEditEventType = ([...new Set(eventsTypeArray.map(et => et.class_name))].length === 1);
 
         if (canEditEventType) {
-            let eventsType = currentSummit.event_types.find(et => et.id == events[0].type_id);
+            let eventsType = currentSummit.event_types.find(et => et.id === events[0].type_id);
 
             typesOptions = currentSummit.event_types
-                .filter(et => eventsType.class_name == et.class_name)
+                .filter(et => eventsType.class_name === et.class_name)
                 .map(et => ({value: et, label: et.name}));
 
-            currentBulkType = typesOptions.find((option) => option.value.id == eventsType.id);
+            currentBulkType = typesOptions.find((option) => option.value.id === eventsType.id);
         }
 
         return (
@@ -224,7 +224,7 @@ class SummitEventBulkEditorForm extends React.Component
                             onStartDateChanged={this.onStartDateChanged}
                             onEndDateChanged={this.onEndDateChanged}
                             onSelectedEvent={this.onSelectedEvent}
-                        ></SummitEventBulkEditorItem>
+                        />
                     ))
                 }
                 <div className="row">

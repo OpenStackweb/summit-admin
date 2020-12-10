@@ -29,7 +29,7 @@ class AttendeeLayout extends React.Component {
         let { match } = this.props;
         return(
             <div>
-                <Breadcrumb data={{ title: T.translate("attendee_list.attendees"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("attendee_list.attendees"), pathname: match.url }} />
 
                 <Switch>
                     <Route strict exact path={match.url} component={SummitAttendeeListPage}/>

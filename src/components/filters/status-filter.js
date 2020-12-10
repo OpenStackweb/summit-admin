@@ -25,7 +25,7 @@ export default class StatusFilter extends React.Component {
     handleFilterChange(value) {
         let status = null;
 
-        if (value.length == 1) {
+        if (value.length === 1) {
             if ( value.includes('received')) {
                 status = "received";
             } else if ( value.includes('not-received')){

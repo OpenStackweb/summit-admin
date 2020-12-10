@@ -44,7 +44,7 @@ class EditLocationPage extends React.Component {
 
     handleFloorDelete(floorId) {
         let {deleteFloor, entity} = this.props;
-        let floor = entity.floors.find(f => f.id == floorId);
+        let floor = entity.floors.find(f => f.id === floorId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -62,7 +62,7 @@ class EditLocationPage extends React.Component {
 
     handleRoomDelete(roomId) {
         let {deleteRoom, entity} = this.props;
-        let room = entity.rooms.find(r => r.id == roomId);
+        let room = entity.rooms.find(r => r.id === roomId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -80,7 +80,7 @@ class EditLocationPage extends React.Component {
 
     handleImageDelete(imageId) {
         let {deleteLocationImage, entity} = this.props;
-        let image = entity.images.find(i => i.id == imageId);
+        let image = entity.images.find(i => i.id === imageId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -98,7 +98,7 @@ class EditLocationPage extends React.Component {
 
     handleMapDelete(mapId) {
         let {deleteLocationMap, entity} = this.props;
-        let map = entity.maps.find(m => m.id == mapId);
+        let map = entity.maps.find(m => m.id === mapId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),

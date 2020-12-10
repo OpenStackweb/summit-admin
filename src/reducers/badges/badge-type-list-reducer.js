@@ -19,7 +19,6 @@ import
 } from '../../actions/badge-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
-import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 const DEFAULT_STATE = {
     badgeTypes            : [],
@@ -55,7 +54,7 @@ const badgeTypeListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case BADGE_TYPE_DELETED: {
             let {badgeTypeId} = payload;
-            return {...state, badgeTypes: state.badgeTypes.filter(t => t.id != badgeTypeId), totalBadgeTypes: (state.totalBadgeTypes - 1)};
+            return {...state, badgeTypes: state.badgeTypes.filter(t => t.id !== badgeTypeId), totalBadgeTypes: (state.totalBadgeTypes - 1)};
         }
         break;
         default:

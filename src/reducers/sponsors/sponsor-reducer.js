@@ -83,7 +83,7 @@ const sponsorReducer = (state = DEFAULT_STATE, action) => {
         break;
         case MEMBER_REMOVED_FROM_SPONSOR: {
             let {memberId} = payload;
-            let currentMembers = state.entity.members.filter(m => m.id != memberId);
+            let currentMembers = state.entity.members.filter(m => m.id !== memberId);
             return {...state, entity: {...state.entity, members: currentMembers } };
         }
         break;

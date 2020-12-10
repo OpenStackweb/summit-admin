@@ -12,8 +12,6 @@
  **/
 
 import React from 'react'
-import T from 'i18n-react/dist/i18n-react'
-import { Table } from 'openstack-uicore-foundation/lib/components'
 const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
 import history from "../../history";
@@ -69,7 +67,7 @@ class RsvpReport extends React.Component {
         let {data} = this.props;
         let storedDataName = this.props.name;
 
-        if (!data || storedDataName != this.getName()) return (<div></div>)
+        if (!data || storedDataName !== this.getName()) return (<div />)
 
         let reportData = data.map(it => {
 

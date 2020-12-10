@@ -15,6 +15,7 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import { MemberInput, GroupInput, EventInput, Dropdown } from 'openstack-uicore-foundation/lib/components'
+import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 
 
 class PushNotificationForm extends React.Component {
@@ -31,18 +32,21 @@ class PushNotificationForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const state = {};
+        scrollToError(this.props.errors);
 
-        this.setState({
-            entity: {...nextProps.entity},
-            errors: {...nextProps.errors}
-        });
+        if(prevProps.entity.id !== this.props.entity.id) {
+            state.entity = {...this.props.entity};
+            state.errors = {};
+        }
 
-        //scroll to first error
-        if(Object.keys(nextProps.errors).length > 0) {
-            let firstError = Object.keys(nextProps.errors)[0]
-            let firstNode = document.getElementById(firstError);
-            if (firstNode) window.scrollTo(0, findElementPos(firstNode));
+        if (!shallowEqual(prevProps.errors, this.props.errors)) {
+            state.errors = {...this.props.errors};
+        }
+
+        if (!isEmpty(state)) {
+            this.setState({...this.state, ...state})
         }
     }
 
@@ -51,7 +55,7 @@ class PushNotificationForm extends React.Component {
         let errors = {...this.state.errors};
         let {value, id} = ev.target;
 
-        if (id == 'channel') {
+        if (id === 'channel') {
             entity.members = [];
             entity.event = {};
             entity.group = {};
@@ -86,16 +90,16 @@ class PushNotificationForm extends React.Component {
 
         switch(component) {
             case 'channel':
-                return (platform == 'MOBILE');
+                return (platform === 'MOBILE');
                 break;
             case 'members':
-                return (platform == 'MOBILE' && channel == 'MEMBERS');
+                return (platform === 'MOBILE' && channel === 'MEMBERS');
                 break;
             case 'event':
-                return (platform == 'MOBILE' && channel == 'EVENT');
+                return (platform === 'MOBILE' && channel === 'EVENT');
                 break;
             case 'group':
-                return (platform == 'MOBILE' && channel == 'GROUP');
+                return (platform === 'MOBILE' && channel === 'GROUP');
                 break;
         }
     }

@@ -33,7 +33,7 @@ export default class TrackFilter extends React.Component {
         let options = tracks.map(t => ({value: t.id, label: t.name}));
 
         if (value) {
-            theValue = this.props.isMulti ? options.filter(op => value.includes(op.value)) : options.find(op => op.value == value);
+            theValue = this.props.isMulti ? options.filter(op => value.includes(op.value)) : options.find(op => op.value === value);
         }
 
         return (

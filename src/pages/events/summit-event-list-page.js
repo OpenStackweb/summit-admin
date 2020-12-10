@@ -63,7 +63,7 @@ class SummitEventListPage extends React.Component {
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit != null && currentSummit.id !== newProps.currentSummit.id) {
             this.props.getEvents();
         }
     }
@@ -87,7 +87,7 @@ class SummitEventListPage extends React.Component {
 
     handleSort(index, key, dir, func) {
         let {term, page, perPage} = this.props;
-        key = (key == 'name') ? 'last_name' : key;
+        key = (key === 'name') ? 'last_name' : key;
         this.props.getEvents(term, page, perPage, key, dir);
     }
 
@@ -103,7 +103,7 @@ class SummitEventListPage extends React.Component {
 
     handleDeleteEvent(eventId) {
         let {deleteEvent, events} = this.props;
-        let event = events.find(e => e.id == eventId);
+        let event = events.find(e => e.id === eventId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -132,7 +132,7 @@ class SummitEventListPage extends React.Component {
         ];
 
         let table_options = {
-            sortCol: (order == 'last_name') ? 'name' : order,
+            sortCol: (order === 'last_name') ? 'name' : order,
             sortDir: orderDir,
             actions: {
                 edit: {onClick: this.handleEdit},
@@ -140,7 +140,7 @@ class SummitEventListPage extends React.Component {
             }
         }
 
-        if(!currentSummit.id) return(<div></div>);
+        if(!currentSummit.id) return(<div />);
 
         return(
             <div className="container">
@@ -166,7 +166,7 @@ class SummitEventListPage extends React.Component {
                     </div>
                 </div>
 
-                {events.length == 0 &&
+                {events.length === 0 &&
                 <div>{T.translate("event_list.no_events")}</div>
                 }
 

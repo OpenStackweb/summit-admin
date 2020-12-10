@@ -28,7 +28,7 @@ class RoomOccupancyLayout extends React.Component {
         let { match } = this.props;
         return(
             <div>
-                <Breadcrumb data={{ title: T.translate("room_occupancy.room_occupancy"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("room_occupancy.room_occupancy"), pathname: match.url }} />
 
                 <Switch>
                     <Route exact strict path={match.url} component={RoomOccupancyPage}/>

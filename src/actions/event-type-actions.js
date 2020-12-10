@@ -191,7 +191,7 @@ const normalizeEntity = (entity) => {
     delete(normalizedEntity['last_edited']);
     delete(normalizedEntity['is_default']);
 
-    if (normalizedEntity.class_name == 'EVENT_TYPE') {
+    if (normalizedEntity.class_name === 'EVENT_TYPE') {
         delete(normalizedEntity['should_be_available_on_cfp']);
         delete(normalizedEntity['use_speakers']);
         delete(normalizedEntity['are_speakers_mandatory']);

@@ -23,8 +23,6 @@ import {
     startLoading,
     showMessage,
     showSuccessMessage,
-    postFile,
-    putFile,
     authErrorHandler
 } from 'openstack-uicore-foundation/lib/methods';
 

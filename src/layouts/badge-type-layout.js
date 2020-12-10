@@ -28,7 +28,7 @@ class BadgeTypeLayout extends React.Component {
         let { match } = this.props;
         return(
             <div>
-                <Breadcrumb data={{ title: T.translate("badge_type_list.badge_types"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("badge_type_list.badge_types"), pathname: match.url }} />
 
                 <Switch>
                     <Route strict exact path={match.url} component={BadgeTypeListPage}/>

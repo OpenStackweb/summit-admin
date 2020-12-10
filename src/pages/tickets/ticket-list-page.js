@@ -14,8 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
-import Swal from "sweetalert2";
-import {Dropdown, FreeTextSearch, MemberInput, Table, UploadInput} from 'openstack-uicore-foundation/lib/components';
+import { FreeTextSearch, Table, UploadInput} from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getTickets, ingestExternalTickets, importTicketsCSV, exportTicketsCSV } from "../../actions/ticket-actions";
 import {Modal, Pagination} from "react-bootstrap";
@@ -54,7 +53,7 @@ class TicketListPage extends React.Component {
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
             this.props.getTickets();
         }
     }
@@ -66,7 +65,7 @@ class TicketListPage extends React.Component {
 
     handleEdit(ticket_id) {
         let {currentSummit, history, tickets} = this.props;
-        let ticket = tickets.find(t => t.id == ticket_id);
+        let ticket = tickets.find(t => t.id === ticket_id);
         history.push(`/app/summits/${currentSummit.id}/purchase-orders/${ticket.order_id}/tickets/${ticket_id}`);
     }
 
@@ -121,11 +120,11 @@ class TicketListPage extends React.Component {
             }
         }
 
-        if(!currentSummit.id) return (<div></div>);
+        if(!currentSummit.id) return (<div />);
 
         return(
             <div>
-                <Breadcrumb data={{ title: T.translate("ticket_list.ticket_list"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("ticket_list.ticket_list"), pathname: match.url }} />
 
                 <div className="container">
                     <h3> {T.translate("ticket_list.ticket_list")} ({totalTickets})</h3>
@@ -150,7 +149,7 @@ class TicketListPage extends React.Component {
                         </div>
                     </div>
 
-                    {tickets.length == 0 &&
+                    {tickets.length === 0 &&
                     <div>{T.translate("ticket_list.no_tickets")}</div>
                     }
 

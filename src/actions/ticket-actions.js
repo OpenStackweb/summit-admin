@@ -121,7 +121,7 @@ export const getTickets = ( term = null, page = 1, perPage = 10, order = 'id', o
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -403,7 +403,7 @@ export const getTicketTypes = ( order = 'name', orderDir = 1 ) => (dispatch, get
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 

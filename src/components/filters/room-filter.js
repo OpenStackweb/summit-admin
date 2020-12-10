@@ -33,7 +33,7 @@ export default class RoomFilter extends React.Component {
         let options = rooms.map(t => ({value: t.id, label: t.name}));
 
         if (value) {
-            theValue = this.props.isMulti ? options.filter(op => value.includes(op.value)) : options.find(op => op.value == value);
+            theValue = this.props.isMulti ? options.filter(op => value.includes(op.value)) : options.find(op => op.value === value);
         }
 
         return (

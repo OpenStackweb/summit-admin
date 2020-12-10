@@ -20,7 +20,7 @@ import
     FLOOR_UPDATED,
     ROOM_DELETED,
     FLOOR_IMAGE_ATTACHED,
-    FLOOR_IMAGE_DELETED, ROOM_IMAGE_ATTACHED, ROOM_IMAGE_DELETED
+    FLOOR_IMAGE_DELETED
 } from '../../actions/location-actions';
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
@@ -79,7 +79,7 @@ const floorReducer = (state = DEFAULT_STATE, action) => {
         break;
         case ROOM_DELETED: {
             let {roomId} = payload;
-            return {...state, entity: {...state.entity, rooms: state.entity.rooms.filter(r => r.id != roomId)}};
+            return {...state, entity: {...state.entity, rooms: state.entity.rooms.filter(r => r.id !== roomId)}};
         }
         break;
         case VALIDATE: {

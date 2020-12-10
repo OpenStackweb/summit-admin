@@ -22,7 +22,7 @@ import {getEmailFlowEvent, resetEmailFlowEventForm, saveEmailFlowEvent} from '..
 class EditEmailFlowEventPage extends React.Component {
 
     constructor(props) {
-        const { currentSummit, match } = props;
+        const { match } = props;
         const eventId = match.params.event_id;
         super(props);
 

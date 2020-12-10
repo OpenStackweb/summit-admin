@@ -51,7 +51,7 @@ const tagGroupListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case TAG_GROUP_DELETED: {
             let {tagGroupId} = payload;
-            return {...state, tagGroups: state.tagGroups.filter(tg => tg.id != tagGroupId)};
+            return {...state, tagGroups: state.tagGroups.filter(tg => tg.id !== tagGroupId)};
         }
         break;
         case TAG_GROUPS_SEEDED: {

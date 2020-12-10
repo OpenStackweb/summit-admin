@@ -27,7 +27,6 @@ import {
     fetchErrorHandler,
     authErrorHandler
 } from "openstack-uicore-foundation/lib/methods";
-import {IMAGE_ATTACHED, IMAGE_DELETED} from "./event-actions";
 
 
 export const REQUEST_EVENT_CATEGORIES      = 'REQUEST_EVENT_CATEGORIES';

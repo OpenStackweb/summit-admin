@@ -126,7 +126,7 @@ const promocodeReducer = (state = DEFAULT_STATE, action) => {
         break;
         case DISCOUNT_TICKET_DELETED: {
             let {ticketId} = payload;
-            let ticket_types_rules = state.entity.ticket_types_rules.filter(tr => tr.id != ticketId);
+            let ticket_types_rules = state.entity.ticket_types_rules.filter(tr => tr.id !== ticketId);
             return {...state, entity: {...state.entity, ticket_types_rules, apply_to_all_tix: false } };
         }
         break;

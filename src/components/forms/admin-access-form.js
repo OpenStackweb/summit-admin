@@ -49,9 +49,9 @@ class AdminAccessForm extends React.Component {
     }
 
     handleChange(ev) {
-        let entity = {...this.state.entity};
-        let errors = {...this.state.errors};
-        let {value, id} = ev.target;
+        const entity = {...this.state.entity};
+        const errors = {...this.state.errors};
+        const {value, id} = ev.target;
 
         errors[id] = '';
         entity[id] = value;
@@ -60,14 +60,14 @@ class AdminAccessForm extends React.Component {
     }
 
     handleSubmit(ev) {
-        let {entity} = this.state;
+        const {entity} = this.state;
         ev.preventDefault();
 
         this.props.onSubmit(entity);
     }
 
     render() {
-        let {entity, errors} = this.state;
+        const {entity, errors} = this.state;
 
         return (
             <form className="admin-access-form">

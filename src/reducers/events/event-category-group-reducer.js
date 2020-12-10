@@ -93,7 +93,7 @@ const eventCategoryGroupReducer = (state = DEFAULT_STATE, action) => {
         break;
         case CATEGORY_REMOVED_FROM_GROUP: {
             let {categoryId} = payload;
-            let tracks = state.entity.tracks.filter(t => t.id != categoryId);
+            let tracks = state.entity.tracks.filter(t => t.id !== categoryId);
             return {...state, entity: {...state.entity, tracks: tracks} };
         }
         break;
@@ -104,7 +104,7 @@ const eventCategoryGroupReducer = (state = DEFAULT_STATE, action) => {
         break;
         case GROUP_REMOVED_FROM_GROUP: {
             let {allowedGroupId} = payload;
-            let allowed_groups = state.entity.allowed_groups.filter(g => g.id != allowedGroupId);
+            let allowed_groups = state.entity.allowed_groups.filter(g => g.id !== allowedGroupId);
             return {...state, entity: {...state.entity, allowed_groups: allowed_groups} };
         }
         break;

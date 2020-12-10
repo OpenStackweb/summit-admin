@@ -54,7 +54,7 @@ class PushNotificationListPage extends React.Component {
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
             this.props.getPushNotifications();
         }
     }
@@ -66,7 +66,7 @@ class PushNotificationListPage extends React.Component {
 
     handleDelete(pushNotificationId) {
         let {deletePushNotification, pushNotifications} = this.props;
-        let pushNotification = pushNotifications.find(n => n.id == pushNotificationId);
+        let pushNotification = pushNotifications.find(n => n.id === pushNotificationId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -84,7 +84,7 @@ class PushNotificationListPage extends React.Component {
 
     handleApprove(pushNotificationId) {
         let {approvePushNotification, pushNotifications} = this.props;
-        let pushNotification = pushNotifications.find(n => n.id == pushNotificationId);
+        let pushNotification = pushNotifications.find(n => n.id === pushNotificationId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -107,7 +107,7 @@ class PushNotificationListPage extends React.Component {
 
     handleSort(index, key, dir, func) {
         let {page, perPage} = this.props;
-        key = (key == 'name') ? 'last_name' : key;
+        key = (key === 'name') ? 'last_name' : key;
         this.props.getPushNotifications(page, perPage, key, dir, this.state.filters);
     }
 
@@ -130,13 +130,13 @@ class PushNotificationListPage extends React.Component {
 
     isNotSent(pushNotificationId) {
         let {pushNotifications} = this.props;
-        let pushNotification = pushNotifications.find(n => n.id == pushNotificationId);
+        let pushNotification = pushNotifications.find(n => n.id === pushNotificationId);
         return !pushNotification.is_sent;
     }
 
     isApproved(pushNotificationId) {
         let {pushNotifications} = this.props;
-        let pushNotification = pushNotifications.find(n => n.id == pushNotificationId);
+        let pushNotification = pushNotifications.find(n => n.id === pushNotificationId);
         return pushNotification.approved;
     }
 
@@ -164,14 +164,14 @@ class PushNotificationListPage extends React.Component {
                     {
                         name: 'approve',
                         tooltip: 'approve',
-                        icon: <i className="fa fa-check"></i>,
+                        icon: <i className="fa fa-check"/>,
                         onClick: this.handleApprove,
                         display: (id) => { return (this.isNotSent(id) && !this.isApproved(id)) }
                     },
                     {
                         name: 'reject',
                         tooltip: 'cancel approve',
-                        icon: <i className="fa fa-times"></i>,
+                        icon: <i className="fa fa-times"/>,
                         onClick: this.props.rejectPushNotification,
                         display: (id) => { return (this.isNotSent(id) && this.isApproved(id)) }
                     }
@@ -184,7 +184,7 @@ class PushNotificationListPage extends React.Component {
         let sent_ddl = [{value: 'ALL', label: 'ALL'}, {value: 1, label: 'SENT'}, {value: 0, label: 'NOT SENT'}];
         let approved_ddl = [{value: 'ALL', label: 'ALL'}, {value: 1, label: 'APPROVED'}, {value: 0, label: 'NOT APPROVED'}];
 
-        if(!currentSummit.id) return (<div></div>);
+        if(!currentSummit.id) return (<div />);
 
         return(
             <div className="container">
@@ -224,7 +224,7 @@ class PushNotificationListPage extends React.Component {
                     </div>
                 </div>
 
-                {pushNotifications.length == 0 &&
+                {pushNotifications.length === 0 &&
                 <div>{T.translate("push_notification_list.no_push_notifications")}</div>
                 }
 

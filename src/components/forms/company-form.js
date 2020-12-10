@@ -15,7 +15,7 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import {TextEditor, UploadInput, Input, CountryDropdown, Dropdown} from 'openstack-uicore-foundation/lib/components';
-import { findElementPos } from 'openstack-uicore-foundation/lib/methods';
+import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 
 
 class CompanyForm extends React.Component {
@@ -34,31 +34,34 @@ class CompanyForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const state = {};
+        scrollToError(this.props.errors);
 
-        this.setState({
-            entity: {...nextProps.entity},
-            errors: {...nextProps.errors}
-        });
+        if(prevProps.entity.id !== this.props.entity.id) {
+            state.entity = {...this.props.entity};
+            state.errors = {};
+        }
 
-        //scroll to first error
-        if(Object.keys(nextProps.errors).length > 0) {
-            let firstError = Object.keys(nextProps.errors)[0]
-            let firstNode = document.getElementById(firstError);
-            if (firstNode) window.scrollTo(0, findElementPos(firstNode));
+        if (!shallowEqual(prevProps.errors, this.props.errors)) {
+            state.errors = {...this.props.errors};
+        }
+
+        if (!isEmpty(state)) {
+            this.setState({...this.state, ...state})
         }
     }
 
     handleChange(ev) {
-        let entity = {...this.state.entity};
-        let errors = {...this.state.errors};
+        const entity = {...this.state.entity};
+        const errors = {...this.state.errors};
         let {value, id} = ev.target;
 
-        if (ev.target.type == 'checkbox') {
+        if (ev.target.type === 'checkbox') {
             value = ev.target.checked;
         }
 
-        if (ev.target.type == 'memberinput') {
+        if (ev.target.type === 'memberinput') {
             entity.email = '';
         }
 
@@ -68,41 +71,30 @@ class CompanyForm extends React.Component {
     }
 
     handleUploadLogo(file) {
-        let formData = new FormData();
+        const formData = new FormData();
         formData.append('file', file);
         this.props.onAttach(this.state.entity, formData, 'logo')
     }
 
     handleUploadBigLogo(file) {
-        let formData = new FormData();
+        const formData = new FormData();
         formData.append('file', file);
         this.props.onAttach(this.state.entity, formData, 'big')
     }
 
     handleRemoveFile(picAttr) {
-        let entity = {...this.state.entity};
-
+        const entity = {...this.state.entity};
         entity[picAttr] = '';
         this.setState({entity:entity});
     }
 
     handleSubmit(publish, ev) {
         ev.preventDefault();
-
         this.props.onSubmit(this.state.entity);
-    }
-
-    hasErrors(field) {
-        let {errors} = this.state;
-        if(field in errors) {
-            return errors[field];
-        }
-
-        return '';
     }
     
     render() {
-        let {entity} = this.state;
+        const {entity} = this.state;
 
         const member_levels_ddl = [
             {label: 'Platinum', value: 'Platinum'},

@@ -39,14 +39,14 @@ class ReportsLayout extends React.Component {
         let { match } = this.props;
         return(
             <div>
-                <Breadcrumb data={{ title: T.translate("reports.reports"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("reports.reports"), pathname: match.url }} />
 
                 <Switch>
                     <Route strict exact path={match.url} component={ReportListPage}/>
                     <Route path={`${match.url}/rsvp_report`} render={
                         props => (
                             <div>
-                                <Breadcrumb data={{ title: T.translate("reports.rsvp_report"), pathname: match.url }} ></Breadcrumb>
+                                <Breadcrumb data={{ title: T.translate("reports.rsvp_report"), pathname: match.url }} />
                                 <Switch>
                                     <Route strict exact path={`${props.match.url}`} component={RsvpReport}/>
                                     <Route strict exact path={`${props.match.url}/:event_id(\\d+)`} component={RsvpEventReport}/>
@@ -59,7 +59,7 @@ class ReportsLayout extends React.Component {
                     <Route path={`${match.url}/feedback_report`} render={
                         props => (
                             <div>
-                                <Breadcrumb data={{ title: T.translate("reports.feedback_report"), pathname: match.url }} ></Breadcrumb>
+                                <Breadcrumb data={{ title: T.translate("reports.feedback_report"), pathname: match.url }} />
                                 <Switch>
                                     <Route strict exact path={`${props.match.url}`} component={FeedbackReport}/>
                                     <Route strict exact path={`${props.match.url}/:group(track|speaker|presentation)/:group_id(\\d+)`} component={FeedbackGroupReport}/>
@@ -70,7 +70,7 @@ class ReportsLayout extends React.Component {
                     <Route path={`${match.url}/tag_report`} render={
                         props => (
                             <div>
-                                <Breadcrumb data={{ title: T.translate("reports.tag_report"), pathname: match.url }} ></Breadcrumb>
+                                <Breadcrumb data={{ title: T.translate("reports.tag_report"), pathname: match.url }} />
                                 <Switch>
                                     <Route strict exact path={`${props.match.url}`} component={TagReport}/>
                                     <Route strict exact path={`${props.match.url}/:tag_id(\\d+)`} component={SingleTagReport}/>

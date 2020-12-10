@@ -11,20 +11,11 @@
  * limitations under the License.
  **/
 
-import T from "i18n-react/dist/i18n-react";
-import history from '../history'
-import moment from 'moment-timezone'
-
 import {
     getRequest,
-    putRequest,
-    postRequest,
-    deleteRequest,
     createAction,
     stopLoading,
     startLoading,
-    showMessage,
-    showSuccessMessage,
     authErrorHandler
 } from 'openstack-uicore-foundation/lib/methods';
 

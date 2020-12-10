@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import DiscountTicketActionsTableCell from './DiscountTicketActionsTableCell';
 import { Dropdown, Input } from 'openstack-uicore-foundation/lib/components'
-import { epochToMoment, formatEpoch } from 'openstack-uicore-foundation/lib/methods'
 import { addDiscountTicket, deleteDiscountTicket } from "../../../actions/promocode-actions"
 import T from "i18n-react/dist/i18n-react";
 

@@ -28,7 +28,7 @@ class RoomBookingsLayout extends React.Component {
         let { match } = this.props;
         return(
             <div>
-                <Breadcrumb data={{ title: T.translate("room_bookings.room_bookings"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("room_bookings.room_bookings"), pathname: match.url }} />
 
                 <Switch>
                     <Route strict exact path={match.url} component={RoomBookingListPage}/>

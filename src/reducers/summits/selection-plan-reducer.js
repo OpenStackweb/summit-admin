@@ -69,7 +69,7 @@ const selectionPlanReducer = (state = DEFAULT_STATE, action) => {
         break;
         case TRACK_GROUP_REMOVED: {
             let {trackGroupId} = payload;
-            let trackGroups = state.entity.track_groups.filter(t => t.id != trackGroupId);
+            let trackGroups = state.entity.track_groups.filter(t => t.id !== trackGroupId);
             return {...state, entity: {...state.entity, track_groups: trackGroups} };
         }
         break;

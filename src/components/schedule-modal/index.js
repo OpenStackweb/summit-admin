@@ -36,7 +36,7 @@ export default class ScheduleModal extends React.Component {
     }
 
     getFormattedLocation(location_id) {
-        let venue = this.props.summit.locations.find(l => l.id == location_id).name;
+        let venue = this.props.summit.locations.find(l => l.id === location_id).name;
         return venue;
     }
 

@@ -58,7 +58,7 @@ class RoomBookingListPage extends React.Component {
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
             this.props.getRoomBookings();
         }
     }
@@ -70,7 +70,7 @@ class RoomBookingListPage extends React.Component {
 
     handleDeleteBooking(bookingId) {
         let {deleteRoomBooking, roomBookings} = this.props;
-        let roomBooking = roomBookings.find(rb => rb.id == bookingId);
+        let roomBooking = roomBookings.find(rb => rb.id === bookingId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -110,7 +110,7 @@ class RoomBookingListPage extends React.Component {
 
     handleRefundClick(bookingId) {
         let {roomBookings} = this.props;
-        let roomBooking = roomBookings.find(rb => rb.id == bookingId);
+        let roomBooking = roomBookings.find(rb => rb.id === bookingId);
 
         this.setState({
             showModal: true,
@@ -120,9 +120,9 @@ class RoomBookingListPage extends React.Component {
 
     hasPaid(bookingId) {
         let {roomBookings} = this.props;
-        let roomBooking = roomBookings.find(rb => rb.id == bookingId);
+        let roomBooking = roomBookings.find(rb => rb.id === bookingId);
 
-        return roomBooking.status == 'Paid';
+        return roomBooking.status === 'Paid';
     }
 
     onCloseModal() {
@@ -173,7 +173,7 @@ class RoomBookingListPage extends React.Component {
                     {
                         name: 'refund',
                         tooltip: 'refund',
-                        icon: <i className="fa fa-money"></i>,
+                        icon: <i className="fa fa-money"/>,
                         onClick: this.handleRefundClick,
                         display: this.hasPaid
                     }
@@ -181,7 +181,7 @@ class RoomBookingListPage extends React.Component {
             }
         }
 
-        if(!currentSummit.id) return (<div></div>);
+        if(!currentSummit.id) return (<div />);
 
         return(
             <div className="container">
@@ -202,7 +202,7 @@ class RoomBookingListPage extends React.Component {
                     </div>
                 </div>
 
-                {roomBookings.length == 0 &&
+                {roomBookings.length === 0 &&
                 <div>{T.translate("room_booking_list.no_room_bookings")}</div>
                 }
 

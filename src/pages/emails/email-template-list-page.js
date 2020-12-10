@@ -122,7 +122,7 @@ class EmailTemplateListPage extends React.Component {
                     </div>
                 </div>
 
-                {templates.length == 0 &&
+                {templates.length === 0 &&
                 <div>{T.translate("emails.no_templates")}</div>
                 }
 

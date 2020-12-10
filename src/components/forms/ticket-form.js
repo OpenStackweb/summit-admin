@@ -14,9 +14,9 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
-import { Input, Dropdown, SimpleLinkList, MemberInput } from 'openstack-uicore-foundation/lib/components'
+import { Input } from 'openstack-uicore-foundation/lib/components'
 import OwnerInput from "../inputs/owner-input";
+import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 
 
 class TicketForm extends React.Component {
@@ -36,22 +36,33 @@ class TicketForm extends React.Component {
         this.handleAssign = this.handleAssign.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const state = {};
+        scrollToError(this.props.errors);
 
-        this.setState({
-            entity: {...nextProps.entity},
-        });
+        if(prevProps.entity.id !== this.props.entity.id) {
+            state.entity = {...this.props.entity};
+            state.errors = {};
+        }
+
+        if (!shallowEqual(prevProps.errors, this.props.errors)) {
+            state.errors = {...this.props.errors};
+        }
+
+        if (!isEmpty(state)) {
+            this.setState({...this.state, ...state})
+        }
     }
 
     handleChange(ev) {
         let entity = {...this.state.entity};
         let {value, id} = ev.target;
 
-        if (ev.target.type == 'number') {
+        if (ev.target.type === 'number') {
             value = parseInt(ev.target.value);
         }
 
-        if (ev.target.type == 'checkbox') {
+        if (ev.target.type === 'checkbox') {
             value = ev.target.checked;
         }
 

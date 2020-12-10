@@ -27,7 +27,7 @@ class EmailFlowEventLayout extends React.Component {
         let { match } = this.props;
         return(
             <div>
-                <Breadcrumb data={{ title: T.translate("email_flow_event_list.email_flow_events"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("email_flow_event_list.email_flow_events"), pathname: match.url }} />
                 <Switch>
                     <Route strict exact path={match.url} component={EmailFlowEventListPage}/>
                     <Route strict exact path={`${match.url}/:event_id(\\d+)`} component={EditEmailFlowEventPage}/>

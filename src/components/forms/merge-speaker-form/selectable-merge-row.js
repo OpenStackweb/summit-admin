@@ -25,7 +25,7 @@ export default class SelectableMergeRow extends React.Component {
         let {selected, disabled} = this.props;
 
         if (disabled) return '';
-        if (selected == column) return 'selected';
+        if (selected === column) return 'selected';
         return 'unselected';
     }
 

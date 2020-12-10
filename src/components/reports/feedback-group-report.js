@@ -12,10 +12,8 @@
  **/
 
 import React from 'react'
-import T from 'i18n-react/dist/i18n-react'
 import { Table } from 'openstack-uicore-foundation/lib/components'
 import StarRatings from 'react-star-ratings';
-import Select from 'react-select'
 const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
 import {flattenData} from "../../actions/report-actions";
@@ -62,7 +60,7 @@ class FeedbackGroupReport extends React.Component {
 
         if (sortKey) {
             let querySortKey = this.translateSortKey(sortKey);
-            let order = (sortDir == 1) ? '' : '-';
+            let order = (sortDir === 1) ? '' : '-';
             filters.ordering = order + '' + querySortKey;
         }
 
@@ -122,7 +120,7 @@ class FeedbackGroupReport extends React.Component {
         let {reportName} = this.state;
         let storedDataName = this.props.name;
 
-        if (!data || storedDataName != this.getName()) return (<div></div>)
+        if (!data || storedDataName !== this.getName()) return (<div />)
 
         let avgRate = extraStat ? extraStat : 0;
 

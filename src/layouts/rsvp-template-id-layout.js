@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import { Breadcrumb } from 'react-breadcrumbs';
 
 import { getRsvpTemplate, resetRsvpTemplateForm }  from '../actions/rsvp-template-actions';

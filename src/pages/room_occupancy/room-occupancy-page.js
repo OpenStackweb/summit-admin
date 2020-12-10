@@ -67,7 +67,7 @@ class RoomOccupancyPage extends React.Component {
 
     handleSort(index, key, dir, func) {
         let {term, page, perPage, roomId, currentEvents} = this.props;
-        key = (key == 'name') ? 'last_name' : key;
+        key = (key === 'name') ? 'last_name' : key;
         this.props.getEventsForOccupancy(term, roomId, currentEvents, page, perPage, key, dir);
     }
 
@@ -99,17 +99,17 @@ class RoomOccupancyPage extends React.Component {
     changeOccupancy(eventId, add, ev) {
         let values = ['EMPTY', '25%', '50%', '75%', 'FULL'];
         let {events} = this.props;
-        let event =  events.find(e => e.id == eventId);
+        let event =  events.find(e => e.id === eventId);
 
         let key = values.indexOf(event.occupancy);
 
         ev.preventDefault();
 
         if (add) {
-            if (event.occupancy == 'FULL') return;
+            if (event.occupancy === 'FULL') return;
             event.occupancy = values[key + 1];
         } else {
-            if (event.occupancy == 'EMPTY') return;
+            if (event.occupancy === 'EMPTY') return;
             event.occupancy = values[key - 1];
         }
 
@@ -137,7 +137,7 @@ class RoomOccupancyPage extends React.Component {
         ];
 
         let table_options = {
-            sortCol: (order == 'last_name') ? 'name' : order,
+            sortCol: (order === 'last_name') ? 'name' : order,
             sortDir: orderDir,
             actions: {
                 valueRow: 'occupancy',
@@ -146,9 +146,9 @@ class RoomOccupancyPage extends React.Component {
             }
         }
 
-        if(!currentSummit.id) return(<div></div>);
+        if(!currentSummit.id) return(<div />);
 
-        let room_ddl = currentSummit.locations.filter(v => (v.class_name == 'SummitVenueRoom')).map(r => {
+        let room_ddl = currentSummit.locations.filter(v => (v.class_name === 'SummitVenueRoom')).map(r => {
             return {label: r.name, value: r.id};
         });
 
@@ -188,7 +188,7 @@ class RoomOccupancyPage extends React.Component {
                         }
                     </div>
 
-                    {events.length == 0 &&
+                    {events.length === 0 &&
                     <div>{T.translate("room_occupancy.no_events")}</div>
                     }
 

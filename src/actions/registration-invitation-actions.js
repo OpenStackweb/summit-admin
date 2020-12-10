@@ -81,7 +81,7 @@ export const getInvitations = ( term = null, page = 1, perPage = 10, order = 'id
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -146,7 +146,7 @@ export const exportInvitationsCSV = (term, order, orderDir, showNonAccepted) => 
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 

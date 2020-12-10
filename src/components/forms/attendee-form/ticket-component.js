@@ -128,7 +128,7 @@ export default class TicketComponent extends React.Component {
                                     {t.external_order_id || t.number}
                                 </a>
                                 <a href="" className="del-ticket btn btn-danger" onClick={this.onDelete.bind(this, t.id)}>
-                                    <i className="fa fa-trash-o"></i>
+                                    <i className="fa fa-trash-o"/>
                                 </a>
                             </div>
                         )}

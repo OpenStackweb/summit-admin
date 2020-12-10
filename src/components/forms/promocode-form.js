@@ -14,10 +14,11 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import {findElementPos, epochToMomentTimeZone} from 'openstack-uicore-foundation/lib/methods'
-import { Dropdown, DateTimePicker, SpeakerInput, MemberInput, CompanyInput, Input } from 'openstack-uicore-foundation/lib/components'
+import {epochToMomentTimeZone} from 'openstack-uicore-foundation/lib/methods'
+import { Dropdown, DateTimePicker, SpeakerInput, CompanyInput, Input } from 'openstack-uicore-foundation/lib/components'
 import { DiscountTicketTable } from '../tables/dicount-ticket-table';
 import OwnerInput from "../inputs/owner-input";
+import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 
 // FORM DEFS
 const EmailRedeemForm = (props) => (
@@ -354,18 +355,21 @@ class PromocodeForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const state = {};
+        scrollToError(this.props.errors);
 
-        this.setState({
-            entity: {...nextProps.entity},
-            errors: {...nextProps.errors}
-        });
+        if(prevProps.entity.id !== this.props.entity.id) {
+            state.entity = {...this.props.entity};
+            state.errors = {};
+        }
 
-        //scroll to first error
-        if(Object.keys(nextProps.errors).length > 0) {
-            let firstError = Object.keys(nextProps.errors)[0]
-            let firstNode = document.getElementById(firstError);
-            if (firstNode) window.scrollTo(0, findElementPos(firstNode));
+        if (!shallowEqual(prevProps.errors, this.props.errors)) {
+            state.errors = {...this.props.errors};
+        }
+
+        if (!isEmpty(state)) {
+            this.setState({...this.state, ...state})
         }
     }
 
@@ -374,16 +378,16 @@ class PromocodeForm extends React.Component {
         let errors = {...this.state.errors};
         let {value, id} = ev.target;
 
-        if (ev.target.type == 'checkbox') {
+        if (ev.target.type === 'checkbox') {
             value = ev.target.checked;
         }
 
-        if (id == 'apply_to_all_tix' && value == false) {
+        if (id === 'apply_to_all_tix' && value === false) {
             entity.amount = 0;
             entity.rate = 0;
         }
 
-        if (ev.target.type == 'datetime') {
+        if (ev.target.type === 'datetime') {
             value = value.valueOf() / 1000;
         }
 
@@ -455,7 +459,7 @@ class PromocodeForm extends React.Component {
         let promocode_types_ddl = [];
 
         if (entity.class_name) {
-            let classTypes = allClasses.find(c => c.class_name == entity.class_name).type;
+            let classTypes = allClasses.find(c => c.class_name === entity.class_name).type;
             if (classTypes) {
                 promocode_types_ddl = classTypes.map(t => ({label: t, value: t}));
             }
@@ -518,7 +522,7 @@ class PromocodeForm extends React.Component {
                     </div>
                 </div>
 
-                {entity.class_name == 'SPEAKER_PROMO_CODE' &&
+                {entity.class_name === 'SPEAKER_PROMO_CODE' &&
                 <SpeakerPCForm
                     entity={entity}
                     summit={currentSummit}
@@ -530,7 +534,7 @@ class PromocodeForm extends React.Component {
                 />
                 }
 
-                {entity.class_name == 'SPONSOR_PROMO_CODE' &&
+                {entity.class_name === 'SPONSOR_PROMO_CODE' &&
                 <SponsorPCForm
                     entity={entity}
                     summit={currentSummit}
@@ -543,7 +547,7 @@ class PromocodeForm extends React.Component {
                 />
                 }
 
-                {entity.class_name == 'MEMBER_PROMO_CODE' &&
+                {entity.class_name === 'MEMBER_PROMO_CODE' &&
                 <MemberPCForm
                     entity={entity}
                     summit={currentSummit}
@@ -555,7 +559,7 @@ class PromocodeForm extends React.Component {
                 />
                 }
 
-                {entity.class_name == 'SPEAKER_DISCOUNT_CODE' &&
+                {entity.class_name === 'SPEAKER_DISCOUNT_CODE' &&
                 <SpeakerDiscountPCForm
                     entity={entity}
                     summit={currentSummit}
@@ -567,7 +571,7 @@ class PromocodeForm extends React.Component {
                 />
                 }
 
-                {entity.class_name == 'SPONSOR_DISCOUNT_CODE' &&
+                {entity.class_name === 'SPONSOR_DISCOUNT_CODE' &&
                 <SponsorDiscountPCForm
                     entity={entity}
                     summit={currentSummit}
@@ -580,7 +584,7 @@ class PromocodeForm extends React.Component {
                 />
                 }
 
-                {entity.class_name == 'MEMBER_DISCOUNT_CODE' &&
+                {entity.class_name === 'MEMBER_DISCOUNT_CODE' &&
                 <MemberDiscountPCForm
                     entity={entity}
                     summit={currentSummit}
@@ -592,7 +596,7 @@ class PromocodeForm extends React.Component {
                 />
                 }
 
-                {entity.class_name == 'SUMMIT_PROMO_CODE' &&
+                {entity.class_name === 'SUMMIT_PROMO_CODE' &&
                 <SummitPCForm
                     entity={entity}
                     summit={currentSummit}
@@ -603,7 +607,7 @@ class PromocodeForm extends React.Component {
                 />
                 }
 
-                {entity.class_name == 'SUMMIT_DISCOUNT_CODE' &&
+                {entity.class_name === 'SUMMIT_DISCOUNT_CODE' &&
                 <SummitDiscountPCForm
                     entity={entity}
                     summit={currentSummit}

@@ -47,7 +47,7 @@ class MarketingSettingListPage extends React.Component {
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
             this.props.getMarketingSettings();
         }
     }
@@ -79,7 +79,7 @@ class MarketingSettingListPage extends React.Component {
 
     handleDeleteSetting(settingId) {
         let {deleteSetting, settings} = this.props;
-        let setting = settings.find(s => s.id == settingId);
+        let setting = settings.find(s => s.id === settingId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -114,7 +114,7 @@ class MarketingSettingListPage extends React.Component {
 
     render(){
         let {currentSummit, allSummits, settings, lastPage, currentPage, term, order, orderDir, totalSettings} = this.props;
-        const summits = allSummits.filter(s => s.id != currentSummit.id);
+        const summits = allSummits.filter(s => s.id !== currentSummit.id);
 
         let columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
@@ -132,7 +132,7 @@ class MarketingSettingListPage extends React.Component {
             }
         }
 
-        if(!currentSummit.id) return(<div></div>);
+        if(!currentSummit.id) return(<div />);
 
         return(
             <div className="container">
@@ -159,7 +159,7 @@ class MarketingSettingListPage extends React.Component {
                     </div>
                 </div>
 
-                {settings.length == 0 &&
+                {settings.length === 0 &&
                 <div>{T.translate("marketing.no_settings")}</div>
                 }
 

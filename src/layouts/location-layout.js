@@ -29,7 +29,7 @@ class LocationLayout extends React.Component {
 
         return(
             <div>
-                <Breadcrumb data={{ title: T.translate("location_list.locations"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("location_list.locations"), pathname: match.url }} />
 
                 <Switch>
                     <Route strict exact path={match.url} component={LocationListPage}/>

@@ -94,7 +94,7 @@ class MediaUploadListPage extends React.Component {
 
     render(){
         let {currentSummit, media_uploads, allSummits, lastPage, currentPage, term, order, orderDir} = this.props;
-        const summits = allSummits.filter(s => s.id != currentSummit.id);
+        const summits = allSummits.filter(s => s.id !== currentSummit.id);
 
         let columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
@@ -134,7 +134,7 @@ class MediaUploadListPage extends React.Component {
                     </div>
                 </div>
 
-                {media_uploads.length == 0 &&
+                {media_uploads.length === 0 &&
                 <div>{T.translate("media_upload.no_results")}</div>
                 }
 

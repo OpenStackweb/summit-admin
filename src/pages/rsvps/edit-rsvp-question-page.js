@@ -15,7 +15,6 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import Swal from "sweetalert2";
-import { Breadcrumb } from 'react-breadcrumbs';
 import QuestionForm from '../../components/forms/question-form';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getRsvpQuestion, resetRsvpQuestionForm, saveRsvpQuestion, getRsvpQuestionMeta, saveRsvpQuestionValue, deleteRsvpQuestionValue, updateQuestionValuesOrder } from "../../actions/rsvp-template-actions";
@@ -32,7 +31,7 @@ class EditRsvpQuestionPage extends React.Component {
 
     handleValueDelete(valueId) {
         let {deleteRsvpQuestionValue, currentTemplate, entity} = this.props;
-        let value = entity.values.find(v => v.id == valueId);
+        let value = entity.values.find(v => v.id === valueId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),

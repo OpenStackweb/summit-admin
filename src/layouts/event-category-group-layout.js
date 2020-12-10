@@ -29,7 +29,7 @@ class EventCategoryGroupLayout extends React.Component {
         let { match } = this.props;
         return(
             <div>
-                <Breadcrumb data={{ title: T.translate("event_category_group_list.event_category_groups"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("event_category_group_list.event_category_groups"), pathname: match.url }} />
 
                 <Switch>
                     <Route exact strict path={match.url} component={EventCategoryGroupListPage}/>

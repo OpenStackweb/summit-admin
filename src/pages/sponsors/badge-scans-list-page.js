@@ -47,7 +47,7 @@ class BadgeScansListPage extends React.Component {
     componentWillReceiveProps(newProps) {
         let {currentSummit, sponsorId} = this.props;
 
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit != null && currentSummit.id !== newProps.currentSummit.id) {
             this.props.getSponsorsWithBadgeScans();
 
             if (sponsorId) {
@@ -76,7 +76,7 @@ class BadgeScansListPage extends React.Component {
         let {sponsorId, order, orderDir, allSponsors} = this.props;
         ev.preventDefault();
 
-        let sponsor = allSponsors.find(s => s.id == sponsorId);
+        let sponsor = allSponsors.find(s => s.id === sponsorId);
 
         this.props.exportBadgeScans(sponsor, order, orderDir);
     }
@@ -99,13 +99,13 @@ class BadgeScansListPage extends React.Component {
             actions: {}
         };
 
-        if(!currentSummit.id) return (<div></div>);
+        if(!currentSummit.id) return (<div/>);
 
         let sponsors_ddl = allSponsors ? allSponsors.map(s => ({label: s.company.name, value: s.id})) : null;
 
         return(
             <>
-                <Breadcrumb data={{ title: T.translate("badge_scan_list.badge_scans"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("badge_scan_list.badge_scans"), pathname: match.url }} />
                 <div className="container">
                     <h3> {T.translate("badge_scan_list.badge_scan_list")} ({totalBadgeScans})</h3>
                     <div className="row">
@@ -124,7 +124,7 @@ class BadgeScansListPage extends React.Component {
                         </div>
                     </div>
 
-                    {badgeScans.length == 0 &&
+                    {badgeScans.length === 0 &&
                     <div>{T.translate("badge_scan_list.no_badge_scans")}</div>
                     }
 

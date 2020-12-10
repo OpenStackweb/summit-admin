@@ -19,9 +19,7 @@ import
     RESET_EXPORT_REPORT,
 } from '../../actions/report-actions';
 
-import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
-import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
-
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
 
 const DEFAULT_STATE = {
     name            : '',

@@ -20,7 +20,6 @@ import
 } from '../../actions/event-type-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
-import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 const DEFAULT_STATE = {
     eventTypes      : []
@@ -46,7 +45,7 @@ const eventTypeListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case EVENT_TYPE_DELETED: {
             let {eventTypeId} = payload;
-            return {...state, eventTypes: state.eventTypes.filter(e => e.id != eventTypeId)};
+            return {...state, eventTypes: state.eventTypes.filter(e => e.id !== eventTypeId)};
         }
         break;
         case EVENT_TYPES_SEEDED: {

@@ -55,7 +55,7 @@ const speakerListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case SPEAKER_DELETED: {
             let {speakerId} = payload;
-            return {...state, speakers: state.speakers.filter(s => s.id != speakerId)};
+            return {...state, speakers: state.speakers.filter(s => s.id !== speakerId)};
         }
         break;
         default:

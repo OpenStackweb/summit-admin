@@ -11,7 +11,6 @@
  * limitations under the License.
  **/
 
-import moment from 'moment-timezone';
 import
 {
     RECEIVE_ATTENDEES,
@@ -85,7 +84,7 @@ const attendeeListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case ATTENDEE_DELETED: {
             let {attendeeId} = payload;
-            return {...state, attendees: state.attendees.filter(a => a.id != attendeeId)};
+            return {...state, attendees: state.attendees.filter(a => a.id !== attendeeId)};
         }
         break;
         case SELECT_ATTENDEE:{

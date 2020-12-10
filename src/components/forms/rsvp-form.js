@@ -12,9 +12,8 @@
  **/
 
 import React from 'react'
-import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { Dropdown, Input, RawHTML } from 'openstack-uicore-foundation/lib/components'
+import { RawHTML } from 'openstack-uicore-foundation/lib/components'
 import Select from 'react-select'
 
 
@@ -32,7 +31,7 @@ class RsvpForm extends React.Component {
                 return (<input className="form-control" />);
                 break;
             case 'RSVPTextAreaQuestionTemplate':
-                return (<textarea className="form-control"></textarea>);
+                return (<textarea className="form-control" />);
                 break;
             case 'RSVPLiteralContentQuestionTemplate':
                 return (<div><RawHTML>{q.value}</RawHTML></div>);

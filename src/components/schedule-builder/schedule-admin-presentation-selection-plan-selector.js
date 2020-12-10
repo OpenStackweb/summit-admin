@@ -27,7 +27,7 @@ class ScheduleAdminPresentationSelectionPlanSelector extends React.Component {
 
     render(){
         let { presentationSelectionPlans, currentValue } = this.props;
-        let theValue = presentationSelectionPlans.find(op => op.value == currentValue);
+        let theValue = presentationSelectionPlans.find(op => op.value === currentValue);
 
         return (
             <Select

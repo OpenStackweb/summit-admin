@@ -217,7 +217,7 @@ class NavMenu extends React.Component {
                     {currentSummit.name}
                     {canEditSummit &&
                     <a href="" className="edit-summit" onClick={(e) => this.onMenuItemClick(e, `summits/${summit_id}`)}>
-                        <i className="fa fa-pencil-square-o"></i>
+                        <i className="fa fa-pencil-square-o"/>
                     </a>
                     }
                 </div>

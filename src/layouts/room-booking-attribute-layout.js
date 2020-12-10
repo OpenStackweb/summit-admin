@@ -12,14 +12,11 @@
  **/
 
 import React from 'react'
-import {Switch, Route, withRouter, Redirect} from 'react-router-dom';
+import {Switch, Route, Redirect} from 'react-router-dom';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import EditRoomBookingAttributePage from "../pages/room_bookings/edit-room-booking-attribute-page";
 import {connect} from "react-redux";
-import {getEvent, resetEventForm} from "../actions/event-actions";
-import {getRsvpTemplates} from "../actions/rsvp-template-actions";
-
 
 class RoomBookingAttributeLayout extends React.Component {
 
@@ -28,7 +25,7 @@ class RoomBookingAttributeLayout extends React.Component {
 
         return(
             <div>
-                <Breadcrumb data={{ title: T.translate("room_bookings.room_bookings_attributes"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("room_bookings.room_bookings_attributes"), pathname: match.url }} />
                 <Switch>
                     <Route strict exact path={`${match.url}/new`} component={EditRoomBookingAttributePage} />
                     <Route strict exact path={`${match.url}/:attribute_id(\\d+)`} component={EditRoomBookingAttributePage} />

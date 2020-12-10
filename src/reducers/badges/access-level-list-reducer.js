@@ -19,7 +19,6 @@ import
 } from '../../actions/badge-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
-import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 const DEFAULT_STATE = {
     accessLevels            : [],
@@ -50,7 +49,7 @@ const accessLevelListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case ACCESS_LEVEL_DELETED: {
             let {accessLevelId} = payload;
-            return {...state, accessLevels: state.accessLevels.filter(t => t.id != accessLevelId), totalAccessLevels: (state.totalAccessLevels - 1)};
+            return {...state, accessLevels: state.accessLevels.filter(t => t.id !== accessLevelId), totalAccessLevels: (state.totalAccessLevels - 1)};
         }
         break;
         default:

@@ -12,9 +12,7 @@
  **/
 
 import React from 'react'
-import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
-import { Breadcrumb } from 'react-breadcrumbs';
-
+import { Switch, Route, withRouter } from 'react-router-dom';
 import EditSummitPage from '../pages/summits/edit-summit-page';
 import SummitIdLayout from './summit-id-layout'
 import NoMatchPage from "../pages/no-match-page";

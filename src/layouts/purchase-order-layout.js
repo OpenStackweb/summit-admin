@@ -16,12 +16,9 @@ import { Switch, Route, withRouter } from 'react-router-dom';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import Restrict from '../routes/restrict';
-
 import PurchaseOrderListPage from '../pages/orders/purchase-order-list-page'
 import PurchaseOrderIdLayout from './purchase-order-id-layout'
-
 import NoMatchPage from "../pages/no-match-page";
-import EditTicketPage from "../pages/orders/edit-ticket-page";
 
 
 class PurchaseOrderLayout extends React.Component {
@@ -30,7 +27,7 @@ class PurchaseOrderLayout extends React.Component {
         let { match } = this.props;
         return(
             <div>
-                <Breadcrumb data={{ title: T.translate("purchase_order_list.purchase_orders"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("purchase_order_list.purchase_orders"), pathname: match.url }} />
 
                 <Switch>
                     <Route strict exact path={match.url} component={PurchaseOrderListPage}/>

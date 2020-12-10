@@ -27,7 +27,7 @@ class TagGroupLayout extends React.Component {
         let { match } = this.props;
         return(
             <div>
-                <Breadcrumb data={{ title: T.translate("tag_group_list.tag_groups"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("tag_group_list.tag_groups"), pathname: match.url }} />
 
                 <Switch>
                     <Route strict exact path={match.url} component={TagGroupListPage}/>

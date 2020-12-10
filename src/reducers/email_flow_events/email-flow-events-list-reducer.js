@@ -18,7 +18,6 @@ import
 } from '../../actions/email-flows-events-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
-import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 const DEFAULT_STATE = {
     emailFlowEvents      : [],

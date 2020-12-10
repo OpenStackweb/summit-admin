@@ -154,7 +154,7 @@ class AffiliationsTable extends React.Component {
 
     saveRow(id) {
         const { rows } = this.state;
-        let row = rows.find(r => r.id == id);
+        let row = rows.find(r => r.id === id);
         row.is_edit = false;
 
         this.editing_row = null;
@@ -172,7 +172,7 @@ class AffiliationsTable extends React.Component {
 
     editRow(id, ev) {
         const { rows } = this.state;
-        let row = rows.find(r => r.id == id);
+        let row = rows.find(r => r.id === id);
 
         //save editing row for cancel
         this.editing_row = {...row};
@@ -190,7 +190,7 @@ class AffiliationsTable extends React.Component {
             r.is_edit = false;
         });
 
-        let rowIdx = rows.findIndex(r => r.id == id);
+        let rowIdx = rows.findIndex(r => r.id === id);
 
         rows[rowIdx] = this.editing_row;
 
@@ -202,14 +202,14 @@ class AffiliationsTable extends React.Component {
     onChangeCell(id, ev) {
         const { rows } = this.state;
         let field = ev.target;
-        let row = rows.find(r => r.id == id);
+        let row = rows.find(r => r.id === id);
         let value = field.value;
 
-        if (field.type == 'checkbox') {
+        if (field.type === 'checkbox') {
             value = field.checked;
         }
 
-        if (ev.target.type == 'datetime') {
+        if (ev.target.type === 'datetime') {
             value = value.valueOf() / 1000;
         }
 
@@ -225,11 +225,11 @@ class AffiliationsTable extends React.Component {
         let field = ev.target;
         let value = field.value;
 
-        if (field.type == 'checkbox') {
+        if (field.type === 'checkbox') {
             value = field.checked;
         }
 
-        if (ev.target.type == 'datetime') {
+        if (ev.target.type === 'datetime') {
             value = value.valueOf() / 1000;
         }
 

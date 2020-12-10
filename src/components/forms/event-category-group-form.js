@@ -14,7 +14,7 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { findElementPos, epochToMomentTimeZone, queryTracks, queryGroups } from 'openstack-uicore-foundation/lib/methods'
+import { epochToMomentTimeZone, queryTracks, queryGroups } from 'openstack-uicore-foundation/lib/methods'
 import {
     Input,
     TextEditor,
@@ -22,6 +22,7 @@ import {
     Dropdown,
     DateTimePicker
 } from 'openstack-uicore-foundation/lib/components'
+import {isEmpty, scrollToError, shallowEqual, hasErrors} from "../../utils/methods";
 
 
 class EventCategoryGroupForm extends React.Component {
@@ -41,27 +42,30 @@ class EventCategoryGroupForm extends React.Component {
         this.handleAllowedGroupUnLink = this.handleAllowedGroupUnLink.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const state = {};
+        scrollToError(this.props.errors);
 
-        this.setState({
-            entity: {...nextProps.entity},
-            errors: {...nextProps.errors}
-        });
+        if(prevProps.entity.id !== this.props.entity.id) {
+            state.entity = {...this.props.entity};
+            state.errors = {};
+        }
 
-        //scroll to first error
-        if(Object.keys(nextProps.errors).length > 0) {
-            let firstError = Object.keys(nextProps.errors)[0]
-            let firstNode = document.getElementById(firstError);
-            if (firstNode) window.scrollTo(0, findElementPos(firstNode));
+        if (!shallowEqual(prevProps.errors, this.props.errors)) {
+            state.errors = {...this.props.errors};
+        }
+
+        if (!isEmpty(state)) {
+            this.setState({...this.state, ...state})
         }
     }
 
     handleChange(ev) {
-        let entity = {...this.state.entity};
-        let errors = {...this.state.errors};
+        const entity = {...this.state.entity};
+        const errors = {...this.state.errors};
         let {value, id} = ev.target;
 
-        if (ev.target.type == 'datetime') {
+        if (ev.target.type === 'datetime') {
             value = value.unix();
         }
 
@@ -71,68 +75,48 @@ class EventCategoryGroupForm extends React.Component {
     }
 
     handleSubmit(ev) {
-        let entity = {...this.state.entity};
         ev.preventDefault();
-
         this.props.onSubmit(this.state.entity);
     }
 
-    hasErrors(field) {
-        let {errors} = this.state;
-        if(field in errors) {
-            return errors[field];
-        }
-
-        return '';
-    }
-
     handleTrackLink(value) {
-        let {entity} = this.state;
+        const {entity} = this.state;
         this.props.onTrackLink(entity.id, value);
     }
 
     handleTrackUnLink(valueId) {
-        let {entity} = this.state;
+        const {entity} = this.state;
         this.props.onTrackUnLink(entity.id, valueId);
     }
 
     handleAllowedGroupLink(value) {
-        let {entity} = this.state;
+        const {entity} = this.state;
         this.props.onAllowedGroupLink(entity.id, value);
     }
 
     handleAllowedGroupUnLink(valueId) {
-        let {entity} = this.state;
+        const {entity} = this.state;
         this.props.onAllowedGroupUnLink(entity.id, valueId);
     }
 
     shouldShowField(flag){
-        let {entity} = this.state;
+        const {entity} = this.state;
         if (!entity.class_name) return false;
-        let class_name = this.props.allClasses.find(c => c.class_name == entity.class_name);
+        const class_name = this.props.allClasses.find(c => c.class_name === entity.class_name);
 
         return class_name[flag];
     }
 
-    queryMediaUploadTypes(input, callback) {
-        let {currentSummit} = this.props;
-        let features = [];
-
-        features = currentSummit.badge_features.filter(f => f.name.toLowerCase().indexOf(input.toLowerCase()) !== -1)
-
-        callback(features);
-    }
-
     render() {
-        let {entity} = this.state;
-        let { currentSummit, allClasses } = this.props;
+        const {entity, errors} = this.state;
+        const { currentSummit, allClasses } = this.props;
 
-        let tracksColumns = [
+        const tracksColumns = [
             { columnKey: 'name', value: T.translate("edit_event_category.name") },
             { columnKey: 'code', value: T.translate("edit_event_category.code") }
         ];
 
-        let tracksOptions = {
+        const tracksOptions = {
             title: T.translate("edit_event_category_group.tracks"),
             valueKey: "name",
             labelKey: "name",
@@ -143,12 +127,12 @@ class EventCategoryGroupForm extends React.Component {
             }
         };
 
-        let allowedGroupsColumns = [
+        const allowedGroupsColumns = [
             { columnKey: 'title', value: T.translate("edit_event_category.name") },
             { columnKey: 'description', value: T.translate("edit_event_category.description") }
         ];
 
-        let allowedGroupsOptions = {
+        const allowedGroupsOptions = {
             title: T.translate("edit_event_category_group.allowed_groups"),
             valueKey: "id",
             labelKey: "title",
@@ -159,7 +143,7 @@ class EventCategoryGroupForm extends React.Component {
             }
         };
 
-        let class_name_ddl = allClasses.map(i => ({label:i.class_name, value:i.class_name}));
+        const class_name_ddl = allClasses.map(i => ({label:i.class_name, value:i.class_name}));
 
         return (
             <form className="event-type-form">
@@ -169,12 +153,12 @@ class EventCategoryGroupForm extends React.Component {
                         <label> {T.translate("edit_event_category_group.class")} *</label>
                         <Dropdown
                             id="class_name"
-                            disabled={entity.id != 0}
+                            disabled={entity.id !== 0}
                             value={entity.class_name}
                             onChange={this.handleChange}
                             placeholder={T.translate("edit_event_category_group.placeholders.select_class")}
                             options={class_name_ddl}
-                            error={this.hasErrors('class_name')}
+                            error={hasErrors('class_name', errors)}
                         />
                     </div>
                     <div className="col-md-4">
@@ -184,7 +168,7 @@ class EventCategoryGroupForm extends React.Component {
                             value={entity.name}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('name')}
+                            error={hasErrors('name', errors)}
                         />
                     </div>
                     <div className="col-md-4">
@@ -239,13 +223,13 @@ class EventCategoryGroupForm extends React.Component {
                             id="description"
                             value={entity.description}
                             onChange={this.handleChange}
-                            error={this.hasErrors('description')}
+                            error={hasErrors('description', errors)}
                         />
                     </div>
                 </div>
 
                 <hr />
-                {entity.id != 0 &&
+                {entity.id !== 0 &&
                 <SimpleLinkList
                     values={entity.tracks}
                     columns={tracksColumns}
@@ -254,7 +238,7 @@ class EventCategoryGroupForm extends React.Component {
                 }
                 <br />
                 <br />
-                {entity.id != 0 && this.shouldShowField('allowed_groups') &&
+                {entity.id !== 0 && this.shouldShowField('allowed_groups') &&
                 <SimpleLinkList
                     values={entity.allowed_groups}
                     columns={allowedGroupsColumns}

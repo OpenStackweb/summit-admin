@@ -23,7 +23,7 @@ class ScheduleAdminVenueSelector extends React.Component {
 
     renderOption(option) {
         let location = option.value;
-        if (location.class_name == 'SummitVenue')
+        if (location.class_name === 'SummitVenue')
             return (<span className="location-option-venue">{location.name}</span>);
         return (<span className="location-option-room">-&nbsp;{location.name}</span>);
     }

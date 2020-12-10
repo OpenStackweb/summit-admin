@@ -14,8 +14,8 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { findElementPos } from 'openstack-uicore-foundation/lib/methods'
 import { Input, EditableTable, Dropdown, TextEditor } from 'openstack-uicore-foundation/lib/components'
+import {isEmpty, scrollToError, shallowEqual, hasErrors} from "../../utils/methods";
 
 
 class EventCategoryQuestionForm extends React.Component {
@@ -31,27 +31,30 @@ class EventCategoryQuestionForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const state = {};
+        scrollToError(this.props.errors);
 
-        this.setState({
-            entity: {...nextProps.entity},
-            errors: {...nextProps.errors}
-        });
+        if(prevProps.entity.id !== this.props.entity.id) {
+            state.entity = {...this.props.entity};
+            state.errors = {};
+        }
 
-        //scroll to first error
-        if(Object.keys(nextProps.errors).length > 0) {
-            let firstError = Object.keys(nextProps.errors)[0]
-            let firstNode = document.getElementById(firstError);
-            if (firstNode) window.scrollTo(0, findElementPos(firstNode));
+        if (!shallowEqual(prevProps.errors, this.props.errors)) {
+            state.errors = {...this.props.errors};
+        }
+
+        if (!isEmpty(state)) {
+            this.setState({...this.state, ...state})
         }
     }
 
     handleChange(ev) {
-        let entity = {...this.state.entity};
-        let errors = {...this.state.errors};
+        const entity = {...this.state.entity};
+        const errors = {...this.state.errors};
         let {value, id} = ev.target;
 
-        if (ev.target.type == 'checkbox') {
+        if (ev.target.type === 'checkbox') {
             value = ev.target.checked;
         }
 
@@ -61,49 +64,39 @@ class EventCategoryQuestionForm extends React.Component {
     }
 
     handleSubmit(ev) {
-        let entity = {...this.state.entity};
-
+        const entity = {...this.state.entity};
         ev.preventDefault();
 
         this.props.onSubmit(entity);
     }
 
-    hasErrors(field) {
-        let {errors} = this.state;
-        if(field in errors) {
-            return errors[field];
-        }
-
-        return '';
-    }
-
     shouldShowField(field){
-        let {entity} = this.state;
+        const {entity} = this.state;
         if (!entity.class_name) return false;
-        let entity_type = this.props.allClasses.find(c => c.class_name == entity.class_name);
+        const entity_type = this.props.allClasses.find(c => c.class_name === entity.class_name);
 
         return (entity_type.hasOwnProperty(field) && entity_type[field]);
     }
 
     render() {
-        let {entity} = this.state;
-        let {allClasses} = this.props;
+        const {entity, errors} = this.state;
+        const {allClasses} = this.props;
 
-        let value_columns = [
+        const value_columns = [
             { columnKey: 'label', value: T.translate("general.label") },
             { columnKey: 'value', value: T.translate("general.value") }
         ];
 
-        let value_options = {
+        const value_options = {
             actions: {
                 save: {onClick: this.props.onSaveValue},
                 delete: {onClick: this.props.onDeleteValue}
             }
-        }
+        };
 
-        let class_name_ddl = allClasses.map(i => ({label:i.class_name, value:i.class_name}));
+        const class_name_ddl = allClasses.map(i => ({label:i.class_name, value:i.class_name}));
 
-        let values_ddl = entity.values.map(v => ({value: v.id, label: v.label}));
+        const values_ddl = entity.values.map(v => ({value: v.id, label: v.label}));
 
         return (
             <form className="event-category-question-form">
@@ -113,12 +106,12 @@ class EventCategoryQuestionForm extends React.Component {
                         <label> {T.translate("edit_event_category_question.class")} *</label>
                         <Dropdown
                             id="class_name"
-                            disabled={entity.id != 0}
+                            disabled={entity.id !== 0}
                             value={entity.class_name}
                             onChange={this.handleChange}
                             placeholder={T.translate("edit_event_category_question.placeholders.select_class")}
                             options={class_name_ddl}
-                            error={this.hasErrors('class_name')}
+                            error={hasErrors('class_name', errors)}
                             clearable
                         />
                     </div>
@@ -129,7 +122,7 @@ class EventCategoryQuestionForm extends React.Component {
                             value={entity.name}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('name')}
+                            error={hasErrors('name', errors)}
                         />
                     </div>
                     <div className="col-md-4">
@@ -139,7 +132,7 @@ class EventCategoryQuestionForm extends React.Component {
                             value={entity.label}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('label')}
+                            error={hasErrors('label', errors)}
                         />
                     </div>
                 </div>
@@ -196,7 +189,7 @@ class EventCategoryQuestionForm extends React.Component {
                             onChange={this.handleChange}
                             placeholder={T.translate("edit_event_category_question.placeholders.select_default_value")}
                             options={values_ddl}
-                            error={this.hasErrors('default_value_id')}
+                            error={hasErrors('default_value_id', errors)}
                         />
                     </div>
                     }
@@ -208,7 +201,7 @@ class EventCategoryQuestionForm extends React.Component {
                             value={entity.initial_value}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('initial_value')}
+                            error={hasErrors('initial_value', errors)}
                         />
                     </div>
                     }
@@ -220,7 +213,7 @@ class EventCategoryQuestionForm extends React.Component {
                             value={entity.empty_string}
                             onChange={this.handleChange}
                             className="form-control"
-                            error={this.hasErrors('empty_string')}
+                            error={hasErrors('empty_string', errors)}
                         />
                     </div>
                     }
@@ -234,13 +227,13 @@ class EventCategoryQuestionForm extends React.Component {
                             id="content"
                             value={entity.content}
                             onChange={this.handleChange}
-                            error={this.hasErrors('content')}
+                            error={hasErrors('content', errors)}
                         />
                     </div>
                 </div>
                 }
 
-                {this.shouldShowField('values') && entity.id != 0 &&
+                {this.shouldShowField('values') && entity.id !== 0 &&
                 <div className="row">
                     <div className="col-md-12">
                         <EditableTable

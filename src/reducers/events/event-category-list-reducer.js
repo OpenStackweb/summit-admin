@@ -20,7 +20,6 @@ import
 } from '../../actions/event-category-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
-import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 const DEFAULT_STATE = {
     eventCategories : []
@@ -70,7 +69,7 @@ const eventCategoryListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case EVENT_CATEGORY_DELETED: {
             let {categoryId} = payload;
-            return {...state, eventCategories: state.eventCategories.filter(c => c.id != categoryId)};
+            return {...state, eventCategories: state.eventCategories.filter(c => c.id !== categoryId)};
         }
         break;
         default:

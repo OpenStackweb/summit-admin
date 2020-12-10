@@ -43,7 +43,7 @@ class AccessLevelListPage extends React.Component {
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
             this.props.getAccessLevels();
         }
     }
@@ -55,7 +55,7 @@ class AccessLevelListPage extends React.Component {
 
     handleDelete(accessLevelId) {
         let {deleteAccessLevel, accessLevels} = this.props;
-        let accessLevel = accessLevels.find(t => t.id == accessLevelId);
+        let accessLevel = accessLevels.find(t => t.id === accessLevelId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -98,7 +98,7 @@ class AccessLevelListPage extends React.Component {
             }
         }
 
-        if(!currentSummit.id) return (<div></div>);
+        if(!currentSummit.id) return (<div/>);
 
         return(
             <div className="container">
@@ -111,7 +111,7 @@ class AccessLevelListPage extends React.Component {
                     </div>
                 </div>
 
-                {accessLevels.length == 0 &&
+                {accessLevels.length === 0 &&
                 <div>{T.translate("access_level_list.no_access_levels")}</div>
                 }
 

@@ -19,8 +19,6 @@ import {
     createAction,
     stopLoading,
     startLoading,
-    showMessage,
-    showSuccessMessage,
     authErrorHandler
 } from "openstack-uicore-foundation/lib/methods";
 import moment from "moment-timezone";
@@ -59,7 +57,7 @@ export const getMembers = ( term = null, page = 1, perPage = 10, order = 'id', o
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 

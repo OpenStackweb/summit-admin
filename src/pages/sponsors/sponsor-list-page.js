@@ -15,8 +15,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import Swal from "sweetalert2";
-import {Table, FreeTextSearch, SortableTable} from 'openstack-uicore-foundation/lib/components';
-import { Pagination } from 'react-bootstrap';
+import {SortableTable} from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getSponsors, deleteSponsor, updateSponsorOrder } from "../../actions/sponsor-actions";
 

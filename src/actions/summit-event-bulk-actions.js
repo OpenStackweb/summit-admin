@@ -46,7 +46,7 @@ export const getSummitEventsById = (summitId, eventIds ) => (dispatch, getState)
     dispatch(startLoading());
     let filter = '';
     for(let id of eventIds){
-        if(filter!='') filter += ',';
+        if(filter !== '') filter += ',';
         filter += `id==${id}`;
     }
 

@@ -25,7 +25,7 @@ export default class PublishedFilter extends React.Component {
     handleFilterChange(value) {
         let published = null;
 
-        if (value.length == 1) {
+        if (value.length === 1) {
             if ( value.includes('published')) {
                 published = true;
             } else if ( value.includes('not-published')){

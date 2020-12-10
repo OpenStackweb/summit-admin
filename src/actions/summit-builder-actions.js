@@ -192,7 +192,7 @@ export const getPublishedEventsBySummitDayLocation = (currentSummit, currentDay,
     dispatch(startLoading());
     let page       = 1
     let per_page   = 100;
-    let locationId = currentLocation.id == 0 ? 'tbd': currentLocation.id;
+    let locationId = currentLocation.id === 0 ? 'tbd': currentLocation.id;
     return getRequest(
         createAction(REQUEST_SCHEDULE_EVENTS_PAGE),
         createAction(RECEIVE_SCHEDULE_EVENTS_PAGE),

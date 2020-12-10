@@ -97,7 +97,7 @@ class SummitEventBulkEditorItem extends React.Component
 
     render(){
         let { event, currentSummit, venuesOptions } = this.props;
-        let currentLocation        = venuesOptions.filter((option) => option.value.id == event.location_id).shift()
+        let currentLocation        = venuesOptions.filter((option) => option.value.id === event.location_id).shift()
         let currentSummitStartDate = moment.tz(currentSummit.start_date * 1000, currentSummit.time_zone.name).hour(0).minute(0).second(0);
         let currentSummitEndDate   = moment.tz(currentSummit.end_date * 1000, currentSummit.time_zone.name).hour(23).minute(59).second(59);
 

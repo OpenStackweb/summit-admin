@@ -77,7 +77,7 @@ export const updateTagGroupsOrder = (tagGroups, tagGroupId, newOrder) => (dispat
         access_token : accessToken
     };
 
-    let tagGroup = tagGroups.find(tg => tg.id == tagGroupId);
+    let tagGroup = tagGroups.find(tg => tg.id === tagGroupId);
     delete(tagGroup.allowed_tags);
 
     putRequest(

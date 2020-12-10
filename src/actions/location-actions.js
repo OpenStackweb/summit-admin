@@ -31,7 +31,6 @@ import {
     geoCodeLatLng,
     authErrorHandler
 } from 'openstack-uicore-foundation/lib/methods';
-import {PIC_ATTACHED, SPEAKER_ADDED, UPDATE_SPEAKER} from "./speaker-actions";
 
 
 export const REQUEST_LOCATIONS          = 'REQUEST_LOCATIONS';
@@ -259,7 +258,7 @@ export const updateLocationOrder = (locations, locationId, newOrder) => (dispatc
         access_token : accessToken
     };
 
-    let location = locations.find(l => l.id == locationId);
+    let location = locations.find(l => l.id === locationId);
 
     putRequest(
         null,
@@ -305,7 +304,7 @@ export const updateAddress = (location) => (dispatch) => {
 
 const normalizeEntity = (entity, allClasses) => {
     let normalizedEntity = {};
-    let locationClass = allClasses.find(c => c.class_name == entity.class_name);
+    let locationClass = allClasses.find(c => c.class_name === entity.class_name);
 
     for(var field in locationClass) {
         normalizedEntity[field] = entity[field];
@@ -554,7 +553,7 @@ export const saveRoom = (locationId, entity, continueAdding) => (dispatch, getSt
     if (entity.floor_id) {
         url += `/floors/${entity.floor_id}`;
     }
-    url += (entity.class_name == 'SummitVenueRoom') ? `/rooms` : `/bookable-rooms`;
+    url += (entity.class_name === 'SummitVenueRoom') ? `/rooms` : `/bookable-rooms`;
 
     if (entity.id) {
 
@@ -633,7 +632,7 @@ export const attachRoomImage = (locationId, entity, file) => (dispatch, getState
     let normalizedEntity = normalizeRoomEntity(entity);
 
     let url = `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}`;
-    url += (entity.class_name == 'SummitVenueRoom') ? `/rooms` : `/bookable-rooms`;
+    url += (entity.class_name === 'SummitVenueRoom') ? `/rooms` : `/bookable-rooms`;
 
     if (entity.id) {
         dispatch(uploadRoomFile(locationId, entity, file));
@@ -697,7 +696,7 @@ export const deleteRoomImage = (locationId, roomId) => (dispatch, getState) => {
 const normalizeRoomEntity = (entity) => {
     let normalizedEntity = {...entity};
 
-    if (normalizedEntity.order == 0) {
+    if (normalizedEntity.order === 0) {
         delete(normalizedEntity['order']);
     }
 

@@ -59,7 +59,7 @@ const adminAccessListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case ADMIN_ACCESS_DELETED: {
             let {adminAccessId} = payload;
-            return {...state, admin_accesses: state.admin_accesses.filter(aa => aa.id != adminAccessId)};
+            return {...state, admin_accesses: state.admin_accesses.filter(aa => aa.id !== adminAccessId)};
         }
         break;
         default:

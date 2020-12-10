@@ -64,7 +64,7 @@ const featuredSpeakersReducer = (state = DEFAULT_STATE, action) => {
         break;
         case FEATURED_SPEAKER_DELETED: {
             let {speakerId} = payload;
-            return {...state, speakers: state.speakers.filter(a => a.id != speakerId)};
+            return {...state, speakers: state.speakers.filter(a => a.id !== speakerId)};
         }
         break;
         case FEATURED_SPEAKER_ADDED: {

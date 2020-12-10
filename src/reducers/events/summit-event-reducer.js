@@ -130,7 +130,7 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
         break;
         case EVENT_MATERIAL_DELETED: {
             let eventMaterialId = payload.eventMaterialId;
-            let materials = state.entity.materials.filter(m => m.id != eventMaterialId);
+            let materials = state.entity.materials.filter(m => m.id !== eventMaterialId);
 
             return {...state, entity: {...state.entity, materials: materials}, errors: {} };
         }
@@ -147,7 +147,7 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
         break;
         case EVENT_MATERIAL_UPDATED: {
             let newMaterial = {...payload.response};
-            let oldMaterials = state.entity.materials.filter(m => m.id != newMaterial.id);
+            let oldMaterials = state.entity.materials.filter(m => m.id !== newMaterial.id);
 
             newMaterial.display_on_site_label = (newMaterial.display_on_site) ? 'Yes' : 'No';
 

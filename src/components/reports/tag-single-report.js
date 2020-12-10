@@ -12,11 +12,9 @@
  **/
 
 import React from 'react'
-import T from 'i18n-react/dist/i18n-react'
 import { Table } from 'openstack-uicore-foundation/lib/components'
 const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
-import history from "../../history";
 
 
 class SingleTagReport extends React.Component {
@@ -44,7 +42,7 @@ class SingleTagReport extends React.Component {
 
         if (sortKey) {
             let querySortKey = this.translateSortKey(sortKey);
-            let order = (sortDir == 1) ? '' : '-';
+            let order = (sortDir === 1) ? '' : '-';
             filters.ordering = order + '' + querySortKey;
         }
 
@@ -67,8 +65,8 @@ class SingleTagReport extends React.Component {
             let attMedia = it.attendingMedia;
 
             if(!forExport) {
-                attMedia = it.attendingMedia ? '<div class="text-center"><i class="fa fa-times" aria-hidden="true"></i></div>' :
-                    '<div class="text-center"><i class="fa fa-check" aria-hidden="true"></i></div>';
+                attMedia = it.attendingMedia ? '<div class="text-center"><i class="fa fa-times" aria-hidden="true"/></div>' :
+                    '<div class="text-center"><i class="fa fa-check" aria-hidden="true"/></div>';
             }
 
             return ({
@@ -98,7 +96,7 @@ class SingleTagReport extends React.Component {
         let {data, extraData, totalCount, sortKey, sortDir} = this.props;
         let storedDataName = this.props.name;
 
-        if (!data || storedDataName != this.getName()) return (<div></div>)
+        if (!data || storedDataName !== this.getName()) return (<div />)
 
         let report_options = {
             sortCol: sortKey,

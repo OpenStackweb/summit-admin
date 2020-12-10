@@ -14,8 +14,9 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import {findElementPos, queryTags} from 'openstack-uicore-foundation/lib/methods'
+import {queryTags} from 'openstack-uicore-foundation/lib/methods'
 import { Input, SimpleLinkList } from 'openstack-uicore-foundation/lib/components'
+import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 
 class TagGroupForm extends React.Component {
     constructor(props) {
@@ -32,18 +33,21 @@ class TagGroupForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const state = {};
+        scrollToError(this.props.errors);
 
-        this.setState({
-            entity: {...nextProps.entity},
-            errors: {...nextProps.errors}
-        });
+        if(prevProps.entity.id !== this.props.entity.id) {
+            state.entity = {...this.props.entity};
+            state.errors = {};
+        }
 
-        //scroll to first error
-        if(Object.keys(nextProps.errors).length > 0) {
-            let firstError = Object.keys(nextProps.errors)[0]
-            let firstNode = document.getElementById(firstError);
-            if (firstNode) window.scrollTo(0, findElementPos(firstNode));
+        if (!shallowEqual(prevProps.errors, this.props.errors)) {
+            state.errors = {...this.props.errors};
+        }
+
+        if (!isEmpty(state)) {
+            this.setState({...this.state, ...state})
         }
     }
 
@@ -105,7 +109,7 @@ class TagGroupForm extends React.Component {
                     {
                         name: 'copy_to_category',
                         tooltip: 'copy to all categories',
-                        icon: <i className="fa fa-files-o"></i>,
+                        icon: <i className="fa fa-files-o"/>,
                         onClick: this.props.onCopyTag
                     }
                 ]
@@ -138,7 +142,7 @@ class TagGroupForm extends React.Component {
                     </div>
                 </div>
 
-                {entity.id != 0 &&
+                {entity.id !== 0 &&
                 <SimpleLinkList
                     values={entity.allowed_tags}
                     columns={allowedTagsColumns}

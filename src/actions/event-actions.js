@@ -85,7 +85,7 @@ export const getEvents = ( term = null, page = 1, perPage = 10, order = 'id', or
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -146,7 +146,7 @@ export const getEventsForOccupancy = ( term = null, roomId = null, currentEvents
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -381,7 +381,7 @@ export const checkProximityEvents = (event, cb = null) => (dispatch, getState) =
     )(params)(dispatch)
         .then((payload) => {
 
-            let proximity_events = payload.response.data.filter( e => e.id != event.id );
+            let proximity_events = payload.response.data.filter( e => e.id !== event.id );
 
             if (proximity_events.length > 0) {
                 success_message.width = null;
@@ -505,7 +505,7 @@ const normalizeEntity = (entity) => {
     if (!normalizedEntity.rsvp_template_id) delete normalizedEntity['rsvp_template_id'];
 
     normalizedEntity.tags = normalizedEntity.tags.map((t) => {
-        if (typeof t == 'string') return t;
+        if (typeof t === 'string') return t;
         else return t.tag;
     });
     normalizedEntity.sponsors = normalizedEntity.sponsors.map(s => s.id);
@@ -566,7 +566,7 @@ export const exportEvents = ( term = null, order = 'id', orderDir = 1 ) => (disp
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 

@@ -14,7 +14,6 @@
 import React from 'react';
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import { Input, Dropdown, RadioList, CheckboxList } from 'openstack-uicore-foundation/lib/components'
-import T from "i18n-react/dist/i18n-react";
 
 export default class QuestionAnswersInput extends React.Component {
 
@@ -22,8 +21,8 @@ export default class QuestionAnswersInput extends React.Component {
         super(props);
 
         let answers = props.questions.map(q => {
-            let defaultValue = (q.type == 'CheckBox') ? 'false' : '';
-            let answer = props.answers.find(ans => ans.question_id == q.id);
+            let defaultValue = (q.type === 'CheckBox') ? 'false' : '';
+            let answer = props.answers.find(ans => ans.question_id === q.id);
             let value = answer ? answer.answer : defaultValue;
             return ({question_id: q.id, answer: value});
         });
@@ -39,17 +38,17 @@ export default class QuestionAnswersInput extends React.Component {
     handleChange(ev) {
         let {value, id} = ev.target;
 
-        if (ev.target.type == 'checkbox') {
+        if (ev.target.type === 'checkbox') {
             value = ev.target.checked ? "true" : "false";
         }
 
-        if (ev.target.type == 'checkboxlist') {
+        if (ev.target.type === 'checkboxlist') {
             value = ev.target.value.join(',');
         }
 
         let answers = this.state.answers.map(ans => {
             let newValue = ans.answer;
-            if (ans.question_id == id) newValue = `${value}`;
+            if (ans.question_id === id) newValue = `${value}`;
 
             return ({question_id: ans.question_id, answer: newValue})
         });
@@ -97,7 +96,7 @@ export default class QuestionAnswersInput extends React.Component {
             case 'CheckBox':
                 return (
                     <div className="form-check abc-checkbox">
-                        <input type="checkbox" id={question.id} checked={(answerValue == "true")}
+                        <input type="checkbox" id={question.id} checked={(answerValue === "true")}
                                onChange={this.handleChange} className="form-check-input" />
                         <label className="form-check-label" htmlFor={question.id}>
                             {question.label}
@@ -105,7 +104,7 @@ export default class QuestionAnswersInput extends React.Component {
                     </div>
                 );
             case 'ComboBox':
-                let value = answerValue ? questionValues.find(val => val.id == parseInt(answerValue)) : null;
+                let value = answerValue ? questionValues.find(val => val.id === parseInt(answerValue)) : null;
                 questionValues = questionValues.map(val => ({...val, value: val.id}));
                 return (
                     <div>
@@ -157,7 +156,7 @@ export default class QuestionAnswersInput extends React.Component {
         return (
             <div>
                 {questions.map( q => {
-                    let answer = answers.find(ans => ans.question_id == q.id);
+                    let answer = answers.find(ans => ans.question_id === q.id);
                     let answerValue = answer ? answer.answer : null;
                     return (
                         <div className="row form-group" key={`question_answer_${q.id}`}>

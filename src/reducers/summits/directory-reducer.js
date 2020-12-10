@@ -31,7 +31,7 @@ const directoryReducer = (state = DEFAULT_STATE, action) => {
         break;
         case SUMMIT_DELETED: {
             let {summitId} = payload;
-            let summits = state.summits.filter(s => s.id != summitId);
+            let summits = state.summits.filter(s => s.id !== summitId);
 
             return {...state, summits: [...summits]};
         }

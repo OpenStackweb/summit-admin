@@ -42,7 +42,7 @@ class OrderExtraQuestionListPage extends React.Component {
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
             this.props.getOrderExtraQuestions();
         }
     }
@@ -54,7 +54,7 @@ class OrderExtraQuestionListPage extends React.Component {
 
     handleDelete(orderExtraQuestionId) {
         let {deleteOrderExtraQuestion, orderExtraQuestions} = this.props;
-        let orderExtraQuestion = orderExtraQuestions.find(t => t.id == orderExtraQuestionId);
+        let orderExtraQuestion = orderExtraQuestions.find(t => t.id === orderExtraQuestionId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -93,7 +93,7 @@ class OrderExtraQuestionListPage extends React.Component {
             }
         }
 
-        if(!currentSummit.id) return (<div></div>);
+        if(!currentSummit.id) return (<div />);
 
         return(
             <div className="container">
@@ -106,7 +106,7 @@ class OrderExtraQuestionListPage extends React.Component {
                     </div>
                 </div>
 
-                {orderExtraQuestions.length == 0 &&
+                {orderExtraQuestions.length === 0 &&
                 <div>{T.translate("order_extra_question_list.no_order_extra_questions")}</div>
                 }
 

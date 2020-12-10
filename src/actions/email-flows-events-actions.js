@@ -52,7 +52,7 @@ export const getEmailFlowEvents = ( term = null, page = 1, perPage = 10, order =
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 

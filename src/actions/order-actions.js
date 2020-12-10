@@ -26,8 +26,6 @@ import {
     authErrorHandler,
     escapeFilterValue
 } from 'openstack-uicore-foundation/lib/methods';
-import Swal from "sweetalert2";
-
 
 export const REQUEST_ORDER_EXTRA_QUESTIONS       = 'REQUEST_ORDER_EXTRA_QUESTIONS';
 export const RECEIVE_ORDER_EXTRA_QUESTIONS       = 'RECEIVE_ORDER_EXTRA_QUESTIONS';
@@ -223,7 +221,7 @@ export const updateOrderExtraQuestionOrder = (questions, questionId, newOrder) =
         access_token : accessToken
     };
 
-    let question = questions.find(q => q.id == questionId);
+    let question = questions.find(q => q.id === questionId);
 
     putRequest(
         null,
@@ -342,7 +340,7 @@ export const getPurchaseOrders = ( term = null, page = 1, perPage = 10, order = 
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 

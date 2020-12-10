@@ -250,7 +250,7 @@ class SummitAttendeeListPage extends React.Component {
                     {
                         name: 'show_schedule',
                         tooltip: 'show schedule',
-                        icon: <i className="fa fa-list"></i>,
+                        icon: <i className="fa fa-list"/>,
                         onClick: this.handleViewSchedule,
                         display: this.hasSchedule
                     }
@@ -260,7 +260,7 @@ class SummitAttendeeListPage extends React.Component {
             selectedAll: selectedAll,
         }
 
-        if(!currentSummit.id) return (<div></div>);
+        if(!currentSummit.id) return (<div />);
 
         let flowEventsDDL = [
             {label: '-- SELECT EMAIL EVENT --', value: ''},

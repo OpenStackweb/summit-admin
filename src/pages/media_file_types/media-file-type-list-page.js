@@ -124,7 +124,7 @@ class MediaFileTypeListPage extends React.Component {
                     </div>
                 </div>
 
-                {media_file_types.length == 0 &&
+                {media_file_types.length === 0 &&
                 <div>{T.translate("media_file_type.no_results")}</div>
                 }
 

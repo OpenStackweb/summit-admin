@@ -23,10 +23,10 @@ class ScheduleAdminOrderSelector extends React.Component {
     render(){
         let { sortOptions, currentValue, disableTrackOrder } = this.props;
         if (disableTrackOrder) {
-            sortOptions = sortOptions.filter(op => op.value != 'trackchairsel')
+            sortOptions = sortOptions.filter(op => op.value !== 'trackchairsel')
         }
 
-        let theValue = sortOptions.find(op => op.value == currentValue);
+        let theValue = sortOptions.find(op => op.value === currentValue);
 
         return (
             <Select

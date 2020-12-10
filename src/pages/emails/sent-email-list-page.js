@@ -72,7 +72,7 @@ class SentEmailListPage extends React.Component {
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: T.translate("emails.sent"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("emails.sent"), pathname: match.url }} />
 
                 <h3> {T.translate("emails.email_list")} ({totalEmails})</h3>
                 <div className={'row'}>
@@ -85,7 +85,7 @@ class SentEmailListPage extends React.Component {
                     </div>
                 </div>
 
-                {emails.length == 0 &&
+                {emails.length === 0 &&
                 <div>{T.translate("emails.no_emails")}</div>
                 }
 

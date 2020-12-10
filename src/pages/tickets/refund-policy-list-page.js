@@ -36,7 +36,7 @@ class RefundPolicyListPage extends React.Component {
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
             this.props.getRefundPolicies();
         }
     }
@@ -58,12 +58,12 @@ class RefundPolicyListPage extends React.Component {
             }
         };
 
-        if(!currentSummit.id) return (<div></div>);
+        if(!currentSummit.id) return (<div />);
 
 
         return(
             <>
-                <Breadcrumb data={{ title: T.translate("refund_policy_list.refund_policies"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("refund_policy_list.refund_policies"), pathname: match.url }} />
                 <div className="container">
                     <h3> {T.translate("refund_policy_list.refund_policies")}</h3>
                     <p> {T.translate("refund_policy_list.warning")}</p>

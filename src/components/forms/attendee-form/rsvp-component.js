@@ -62,12 +62,12 @@ export default class RsvpComponent extends React.Component {
                         <tbody>
                         {member.rsvp.map(r =>
                             <tr key={r.id} >
-                                <td>{member.schedule_summit_events.find(e => e.id == r.event_id).title}</td>
+                                <td>{member.schedule_summit_events.find(e => e.id === r.event_id).title}</td>
                                 <td>{epochToMoment(r.created).format('MMMM Do YYYY, h:mm:ss a')}</td>
                                 <td>{r.seat_type}</td>
                                 <td>
                                     <a href="" onClick={this.handleDelete.bind(this, r.id)} >
-                                        <i className="fa fa-trash-o"></i>
+                                        <i className="fa fa-trash-o"/>
                                     </a>
                                 </td>
                             </tr>

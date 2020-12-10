@@ -55,7 +55,7 @@ export const getTaxTypes = ( order = 'name', orderDir = 1 ) => (dispatch, getSta
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 

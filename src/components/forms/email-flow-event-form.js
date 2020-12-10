@@ -10,14 +10,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-import React from 'react'
-import T from 'i18n-react/dist/i18n-react'
-import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import {
-    findElementPos
-} from 'openstack-uicore-foundation/lib/methods'
-import { Input} from 'openstack-uicore-foundation/lib/components';
+import React from 'react';
+import T from 'i18n-react/dist/i18n-react';
+import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css';
 import EmailTemplateInput from "../inputs/email-template-input";
+import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 
 
 class EmailFlowEventForm extends React.Component {
@@ -33,27 +30,30 @@ class EmailFlowEventForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const state = {};
+        scrollToError(this.props.errors);
 
-        this.setState({
-            entity: {...nextProps.entity},
-            errors: {...nextProps.errors}
-        });
+        if(prevProps.entity.id !== this.props.entity.id) {
+            state.entity = {...this.props.entity};
+            state.errors = {};
+        }
 
-        //scroll to first error
-        if(Object.keys(nextProps.errors).length > 0) {
-            let firstError = Object.keys(nextProps.errors)[0]
-            let firstNode = document.getElementById(firstError);
-            if (firstNode) window.scrollTo(0, findElementPos(firstNode));
+        if (!shallowEqual(prevProps.errors, this.props.errors)) {
+            state.errors = {...this.props.errors};
+        }
+
+        if (!isEmpty(state)) {
+            this.setState({...this.state, ...state})
         }
     }
 
     handleChange(ev) {
-        let entity = {...this.state.entity};
-        let errors = {...this.state.errors};
+        const entity = {...this.state.entity};
+        const errors = {...this.state.errors};
         let {value, id} = ev.target;
 
-        if (ev.target.type == 'checkbox') {
+        if (ev.target.type === 'checkbox') {
             value = ev.target.checked;
         }
 
@@ -63,24 +63,12 @@ class EmailFlowEventForm extends React.Component {
     }
 
     handleSubmit(ev) {
-        let entity = {...this.state.entity};
         ev.preventDefault();
-
         this.props.onSubmit(this.state.entity);
     }
 
-    hasErrors(field) {
-        let {errors} = this.state;
-        if(field in errors) {
-            return errors[field];
-        }
-
-        return '';
-    }
-
     render() {
-        let {entity} = this.state;
-        let { currentSummit } = this.props;
+        const {entity} = this.state;
 
         return (
             <form className="email-flow-event-form">

@@ -15,7 +15,7 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import moment from 'moment-timezone'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { findElementPos, epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/methods'
+import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/methods'
 import {
     DateTimePicker,
     Input,
@@ -25,6 +25,7 @@ import {
     UploadInput, TextEditor
 } from 'openstack-uicore-foundation/lib/components'
 import {Exclusive} from 'openstack-uicore-foundation/lib/components'
+import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 
 
 
@@ -48,17 +49,21 @@ class SummitForm extends React.Component {
         this.handleRemoveFile = this.handleRemoveFile.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.setState({
-            entity: {...nextProps.entity},
-            errors: nextProps.errors
-        });
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const state = {};
+        scrollToError(this.props.errors);
 
-        //scroll to first error
-        if(Object.keys(nextProps.errors).length > 0) {
-            let firstError = Object.keys(nextProps.errors)[0]
-            let firstNode = document.getElementById(firstError);
-            if (firstNode) window.scrollTo(0, findElementPos(firstNode));
+        if(prevProps.entity.id !== this.props.entity.id) {
+            state.entity = {...this.props.entity};
+            state.errors = {};
+        }
+
+        if (!shallowEqual(prevProps.errors, this.props.errors)) {
+            state.errors = {...this.props.errors};
+        }
+
+        if (!isEmpty(state)) {
+            this.setState({...this.state, ...state})
         }
     }
 
@@ -67,20 +72,20 @@ class SummitForm extends React.Component {
         let {errors} = this.state;
         let {value, id} = ev.target;
 
-        if (ev.target.type == 'radio') {
+        if (ev.target.type === 'radio') {
             id = ev.target.name;
-            value = (ev.target.value == 1);
+            value = (ev.target.value === 1);
         }
 
-        if (ev.target.type == 'checkbox') {
+        if (ev.target.type === 'checkbox') {
             value = ev.target.checked;
         }
 
-        if (ev.target.type == 'datetime') {
+        if (ev.target.type === 'datetime') {
             value = value.valueOf() / 1000;
         }
 
-        if (ev.target.type == 'number') {
+        if (ev.target.type === 'number') {
             value = parseInt(value);
         }
 
@@ -152,7 +157,7 @@ class SummitForm extends React.Component {
         let {entity, showSection} = this.state;
         let {onSPlanDelete, onAttributeTypeDelete} = this.props;
         let time_zones_ddl = moment.tz.names().map(tz => ({label: tz, value: tz}));
-        let dates_enabled = (entity.hasOwnProperty('time_zone_id') && entity.time_zone_id != '');
+        let dates_enabled = (entity.hasOwnProperty('time_zone_id') && entity.time_zone_id !== '');
 
         let splan_columns = [
             { columnKey: 'name', value: T.translate("edit_summit.name") },
@@ -371,7 +376,7 @@ class SummitForm extends React.Component {
                     </div>
                 </div>
 
-                <Panel show={showSection == 'dates'} title={T.translate("edit_summit.dates")}
+                <Panel show={showSection === 'dates'} title={T.translate("edit_summit.dates")}
                        handleClick={this.toggleSection.bind(this, 'dates')}>
                     <div className="row form-group">
                         <div className="col-md-6">
@@ -489,7 +494,7 @@ class SummitForm extends React.Component {
 
                 </Panel>
 
-                <Panel show={showSection == 'calendar'} title={T.translate("edit_summit.calendar_sync")}
+                <Panel show={showSection === 'calendar'} title={T.translate("edit_summit.calendar_sync")}
                        handleClick={this.toggleSection.bind(this, 'calendar')}>
                     <div className="row form-group">
                         <div className="col-md-6">
@@ -564,7 +569,7 @@ class SummitForm extends React.Component {
                 </Panel>
 
                 <Exclusive name="room-booking">
-                    <Panel show={showSection == 'room-booking'} title={T.translate("edit_summit.room-booking")}
+                    <Panel show={showSection === 'room-booking'} title={T.translate("edit_summit.room-booking")}
                            handleClick={this.toggleSection.bind(this, 'room-booking')}>
                         <div className="row form-group">
                             <div className="col-md-4">
@@ -654,7 +659,7 @@ class SummitForm extends React.Component {
                     </Panel>
                 </Exclusive>
 
-                <Panel show={showSection == 'third_party'} title={T.translate("edit_summit.third_party")}
+                <Panel show={showSection === 'third_party'} title={T.translate("edit_summit.third_party")}
                        handleClick={this.toggleSection.bind(this, 'third_party')}>
                     <div className="row form-group">
                         <div className="col-md-4">

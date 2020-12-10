@@ -19,7 +19,6 @@ import
 } from '../../actions/tax-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
-import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 const DEFAULT_STATE = {
     taxTypes            : [],
@@ -50,7 +49,7 @@ const taxTypeListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case TAX_TYPE_DELETED: {
             let {taxTypeId} = payload;
-            return {...state, taxTypes: state.taxTypes.filter(t => t.id != taxTypeId)};
+            return {...state, taxTypes: state.taxTypes.filter(t => t.id !== taxTypeId)};
         }
         break;
         default:

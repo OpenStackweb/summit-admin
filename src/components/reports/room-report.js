@@ -13,9 +13,7 @@
 
 import React from 'react'
 import moment from 'moment-timezone'
-import T from 'i18n-react/dist/i18n-react'
 import { Table } from 'openstack-uicore-foundation/lib/components'
-import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/methods'
 const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
 import {groupByDate} from '../../utils/methods'
@@ -39,7 +37,7 @@ class RoomReport extends React.Component {
 
         if (sortKey) {
             let querySortKey = this.translateSortKey(sortKey);
-            let order = (sortDir == 1) ? '' : '-';
+            let order = (sortDir === 1) ? '' : '-';
             filters.ordering = `${order}${querySortKey},start_date`;
         }
 
@@ -83,7 +81,7 @@ class RoomReport extends React.Component {
 
     handleAttendeeList(eventId) {
         let {data} = this.props;
-        let event = data.find(ev => ev.id == eventId);
+        let event = data.find(ev => ev.id === eventId);
 
         if (event) {
             this.props.getMembersForEventCSV(event);
@@ -152,7 +150,7 @@ class RoomReport extends React.Component {
         let {data, sortKey, sortDir, currentSummit} = this.props;
         let storedDataName = this.props.name;
 
-        if (!data || storedDataName != this.getName()) return (<div></div>);
+        if (!data || storedDataName !== this.getName()) return (<div />);
 
         let report_options = {
             sortCol: sortKey,
@@ -162,7 +160,7 @@ class RoomReport extends React.Component {
                 {
                   name: 'list_attendees',
                   tooltip: 'list attendees',
-                  icon: <i className="fa fa-download"></i>,
+                  icon: <i className="fa fa-download"/>,
                   onClick: this.handleAttendeeList,
                 }
               ]

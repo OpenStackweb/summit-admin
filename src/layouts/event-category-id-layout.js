@@ -12,7 +12,7 @@
  **/
 
 import React from 'react'
-import { Switch, Route, withRouter } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import Restrict from '../routes/restrict';
@@ -41,7 +41,7 @@ class EventCategoryIdLayout extends React.Component {
         let oldId = this.props.match.params.event_category_id;
         let newId = newProps.match.params.event_category_id;
 
-        if (oldId != newId) {
+        if (oldId !== newId) {
             if (!newId) {
                 this.props.resetEventCategoryForm();
             } else {
@@ -56,13 +56,13 @@ class EventCategoryIdLayout extends React.Component {
 
         return(
             <div>
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
 
                 <Switch>
                     <Route path={`${match.url}/questions`} render={
                         props => (
                             <div>
-                                <Breadcrumb data={{ title: T.translate("edit_event_category.questions"), pathname: match.url }} ></Breadcrumb>
+                                <Breadcrumb data={{ title: T.translate("edit_event_category.questions"), pathname: match.url }} />
                                 <Switch>
                                     <Route exact strict path={`${props.match.url}/new`} component={EditEventCategoryQuestionPage} />
                                     <Route exact strict path={`${props.match.url}/:category_question_id(\\d+)`} component={EditEventCategoryQuestionPage} />

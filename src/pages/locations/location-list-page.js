@@ -43,7 +43,7 @@ class LocationListPage extends React.Component {
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
             this.props.getLocations();
         }
     }
@@ -60,7 +60,7 @@ class LocationListPage extends React.Component {
 
     handleDelete(locationId) {
         let {deleteLocation, locations} = this.props;
-        let location = locations.find(p => p.id == locationId);
+        let location = locations.find(p => p.id === locationId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -96,7 +96,7 @@ class LocationListPage extends React.Component {
             }
         }
 
-        if(!currentSummit.id) return(<div></div>);
+        if(!currentSummit.id) return(<div />);
 
         let sortedLocations = [...locations];
         sortedLocations.sort(
@@ -117,7 +117,7 @@ class LocationListPage extends React.Component {
                     </div>
                 </div>
 
-                {locations.length == 0 &&
+                {locations.length === 0 &&
                 <div>{T.translate("location_list.no_items")}</div>
                 }
 

@@ -44,7 +44,7 @@ class ScheduleEventResult extends React.Component {
                                 </OverlayTrigger>
                             </div>
                             <div className="event-actions">
-                                <i className="fa fa-pencil-square-o edit-published-event-btn" title="edit event" aria-hidden="true" onClick={this.onClickEdit.bind(this)}></i>
+                                <i className="fa fa-pencil-square-o edit-published-event-btn" title="edit event" aria-hidden="true" onClick={this.onClickEdit.bind(this)}/>
                             </div>
                         </div>
                     </div>

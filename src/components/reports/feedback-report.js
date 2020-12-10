@@ -12,7 +12,6 @@
  **/
 
 import React from 'react'
-import T from 'i18n-react/dist/i18n-react'
 import history from '../../history'
 import { Table } from 'openstack-uicore-foundation/lib/components'
 import StarRatings from 'react-star-ratings';
@@ -45,7 +44,7 @@ class FeedbackReport extends React.Component {
 
         if (sortKey) {
             let querySortKey = this.translateSortKey(sortKey);
-            let order = (sortDir == 1) ? '' : '-';
+            let order = (sortDir === 1) ? '' : '-';
             filters.ordering = order + '' + querySortKey;
         }
 
@@ -124,7 +123,7 @@ class FeedbackReport extends React.Component {
 
     getName() {
         let {groupBy} = this.state;
-        let name = groupBy == 'feedback' ? '' : ' by ' + groupBy;
+        let name = groupBy === 'feedback' ? '' : ' by ' + groupBy;
         return `Feedback Report ${name}`;
     }
 
@@ -233,7 +232,7 @@ class FeedbackReport extends React.Component {
         let {groupBy} = this.state;
         let storedDataName = this.props.name;
 
-        if (!data || storedDataName != this.getName()) return (<div></div>)
+        if (!data || storedDataName !== this.getName()) return (<div />)
 
         let avgRate = extraStat ? extraStat : 0;
 
@@ -258,7 +257,7 @@ class FeedbackReport extends React.Component {
                     <div className="col-md-4 pull-right">
                         <label>Group by</label>
                         <Select
-                            value={groupOptions.find(v => v.value == groupBy)}
+                            value={groupOptions.find(v => v.value === groupBy)}
                             id="report_group_by"
                             options={groupOptions}
                             onChange={this.handleFilterChange}

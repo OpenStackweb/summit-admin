@@ -42,7 +42,7 @@ class TagGroupListPage extends React.Component {
     componentWillReceiveProps(newProps) {
         let {currentSummit} = this.props;
 
-        if (currentSummit !== null && currentSummit.id != newProps.currentSummit.id) {
+        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
             this.props.getTagGroups();
         }
     }
@@ -54,7 +54,7 @@ class TagGroupListPage extends React.Component {
 
     handleDelete(tagGroupId) {
         let {deleteTagGroup, tagGroups} = this.props;
-        let tagGroup = tagGroups.find(tg => tg.id == tagGroupId);
+        let tagGroup = tagGroups.find(tg => tg.id === tagGroupId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -100,7 +100,7 @@ class TagGroupListPage extends React.Component {
             }
         }
 
-        if(!currentSummit.id) return(<div></div>);
+        if(!currentSummit.id) return(<div />);
 
         let sortedTagGroups = [...tagGroups];
         sortedTagGroups.sort(
@@ -121,7 +121,7 @@ class TagGroupListPage extends React.Component {
                     </div>
                 </div>
 
-                {tagGroups.length == 0 &&
+                {tagGroups.length === 0 &&
                 <div>{T.translate("tag_group_list.no_tag_groups")}</div>
                 }
 

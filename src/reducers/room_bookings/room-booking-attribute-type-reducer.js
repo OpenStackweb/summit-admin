@@ -82,7 +82,7 @@ const roomBookingAttributeTypeReducer = (state = DEFAULT_STATE, action) => {
         break;
         case ROOM_BOOKING_ATTRIBUTE_DELETED: {
             let {attributeValueId} = payload;
-            let attributes = state.entity.values.filter(v => v.id != attributeValueId);
+            let attributes = state.entity.values.filter(v => v.id !== attributeValueId);
             return {...state, entity: {...state.entity, values: attributes} };
         }
         break;

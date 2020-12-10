@@ -19,7 +19,7 @@ class FragmentParser {
             if(val === '') continue;
 
             if (val === 'true' || val === 'false')
-                param[1] = val == 'true';
+                param[1] = val === 'true';
 
             res[param[0]] = param[1];
         }
@@ -54,7 +54,7 @@ class FragmentParser {
         var hash    = this.getParams();
         this.clearParams();
         for(let key in hash) {
-            if(key == param) continue;
+            if(key === param) continue;
             this.hash[key] = hash[key];
         }
     }

@@ -520,7 +520,7 @@ export const getBadgeScans = ( sponsorId = null, page = 1, perPage = 10, order =
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -558,7 +558,7 @@ export const exportBadgeScans = ( sponsor = null, order = 'attendee_last_name', 
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 

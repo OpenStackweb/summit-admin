@@ -29,7 +29,7 @@ class RsvpTemplateLayout extends React.Component {
 
         return(
             <div>
-                <Breadcrumb data={{ title: T.translate("rsvp_template_list.rsvp_template_list"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("rsvp_template_list.rsvp_template_list"), pathname: match.url }} />
 
                 <Switch>
                     <Route exact strict path={match.url} component={RsvpTemplateListPage} />

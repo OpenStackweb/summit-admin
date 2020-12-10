@@ -26,7 +26,6 @@ import {
     authErrorHandler,
     escapeFilterValue, getCSV
 } from "openstack-uicore-foundation/lib/methods";
-import {RECEIVE_INVITATION} from "./registration-invitation-actions";
 
 export const REQUEST_ATTENDEES          = 'REQUEST_ATTENDEES';
 export const RECEIVE_ATTENDEES          = 'RECEIVE_ATTENDEES';
@@ -96,16 +95,16 @@ export const getAttendees = ( term = null, page = 1, perPage = 10,
     }
 
     if(memberFilter){
-        if(memberFilter == 'HAS_MEMBER')
+        if(memberFilter === 'HAS_MEMBER')
             filter.push(`has_member==true`)
-        if(memberFilter == 'HAS_NO_MEMBER')
+        if(memberFilter === 'HAS_NO_MEMBER')
             filter.push(`has_member==false`)
     }
 
     if(ticketsFilter){
-        if(ticketsFilter == 'HAS_TICKETS')
+        if(ticketsFilter === 'HAS_TICKETS')
             filter.push(`has_tickets==true`)
-        if(ticketsFilter == 'HAS_NO_TICKETS')
+        if(ticketsFilter === 'HAS_NO_TICKETS')
             filter.push(`has_tickets==false`)
     }
 
@@ -115,7 +114,7 @@ export const getAttendees = ( term = null, page = 1, perPage = 10,
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -157,16 +156,16 @@ export const exportAttendees = ( term = null,
     }
 
     if(memberFilter){
-        if(memberFilter == 'HAS_MEMBER')
+        if(memberFilter === 'HAS_MEMBER')
             filter.push(`has_member==true`)
-        if(memberFilter == 'HAS_NO_MEMBER')
+        if(memberFilter === 'HAS_NO_MEMBER')
             filter.push(`has_member==false`)
     }
 
     if(ticketsFilter){
-        if(ticketsFilter == 'HAS_TICKETS')
+        if(ticketsFilter === 'HAS_TICKETS')
             filter.push(`has_tickets==true`)
-        if(ticketsFilter == 'HAS_NO_TICKETS')
+        if(ticketsFilter === 'HAS_NO_TICKETS')
             filter.push(`has_tickets==false`)
     }
 
@@ -176,7 +175,7 @@ export const exportAttendees = ( term = null,
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir == 1) ? '+' : '-';
+        let orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -421,16 +420,16 @@ export const sendEmails = (currentFlowEvent, selectedAll = false , selectedIds =
     }
 
     if(memberFilter){
-        if(memberFilter == 'HAS_MEMBER')
+        if(memberFilter === 'HAS_MEMBER')
             filter.push(`has_member==true`)
-        if(memberFilter == 'HAS_NO_MEMBER')
+        if(memberFilter === 'HAS_NO_MEMBER')
             filter.push(`has_member==false`)
     }
 
     if(ticketsFilter){
-        if(ticketsFilter == 'HAS_TICKETS')
+        if(ticketsFilter === 'HAS_TICKETS')
             filter.push(`has_tickets==true`)
-        if(ticketsFilter == 'HAS_NO_TICKETS')
+        if(ticketsFilter === 'HAS_NO_TICKETS')
             filter.push(`has_tickets==false`)
     }
 

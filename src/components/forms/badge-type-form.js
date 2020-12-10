@@ -11,15 +11,11 @@
  * limitations under the License.
  **/
 
-import React from 'react'
-import T from 'i18n-react/dist/i18n-react'
-import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import {
-    findElementPos,
-    epochToMomentTimeZone,
-    queryTicketTypes,
-} from 'openstack-uicore-foundation/lib/methods'
-import { Input, DateTimePicker, SimpleLinkList } from 'openstack-uicore-foundation/lib/components';
+import React from 'react';
+import T from 'i18n-react/dist/i18n-react';
+import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css';
+import { Input, SimpleLinkList } from 'openstack-uicore-foundation/lib/components';
+import {isEmpty, scrollToError, shallowEqual, hasErrors} from "../../utils/methods";
 
 
 class BadgeTypeForm extends React.Component {
@@ -41,27 +37,30 @@ class BadgeTypeForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const state = {};
+        scrollToError(this.props.errors);
 
-        this.setState({
-            entity: {...nextProps.entity},
-            errors: {...nextProps.errors}
-        });
+        if(prevProps.entity.id !== this.props.entity.id) {
+            state.entity = {...this.props.entity};
+            state.errors = {};
+        }
 
-        //scroll to first error
-        if(Object.keys(nextProps.errors).length > 0) {
-            let firstError = Object.keys(nextProps.errors)[0]
-            let firstNode = document.getElementById(firstError);
-            if (firstNode) window.scrollTo(0, findElementPos(firstNode));
+        if (!shallowEqual(prevProps.errors, this.props.errors)) {
+            state.errors = {...this.props.errors};
+        }
+
+        if (!isEmpty(state)) {
+            this.setState({...this.state, ...state})
         }
     }
 
     handleChange(ev) {
-        let entity = {...this.state.entity};
-        let errors = {...this.state.errors};
+        const entity = {...this.state.entity};
+        const errors = {...this.state.errors};
         let {value, id} = ev.target;
 
-        if (ev.target.type == 'checkbox') {
+        if (ev.target.type === 'checkbox') {
             value = ev.target.checked;
         }
 
@@ -71,69 +70,50 @@ class BadgeTypeForm extends React.Component {
     }
 
     handleSubmit(ev) {
-        let entity = {...this.state.entity};
         ev.preventDefault();
-
         this.props.onSubmit(this.state.entity);
     }
 
-    hasErrors(field) {
-        let {errors} = this.state;
-        if(field in errors) {
-            return errors[field];
-        }
-
-        return '';
-    }
-
     handleAccessLevelLink(accessLevel) {
-        let {entity} = this.state;
+        const {entity} = this.state;
         this.props.onAccessLevelLink(entity.id, accessLevel);
     }
 
     handleAccessLevelUnLink(accessLevelId) {
-        let {entity} = this.state;
+        const {entity} = this.state;
         this.props.onAccessLevelUnLink(entity.id, accessLevelId);
     }
 
     queryAccessLevels(input, callback) {
-        let {currentSummit} = this.props;
-        let accessLevels = [];
-
-        accessLevels = currentSummit.access_level_types.filter(f => f.name.toLowerCase().indexOf(input.toLowerCase()) !== -1)
-
+        const {currentSummit} = this.props;
+        const accessLevels = currentSummit.access_level_types.filter(f => f.name.toLowerCase().indexOf(input.toLowerCase()) !== -1);
         callback(accessLevels);
     }
 
     handleFeatureLink(feature) {
-        let {entity} = this.state;
+        const {entity} = this.state;
         this.props.onFeatureLink(entity.id, feature);
     }
 
     handleFeatureUnLink(featureId) {
-        let {entity} = this.state;
+        const {entity} = this.state;
         this.props.onFeatureUnLink(entity.id, featureId);
     }
 
     queryFeatures(input, callback) {
-        let {currentSummit} = this.props;
-        let features = [];
-
-        features = currentSummit.badge_features.filter(f => f.name.toLowerCase().indexOf(input.toLowerCase()) !== -1)
-
+        const {currentSummit} = this.props;
+        const features = currentSummit.badge_features.filter(f => f.name.toLowerCase().indexOf(input.toLowerCase()) !== -1);
         callback(features);
     }
 
 
     render() {
-        let {entity} = this.state;
-        let { currentSummit } = this.props;
-
-        let accessLevelColumns = [
+        const {entity, errors} = this.state;
+        const accessLevelColumns = [
             { columnKey: 'name', value: T.translate("edit_badge_type.name") },
         ];
 
-        let accessLevelOptions = {
+        const accessLevelOptions = {
             title: T.translate("edit_badge_type.access_levels"),
             valueKey: "name",
             labelKey: "name",
@@ -145,11 +125,11 @@ class BadgeTypeForm extends React.Component {
             }
         };
 
-        let featuresColumns = [
+        const featuresColumns = [
             { columnKey: 'name', value: T.translate("edit_badge_type.name") },
         ];
 
-        let featuresOptions = {
+        const featuresOptions = {
             title: T.translate("edit_badge_type.badge_features"),
             valueKey: "name",
             labelKey: "name",
@@ -170,7 +150,7 @@ class BadgeTypeForm extends React.Component {
                         <Input
                             id="name"
                             className="form-control"
-                            error={this.hasErrors('name')}
+                            error={hasErrors('name', errors)}
                             onChange={this.handleChange}
                             value={entity.name}
                         />
@@ -199,7 +179,7 @@ class BadgeTypeForm extends React.Component {
 
 
                 <hr />
-                {entity.id != 0 &&
+                {entity.id !== 0 &&
                 <SimpleLinkList
                     values={entity.access_levels}
                     columns={accessLevelColumns}
@@ -208,7 +188,7 @@ class BadgeTypeForm extends React.Component {
                 }
 
                 <hr />
-                {entity.id != 0 &&
+                {entity.id !== 0 &&
                 <SimpleLinkList
                     values={entity.badge_features}
                     columns={featuresColumns}

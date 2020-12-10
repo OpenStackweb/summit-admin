@@ -13,7 +13,6 @@
 import T from "i18n-react/dist/i18n-react";
 import history from '../history'
 import {
-    getRequest,
     putRequest,
     postRequest,
     deleteRequest,
@@ -24,7 +23,6 @@ import {
     showSuccessMessage,
     authErrorHandler, putFile, postFile
 } from 'openstack-uicore-foundation/lib/methods';
-import {LOCATION_IMAGE_ADDED, LOCATION_IMAGE_UPDATED, UPDATE_LOCATION_IMAGE} from "./location-actions";
 
 export const RECEIVE_EVENT_MATERIAL        = 'RECEIVE_EVENT_MATERIAL';
 export const RESET_EVENT_MATERIAL_FORM     = 'RESET_EVENT_MATERIAL_FORM';
@@ -43,7 +41,7 @@ export const getEventMaterial = (eventMaterialId) => (dispatch, getState) => {
 
     dispatch(startLoading());
 
-    let material = event.materials.find(m => m.id == eventMaterialId);
+    let material = event.materials.find(m => m.id === eventMaterialId);
 
     if (material) {
         dispatch(createAction(RECEIVE_EVENT_MATERIAL)({material}));
@@ -191,7 +189,7 @@ export const deleteEventMaterial = (eventMaterialId) => (dispatch, getState) => 
     let { accessToken }     = loggedUserState;
     let { currentSummit }   = currentSummitState;
     let event               = currentSummitEventState.entity;
-    let material            = event.materials.find(m => m.id == eventMaterialId);
+    let material            = event.materials.find(m => m.id === eventMaterialId);
     let slug = '';
 
     if (!material) {

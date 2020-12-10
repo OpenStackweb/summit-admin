@@ -28,7 +28,7 @@ class SponsorshipLayout extends React.Component {
         let { match } = this.props;
         return(
             <div>
-                <Breadcrumb data={{ title: T.translate("sponsorship_list.sponsorships"), pathname: match.url }} ></Breadcrumb>
+                <Breadcrumb data={{ title: T.translate("sponsorship_list.sponsorships"), pathname: match.url }} />
 
                 <Switch>
                     <Route strict exact path={match.url} component={SponsorshipListPage}/>
