@@ -516,8 +516,8 @@
     "affiliation_title"           : "Title",
     "company"                     : "Company",
     "affiliation_current"         : "Current",
-    "shared_contact_info"         : "Share Contact Info",
-    "checked_in"                  : "Checked In",
+    "shared_contact_info"         : "Share Contact Info?",
+    "checked_in"                  : "Checked In?",
     "tickets"                     : "Tickets",
     "rsvp"                        : "RSVP",
     "remove_ticket_from_attendee" : "Do you really want to remove this ticket from this attendee?",
@@ -542,6 +542,7 @@
     "has_idp_account"             : "Has IDP Account?",
     "has_pending_questions"       : "Has Pending Questions?",
     "promo_code"                  : "Promo Code",
+    "disclaimer_accepted"         : "Disclaimer Accepted?",
     "placeholders": {
       "start_date"            : "Start Date",
       "end_date"              : "End Date",

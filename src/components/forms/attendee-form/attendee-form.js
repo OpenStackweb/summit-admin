@@ -214,6 +214,15 @@ class AttendeeForm extends React.Component {
                             </label>
                         </div>
                     </div>
+                    <div className="col-md-3 checkboxes-div">
+                        <div className="form-check abc-checkbox">
+                            <input type="checkbox" id="disclaimer_accepted" checked={entity.disclaimer_accepted}
+                                   onChange={this.handleChange} className="form-check-input"/>
+                            <label className="form-check-label" htmlFor="disclaimer_accepted">
+                                {T.translate("edit_attendee.disclaimer_accepted")}
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
                 <div>

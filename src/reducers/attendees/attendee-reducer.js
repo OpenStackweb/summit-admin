@@ -38,7 +38,7 @@ export const DEFAULT_ENTITY = {
     admin_notes: '',
     shared_contact_info: 0,
     summit_hall_checked_in: 0,
-    summit_hall_checked_in_date: '',
+    disclaimer_accepted: 0,
     tickets: [],
     extra_question_answers: []
 }
