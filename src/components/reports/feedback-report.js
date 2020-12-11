@@ -37,7 +37,7 @@ class FeedbackReport extends React.Component {
     }
 
     buildReportQuery(filters, listFilters) {
-        let {currentSummit, sortKey, sortDir} = this.props;
+        const {currentSummit, sortKey, sortDir} = this.props;
         let {groupBy} = this.state
         listFilters.summitId = currentSummit.id;
         let query = null;

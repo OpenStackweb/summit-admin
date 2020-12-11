@@ -41,34 +41,34 @@ class AdminAccessListPage extends React.Component {
     }
 
     handleEdit(admin_access_id) {
-        let {history} = this.props;
+        const {history} = this.props;
         history.push(`/app/admin-access/${admin_access_id}`);
     }
 
     handlePageChange(page) {
-        let {term, order, orderDir, perPage} = this.props;
+        const {term, order, orderDir, perPage} = this.props;
         this.props.getAdminAccesses(term, page, perPage, order, orderDir);
     }
 
     handleSort(index, key, dir, func) {
-        let {term, page, perPage} = this.props;
+        const {term, page, perPage} = this.props;
         this.props.getAdminAccesses(term, page, perPage, key, dir);
     }
 
     handleSearch(term) {
-        let {order, orderDir, page, perPage} = this.props;
+        const {order, orderDir, page, perPage} = this.props;
         this.props.getAdminAccesses(term, page, perPage, order, orderDir);
     }
 
     handleNewAdminAccess(ev) {
-        let {history} = this.props;
+        const {history} = this.props;
         ev.preventDefault();
 
         history.push(`/app/admin-access/new`);
     }
 
     handleDeleteAdminAccess(accessId) {
-        let {deleteAdminAccess, admin_accesses} = this.props;
+        const {deleteAdminAccess, admin_accesses} = this.props;
         let admin_access = admin_accesses.find(t => t.id === accessId);
 
         Swal.fire({
@@ -86,16 +86,16 @@ class AdminAccessListPage extends React.Component {
     }
 
     render(){
-        let {admin_accesses, lastPage, currentPage, term, order, orderDir} = this.props;
+        const {admin_accesses, lastPage, currentPage, term, order, orderDir} = this.props;
 
-        let columns = [
+        const columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
             { columnKey: 'title', value: T.translate("admin_access.title"), sortable: true },
             { columnKey: 'summits', value: T.translate("admin_access.summits") },
             { columnKey: 'members', value: T.translate("admin_access.members")},
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: order,
             sortDir: orderDir,
             actions: {

@@ -40,12 +40,12 @@ class EditSummitAttendeePage extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.attendee_id;
-        let newId = newProps.match.params.attendee_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.attendee_id;
+        const newId = this.props.match.params.attendee_id;
 
         if (oldId !== newId) {
-            if(!newId) {
+            if (!newId) {
                 this.props.resetAttendeeForm();
             } else {
                 this.props.getAttendee(newId);
@@ -54,9 +54,9 @@ class EditSummitAttendeePage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors, match} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.email : T.translate("general.new");
+        const {currentSummit, entity, errors, match} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.email : T.translate("general.new");
 
         return(
             <div className="container">

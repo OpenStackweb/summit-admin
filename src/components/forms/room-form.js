@@ -88,7 +88,7 @@ class RoomForm extends React.Component {
     }
 
     queryAttributes(input, callback) {
-        let {currentSummit} = this.props;
+        const {currentSummit} = this.props;
         let attributeTypes = currentSummit.meeting_booking_room_allowed_attributes;
         let attributes = [];
 
@@ -125,7 +125,7 @@ class RoomForm extends React.Component {
     }
 
     render() {
-        let {entity} = this.state;
+        const {entity} = this.state;
         let { allFloors, currentSummit } = this.props;
         let floors_ddl = allFloors.map(f => ({label: f.name, value: f.id}));
 

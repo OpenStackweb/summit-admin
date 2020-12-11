@@ -24,7 +24,7 @@ import SentEmailListPage from "../pages/emails/sent-email-list-page";
 class EmailLayout extends React.Component {
 
     render(){
-        let { match, currentSummit } = this.props;
+        const { match, currentSummit } = this.props;
 
         return(
             <div>

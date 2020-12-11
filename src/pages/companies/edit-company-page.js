@@ -32,23 +32,23 @@ class EditCompanyPage extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
-        let companyId = this.props.match.params.company_id;
-        let newCompanyId = newProps.match.params.company_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.company_id;
+        const newId = this.props.match.params.company_id;
 
-        if (companyId !== newCompanyId) {
-            if (!newCompanyId) {
+        if (oldId !== newId) {
+            if (!newId) {
                 this.props.resetCompanyForm();
             } else {
-                this.props.getCompany(newCompanyId);
+                this.props.getCompany(newId);
             }
         }
     }
 
     render(){
-        let {entity, errors, summits, history, saveCompany, attachLogo, match} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+        const {entity, errors, summits, history, saveCompany, attachLogo, match} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
         return(
             <div className="container">

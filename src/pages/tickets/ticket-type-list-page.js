@@ -35,22 +35,14 @@ class TicketTypeListPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            this.props.getTicketTypes();
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
+        const {currentSummit} = this.props;
+        if(currentSummit) {
             this.props.getTicketTypes();
         }
     }
 
     handleEdit(ticket_type_id) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/ticket-types/${ticket_type_id}`);
     }
 
@@ -61,7 +53,7 @@ class TicketTypeListPage extends React.Component {
     }
 
     handleDelete(ticketTypeId) {
-        let {deleteTicketType, ticketTypes} = this.props;
+        const {deleteTicketType, ticketTypes} = this.props;
         let ticketType = ticketTypes.find(t => t.id === ticketTypeId);
 
         Swal.fire({
@@ -83,19 +75,19 @@ class TicketTypeListPage extends React.Component {
     }
 
     handleNewTicketType(ev) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/ticket-types/new`);
     }
 
     render(){
-        let {currentSummit, ticketTypes, order, orderDir, totalTicketTypes} = this.props;
+        const {currentSummit, ticketTypes, order, orderDir, totalTicketTypes} = this.props;
 
-        let columns = [
+        const columns = [
             { columnKey: 'name', value: T.translate("ticket_type_list.name"), sortable: true },
             { columnKey: 'external_id', value: T.translate("ticket_type_list.external_id") }
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: order,
             sortDir: orderDir,
             actions: {

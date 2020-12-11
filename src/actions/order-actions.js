@@ -63,11 +63,11 @@ export const ORDER_EMAIL_SENT = 'ORDER_EMAIL_SENT';
 
 export const getOrderExtraQuestionMeta = () => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -85,13 +85,13 @@ export const getOrderExtraQuestionMeta = () => (dispatch, getState) => {
 
 export const getOrderExtraQuestions = () => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         page         : 1,
         per_page     : 100,
         order        : '+order',
@@ -112,13 +112,13 @@ export const getOrderExtraQuestions = () => (dispatch, getState) => {
 
 export const getOrderExtraQuestion = (orderExtraQuestionId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
         expand: "values"
     };
@@ -139,17 +139,17 @@ export const resetOrderExtraQuestionForm = () => (dispatch, getState) => {
 };
 
 export const saveOrderExtraQuestion = (entity) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeQuestion(entity);
+    const normalizedEntity = normalizeQuestion(entity);
 
     if (entity.id) {
 
@@ -166,7 +166,7 @@ export const saveOrderExtraQuestion = (entity) => (dispatch, getState) => {
             });
 
     } else {
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_order_extra_question.order_extra_question_created"),
             type: 'success'
@@ -191,11 +191,11 @@ export const saveOrderExtraQuestion = (entity) => (dispatch, getState) => {
 
 export const deleteOrderExtraQuestion = (orderExtraQuestionId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -213,15 +213,15 @@ export const deleteOrderExtraQuestion = (orderExtraQuestionId) => (dispatch, get
 
 export const updateOrderExtraQuestionOrder = (questions, questionId, newOrder) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
-    let question = questions.find(q => q.id === questionId);
+    const question = questions.find(q => q.id === questionId);
 
     putRequest(
         null,
@@ -238,13 +238,13 @@ export const updateOrderExtraQuestionOrder = (questions, questionId, newOrder) =
 
 
 export const saveOrderExtraQuestionValue = (orderExtraQuestionId, entity) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -280,11 +280,11 @@ export const saveOrderExtraQuestionValue = (orderExtraQuestionId, entity) => (di
 
 export const deleteOrderExtraQuestionValue = (orderExtraQuestionId, orderExtraQuestionValueId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -303,7 +303,7 @@ export const deleteOrderExtraQuestionValue = (orderExtraQuestionId, orderExtraQu
 
 
 const normalizeQuestion = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     return normalizedEntity;
 
@@ -315,19 +315,19 @@ const normalizeQuestion = (entity) => {
 
 export const getPurchaseOrders = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let filter = [];
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const filter = [];
 
     dispatch(startLoading());
 
     if(term){
-        let escapedTerm = escapeFilterValue(term);
+        const escapedTerm = escapeFilterValue(term);
         filter.push(`ticket_number=@${escapedTerm},ticket_owner_email=@${escapedTerm},ticket_owner_name=@${escapedTerm},number=@${escapedTerm},owner_name=@${escapedTerm},owner_email=@${escapedTerm},owner_company=@${escapedTerm}`);
     }
 
-    let params = {
+    const params = {
         expand       : 'tickets',
         page         : page,
         per_page     : perPage,
@@ -340,7 +340,7 @@ export const getPurchaseOrders = ( term = null, page = 1, perPage = 10, order = 
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '+' : '-';
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -359,13 +359,13 @@ export const getPurchaseOrders = ( term = null, page = 1, perPage = 10, order = 
 
 export const getPurchaseOrder = (orderId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         expand       : 'extra_questions, tickets, tickets.owner, tickets.owner.member, tickets.ticket_type',
         access_token : accessToken,
     };
@@ -389,17 +389,17 @@ export const resetPurchaseOrderForm = () => (dispatch, getState) => {
 
 
 export const savePurchaseOrder = (entity) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
-    let normalizedEntity = normalizePurchaseOrder(entity);
+    const normalizedEntity = normalizePurchaseOrder(entity);
 
     if (entity.id) {
 
@@ -417,7 +417,7 @@ export const savePurchaseOrder = (entity) => (dispatch, getState) => {
 
     } else {
 
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_purchase_order.order_created"),
             type: 'success'
@@ -445,15 +445,15 @@ export const savePurchaseOrder = (entity) => (dispatch, getState) => {
 
 export const deletePurchaseOrder = (orderId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
-    let success_message = {
+    const success_message = {
         title: T.translate("general.done"),
         html: T.translate("edit_purchase_order.order_deleted"),
         type: 'success'
@@ -478,15 +478,15 @@ export const deletePurchaseOrder = (orderId) => (dispatch, getState) => {
 };
 
 export const cancelRefundPurchaseOrder = (orderId) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
-    let success_message = {
+    const success_message = {
         title: T.translate("general.done"),
         html: T.translate("edit_purchase_order.order_cancel_refund"),
         type: 'success'
@@ -507,11 +507,11 @@ export const cancelRefundPurchaseOrder = (orderId) => (dispatch, getState) => {
 
 export const refundPurchaseOrder = (orderId, refundAmount) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -530,10 +530,10 @@ export const refundPurchaseOrder = (orderId, refundAmount) => (dispatch, getStat
 
 export const reSendOrderEmail = (orderId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -553,7 +553,7 @@ export const reSendOrderEmail = (orderId) => (dispatch, getState) => {
 };
 
 const normalizePurchaseOrder = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     delete(normalizedEntity.amount);
     delete(normalizedEntity.created);

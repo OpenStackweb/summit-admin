@@ -70,11 +70,11 @@ export const FEATURE_REMOVED_FROM_TYPE      = 'FEATURE_REMOVED_FROM_TYPE';
 
 export const deleteBadge = (ticketId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -93,17 +93,17 @@ export const deleteBadge = (ticketId) => (dispatch, getState) => {
 
 export const changeBadgeType = (badge) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
-    let newBadgeType = currentSummit.badge_types.find(bt => bt.id === badge.type_id);
+    const newBadgeType = currentSummit.badge_types.find(bt => bt.id === badge.type_id);
 
     return putRequest(
         null,
@@ -119,13 +119,13 @@ export const changeBadgeType = (badge) => (dispatch, getState) => {
 
 export const addFeatureToBadge = (ticketId, feature) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -143,13 +143,13 @@ export const addFeatureToBadge = (ticketId, feature) => (dispatch, getState) => 
 
 export const removeFeatureFromBadge = (ticketId, featureId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -167,9 +167,9 @@ export const removeFeatureFromBadge = (ticketId, featureId) => (dispatch, getSta
 
 export const printBadge = (ticketId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(createAction(PRINT_BADGE));
 
@@ -183,13 +183,13 @@ export const printBadge = (ticketId) => (dispatch, getState) => {
 
 export const getBadgeTypes = ( order = 'name', orderDir = 1 ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         page         : 1,
         per_page     : 100,
         access_token : accessToken,
@@ -198,7 +198,7 @@ export const getBadgeTypes = ( order = 'name', orderDir = 1 ) => (dispatch, getS
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '+' : '-';
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -217,13 +217,13 @@ export const getBadgeTypes = ( order = 'name', orderDir = 1 ) => (dispatch, getS
 
 export const getBadgeType = (badgeTypeId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
         expand: 'access_levels,badge_features'
     };
@@ -244,17 +244,17 @@ export const resetBadgeTypeForm = () => (dispatch, getState) => {
 };
 
 export const saveBadgeType = (entity) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeBadgeType(entity);
+    const normalizedEntity = normalizeBadgeType(entity);
 
     delete(normalizedEntity.id);
     delete(normalizedEntity.access_levels);
@@ -274,7 +274,7 @@ export const saveBadgeType = (entity) => (dispatch, getState) => {
             });
 
     } else {
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_badge_type.badge_type_created"),
             type: 'success'
@@ -299,11 +299,11 @@ export const saveBadgeType = (entity) => (dispatch, getState) => {
 
 export const deleteBadgeType = (badgeTypeId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -321,13 +321,13 @@ export const deleteBadgeType = (badgeTypeId) => (dispatch, getState) => {
 
 export const addAccessLevelToBadgeType = (badgeTypeId, accessLevel) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -345,13 +345,13 @@ export const addAccessLevelToBadgeType = (badgeTypeId, accessLevel) => (dispatch
 
 export const removeAccessLevelFromBadgeType = (badgeTypeId, accessLevelId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -369,13 +369,13 @@ export const removeAccessLevelFromBadgeType = (badgeTypeId, accessLevelId) => (d
 
 export const addFeatureToBadgeType = (badgeTypeId, feature) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -393,13 +393,13 @@ export const addFeatureToBadgeType = (badgeTypeId, feature) => (dispatch, getSta
 
 export const removeFeatureFromBadgeType = (badgeTypeId, featureId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -417,7 +417,7 @@ export const removeFeatureFromBadgeType = (badgeTypeId, featureId) => (dispatch,
 
 
 const normalizeBadgeType = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     delete(normalizedEntity.id);
     delete(normalizedEntity.access_levels);
@@ -434,13 +434,13 @@ const normalizeBadgeType = (entity) => {
 
 export const getBadgeFeatures = ( order = 'name', orderDir = 1 ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         page         : 1,
         per_page     : 100,
         access_token : accessToken,
@@ -448,7 +448,7 @@ export const getBadgeFeatures = ( order = 'name', orderDir = 1 ) => (dispatch, g
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '+' : '-';
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -467,13 +467,13 @@ export const getBadgeFeatures = ( order = 'name', orderDir = 1 ) => (dispatch, g
 
 export const getBadgeFeature = (badgeFeatureId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -493,17 +493,17 @@ export const resetBadgeFeatureForm = () => (dispatch, getState) => {
 };
 
 export const saveBadgeFeature = (entity) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeBadgeFeature(entity);
+    const normalizedEntity = normalizeBadgeFeature(entity);
 
     if (entity.id) {
 
@@ -520,7 +520,7 @@ export const saveBadgeFeature = (entity) => (dispatch, getState) => {
             });
 
     } else {
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_badge_feature.badge_feature_created"),
             type: 'success'
@@ -545,11 +545,11 @@ export const saveBadgeFeature = (entity) => (dispatch, getState) => {
 
 export const deleteBadgeFeature = (badgeFeatureId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -566,7 +566,7 @@ export const deleteBadgeFeature = (badgeFeatureId) => (dispatch, getState) => {
 };
 
 const normalizeBadgeFeature = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
     delete(normalizedEntity.id);
 
     return normalizedEntity;
@@ -578,13 +578,13 @@ const normalizeBadgeFeature = (entity) => {
 
 export const getAccessLevels = ( order = 'name', orderDir = 1 ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         page         : 1,
         per_page     : 100,
         access_token : accessToken,
@@ -592,7 +592,7 @@ export const getAccessLevels = ( order = 'name', orderDir = 1 ) => (dispatch, ge
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '+' : '-';
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -611,13 +611,13 @@ export const getAccessLevels = ( order = 'name', orderDir = 1 ) => (dispatch, ge
 
 export const getAccessLevel = (accessLevelId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -637,17 +637,17 @@ export const resetAccessLevelForm = () => (dispatch, getState) => {
 };
 
 export const saveAccessLevel = (entity) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeAccessLevel(entity);
+    const normalizedEntity = normalizeAccessLevel(entity);
 
     if (entity.id) {
 
@@ -664,7 +664,7 @@ export const saveAccessLevel = (entity) => (dispatch, getState) => {
             });
 
     } else {
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_access_level.access_level_created"),
             type: 'success'
@@ -689,11 +689,11 @@ export const saveAccessLevel = (entity) => (dispatch, getState) => {
 
 export const deleteAccessLevel = (accessLevelId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -710,7 +710,7 @@ export const deleteAccessLevel = (accessLevelId) => (dispatch, getState) => {
 };
 
 const normalizeAccessLevel = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
     delete(normalizedEntity.id);
 
     return normalizedEntity;

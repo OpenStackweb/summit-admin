@@ -37,9 +37,9 @@ class EventCategoryIdLayout extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.event_category_id;
-        let newId = newProps.match.params.event_category_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.event_category_id;
+        const newId = this.props.match.params.event_category_id;
 
         if (oldId !== newId) {
             if (!newId) {
@@ -51,7 +51,7 @@ class EventCategoryIdLayout extends React.Component {
     }
 
     render(){
-        let { match, currentEventCategory } = this.props;
+        const { match, currentEventCategory } = this.props;
         let breadcrumb = currentEventCategory.id ? currentEventCategory.name : T.translate("general.new");
 
         return(

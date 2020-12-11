@@ -39,45 +39,33 @@ class RoomOccupancyPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
+        const {currentSummit} = this.props;
         let roomIdHash = this.fragmentParser.getParam('room');
         let currentHash = (this.fragmentParser.getParam('current') === 'true');
 
-        if(currentSummit !== null) {
+        if(currentSummit) {
             this.props.getEventsForOccupancy(null, roomIdHash, currentHash);
         }
     }
 
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-        let roomIdHash = this.fragmentParser.getParam('room');
-        let currentHash = (this.fragmentParser.getParam('current') === 'true');
-
-        if (currentSummit !== null) {
-            if (currentSummit.id !== newProps.currentSummit.id || roomIdHash !== newProps.roomId || currentHash !== newProps.currentEvents) {
-                this.props.getEventsForOccupancy(null, roomIdHash, currentHash);
-            }
-        }
-    }
-
     handlePageChange(page) {
-        let {term, order, orderDir, perPage, roomId, currentEvents} = this.props;
+        const {term, order, orderDir, perPage, roomId, currentEvents} = this.props;
         this.props.getEventsForOccupancy(term, roomId, currentEvents, page, perPage, order, orderDir);
     }
 
     handleSort(index, key, dir, func) {
-        let {term, page, perPage, roomId, currentEvents} = this.props;
+        const {term, page, perPage, roomId, currentEvents} = this.props;
         key = (key === 'name') ? 'last_name' : key;
         this.props.getEventsForOccupancy(term, roomId, currentEvents, page, perPage, key, dir);
     }
 
     handleSearch(term) {
-        let {order, orderDir, page, perPage, roomId, currentEvents} = this.props;
+        const {order, orderDir, page, perPage, roomId, currentEvents} = this.props;
         this.props.getEventsForOccupancy(term, roomId, currentEvents, page, perPage, order, orderDir);
     }
 
     handleRoomFilter(ev) {
-        let {term, order, orderDir, page, perPage, currentEvents} = this.props;
+        const {term, order, orderDir, page, perPage, currentEvents} = this.props;
         let roomId = ev.target.value;
 
         this.fragmentParser.setParam('room', roomId);
@@ -87,7 +75,7 @@ class RoomOccupancyPage extends React.Component {
     }
 
     handleChangeCurrentEvents(ev) {
-        let {term, roomId, order, orderDir, page, perPage} = this.props;
+        const {term, roomId, order, orderDir, page, perPage} = this.props;
         let value = ev.target.checked;
 
         this.fragmentParser.setParam('current', value);
@@ -98,7 +86,7 @@ class RoomOccupancyPage extends React.Component {
 
     changeOccupancy(eventId, add, ev) {
         let values = ['EMPTY', '25%', '50%', '75%', 'FULL'];
-        let {events} = this.props;
+        const {events} = this.props;
         let event =  events.find(e => e.id === eventId);
 
         let key = values.indexOf(event.occupancy);
@@ -118,7 +106,7 @@ class RoomOccupancyPage extends React.Component {
     }
 
     handleEventViewClick(ev) {
-        let {roomId, history, currentSummit} = this.props;
+        const {roomId, history, currentSummit} = this.props;
 
         ev.preventDefault();
 
@@ -126,17 +114,17 @@ class RoomOccupancyPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, events, lastPage, currentPage, term, order, orderDir, roomId, currentEvents} = this.props;
+        const {currentSummit, events, lastPage, currentPage, term, order, orderDir, roomId, currentEvents} = this.props;
         let that = this;
 
-        let columns = [
+        const columns = [
             { columnKey: 'room', value: T.translate("room_occupancy.room") },
             { columnKey: 'start_date', value: T.translate("room_occupancy.start"), sortable: true, width: '100px' },
             { columnKey: 'title', value: T.translate("room_occupancy.title"), sortable: true, className: 'hidden-xs' },
             { columnKey: 'speakers', value: T.translate("room_occupancy.speakers"), className: 'hidden-xs' },
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: (order === 'last_name') ? 'name' : order,
             sortDir: orderDir,
             actions: {

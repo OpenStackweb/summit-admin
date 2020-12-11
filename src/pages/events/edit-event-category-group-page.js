@@ -36,7 +36,7 @@ class EditEventCategoryGroupPage extends React.Component {
     }
 
     componentDidMount () {
-        let {allClasses} = this.props;
+        const {allClasses} = this.props;
         let groupId = this.props.match.params.group_id;
 
         if (!groupId) {
@@ -50,9 +50,9 @@ class EditEventCategoryGroupPage extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.group_id;
-        let newId = newProps.match.params.group_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.group_id;
+        const newId = this.props.match.params.group_id;
 
         if (oldId !== newId) {
             if (!newId) {
@@ -64,9 +64,9 @@ class EditEventCategoryGroupPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, allClasses, errors, match} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+        const {currentSummit, entity, allClasses, errors, match} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
         if (!allClasses.length) return (<div />);
 

@@ -29,12 +29,12 @@ export const RESET_EXPORT_REPORT    = 'RESET_EXPORT_REPORT';
 
 export const getReport = (query, reportName, page) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
         query: query
     };
@@ -63,12 +63,12 @@ const jsonToCsv = (items) => {
 
 export const exportReport = ( query, reportName, grouped, preProcessData=null ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
         query: query
     };
@@ -81,23 +81,23 @@ export const exportReport = ( query, reportName, grouped, preProcessData=null ) 
     )(params)(dispatch).then((payload) => {
         dispatch(stopLoading());
 
-        let responseData = {...payload.response.data};
-        let data = (responseData.hasOwnProperty("reportData")) ? responseData.reportData : [];
-        let extraData = (responseData.hasOwnProperty("extraData")) ? responseData.extraData : null;
+        const responseData = {...payload.response.data};
+        const data = (responseData.hasOwnProperty("reportData")) ? responseData.reportData : [];
+        const extraData = (responseData.hasOwnProperty("extraData")) ? responseData.extraData : null;
         let reportData = [];
 
         if (preProcessData) {
-            let procData = preProcessData(data.results || data, extraData, true);
-            let labels = procData.tableColumns.map(col => col.value);
-            let keys = procData.tableColumns.map(col => col.columnKey);
+            const procData = preProcessData(data.results || data, extraData, true);
+            const labels = procData.tableColumns.map(col => col.value);
+            const keys = procData.tableColumns.map(col => col.columnKey);
 
             // replace labels
             if (grouped) {
                 for (var groupName in procData.reportData) {
-                    let newSheet = {name: groupName, data: []};
-                    let groupData = procData.reportData[groupName];
-                    for (var item in groupData) {
-                        var newData = {};
+                    const newSheet = {name: groupName, data: []};
+                    const groupData = procData.reportData[groupName];
+                    for (let item in groupData) {
+                        const newData = {};
 
                         for (var a in labels) {
                             newData[labels[a]] = groupData[item][keys[a]];
@@ -150,19 +150,19 @@ export const exportReport = ( query, reportName, grouped, preProcessData=null ) 
 
 
 const normalizeEntity = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     return normalizedEntity;
 
 }
 
 export const flattenData = (data) => {
-    let flatData = [];
-    let rawData = JSON.parse(JSON.stringify(data));
+    const flatData = [];
+    const rawData = JSON.parse(JSON.stringify(data));
 
     for (var idx=0; idx < rawData.length; idx++) {
-        let idxRef = {idx};
-        let flatItem = {};
+        const idxRef = {idx};
+        const flatItem = {};
         flattenItem(flatItem, rawData[idx], idxRef);
         idx = idxRef.idx;
         flatData.push(flatItem);
@@ -177,7 +177,7 @@ export const flattenItem = (flatData, item, idxRef, ctx='') => {
         flatData[ctx] = item;
     } else {
         for (var property in item) {
-            let flatName = ctx ? ctx + '_' + property : property;
+            const flatName = ctx ? ctx + '_' + property : property;
 
             if (item[property] == null) {
                 flatData[flatName] = '';

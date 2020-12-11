@@ -40,14 +40,14 @@ export const PUSH_NOTIFICATION_REJECTED       = 'PUSH_NOTIFICATION_REJECTED';
 
 export const getPushNotifications = ( page = 1, perPage = 10, order = 'created', orderDir = -1, filters ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let filter = [];
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const filter = [];
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         page         : page,
         per_page     : perPage,
         access_token : accessToken,
@@ -73,7 +73,7 @@ export const getPushNotifications = ( page = 1, perPage = 10, order = 'created',
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '+' : '-';
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -92,13 +92,13 @@ export const getPushNotifications = ( page = 1, perPage = 10, order = 'created',
 
 export const getPushNotification = (pushNotificationId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -118,17 +118,17 @@ export const resetPushNotificationForm = () => (dispatch, getState) => {
 };
 
 export const savePushNotification = (entity) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity);
+    const normalizedEntity = normalizeEntity(entity);
 
     if (entity.id) {
 
@@ -146,7 +146,7 @@ export const savePushNotification = (entity) => (dispatch, getState) => {
 
     } else {
 
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_push_notification.push_notification_created"),
             type: 'success'
@@ -171,11 +171,11 @@ export const savePushNotification = (entity) => (dispatch, getState) => {
 
 export const deletePushNotification = (pushNotificationId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -193,11 +193,11 @@ export const deletePushNotification = (pushNotificationId) => (dispatch, getStat
 
 
 export const approvePushNotification = (pushNotificationId) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -218,11 +218,11 @@ export const approvePushNotification = (pushNotificationId) => (dispatch, getSta
 
 export const rejectPushNotification = (pushNotificationId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -240,7 +240,7 @@ export const rejectPushNotification = (pushNotificationId) => (dispatch, getStat
 
 
 const normalizeEntity = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     if (entity.members.length > 0) {
         normalizedEntity['recipient_ids'] = entity.members.map(m => m.id);

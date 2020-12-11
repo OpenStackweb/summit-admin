@@ -38,9 +38,9 @@ class EventIdLayout extends React.Component {
         props.getRsvpTemplates();
     }
 
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.event_id;
-        let newId = newProps.match.params.event_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.event_id;
+        const newId = this.props.match.params.event_id;
 
         if (oldId !== newId) {
             if (!newId) {
@@ -52,7 +52,7 @@ class EventIdLayout extends React.Component {
     }
 
     render(){
-        let { match, entity } = this.props;
+        const { match, entity } = this.props;
         let eventId = this.props.match.params.event_id;
         let breadcrumb = entity.id ? entity.title : T.translate("general.new");
 

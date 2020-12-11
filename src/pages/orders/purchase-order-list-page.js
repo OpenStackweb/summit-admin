@@ -39,22 +39,14 @@ class PurchaseOrderListPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            this.props.getPurchaseOrders();
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
+        const {currentSummit} = this.props;
+        if(currentSummit) {
             this.props.getPurchaseOrders();
         }
     }
 
     handleQRScan(qrCode) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         let qrCodeArray = qrCode.split(currentSummit.qr_registry_field_delimiter);
 
         if (qrCodeArray.length < 2 || qrCodeArray[0] !== currentSummit.ticket_qr_prefix) {
@@ -69,35 +61,35 @@ class PurchaseOrderListPage extends React.Component {
     }
 
     handleEdit(purchaseOrderId) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/purchase-orders/${purchaseOrderId}`);
     }
 
     handlePageChange(page) {
-        let {term, order, orderDir, perPage} = this.props;
+        const {term, order, orderDir, perPage} = this.props;
         this.props.getPurchaseOrders(term, page, perPage, order, orderDir);
     }
 
     handleSort(index, key, dir, func) {
-        let {term, page, perPage} = this.props;
+        const {term, page, perPage} = this.props;
         key = (key === 'name') ? 'last_name' : key;
         this.props.getPurchaseOrders(term, page, perPage, key, dir);
     }
 
     handleSearch(term) {
-        let {order, orderDir, page, perPage} = this.props;
+        const {order, orderDir, page, perPage} = this.props;
         this.props.getPurchaseOrders(term, page, perPage, order, orderDir);
     }
 
     handleNewOrder(ev) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/purchase-orders/new`);
     }
 
     render(){
-        let {currentSummit, purchaseOrders, lastPage, currentPage, term, order, orderDir, totalPurchaseOrders} = this.props;
+        const {currentSummit, purchaseOrders, lastPage, currentPage, term, order, orderDir, totalPurchaseOrders} = this.props;
 
-        let columns = [
+        const columns = [
             { columnKey: 'number', value: T.translate("purchase_order_list.number")},
             { columnKey: 'owner_id', value: T.translate("purchase_order_list.owner_id")},
             { columnKey: 'owner_name', value: T.translate("general.name"), sortable: true },
@@ -109,7 +101,7 @@ class PurchaseOrderListPage extends React.Component {
             { columnKey: 'status', value: T.translate("purchase_order_list.status") },
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: (order === 'last_name') ? 'name' : order,
             sortDir: orderDir,
             actions: {

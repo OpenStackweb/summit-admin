@@ -23,7 +23,7 @@ import EditMarketingSettingPage from "../pages/marketing/edit-marketing-setting-
 class MarketingLayout extends React.Component {
 
     render(){
-        let { match } = this.props;
+        const { match } = this.props;
         return(
             <div>
                 <Breadcrumb data={{ title: T.translate("marketing.settings"), pathname: match.url }} />

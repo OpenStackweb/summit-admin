@@ -25,7 +25,7 @@ import NoMatchPage from "../pages/no-match-page";
 class RoomBookingsLayout extends React.Component {
 
     render(){
-        let { match } = this.props;
+        const { match } = this.props;
         return(
             <div>
                 <Breadcrumb data={{ title: T.translate("room_bookings.room_bookings"), pathname: match.url }} />

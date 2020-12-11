@@ -37,7 +37,7 @@ class EditRsvpTemplatePage extends React.Component {
     }
 
     handleDeleteQuestion(rsvpQuestionId) {
-        let {deleteRsvpQuestion, entity} = this.props;
+        const {deleteRsvpQuestion, entity} = this.props;
         let question = entity.questions.find(q => q.id === rsvpQuestionId);
 
         Swal.fire({
@@ -55,7 +55,7 @@ class EditRsvpTemplatePage extends React.Component {
     }
 
     handleReorderQuestion(questions, questionId, newOrder) {
-        let {updateQuestionsOrder, entity} = this.props;
+        const {updateQuestionsOrder, entity} = this.props;
 
         entity.questions = [...questions];
 
@@ -64,8 +64,8 @@ class EditRsvpTemplatePage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const {currentSummit, entity, errors} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
 
         let sortedQuestions = [...entity.questions];
         sortedQuestions.sort(

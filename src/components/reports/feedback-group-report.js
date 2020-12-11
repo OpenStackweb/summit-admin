@@ -37,7 +37,7 @@ class FeedbackGroupReport extends React.Component {
     }
 
     buildReportQuery(filters, listFilters) {
-        let {currentSummit, match, sortKey, sortDir} = this.props;
+        const {currentSummit, match, sortKey, sortDir} = this.props;
         listFilters.summitId = currentSummit.id;
         filters.ordering = filters.ordering ? filters.ordering : 'rate';
         let {group, group_id} = match.params;

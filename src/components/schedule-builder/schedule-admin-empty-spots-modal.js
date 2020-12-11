@@ -22,7 +22,7 @@ class ScheduleAdminEmptySpotsModal extends React.Component {
     constructor(props){
         super(props);
 
-        let { currentSummit } = this.props;
+        const { currentSummit } = this.props;
         let defaultValueStart = moment.tz(currentSummit.start_date * 1000, currentSummit.time_zone.name).hour(7).minute(0).second(0);
         let defaultValueEnd   = moment.tz(currentSummit.start_date * 1000, currentSummit.time_zone.name).hour(19).minute(0).second(0);
 

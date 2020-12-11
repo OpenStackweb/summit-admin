@@ -27,22 +27,14 @@ class RefundPolicyListPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            this.props.getRefundPolicies();
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
+        const {currentSummit} = this.props;
+        if(currentSummit) {
             this.props.getRefundPolicies();
         }
     }
 
     render(){
-        let {currentSummit, match, refundPolicies, totalRefundPolicies} = this.props;
+        const {currentSummit, match, refundPolicies, totalRefundPolicies} = this.props;
 
 
         let refund_columns = [

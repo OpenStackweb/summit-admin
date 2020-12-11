@@ -34,27 +34,19 @@ class BadgeTypeListPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            this.props.getBadgeTypes();
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit != null && currentSummit.id !== newProps.currentSummit.id) {
+        const {currentSummit} = this.props;
+        if(currentSummit) {
             this.props.getBadgeTypes();
         }
     }
 
     handleEdit(badge_type_id) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/badge-types/${badge_type_id}`);
     }
 
     handleDelete(badgeTypeId) {
-        let {deleteBadgeType, badgeTypes} = this.props;
+        const {deleteBadgeType, badgeTypes} = this.props;
         let badgeType = badgeTypes.find(t => t.id === badgeTypeId);
 
         Swal.fire({
@@ -76,20 +68,20 @@ class BadgeTypeListPage extends React.Component {
     }
 
     handleNewBadgeType(ev) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/badge-types/new`);
     }
 
     render(){
-        let {currentSummit, badgeTypes, order, orderDir, totalBadgeTypes} = this.props;
+        const {currentSummit, badgeTypes, order, orderDir, totalBadgeTypes} = this.props;
 
-        let columns = [
+        const columns = [
             { columnKey: 'name', value: T.translate("badge_type_list.name"), sortable: true },
             { columnKey: 'description', value: T.translate("badge_type_list.description") },
             { columnKey: 'access_level_names', value: T.translate("badge_type_list.access_levels") }
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: order,
             sortDir: orderDir,
             actions: {

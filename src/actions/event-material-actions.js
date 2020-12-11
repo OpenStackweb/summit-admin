@@ -34,19 +34,19 @@ export const EVENT_MATERIAL_DELETED        = 'EVENT_MATERIAL_DELETED';
 
 export const getEventMaterial = (eventMaterialId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState, currentSummitEventState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let event               = currentSummitEventState.entity;
+    const { loggedUserState, currentSummitState, currentSummitEventState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const event               = currentSummitEventState.entity;
 
     dispatch(startLoading());
 
-    let material = event.materials.find(m => m.id === eventMaterialId);
+    const material = event.materials.find(m => m.id === eventMaterialId);
 
     if (material) {
         dispatch(createAction(RECEIVE_EVENT_MATERIAL)({material}));
     } else {
-        let message = {
+        const message = {
             title: T.translate("errors.not_found"),
             html: T.translate("errors.entity_not_found"),
             type: 'error'
@@ -68,10 +68,10 @@ export const resetEventMaterialForm = () => (dispatch, getState) => {
 };
 
 export const saveEventMaterial = (entity) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState, currentSummitEventState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let eventId             = currentSummitEventState.entity.id
+    const { loggedUserState, currentSummitState, currentSummitEventState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const eventId             = currentSummitEventState.entity.id;
 
     let slug = '';
 
@@ -82,8 +82,8 @@ export const saveEventMaterial = (entity) => (dispatch, getState) => {
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity);
-    let params = {
+    const normalizedEntity = normalizeEntity(entity);
+    const params = {
         access_token : accessToken,
         expand: 'media_upload_type, media_upload_type.type'
     };
@@ -103,7 +103,7 @@ export const saveEventMaterial = (entity) => (dispatch, getState) => {
             });
 
     } else {
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_event_material.event_material_created"),
             type: 'success'
@@ -127,19 +127,19 @@ export const saveEventMaterial = (entity) => (dispatch, getState) => {
 }
 
 export const saveEventMaterialWithFile = (entity, file, slug) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState, currentSummitEventState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let eventId             = currentSummitEventState.entity.id;
+    const { loggedUserState, currentSummitState, currentSummitEventState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const eventId             = currentSummitEventState.entity.id;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
         expand: 'media_upload_type, media_upload_type.type'
     };
 
-    let normalizedEntity = normalizeEntity(entity);
+    const normalizedEntity = normalizeEntity(entity);
 
 
     if (entity.id) {
@@ -159,7 +159,7 @@ export const saveEventMaterialWithFile = (entity, file, slug) => (dispatch, getS
 
     } else {
 
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_event_material.event_material_created"),
             type: 'success'
@@ -185,11 +185,11 @@ export const saveEventMaterialWithFile = (entity, file, slug) => (dispatch, getS
 
 export const deleteEventMaterial = (eventMaterialId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState, currentSummitEventState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let event               = currentSummitEventState.entity;
-    let material            = event.materials.find(m => m.id === eventMaterialId);
+    const { loggedUserState, currentSummitState, currentSummitEventState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const event               = currentSummitEventState.entity;
+    const material            = event.materials.find(m => m.id === eventMaterialId);
     let slug = '';
 
     if (!material) {
@@ -214,7 +214,7 @@ export const deleteEventMaterial = (eventMaterialId) => (dispatch, getState) => 
     }
 
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -233,7 +233,7 @@ export const deleteEventMaterial = (eventMaterialId) => (dispatch, getState) => 
 
 
 const normalizeEntity = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     if (entity.class_name !== 'PresentationVideo') {
         delete(normalizedEntity['youtube_id']);

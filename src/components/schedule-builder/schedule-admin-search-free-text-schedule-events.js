@@ -43,9 +43,9 @@ class ScheduleAdminSearchFreeTextScheduleEvents extends React.Component {
         }
     }
 
-    componentWillReceiveProps(nextProps){
-        if( nextProps.currentValue != null)
-            this.searchTxt.value = nextProps.currentValue;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if( this.props.currentValue)
+            this.searchTxt.value = this.props.currentValue;
     }
 
     render(){

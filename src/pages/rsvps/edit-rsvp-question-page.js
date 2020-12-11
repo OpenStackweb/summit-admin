@@ -30,7 +30,7 @@ class EditRsvpQuestionPage extends React.Component {
     }
 
     handleValueDelete(valueId) {
-        let {deleteRsvpQuestionValue, currentTemplate, entity} = this.props;
+        const {deleteRsvpQuestionValue, currentTemplate, entity} = this.props;
         let value = entity.values.find(v => v.id === valueId);
 
         Swal.fire({
@@ -48,18 +48,18 @@ class EditRsvpQuestionPage extends React.Component {
     }
 
     handleValueSave(valueEntity) {
-        let {entity, currentTemplate} = this.props;
+        const {entity, currentTemplate} = this.props;
         this.props.saveRsvpQuestionValue(currentTemplate.id, entity.id, valueEntity);
     }
 
     handleValueReorder(values, valueId, newOrder) {
-        let {updateQuestionValuesOrder, currentTemplate, entity} = this.props;
+        const {updateQuestionValuesOrder, currentTemplate, entity} = this.props;
         updateQuestionValuesOrder(values, currentTemplate.id, entity.id, valueId, newOrder);
     }
 
     render(){
-        let {currentSummit, currentTemplate, entity, match, errors, allClasses} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const {currentSummit, currentTemplate, entity, match, errors, allClasses} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
 
         return(
             <div>

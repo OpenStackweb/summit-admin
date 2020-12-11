@@ -38,12 +38,12 @@ class CompanyListPage extends React.Component {
     }
 
     handleEdit(company_id) {
-        let {history} = this.props;
+        const {history} = this.props;
         history.push(`/app/companies/${company_id}`);
     }
 
     handleDelete(companyId) {
-        let {deleteCompany, companies} = this.props;
+        const {deleteCompany, companies} = this.props;
         let company = companies.find(s => s.id === companyId);
 
         Swal.fire({
@@ -61,36 +61,36 @@ class CompanyListPage extends React.Component {
     }
 
     handlePageChange(page) {
-        let {term, order, orderDir, perPage} = this.props;
+        const {term, order, orderDir, perPage} = this.props;
         this.props.getCompanies(term, page, perPage, order, orderDir);
     }
 
     handleSort(index, key, dir, func) {
-        let {term, page, perPage} = this.props;
+        const {term, page, perPage} = this.props;
         this.props.getCompanies(term, page, perPage, key, dir);
     }
 
     handleSearch(term) {
-        let {order, orderDir, page, perPage} = this.props;
+        const {order, orderDir, page, perPage} = this.props;
         this.props.getCompanies(term, page, perPage, order, orderDir);
     }
 
     handleNewCompany(ev) {
-        let {history} = this.props;
+        const {history} = this.props;
         history.push(`/app/companies/new`);
     }
 
     render(){
-        let {companies, lastPage, currentPage, term, order, orderDir, totalCompanies } = this.props;
+        const {companies, lastPage, currentPage, term, order, orderDir, totalCompanies } = this.props;
 
-        let columns = [
+        const columns = [
             { columnKey: 'id', value: 'Id', sortable: true },
             { columnKey: 'name', value: T.translate("general.name"), sortable: true },
             { columnKey: 'contact_email', value: T.translate("general.email")},
             { columnKey: 'member_level', value: T.translate("company_list.member_level")}
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: order,
             sortDir: orderDir,
             actions: {

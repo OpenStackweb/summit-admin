@@ -44,38 +44,30 @@ class TicketListPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
+        const {currentSummit} = this.props;
+        if(currentSummit) {
             this.props.getTickets('', 1, 10);
         }
     }
 
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
-            this.props.getTickets();
-        }
-    }
-
     handleSearch(term) {
-        let {order, orderDir, page, perPage} = this.props;
+        const {order, orderDir, page, perPage} = this.props;
         this.props.getTickets(term, page, perPage, order, orderDir);
     }
 
     handleEdit(ticket_id) {
-        let {currentSummit, history, tickets} = this.props;
+        const {currentSummit, history, tickets} = this.props;
         let ticket = tickets.find(t => t.id === ticket_id);
         history.push(`/app/summits/${currentSummit.id}/purchase-orders/${ticket.order_id}/tickets/${ticket_id}`);
     }
 
     handleSort(index, key, dir, func) {
-        let {term, page, perPage} = this.props;
+        const {term, page, perPage} = this.props;
         this.props.getTickets(term, page, perPage, key, dir);
     }
 
     handlePageChange(page) {
-        let {term, order, orderDir, perPage} = this.props;
+        const {term, order, orderDir, perPage} = this.props;
         this.props.getTickets(term, page, perPage, order, orderDir);
     }
 
@@ -99,10 +91,10 @@ class TicketListPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, tickets, term, order, orderDir, totalTickets, lastPage, currentPage, match} = this.props;
-        let {showIngestModal, showImportModal, importFile} = this.state;
+        const {currentSummit, tickets, term, order, orderDir, totalTickets, lastPage, currentPage, match} = this.props;
+        const {showIngestModal, showImportModal, importFile} = this.state;
 
-        let columns = [
+        const columns = [
             { columnKey: 'number', value: T.translate("ticket_list.number"), sortable: true },
             { columnKey: 'ticket_type', value: T.translate("ticket_list.ticket_type") },
             { columnKey: 'bought_date', value: T.translate("ticket_list.bought_date") },
@@ -112,7 +104,7 @@ class TicketListPage extends React.Component {
             { columnKey: 'final_amount_formatted', value: T.translate("ticket_list.paid_amount") }
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: order,
             sortDir: orderDir,
             actions: {

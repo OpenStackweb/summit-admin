@@ -33,27 +33,19 @@ class TagGroupListPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            this.props.getTagGroups();
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
+        const {currentSummit} = this.props;
+        if(currentSummit) {
             this.props.getTagGroups();
         }
     }
 
     handleEdit(tag_group_id) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/tag-groups/${tag_group_id}`);
     }
 
     handleDelete(tagGroupId) {
-        let {deleteTagGroup, tagGroups} = this.props;
+        const {deleteTagGroup, tagGroups} = this.props;
         let tagGroup = tagGroups.find(tg => tg.id === tagGroupId);
 
         Swal.fire({
@@ -71,14 +63,14 @@ class TagGroupListPage extends React.Component {
     }
 
     handleNewTagGroup(ev) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
 
         ev.preventDefault();
         history.push(`/app/summits/${currentSummit.id}/tag-groups/new`);
     }
 
     handleSeedTagGroups(ev) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         ev.preventDefault();
 
         this.props.seedTagGroups();
@@ -86,14 +78,14 @@ class TagGroupListPage extends React.Component {
 
 
     render(){
-        let {currentSummit, tagGroups} = this.props;
+        const {currentSummit, tagGroups} = this.props;
 
-        let columns = [
+        const columns = [
             { columnKey: 'name', value: T.translate("tag_group_list.name") },
             { columnKey: 'label', value: T.translate("tag_group_list.label") }
         ];
 
-        let table_options = {
+        const table_options = {
             actions: {
                 edit: { onClick: this.handleEdit },
                 delete: { onClick: this.handleDelete }

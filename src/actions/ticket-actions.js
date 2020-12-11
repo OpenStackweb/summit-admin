@@ -72,10 +72,10 @@ export const RESET_PAYMENT_PROFILE_FORM = 'RESET_PAYMENT_PROFILE_FORM';
 
 export const reSendTicketEmail = (orderId, ticketId) => (dispatch, getState) => {
 
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -96,14 +96,14 @@ export const reSendTicketEmail = (orderId, ticketId) => (dispatch, getState) => 
 
 export const getTickets = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let filter = [];
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const filter = [];
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         page         : page,
         per_page     : perPage,
         access_token : accessToken,
@@ -111,7 +111,7 @@ export const getTickets = ( term = null, page = 1, perPage = 10, order = 'id', o
     };
 
     if(term){
-        let escapedTerm = escapeFilterValue(term);
+        const escapedTerm = escapeFilterValue(term);
         filter.push(`number=@${escapedTerm},owner_email=@${escapedTerm},owner_name=@${escapedTerm},owner_company=@${escapedTerm}`);
     }
 
@@ -121,7 +121,7 @@ export const getTickets = ( term = null, page = 1, perPage = 10, order = 'id', o
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '+' : '-';
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -139,11 +139,11 @@ export const getTickets = ( term = null, page = 1, perPage = 10, order = 'id', o
 
 export const ingestExternalTickets = (email) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -160,11 +160,11 @@ export const ingestExternalTickets = (email) => (dispatch, getState) => {
 };
 
 export const importTicketsCSV = (file) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -183,11 +183,11 @@ export const importTicketsCSV = (file) => (dispatch, getState) => {
 
 export const exportTicketsCSV = ( ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let filename = currentSummit.name + '-Tickets.csv';
-    let params = {
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const filename = currentSummit.name + '-Tickets.csv';
+    const params = {
         access_token : accessToken
     };
 
@@ -197,13 +197,13 @@ export const exportTicketsCSV = ( ) => (dispatch, getState) => {
 
 export const getTicket = (ticketId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
         expand: 'badge, badge.features, promo_code, ticket_type, owner, owner.member'
     };
@@ -222,15 +222,15 @@ export const getTicket = (ticketId) => (dispatch, getState) => {
 
 export const saveTicket = (orderId, ticket) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
-    let normalizedEntity = normalizeTicket(ticket);
+    const normalizedEntity = normalizeTicket(ticket);
 
     putRequest(
         null,
@@ -247,21 +247,21 @@ export const saveTicket = (orderId, ticket) => (dispatch, getState) => {
 
 export const reassignTicket = (ticketId, attendeeId, firstName, lastName, email, company ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
-    let success_message = {
+    const success_message = {
         title: T.translate("general.done"),
         html: T.translate("edit_ticket.ticket_reassigned"),
         type: 'success'
     };
 
-    let attendee = {
+    const attendee = {
         attendee_first_name: firstName,
         attendee_last_name: lastName,
         attendee_email: email,
@@ -284,15 +284,15 @@ export const reassignTicket = (ticketId, attendeeId, firstName, lastName, email,
 };
 
 export const cancelRefundTicket = (orderId, ticketId) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
-    let success_message = {
+    const success_message = {
         title: T.translate("general.done"),
         html: T.translate("edit_ticket.ticket_cancel_refund"),
         type: 'success'
@@ -313,11 +313,11 @@ export const cancelRefundTicket = (orderId, ticketId) => (dispatch, getState) =>
 
 export const refundTicket = (ticketId, refundAmount) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -336,11 +336,11 @@ export const refundTicket = (ticketId, refundAmount) => (dispatch, getState) => 
 
 export const addBadgeToTicket = (ticketId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -357,7 +357,7 @@ export const addBadgeToTicket = (ticketId) => (dispatch, getState) => {
 };
 
 const normalizeTicket = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     // if no owner then we are assigning the tix to someone
     if (!normalizedEntity.owner && normalizedEntity.attendee) {
@@ -389,13 +389,13 @@ const normalizeTicket = (entity) => {
 
 export const getTicketTypes = ( order = 'name', orderDir = 1 ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         page         : 1,
         per_page     : 100,
         access_token : accessToken,
@@ -403,7 +403,7 @@ export const getTicketTypes = ( order = 'name', orderDir = 1 ) => (dispatch, get
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '+' : '-';
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -422,13 +422,13 @@ export const getTicketTypes = ( order = 'name', orderDir = 1 ) => (dispatch, get
 
 export const getTicketType = (ticketTypeId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -448,17 +448,17 @@ export const resetTicketTypeForm = () => (dispatch, getState) => {
 };
 
 export const saveTicketType = (entity) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity);
+    const normalizedEntity = normalizeEntity(entity);
 
     if (entity.id) {
 
@@ -475,7 +475,7 @@ export const saveTicketType = (entity) => (dispatch, getState) => {
             });
 
     } else {
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_ticket_type.ticket_type_created"),
             type: 'success'
@@ -500,11 +500,11 @@ export const saveTicketType = (entity) => (dispatch, getState) => {
 
 export const deleteTicketType = (ticketTypeId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -522,10 +522,10 @@ export const deleteTicketType = (ticketTypeId) => (dispatch, getState) => {
 
 export const seedTicketTypes = ( ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let params = {
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const params = {
         access_token : accessToken
     };
 
@@ -543,7 +543,7 @@ export const seedTicketTypes = ( ) => (dispatch, getState) => {
 };
 
 const normalizeEntity = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     if (!normalizedEntity.external_id)
         delete(normalizedEntity.external_id);
@@ -572,13 +572,13 @@ const normalizeEntity = (entity) => {
 
 export const getRefundPolicies = () => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -595,11 +595,11 @@ export const getRefundPolicies = () => (dispatch, getState) => {
 };
 
 export const saveRefundPolicy = (entity) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -633,11 +633,11 @@ export const saveRefundPolicy = (entity) => (dispatch, getState) => {
 
 export const deleteRefundPolicy = (refundPolicyId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -658,13 +658,13 @@ export const deleteRefundPolicy = (refundPolicyId) => (dispatch, getState) => {
 /***************************   PAYMENT PROFILES   ******************************/
 
 export const getPaymentProfiles = (page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         page         : page,
         per_page     : perPage,
         access_token : accessToken,
@@ -672,7 +672,7 @@ export const getPaymentProfiles = (page = 1, perPage = 10, order = 'id', orderDi
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '+' : '-';
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -689,11 +689,11 @@ export const getPaymentProfiles = (page = 1, perPage = 10, order = 'id', orderDi
 };
 
 export const savePaymentProfile = (entity) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -712,7 +712,7 @@ export const savePaymentProfile = (entity) => (dispatch, getState) => {
         return;
     }
 
-    let success_message = {
+    const success_message = {
         title: T.translate("general.done"),
         html: T.translate("edit_payment_profile.payment_profile_created"),
         type: 'success'
@@ -735,11 +735,11 @@ export const savePaymentProfile = (entity) => (dispatch, getState) => {
 
 export const deletePaymentProfile = (paymentProfileId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -757,13 +757,13 @@ export const deletePaymentProfile = (paymentProfileId) => (dispatch, getState) =
 
 export const getPaymentProfile = (paymentProfileId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 

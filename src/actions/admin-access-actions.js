@@ -36,13 +36,13 @@ export const ADMIN_ACCESS_DELETED        = 'ADMIN_ACCESS_DELETED';
 
 
 export const getAdminAccesses = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
-    let filter = [];
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
+    const filter = [];
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         page         : page,
         per_page     : perPage,
         expand       : 'members,summits',
@@ -50,7 +50,7 @@ export const getAdminAccesses = (term = null, page = 1, perPage = 10, order = 'i
     };
 
     if(term){
-        let escapedTerm = escapeFilterValue(term);
+        const escapedTerm = escapeFilterValue(term);
         filter.push(`title=@${escapedTerm},member_email=@${escapedTerm},member_full_name=@${escapedTerm}`);
     }
 
@@ -60,7 +60,7 @@ export const getAdminAccesses = (term = null, page = 1, perPage = 10, order = 'i
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '' : '-';
+        const orderDirSign = (orderDir === 1) ? '' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -77,12 +77,12 @@ export const getAdminAccesses = (term = null, page = 1, perPage = 10, order = 'i
 };
 
 export const getAdminAccess = (adminAccessId) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
         expand       : 'members,summits',
     };
@@ -103,13 +103,13 @@ export const resetAdminAccessForm = () => (dispatch, getState) => {
 };
 
 export const saveAdminAccess = (entity, noAlert = false) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity);
-    let params = { access_token : accessToken };
+    const normalizedEntity = normalizeEntity(entity);
+    const params = { access_token : accessToken };
 
     if (entity.id) {
 
@@ -130,7 +130,7 @@ export const saveAdminAccess = (entity, noAlert = false) => (dispatch, getState)
 
     } else {
 
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("admin_access.created"),
             type: 'success'
@@ -155,10 +155,10 @@ export const saveAdminAccess = (entity, noAlert = false) => (dispatch, getState)
 
 export const deleteAdminAccess = (adminAccessId) => (dispatch, getState) => {
 
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -176,7 +176,7 @@ export const deleteAdminAccess = (adminAccessId) => (dispatch, getState) => {
 
 
 const normalizeEntity = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     delete(normalizedEntity['id']);
     delete(normalizedEntity['created']);

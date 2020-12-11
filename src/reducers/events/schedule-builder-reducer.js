@@ -166,7 +166,7 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case REQUEST_PUBLISH_EVENT:
-            let {currentSummit, currentLocation, event, startTime, day, minutes } = payload;
+            const {currentSummit, currentLocation, event, startTime, day, minutes } = payload;
 
             let eventModel        = new SummitEvent(event, currentSummit);
             let [eventStarDateTime, eventEndDateTime ] = eventModel.calculateNewDates(day, startTime, minutes);

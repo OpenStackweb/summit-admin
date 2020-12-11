@@ -42,17 +42,14 @@ class MergeSpeakerPage extends React.Component {
         this.handleMerge = this.handleMerge.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
-
-        if(nextProps.speakers[0] && nextProps.speakers[1]) {
-            this.setState({
-                canMerge: true
-            });
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.speakers[0] && this.props.speakers[0] && !this.state.canMerge) {
+            this.setState({canMerge: true});
         }
     }
 
     handleChangeSpeaker(ev) {
-        let {value, id} = ev.target;
+        const {value, id} = ev.target;
         let selectedFields = {...this.props.selectedFields};
 
         this.setState({selectedFields: selectedFields})

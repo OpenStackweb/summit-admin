@@ -36,7 +36,7 @@ import {
 class ReportsLayout extends React.Component {
 
     render(){
-        let { match } = this.props;
+        const { match } = this.props;
         return(
             <div>
                 <Breadcrumb data={{ title: T.translate("reports.reports"), pathname: match.url }} />

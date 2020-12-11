@@ -34,27 +34,19 @@ class SponsorshipListPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            this.props.getSponsorships();
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
+        const {currentSummit} = this.props;
+        if(currentSummit) {
             this.props.getSponsorships();
         }
     }
 
     handleEdit(sponsorship_id) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/sponsorships/${sponsorship_id}`);
     }
 
     handleDelete(sponsorshipId) {
-        let {deleteSponsorship, sponsorships} = this.props;
+        const {deleteSponsorship, sponsorships} = this.props;
         let sponsorship = sponsorships.find(t => t.id === sponsorshipId);
 
         Swal.fire({
@@ -76,20 +68,20 @@ class SponsorshipListPage extends React.Component {
     }
 
     handleNewSponsorship(ev) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/sponsorships/new`);
     }
 
     render(){
-        let {currentSummit, sponsorships, order, orderDir, totalSponsorships} = this.props;
+        const {currentSummit, sponsorships, order, orderDir, totalSponsorships} = this.props;
 
-        let columns = [
+        const columns = [
             { columnKey: 'name', value: T.translate("sponsorship_list.name"), sortable: true },
             { columnKey: 'label', value: T.translate("sponsorship_list.label"), sortable: true },
             { columnKey: 'size', value: T.translate("sponsorship_list.size"), sortable: true }
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: order,
             sortDir: orderDir,
             actions: {

@@ -70,7 +70,7 @@ class SummitDocForm extends React.Component {
     }
 
     handleSubmit(ev) {
-        let {entity, file} = this.state;
+        const {entity, file} = this.state;
         ev.preventDefault();
 
         this.props.onSubmit(entity, file);
@@ -101,8 +101,8 @@ class SummitDocForm extends React.Component {
     }
 
     render() {
-        let {entity} = this.state;
-        let { currentSummit } = this.props;
+        const {entity} = this.state;
+        const { currentSummit } = this.props;
 
         let event_types_ddl = currentSummit.event_types
             .filter( t => t.should_be_available_on_cfp )

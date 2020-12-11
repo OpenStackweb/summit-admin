@@ -133,7 +133,7 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
             return {...state, entity: {...state.entity,  badge: {...state.entity.badge, features: badgeFeatures}} };
         }
         case TICKET_CANCEL_REFUND:{
-            let { entity} = state;
+            const { entity} = state;
             return {...state,  entity: {...entity, status: 'Paid' }};
         }
         break;

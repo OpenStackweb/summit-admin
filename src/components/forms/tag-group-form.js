@@ -88,8 +88,8 @@ class TagGroupForm extends React.Component {
 
 
     render() {
-        let {entity} = this.state;
-        let {currentSummit} = this.props;
+        const {entity} = this.state;
+        const {currentSummit} = this.props;
 
         let allowedTagsColumns = [
             { columnKey: 'tag', value: T.translate("edit_tag_group.tag") }

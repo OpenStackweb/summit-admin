@@ -43,9 +43,9 @@ class LocationIdLayout extends React.Component {
         props.getLocationMeta();
     }
 
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.location_id;
-        let newId = newProps.match.params.location_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.location_id;
+        const newId = this.props.match.params.location_id;
 
         if (oldId !== newId) {
             if (!newId) {
@@ -57,7 +57,7 @@ class LocationIdLayout extends React.Component {
     }
 
     render(){
-        let { match, entity, allClasses } = this.props;
+        const { match, entity, allClasses } = this.props;
         let locationId = match.params.location_id;
         let breadcrumb = entity.id ? entity.name : T.translate("general.new");
 

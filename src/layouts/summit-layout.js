@@ -21,7 +21,7 @@ import NoMatchPage from "../pages/no-match-page";
 class SummitLayout extends React.Component {
 
     render(){
-        let { match } = this.props;
+        const { match } = this.props;
 
         return(
             <div>

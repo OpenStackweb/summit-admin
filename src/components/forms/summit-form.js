@@ -131,30 +131,30 @@ class SummitForm extends React.Component {
     }
 
     handleSPlanEdit(selectionPlanId) {
-        let {entity, history} = this.props;
+        const {entity, history} = this.props;
         history.push(`/app/summits/${entity.id}/selection-plans/${selectionPlanId}`);
     }
 
     handleSPlanAdd(ev) {
-        let {entity, history} = this.props;
+        const {entity, history} = this.props;
         ev.preventDefault();
         history.push(`/app/summits/${entity.id}/selection-plans/new`);
     }
 
     handleAttributeTypeEdit(attributeId) {
-        let {entity, history} = this.props;
+        const {entity, history} = this.props;
         history.push(`/app/summits/${entity.id}/room-booking-attributes/${attributeId}`);
     }
 
     handleNewAttributeType(ev) {
         ev.preventDefault();
 
-        let {entity, history} = this.props;
+        const {entity, history} = this.props;
         history.push(`/app/summits/${entity.id}/room-booking-attributes/new`);
     }
 
     render() {
-        let {entity, showSection} = this.state;
+        const {entity, showSection} = this.state;
         let {onSPlanDelete, onAttributeTypeDelete} = this.props;
         let time_zones_ddl = moment.tz.names().map(tz => ({label: tz, value: tz}));
         let dates_enabled = (entity.hasOwnProperty('time_zone_id') && entity.time_zone_id !== '');

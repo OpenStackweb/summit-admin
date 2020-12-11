@@ -93,14 +93,14 @@ class FloorForm extends React.Component {
     }
 
     handleRoomEdit(roomId) {
-        let {currentSummit, locationId, history} = this.props;
+        const {currentSummit, locationId, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/locations/${locationId}/rooms/${roomId}`);
     }
 
     handleNewRoom(ev) {
         ev.preventDefault();
 
-        let {currentSummit, locationId, history} = this.props;
+        const {currentSummit, locationId, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/locations/${locationId}/rooms/new`);
     }
 
@@ -123,7 +123,7 @@ class FloorForm extends React.Component {
     }
 
     render() {
-        let {entity, showRooms} = this.state;
+        const {entity, showRooms} = this.state;
 
         let room_columns = [
             { columnKey: 'id', value: T.translate("general.id") },

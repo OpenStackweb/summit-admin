@@ -35,47 +35,39 @@ class SummitDocListPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            this.props.getSummitDocs();
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
+        const {currentSummit} = this.props;
+        if(currentSummit) {
             this.props.getSummitDocs();
         }
     }
 
     handleEdit(summitdoc_id) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/summitdocs/${summitdoc_id}`);
     }
 
     handlePageChange(page) {
-        let {term, order, orderDir, perPage} = this.props;
+        const {term, order, orderDir, perPage} = this.props;
         this.props.getSummitDocs(term, page, perPage, order, orderDir);
     }
 
     handleSort(index, key, dir, func) {
-        let {term, page, perPage} = this.props;
+        const {term, page, perPage} = this.props;
         this.props.getSummitDocs(term, page, perPage, key, dir);
     }
 
     handleSearch(term) {
-        let {order, orderDir, page, perPage} = this.props;
+        const {order, orderDir, page, perPage} = this.props;
         this.props.getSummitDocs(term, page, perPage, order, orderDir);
     }
 
     handleNew(ev) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/summitdocs/new`);
     }
 
     handleDelete(summitDocId) {
-        let {deleteSummitDoc, summitDocs} = this.props;
+        const {deleteSummitDoc, summitDocs} = this.props;
         let summitDoc = summitDocs.find(s => s.id === summitDocId);
 
         Swal.fire({
@@ -93,16 +85,16 @@ class SummitDocListPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, summitDocs, lastPage, currentPage, term, order, orderDir, totalSummitDocs} = this.props;
+        const {currentSummit, summitDocs, lastPage, currentPage, term, order, orderDir, totalSummitDocs} = this.props;
 
-        let columns = [
+        const columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
             { columnKey: 'label', value: T.translate("summitdoc.label"), sortable: true },
             { columnKey: 'description', value: T.translate("summitdoc.description") },
             { columnKey: 'event_types_string', value: T.translate("summitdoc.event_types")},
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: order,
             sortDir: orderDir,
             actions: {

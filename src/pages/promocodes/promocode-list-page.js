@@ -43,33 +43,25 @@ class PromocodeListPage extends React.Component {
 
     componentDidMount() {
         const {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            this.props.getPromocodes();
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
+        if(currentSummit) {
             this.props.getPromocodes();
         }
     }
 
     handleEdit(promocode_id) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/promocodes/${promocode_id}`);
     }
 
     handleExport(ev) {
-        let {term, order, orderDir, type} = this.props;
+        const {term, order, orderDir, type} = this.props;
         ev.preventDefault();
 
         this.props.exportPromocodes(term, order, orderDir, type);
     }
 
     handleDelete(promocodeId) {
-        let {deletePromocode, promocodes} = this.props;
+        const {deletePromocode, promocodes} = this.props;
         let promocode = promocodes.find(p => p.id === promocodeId);
 
         Swal.fire({
@@ -88,42 +80,42 @@ class PromocodeListPage extends React.Component {
 
     isNotRedeemed(promocodeId) {
 
-        let {promocodes} = this.props;
+        const {promocodes} = this.props;
         let promocode = promocodes.find(a => a.id === promocodeId);
 
         return (promocode.redeemed === 'No');
     }
 
     handlePageChange(page) {
-        let {term, order, orderDir, perPage, type} = this.props;
+        const {term, order, orderDir, perPage, type} = this.props;
         this.props.getPromocodes(term, page, perPage, order, orderDir, type);
     }
 
     handleTypeChange(type) {
-        let {term, order, orderDir, perPage, page} = this.props;
+        const {term, order, orderDir, perPage, page} = this.props;
         this.props.getPromocodes(term, page, perPage, order, orderDir, type.target.value);
     }
 
     handleSort(index, key, dir, func) {
-        let {term, page, perPage, type} = this.props;
+        const {term, page, perPage, type} = this.props;
         key = (key === 'name') ? 'last_name' : key;
         this.props.getPromocodes(term, page, perPage, key, dir, type);
     }
 
     handleSearch(term) {
-        let {order, orderDir, page, perPage, type} = this.props;
+        const {order, orderDir, page, perPage, type} = this.props;
         this.props.getPromocodes(term, page, perPage, order, orderDir, type);
     }
 
     handleNewPromocode(ev) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/promocodes/new`);
     }
 
     render(){
-        let {currentSummit, promocodes, lastPage, currentPage, term, order, orderDir, totalPromocodes, allTypes, allClasses, type} = this.props;
+        const {currentSummit, promocodes, lastPage, currentPage, term, order, orderDir, totalPromocodes, allTypes, allClasses, type} = this.props;
 
-        let columns = [
+        const columns = [
             { columnKey: 'code', value: T.translate("promocode_list.code"), sortable: true },
             { columnKey: 'class_name', value: T.translate("promocode_list.type") },
             /*{ columnKey: 'owner', value: T.translate("promocode_list.owner") },*/
@@ -133,7 +125,7 @@ class PromocodeListPage extends React.Component {
             { columnKey: 'creator', value: T.translate("promocode_list.creator") },
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: order,
             sortDir: orderDir,
             actions: {

@@ -42,21 +42,21 @@ export const MEDIA_UPLOAD_UNLINKED       = 'MEDIA_UPLOAD_UNLINKED';
 
 
 export const getMediaUploads = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let filter = [];
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const filter = [];
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         page         : page,
         per_page     : perPage,
         access_token : accessToken
     };
 
     if(term){
-        let escapedTerm = escapeFilterValue(term);
+        const escapedTerm = escapeFilterValue(term);
         filter.push(`name=@${escapedTerm}`);
     }
 
@@ -66,7 +66,7 @@ export const getMediaUploads = (term = null, page = 1, perPage = 10, order = 'id
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '' : '-';
+        const orderDirSign = (orderDir === 1) ? '' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -83,13 +83,13 @@ export const getMediaUploads = (term = null, page = 1, perPage = 10, order = 'id
 };
 
 export const getMediaUpload = (mediaUploadId) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -106,14 +106,14 @@ export const getMediaUpload = (mediaUploadId) => (dispatch, getState) => {
 
 export const queryMediaUploads = _.debounce((summitId, input, callback) => {
 
-    let accessToken = window.accessToken;
+    const accessToken = window.accessToken;
     input = escapeFilterValue(input);
-    let filter = encodeURIComponent(`name=@${input}`);
+    const filter = encodeURIComponent(`name=@${input}`);
 
     fetch(`${window.API_BASE_URL}/api/v1/summits/${summitId}/media-upload-types?filter=${filter}&order=name&access_token=${accessToken}&expand=type`)
         .then(fetchResponseHandler)
         .then((json) => {
-            let options = [...json.data];
+            const options = [...json.data];
 
             callback(options);
         })
@@ -125,14 +125,14 @@ export const resetMediaUploadForm = () => (dispatch, getState) => {
 };
 
 export const saveMediaUpload = (entity, noAlert = false) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity);
-    let params = { access_token : accessToken };
+    const normalizedEntity = normalizeEntity(entity);
+    const params = { access_token : accessToken };
 
     if (entity.id) {
 
@@ -153,7 +153,7 @@ export const saveMediaUpload = (entity, noAlert = false) => (dispatch, getState)
 
     } else {
 
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("media_upload.created"),
             type: 'success'
@@ -177,11 +177,11 @@ export const saveMediaUpload = (entity, noAlert = false) => (dispatch, getState)
 };
 
 export const linkToPresentationType = (mediaUpload, presentationTypeId) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = { access_token : accessToken };
+    const params = { access_token : accessToken };
 
     dispatch(startLoading());
 
@@ -198,11 +198,11 @@ export const linkToPresentationType = (mediaUpload, presentationTypeId) => (disp
 };
 
 export const unlinkFromPresentationType = (mediaUploadId, presentationTypeId) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = { access_token : accessToken };
+    const params = { access_token : accessToken };
 
     dispatch(startLoading());
 
@@ -219,11 +219,11 @@ export const unlinkFromPresentationType = (mediaUploadId, presentationTypeId) =>
 };
 
 export const deleteMediaUpload = (mediaUploadId) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -240,13 +240,13 @@ export const deleteMediaUpload = (mediaUploadId) => (dispatch, getState) => {
 };
 
 export const copyMediaUploads = (summitId) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = { access_token : accessToken };
+    const params = { access_token : accessToken };
 
     postRequest(
         null,
@@ -263,7 +263,7 @@ export const copyMediaUploads = (summitId) => (dispatch, getState) => {
 
 
 const normalizeEntity = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     delete(normalizedEntity['id']);
     delete(normalizedEntity['created']);

@@ -38,9 +38,9 @@ class EditAdminAccessPage extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.access_id;
-        let newId = newProps.match.params.access_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.access_id;
+        const newId = this.props.match.params.access_id;
 
         if (oldId !== newId) {
             if (!newId) {
@@ -52,9 +52,9 @@ class EditAdminAccessPage extends React.Component {
     }
 
     render(){
-        let {entity, errors, match} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.title : T.translate("general.new");
+        const {entity, errors, match} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.title : T.translate("general.new");
 
         return(
             <div className="container edit-admin-access-page">

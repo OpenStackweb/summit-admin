@@ -32,9 +32,9 @@ class EditTaxTypePage extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.tax_type_id;
-        let newId = newProps.match.params.tax_type_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.tax_type_id;
+        const newId = this.props.match.params.tax_type_id;
 
         if (newId !== oldId) {
             if (!newId) {
@@ -46,9 +46,9 @@ class EditTaxTypePage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors, match, history} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+        const {currentSummit, entity, errors, match, history} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
 
         return(

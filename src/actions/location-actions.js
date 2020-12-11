@@ -86,11 +86,11 @@ export const LOCATION_MAP_ATTACHED       = 'LOCATION_MAP_ATTACHED';
 
 export const getLocationMeta = () => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -107,13 +107,13 @@ export const getLocationMeta = () => (dispatch, getState) => {
 
 export const getLocations = ( ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         expand       : '',
         page         : 1,
         per_page     : 100,
@@ -133,13 +133,13 @@ export const getLocations = ( ) => (dispatch, getState) => {
 
 export const getLocation = (locationId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         expand       : 'rooms,floors',
         access_token : accessToken,
     };
@@ -160,18 +160,18 @@ export const resetLocationForm = () => (dispatch, getState) => {
 };
 
 export const saveLocation = (entity, allClasses) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
-    let normalizedEntity = normalizeEntity(entity, allClasses);
-    let class_name = entity.class_name.toLowerCase();
+    const normalizedEntity = normalizeEntity(entity, allClasses);
+    const class_name = entity.class_name.toLowerCase();
 
     if (entity.id) {
 
@@ -189,7 +189,7 @@ export const saveLocation = (entity, allClasses) => (dispatch, getState) => {
 
     } else {
 
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_location.location_created"),
             type: 'success'
@@ -214,11 +214,11 @@ export const saveLocation = (entity, allClasses) => (dispatch, getState) => {
 
 export const deleteLocation = (locationId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -236,11 +236,11 @@ export const deleteLocation = (locationId) => (dispatch, getState) => {
 
 export const exportLocations = ( ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let filename = currentSummit.name + '-Locations.csv';
-    let params = {
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const filename = currentSummit.name + '-Locations.csv';
+    const params = {
         access_token : accessToken
     };
 
@@ -250,15 +250,15 @@ export const exportLocations = ( ) => (dispatch, getState) => {
 
 export const updateLocationOrder = (locations, locationId, newOrder) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
-    let location = locations.find(l => l.id === locationId);
+    const location = locations.find(l => l.id === locationId);
 
     putRequest(
         null,
@@ -275,7 +275,7 @@ export const updateLocationOrder = (locations, locationId, newOrder) => (dispatc
 
 export const updateLocationMap = (location) => (dispatch) => {
 
-    let address = location.address_1 + ',' + location.address_2 + ',' + location.city + ',' + location.state + ',' + location.country ;
+    const address = location.address_1 + ',' + location.address_2 + ',' + location.city + ',' + location.state + ',' + location.country ;
 
     dispatch(createAction(UPDATE_LOCATION)(location));
 
@@ -303,8 +303,8 @@ export const updateAddress = (location) => (dispatch) => {
 
 
 const normalizeEntity = (entity, allClasses) => {
-    let normalizedEntity = {};
-    let locationClass = allClasses.find(c => c.class_name === entity.class_name);
+    const normalizedEntity = {};
+    const locationClass = allClasses.find(c => c.class_name === entity.class_name);
 
     for(var field in locationClass) {
         normalizedEntity[field] = entity[field];
@@ -321,13 +321,13 @@ const normalizeEntity = (entity, allClasses) => {
 
 export const getFloor = (locationId, floorId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         expand       : 'rooms',
         access_token : accessToken,
     };
@@ -348,17 +348,17 @@ export const resetFloorForm = () => (dispatch, getState) => {
 };
 
 export const saveFloor = (locationId, entity, continueAdding) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
-    let normalizedEntity = normalizeFloorEntity(entity);
+    const normalizedEntity = normalizeFloorEntity(entity);
 
     if (entity.id) {
 
@@ -376,7 +376,7 @@ export const saveFloor = (locationId, entity, continueAdding) => (dispatch, getS
 
     } else {
 
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_floor.floor_created"),
             type: 'success'
@@ -407,11 +407,11 @@ export const saveFloor = (locationId, entity, continueAdding) => (dispatch, getS
 
 export const deleteFloor = (locationId, floorId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -429,15 +429,15 @@ export const deleteFloor = (locationId, floorId) => (dispatch, getState) => {
 
 
 export const attachFloorImage = (locationId, entity, file) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeFloorEntity(entity);
+    const normalizedEntity = normalizeFloorEntity(entity);
 
-    let url = `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/floors`;
+    const url = `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}/floors`;
 
     if (entity.id) {
         dispatch(uploadFloorFile(locationId, entity, file));
@@ -458,9 +458,9 @@ export const attachFloorImage = (locationId, entity, file) => (dispatch, getStat
 };
 
 const uploadFloorFile = (locationId, entity, file) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     postRequest(
         null,
@@ -478,11 +478,11 @@ const uploadFloorFile = (locationId, entity, file) => (dispatch, getState) => {
 
 export const deleteFloorImage = (locationId, floorId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -499,7 +499,7 @@ export const deleteFloorImage = (locationId, floorId) => (dispatch, getState) =>
 };
 
 const normalizeFloorEntity = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
 
     return normalizedEntity;
@@ -512,13 +512,13 @@ const normalizeFloorEntity = (entity) => {
 
 export const getRoom = (locationId, roomId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -538,17 +538,17 @@ export const resetRoomForm = () => (dispatch, getState) => {
 };
 
 export const saveRoom = (locationId, entity, continueAdding) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
-    let normalizedEntity = normalizeRoomEntity(entity);
+    const normalizedEntity = normalizeRoomEntity(entity);
     let url = `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}`;
     if (entity.floor_id) {
         url += `/floors/${entity.floor_id}`;
@@ -571,7 +571,7 @@ export const saveRoom = (locationId, entity, continueAdding) => (dispatch, getSt
 
     } else {
 
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_room.room_created"),
             type: 'success'
@@ -602,11 +602,11 @@ export const saveRoom = (locationId, entity, continueAdding) => (dispatch, getSt
 
 export const deleteRoom = (locationId, roomId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -623,13 +623,13 @@ export const deleteRoom = (locationId, roomId) => (dispatch, getState) => {
 };
 
 export const attachRoomImage = (locationId, entity, file) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeRoomEntity(entity);
+    const normalizedEntity = normalizeRoomEntity(entity);
 
     let url = `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/venues/${locationId}`;
     url += (entity.class_name === 'SummitVenueRoom') ? `/rooms` : `/bookable-rooms`;
@@ -653,9 +653,9 @@ export const attachRoomImage = (locationId, entity, file) => (dispatch, getState
 };
 
 const uploadRoomFile = (locationId, entity, file) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     postRequest(
         null,
@@ -673,11 +673,11 @@ const uploadRoomFile = (locationId, entity, file) => (dispatch, getState) => {
 
 export const deleteRoomImage = (locationId, roomId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -694,7 +694,7 @@ export const deleteRoomImage = (locationId, roomId) => (dispatch, getState) => {
 };
 
 const normalizeRoomEntity = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     if (normalizedEntity.order === 0) {
         delete(normalizedEntity['order']);
@@ -716,13 +716,13 @@ const normalizeRoomEntity = (entity) => {
 
 export const addAttributeToRoom = (locationId, roomId, attribute) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -741,13 +741,13 @@ export const addAttributeToRoom = (locationId, roomId, attribute) => (dispatch, 
 
 export const removeAttributeFromRoom = (locationId, roomId, attributeId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -771,13 +771,13 @@ export const removeAttributeFromRoom = (locationId, roomId, attributeId) => (dis
 
 export const getLocationImage = (locationId, imageId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -797,17 +797,17 @@ export const resetLocationImageForm = () => (dispatch, getState) => {
 };
 
 export const saveLocationImage = (locationId, entity, file) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
-    let normalizedEntity = normalizeImageEntity(entity);
+    const normalizedEntity = normalizeImageEntity(entity);
 
     if (entity.id) {
 
@@ -826,7 +826,7 @@ export const saveLocationImage = (locationId, entity, file) => (dispatch, getSta
 
     } else {
 
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_location_image.image_created"),
             type: 'success'
@@ -852,11 +852,11 @@ export const saveLocationImage = (locationId, entity, file) => (dispatch, getSta
 
 export const deleteLocationImage = (locationId, imageId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -873,7 +873,7 @@ export const deleteLocationImage = (locationId, imageId) => (dispatch, getState)
 };
 
 const normalizeImageEntity = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     delete(normalizedEntity['location_id']);
     delete(normalizedEntity['image_url']);
@@ -893,13 +893,13 @@ const normalizeImageEntity = (entity) => {
 
 export const getLocationMap = (locationId, mapId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -919,17 +919,17 @@ export const resetLocationMapForm = () => (dispatch, getState) => {
 };
 
 export const saveLocationMap = (locationId, entity, file) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
-    let normalizedEntity = normalizeMapEntity(entity);
+    const normalizedEntity = normalizeMapEntity(entity);
 
     if (entity.id) {
 
@@ -948,7 +948,7 @@ export const saveLocationMap = (locationId, entity, file) => (dispatch, getState
 
     } else {
 
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_location_map.map_created"),
             type: 'success'
@@ -974,11 +974,11 @@ export const saveLocationMap = (locationId, entity, file) => (dispatch, getState
 
 export const deleteLocationMap = (locationId, mapId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -995,7 +995,7 @@ export const deleteLocationMap = (locationId, mapId) => (dispatch, getState) => 
 };
 
 const normalizeMapEntity = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     delete(normalizedEntity['location_id']);
     delete(normalizedEntity['image_url']);

@@ -32,11 +32,11 @@ class EditPushNotificationPage extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.push_notification_id;
-        let newId = newProps.match.params.push_notification_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.push_notification_id;
+        const newId = this.props.match.params.push_notification_id;
 
-        if (oldId !== newId) {
+        if (newId !== oldId) {
             if (!newId) {
                 this.props.resetPushNotificationForm();
             } else {
@@ -46,9 +46,9 @@ class EditPushNotificationPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors, match, channels, platforms} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.id : T.translate("general.new");
+        const {currentSummit, entity, errors, match, channels, platforms} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.id : T.translate("general.new");
 
         return(
             <div className="container">

@@ -93,14 +93,14 @@ class AttendeeForm extends React.Component {
     }
 
     handlePresentationLink(event_id, ev) {
-        let {currentSummit} = this.props;
+        const {currentSummit} = this.props;
         ev.preventDefault();
         let event_detail_url = currentSummit.schedule_event_detail_url.replace(':event_id',event_id).replace(':event_title','');
         window.open(event_detail_url, '_blank');
     }
 
     handleSpeakerLink(speaker_id, ev) {
-        let {history} = this.props;
+        const {history} = this.props;
         ev.preventDefault();
 
         history.push(`/app/speakers/${speaker_id}`);
@@ -116,8 +116,8 @@ class AttendeeForm extends React.Component {
     }
 
     render() {
-        let {entity, showSection} = this.state;
-        let { currentSummit } = this.props;
+        const {entity, showSection} = this.state;
+        const { currentSummit } = this.props;
 
         return (
             <form className="summit-attendee-form">

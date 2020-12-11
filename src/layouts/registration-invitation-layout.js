@@ -24,7 +24,7 @@ import EditRegistrationInvitationPage from "../pages/tickets/edit-registration-i
 class RegistrationInvitationLayout extends React.Component {
 
     render(){
-        let { match } = this.props;
+        const { match } = this.props;
         return(
             <div>
                 <Breadcrumb data={{ title: T.translate("registration_invitations.registration_invitations"), pathname: match.url }} />

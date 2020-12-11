@@ -25,7 +25,7 @@ import NoMatchPage from "../pages/no-match-page";
 class EventCategoryLayout extends React.Component {
 
     render(){
-        let { match } = this.props;
+        const { match } = this.props;
         return(
             <div>
                 <Breadcrumb data={{ title: T.translate("event_category_list.event_categories"), pathname: match.url }} />

@@ -34,22 +34,14 @@ class EventCategoryListPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            this.props.getEventCategories();
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit != null && currentSummit.id !== newProps.currentSummit.id) {
+        const {currentSummit} = this.props;
+        if(currentSummit) {
             this.props.getEventCategories();
         }
     }
 
     handleEdit(categoryId) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/event-categories/${categoryId}`);
     }
 
@@ -58,12 +50,12 @@ class EventCategoryListPage extends React.Component {
     }
 
     handleNew(ev) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/event-categories/new`);
     }
 
     handleDelete(categoryId) {
-        let {deleteEventCategory, eventCategories} = this.props;
+        const {deleteEventCategory, eventCategories} = this.props;
         let category = eventCategories.find(c => c.id === categoryId);
 
         Swal.fire({
@@ -81,17 +73,17 @@ class EventCategoryListPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, eventCategories, allSummits} = this.props;
+        const {currentSummit, eventCategories, allSummits} = this.props;
         const summits = allSummits.filter(s => s.id !== currentSummit.id);
 
-        let columns = [
+        const columns = [
             { columnKey: 'id', value: T.translate("general.id") },
             { columnKey: 'name', value: T.translate("event_category_list.name") },
             { columnKey: 'code', value: T.translate("event_category_list.code") },
             { columnKey: 'color', value: T.translate("event_category_list.color") }
         ];
 
-        let table_options = {
+        const table_options = {
             actions: {
                 edit: {onClick: this.handleEdit},
                 delete: { onClick: this.handleDelete }

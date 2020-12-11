@@ -37,11 +37,11 @@ class RsvpTemplateIdLayout extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.rsvp_template_id;
-        let newId = newProps.match.params.rsvp_template_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.rsvp_template_id;
+        const newId = this.props.match.params.rsvp_template_id;
 
-        if (newId !== oldId) {
+        if (oldId !== newId) {
             if (!newId) {
                 this.props.resetRsvpTemplateForm();
             } else {
@@ -49,7 +49,6 @@ class RsvpTemplateIdLayout extends React.Component {
             }
         }
     }
-
 
     render() {
         let {match, currentRsvpTemplate} = this.props;

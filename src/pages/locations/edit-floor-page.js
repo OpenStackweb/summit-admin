@@ -36,10 +36,10 @@ class EditFloorPage extends React.Component {
         this.handleRoomDelete = this.handleRoomDelete.bind(this);
     }
 
-    componentWillReceiveProps(newProps) {
-        let {currentLocation} = newProps;
-        let oldId = this.props.match.params.floor_id;
-        let newId = newProps.match.params.floor_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.floor_id;
+        const newId = this.props.match.params.floor_id;
+        const {currentLocation} = this.props;
 
         if (oldId !== newId && currentLocation) {
             this.props.getFloor(currentLocation.id, newId);
@@ -47,7 +47,7 @@ class EditFloorPage extends React.Component {
     }
 
     handleRoomDelete(roomId) {
-        let {deleteRoom, entity, currentLocation} = this.props;
+        const {deleteRoom, entity, currentLocation} = this.props;
         let room = entity.rooms.find(r => r.id === roomId);
 
         Swal.fire({
@@ -65,9 +65,9 @@ class EditFloorPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, currentLocation, entity, errors, match, attachFloorImage, deleteFloorImage} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+        const {currentSummit, currentLocation, entity, errors, match, attachFloorImage, deleteFloorImage} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
         return(
             <div className="container">

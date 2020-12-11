@@ -26,7 +26,7 @@ import NoMatchPage from "../pages/no-match-page";
 class AttendeeLayout extends React.Component {
 
     render(){
-        let { match } = this.props;
+        const { match } = this.props;
         return(
             <div>
                 <Breadcrumb data={{ title: T.translate("attendee_list.attendees"), pathname: match.url }} />

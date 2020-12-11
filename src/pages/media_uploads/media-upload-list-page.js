@@ -42,34 +42,34 @@ class MediaUploadListPage extends React.Component {
     }
 
     handleEdit(media_upload_id) {
-        let {history, currentSummit} = this.props;
+        const {history, currentSummit} = this.props;
         history.push(`/app/summits/${currentSummit.id}/media-uploads/${media_upload_id}`);
     }
 
     handlePageChange(page) {
-        let {term, order, orderDir, perPage} = this.props;
+        const {term, order, orderDir, perPage} = this.props;
         this.props.getMediaUploads(term, page, perPage, order, orderDir);
     }
 
     handleSort(index, key, dir, func) {
-        let {term, page, perPage} = this.props;
+        const {term, page, perPage} = this.props;
         this.props.getMediaUploads(term, page, perPage, key, dir);
     }
 
     handleSearch(term) {
-        let {order, orderDir, page, perPage} = this.props;
+        const {order, orderDir, page, perPage} = this.props;
         this.props.getMediaUploads(term, page, perPage, order, orderDir);
     }
 
     handleNewMediaUpload(ev) {
-        let {history, currentSummit} = this.props;
+        const {history, currentSummit} = this.props;
         ev.preventDefault();
 
         history.push(`/app/summits/${currentSummit.id}/media-uploads/new`);
     }
 
     handleDelete(mediaUploadId) {
-        let {deleteMediaUpload, media_uploads} = this.props;
+        const {deleteMediaUpload, media_uploads} = this.props;
         let media_upload = media_uploads.find(t => t.id === mediaUploadId);
 
         Swal.fire({
@@ -93,16 +93,16 @@ class MediaUploadListPage extends React.Component {
     canEdit = (item) => !item.is_system_defined;
 
     render(){
-        let {currentSummit, media_uploads, allSummits, lastPage, currentPage, term, order, orderDir} = this.props;
+        const {currentSummit, media_uploads, allSummits, lastPage, currentPage, term, order, orderDir} = this.props;
         const summits = allSummits.filter(s => s.id !== currentSummit.id);
 
-        let columns = [
+        const columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
             { columnKey: 'name', value: T.translate("media_upload.name"), sortable: true },
             { columnKey: 'description', value: T.translate("media_upload.description") },
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: order,
             sortDir: orderDir,
             actions: {

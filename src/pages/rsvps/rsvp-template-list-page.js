@@ -37,27 +37,19 @@ class RsvpTemplateListPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            this.props.getRsvpTemplates();
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
+        const {currentSummit} = this.props;
+        if(currentSummit) {
             this.props.getRsvpTemplates();
         }
     }
 
     handleEdit(rsvpTemplateId) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/rsvp-templates/${rsvpTemplateId}`);
     }
 
     handleDelete(rsvpTemplateId) {
-        let {deleteRsvpTemplate, rsvpTemplates} = this.props;
+        const {deleteRsvpTemplate, rsvpTemplates} = this.props;
         let rsvpTemplate = rsvpTemplates.find(r => r.id === rsvpTemplateId);
 
         Swal.fire({
@@ -75,34 +67,34 @@ class RsvpTemplateListPage extends React.Component {
     }
 
     handlePageChange(page) {
-        let {term, order, orderDir, perPage} = this.props;
+        const {term, order, orderDir, perPage} = this.props;
         this.props.getRsvpTemplates(term, page, perPage, order, orderDir, type);
     }
 
     handleSort(index, key, dir, func) {
-        let {term, page, perPage} = this.props;
+        const {term, page, perPage} = this.props;
         this.props.getRsvpTemplates(term, page, perPage, key, dir);
     }
 
     handleSearch(term) {
-        let {order, orderDir, page, perPage} = this.props;
+        const {order, orderDir, page, perPage} = this.props;
         this.props.getRsvpTemplates(term, page, perPage, order, orderDir);
     }
 
     handleNewRsvpTemplate(ev) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/rsvp-templates/new`);
     }
 
     render(){
-        let {currentSummit, rsvpTemplates, lastPage, currentPage, term, order, orderDir, totalRsvpTemplates} = this.props;
+        const {currentSummit, rsvpTemplates, lastPage, currentPage, term, order, orderDir, totalRsvpTemplates} = this.props;
 
-        let columns = [
+        const columns = [
             { columnKey: 'id', value: T.translate("general.id") },
             { columnKey: 'title', value: T.translate("rsvp_template_list.title") }
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: order,
             sortDir: orderDir,
             actions: {

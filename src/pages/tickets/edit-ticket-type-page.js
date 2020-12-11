@@ -27,7 +27,7 @@ class EditTicketTypePage extends React.Component {
         const ticketTypeId = match.params.ticket_type_id;
         super(props);
 
-        if(currentSummit !== null) {
+        if (currentSummit && !currentSummit.badge_types) {
             props.getBadgeTypes();
         }
 
@@ -38,10 +38,9 @@ class EditTicketTypePage extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
-        const {currentSummit} = newProps;
-        const oldId = this.props.match.params.ticket_type_id;
-        const newId = newProps.match.params.ticket_type_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.ticket_type_id;
+        const newId = this.props.match.params.ticket_type_id;
 
         if (newId !== oldId) {
             if (!newId) {
@@ -49,10 +48,6 @@ class EditTicketTypePage extends React.Component {
             } else {
                 this.props.getTicketType(newId);
             }
-        }
-
-        if (currentSummit && !currentSummit.badge_types) {
-            this.props.getBadgeTypes();
         }
     }
 

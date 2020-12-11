@@ -28,7 +28,7 @@ export default class EmailTemplateInput extends React.Component {
         const {plainValue} = this.props;
         const theValue = plainValue ? value.label : {id: value.value, identifier: value.label};
 
-        let ev = {target: {
+        const ev = {target: {
                 id: this.props.id,
                 value: theValue,
                 type: 'emailtemplateinput'
@@ -38,7 +38,7 @@ export default class EmailTemplateInput extends React.Component {
     }
 
     getTemplates (input, callback) {
-        let {ownerId } = this.props;
+        const {ownerId } = this.props;
 
         if (!input) {
             return Promise.resolve({ options: [] });
@@ -48,7 +48,7 @@ export default class EmailTemplateInput extends React.Component {
         // https://github.com/JedWatson/react-select/issues/2998
 
         const translateOptions = (options) => {
-            let newOptions = (ownerId ? options.filter(t => t.id !== ownerId) : options).map(c => ({value: c.id.toString(), label: c.identifier}));
+            const newOptions = (ownerId ? options.filter(t => t.id !== ownerId) : options).map(c => ({value: c.id.toString(), label: c.identifier}));
             callback(newOptions);
         };
 
@@ -56,8 +56,8 @@ export default class EmailTemplateInput extends React.Component {
     }
 
     render() {
-        let {error, value, onChange, id, multi, plainValue, ...rest} = this.props;
-        let has_error = ( this.props.hasOwnProperty('error') && error !== '' );
+        const {error, value, onChange, id, multi, plainValue, ...rest} = this.props;
+        const has_error = ( this.props.hasOwnProperty('error') && error !== '' );
 
         // we need to map into value/label because of a bug in react-select 2
         // https://github.com/JedWatson/react-select/issues/2998

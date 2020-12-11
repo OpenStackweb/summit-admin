@@ -52,12 +52,12 @@ export const VALIDATE_RENDER            = 'VALIDATE_RENDER';
 
 
 export const getEmailTemplates = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         page         : page,
         per_page     : perPage,
         access_token : accessToken
@@ -69,7 +69,7 @@ export const getEmailTemplates = (term = null, page = 1, perPage = 10, order = '
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '' : '-';
+        const orderDirSign = (orderDir === 1) ? '' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -86,12 +86,12 @@ export const getEmailTemplates = (term = null, page = 1, perPage = 10, order = '
 };
 
 export const getEmailTemplate = (templateId) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
-    let params = { access_token : accessToken, expand: 'parent' };
+    const params = { access_token : accessToken, expand: 'parent' };
 
     return getRequest(
         null,
@@ -109,13 +109,13 @@ export const resetTemplateForm = () => (dispatch, getState) => {
 };
 
 export const saveEmailTemplate = (entity, noAlert = false) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity);
-    let params = { access_token : accessToken };
+    const normalizedEntity = normalizeEntity(entity);
+    const params = { access_token : accessToken };
 
     if (entity.id) {
 
@@ -136,7 +136,7 @@ export const saveEmailTemplate = (entity, noAlert = false) => (dispatch, getStat
 
     } else {
 
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("emails.template_created"),
             type: 'success'
@@ -161,10 +161,10 @@ export const saveEmailTemplate = (entity, noAlert = false) => (dispatch, getStat
 
 export const deleteEmailTemplate = (templateId) => (dispatch, getState) => {
 
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -183,10 +183,10 @@ export const deleteEmailTemplate = (templateId) => (dispatch, getState) => {
 
 export const previewEmailTemplate = (templateId, json) => (dispatch, getState) => {
 
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -211,7 +211,7 @@ const renderErrorHandler = (err, res) => (dispatch, state) => {
 
 
 const normalizeEntity = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     delete(normalizedEntity['id']);
     delete(normalizedEntity['created']);
@@ -228,13 +228,13 @@ const normalizeEntity = (entity) => {
 
 export const queryTemplates = _.debounce((input, callback) => {
 
-    let accessToken = window.accessToken;
+    const accessToken = window.accessToken;
     input = escapeFilterValue(input);
 
     fetch(`${window.EMAIL_API_BASE_URL}/api/v1/mail-templates?identifier__contains=${input}&access_token=${accessToken}`)
         .then(fetchResponseHandler)
         .then((json) => {
-            let options = [...json.data];
+            const options = [...json.data];
 
             callback(options);
         })
@@ -249,13 +249,13 @@ export const queryTemplates = _.debounce((input, callback) => {
 
 
 export const getSentEmailsByTemplatesAndEmail = (templates = [], toEmail , page = 1, perPage = 10) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
 
-    let params = {
+    const params = {
         page         : page,
         per_page     : perPage,
         access_token : accessToken,
@@ -280,12 +280,12 @@ export const getSentEmailsByTemplatesAndEmail = (templates = [], toEmail , page 
 
 export const getSentEmails = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
 
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         page         : page,
         per_page     : perPage,
         access_token : accessToken,
@@ -299,7 +299,7 @@ export const getSentEmails = (term = null, page = 1, perPage = 10, order = 'id',
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '' : '-';
+        const orderDirSign = (orderDir === 1) ? '' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -323,12 +323,12 @@ export const getSentEmails = (term = null, page = 1, perPage = 10, order = 'id',
 
 export const getAllClients = () => (dispatch, getState) => {
 
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         page         : 1,
         per_page     : 100,
         access_token : accessToken
@@ -347,7 +347,7 @@ export const getAllClients = () => (dispatch, getState) => {
 
 
 export const customErrorHandler = (err, res) => (dispatch, state) => {
-    let code = err.status;
+    const code = err.status;
     let msg = '';
 
     dispatch(stopLoading());

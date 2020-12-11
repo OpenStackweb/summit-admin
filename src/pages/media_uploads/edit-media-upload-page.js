@@ -39,9 +39,9 @@ class EditMediaUploadPage extends React.Component {
         props.getAllMediaFileTypes();
     }
 
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.media_upload_id;
-        let newId = newProps.match.params.media_upload_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.media_upload_id;
+        const newId = this.props.match.params.media_upload_id;
 
         if (oldId !== newId) {
             if (!newId) {
@@ -53,9 +53,9 @@ class EditMediaUploadPage extends React.Component {
     }
 
     render(){
-        let {entity, errors, match, currentSummit, media_file_types} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+        const {entity, errors, match, currentSummit, media_file_types} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
         return(
             <div className="container edit-media-uploads-page">

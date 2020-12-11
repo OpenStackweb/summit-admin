@@ -34,27 +34,19 @@ class AccessLevelListPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            this.props.getAccessLevels();
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
+        const {currentSummit} = this.props;
+        if(currentSummit) {
             this.props.getAccessLevels();
         }
     }
 
     handleEdit(access_level_id) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/access-levels/${access_level_id}`);
     }
 
     handleDelete(accessLevelId) {
-        let {deleteAccessLevel, accessLevels} = this.props;
+        const {deleteAccessLevel, accessLevels} = this.props;
         let accessLevel = accessLevels.find(t => t.id === accessLevelId);
 
         Swal.fire({
@@ -76,20 +68,20 @@ class AccessLevelListPage extends React.Component {
     }
 
     handleNewAccessLevel(ev) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/access-levels/new`);
     }
 
     render(){
-        let {currentSummit, accessLevels, order, orderDir, totalAccessLevels} = this.props;
+        const {currentSummit, accessLevels, order, orderDir, totalAccessLevels} = this.props;
 
-        let columns = [
+        const columns = [
             { columnKey: 'name', value: T.translate("access_level_list.name"), sortable: true },
             { columnKey: 'description', value: T.translate("access_level_list.description") },
             { columnKey: 'is_default', value: T.translate("access_level_list.is_default") }
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: order,
             sortDir: orderDir,
             actions: {

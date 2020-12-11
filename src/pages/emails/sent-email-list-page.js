@@ -37,25 +37,25 @@ class SentEmailListPage extends React.Component {
     }
 
     handlePageChange(page) {
-        let {term, order, orderDir, perPage} = this.props;
+        const {term, order, orderDir, perPage} = this.props;
         this.props.getSentEmails(term, page, perPage, order, orderDir);
     }
 
     handleSort(index, key, dir, func) {
-        let {term, page, perPage} = this.props;
+        const {term, page, perPage} = this.props;
         this.props.getSentEmails(term, page, perPage, key, dir);
     }
 
     handleSearch(term) {
-        let {order, orderDir, page, perPage} = this.props;
+        const {order, orderDir, page, perPage} = this.props;
         this.props.getSentEmails(term, page, perPage, order, orderDir);
     }
 
 
     render(){
-        let {currentSummit, emails, lastPage, currentPage, term, order, orderDir, totalEmails, match} = this.props;
+        const {currentSummit, emails, lastPage, currentPage, term, order, orderDir, totalEmails, match} = this.props;
 
-        let columns = [
+        const columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
             { columnKey: 'template', value: T.translate("emails.template"), sortable: true },
             { columnKey: 'subject', value: T.translate("emails.subject") },
@@ -64,7 +64,7 @@ class SentEmailListPage extends React.Component {
             { columnKey: 'sent_date', value: T.translate("emails.sent_date") },
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: order,
             sortDir: orderDir,
             actions: {}

@@ -60,11 +60,11 @@ export const getUnScheduleEventsPage =
         order            = null
     ) =>
     (dispatch, getState) => {
-        let { loggedUserState } = getState();
-        let { accessToken }     = loggedUserState;
+        const { loggedUserState } = getState();
+        const { accessToken }     = loggedUserState;
         dispatch(startLoading());
         // filters
-        let filter = [];
+        const filter = [];
 
         if(event_type_id != null){
             filter.push(`event_type_id==${event_type_id}`);
@@ -83,7 +83,7 @@ export const getUnScheduleEventsPage =
         }
 
         if(term){
-            let escapedTerm = escapeFilterValue(term);
+            const escapedTerm = escapeFilterValue(term);
             let searchString = `title=@${escapedTerm},abstract=@${escapedTerm},tags=@${escapedTerm},speaker=@${escapedTerm},speaker_email=@${escapedTerm}`;
 
             if (parseInt(term)) {
@@ -93,7 +93,7 @@ export const getUnScheduleEventsPage =
             filter.push(searchString);
         }
 
-        let params = {
+        const params = {
             page         : page,
             per_page     : per_page,
             access_token : accessToken,
@@ -122,13 +122,13 @@ export const getUnScheduleEventsPage =
 
 export const publishEvent = (event, day, startTime, minutes) =>
     (dispatch, getState) => {
-        let { loggedUserState, currentSummitState, currentScheduleBuilderState } = getState();
-        let { accessToken }     = loggedUserState;
-        let { currentSummit }   = currentSummitState;
-        let { currentLocation } = currentScheduleBuilderState;
+        const { loggedUserState, currentSummitState, currentScheduleBuilderState } = getState();
+        const { accessToken }     = loggedUserState;
+        const { currentSummit }   = currentSummitState;
+        const { currentLocation } = currentScheduleBuilderState;
 
-        let eventModel          = new SummitEvent(event, currentSummit);
-        let [eventStarDateTime, eventEndDateTime ] = eventModel.calculateNewDates(day, startTime, minutes);
+        const eventModel          = new SummitEvent(event, currentSummit);
+        const [eventStarDateTime, eventEndDateTime ] = eventModel.calculateNewDates(day, startTime, minutes);
 
         dispatch(startLoading());
         putRequest(
@@ -182,17 +182,17 @@ export const changeCurrentSelectedLocation = (currentSelectedLocation) => (dispa
 }
 
 export const getPublishedEventsBySummitDayLocation = (currentSummit, currentDay, currentLocation) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
     //currentDay            = moment(currentDay, 'YYYY-MM-DD').tz(currentSummit.time_zone.name);
     currentDay              = moment.tz(currentDay, currentSummit.time_zone.name);
-    let startDate           = ( currentDay.clone().hours(0).minutes(0).seconds(0).valueOf()) / 1000;
-    let endDate             = ( currentDay.clone().hours(23).minutes(59).seconds(59).valueOf()) /1000;
+    const startDate           = ( currentDay.clone().hours(0).minutes(0).seconds(0).valueOf()) / 1000;
+    const endDate             = ( currentDay.clone().hours(23).minutes(59).seconds(59).valueOf()) /1000;
 
     dispatch(startLoading());
-    let page       = 1
-    let per_page   = 100;
-    let locationId = currentLocation.id === 0 ? 'tbd': currentLocation.id;
+    const page       = 1;
+    const per_page   = 100;
+    const locationId = currentLocation.id === 0 ? 'tbd': currentLocation.id;
     return getRequest(
         createAction(REQUEST_SCHEDULE_EVENTS_PAGE),
         createAction(RECEIVE_SCHEDULE_EVENTS_PAGE),
@@ -268,9 +268,9 @@ export const changeCurrentScheduleSearchTerm = (term) => (dispatch, getState) =>
 }
 
 export const unPublishEvent = (event) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
     deleteRequest(
@@ -293,15 +293,15 @@ export const unPublishEvent = (event) => (dispatch, getState) => {
 }
 
 export const searchScheduleEvents = (term) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState
-    let filter = [];
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState
+    const filter = [];
 
     dispatch(startLoading());
 
     if(term){
-        let escapedTerm = escapeFilterValue(term);
+        const escapedTerm = escapeFilterValue(term);
         let searchString = `title=@${escapedTerm},abstract=@${escapedTerm},social_summary=@${term},tags=@${escapedTerm},speaker=@${escapedTerm},speaker_email=@${escapedTerm}`;
 
         if (parseInt(term)) {
@@ -311,7 +311,7 @@ export const searchScheduleEvents = (term) => (dispatch, getState) => {
         filter.push(searchString);
     }
 
-    let params = {
+    const params = {
         page         : 1,
         per_page     : ScheduleEventsSearchResultMaxPage,
         access_token : accessToken,
@@ -334,13 +334,13 @@ export const searchScheduleEvents = (term) => (dispatch, getState) => {
 }
 
 export const getEmptySpots = (location, fromDate, toDate, gapSize) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
         'filter[]': [
             `location_id==${location.id}`,

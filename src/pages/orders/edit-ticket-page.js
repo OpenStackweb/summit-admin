@@ -50,9 +50,9 @@ class EditTicketPage extends React.Component {
         this.handleResendEmail = this.handleResendEmail.bind(this);
     }
 
-    componentWillReceiveProps(newProps) {
-        const oldId = this.props.match.params.ticket_id;
-        const newId = newProps.match.params.ticket_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.ticket_id;
+        const newId = this.props.match.params.ticket_id;
 
         if (oldId !== newId) {
             this.props.getTicket(newId);
@@ -72,7 +72,7 @@ class EditTicketPage extends React.Component {
     }
 
     handleCancelRefundTicket(ticket, ev){
-        let {cancelRefundTicket} = this.props;
+        const {cancelRefundTicket} = this.props;
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -89,8 +89,8 @@ class EditTicketPage extends React.Component {
     }
 
     handleRefundTicket(ticket, ev) {
-        let {refundTicket} = this.props;
-        let {refund_amount} = this.state;
+        const {refundTicket} = this.props;
+        const {refund_amount} = this.state;
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -111,7 +111,7 @@ class EditTicketPage extends React.Component {
     }
 
     handleDeleteBadge(ticketId, ev) {
-        let {deleteBadge} = this.props;
+        const {deleteBadge} = this.props;
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -133,10 +133,10 @@ class EditTicketPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, currentOrder, loading,  entity, errors, match} = this.props;
-        let {refund_amount} = this.state;
+        const {currentSummit, currentOrder, loading,  entity, errors, match} = this.props;
+        const {refund_amount} = this.state;
 
-        let breadcrumb = `...${entity.number.slice(-20)}`;
+        const breadcrumb = `...${entity.number.slice(-20)}`;
 
         if (!entity || !entity.id) return (<div />);
         if (entity.order_id !== currentOrder.id) return (<div />);

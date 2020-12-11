@@ -30,7 +30,7 @@ class PresentationVideoReport extends React.Component {
     }
 
     buildReportQuery(filters, listFilters) {
-        let {currentSummit, sortKey, sortDir} = this.props;
+        const {currentSummit, sortKey, sortDir} = this.props;
 
         listFilters.summitId = currentSummit.id;
         listFilters.hasVideo = true;
@@ -57,7 +57,7 @@ class PresentationVideoReport extends React.Component {
     }
 
     preProcessData(data, extraData, forExport=false) {
-        let {currentSummit} = this.props;
+        const {currentSummit} = this.props;
         let flatData = flattenData(data);
 
         let processedData = flatData.map(it => {

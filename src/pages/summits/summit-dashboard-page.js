@@ -34,15 +34,8 @@ class SummitDashboardPage extends React.Component {
     }
 
     componentDidMount() {
+        const {currentSummit} = this.props;
         this.interval = setInterval(this.localTimer.bind(this), 1000);
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.interval);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        let {currentSummit} = nextProps;
 
         if(currentSummit){
             let localtime = moment().tz(currentSummit.time_zone.name);
@@ -50,6 +43,10 @@ class SummitDashboardPage extends React.Component {
                 localtime: localtime
             });
         }
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
     }
 
     localTimer() {
@@ -70,7 +67,7 @@ class SummitDashboardPage extends React.Component {
     }
 
     render() {
-        let { currentSummit, match, member } = this.props;
+        const { currentSummit, match, member } = this.props;
         let memberObj = new Member(member);
         let currentSummitTime = (new Date).getTime();
         let canEditSummit = memberObj.canEditSummit();

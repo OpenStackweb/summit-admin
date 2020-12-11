@@ -65,7 +65,7 @@ class SpeakerAttendanceForm extends React.Component {
     }
 
     handleSendEmail(ev) {
-        let {entity} = this.state;
+        const {entity} = this.state;
         ev.preventDefault();
 
         this.props.onSendEmail(entity.id);
@@ -88,8 +88,8 @@ class SpeakerAttendanceForm extends React.Component {
     }
 
     render() {
-        let {entity} = this.state;
-        let { currentSummit } = this.props;
+        const {entity} = this.state;
+        const { currentSummit } = this.props;
 
         return (
             <form className="speaker-attendance-form">

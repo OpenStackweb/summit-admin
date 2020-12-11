@@ -119,7 +119,7 @@ class SpeakerForm extends React.Component {
     getPresentations(summitId) {
         let presentations = this.state.entity.all_presentations.filter( p => p.summit_id === summitId );
         let speakerId = this.state.entity.id;
-        let {history} = this.props;
+        const {history} = this.props;
 
         return (
             <div>
@@ -156,7 +156,7 @@ class SpeakerForm extends React.Component {
 
     getAttendance(summitId) {
         let assistances = this.state.entity.summit_assistances.filter( a => a.summit_id === summitId );
-        let {history} = this.props;
+        const {history} = this.props;
 
         if (assistances.length === 0) return (<div />);
 
@@ -184,7 +184,7 @@ class SpeakerForm extends React.Component {
 
     getPromocodes(summitId) {
         let promocodes = this.state.entity.registration_codes.filter( r => r.summit_id === summitId );
-        let {history, summits} = this.props;
+        const {history, summits} = this.props;
 
         return (
             <div>
@@ -216,7 +216,7 @@ class SpeakerForm extends React.Component {
     }
 
     render() {
-        let {entity, showSummit} = this.state;
+        const {entity, showSummit} = this.state;
         let {summits} = this.props;
         let allPresentations = entity.all_presentations;
 

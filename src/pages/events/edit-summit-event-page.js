@@ -101,7 +101,7 @@ class EditSummitEventPage extends React.Component {
     };
 
     render(){
-        let {currentSummit, entity, errors, levelOptions, rsvpTemplateOptions} = this.props;
+        const {currentSummit, entity, errors, levelOptions, rsvpTemplateOptions} = this.props;
         const header = !entity.id ? T.translate("general.summit_event") : `${entity.title} - ID ${entity.id}`;
 
         return(

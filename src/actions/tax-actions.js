@@ -40,13 +40,13 @@ export const TAX_TICKET_REMOVED      = 'TAX_TICKET_REMOVED';
 
 export const getTaxTypes = ( order = 'name', orderDir = 1 ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         page         : 1,
         per_page     : 100,
         access_token : accessToken,
@@ -55,7 +55,7 @@ export const getTaxTypes = ( order = 'name', orderDir = 1 ) => (dispatch, getSta
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '+' : '-';
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -74,13 +74,13 @@ export const getTaxTypes = ( order = 'name', orderDir = 1 ) => (dispatch, getSta
 
 export const getTaxType = (taxTypeId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
         expand       : 'ticket_types'
     };
@@ -101,17 +101,17 @@ export const resetTaxTypeForm = () => (dispatch, getState) => {
 };
 
 export const saveTaxType = (entity) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity);
+    const normalizedEntity = normalizeEntity(entity);
 
     if (entity.id) {
 
@@ -128,7 +128,7 @@ export const saveTaxType = (entity) => (dispatch, getState) => {
             });
 
     } else {
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_tax_type.tax_type_created"),
             type: 'success'
@@ -153,11 +153,11 @@ export const saveTaxType = (entity) => (dispatch, getState) => {
 
 export const deleteTaxType = (taxTypeId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -175,13 +175,13 @@ export const deleteTaxType = (taxTypeId) => (dispatch, getState) => {
 
 export const addTicketToTaxType = (taxTypeId, ticket) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -199,13 +199,13 @@ export const addTicketToTaxType = (taxTypeId, ticket) => (dispatch, getState) =>
 
 export const removeTicketFromTaxType = (taxTypeId, ticketId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -223,7 +223,7 @@ export const removeTicketFromTaxType = (taxTypeId, ticketId) => (dispatch, getSt
 
 
 const normalizeEntity = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     return normalizedEntity;
 

@@ -24,7 +24,7 @@ import NoMatchPage from "../pages/no-match-page";
 class TagGroupLayout extends React.Component {
 
     render(){
-        let { match } = this.props;
+        const { match } = this.props;
         return(
             <div>
                 <Breadcrumb data={{ title: T.translate("tag_group_list.tag_groups"), pathname: match.url }} />

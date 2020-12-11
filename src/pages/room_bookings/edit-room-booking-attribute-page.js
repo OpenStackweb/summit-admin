@@ -32,9 +32,9 @@ class EditRoomBookingAttributePage extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.attribute_id;
-        let newId = newProps.match.params.attribute_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.attribute_id;
+        const newId = this.props.match.params.attribute_id;
 
         if (newId !== oldId) {
             if (!newId) {
@@ -46,10 +46,10 @@ class EditRoomBookingAttributePage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, match} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const {currentSummit, entity, match} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
 
-        let breadcrumb = (entity.id) ? entity.type : `${T.translate("general.new")} ${T.translate("room_bookings.attribute")}`;
+        const breadcrumb = (entity.id) ? entity.type : `${T.translate("general.new")} ${T.translate("room_bookings.attribute")}`;
 
         return(
             <div className="container">

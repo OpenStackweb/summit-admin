@@ -23,7 +23,7 @@ import EditMediaFileTypePage from "../pages/media_file_types/edit-media-file-typ
 class MediaFileTypeLayout extends React.Component {
 
     render(){
-        let { match } = this.props;
+        const { match } = this.props;
 
         return(
             <div>

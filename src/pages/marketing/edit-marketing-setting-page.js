@@ -33,9 +33,9 @@ class EditMarketingSettingPage extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.setting_id;
-        let newId = newProps.match.params.setting_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.setting_id;
+        const newId = this.props.match.params.setting_id;
 
         if (oldId !== newId) {
             if (!newId) {
@@ -47,9 +47,9 @@ class EditMarketingSettingPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors, match} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.key : T.translate("general.new");
+        const {currentSummit, entity, errors, match} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.key : T.translate("general.new");
 
         return(
             <div className="container">

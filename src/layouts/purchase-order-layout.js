@@ -24,7 +24,7 @@ import NoMatchPage from "../pages/no-match-page";
 class PurchaseOrderLayout extends React.Component {
 
     render(){
-        let { match } = this.props;
+        const { match } = this.props;
         return(
             <div>
                 <Breadcrumb data={{ title: T.translate("purchase_order_list.purchase_orders"), pathname: match.url }} />

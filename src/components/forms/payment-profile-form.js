@@ -83,8 +83,8 @@ class PaymentProfileForm extends React.Component {
     }
 
     render() {
-        let {entity} = this.state;
-        let { currentSummit } = this.props;
+        const {entity} = this.state;
+        const { currentSummit } = this.props;
         let application_type_ddl = [
             {label: 'Registration', value: 'Registration'},
             {label: 'Bookable Rooms', value: 'BookableRooms'},

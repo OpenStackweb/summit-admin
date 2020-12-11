@@ -34,11 +34,11 @@ class EditAccessLevelPage extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.access_level_id;
-        let newId = newProps.match.params.access_level_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.access_level_id;
+        const newId = this.props.match.params.access_level_id;
 
-        if (newId !== oldId) {
+        if (oldId !== newId) {
             if (!newId) {
                 this.props.resetAccessLevelForm();
             } else {
@@ -52,11 +52,11 @@ class EditAccessLevelPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors, match, history} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+        const {currentSummit, entity, errors, match, history} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
-        let fields = [
+        const fields = [
             {type: 'text', name: 'name', label: T.translate("edit_access_level.name")},
             /*{type: 'text', name: 'tag_name', label: T.translate("edit_access_level.tag_name")},*/
             {type: 'textarea', name: 'description', label: T.translate("edit_access_level.description")},

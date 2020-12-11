@@ -58,9 +58,9 @@ class EditEmailTemplatePage extends React.Component {
         this.handleJsonChange = this.handleJsonChange.bind(this);
     }
 
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.template_id;
-        let newId = newProps.match.params.template_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.template_id;
+        const newId = this.props.match.params.template_id;
 
         if (oldId !== newId) {
             if (!newId) {
@@ -86,10 +86,10 @@ class EditEmailTemplatePage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors, match, clients, preview, render_errors} = this.props;
+        const {currentSummit, entity, errors, match, clients, preview, render_errors} = this.props;
         const {showModal, json_preview} = this.state;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.identifier : T.translate("general.new");
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.identifier : T.translate("general.new");
 
         return(
             <div className="container edit-template-page">

@@ -34,22 +34,14 @@ class LocationListPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            this.props.getLocations();
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
+        const {currentSummit} = this.props;
+        if(currentSummit) {
             this.props.getLocations();
         }
     }
 
     handleEdit(locationId) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/locations/${locationId}`);
     }
 
@@ -59,7 +51,7 @@ class LocationListPage extends React.Component {
     }
 
     handleDelete(locationId) {
-        let {deleteLocation, locations} = this.props;
+        const {deleteLocation, locations} = this.props;
         let location = locations.find(p => p.id === locationId);
 
         Swal.fire({
@@ -77,19 +69,19 @@ class LocationListPage extends React.Component {
     }
 
     handleNewLocation(ev) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/locations/new`);
     }
 
     render(){
-        let {currentSummit, locations, totalLocations} = this.props;
+        const {currentSummit, locations, totalLocations} = this.props;
 
-        let columns = [
+        const columns = [
             { columnKey: 'name', value: T.translate("location_list.name") },
             { columnKey: 'class_name', value: T.translate("location_list.class_name") }
         ];
 
-        let table_options = {
+        const table_options = {
             actions: {
                 edit: { onClick: this.handleEdit },
                 delete: { onClick: this.handleDelete }

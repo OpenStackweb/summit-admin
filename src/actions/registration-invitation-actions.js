@@ -49,21 +49,21 @@ export const SET_SELECTED_ALL = 'SET_SELECTED_ALL';
 export const getInvitations = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1,
                                 showNonAccepted = false , showNotSent = false) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let filter = [];
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const filter = [];
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         page         : page,
         per_page     : perPage,
         access_token : accessToken,
     };
 
     if(term){
-        let escapedTerm = escapeFilterValue(term);
+        const escapedTerm = escapeFilterValue(term);
         filter.push(`email=@${escapedTerm},first_name=@${escapedTerm},last_name=@${escapedTerm}`);
     }
 
@@ -81,7 +81,7 @@ export const getInvitations = ( term = null, page = 1, perPage = 10, order = 'id
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '+' : '-';
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -98,11 +98,11 @@ export const getInvitations = ( term = null, page = 1, perPage = 10, order = 'id
 };
 
 export const importInvitationsCSV = (file) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -121,18 +121,18 @@ export const importInvitationsCSV = (file) => (dispatch, getState) => {
 
 export const exportInvitationsCSV = (term, order, orderDir, showNonAccepted) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let filename = currentSummit.name + '-invitations.csv';
-    let filter = [];
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const filename = currentSummit.name + '-invitations.csv';
+    const filter = [];
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
     if(term){
-        let escapedTerm = escapeFilterValue(term);
+        const escapedTerm = escapeFilterValue(term);
         filter.push(`email=@${escapedTerm},first_name=@${escapedTerm},last_name=@${escapedTerm}`);
     }
 
@@ -146,7 +146,7 @@ export const exportInvitationsCSV = (term, order, orderDir, showNonAccepted) => 
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '+' : '-';
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -156,13 +156,13 @@ export const exportInvitationsCSV = (term, order, orderDir, showNonAccepted) => 
 
 export const getInvitation = (invitationId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
         expand: 'order,member'
     };
@@ -192,13 +192,13 @@ export const clearAllSelectedInvitations = () => (dispatch, getState) => {
 }
 
 export const getRegistrationInvitation = (invitationId) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -216,11 +216,11 @@ export const getRegistrationInvitation = (invitationId) => (dispatch, getState) 
 
 export const deleteRegistrationInvitation= (invitationId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -238,11 +238,11 @@ export const deleteRegistrationInvitation= (invitationId) => (dispatch, getState
 
 export const deleteAllRegistrationInvitation= () => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -271,11 +271,11 @@ export const setSelectedAll = (value) => (dispatch, getState) => {
 };
 
 export const saveRegistrationInvitation = (entity) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -294,7 +294,7 @@ export const saveRegistrationInvitation = (entity) => (dispatch, getState) => {
         return;
     }
 
-    let success_message = {
+    const success_message = {
         title: T.translate("general.done"),
         html: T.translate("edit_registration_invitation.registration_invitation_created"),
         type: 'success'
@@ -319,18 +319,18 @@ export const sendEmails = (currentFlowEvent, selectedAll = false , selectedInvit
                           term = null, showNonAccepted = false , showNotSent = false) => (dispatch, getState) => {
 
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let filter = [];
+    const filter = [];
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
     if(term){
-        let escapedTerm = escapeFilterValue(term);
+        const escapedTerm = escapeFilterValue(term);
         filter.push(`email=@${escapedTerm},first_name=@${escapedTerm},last_name=@${escapedTerm}`);
     }
 
@@ -346,7 +346,7 @@ export const sendEmails = (currentFlowEvent, selectedAll = false , selectedInvit
         params['filter[]'] = filter;
     }
 
-    let payload =  {
+    const payload =  {
         email_flow_event : currentFlowEvent
     };
 
@@ -356,7 +356,7 @@ export const sendEmails = (currentFlowEvent, selectedAll = false , selectedInvit
 
     dispatch(startLoading());
 
-    let success_message = {
+    const success_message = {
         title: T.translate("general.done"),
         html: T.translate("attendee_list.resend_done"),
         type: 'success'

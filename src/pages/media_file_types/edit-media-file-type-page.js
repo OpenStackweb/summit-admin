@@ -36,13 +36,13 @@ class EditMediaFileTypePage extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.media_file_type_id;
-        let newId = newProps.match.params.media_file_type_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.media_file_type_id;
+        const newId = this.props.match.params.media_file_type_id;
 
         if (oldId !== newId) {
             if (!newId) {
-                this.props.resetTemplateForm();
+                this.props.resetMediaFileTypeForm();
             } else {
                 this.props.getMediaFileType(newId);
             }
@@ -50,11 +50,11 @@ class EditMediaFileTypePage extends React.Component {
     }
 
     render(){
-        let {entity, errors, match} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+        const {entity, errors, match} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
-        let fields = [
+        const fields = [
             {type: 'text', name: 'name', label: T.translate("media_file_type.name")},
             {type: 'textarea', name: 'description', label: T.translate("media_file_type.description")},
             {type: 'textarea', name: 'allowed_extensions', label: T.translate("media_file_type.allowed_extensions_input")},

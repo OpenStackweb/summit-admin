@@ -61,18 +61,18 @@ export const FEATURED_SPEAKER_ADDED         = 'FEATURED_SPEAKER_ADDED';
 
 export const getSpeakers = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
 
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
-    let filter = [];
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
+    const filter = [];
 
     dispatch(startLoading());
 
     if(term){
-        let escapedTerm = escapeFilterValue(term);
+        const escapedTerm = escapeFilterValue(term);
         filter.push(`full_name=@${escapedTerm},first_name=@${escapedTerm},last_name=@${escapedTerm},email=@${escapedTerm}`);
     }
 
-    let params = {
+    const params = {
         page         : page,
         per_page     : perPage,
         access_token : accessToken,
@@ -84,7 +84,7 @@ export const getSpeakers = ( term = null, page = 1, perPage = 10, order = 'id', 
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '+' : '-';
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -103,8 +103,8 @@ export const getSpeakers = ( term = null, page = 1, perPage = 10, order = 'id', 
 
 export const getSpeaker = (speakerId) => (dispatch, getState) => {
 
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
@@ -121,12 +121,12 @@ export const getSpeaker = (speakerId) => (dispatch, getState) => {
 
 export const getSpeakerForMerge = (speakerId, speakerCol) => (dispatch, getState) => {
 
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
         expand: 'member,presentations'
     };
@@ -145,12 +145,12 @@ export const getSpeakerForMerge = (speakerId, speakerCol) => (dispatch, getState
 
 export const deleteSpeaker = (speakerId) => (dispatch, getState) => {
 
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -167,12 +167,12 @@ export const deleteSpeaker = (speakerId) => (dispatch, getState) => {
 };
 
 export const mergeSpeakers = (speakers, selectedFields, changedFields) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
-    let success_message = [
+    const success_message = [
         T.translate("merge_speakers.merge_success"),
         T.translate("merge_speakers.merge_changes") + changedFields.join(', ') ,
         'success'
@@ -196,12 +196,12 @@ export const resetSpeakerForm = () => (dispatch, getState) => {
 };
 
 export const saveSpeaker = (entity) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity);
+    const normalizedEntity = normalizeEntity(entity);
 
     if (entity.id) {
 
@@ -218,7 +218,7 @@ export const saveSpeaker = (entity) => (dispatch, getState) => {
             });
 
     } else {
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_speaker.speaker_created"),
             type: 'success'
@@ -242,14 +242,14 @@ export const saveSpeaker = (entity) => (dispatch, getState) => {
 }
 
 export const attachPicture = (entity, file, picAttr) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity);
+    const normalizedEntity = normalizeEntity(entity);
 
-    let uploadFile = picAttr === 'profile' ? uploadProfilePic : uploadBigPic;
+    const uploadFile = picAttr === 'profile' ? uploadProfilePic : uploadBigPic;
 
     if (entity.id) {
         dispatch(uploadFile(entity, file));
@@ -270,8 +270,8 @@ export const attachPicture = (entity, file, picAttr) => (dispatch, getState) => 
 }
 
 const uploadProfilePic = (entity, file) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     postRequest(
         null,
@@ -288,8 +288,8 @@ const uploadProfilePic = (entity, file) => (dispatch, getState) => {
 };
 
 const uploadBigPic = (entity, file) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     postRequest(
         null,
@@ -306,7 +306,7 @@ const uploadBigPic = (entity, file) => (dispatch, getState) => {
 };
 
 const normalizeEntity = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     if (normalizedEntity.member != null) {
         normalizedEntity.member_id = normalizedEntity.member.id;
@@ -338,26 +338,26 @@ const normalizeEntity = (entity) => {
 
 export const getAttendances = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = '1' ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let filter = [];
+    const filter = [];
 
     dispatch(startLoading());
 
     if(term){
-        let escapedTerm = escapeFilterValue(term);
+        const escapedTerm = escapeFilterValue(term);
         filter.push(`speaker=@${escapedTerm},speaker_email=@${escapedTerm},on_site_phone=@${escapedTerm}`);
     }
 
-    let req_params = {
+    const req_params = {
         order: order,
         orderDir: parseInt(orderDir),
         term: term
     }
 
-    let params = {
+    const params = {
         expand       : 'speaker',
         page         : page,
         per_page     : perPage,
@@ -389,13 +389,13 @@ export const getAttendances = ( term = null, page = 1, perPage = 10, order = 'id
 
 export const deleteAttendance = (attendanceId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -413,13 +413,13 @@ export const deleteAttendance = (attendanceId) => (dispatch, getState) => {
 
 export const getAttendance = (attendanceId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         expand       : 'speaker',
         access_token : accessToken,
     };
@@ -440,17 +440,17 @@ export const resetAttendanceForm = () => (dispatch, getState) => {
 };
 
 export const saveAttendance = (entity) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeAttendance(entity);
+    const normalizedEntity = normalizeAttendance(entity);
 
     if (entity.id) {
 
@@ -468,7 +468,7 @@ export const saveAttendance = (entity) => (dispatch, getState) => {
 
     } else {
 
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_speaker_attendance.attendance_created"),
             type: 'success'
@@ -494,13 +494,13 @@ export const saveAttendance = (entity) => (dispatch, getState) => {
 
 export const sendAttendanceEmail = (attendanceId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -519,17 +519,17 @@ export const sendAttendanceEmail = (attendanceId) => (dispatch, getState) => {
 
 export const exportAttendances = ( term = null, order = 'code', orderDir = 1 ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let filename = currentSummit.name + '-Speaker-Attendance.csv';
-    let filter = [];
-    let params = {
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const filename = currentSummit.name + '-Speaker-Attendance.csv';
+    const filter = [];
+    const params = {
         access_token : accessToken
     };
 
     if(term){
-        let escapedTerm = escapeFilterValue(term);
+        const escapedTerm = escapeFilterValue(term);
         filter.push(`speaker=@${escapedTerm},speaker_email=@${escapedTerm},on_site_phone=@${escapedTerm}`);
     }
 
@@ -539,7 +539,7 @@ export const exportAttendances = ( term = null, order = 'code', orderDir = 1 ) =
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '+' : '-';
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -548,7 +548,7 @@ export const exportAttendances = ( term = null, order = 'code', orderDir = 1 ) =
 };
 
 const normalizeAttendance = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     normalizedEntity.speaker_id = (normalizedEntity.speaker != null) ? normalizedEntity.speaker.id : 0;
 
@@ -564,26 +564,26 @@ const normalizeAttendance = (entity) => {
 
 export const getFeaturedSpeakers = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = '1' ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let filter = [];
+    const filter = [];
 
     dispatch(startLoading());
 
     if(term){
-        let escapedTerm = escapeFilterValue(term);
+        const escapedTerm = escapeFilterValue(term);
         filter.push(`full_name=@${escapedTerm},last_name=@${escapedTerm},email=@${escapedTerm}`);
     }
 
-    let req_params = {
+    const req_params = {
         order: order,
         orderDir: parseInt(orderDir),
         term: term
     };
 
-    let params = {
+    const params = {
         expand       : 'speaker',
         page         : page,
         per_page     : perPage,
@@ -614,13 +614,13 @@ export const getFeaturedSpeakers = ( term = null, page = 1, perPage = 10, order 
 
 export const addFeaturedSpeaker = (speaker) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -638,13 +638,13 @@ export const addFeaturedSpeaker = (speaker) => (dispatch, getState) => {
 
 export const removeFeaturedSpeaker = (speakerId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 

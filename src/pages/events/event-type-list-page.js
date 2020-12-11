@@ -31,26 +31,25 @@ class EventTypeListPage extends React.Component {
         this.isNotDefault = this.isNotDefault.bind(this);
     }
 
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
+    componentDidMount() {
+        const {currentSummit} = this.props;
+        if(currentSummit) {
             this.props.getEventTypes();
         }
     }
 
     handleEdit(eventTypeId) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/event-types/${eventTypeId}`);
     }
 
     handleNew(ev) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/event-types/new`);
     }
 
     handleDelete(eventTypeId) {
-        let {deleteEventType, eventTypes} = this.props;
+        const {deleteEventType, eventTypes} = this.props;
         let eventType = eventTypes.find(e => e.id === eventTypeId);
 
         Swal.fire({
@@ -68,21 +67,21 @@ class EventTypeListPage extends React.Component {
     }
 
     isNotDefault(eventTypeId) {
-        let {eventTypes} = this.props;
+        const {eventTypes} = this.props;
         let eventType = eventTypes.find(e => e.id === eventTypeId);
 
         return !eventType.is_default;
     }
 
     render(){
-        let {currentSummit, eventTypes} = this.props;
+        const {currentSummit, eventTypes} = this.props;
 
-        let columns = [
+        const columns = [
             { columnKey: 'name', value: T.translate("event_type_list.name") },
             { columnKey: 'class_name', value: T.translate("event_type_list.class") }
         ];
 
-        let table_options = {
+        const table_options = {
             actions: {
                 edit: {onClick: this.handleEdit},
                 delete: { onClick: this.handleDelete, display: this.isNotDefault }

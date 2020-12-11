@@ -37,32 +37,24 @@ class FeaturedSpeakersPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            this.props.getFeaturedSpeakers();
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
+        const {currentSummit} = this.props;
+        if(currentSummit) {
             this.props.getFeaturedSpeakers();
         }
     }
 
     handlePageChange(page) {
-        let {term, order, orderDir, perPage} = this.props;
+        const {term, order, orderDir, perPage} = this.props;
         this.props.getFeaturedSpeakers(term, page, perPage, order, orderDir);
     }
 
     handleSort(index, key, dir, func) {
-        let {term, page, perPage} = this.props;
+        const {term, page, perPage} = this.props;
         this.props.getFeaturedSpeakers(term, page, perPage, key, dir);
     }
 
     handleSearch(term) {
-        let {order, orderDir, page, perPage} = this.props;
+        const {order, orderDir, page, perPage} = this.props;
         this.props.getFeaturedSpeakers(term, page, perPage, order, orderDir);
     }
 
@@ -84,15 +76,15 @@ class FeaturedSpeakersPage extends React.Component {
     }
 
     handleLink(speakerId,) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/speakers/${speakerId}`);
     }
 
     render(){
-        let {currentSummit, speakers, lastPage, currentPage, term, order, orderDir, totalSpeakers} = this.props;
+        const {currentSummit, speakers, lastPage, currentPage, term, order, orderDir, totalSpeakers} = this.props;
         const {speakerToAdd} = this.state;
 
-        let columns = [
+        const columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
             { columnKey: 'name', value: T.translate("general.name") },
             { columnKey: 'email', value: T.translate("general.email") },
@@ -101,7 +93,7 @@ class FeaturedSpeakersPage extends React.Component {
             { columnKey: 'big_pic_bool', value: T.translate("featured_speakers.big_pic") },
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: order,
             sortDir: orderDir,
             actions: {

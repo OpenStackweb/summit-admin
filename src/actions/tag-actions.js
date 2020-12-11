@@ -44,13 +44,13 @@ export const TAG_REMOVED_FROM_GROUP   = 'TAG_REMOVED_FROM_GROUP';
 
 export const getTagGroups = ( ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
         per_page     : 100,
         page         : 1
@@ -69,15 +69,15 @@ export const getTagGroups = ( ) => (dispatch, getState) => {
 
 export const updateTagGroupsOrder = (tagGroups, tagGroupId, newOrder) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
-    let tagGroup = tagGroups.find(tg => tg.id === tagGroupId);
+    const tagGroup = tagGroups.find(tg => tg.id === tagGroupId);
     delete(tagGroup.allowed_tags);
 
     putRequest(
@@ -96,13 +96,13 @@ export const updateTagGroupsOrder = (tagGroups, tagGroupId, newOrder) => (dispat
 
 export const getTagGroup = (tagGroupId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         expand       : 'allowed_tags, allowed_tags.tag',
         access_token : accessToken,
     };
@@ -123,14 +123,14 @@ export const resetTagGroupForm = () => (dispatch, getState) => {
 };
 
 export const saveTagGroup = (entity) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity);
-    let params = { access_token : accessToken };
+    const normalizedEntity = normalizeEntity(entity);
+    const params = { access_token : accessToken };
 
     if (entity.id) {
 
@@ -147,7 +147,7 @@ export const saveTagGroup = (entity) => (dispatch, getState) => {
             });
 
     } else {
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_tag_group.tag_group_created"),
             type: 'success'
@@ -172,11 +172,11 @@ export const saveTagGroup = (entity) => (dispatch, getState) => {
 
 export const deleteTagGroup = (tagGroupId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -194,11 +194,11 @@ export const deleteTagGroup = (tagGroupId) => (dispatch, getState) => {
 
 export const seedTagGroups = () => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -215,11 +215,11 @@ export const seedTagGroups = () => (dispatch, getState) => {
 };
 
 export const copyTagToAllCategories = (tagId) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -236,11 +236,11 @@ export const copyTagToAllCategories = (tagId) => (dispatch, getState) => {
 }
 
 export const copyAllTagsToCategory = (tagGroupId, categoryId) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -257,11 +257,11 @@ export const copyAllTagsToCategory = (tagGroupId, categoryId) => (dispatch, getS
 }
 
 export const createTag = (tag, callback) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -289,7 +289,7 @@ export const removeTagFromGroup = (tagId) => (dispatch) => {
 
 
 const normalizeEntity = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     normalizedEntity.allowed_tags = entity.allowed_tags.map(at => at.tag);
 

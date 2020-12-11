@@ -45,27 +45,19 @@ class PushNotificationListPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            this.props.getPushNotifications();
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
+        const {currentSummit} = this.props;
+        if(currentSummit) {
             this.props.getPushNotifications();
         }
     }
 
     handleEdit(push_notification_id) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/push-notifications/${push_notification_id}`);
     }
 
     handleDelete(pushNotificationId) {
-        let {deletePushNotification, pushNotifications} = this.props;
+        const {deletePushNotification, pushNotifications} = this.props;
         let pushNotification = pushNotifications.find(n => n.id === pushNotificationId);
 
         Swal.fire({
@@ -83,7 +75,7 @@ class PushNotificationListPage extends React.Component {
     }
 
     handleApprove(pushNotificationId) {
-        let {approvePushNotification, pushNotifications} = this.props;
+        const {approvePushNotification, pushNotifications} = this.props;
         let pushNotification = pushNotifications.find(n => n.id === pushNotificationId);
 
         Swal.fire({
@@ -101,18 +93,18 @@ class PushNotificationListPage extends React.Component {
     }
 
     handlePageChange(page) {
-        let {order, orderDir, perPage} = this.props;
+        const {order, orderDir, perPage} = this.props;
         this.props.getPushNotifications(page, perPage, order, orderDir, this.state.filters);
     }
 
     handleSort(index, key, dir, func) {
-        let {page, perPage} = this.props;
+        const {page, perPage} = this.props;
         key = (key === 'name') ? 'last_name' : key;
         this.props.getPushNotifications(page, perPage, key, dir, this.state.filters);
     }
 
     handleFilter(ev) {
-        let {order, orderDir, perPage, page} = this.props;
+        const {order, orderDir, perPage, page} = this.props;
         let filter = ev.target.id;
         let value = ev.target.value;
         let filters = {...this.state.filters};
@@ -124,27 +116,27 @@ class PushNotificationListPage extends React.Component {
     }
 
     handleNewPushNotification(ev) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/push-notifications/new`);
     }
 
     isNotSent(pushNotificationId) {
-        let {pushNotifications} = this.props;
+        const {pushNotifications} = this.props;
         let pushNotification = pushNotifications.find(n => n.id === pushNotificationId);
         return !pushNotification.is_sent;
     }
 
     isApproved(pushNotificationId) {
-        let {pushNotifications} = this.props;
+        const {pushNotifications} = this.props;
         let pushNotification = pushNotifications.find(n => n.id === pushNotificationId);
         return pushNotification.approved;
     }
 
     render(){
-        let {currentSummit, pushNotifications, lastPage, page, order, orderDir, totalPushNotifications, channels} = this.props;
-        let {approved_filter, sent_filter, channel_filter} = this.state.filters;
+        const {currentSummit, pushNotifications, lastPage, page, order, orderDir, totalPushNotifications, channels} = this.props;
+        const {approved_filter, sent_filter, channel_filter} = this.state.filters;
 
-        let columns = [
+        const columns = [
             { columnKey: 'id', value: T.translate("push_notification_list.id"), sortable: true },
             { columnKey: 'created', value: T.translate("push_notification_list.created"), sortable: true },
             { columnKey: 'message', value: T.translate("push_notification_list.message") },
@@ -155,7 +147,7 @@ class PushNotificationListPage extends React.Component {
             { columnKey: 'channel', value: T.translate("push_notification_list.channel") }
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: order,
             sortDir: orderDir,
             actions: {

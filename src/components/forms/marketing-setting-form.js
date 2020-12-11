@@ -70,7 +70,7 @@ class MarketingSettingForm extends React.Component {
     }
 
     handleSubmit(ev) {
-        let {entity, file} = this.state;
+        const {entity, file} = this.state;
         ev.preventDefault();
 
         this.props.onSubmit(entity, file);
@@ -101,8 +101,8 @@ class MarketingSettingForm extends React.Component {
     }
 
     render() {
-        let {entity} = this.state;
-        let { currentSummit } = this.props;
+        const {entity} = this.state;
+        const { currentSummit } = this.props;
         let setting_types_ddl = [
             {label: 'Plain Text', value: 'TEXT'},
             {label: 'Html', value: 'TEXTAREA'},

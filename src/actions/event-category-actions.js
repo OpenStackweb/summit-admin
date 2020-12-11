@@ -74,13 +74,13 @@ export const GROUP_REMOVED_FROM_GROUP            = 'GROUP_REMOVED_FROM_GROUP';
 
 export const getEventCategories = ( ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         expand       : "track_groups",
         access_token : accessToken,
         page : 1,
@@ -100,13 +100,13 @@ export const getEventCategories = ( ) => (dispatch, getState) => {
 
 export const getEventCategory = (eventCategoryId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         expand       : "track_groups,allowed_tags,extra_questions",
         access_token : accessToken,
     };
@@ -122,19 +122,19 @@ export const getEventCategory = (eventCategoryId) => (dispatch, getState) => {
     );
 };
 
-export const resetEventCategoryForm = () => (dispatch, getState) => {
+export const resetEventCategoryForm = () => (dispatch) => {
     dispatch(createAction(RESET_EVENT_CATEGORY_FORM)({}));
 };
 
 export const saveEventCategory = (entity) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity);
-    let params = { access_token : accessToken };
+    const normalizedEntity = normalizeEntity(entity);
+    const params = { access_token : accessToken };
 
     if (entity.id) {
 
@@ -146,13 +146,13 @@ export const saveEventCategory = (entity) => (dispatch, getState) => {
             authErrorHandler,
             entity
         )(params)(dispatch)
-            .then((payload) => {
+            .then(() => {
                 dispatch(showSuccessMessage(T.translate("edit_event_category.category_saved")));
             });
 
     } else {
 
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_event_category.category_created"),
             type: 'success'
@@ -173,16 +173,16 @@ export const saveEventCategory = (entity) => (dispatch, getState) => {
                 ));
             });
     }
-}
+};
 
 export const copyEventCategories = (fromSummitId) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = { access_token : accessToken };
+    const params = { access_token : accessToken };
 
     postRequest(
         null,
@@ -194,15 +194,15 @@ export const copyEventCategories = (fromSummitId) => (dispatch, getState) => {
         .then(() => {
             dispatch(stopLoading());
         });
-}
+};
 
 export const deleteEventCategory = (categoryId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -219,11 +219,11 @@ export const deleteEventCategory = (categoryId) => (dispatch, getState) => {
 };
 
 export const uploadImage = (entity, file) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -240,11 +240,11 @@ export const uploadImage = (entity, file) => (dispatch, getState) => {
 };
 
 export const removeImage = (eventId) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -261,7 +261,7 @@ export const removeImage = (eventId) => (dispatch, getState) => {
 };
 
 const normalizeEntity = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     //remove # from color hexa
     if (normalizedEntity.color)
@@ -276,7 +276,7 @@ const normalizeEntity = (entity) => {
 
     return normalizedEntity;
 
-}
+};
 
 
 /***********************************  CATEGORY QUESTIONS ***************************************************/
@@ -284,12 +284,12 @@ const normalizeEntity = (entity) => {
 
 export const getEventCategoryQuestion = (questionId) => (dispatch, getState) => {
 
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         expand: 'values',
         access_token : accessToken,
     };
@@ -307,11 +307,11 @@ export const getEventCategoryQuestion = (questionId) => (dispatch, getState) => 
 
 export const getEventCategoryQuestionMeta = () => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState} = getState();
+    const { accessToken }     = loggedUserState;
 
-    let params = {
+
+    const params = {
         access_token : accessToken,
     };
 
@@ -326,20 +326,20 @@ export const getEventCategoryQuestionMeta = () => (dispatch, getState) => {
     );
 };
 
-export const resetEventCategoryQuestionForm = () => (dispatch, getState) => {
+export const resetEventCategoryQuestionForm = () => (dispatch) => {
     dispatch(createAction(RESET_EVENT_CATEGORY_QUESTION_FORM)({}));
 };
 
 export const saveEventCategoryQuestion = (entity) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState, currentEventCategoryState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let currentEventCategory = currentEventCategoryState.entity;
+    const { loggedUserState, currentSummitState, currentEventCategoryState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const currentEventCategory = currentEventCategoryState.entity;
 
 
     dispatch(startLoading());
 
-    let params = { access_token : accessToken };
+    const params = { access_token : accessToken };
 
     if (entity.id) {
         putRequest(
@@ -350,12 +350,12 @@ export const saveEventCategoryQuestion = (entity) => (dispatch, getState) => {
             authErrorHandler,
             entity
         )(params)(dispatch)
-            .then((payload) => {
+            .then(() => {
                 dispatch(showSuccessMessage(T.translate("edit_event_category_question.question_saved")));
             });
 
     } else {
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_event_category_question.question_created"),
             type: 'success'
@@ -384,12 +384,12 @@ export const saveEventCategoryQuestion = (entity) => (dispatch, getState) => {
 
 export const linkQuestionToCategory = (question) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState, currentEventCategoryState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let currentEventCategory = currentEventCategoryState.entity;
+    const { loggedUserState, currentSummitState, currentEventCategoryState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const currentEventCategory = currentEventCategoryState.entity;
 
-    let params = { access_token : accessToken };
+    const params = { access_token : accessToken };
 
     putRequest(
         null,
@@ -398,7 +398,7 @@ export const linkQuestionToCategory = (question) => (dispatch, getState) => {
         null,
         authErrorHandler
     )(params)(dispatch)
-        .then((payload) => {
+        .then(() => {
             dispatch(stopLoading());
         });
 
@@ -407,12 +407,12 @@ export const linkQuestionToCategory = (question) => (dispatch, getState) => {
 
 export const unlinkQuestionToCategory = (questionId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState, currentEventCategoryState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let currentEventCategory = currentEventCategoryState.entity;
+    const { loggedUserState, currentSummitState, currentEventCategoryState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const currentEventCategory = currentEventCategoryState.entity;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -431,13 +431,13 @@ export const unlinkQuestionToCategory = (questionId) => (dispatch, getState) => 
 
 export const queryQuestions = _.debounce((input, callback) => {
 
-    let accessToken = window.accessToken;
-    let filter = input ? `filter=name=@${input}` : '';
+    const accessToken = window.accessToken;
+    const filter = input ? `filter=name=@${input}` : '';
 
     fetch(`${window.API_BASE_URL}/api/v1/track-question-templates?order=name&access_token=${accessToken}&${filter}`)
         .then(fetchResponseHandler)
         .then((json) => {
-            let options = [...json.data];
+            const options = [...json.data];
 
             callback(options);
         })
@@ -450,15 +450,15 @@ export const queryQuestions = _.debounce((input, callback) => {
 
 
 export const saveEventCategoryQuestionValue = (questionId, entity) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState, currentEventCategoryState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let currentEventCategory = currentEventCategoryState.entity;
+    const { loggedUserState, currentEventCategoryState } = getState();
+    const { accessToken }     = loggedUserState;
+
+    const currentEventCategory = currentEventCategoryState.entity;
 
 
     dispatch(startLoading());
 
-    let params = { access_token : accessToken };
+    const params = { access_token : accessToken };
 
     if (entity.id) {
         putRequest(
@@ -469,16 +469,13 @@ export const saveEventCategoryQuestionValue = (questionId, entity) => (dispatch,
             authErrorHandler,
             entity
         )(params)(dispatch)
-            .then((payload) => {
+            .then(() => {
                 dispatch(stopLoading());
             });
 
     } else {
-        let success_message = {
-            title: T.translate("general.done"),
-            html: T.translate("edit_event_category_question.question_created"),
-            type: 'success'
-        };
+        T.translate("general.done");
+        T.translate("edit_event_category_question.question_created");
 
         normalizedEntity.tracks = [currentEventCategory.id];
 
@@ -489,7 +486,7 @@ export const saveEventCategoryQuestionValue = (questionId, entity) => (dispatch,
             entity,
             authErrorHandler
         )(params)(dispatch)
-            .then((payload) => {
+            .then(() => {
                 dispatch(stopLoading());
             });
     }
@@ -498,10 +495,10 @@ export const saveEventCategoryQuestionValue = (questionId, entity) => (dispatch,
 
 export const deleteEventCategoryQuestionValue = (questionId, valueId) => (dispatch, getState) => {
 
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -523,13 +520,13 @@ export const deleteEventCategoryQuestionValue = (questionId, valueId) => (dispat
 
 export const getEventCategoryGroups = ( ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         expand: 'tracks',
         access_token : accessToken,
         page : 1,
@@ -549,13 +546,13 @@ export const getEventCategoryGroups = ( ) => (dispatch, getState) => {
 
 export const getEventCategoryGroup = (groupId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         expand: 'tracks',
         access_token : accessToken,
     };
@@ -573,11 +570,11 @@ export const getEventCategoryGroup = (groupId) => (dispatch, getState) => {
 
 export const getEventCategoryGroupMeta = () => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -592,19 +589,19 @@ export const getEventCategoryGroupMeta = () => (dispatch, getState) => {
     );
 };
 
-export const resetEventCategoryGroupForm = () => (dispatch, getState) => {
+export const resetEventCategoryGroupForm = () => (dispatch) => {
     dispatch(createAction(RESET_EVENT_CATEGORY_GROUP_FORM)({}));
 };
 
 export const saveEventCategoryGroup = (entity) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeGroupEntity(entity);
-    let params = { access_token : accessToken };
+    const normalizedEntity = normalizeGroupEntity(entity);
+    const params = { access_token : accessToken };
 
     if (entity.id) {
         putRequest(
@@ -615,12 +612,12 @@ export const saveEventCategoryGroup = (entity) => (dispatch, getState) => {
             authErrorHandler,
             entity
         )(params)(dispatch)
-            .then((payload) => {
+            .then(() => {
                 dispatch(showSuccessMessage(T.translate("edit_event_category_group.group_saved")));
             });
 
     } else {
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_event_category_group.group_created"),
             type: 'success'
@@ -643,15 +640,15 @@ export const saveEventCategoryGroup = (entity) => (dispatch, getState) => {
                 ));
             });
     }
-}
+};
 
 export const deleteEventCategoryGroup = (groupId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -669,13 +666,13 @@ export const deleteEventCategoryGroup = (groupId) => (dispatch, getState) => {
 
 export const addCategoryToGroup = (groupId, category) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -693,13 +690,13 @@ export const addCategoryToGroup = (groupId, category) => (dispatch, getState) =>
 
 export const removeCategoryFromGroup = (groupId, categoryId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -717,13 +714,13 @@ export const removeCategoryFromGroup = (groupId, categoryId) => (dispatch, getSt
 
 export const addAllowedGroupToGroup = (groupId, allowedGroup) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -741,13 +738,13 @@ export const addAllowedGroupToGroup = (groupId, allowedGroup) => (dispatch, getS
 
 export const removeAllowedGroupFromGroup = (groupId, allowedGroupId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -764,8 +761,8 @@ export const removeAllowedGroupFromGroup = (groupId, allowedGroupId) => (dispatc
 };
 
 const normalizeGroupEntity = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
     normalizedEntity['color'] = normalizedEntity['color'].substr(1);
 
     return normalizedEntity;
-}
+};

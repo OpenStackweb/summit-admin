@@ -38,47 +38,39 @@ class MarketingSettingListPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            this.props.getMarketingSettings();
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
+        const {currentSummit} = this.props;
+        if(currentSummit) {
             this.props.getMarketingSettings();
         }
     }
 
     handleEdit(setting_id) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/marketing/${setting_id}`);
     }
 
     handlePageChange(page) {
-        let {term, order, orderDir, perPage} = this.props;
+        const {term, order, orderDir, perPage} = this.props;
         this.props.getMarketingSettings(term, page, perPage, order, orderDir);
     }
 
     handleSort(index, key, dir, func) {
-        let {term, page, perPage} = this.props;
+        const {term, page, perPage} = this.props;
         this.props.getMarketingSettings(term, page, perPage, key, dir);
     }
 
     handleSearch(term) {
-        let {order, orderDir, page, perPage} = this.props;
+        const {order, orderDir, page, perPage} = this.props;
         this.props.getMarketingSettings(term, page, perPage, order, orderDir);
     }
 
     handleNewSetting(ev) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/marketing/new`);
     }
 
     handleDeleteSetting(settingId) {
-        let {deleteSetting, settings} = this.props;
+        const {deleteSetting, settings} = this.props;
         let setting = settings.find(s => s.id === settingId);
 
         Swal.fire({
@@ -96,7 +88,7 @@ class MarketingSettingListPage extends React.Component {
     }
 
     handleCloneSettings(summitId) {
-        let {cloneMarketingSettings} = this.props;
+        const {cloneMarketingSettings} = this.props;
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -113,17 +105,17 @@ class MarketingSettingListPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, allSummits, settings, lastPage, currentPage, term, order, orderDir, totalSettings} = this.props;
+        const {currentSummit, allSummits, settings, lastPage, currentPage, term, order, orderDir, totalSettings} = this.props;
         const summits = allSummits.filter(s => s.id !== currentSummit.id);
 
-        let columns = [
+        const columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
             { columnKey: 'key', value: T.translate("marketing.key"), sortable: true },
             { columnKey: 'type', value: T.translate("marketing.type") },
             { columnKey: 'value', value: T.translate("marketing.value")},
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: order,
             sortDir: orderDir,
             actions: {

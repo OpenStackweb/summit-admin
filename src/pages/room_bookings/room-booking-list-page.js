@@ -49,27 +49,19 @@ class RoomBookingListPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            this.props.getRoomBookings();
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
+        const {currentSummit} = this.props;
+        if(currentSummit) {
             this.props.getRoomBookings();
         }
     }
 
     handleEdit(room_booking_id) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/room-bookings/${room_booking_id}`);
     }
 
     handleDeleteBooking(bookingId) {
-        let {deleteRoomBooking, roomBookings} = this.props;
+        const {deleteRoomBooking, roomBookings} = this.props;
         let roomBooking = roomBookings.find(rb => rb.id === bookingId);
 
         Swal.fire({
@@ -87,29 +79,29 @@ class RoomBookingListPage extends React.Component {
     }
 
     handlePageChange(page) {
-        let {term, order, orderDir, perPage} = this.props;
+        const {term, order, orderDir, perPage} = this.props;
         this.props.getRoomBookings(term, page, perPage, order, orderDir);
     }
 
     handleSort(index, key, dir, func) {
-        let {term, page, perPage} = this.props;
+        const {term, page, perPage} = this.props;
         this.props.getRoomBookings(term, page, perPage, key, dir);
     }
 
     handleSearch(term) {
-        let {order, orderDir, page, perPage} = this.props;
+        const {order, orderDir, page, perPage} = this.props;
         this.props.getRoomBookings(term, page, perPage, order, orderDir);
     }
 
     handleExport(ev) {
-        let {term, order, orderDir} = this.props;
+        const {term, order, orderDir} = this.props;
         ev.preventDefault();
 
         this.props.exportRoomBookings(term, order, orderDir);
     }
 
     handleRefundClick(bookingId) {
-        let {roomBookings} = this.props;
+        const {roomBookings} = this.props;
         let roomBooking = roomBookings.find(rb => rb.id === bookingId);
 
         this.setState({
@@ -119,7 +111,7 @@ class RoomBookingListPage extends React.Component {
     }
 
     hasPaid(bookingId) {
-        let {roomBookings} = this.props;
+        const {roomBookings} = this.props;
         let roomBooking = roomBookings.find(rb => rb.id === bookingId);
 
         return roomBooking.status === 'Paid';
@@ -130,7 +122,7 @@ class RoomBookingListPage extends React.Component {
     }
 
     handleRefund() {
-        let {modalBooking, modalAmount} = this.state;
+        const {modalBooking, modalAmount} = this.state;
 
         this.setState({
             showModal: false,
@@ -140,13 +132,13 @@ class RoomBookingListPage extends React.Component {
     }
 
     handleRefundChange(ev) {
-        let {value, id} = ev.target;
+        const {value, id} = ev.target;
         this.setState({modalAmount: parseInt(value)});
     }
 
     render(){
-        let {currentSummit, roomBookings, lastPage, currentPage, term, order, orderDir, totalRoomBookings} = this.props;
-        let {showModal, modalBooking, modalAmount} = this.state;
+        const {currentSummit, roomBookings, lastPage, currentPage, term, order, orderDir, totalRoomBookings} = this.props;
+        const {showModal, modalBooking, modalAmount} = this.state;
 
         roomBookings = roomBookings.map(rb => {
             let start_datetime = epochToMomentTimeZone(rb.start_datetime, currentSummit.time_zone_id).format('YYYY-MM-DD h:mm a');
@@ -154,7 +146,7 @@ class RoomBookingListPage extends React.Component {
             return {...rb, start_datetime: start_datetime, end_datetime: end_datetime}
         })
 
-        let columns = [
+        const columns = [
             { columnKey: 'created', value: T.translate("room_booking_list.created"), sortable: true },
             { columnKey: 'room_name', value: T.translate("room_booking_list.room"), sortable: true },
             { columnKey: 'start_datetime', value: T.translate("room_booking_list.start"), sortable: true },
@@ -165,7 +157,7 @@ class RoomBookingListPage extends React.Component {
             { columnKey: 'refunded_amount_str', value: T.translate("room_booking_list.refunded") },
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: order,
             sortDir: orderDir,
             actions: {

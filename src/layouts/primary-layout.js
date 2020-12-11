@@ -30,7 +30,7 @@ import MediaFileTypeLayout from "./media-file-type-layout";
 class PrimaryLayout extends React.Component {
 
     render(){
-        let { match, currentSummit, location, member } = this.props;
+        const { match, currentSummit, location, member } = this.props;
         let extraClass = 'container';
 
         // full width pages

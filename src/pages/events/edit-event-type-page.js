@@ -36,9 +36,9 @@ class EditEventTypePage extends React.Component {
         this.getMediaUploads = this.getMediaUploads.bind(this);
     }
 
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.event_type_id;
-        let newId = newProps.match.params.event_type_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.event_type_id;
+        const newId = this.props.match.params.event_type_id;
 
         if (oldId !== newId) {
             if (!newId) {
@@ -50,7 +50,7 @@ class EditEventTypePage extends React.Component {
     }
 
     getMediaUploads (input, callback) {
-        let { currentSummit } = this.props;
+        const { currentSummit } = this.props;
 
         if (!input) {
             return Promise.resolve({ options: [] });
@@ -60,9 +60,9 @@ class EditEventTypePage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors, match} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+        const {currentSummit, entity, errors, match} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
         return(
             <div className="container">

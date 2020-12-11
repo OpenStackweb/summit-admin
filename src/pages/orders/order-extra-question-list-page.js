@@ -33,27 +33,19 @@ class OrderExtraQuestionListPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            this.props.getOrderExtraQuestions();
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
+        const {currentSummit} = this.props;
+        if(currentSummit) {
             this.props.getOrderExtraQuestions();
         }
     }
 
     handleEdit(order_extra_question_id) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/order-extra-questions/${order_extra_question_id}`);
     }
 
     handleDelete(orderExtraQuestionId) {
-        let {deleteOrderExtraQuestion, orderExtraQuestions} = this.props;
+        const {deleteOrderExtraQuestion, orderExtraQuestions} = this.props;
         let orderExtraQuestion = orderExtraQuestions.find(t => t.id === orderExtraQuestionId);
 
         Swal.fire({
@@ -71,20 +63,20 @@ class OrderExtraQuestionListPage extends React.Component {
     }
 
     handleNewOrderExtraQuestion(ev) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/order-extra-questions/new`);
     }
 
     render(){
-        let {currentSummit, orderExtraQuestions, order, orderDir, totalOrderExtraQuestions} = this.props;
+        const {currentSummit, orderExtraQuestions, order, orderDir, totalOrderExtraQuestions} = this.props;
 
-        let columns = [
+        const columns = [
             { columnKey: 'type', value: T.translate("order_extra_question_list.question_type")},
             { columnKey: 'label', value: T.translate("order_extra_question_list.visible_question") },
             { columnKey: 'name', value: T.translate("order_extra_question_list.question_id") }
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: order,
             sortDir: orderDir,
             actions: {

@@ -43,7 +43,7 @@ class EditLocationPage extends React.Component {
     }
 
     handleFloorDelete(floorId) {
-        let {deleteFloor, entity} = this.props;
+        const {deleteFloor, entity} = this.props;
         let floor = entity.floors.find(f => f.id === floorId);
 
         Swal.fire({
@@ -61,7 +61,7 @@ class EditLocationPage extends React.Component {
     }
 
     handleRoomDelete(roomId) {
-        let {deleteRoom, entity} = this.props;
+        const {deleteRoom, entity} = this.props;
         let room = entity.rooms.find(r => r.id === roomId);
 
         Swal.fire({
@@ -79,7 +79,7 @@ class EditLocationPage extends React.Component {
     }
 
     handleImageDelete(imageId) {
-        let {deleteLocationImage, entity} = this.props;
+        const {deleteLocationImage, entity} = this.props;
         let image = entity.images.find(i => i.id === imageId);
 
         Swal.fire({
@@ -97,7 +97,7 @@ class EditLocationPage extends React.Component {
     }
 
     handleMapDelete(mapId) {
-        let {deleteLocationMap, entity} = this.props;
+        const {deleteLocationMap, entity} = this.props;
         let map = entity.maps.find(m => m.id === mapId);
 
         Swal.fire({
@@ -115,8 +115,8 @@ class EditLocationPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, allClasses, entity, errors, history, match} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const {currentSummit, allClasses, entity, errors, history, match} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
 
         return(
             <div className="container">

@@ -87,8 +87,8 @@ class RoomBookingForm extends React.Component {
     }
 
     render() {
-        let {entity} = this.state;
-        let {currentSummit} = this.props;
+        const {entity} = this.state;
+        const {currentSummit} = this.props;
 
         let rooms_ddl = currentSummit.locations.filter(v => (v.class_name === 'SummitBookableVenueRoom')).map(l => {
             return {label: l.name, value: l.id};

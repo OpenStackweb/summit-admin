@@ -33,27 +33,19 @@ class SponsorListPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            this.props.getSponsors();
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
+        const {currentSummit} = this.props;
+        if(currentSummit) {
             this.props.getSponsors();
         }
     }
 
     handleEdit(sponsor_id) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/sponsors/${sponsor_id}`);
     }
 
     handleDelete(sponsorId) {
-        let {deleteSponsor, sponsors} = this.props;
+        const {deleteSponsor, sponsors} = this.props;
         let sponsor = sponsors.find(s => s.id === sponsorId);
 
         Swal.fire({
@@ -71,20 +63,20 @@ class SponsorListPage extends React.Component {
     }
 
     handleNewSponsor(ev) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/sponsors/new`);
     }
 
     render(){
-        let {currentSummit, sponsors, totalSponsors} = this.props;
+        const {currentSummit, sponsors, totalSponsors} = this.props;
 
-        let columns = [
+        const columns = [
             { columnKey: 'id', value: T.translate("sponsor_list.id") },
             { columnKey: 'sponsorship_name', value: T.translate("sponsor_list.sponsorship")},
             { columnKey: 'company_name', value: T.translate("sponsor_list.company") }
         ];
 
-        let table_options = {
+        const table_options = {
             actions: {
                 edit: { onClick: this.handleEdit },
                 delete: { onClick: this.handleDelete }

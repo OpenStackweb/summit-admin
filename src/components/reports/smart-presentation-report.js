@@ -62,43 +62,43 @@ class SmartPresentationReport extends React.Component {
     }
 
     buildReportQuery(filters, listFilters) {
-        let {currentSummit, sortKey, sortDir} = this.props;
-        let {showFields} = this.state;
+        const {currentSummit, sortKey, sortDir} = this.props;
+        const {showFields} = this.state;
         listFilters.summitId = currentSummit.id;
 
-        let query = new Query("presentations", listFilters);
-        let reportData = ["id", "title"];
+        const query = new Query("presentations", listFilters);
+        const reportData = ["id", "title"];
 
         if (sortKey) {
-            let querySortKey = this.translateSortKey(sortKey);
-            let order = (sortDir === 1) ? '' : '-';
+            const querySortKey = this.translateSortKey(sortKey);
+            const order = (sortDir === 1) ? '' : '-';
             filters.ordering = order + '' + querySortKey;
         }
 
         if (showFields.includes("type_name")) {
-            let type = new Query("type");
+            const type = new Query("type");
             type.find(["id", "name"]);
             reportData.push({"type": type})
         }
 
         if (showFields.includes("category_title")) {
-            let category = new Query("category");
+            const category = new Query("category");
             category.find(["id", "code", "title"]);
             reportData.push({"category": category})
         }
 
         if (showFields.includes("speakers_currentCompany")) {
-            let speakers = new Query("speakers");
+            const speakers = new Query("speakers");
             speakers.find(["currentCompany"]);
             reportData.push({"speakers": speakers})
         }
 
-        let allSimpleFields = fieldNames.filter(f => f.simple).map(f => f.key);
-        let simpleFields = showFields.filter(f => allSimpleFields.includes(f));
-        let results = new Query("results", filters);
+        const allSimpleFields = fieldNames.filter(f => f.simple).map(f => f.key);
+        const simpleFields = showFields.filter(f => allSimpleFields.includes(f));
+        const results = new Query("results", filters);
         results.find([...reportData, ...simpleFields]);
 
-        let categoryStats = new Query("categoryStats")
+        const categoryStats = new Query("categoryStats")
         categoryStats.find(["key", "value"]);
 
         query.find([{"results": results}, "totalCount", {"extraStat":categoryStats}]);

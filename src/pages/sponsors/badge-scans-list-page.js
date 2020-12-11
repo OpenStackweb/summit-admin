@@ -34,20 +34,8 @@ class BadgeScansListPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit, sponsorId} = this.props;
-        if(currentSummit !== null) {
-            this.props.getSponsorsWithBadgeScans();
-
-            if (sponsorId) {
-                this.props.getBadgeScans(sponsorId);
-            }
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit, sponsorId} = this.props;
-
-        if (currentSummit != null && currentSummit.id !== newProps.currentSummit.id) {
+        const {currentSummit, sponsorId} = this.props;
+        if(currentSummit) {
             this.props.getSponsorsWithBadgeScans();
 
             if (sponsorId) {
@@ -57,23 +45,23 @@ class BadgeScansListPage extends React.Component {
     }
 
     handlePageChange(page) {
-        let {sponsorId, order, orderDir, perPage} = this.props;
+        const {sponsorId, order, orderDir, perPage} = this.props;
         this.props.getBadgeScans(sponsorId, page, perPage, order, orderDir);
     }
 
     handleSort(index, key, dir, func) {
-        let {sponsorId, page, perPage} = this.props;
+        const {sponsorId, page, perPage} = this.props;
         this.props.getBadgeScans(sponsorId, page, perPage, key, dir);
     }
 
     handleSponsorChange(ev) {
-        let {order, orderDir, page, perPage} = this.props;
+        const {order, orderDir, page, perPage} = this.props;
         let value = ev.target.value;
         this.props.getBadgeScans(value, page, perPage, order, orderDir);
     }
 
     handleExport(ev) {
-        let {sponsorId, order, orderDir, allSponsors} = this.props;
+        const {sponsorId, order, orderDir, allSponsors} = this.props;
         ev.preventDefault();
 
         let sponsor = allSponsors.find(s => s.id === sponsorId);
@@ -82,9 +70,9 @@ class BadgeScansListPage extends React.Component {
     }
 
     render(){
-        let {match, currentSummit, allSponsors, sponsorId, badgeScans, lastPage, currentPage, order, orderDir, totalBadgeScans} = this.props;
+        const {match, currentSummit, allSponsors, sponsorId, badgeScans, lastPage, currentPage, order, orderDir, totalBadgeScans} = this.props;
 
-        let columns = [
+        const columns = [
             { columnKey: 'id', value: T.translate("badge_scan_list.id"), sortable: true },
             { columnKey: 'scan_date', value: T.translate("badge_scan_list.created"), sortable: true },
             { columnKey: 'attendee_first_name', value: T.translate("badge_scan_list.first_name"), sortable: true},
@@ -93,7 +81,7 @@ class BadgeScansListPage extends React.Component {
             { columnKey: 'attendee_company', value: T.translate("badge_scan_list.company_name"), sortable: true },
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: order,
             sortDir: orderDir,
             actions: {}

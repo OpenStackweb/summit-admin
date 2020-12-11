@@ -40,9 +40,9 @@ export const UPDATE_END_DATE_BULK             = 'UPDATE_END_DATE_BULK';
 
 export const getSummitEventsById = (summitId, eventIds ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
     dispatch(startLoading());
     let filter = '';
     for(let id of eventIds){
@@ -50,7 +50,7 @@ export const getSummitEventsById = (summitId, eventIds ) => (dispatch, getState)
         filter += `id==${id}`;
     }
 
-    let params = {
+    const params = {
         access_token : accessToken,
         filter: filter,
         page: 1,
@@ -98,8 +98,8 @@ export const updateEventTitleLocal = (event, title, isValid) => (dispatch) => {
 };
 
 export const updateEvents = (summitId, events) =>  (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
     dispatch(startLoading());
 
     putRequest(
@@ -130,8 +130,8 @@ export const updateEvents = (summitId, events) =>  (dispatch, getState) => {
 }
 
 export const updateAndPublishEvents = (summitId, events) =>  (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
     dispatch(startLoading());
 
     events = events.map((event) => ({
@@ -187,10 +187,10 @@ export const setBulkEventSelectedState = (events, selectedState, published) => (
 }
 
 export const performBulkAction = (eventsIds, bulkAction, published) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState,  currentScheduleBuilderState } = getState();
-    let { accessToken }                         = loggedUserState;
-    let { currentSummit }                       = currentSummitState;
-    let { currentDay,  currentLocation }        = currentScheduleBuilderState;
+    const { loggedUserState, currentSummitState,  currentScheduleBuilderState } = getState();
+    const { accessToken }                         = loggedUserState;
+    const { currentSummit }                       = currentSummitState;
+    const { currentDay,  currentLocation }        = currentScheduleBuilderState;
 
     switch(bulkAction){
         case BulkActionEdit:{
@@ -200,7 +200,7 @@ export const performBulkAction = (eventsIds, bulkAction, published) => (dispatch
         }
         break;
         case BulkActionUnPublish:{
-            let params = {
+            const params = {
                 access_token: accessToken
             }
             dispatch(startLoading());

@@ -39,10 +39,10 @@ class RsvpQuestionLayout extends React.Component {
         props.getRsvpQuestionMeta();
     }
 
-    componentWillReceiveProps(newProps) {
-        let {currentRsvpTemplate} = newProps;
-        let oldId = this.props.match.params.rsvp_question_id;
-        let newId = newProps.match.params.rsvp_question_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const {currentRsvpTemplate} = this.props;
+        const oldId = prevProps.match.params.rsvp_question_id;
+        const newId = this.props.match.params.rsvp_question_id;
 
         if (newId !== oldId) {
             if (newId === 'new') {

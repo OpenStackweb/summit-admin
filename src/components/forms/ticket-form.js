@@ -76,7 +76,7 @@ class TicketForm extends React.Component {
     }
 
     handleAssign(ev) {
-        let {entity, canReassign} = this.state;
+        const {entity, canReassign} = this.state;
         let {owner: prevOwner} = this.props.entity;
         ev.preventDefault();
 
@@ -96,14 +96,14 @@ class TicketForm extends React.Component {
 
 
     handleOwnerClick(ev) {
-        let {currentSummit, entity, history} = this.props;
+        const {currentSummit, entity, history} = this.props;
 
         ev.preventDefault();
         history.push(`/app/summits/${currentSummit.id}/attendees/${entity.owner.id}`);
     }
 
     handlePromocodeClick(ev) {
-        let {currentSummit, entity, history} = this.props;
+        const {currentSummit, entity, history} = this.props;
 
         ev.preventDefault();
         history.push(`/app/summits/${currentSummit.id}/promocodes/${entity.promo_code.id}`);
@@ -120,7 +120,7 @@ class TicketForm extends React.Component {
 
 
     render() {
-        let {entity, canReassign} = this.state;
+        const {entity, canReassign} = this.state;
         let member = entity.member ? entity.member : (entity.owner ? entity.owner.member : null);
 
         return (

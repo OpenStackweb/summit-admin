@@ -25,7 +25,7 @@ import NoMatchPage from "../pages/no-match-page";
 class TicketTypeLayout extends React.Component {
 
     render(){
-        let { match } = this.props;
+        const { match } = this.props;
         return(
             <div>
                 <Breadcrumb data={{ title: T.translate("ticket_type_list.ticket_types"), pathname: match.url }} />

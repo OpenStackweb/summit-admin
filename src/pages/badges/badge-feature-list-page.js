@@ -34,27 +34,19 @@ class BadgeFeatureListPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            this.props.getBadgeFeatures();
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
+        const {currentSummit} = this.props;
+        if(currentSummit) {
             this.props.getBadgeFeatures();
         }
     }
 
     handleEdit(badge_feature_id) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/badge-features/${badge_feature_id}`);
     }
 
     handleDelete(badgeFeatureId) {
-        let {deleteBadgeFeature, badgeFeatures} = this.props;
+        const {deleteBadgeFeature, badgeFeatures} = this.props;
         let badgeFeature = badgeFeatures.find(t => t.id === badgeFeatureId);
 
         Swal.fire({
@@ -76,20 +68,20 @@ class BadgeFeatureListPage extends React.Component {
     }
 
     handleNewBadgeFeature(ev) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/badge-features/new`);
     }
 
     render(){
-        let {currentSummit, badgeFeatures, order, orderDir, totalBadgeFeatures} = this.props;
+        const {currentSummit, badgeFeatures, order, orderDir, totalBadgeFeatures} = this.props;
 
-        let columns = [
+        const columns = [
             { columnKey: 'name', value: T.translate("badge_feature_list.name"), sortable: true },
             { columnKey: 'description', value: T.translate("badge_feature_list.description") },
             { columnKey: 'tag_name', value: T.translate("badge_feature_list.tag_name") }
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: order,
             sortDir: orderDir,
             actions: {

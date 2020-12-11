@@ -32,7 +32,7 @@ class CurrentEventOccupancyPage extends React.Component {
 
     componentDidMount() {
         let roomId = this.props.match.params.room_id;
-        let {getCurrentEventForOccupancy} = this.props;
+        const {getCurrentEventForOccupancy} = this.props;
         let eventIdHash = this.fragmentParser.getParam('event');
 
         getCurrentEventForOccupancy(roomId, eventIdHash);
@@ -40,13 +40,12 @@ class CurrentEventOccupancyPage extends React.Component {
         this.interval = setInterval(getCurrentEventForOccupancy, 1000*60*5, roomId, eventIdHash); //every 2 minutes
     }
 
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.room_id;
-        let newId = newProps.match.params.room_id;
-
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.room_id;
+        const newId = this.props.match.params.room_id;
         let eventIdHash = this.fragmentParser.getParam('event');
 
-        if (oldId !== newId) {
+        if (newId !== oldId) {
             this.props.getCurrentEventForOccupancy(newId, eventIdHash);
         }
     }
@@ -76,7 +75,7 @@ class CurrentEventOccupancyPage extends React.Component {
 
 
     render(){
-        let {currentEvent, match} = this.props;
+        const {currentEvent, match} = this.props;
 
         if (!currentEvent.id) {
             return (

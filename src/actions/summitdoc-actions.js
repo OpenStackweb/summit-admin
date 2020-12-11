@@ -34,19 +34,19 @@ export const SUMMITDOC_DELETED        = 'SUMMITDOC_DELETED';
 
 export const getSummitDocs = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let filter = [];
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const filter = [];
 
     dispatch(startLoading());
 
     if(term){
-        let escapedTerm = escapeFilterValue(term);
+        const escapedTerm = escapeFilterValue(term);
         filter.push(`name=@${escapedTerm}`);
     }
 
-    let params = {
+    const params = {
         page         : page,
         per_page     : perPage,
         access_token : accessToken,
@@ -59,7 +59,7 @@ export const getSummitDocs = (term = null, page = 1, perPage = 10, order = 'id',
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '' : '-';
+        const orderDirSign = (orderDir === 1) ? '' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -76,13 +76,13 @@ export const getSummitDocs = (term = null, page = 1, perPage = 10, order = 'id',
 };
 
 export const getSummitDoc = (summitDocId) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -102,14 +102,14 @@ export const resetSummitDocForm = () => (dispatch, getState) => {
 };
 
 export const saveSummitDoc = (entity, file) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity);
-    let params = { access_token : accessToken };
+    const normalizedEntity = normalizeEntity(entity);
+    const params = { access_token : accessToken };
 
 
     if (entity.id) {
@@ -129,7 +129,7 @@ export const saveSummitDoc = (entity, file) => (dispatch, getState) => {
 
     } else {
 
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("summitdoc.created"),
             type: 'success'
@@ -156,11 +156,11 @@ export const saveSummitDoc = (entity, file) => (dispatch, getState) => {
 
 export const deleteSummitDoc = (summitDocId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -178,7 +178,7 @@ export const deleteSummitDoc = (summitDocId) => (dispatch, getState) => {
 
 
 const normalizeEntity = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     delete(normalizedEntity['id']);
     delete(normalizedEntity['created']);

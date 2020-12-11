@@ -33,7 +33,7 @@ class RsvpEventReport extends React.Component {
     }
 
     buildReportQuery(filters, listFilters) {
-        let {currentSummit, sortKey, sortDir} = this.props;
+        const {currentSummit, sortKey, sortDir} = this.props;
         let event_id = this.props.match.params.event_id;
 
         listFilters.eventId = parseInt(event_id);

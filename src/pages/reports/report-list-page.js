@@ -29,14 +29,14 @@ class ReportListPage extends React.Component {
     }
 
     handleClick(reportName, ev) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
 
         history.push(`/app/summits/${currentSummit.id}/reports/${reportName}`);
     }
 
 
     render(){
-        let {currentSummit} = this.props;
+        const {currentSummit} = this.props;
 
         return(
             <div className="container report-list">

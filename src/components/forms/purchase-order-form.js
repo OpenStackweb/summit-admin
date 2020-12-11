@@ -53,7 +53,7 @@ class PurchaseOrderForm extends React.Component {
     }
 
     handleTicketEdit(ticketId) {
-        let {currentSummit, entity, history} = this.props;
+        const {currentSummit, entity, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/purchase-orders/${entity.id}/tickets/${ticketId}`);
     }
 
@@ -101,8 +101,8 @@ class PurchaseOrderForm extends React.Component {
     }
 
     render() {
-        let {entity, showSection} = this.state;
-        let {currentSummit} = this.props;
+        const {entity, showSection} = this.state;
+        const {currentSummit} = this.props;
 
         let ticket_columns = [
             { columnKey: 'number', value: T.translate("edit_purchase_order.ticket_number") },

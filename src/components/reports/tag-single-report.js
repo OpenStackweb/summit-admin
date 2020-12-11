@@ -34,7 +34,7 @@ class SingleTagReport extends React.Component {
 
     buildReportQuery(filters, listFilters) {
         let tag_id = this.props.match.params.tag_id;
-        let {currentSummit, sortKey, sortDir} = this.props;
+        const {currentSummit, sortKey, sortDir} = this.props;
 
         listFilters.summitId = currentSummit.id;
         listFilters.tagId = parseInt(tag_id);

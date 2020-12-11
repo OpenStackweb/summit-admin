@@ -43,7 +43,7 @@ class EditPurchaseOrderPage extends React.Component {
     }
 
     handleCancelRefundOrder(order, ev){
-        let {cancelRefundPurchaseOrder} = this.props;
+        const {cancelRefundPurchaseOrder} = this.props;
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -64,7 +64,7 @@ class EditPurchaseOrderPage extends React.Component {
     }
 
     handleDeleteOrder(order, ev) {
-        let {deletePurchaseOrder} = this.props;
+        const {deletePurchaseOrder} = this.props;
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -81,8 +81,8 @@ class EditPurchaseOrderPage extends React.Component {
     }
 
     handleRefundOrder(order, ev) {
-        let {refundPurchaseOrder} = this.props;
-        let {refund_amount} = this.state;
+        const {refundPurchaseOrder} = this.props;
+        const {refund_amount} = this.state;
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -99,9 +99,9 @@ class EditPurchaseOrderPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors, match} = this.props;
-        let {refund_amount} = this.state;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const {currentSummit, entity, errors, match} = this.props;
+        const {refund_amount} = this.state;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
 
         return(
             <div className="container">

@@ -36,12 +36,12 @@ export const SETTINGS_CLONED        = 'SETTINGS_CLONED';
 
 export const getMarketingSettings = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
 
-    let { currentSummitState } = getState();
-    let { currentSummit }   = currentSummitState;
+    const { currentSummitState } = getState();
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         page         : page,
         per_page     : perPage,
     };
@@ -52,7 +52,7 @@ export const getMarketingSettings = (term = null, page = 1, perPage = 10, order 
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '' : '-';
+        const orderDirSign = (orderDir === 1) ? '' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -72,7 +72,7 @@ export const getMarketingSetting = (settingId) => (dispatch, getState) => {
 
     dispatch(startLoading());
 
-    let params = {};
+    const params = {};
 
     return getRequest(
         null,
@@ -90,14 +90,14 @@ export const resetSettingForm = () => (dispatch, getState) => {
 };
 
 export const saveMarketingSetting = (entity, file) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity, currentSummit.id);
-    let params = { access_token : accessToken };
+    const normalizedEntity = normalizeEntity(entity, currentSummit.id);
+    const params = { access_token : accessToken };
 
     if (entity.id) {
 
@@ -116,7 +116,7 @@ export const saveMarketingSetting = (entity, file) => (dispatch, getState) => {
 
     } else {
 
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("marketing.setting_created"),
             type: 'success'
@@ -142,11 +142,11 @@ export const saveMarketingSetting = (entity, file) => (dispatch, getState) => {
 
 export const deleteSetting = (settingId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -164,11 +164,11 @@ export const deleteSetting = (settingId) => (dispatch, getState) => {
 
 export const cloneMarketingSettings = (summitId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -187,7 +187,7 @@ export const cloneMarketingSettings = (summitId) => (dispatch, getState) => {
 
 
 const normalizeEntity = (entity, summitId) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     delete(normalizedEntity['id']);
     delete(normalizedEntity['created']);

@@ -148,8 +148,8 @@ class AffiliationsTable extends React.Component {
         this.newActions.addOrganization = props.addOrganization;
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.setState({ rows: nextProps.data, new_row: {...this.new_row} });
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        this.setState({ rows: this.props.data, new_row: {...this.new_row} });
     }
 
     saveRow(id) {

@@ -42,9 +42,9 @@ class PurchaseOrderIdLayout extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.purchase_order_id;
-        let newId = newProps.match.params.purchase_order_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.purchase_order_id;
+        const newId = this.props.match.params.purchase_order_id;
 
         if (oldId !== newId) {
             if (!newId) {

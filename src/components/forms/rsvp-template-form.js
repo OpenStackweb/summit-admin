@@ -82,18 +82,18 @@ class RsvpTemplateForm extends React.Component {
     }
 
     handleEditQuestion(rsvpQuestionId,) {
-        let {currentSummit, history, entity} = this.props;
+        const {currentSummit, history, entity} = this.props;
         history.push(`/app/summits/${currentSummit.id}/rsvp-templates/${entity.id}/questions/${rsvpQuestionId}`);
     }
 
     handleAddQuestion(ev) {
-        let {currentSummit, history, entity} = this.props;
+        const {currentSummit, history, entity} = this.props;
         history.push(`/app/summits/${currentSummit.id}/rsvp-templates/${entity.id}/questions/new`);
     }
 
     render() {
-        let {entity} = this.state;
-        let { currentSummit, onQuestionDelete, onQuestionReorder } = this.props;
+        const {entity} = this.state;
+        const { currentSummit, onQuestionDelete, onQuestionReorder } = this.props;
 
         let columns = [
             { columnKey: 'id', value: T.translate("general.id") },

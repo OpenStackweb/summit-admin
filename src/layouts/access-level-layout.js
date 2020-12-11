@@ -25,7 +25,7 @@ import NoMatchPage from "../pages/no-match-page";
 class AccessLevelLayout extends React.Component {
 
     render(){
-        let { match } = this.props;
+        const { match } = this.props;
         return(
             <div>
                 <Breadcrumb data={{ title: T.translate("access_level_list.access_levels"), pathname: match.url }} />

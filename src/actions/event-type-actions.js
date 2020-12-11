@@ -37,13 +37,13 @@ export const EVENT_TYPES_SEEDED        = 'EVENT_TYPES_SEEDED';
 
 export const getEventTypes = ( ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
         per_page     : 100,
         page         : 1
@@ -62,13 +62,13 @@ export const getEventTypes = ( ) => (dispatch, getState) => {
 
 export const getEventType = (eventTypeId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         expand       : 'allowed_media_upload_types, allowed_media_upload_types.type',
         access_token : accessToken,
     };
@@ -89,14 +89,14 @@ export const resetEventTypeForm = () => (dispatch, getState) => {
 };
 
 export const saveEventType = (entity) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity);
-    let params = { access_token : accessToken };
+    const normalizedEntity = normalizeEntity(entity);
+    const params = { access_token : accessToken };
 
     if (entity.id) {
 
@@ -113,7 +113,7 @@ export const saveEventType = (entity) => (dispatch, getState) => {
             });
 
     } else {
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_event_type.event_type_created"),
             type: 'success'
@@ -138,11 +138,11 @@ export const saveEventType = (entity) => (dispatch, getState) => {
 
 export const deleteEventType = (eventTypeId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -160,11 +160,11 @@ export const deleteEventType = (eventTypeId) => (dispatch, getState) => {
 
 export const seedEventTypes = () => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -181,7 +181,7 @@ export const seedEventTypes = () => (dispatch, getState) => {
 };
 
 const normalizeEntity = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     //remove # from color hexa
     normalizedEntity['color'] = normalizedEntity['color'].substr(1);

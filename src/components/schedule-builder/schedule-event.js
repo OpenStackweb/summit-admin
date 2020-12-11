@@ -64,12 +64,6 @@ class ScheduleEvent extends React.Component {
         return this.state.height;
     }
 
-    componentWillReceiveProps(nextProps){
-        this.setState({...this.state,
-            top: nextProps.initialTop,
-            height: nextProps.initialHeight});
-    }
-
     getInlineStyles(isDragging){
         return {
             top: this.state.top,

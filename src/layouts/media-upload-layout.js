@@ -24,7 +24,7 @@ import NoMatchPage from "../pages/no-match-page";
 class MediaUploadLayout extends React.Component {
 
     render(){
-        let { match } = this.props;
+        const { match } = this.props;
 
         return(
             <div>

@@ -34,9 +34,9 @@ class EditSponsorPage extends React.Component {
         props.getSponsorships();
     }
 
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.sponsor_id;
-        let newId = newProps.match.params.sponsor_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.sponsor_id;
+        const newId = this.props.match.params.sponsor_id;
 
         if (newId !== oldId) {
             if (!newId) {
@@ -48,9 +48,9 @@ class EditSponsorPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors, match, sponsorships} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.company.name : T.translate("general.new");
+        const {currentSummit, entity, errors, match, sponsorships} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.company.name : T.translate("general.new");
 
 
         return(

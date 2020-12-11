@@ -54,55 +54,47 @@ class SummitEventListPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            this.props.getEvents();
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit != null && currentSummit.id !== newProps.currentSummit.id) {
+        const {currentSummit} = this.props;
+        if(currentSummit) {
             this.props.getEvents();
         }
     }
 
     handleEdit(event_id) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/events/${event_id}`);
     }
 
     handleExport(ev) {
-        let {term, order, orderDir} = this.props;
+        const {term, order, orderDir} = this.props;
         ev.preventDefault();
 
         this.props.exportEvents(term, order, orderDir);
     }
 
     handlePageChange(page) {
-        let {term, order, orderDir, perPage} = this.props;
+        const {term, order, orderDir, perPage} = this.props;
         this.props.getEvents(term, page, perPage, order, orderDir);
     }
 
     handleSort(index, key, dir, func) {
-        let {term, page, perPage} = this.props;
+        const {term, page, perPage} = this.props;
         key = (key === 'name') ? 'last_name' : key;
         this.props.getEvents(term, page, perPage, key, dir);
     }
 
     handleSearch(term) {
-        let {order, orderDir, page, perPage} = this.props;
+        const {order, orderDir, page, perPage} = this.props;
         this.props.getEvents(term, page, perPage, order, orderDir);
     }
 
     handleNewEvent(ev) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/events/new`);
     }
 
     handleDeleteEvent(eventId) {
-        let {deleteEvent, events} = this.props;
+        const {deleteEvent, events} = this.props;
         let event = events.find(e => e.id === eventId);
 
         Swal.fire({
@@ -120,9 +112,9 @@ class SummitEventListPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, events, lastPage, currentPage, term, order, orderDir, totalEvents} = this.props;
+        const {currentSummit, events, lastPage, currentPage, term, order, orderDir, totalEvents} = this.props;
 
-        let columns = [
+        const columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
             { columnKey: 'type', value: T.translate("event_list.type") },
             { columnKey: 'title', value: T.translate("event_list.title"), sortable: true },
@@ -131,7 +123,7 @@ class SummitEventListPage extends React.Component {
             { columnKey: 'published', value: T.translate("event_list.published") },
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: (order === 'last_name') ? 'name' : order,
             sortDir: orderDir,
             actions: {

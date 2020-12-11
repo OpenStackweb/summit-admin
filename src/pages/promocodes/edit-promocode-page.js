@@ -40,11 +40,11 @@ class EditPromocodePage extends React.Component {
         if (!currentSummit.badge_types) props.getBadgeTypes()
     }
 
-    componentWillReceiveProps(newProps) {
-        const oldId = this.props.match.params.promocode_id;
-        const newId = newProps.match.params.promocode_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.promocode_id;
+        const newId = this.props.match.params.promocode_id;
 
-        if (oldId !== newId) {
+        if (newId !== oldId) {
             if (!newId) {
                 this.props.resetPromocodeForm();
             } else {

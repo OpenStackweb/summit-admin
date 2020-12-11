@@ -59,19 +59,19 @@ export const RECEIVE_BADGE_SCANS       = 'RECEIVE_BADGE_SCANS';
 
 export const getSponsors = ( term = null, page = 1, perPage = 100, order = 'order', orderDir = 1 ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let filter = [];
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const filter = [];
 
     dispatch(startLoading());
 
     if(term){
-        let escapedTerm = escapeFilterValue(term);
+        const escapedTerm = escapeFilterValue(term);
         filter.push(`company_name=@${escapedTerm},sponsorship_name=@${escapedTerm},sponsorship_size=@${escapedTerm}`);
     }
 
-    let params = {
+    const params = {
         page         : page,
         per_page     : perPage,
         expand       : 'company,sponsorship',
@@ -84,7 +84,7 @@ export const getSponsors = ( term = null, page = 1, perPage = 100, order = 'orde
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '+' : '-';
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -103,14 +103,14 @@ export const getSponsors = ( term = null, page = 1, perPage = 100, order = 'orde
 
 export const getSponsorsWithBadgeScans = () => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let filter = [];
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const filter = [];
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         page         : 1,
         per_page     : 100,
         expand       : 'company',
@@ -132,13 +132,13 @@ export const getSponsorsWithBadgeScans = () => (dispatch, getState) => {
 
 export const getSponsor = (sponsorId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
         expand       : 'company, members',
     };
@@ -159,17 +159,17 @@ export const resetSponsorForm = () => (dispatch, getState) => {
 };
 
 export const saveSponsor = (entity) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeSponsor(entity);
+    const normalizedEntity = normalizeSponsor(entity);
 
     if (entity.id) {
 
@@ -186,7 +186,7 @@ export const saveSponsor = (entity) => (dispatch, getState) => {
             });
 
     } else {
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_sponsor.sponsor_created"),
             type: 'success'
@@ -210,11 +210,11 @@ export const saveSponsor = (entity) => (dispatch, getState) => {
 };
 
 export const addMemberToSponsor = (sponsorId, member) => (dispatch, getState) => {
-    let {loggedUserState, currentSummitState} = getState();
-    let {accessToken} = loggedUserState;
-    let {currentSummit} = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
-    let params = {
+    const params = {
         access_token: accessToken,
     };
 
@@ -234,11 +234,11 @@ export const addMemberToSponsor = (sponsorId, member) => (dispatch, getState) =>
 
 export const removeMemberFromSponsor = (sponsorId, memberId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -258,11 +258,11 @@ export const removeMemberFromSponsor = (sponsorId, memberId) => (dispatch, getSt
 
 export const deleteSponsor = (sponsorId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -280,17 +280,17 @@ export const deleteSponsor = (sponsorId) => (dispatch, getState) => {
 
 export const updateSponsorOrder = (sponsors, sponsorId, newOrder) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
-    let sponsor = sponsors.find(s => s.id === sponsorId);
+    const sponsor = sponsors.find(s => s.id === sponsorId);
 
-    let normalizedEntity = normalizeSponsor(sponsor);
+    const normalizedEntity = normalizeSponsor(sponsor);
 
     putRequest(
         null,
@@ -307,7 +307,7 @@ export const updateSponsorOrder = (sponsors, sponsorId, newOrder) => (dispatch, 
 
 
 const normalizeSponsor = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     normalizedEntity.company_id = (normalizedEntity.company) ? normalizedEntity.company.id : 0;
 
@@ -320,10 +320,10 @@ const normalizeSponsor = (entity) => {
 };
 
 export const createCompany = (company, callback) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -351,13 +351,13 @@ export const createCompany = (company, callback) => (dispatch, getState) => {
 
 export const getSponsorships = ( order = 'name', orderDir = 1 ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         page         : 1,
         per_page     : 100,
         access_token : accessToken,
@@ -365,7 +365,7 @@ export const getSponsorships = ( order = 'name', orderDir = 1 ) => (dispatch, ge
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '+' : '-';
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -384,13 +384,13 @@ export const getSponsorships = ( order = 'name', orderDir = 1 ) => (dispatch, ge
 
 export const getSponsorship = (sponsorshipId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -410,17 +410,17 @@ export const resetSponsorshipForm = () => (dispatch, getState) => {
 };
 
 export const saveSponsorship = (entity) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeSponsorship(entity);
+    const normalizedEntity = normalizeSponsorship(entity);
 
     if (entity.id) {
 
@@ -437,7 +437,7 @@ export const saveSponsorship = (entity) => (dispatch, getState) => {
             });
 
     } else {
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_sponsorship.sponsorship_created"),
             type: 'success'
@@ -462,11 +462,11 @@ export const saveSponsorship = (entity) => (dispatch, getState) => {
 
 export const deleteSponsorship = (sponsorshipId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -484,7 +484,7 @@ export const deleteSponsorship = (sponsorshipId) => (dispatch, getState) => {
 
 
 const normalizeSponsorship = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     return normalizedEntity;
 
@@ -496,10 +496,10 @@ const normalizeSponsorship = (entity) => {
 
 export const getBadgeScans = ( sponsorId = null, page = 1, perPage = 10, order = 'attendee_last_name', orderDir = 1 ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let filter = [];
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const filter = [];
 
     dispatch(startLoading());
 
@@ -507,7 +507,7 @@ export const getBadgeScans = ( sponsorId = null, page = 1, perPage = 10, order =
         filter.push(`sponsor_id==${sponsorId}`);
     }
 
-    let params = {
+    const params = {
         page         : page,
         per_page     : perPage,
         expand       : 'badge,badge.ticket,badge.ticket.owner,badge.ticket.owner.member',
@@ -520,7 +520,7 @@ export const getBadgeScans = ( sponsorId = null, page = 1, perPage = 10, order =
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '+' : '-';
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -540,12 +540,12 @@ export const getBadgeScans = ( sponsorId = null, page = 1, perPage = 10, order =
 
 export const exportBadgeScans = ( sponsor = null, order = 'attendee_last_name', orderDir = 1 ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let filter = [];
-    let filename = sponsor.company.name + '-BadgeScans.csv';
-    let params = {
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const filter = [];
+    const filename = sponsor.company.name + '-BadgeScans.csv';
+    const params = {
         access_token : accessToken,
         columns      : 'scan_date,attendee_first_name,attendee_last_name,attendee_email,attendee_company',
     };
@@ -558,7 +558,7 @@ export const exportBadgeScans = ( sponsor = null, order = 'attendee_last_name', 
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '+' : '-';
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 

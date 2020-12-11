@@ -30,7 +30,6 @@ import {
 export const REQUEST_COMPANIES       = 'REQUEST_COMPANIES';
 export const RECEIVE_COMPANIES       = 'RECEIVE_COMPANIES';
 export const RECEIVE_COMPANY        = 'RECEIVE_COMPANY';
-export const REQUEST_COMPANY        = 'REQUEST_COMPANY';
 export const RESET_COMPANY_FORM     = 'RESET_COMPANY_FORM';
 export const COMPANY_DELETED        = 'COMPANY_DELETED';
 export const UPDATE_COMPANY         = 'UPDATE_COMPANY';
@@ -42,18 +41,18 @@ export const BIG_LOGO_ATTACHED       = 'BIG_LOGO_ATTACHED';
 
 export const getCompanies = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
 
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
-    let filter = [];
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
+    const filter = [];
 
     dispatch(startLoading());
 
     if(term){
-        let escapedTerm = escapeFilterValue(term);
+        const escapedTerm = escapeFilterValue(term);
         filter.push(`name=@${escapedTerm}`);
     }
 
-    let params = {
+    const params = {
         page         : page,
         per_page     : perPage,
         access_token : accessToken,
@@ -65,7 +64,7 @@ export const getCompanies = ( term = null, page = 1, perPage = 10, order = 'id',
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '+' : '-';
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -84,12 +83,12 @@ export const getCompanies = ( term = null, page = 1, perPage = 10, order = 'id',
 
 export const getCompany = (companyId) => (dispatch, getState) => {
 
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -106,12 +105,12 @@ export const getCompany = (companyId) => (dispatch, getState) => {
 
 export const deleteCompany = (companyId) => (dispatch, getState) => {
 
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -128,21 +127,21 @@ export const deleteCompany = (companyId) => (dispatch, getState) => {
 };
 
 
-export const resetCompanyForm = () => (dispatch, getState) => {
+export const resetCompanyForm = () => (dispatch) => {
     dispatch(createAction(RESET_COMPANY_FORM)({}));
 };
 
 export const saveCompany = (entity) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
-    let normalizedEntity = normalizeEntity(entity);
+    const normalizedEntity = normalizeEntity(entity);
 
     if (entity.id) {
 
@@ -154,12 +153,12 @@ export const saveCompany = (entity) => (dispatch, getState) => {
             authErrorHandler,
             entity
         )(params)(dispatch)
-            .then((payload) => {
+            .then(() => {
                 dispatch(showSuccessMessage(T.translate("edit_company.company_saved")));
             });
 
     } else {
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_company.company_created"),
             type: 'success'
@@ -173,28 +172,28 @@ export const saveCompany = (entity) => (dispatch, getState) => {
             authErrorHandler,
             entity
         )(params)(dispatch)
-            .then((payload) => {
+            .then(() => {
                 dispatch(showMessage(
                     success_message,
                     () => { history.push(`/app/companies`) }
                 ));
             });
     }
-}
+};
 
 export const attachLogo = (entity, file, picAttr) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
-    let normalizedEntity = normalizeEntity(entity);
+    const normalizedEntity = normalizeEntity(entity);
 
-    let uploadFile = picAttr === 'logo' ? uploadLogo : uploadBigLogo;
+    const uploadFile = picAttr === 'logo' ? uploadLogo : uploadBigLogo;
 
     if (entity.id) {
         dispatch(uploadFile(entity, file));
@@ -212,13 +211,13 @@ export const attachLogo = (entity, file, picAttr) => (dispatch, getState) => {
             }
         );
     }
-}
+};
 
 const uploadLogo = (entity, file) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -237,10 +236,10 @@ const uploadLogo = (entity, file) => (dispatch, getState) => {
 };
 
 const uploadBigLogo = (entity, file) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -259,7 +258,7 @@ const uploadBigLogo = (entity, file) => (dispatch, getState) => {
 };
 
 const normalizeEntity = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     //remove # from color hexa
     normalizedEntity['color'] = normalizedEntity['color'].substr(1);
@@ -268,5 +267,5 @@ const normalizeEntity = (entity) => {
     delete normalizedEntity['big_logo'];
 
     return normalizedEntity;
-}
+};
 

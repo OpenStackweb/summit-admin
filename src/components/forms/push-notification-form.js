@@ -105,8 +105,8 @@ class PushNotificationForm extends React.Component {
     }
 
     render() {
-        let {entity} = this.state;
-        let { currentSummit, channels, platforms } = this.props;
+        const {entity} = this.state;
+        const { currentSummit, channels, platforms } = this.props;
 
         let channel_ddl = channels.map(c => ({value: c, label: c}));
         let platform_ddl = platforms.map(p => ({value: p, label: p}));

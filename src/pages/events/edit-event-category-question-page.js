@@ -44,9 +44,9 @@ class EditEventCategoryQuestionPage extends React.Component {
         this.handleDeleteValue = this.handleDeleteValue.bind(this);
     }
 
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.category_question_id;
-        let newId = newProps.match.params.category_question_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.category_question_id;
+        const newId = this.props.match.params.category_question_id;
 
         if (oldId !== newId) {
             if (!newId) {
@@ -58,21 +58,21 @@ class EditEventCategoryQuestionPage extends React.Component {
     }
 
     handleSaveValue(value) {
-        let {entity} = this.props;
+        const {entity} = this.props;
 
         this.props.saveEventCategoryQuestionValue(entity.id, value);
     }
 
     handleDeleteValue(valueId) {
-        let {entity} = this.props;
+        const {entity} = this.props;
 
         this.props.deleteEventCategoryQuestionValue(entity.id, valueId);
     }
 
     render(){
-        let {currentSummit, currentEventCategory, allClasses, entity, errors, match} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+        const {currentSummit, currentEventCategory, allClasses, entity, errors, match} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
         if (!currentEventCategory.id) return (<div/>);
 

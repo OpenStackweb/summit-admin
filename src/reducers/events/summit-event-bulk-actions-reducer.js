@@ -56,7 +56,7 @@ const summitEventBulkActionReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case UPDATE_VALIDATION_STATE:{
-            let { currentSummit }      = payload;
+            const { currentSummit }      = payload;
             let { eventOnBulkEdition } = state;
             eventOnBulkEdition = eventOnBulkEdition.map(event => {
                 let model = new SummitEvent(event, currentSummit)
@@ -66,13 +66,13 @@ const summitEventBulkActionReducer = (state = DEFAULT_STATE, action) => {
         }
        break;
         case RECEIVE_SELECTED_EVENTS:
-            let { data } = payload.response;
+            const { data } = payload.response;
             return {...state,
                 eventOnBulkEdition: data.map((event) => ({ ...event, is_valid: false}))
             };
             break;
         case UPDATE_LOCAL_EVENT:
-            let { eventId, mutator }   = payload;
+            const { eventId, mutator }   = payload;
             let { eventOnBulkEdition } = state;
             eventOnBulkEdition = eventOnBulkEdition.map(event => {
                 return event.id === eventId ? mutator(event) : event
@@ -81,7 +81,7 @@ const summitEventBulkActionReducer = (state = DEFAULT_STATE, action) => {
             break;
         case UPDATE_EVENT_SELECTED_STATE:
         {
-            let { event } = payload;
+            const { event } = payload;
             let { selectedPublishedEvents, selectedUnPublishedEvents } = state;
             // event is published
             if(event.hasOwnProperty('is_published') && event.is_published){

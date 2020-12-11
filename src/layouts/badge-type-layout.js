@@ -25,7 +25,7 @@ import NoMatchPage from "../pages/no-match-page";
 class BadgeTypeLayout extends React.Component {
 
     render(){
-        let { match } = this.props;
+        const { match } = this.props;
         return(
             <div>
                 <Breadcrumb data={{ title: T.translate("badge_type_list.badge_types"), pathname: match.url }} />

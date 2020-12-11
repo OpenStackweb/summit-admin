@@ -26,8 +26,8 @@ class EditEventCategoryPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors, match, history} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const {currentSummit, entity, errors, match, history} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
 
         return(
             <div className="container">

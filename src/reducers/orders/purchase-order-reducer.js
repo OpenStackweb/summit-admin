@@ -108,7 +108,7 @@ const purchaseOrderReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  errors: payload.errors };
         }
         case PURCHASE_ORDER_CANCEL_REFUND:{
-            let { entity} = state;
+            const { entity} = state;
             return {...state,  entity: {...entity, status: 'Paid' }};
         }
         break;

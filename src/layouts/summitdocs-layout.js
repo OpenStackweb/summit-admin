@@ -23,7 +23,7 @@ import EditSummitDocPage from "../pages/summitdocs/edit-summitdoc-page";
 class SummitDocsLayout extends React.Component {
 
     render(){
-        let { match } = this.props;
+        const { match } = this.props;
         return(
             <div>
                 <Breadcrumb data={{ title: T.translate("summitdoc.summitdocs"), pathname: match.url }} />

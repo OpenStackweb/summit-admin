@@ -22,7 +22,7 @@ import {connect} from "react-redux";
 class SelectionPlanLayout extends React.Component {
 
     render(){
-        let { match, currentSummit } = this.props;
+        const { match, currentSummit } = this.props;
         return(
             <div>
                 <Breadcrumb data={{ title: T.translate("edit_selection_plan.selection_plans"), pathname: match.url }} />

@@ -53,11 +53,11 @@ export const BADGE_FEATURE_REMOVED  = 'BADGE_FEATURE_REMOVED';
 
 export const getPromocodeMeta = () => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -74,15 +74,15 @@ export const getPromocodeMeta = () => (dispatch, getState) => {
 
 export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'code', orderDir = 1, type = 'ALL' ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let filter = [];
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const filter = [];
 
     dispatch(startLoading());
 
     if(term){
-        let escapedTerm = escapeFilterValue(term);
+        const escapedTerm = escapeFilterValue(term);
         filter.push(`code=@${escapedTerm},creator=@${escapedTerm},creator_email=@${escapedTerm},owner=@${escapedTerm},owner_email=@${escapedTerm},speaker=@${escapedTerm},speaker_email=@${escapedTerm},sponsor=@${escapedTerm}`);
     }
 
@@ -90,7 +90,7 @@ export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'cod
         filter.push(`type==${type}`);
     }
 
-    let params = {
+    const params = {
         expand       : 'speaker,owner,sponsor,creator',
         page         : page,
         per_page     : perPage,
@@ -103,7 +103,7 @@ export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'cod
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '+' : '-';
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -122,13 +122,13 @@ export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'cod
 
 export const getPromocode = (promocodeId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         expand       : 'owner,sponsor,sponsor.company,sponsor.sponsorship,speaker,tickets,ticket_type,ticket_types_rules',
         access_token : accessToken,
     };
@@ -149,13 +149,13 @@ export const resetPromocodeForm = () => (dispatch, getState) => {
 };
 
 export const savePromocode = (entity) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity);
+    const normalizedEntity = normalizeEntity(entity);
 
     if (entity.id) {
 
@@ -172,7 +172,7 @@ export const savePromocode = (entity) => (dispatch, getState) => {
             });
 
     } else {
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_promocode.promocode_created"),
             type: 'success'
@@ -197,11 +197,11 @@ export const savePromocode = (entity) => (dispatch, getState) => {
 
 export const deletePromocode = (promocodeId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -219,11 +219,11 @@ export const deletePromocode = (promocodeId) => (dispatch, getState) => {
 
 export const sendEmail = (promocodeId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -242,20 +242,20 @@ export const sendEmail = (promocodeId) => (dispatch, getState) => {
 
 export const exportPromocodes = ( term = null, order = 'code', orderDir = 1, type = 'ALL' ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let filter = [];
-    let filename = currentSummit.name + '-Promocodes.csv';
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const filter = [];
+    const filename = currentSummit.name + '-Promocodes.csv';
 
-    let params = {
+    const params = {
         access_token : accessToken,
         expand: 'owner_name,owner_email,sponsor_name',
         columns: 'code,type,owner_name,owner_email,sponsor_name,redeemed,email_sent'
     };
 
     if(term){
-        let escapedTerm = escapeFilterValue(term);
+        const escapedTerm = escapeFilterValue(term);
         filter.push(`code=@${escapedTerm},creator=@${escapedTerm},creator_email=@${escapedTerm},owner=@${escapedTerm},owner_email=@${escapedTerm},speaker=@${escapedTerm},speaker_email=@${escapedTerm},sponsor=@${escapedTerm}`);
     }
 
@@ -269,7 +269,7 @@ export const exportPromocodes = ( term = null, order = 'code', orderDir = 1, typ
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '+' : '-';
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -279,7 +279,7 @@ export const exportPromocodes = ( term = null, order = 'code', orderDir = 1, typ
 
 
 const normalizeEntity = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     if (entity.class_name.indexOf('MEMBER_') === 0) {
         if (entity.owner != null) {
@@ -329,13 +329,13 @@ const normalizeEntity = (entity) => {
 
 export const addBadgeFeatureToPromocode = (promocodeId, badgeFeature) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -353,13 +353,13 @@ export const addBadgeFeatureToPromocode = (promocodeId, badgeFeature) => (dispat
 
 export const removeBadgeFeatureFromPromocode = (promocodeId, badgeFeatureId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -381,11 +381,11 @@ export const removeBadgeFeatureFromPromocode = (promocodeId, badgeFeatureId) => 
 
 
 export const addDiscountTicket = (ticket) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
         expand: 'ticket_types_rules'
     };
@@ -406,11 +406,11 @@ export const addDiscountTicket = (ticket) => (dispatch, getState) => {
 
 export const deleteDiscountTicket = (promocodeId, ticketId, ticketTypeId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 

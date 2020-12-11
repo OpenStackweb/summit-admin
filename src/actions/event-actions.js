@@ -53,16 +53,16 @@ export const EVENTS_IMPORTED                        = 'EVENTS_IMPORTED';
 
 export const getEvents = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let filter = [];
-    let summitTZ = currentSummit.time_zone.name;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const filter = [];
+    const summitTZ = currentSummit.time_zone.name;
 
     dispatch(startLoading());
 
     if(term){
-        let escapedTerm = escapeFilterValue(term);
+        const escapedTerm = escapeFilterValue(term);
         let searchString = `title=@${escapedTerm},abstract=@${escapedTerm},tags=@${escapedTerm},speaker=@${escapedTerm},speaker_email=@${escapedTerm}`;
 
         if (parseInt(term)) {
@@ -72,7 +72,7 @@ export const getEvents = ( term = null, page = 1, perPage = 10, order = 'id', or
         filter.push(searchString);
     }
 
-    let params = {
+    const params = {
         expand       : 'speakers, type',
         page         : page,
         per_page     : perPage,
@@ -85,7 +85,7 @@ export const getEvents = ( term = null, page = 1, perPage = 10, order = 'id', or
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '+' : '-';
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -104,18 +104,18 @@ export const getEvents = ( term = null, page = 1, perPage = 10, order = 'id', or
 
 export const getEventsForOccupancy = ( term = null, roomId = null, currentEvents = false, page = 1, perPage = 10, order = 'start_date', orderDir = 1 ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let filter = [];
-    let summitTZ = currentSummit.time_zone.name;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const filter = [];
+    const summitTZ = currentSummit.time_zone.name;
     let endPoint = 'events/published';
 
     dispatch(startLoading());
 
     // search
     if(term){
-        let escapedTerm = escapeFilterValue(term);
+        const escapedTerm = escapeFilterValue(term);
         filter.push(`title=@${escapedTerm},speaker=@${escapedTerm}`);
     }
 
@@ -126,14 +126,14 @@ export const getEventsForOccupancy = ( term = null, roomId = null, currentEvents
 
     // only current events
     if (currentEvents) {
-        let now = moment().tz(summitTZ).unix(); // now in summit timezone converted to epoch
-        let from_date = now - 900; // minus 15min
-        let to_date = now + 900; // plus 15min
+        const now = moment().tz(summitTZ).unix(); // now in summit timezone converted to epoch
+        const from_date = now - 900; // minus 15min
+        const to_date = now + 900; // plus 15min
         filter.push(`start_date<=${to_date}`);
         filter.push(`end_date>=${from_date}`);
     }
 
-    let params = {
+    const params = {
         expand       : 'speakers, location',
         page         : page,
         per_page     : perPage,
@@ -146,7 +146,7 @@ export const getEventsForOccupancy = ( term = null, roomId = null, currentEvents
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '+' : '-';
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -165,16 +165,16 @@ export const getEventsForOccupancy = ( term = null, roomId = null, currentEvents
 
 export const getCurrentEventForOccupancy = ( roomId, eventId = null ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let filter = [];
-    let summitTZ = currentSummit.time_zone.name;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const filter = [];
+    const summitTZ = currentSummit.time_zone.name;
     let endPoint = `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}`;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         expand       : 'speakers, location',
         page         : 1,
         per_page     : 100,
@@ -187,7 +187,7 @@ export const getCurrentEventForOccupancy = ( roomId, eventId = null ) => (dispat
         endPoint = endPoint + `/locations/${roomId}/events/published`;
 
         // only current events
-        let now = moment().tz(summitTZ).unix(); // now in summit timezone converted to epoch
+        const now = moment().tz(summitTZ).unix(); // now in summit timezone converted to epoch
         filter.push(`start_date<=${now}`);
         filter.push(`end_date>=${now}`);
         params['filter[]']= filter;
@@ -206,13 +206,13 @@ export const getCurrentEventForOccupancy = ( roomId, eventId = null ) => (dispat
 };
 
 export const getEvent = (eventId) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     if (!currentSummit.id) return;
 
-    let params = {
+    const params = {
         access_token: accessToken,
         expand: 'creator, speakers, moderator, sponsors, groups, type, type.allowed_media_upload_types, type.allowed_media_upload_types.type, slides, links, videos, media_uploads, tags, media_uploads.media_upload_type, media_uploads.media_upload_type.type'
     };
@@ -234,15 +234,15 @@ export const resetEventForm = () => (dispatch, getState) => {
 };
 
 export const saveEvent = (entity, publish) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity);
+    const normalizedEntity = normalizeEntity(entity);
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -265,7 +265,7 @@ export const saveEvent = (entity, publish) => (dispatch, getState) => {
 
     } else {
 
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_event.event_created"),
             type: 'success'
@@ -294,11 +294,11 @@ export const saveEvent = (entity, publish) => (dispatch, getState) => {
 }
 
 export const saveOccupancy = (entity) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -314,11 +314,11 @@ export const saveOccupancy = (entity) => (dispatch, getState) => {
 }
 
 const publishEvent = (entity, cb = null) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -339,10 +339,10 @@ const publishEvent = (entity, cb = null) => (dispatch, getState) => {
 }
 
 export const checkProximityEvents = (event, cb = null) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let success_message = {
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const success_message = {
         title: T.translate("general.done"),
         html: T.translate("edit_event.saved_and_published"),
         type: 'success'
@@ -358,10 +358,10 @@ export const checkProximityEvents = (event, cb = null) => (dispatch, getState) =
         speaker_ids.push(`speaker_id==${event.moderator_speaker_id}`)
     }
 
-    let from_date = event.start_date - 5400; // minus 1.5hrs
-    let to_date = event.end_date + 5400; // plus 1.5hrs
+    const from_date = event.start_date - 5400; // minus 1.5hrs
+    const to_date = event.end_date + 5400; // plus 1.5hrs
 
-    let params = {
+    const params = {
         page         : 1,
         per_page     : 100,
         access_token : accessToken,
@@ -381,7 +381,7 @@ export const checkProximityEvents = (event, cb = null) => (dispatch, getState) =
     )(params)(dispatch)
         .then((payload) => {
 
-            let proximity_events = payload.response.data.filter( e => e.id !== event.id );
+            const proximity_events = payload.response.data.filter( e => e.id !== event.id );
 
             if (proximity_events.length > 0) {
                 success_message.width = null;
@@ -389,9 +389,9 @@ export const checkProximityEvents = (event, cb = null) => (dispatch, getState) =
                 success_message.html += `<br/><br/><strong>${T.translate("edit_event.proximity_alert")}</strong><br/>`;
 
                 for(var i in proximity_events) {
-                    let prox_event = proximity_events[i];
-                    let event_date = epochToMomentTimeZone(prox_event.start_date, currentSummit.time_zone_id).format('M/D h:mm a');
-                    let locationName = prox_event.location ? prox_event.location.name : 'TBD';
+                    const prox_event = proximity_events[i];
+                    const event_date = epochToMomentTimeZone(prox_event.start_date, currentSummit.time_zone_id).format('M/D h:mm a');
+                    const locationName = prox_event.location ? prox_event.location.name : 'TBD';
                     success_message.html += `<small><i>"${prox_event.title}"</i> at ${event_date} in ${locationName}</small><br/>`;
                 }
             }
@@ -403,17 +403,17 @@ export const checkProximityEvents = (event, cb = null) => (dispatch, getState) =
 }
 
 export const attachFile = (entity, file, attr) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let normalizedEntity = normalizeEntity(entity);
+    const normalizedEntity = normalizeEntity(entity);
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
-    let uploadFile = attr === 'file' ? uploadFile : uploadImage;
+    const uploadFile = attr === 'file' ? uploadFile : uploadImage;
 
     if (entity.id) {
         return dispatch(uploadFile(entity, file));
@@ -433,11 +433,11 @@ export const attachFile = (entity, file, attr) => (dispatch, getState) => {
 }
 
 const uploadFile = (entity, file) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -455,11 +455,11 @@ const uploadFile = (entity, file) => (dispatch, getState) => {
 }
 
 const uploadImage = (entity, file) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -477,11 +477,11 @@ const uploadImage = (entity, file) => (dispatch, getState) => {
 };
 
 export const removeImage = (eventId) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -498,7 +498,7 @@ export const removeImage = (eventId) => (dispatch, getState) => {
 };
 
 const normalizeEntity = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
     if (!normalizedEntity.start_date) delete normalizedEntity['start_date'];
     if (!normalizedEntity.end_date) delete normalizedEntity['end_date'];
     if (!normalizedEntity.rsvp_link) delete normalizedEntity['rsvp_link'];
@@ -524,11 +524,11 @@ const normalizeEntity = (entity) => {
 
 export const deleteEvent = (eventId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -546,17 +546,17 @@ export const deleteEvent = (eventId) => (dispatch, getState) => {
 
 export const exportEvents = ( term = null, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let filter = [];
-    let filename = currentSummit.name + '-Events.csv';
-    let params = {
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const filter = [];
+    const filename = currentSummit.name + '-Events.csv';
+    const params = {
         access_token : accessToken
     };
 
     if(term){
-        let escapedTerm = escapeFilterValue(term);
+        const escapedTerm = escapeFilterValue(term);
         filter.push(`title=@${escapedTerm},abstract=@${escapedTerm},tags=@${escapedTerm},speaker=@${escapedTerm},speaker_email=@${escapedTerm},id==${escapedTerm}`);
     }
 
@@ -566,7 +566,7 @@ export const exportEvents = ( term = null, order = 'id', orderDir = 1 ) => (disp
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '+' : '-';
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -575,11 +575,11 @@ export const exportEvents = ( term = null, order = 'id', orderDir = 1 ) => (disp
 };
 
 export const importEventsCSV =  (file, send_speaker_email) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 

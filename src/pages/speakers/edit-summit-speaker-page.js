@@ -38,15 +38,15 @@ class EditSummitSpeakerPage extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
-        const speakerId = this.props.match.params.speaker_id;
-        const newSpeakerId = newProps.match.params.speaker_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.speaker_id;
+        const newId = this.props.match.params.speaker_id;
 
-        if (speakerId !== newSpeakerId) {
-            if (!newSpeakerId) {
+        if (newId !== oldId) {
+            if (!newId) {
                 this.props.resetSpeakerForm();
             } else {
-                this.props.getSpeaker(newSpeakerId);
+                this.props.getSpeaker(newId);
             }
         }
     }

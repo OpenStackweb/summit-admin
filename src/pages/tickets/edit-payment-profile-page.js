@@ -32,9 +32,9 @@ class EditPaymentProfilePage extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
-        const oldId = this.props.match.params.payment_profile_id;
-        const newId = newProps.match.params.payment_profile_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.payment_profile_id;
+        const newId = this.props.match.params.payment_profile_id;
 
         if (newId !== oldId) {
             if (!newId) {

@@ -38,20 +38,20 @@ export const MEDIA_FILE_TYPE_DELETED        = 'MEDIA_FILE_TYPE_DELETED';
 
 
 export const getMediaFileTypes = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
-    let filter = [];
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
+    const filter = [];
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         page         : page,
         per_page     : perPage,
         access_token : accessToken
     };
 
     if(term){
-        let escapedTerm = escapeFilterValue(term);
+        const escapedTerm = escapeFilterValue(term);
         filter.push(`name=@${escapedTerm}`);
     }
 
@@ -61,7 +61,7 @@ export const getMediaFileTypes = (term = null, page = 1, perPage = 10, order = '
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '' : '-';
+        const orderDirSign = (orderDir === 1) ? '' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -78,12 +78,12 @@ export const getMediaFileTypes = (term = null, page = 1, perPage = 10, order = '
 };
 
 export const getAllMediaFileTypes = () => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
         page         : 1,
         per_page     : 100,
@@ -102,12 +102,12 @@ export const getAllMediaFileTypes = () => (dispatch, getState) => {
 };
 
 export const getMediaFileType = (mediaFileTypeId) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -127,13 +127,13 @@ export const resetMediaFileTypeForm = () => (dispatch, getState) => {
 };
 
 export const saveMediaFileType = (entity, noAlert = false) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity);
-    let params = { access_token : accessToken };
+    const normalizedEntity = normalizeEntity(entity);
+    const params = { access_token : accessToken };
 
     if (entity.id) {
 
@@ -154,7 +154,7 @@ export const saveMediaFileType = (entity, noAlert = false) => (dispatch, getStat
 
     } else {
 
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("media_file_type.created"),
             type: 'success'
@@ -179,10 +179,10 @@ export const saveMediaFileType = (entity, noAlert = false) => (dispatch, getStat
 
 export const deleteMediaFileType = (mediaFileTypeId) => (dispatch, getState) => {
 
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -200,7 +200,7 @@ export const deleteMediaFileType = (mediaFileTypeId) => (dispatch, getState) => 
 
 
 const normalizeEntity = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     delete(normalizedEntity['id']);
     delete(normalizedEntity['created']);

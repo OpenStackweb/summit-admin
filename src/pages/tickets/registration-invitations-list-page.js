@@ -13,8 +13,16 @@
 
 import React from 'react'
 import { connect } from 'react-redux';
+import {Modal, Pagination} from "react-bootstrap";
+import Swal from "sweetalert2";
 import T from 'i18n-react/dist/i18n-react';
-import {FreeTextSearch, SelectableTable, UploadInput, Dropdown} from 'openstack-uicore-foundation/lib/components';
+import {
+    FreeTextSearch,
+    SelectableTable,
+    UploadInput,
+    Dropdown,
+    ActionDropdown
+} from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
 import {
     exportInvitationsCSV, getInvitations, importInvitationsCSV, selectInvitation, unSelectInvitation,
@@ -22,8 +30,7 @@ import {
     setSelectedAll, sendEmails
 }
 from "../../actions/registration-invitation-actions";
-import {Modal, Pagination} from "react-bootstrap";
-import Swal from "sweetalert2";
+
 
 
 class RegistrationInvitationsListPage extends React.Component {
@@ -54,38 +61,30 @@ class RegistrationInvitationsListPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
+        const {currentSummit} = this.props;
+        if(currentSummit) {
             this.props.getInvitations('', 1, 10);
         }
     }
 
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
-            this.props.getInvitations();
-        }
-    }
-
     handleSearch(term) {
-        let {order, orderDir, page, perPage, showNonAccepted} = this.props;
+        const {order, orderDir, page, perPage, showNonAccepted} = this.props;
         this.props.getInvitations(term, page, perPage, order, orderDir, showNonAccepted);
     }
 
     handleEdit(invitation_id) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/registration-invitations/${invitation_id}`);
     }
 
     handleChangeFlowEvent(ev){
-        let {value, id} = ev.target;
+        const {value, id} = ev.target;
         this.props.setCurrentFlowEvent(value);
     }
 
     handleDeleteAll(){
 
-        let {deleteAllRegistrationInvitation} = this.props;
+        const {deleteAllRegistrationInvitation} = this.props;
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -102,7 +101,7 @@ class RegistrationInvitationsListPage extends React.Component {
     }
 
     handleDelete(invitation_id){
-        let {deleteRegistrationInvitation, invitations} = this.props;
+        const {deleteRegistrationInvitation, invitations} = this.props;
         let invitation = invitations.find(i => i.id === invitation_id);
 
         Swal.fire({
@@ -120,7 +119,7 @@ class RegistrationInvitationsListPage extends React.Component {
     }
 
     handleNewInvitation(){
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/registration-invitations/new`);
     }
 
@@ -129,7 +128,7 @@ class RegistrationInvitationsListPage extends React.Component {
         ev.stopPropagation();
         ev.preventDefault();
 
-        let {
+        const {
             selectedAll,
             term,
             showNonAccepted,
@@ -170,12 +169,12 @@ class RegistrationInvitationsListPage extends React.Component {
     }
 
     handleSort(index, key, dir, func) {
-        let {term, page, perPage, showNonAccepted} = this.props;
+        const {term, page, perPage, showNonAccepted} = this.props;
         this.props.getInvitations(term, page, perPage, key, dir, showNonAccepted);
     }
 
     handlePageChange(page) {
-        let {term, order, orderDir, perPage, showNonAccepted} = this.props;
+        const {term, order, orderDir, perPage, showNonAccepted} = this.props;
         this.props.getInvitations(term, page, perPage, order, orderDir, showNonAccepted);
     }
 
@@ -189,32 +188,32 @@ class RegistrationInvitationsListPage extends React.Component {
     }
 
     handleExportInvitations() {
-        let {term, order, orderDir, showNonAccepted} = this.props;
+        const {term, order, orderDir, showNonAccepted} = this.props;
         this.props.exportInvitationsCSV(term, order, orderDir, showNonAccepted);
     }
 
     handleChangeNonAccepted() {
-        let {term, order, page, orderDir, perPage, showNonAccepted, showNotSent} = this.props;
+        const {term, order, page, orderDir, perPage, showNonAccepted, showNotSent} = this.props;
         this.props.getInvitations(term, page, perPage, order, orderDir, !showNonAccepted, showNotSent);
     }
 
     handleChangeNoSent() {
-        let {term, order, page, orderDir, perPage, showNonAccepted, showNotSent} = this.props;
+        const {term, order, page, orderDir, perPage, showNonAccepted, showNotSent} = this.props;
         this.props.getInvitations(term, page, perPage, order, orderDir, showNonAccepted, !showNotSent);
     }
 
     render(){
 
-        let { currentSummit, invitations, term, order,
+        const { currentSummit, invitations, term, order,
             orderDir, totalInvitations,
             lastPage, currentPage, showNonAccepted,
             selectedInvitationsIds, showNotSent,
             currentFlowEvent, selectedAll
         } = this.props;
 
-        let {showImportModal, importFile} = this.state;
+        const {showImportModal, importFile} = this.state;
 
-        let columns = [
+        const columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
             { columnKey: 'email', value: T.translate("registration_invitation_list.email") },
             { columnKey: 'first_name', value: T.translate("registration_invitation_list.first_name") },
@@ -223,7 +222,7 @@ class RegistrationInvitationsListPage extends React.Component {
             { columnKey: 'is_sent', value: T.translate("registration_invitation_list.sent") },
         ];
 
-        let table_options = {
+        const table_options = {
             selectedIds: selectedInvitationsIds,
             sortCol: order,
             sortDir: orderDir,
@@ -242,7 +241,6 @@ class RegistrationInvitationsListPage extends React.Component {
         if(!currentSummit.id) return (<div />);
 
         let flowEventsDDL = [
-            {label: '-- SELECT EMAIL EVENT --', value: ''},
             {label: 'Initial Invite', value: 'SUMMIT_REGISTRATION_INVITE_REGISTRATION'},
             {label: 'Reminder', value: 'SUMMIT_REGISTRATION_REINVITE_REGISTRATION'},
         ];
@@ -251,66 +249,59 @@ class RegistrationInvitationsListPage extends React.Component {
             <div>
                 <div className="container">
                     <h3> {T.translate("registration_invitation_list.invitation_list")} ({totalInvitations})</h3>
-                    <div className={'row'}>
-                        <div className={'col-md-6'}>
-                            <FreeTextSearch
-                                value={term}
-                                placeholder={T.translate("registration_invitation_list.placeholders.search")}
-                                onSearch={this.handleSearch}
-                            />
-                        </div>
-                        <div className="col-md-6 text-right">
-                            <button className="btn btn-default right-space" onClick={() => this.setState({showImportModal:true})}>
-                                {T.translate("registration_invitation_list.import")}
-                            </button>
-                            <button className="btn btn-default right-space" onClick={this.handleExportInvitations}>
-                                {T.translate("registration_invitation_list.export")}
-                            </button>
-                            <button className="btn btn-primary right-space" onClick={this.handleNewInvitation}>
-                                {T.translate("registration_invitation_list.add_invitation")}
-                            </button>
-                            <button className="btn btn-danger right-space" onClick={this.handleDeleteAll}>
-                                {T.translate("registration_invitation_list.delete_all_invitations")}
-                            </button>
-                        </div>
-                    </div>
-                    <div className={'row'}>
-                        <div className={'col-md-2'}>
-                            <div className="form-check abc-checkbox">
-                                <input type="checkbox" id="showNonSent" checked={showNotSent}
-                                       className="form-check-input"
-                                       onChange={this.handleChangeNoSent}
+                    <div className="actions-wrapper">
+                        <div className="row">
+                            <div className="col-md-6">
+                                <FreeTextSearch
+                                    value={term}
+                                    placeholder={T.translate("registration_invitation_list.placeholders.search")}
+                                    onSearch={this.handleSearch}
                                 />
-                                <label className="form-check-label" htmlFor="showNonSent">
-                                    {T.translate("registration_invitation_list.show_non_sent")}
-                                </label>
+                            </div>
+                            <div className="col-md-6 text-right">
+                                <button className="btn btn-default right-space" onClick={() => this.setState({showImportModal:true})}>
+                                    {T.translate("registration_invitation_list.import")}
+                                </button>
+                                <button className="btn btn-default right-space" onClick={this.handleExportInvitations}>
+                                    {T.translate("registration_invitation_list.export")}
+                                </button>
+                                <button className="btn btn-primary right-space" onClick={this.handleNewInvitation}>
+                                    {T.translate("registration_invitation_list.add_invitation")}
+                                </button>
+                                <button className="btn btn-danger" onClick={this.handleDeleteAll}>
+                                    {T.translate("registration_invitation_list.delete_all_invitations")}
+                                </button>
                             </div>
                         </div>
-                        <div className={'col-md-2'}>
-                            <div className="form-check abc-checkbox">
-                                <input type="checkbox" id="showNonAccepted" checked={showNonAccepted}
-                                       className="form-check-input"
-                                       onChange={this.handleChangeNonAccepted}
-                                />
-                                <label className="form-check-label" htmlFor="showNonAccepted">
-                                    {T.translate("registration_invitation_list.show_non_accepted")}
-                                </label>
+                        <div className="row">
+                            <div className="col-md-6">
+                                <div className="form-check abc-checkbox col-md-6">
+                                    <input type="checkbox" id="showNonSent" checked={showNotSent}
+                                           className="form-check-input"
+                                           onChange={this.handleChangeNoSent}
+                                    />
+                                    <label className="form-check-label" htmlFor="showNonSent">
+                                        {T.translate("registration_invitation_list.show_non_sent")}
+                                    </label>
+                                </div>
+                                <div className="form-check abc-checkbox col-md-6">
+                                    <input type="checkbox" id="showNonAccepted" checked={showNonAccepted}
+                                           className="form-check-input"
+                                           onChange={this.handleChangeNonAccepted}
+                                    />
+                                    <label className="form-check-label" htmlFor="showNonAccepted">
+                                        {T.translate("registration_invitation_list.show_non_accepted")}
+                                    </label>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div className={'row'}>
-                        <div className={'col-md-5'}>
-                            <Dropdown
-                                id="flow_event"
-                                value={currentFlowEvent}
-                                onChange={this.handleChangeFlowEvent}
-                                options={flowEventsDDL}
-                            />
-                        </div>
-                        <div className={'col-md-1'}>
-                            <button className="btn btn-primary right-space" onClick={this.handleSendEmails}>
-                                {T.translate("registration_invitation_list.send_emails")}
-                            </button>
+                            <div className="col-md-6 text-right">
+                                <ActionDropdown
+                                    options={flowEventsDDL}
+                                    actionLabel={T.translate("registration_invitation_list.send_emails")}
+                                    placeholder="-- SELECT EMAIL EVENT --"
+                                    onClick={this.handleSendEmails}
+                                />
+                            </div>
                         </div>
                     </div>
 

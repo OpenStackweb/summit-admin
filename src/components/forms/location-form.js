@@ -119,42 +119,42 @@ class LocationForm extends React.Component {
     }
 
     handleNewFloor(ev) {
-        let {currentSummit, history, entity} = this.props;
+        const {currentSummit, history, entity} = this.props;
         history.push(`/app/summits/${currentSummit.id}/locations/${entity.id}/floors/new`);
     }
 
     handleFloorEdit(floorId) {
-        let {currentSummit, history, entity} = this.props;
+        const {currentSummit, history, entity} = this.props;
         history.push(`/app/summits/${currentSummit.id}/locations/${entity.id}/floors/${floorId}`);
     }
 
     handleNewRoom(ev) {
-        let {currentSummit, history, entity} = this.props;
+        const {currentSummit, history, entity} = this.props;
         history.push(`/app/summits/${currentSummit.id}/locations/${entity.id}/rooms/new`);
     }
 
     handleRoomEdit(roomId) {
-        let {currentSummit, history, entity} = this.props;
+        const {currentSummit, history, entity} = this.props;
         history.push(`/app/summits/${currentSummit.id}/locations/${entity.id}/rooms/${roomId}`);
     }
 
     handleNewImage(ev) {
-        let {currentSummit, history, entity} = this.props;
+        const {currentSummit, history, entity} = this.props;
         history.push(`/app/summits/${currentSummit.id}/locations/${entity.id}/images/new`);
     }
 
     handleImageEdit(imageId) {
-        let {currentSummit, history, entity} = this.props;
+        const {currentSummit, history, entity} = this.props;
         history.push(`/app/summits/${currentSummit.id}/locations/${entity.id}/images/${imageId}`);
     }
 
     handleNewMap(ev) {
-        let {currentSummit, history, entity} = this.props;
+        const {currentSummit, history, entity} = this.props;
         history.push(`/app/summits/${currentSummit.id}/locations/${entity.id}/maps/new`);
     }
 
     handleMapEdit(mapId) {
-        let {currentSummit, history, entity} = this.props;
+        const {currentSummit, history, entity} = this.props;
         history.push(`/app/summits/${currentSummit.id}/locations/${entity.id}/maps/${mapId}`);
     }
 
@@ -182,8 +182,8 @@ class LocationForm extends React.Component {
     }
 
     render() {
-        let {entity, showSection} = this.state;
-        let { currentSummit, allClasses } = this.props;
+        const {entity, showSection} = this.state;
+        const { currentSummit, allClasses } = this.props;
         let location_class_ddl = allClasses.map(l => ({label: l.class_name, value: l.class_name}));
         let airport_type_ddl = [ {label: 'International', value: 'International'}, {label: 'Domestic', value: 'Domestic'} ];
         let hotel_type_ddl = [ {label: 'Primary', value: 'Primary'}, {label: 'Alternate', value: 'Alternate'} ];

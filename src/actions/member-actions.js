@@ -34,10 +34,10 @@ export const ORGANIZATION_ADDED       = 'ORGANIZATION_ADDED';
 
 export const getMembers = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let filter = [];
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const filter = [];
 
     dispatch(startLoading());
 
@@ -45,7 +45,7 @@ export const getMembers = ( term = null, page = 1, perPage = 10, order = 'id', o
         filter.push(`schedule_event_id==${term}`);
     }
 
-    let params = {
+    const params = {
         page         : page,
         per_page     : perPage,
         access_token : accessToken,
@@ -57,7 +57,7 @@ export const getMembers = ( term = null, page = 1, perPage = 10, order = 'id', o
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '+' : '-';
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -76,23 +76,23 @@ export const getMembers = ( term = null, page = 1, perPage = 10, order = 'id', o
 
 export const getMembersForEventCSV = ( event ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let momentStartDate = moment(event.startDate).tz(currentSummit.time_zone_id);
-    let momentEndDate = moment(event.endDate).tz(currentSummit.time_zone_id);
+    const momentStartDate = moment(event.startDate).tz(currentSummit.time_zone_id);
+    const momentEndDate = moment(event.endDate).tz(currentSummit.time_zone_id);
 
-    let date = momentStartDate.format('dddd Do');
-    let time = momentStartDate.format('h:mm a') + ' - ' + momentEndDate.format('h:mm a');
-    let roomName = (event.location && event.location.venueroom) ? event.location.venueroom.name : 'N/A';
+    const date = momentStartDate.format('dddd Do');
+    const time = momentStartDate.format('h:mm a') + ' - ' + momentEndDate.format('h:mm a');
+    const roomName = (event.location && event.location.venueroom) ? event.location.venueroom.name : 'N/A';
 
-    let filename = `Room ${roomName}-Event ${event.id}-Attendees.csv`;
-    let header = `Room "${roomName}",${date},${time},"${event.title}"`;
+    const filename = `Room ${roomName}-Event ${event.id}-Attendees.csv`;
+    const header = `Room "${roomName}",${date},${time},"${event.title}"`;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
         columns: 'id,first_name,last_name,email,affiliations',
         'filter[]': [`schedule_event_id==${event.id}`]
@@ -109,10 +109,10 @@ export const getMembersForEventCSV = ( event ) => (dispatch, getState) => {
 
 
 export const addOrganization = (organization, callback) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -133,17 +133,17 @@ export const addOrganization = (organization, callback) => (dispatch, getState) 
 
 
 export const addAffiliation = (affiliation) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
         expand: 'organization'
     };
 
-    let normalizedEntity = normalizeEntity(affiliation);
+    const normalizedEntity = normalizeEntity(affiliation);
 
     postRequest(
         null,
@@ -159,17 +159,17 @@ export const addAffiliation = (affiliation) => (dispatch, getState) => {
 }
 
 export const saveAffiliation = (affiliation) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
-    let normalizedEntity = normalizeEntity(affiliation);
+    const normalizedEntity = normalizeEntity(affiliation);
 
     putRequest(
         null,
@@ -186,10 +186,10 @@ export const saveAffiliation = (affiliation) => (dispatch, getState) => {
 
 export const deleteAffiliation = (ownerId, affiliationId) => (dispatch, getState) => {
 
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -206,7 +206,7 @@ export const deleteAffiliation = (ownerId, affiliationId) => (dispatch, getState
 };
 
 const normalizeEntity = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     if (!normalizedEntity.end_date) delete(normalizedEntity['end_date']);
 

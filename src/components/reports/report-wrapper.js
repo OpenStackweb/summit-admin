@@ -141,7 +141,7 @@ const wrapReport = (ReportComponent, specs) => {
         }
 
         renderFilters() {
-            let {currentSummit} = this.props;
+            const {currentSummit} = this.props;
             let filterHtml = [];
             let {sort, sortdir, search, ...filters} = this.fragmentParser.getParams();
 
@@ -212,7 +212,7 @@ const wrapReport = (ReportComponent, specs) => {
         }
 
         render() {
-            let { match, currentPage, totalCount, perPage, currentSummit, exportData} = this.props;
+            const { match, currentPage, totalCount, perPage, currentSummit, exportData} = this.props;
             let {sort, sortdir, search, ...filters} = this.fragmentParser.getParams();
             let pageCount = Math.ceil(totalCount / perPage);
             let reportName = this.refs.childCmp ? this.refs.childCmp.getName() : 'report';

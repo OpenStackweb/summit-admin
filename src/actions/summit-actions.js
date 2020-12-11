@@ -43,11 +43,11 @@ export const SUMMIT_LOGO_DELETED      = 'SUMMIT_LOGO_DELETED';
 
 export const getSummitById = (summitId) => (dispatch, getState) => {
 
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
         expand: 'event_types,tracks,values,locations,locations.rooms'
     };
@@ -65,13 +65,13 @@ export const getSummitById = (summitId) => (dispatch, getState) => {
 
 export const setCurrentSummit = (summit) => (dispatch, getState) =>
 {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     if (summit) {
         dispatch(startLoading());
 
-        let params = {
+        const params = {
             access_token : accessToken,
             expand: 'event_types,tracks,locations,locations.rooms'
         };
@@ -96,12 +96,12 @@ export const setCurrentSummit = (summit) => (dispatch, getState) =>
 
 export const loadSummits = (page = 1, perPage = 10) => (dispatch, getState) => {
 
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
         expand: 'none',
         relations: 'none',
@@ -123,10 +123,10 @@ export const loadSummits = (page = 1, perPage = 10) => (dispatch, getState) => {
 
 export const getAllSummits = () => (dispatch, getState) => {
 
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
         expand: 'none',
         relations: 'none',
@@ -148,13 +148,13 @@ export const resetSummitForm = () => (dispatch, getState) => {
 };
 
 export const saveSummit = (entity) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity);
+    const normalizedEntity = normalizeEntity(entity);
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -173,7 +173,7 @@ export const saveSummit = (entity) => (dispatch, getState) => {
             });
 
     } else {
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_summit.summit_created"),
             type: 'success'
@@ -198,10 +198,10 @@ export const saveSummit = (entity) => (dispatch, getState) => {
 
 export const deleteSummit = (summitId) => (dispatch, getState) => {
 
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -219,16 +219,16 @@ export const deleteSummit = (summitId) => (dispatch, getState) => {
 
 
 export const attachLogo = (entity, file) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
-    let normalizedEntity = normalizeEntity(entity);
+    const normalizedEntity = normalizeEntity(entity);
 
     if (entity.id) {
         dispatch(uploadFile(entity, file));
@@ -249,10 +249,10 @@ export const attachLogo = (entity, file) => (dispatch, getState) => {
 }
 
 const uploadFile = (entity, file) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -270,11 +270,11 @@ const uploadFile = (entity, file) => (dispatch, getState) => {
 
 export const deleteLogo = () => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -292,7 +292,7 @@ export const deleteLogo = () => (dispatch, getState) => {
 
 
 const normalizeEntity = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     delete(normalizedEntity['id']);
     delete(normalizedEntity['created']);

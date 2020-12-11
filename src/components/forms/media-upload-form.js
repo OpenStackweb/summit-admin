@@ -81,8 +81,8 @@ class MediaUploadForm extends React.Component {
 
 
     render() {
-        let {entity} = this.state;
-        let { currentSummit, mediaFileTypes } = this.props;
+        const {entity} = this.state;
+        const { currentSummit, mediaFileTypes } = this.props;
 
         let private_storage_ddl = [
             {value: 'None', label:'None'},

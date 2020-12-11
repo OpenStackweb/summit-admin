@@ -28,7 +28,7 @@ import NoMatchPage from "../pages/no-match-page";
 class SpeakerLayout extends React.Component {
 
     render(){
-        let { match } = this.props;
+        const { match } = this.props;
         return(
             <div>
                 <Breadcrumb data={{ title: T.translate("speaker_list.speakers"), pathname: match.url }} />

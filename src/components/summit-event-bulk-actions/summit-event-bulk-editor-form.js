@@ -43,7 +43,7 @@ class SummitEventBulkEditorForm extends React.Component
     onApplyChanges(evt){
         evt.stopPropagation();
         evt.preventDefault();
-        let {currentSummit, events }  = this.props;
+        const {currentSummit, events }  = this.props;
         let invalidEvents = events.filter((event) => !event.is_valid);
         if(invalidEvents.length > 0){
             Swal.fire({
@@ -59,7 +59,7 @@ class SummitEventBulkEditorForm extends React.Component
     onApplyChangesAndPublish(evt){
         evt.stopPropagation();
         evt.preventDefault();
-        let {currentSummit, events }  = this.props;
+        const {currentSummit, events }  = this.props;
         let invalidEvents = events.filter((event) => !event.is_valid);
         if(invalidEvents.length > 0){
             Swal.fire({
@@ -94,7 +94,7 @@ class SummitEventBulkEditorForm extends React.Component
     }
 
     onSelectedEvent(event){
-        let { currentSummit} = this.props;
+        const { currentSummit} = this.props;
         this.props.history.push(`/app/summits/${currentSummit.id}/events/${event.id}`);
         return false;
     }

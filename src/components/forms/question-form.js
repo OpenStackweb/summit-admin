@@ -82,7 +82,7 @@ class QuestionForm extends React.Component {
     }
 
     shouldShowField(field){
-        let {entity} = this.state;
+        const {entity} = this.state;
         if (!entity.class_name) return false;
         let entity_type = this.props.questionClasses.find(c => c.class_name === entity.class_name);
 
@@ -90,7 +90,7 @@ class QuestionForm extends React.Component {
     }
 
     render() {
-        let {entity} = this.state;
+        const {entity} = this.state;
         let { onValueDelete, onValueSave, questionClasses } = this.props;
         let question_class_ddl = questionClasses.map(c => ({label: c.class_name, value: c.class_name}));
 

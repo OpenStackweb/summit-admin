@@ -38,13 +38,13 @@ export const TRACK_GROUP_ADDED             = 'TRACK_GROUP_ADDED';
 
 export const getSelectionPlan = (selectionPlanId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken,
         expand: 'track_groups'
     };
@@ -65,13 +65,13 @@ export const resetSelectionPlanForm = () => (dispatch, getState) => {
 };
 
 export const saveSelectionPlan = (entity) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity);
+    const normalizedEntity = normalizeEntity(entity);
 
     if (entity.id) {
 
@@ -88,7 +88,7 @@ export const saveSelectionPlan = (entity) => (dispatch, getState) => {
             });
 
     } else {
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_selection_plan.selection_plan_created"),
             type: 'success'
@@ -113,11 +113,11 @@ export const saveSelectionPlan = (entity) => (dispatch, getState) => {
 
 export const deleteSelectionPlan = (selectionPlanId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -135,13 +135,13 @@ export const deleteSelectionPlan = (selectionPlanId) => (dispatch, getState) => 
 
 export const addTrackGroupToSelectionPlan = (selectionPlanId, trackGroup) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -159,13 +159,13 @@ export const addTrackGroupToSelectionPlan = (selectionPlanId, trackGroup) => (di
 
 export const removeTrackGroupFromSelectionPlan = (selectionPlanId, trackGroupId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         access_token : accessToken
     };
 
@@ -182,7 +182,7 @@ export const removeTrackGroupFromSelectionPlan = (selectionPlanId, trackGroupId)
 };
 
 const normalizeEntity = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     if (!normalizedEntity['selection_begin_date']) normalizedEntity['selection_begin_date'] = null;
     if (!normalizedEntity['selection_end_date']) normalizedEntity['selection_end_date'] = null;

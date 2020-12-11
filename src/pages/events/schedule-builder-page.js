@@ -22,7 +22,7 @@ class ScheduleBuilderPage extends React.Component {
 
 
     render(){
-        let {currentSummit, match} = this.props;
+        const {currentSummit, match} = this.props;
         if(!currentSummit.id) return(<div />);
 
         return(

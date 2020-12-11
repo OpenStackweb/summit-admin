@@ -32,9 +32,9 @@ class EditRoomBookingPage extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
-        const oldId = this.props.match.params.room_booking_id;
-        const newId = newProps.match.params.room_booking_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.room_booking_id;
+        const newId = this.props.match.params.room_booking_id;
 
         if (newId !== oldId) {
             if (!newId) {

@@ -410,7 +410,7 @@ class PromocodeForm extends React.Component {
     }
 
     handleSendEmail(ev) {
-        let {entity} = this.state;
+        const {entity} = this.state;
         ev.preventDefault();
 
         this.props.onSendEmail(entity.id);
@@ -433,17 +433,17 @@ class PromocodeForm extends React.Component {
     }
 
     handleBadgeFeatureLink(value) {
-        let {entity} = this.state;
+        const {entity} = this.state;
         this.props.onBadgeFeatureLink(entity.id, value);
     }
 
     handleBadgeFeatureUnLink(valueId) {
-        let {entity} = this.state;
+        const {entity} = this.state;
         this.props.onBadgeFeatureUnLink(entity.id, valueId);
     }
 
     queryBadgeFeatures(input, callback) {
-        let {currentSummit} = this.props;
+        const {currentSummit} = this.props;
         let badgeFeatures = [];
 
         badgeFeatures = currentSummit.badge_features.filter(f => f.name.toLowerCase().indexOf(input.toLowerCase()) !== -1)
@@ -453,8 +453,8 @@ class PromocodeForm extends React.Component {
 
 
     render() {
-        let {entity} = this.state;
-        let { currentSummit, allTypes, allClasses } = this.props;
+        const {entity} = this.state;
+        const { currentSummit, allTypes, allClasses } = this.props;
         let promocode_class_ddl = allClasses.map(c => ({label: c.class_name, value: c.class_name}));
         let promocode_types_ddl = [];
 

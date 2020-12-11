@@ -29,11 +29,11 @@ class EditEmailFlowEventPage extends React.Component {
         props.getEmailFlowEvent(eventId);
     }
 
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.event_id;
-        let newId = newProps.match.params.event_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.event_id;
+        const newId = this.props.match.params.event_id;
 
-        if (newId !== oldId) {
+        if (oldId !== newId) {
             if (!newId) {
                 this.props.resetEmailFlowEventForm();
             } else {
@@ -43,9 +43,9 @@ class EditEmailFlowEventPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors, match, history} = this.props;
-        let title = T.translate("general.edit")
-        let breadcrumb = (entity.id) ? entity.flow_name : T.translate("general.new");
+        const {currentSummit, entity, errors, match, history} = this.props;
+        const title = T.translate("general.edit")
+        const breadcrumb = (entity.id) ? entity.flow_name : T.translate("general.new");
 
         return(
             <div className="container">

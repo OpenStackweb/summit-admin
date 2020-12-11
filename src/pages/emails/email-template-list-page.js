@@ -41,34 +41,34 @@ class EmailTemplateListPage extends React.Component {
     }
 
     handleEdit(template_id) {
-        let {history} = this.props;
+        const {history} = this.props;
         history.push(`/app/emails/templates/${template_id}`);
     }
 
     handlePageChange(page) {
-        let {term, order, orderDir, perPage} = this.props;
+        const {term, order, orderDir, perPage} = this.props;
         this.props.getEmailTemplates(term, page, perPage, order, orderDir);
     }
 
     handleSort(index, key, dir, func) {
-        let {term, page, perPage} = this.props;
+        const {term, page, perPage} = this.props;
         this.props.getEmailTemplates(term, page, perPage, key, dir);
     }
 
     handleSearch(term) {
-        let {order, orderDir, page, perPage} = this.props;
+        const {order, orderDir, page, perPage} = this.props;
         this.props.getEmailTemplates(term, page, perPage, order, orderDir);
     }
 
     handleNewEmailTemplate(ev) {
-        let {history} = this.props;
+        const {history} = this.props;
         ev.preventDefault();
 
         history.push(`/app/emails/templates/new`);
     }
 
     handleDeleteEmailTemplate(templateId) {
-        let {deleteEmailTemplate, templates} = this.props;
+        const {deleteEmailTemplate, templates} = this.props;
         let template = templates.find(t => t.id === templateId);
 
         Swal.fire({
@@ -86,16 +86,16 @@ class EmailTemplateListPage extends React.Component {
     }
 
     render(){
-        let {templates, lastPage, currentPage, term, order, orderDir, totalTemplates} = this.props;
+        const {templates, lastPage, currentPage, term, order, orderDir, totalTemplates} = this.props;
 
-        let columns = [
+        const columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
             { columnKey: 'identifier', value: T.translate("emails.name"), sortable: true },
             { columnKey: 'subject', value: T.translate("emails.subject") },
             { columnKey: 'from_email', value: T.translate("emails.from_email")},
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: order,
             sortDir: orderDir,
             actions: {

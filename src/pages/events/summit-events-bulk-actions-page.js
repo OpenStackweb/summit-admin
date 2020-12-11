@@ -36,7 +36,7 @@ class SummitEventsBulkActionsPage extends React.Component {
     constructor(props) {
         super(props);
         // get events ids from query string
-        let { location, history } = this.props;
+        const { location, history } = this.props;
         let query      = URI.parseQuery(location.search);
 
         if(!query.hasOwnProperty('id[]')) {
@@ -52,14 +52,14 @@ class SummitEventsBulkActionsPage extends React.Component {
     }
 
     componentDidMount(){
-        let { currentSummit }  = this.props;
+        const { currentSummit }  = this.props;
         if(this.state == null || !this.state.hasOwnProperty('eventIds')) return;
 
         this.props.getSummitEventsById(currentSummit.id, this.state.eventIds);
     }
 
     render(){
-        let {
+        const {
             events,
             match,
             currentSummit,

@@ -34,27 +34,19 @@ class TaxTypeListPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            this.props.getTaxTypes();
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
+        const {currentSummit} = this.props;
+        if(currentSummit) {
             this.props.getTaxTypes();
         }
     }
 
     handleEdit(tax_type_id) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/tax-types/${tax_type_id}`);
     }
 
     handleDelete(taxTypeId) {
-        let {deleteTaxType, taxTypes} = this.props;
+        const {deleteTaxType, taxTypes} = this.props;
         let taxType = taxTypes.find(t => t.id === taxTypeId);
 
         Swal.fire({
@@ -76,20 +68,20 @@ class TaxTypeListPage extends React.Component {
     }
 
     handleNewTaxType(ev) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/tax-types/new`);
     }
 
     render(){
-        let {currentSummit, taxTypes, order, orderDir, totalTaxTypes} = this.props;
+        const {currentSummit, taxTypes, order, orderDir, totalTaxTypes} = this.props;
 
-        let columns = [
+        const columns = [
             { columnKey: 'name', value: T.translate("tax_type_list.name"), sortable: true },
             { columnKey: 'rate', value: T.translate("tax_type_list.rate") },
             { columnKey: 'tax_id', value: T.translate("tax_type_list.tax_id") }
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: order,
             sortDir: orderDir,
             actions: {

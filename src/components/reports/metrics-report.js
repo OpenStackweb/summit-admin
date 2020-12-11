@@ -87,7 +87,7 @@ class MetricsReport extends React.Component {
     };
 
     buildMemberQuery = (filters, listFilters) => {
-        let {currentSummit} = this.props;
+        const {currentSummit} = this.props;
         const {fromDate, toDate, eventType} = this.state;
         const overallFilter = [];
         const dateFilter = [];

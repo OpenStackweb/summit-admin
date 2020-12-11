@@ -29,7 +29,7 @@ class TagReport extends React.Component {
     }
 
     buildReportQuery(filters, listFilters) {
-        let {currentSummit, sortKey, sortDir} = this.props;
+        const {currentSummit, sortKey, sortDir} = this.props;
 
         listFilters.summitId = currentSummit.id;
         listFilters.published = true;

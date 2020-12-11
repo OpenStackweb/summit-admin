@@ -82,7 +82,7 @@ class RoomBookingAttributeForm extends React.Component {
 
 
     render() {
-        let {currentSummit, entity} = this.state;
+        const {currentSummit, entity} = this.state;
 
         let value_columns = [
             { columnKey: 'value', value: T.translate("general.value") }

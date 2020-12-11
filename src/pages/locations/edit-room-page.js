@@ -33,10 +33,10 @@ class EditRoomPage extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
-        let {currentLocation} = newProps;
-        let oldId = this.props.match.params.room_id;
-        let newId = newProps.match.params.room_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.room_id;
+        const newId = this.props.match.params.room_id;
+        const {currentLocation} = this.props;
 
         if (oldId !== newId && currentLocation) {
             this.props.getRoom(currentLocation.id, newId);
@@ -44,9 +44,9 @@ class EditRoomPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, currentLocation, entity, errors, allFloors, match, attachRoomImage, deleteRoomImage} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+        const {currentSummit, currentLocation, entity, errors, allFloors, match, attachRoomImage, deleteRoomImage} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
         return(
             <div className="container">

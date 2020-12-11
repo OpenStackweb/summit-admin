@@ -28,7 +28,7 @@ class RsvpReport extends React.Component {
     }
 
     buildReportQuery(filters, listFilters) {
-        let {currentSummit} = this.props;
+        const {currentSummit} = this.props;
 
         listFilters.isRsvp = true;
         listFilters.summitId = currentSummit.id;

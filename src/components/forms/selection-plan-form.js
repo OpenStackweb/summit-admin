@@ -90,19 +90,19 @@ class SelectionPlanForm extends React.Component {
     }
 
     handleTrackGroupLink(value) {
-        let {entity} = this.state;
+        const {entity} = this.state;
         this.props.onTrackGroupLink(entity.id, value);
     }
 
     handleTrackGroupUnLink(valueId) {
-        let {entity} = this.state;
+        const {entity} = this.state;
         this.props.onTrackGroupUnLink(entity.id, valueId);
     }
 
 
     render() {
-        let {entity} = this.state;
-        let { currentSummit } = this.props;
+        const {entity} = this.state;
+        const { currentSummit } = this.props;
 
         let trackGroupsColumns = [
             { columnKey: 'name', value: T.translate("edit_selection_plan.name") },

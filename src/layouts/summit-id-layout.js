@@ -73,11 +73,11 @@ class SummitIdLayout extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.summit_id;
-        let newId = newProps.match.params.summit_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.summit_id;
+        const newId = this.props.match.params.summit_id;
 
-        if (newId !== oldId) {
+        if (oldId !== newId) {
             if (!newId) {
                 this.props.resetSummitForm();
             } else {
@@ -87,7 +87,7 @@ class SummitIdLayout extends React.Component {
     }
 
     render(){
-        let { match, currentSummit } = this.props;
+        const { match, currentSummit } = this.props;
         let summitId = this.props.match.params.summit_id;
         let breadcrumb = currentSummit.id ? currentSummit.name : T.translate("general.new_summit");
 

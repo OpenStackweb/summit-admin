@@ -37,42 +37,34 @@ class SpeakerAttendanceListPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            this.props.getAttendances();
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit != null && currentSummit.id !== newProps.currentSummit.id) {
+        const {currentSummit} = this.props;
+        if(currentSummit) {
             this.props.getAttendances();
         }
     }
 
     handleEdit(attendanceId) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/speaker-attendances/${attendanceId}`);
     }
 
     handlePageChange(page) {
-        let {term, order, orderDir, perPage} = this.props;
+        const {term, order, orderDir, perPage} = this.props;
         this.props.getAttendances(term, page, perPage, order, orderDir);
     }
 
     handleSort(index, key, dir, func) {
-        let {term, page, perPage} = this.props;
+        const {term, page, perPage} = this.props;
         this.props.getAttendances(term, page, perPage, key, dir);
     }
 
     handleSearch(term) {
-        let {order, orderDir, page, perPage} = this.props;
+        const {order, orderDir, page, perPage} = this.props;
         this.props.getAttendances(term, page, perPage, order, orderDir);
     }
 
     handleDeleteAttendance(attendanceId) {
-        let {deleteAttendance, attendances} = this.props;
+        const {deleteAttendance, attendances} = this.props;
         let attendance = attendances.find(a => a.id === attendanceId);
 
         Swal.fire({
@@ -91,28 +83,28 @@ class SpeakerAttendanceListPage extends React.Component {
 
     isNotConfirmed(attendanceId) {
 
-        let {attendances} = this.props;
+        const {attendances} = this.props;
         let attendance = attendances.find(a => a.id === attendanceId);
 
         return (attendance.is_confirmed === 'No');
     }
 
     handleExport(ev) {
-        let {term, order, orderDir} = this.props;
+        const {term, order, orderDir} = this.props;
         ev.preventDefault();
 
         this.props.exportAttendances(term, order, orderDir);
     }
 
     handleNewAttendance(ev) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/speaker-attendances/new`);
     }
 
     render(){
-        let {currentSummit, attendances, lastPage, currentPage, term, order, orderDir, totalAttendances} = this.props;
+        const {currentSummit, attendances, lastPage, currentPage, term, order, orderDir, totalAttendances} = this.props;
 
-        let columns = [
+        const columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
             { columnKey: 'created', value: T.translate("speaker_attendance_list.created"), sortable: true },
             { columnKey: 'speaker_name', value: T.translate("general.name") },
@@ -122,7 +114,7 @@ class SpeakerAttendanceListPage extends React.Component {
             { columnKey: 'confirmation_date', value: T.translate("speaker_attendance_list.confirmation_date"), sortable: true },
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: order,
             sortDir: orderDir,
             actions: {

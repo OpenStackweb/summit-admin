@@ -32,9 +32,9 @@ class EditSponsorshipPage extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
-        const oldId = this.props.match.params.sponsorship_id;
-        const newId = newProps.match.params.sponsorship_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.sponsorship_id;
+        const newId = this.props.match.params.sponsorship_id;
 
         if (newId !== oldId) {
             if (!newId) {

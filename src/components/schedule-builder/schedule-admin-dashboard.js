@@ -60,7 +60,9 @@ import * as Scroll from 'react-scroll';
 import Swal from "sweetalert2";
 import ScheduleAdminEmptySpotsModal from './schedule-admin-empty-spots-modal';
 import ScheduleAdminEmptySpotsList from './schedule-admin-empty-spots-list';
-import ScheduleAdminsBulkActionsSelector from './bulk-actions/schedule-admin-bulk-actions-selector'
+import ScheduleAdminsBulkActionsSelector from './bulk-actions/schedule-admin-bulk-actions-selector';
+import {epochToMomentTimeZone} from 'openstack-uicore-foundation/lib/methods';
+
 
 class ScheduleAdminDashBoard extends React.Component {
 
@@ -103,34 +105,35 @@ class ScheduleAdminDashBoard extends React.Component {
     }
 
     parseFilterFromFragment(){
-        // read url hash and redirect to event
-        let { currentSummit } = this.props;
-        if(!currentSummit.id) return;
-        var hash    = this.fragmentParser.getParams();
-        var filters = {};
+        const { currentSummit } = this.props;
+        const hash    = this.fragmentParser.getParams();
+        const filters = {};
+
+        if(!currentSummit) return;
+
         for(let key in hash) {
             let value = hash[key];
             switch(key) {
                 case 'day':
-                    filters['currentDay'] = value;
+                    filters.currentDay = value;
                     break;
                 case 'location_id':
-                    let location = currentSummit.locations.filter((location) => location.id === value).shift()
+                    const location = currentSummit.locations.filter(l => l.id === parseInt(value)).shift();
                     if(location) {
-                        filters['currentLocation'] = location;
+                        filters.currentLocation = location;
                     }
                     if(value === 0){ //special case TBD location
-                        filters['currentLocation'] = {id : 0, name : 'TBD'};
+                        filters.currentLocation = {id : 0, name : 'TBD'};
                     }
                     break;
                 case 'event':
-                        filters['currentEvent'] = value;
+                        filters.currentEvent = value;
                     break;
                 case 'time':
-                    filters['currentTime'] = value;
+                    filters.currentTime = value;
                     break;
                 case 'q':
-                    filters['currentScheduleEventsSearchTerm'] = decodeURIComponent(value.replace(/\+/g, '%20'));
+                    filters.currentScheduleEventsSearchTerm = decodeURIComponent(value.replace(/\+/g, '%20'));
                     break;
             }
         }
@@ -138,39 +141,26 @@ class ScheduleAdminDashBoard extends React.Component {
     }
 
     componentDidMount(){
+        const { currentSummit, currentEventType, currentTrack, currentPresentationSelectionStatus, currentPresentationSelectionPlan, currentDay, currentLocation, scheduleEventsCurrentSearchTerm, currentUnScheduleOrderBy } = this.props;
+        const eventTypeId = currentEventType === null ? null : currentEventType.id;
+        const trackId     = currentTrack === null ? null : currentTrack.id;
 
-        let { currentSummit, currentEventType, currentTrack, currentPresentationSelectionStatus, currentPresentationSelectionPlan, currentDay, currentLocation, scheduleEventsCurrentSearchTerm, currentUnScheduleOrderBy } = this.props;
-        if(!currentSummit.id) return;
+        if(!currentSummit) return;
 
-        let eventTypeId = currentEventType === null ? null : currentEventType.id;
-        let trackId     = currentTrack === null ? null : currentTrack.id;
         this.props.getUnScheduleEventsPage(currentSummit.id, 1, 20, eventTypeId, trackId, currentPresentationSelectionStatus, currentPresentationSelectionPlan,'', currentUnScheduleOrderBy);
 
-        if(this.filters.hasOwnProperty('currentScheduleEventsSearchTerm')) {
-            scheduleEventsCurrentSearchTerm = this.filters['currentScheduleEventsSearchTerm'];
-            this.onScheduledEventsFilterTextChanged(scheduleEventsCurrentSearchTerm);
-            return;
-        }
-
-        if(this.filters.hasOwnProperty('currentDay')) {
-            currentDay = this.filters['currentDay'];
-            this.props.changeCurrentSelectedDay(currentDay);
-        }
-
-        if(this.filters.hasOwnProperty('currentLocation')) {
-            currentLocation = this.filters['currentLocation'];
-            this.props.changeCurrentSelectedLocation(currentLocation);
-        }
-
-
-        if(window.location.hash === '' && currentDay != null && currentLocation != null){
+        if(window.location.hash === '' && currentDay && currentLocation){
             this.byPassHashRefresh = true;
             this.fragmentParser.setParam('day', currentDay);
             this.fragmentParser.setParam('location_id', currentLocation.id);
             window.location.hash   = this.fragmentParser.serialize();
         }
 
-        this.updatePublishedList(currentDay, currentLocation);
+        this.filters = this.parseFilterFromFragment();
+
+        this.updateFilters();
+
+        this.updatePublishedList(this.filters.currentDay, this.filters.currentLocation);
 
         window.onhashchange = (event) =>
         {
@@ -181,29 +171,29 @@ class ScheduleAdminDashBoard extends React.Component {
 
             this.filters = this.parseFilterFromFragment();
             this.shouldTestDeepLink = true;
-            if(this.filters.hasOwnProperty('currentScheduleEventsSearchTerm')) {
-                scheduleEventsCurrentSearchTerm = this.filters['currentScheduleEventsSearchTerm'];
-                this.onScheduledEventsFilterTextChanged(scheduleEventsCurrentSearchTerm);
-                return;
-            }
-
-            if(this.filters.hasOwnProperty('currentDay')) {
-                currentDay = this.filters['currentDay'];
-                this.props.changeCurrentSelectedDay(currentDay);
-            }
-
-            if(this.filters.hasOwnProperty('currentLocation')) {
-                currentLocation = this.filters['currentLocation'];
-                this.props.changeCurrentSelectedLocation(currentLocation);
-            }
+            this.updateFilters();
             this.updatePublishedList(currentDay, currentLocation);
 
         };
+    }
 
+    updateFilters () {
+        if(this.filters.hasOwnProperty('currentScheduleEventsSearchTerm')) {
+            this.onScheduledEventsFilterTextChanged(this.filters.currentScheduleEventsSearchTerm);
+            return;
+        }
+
+        if(this.filters.hasOwnProperty('currentDay')) {
+            this.props.changeCurrentSelectedDay(this.filters.currentDay);
+        }
+
+        if(this.filters.hasOwnProperty('currentLocation')) {
+            this.props.changeCurrentSelectedLocation(this.filters.currentLocation);
+        }
     }
 
     updatePublishedList(day, location){
-        let { currentSummit } = this.props;
+        const { currentSummit } = this.props;
         if( day == null || location == null)
         {
             this.props.clearPublishedEvents();
@@ -242,14 +232,14 @@ class ScheduleAdminDashBoard extends React.Component {
     }
 
     onUnScheduleEventsPageChange(currentPage){
-        let { currentSummit, currentTrack, currentEventType , currentPresentationSelectionStatus, currentPresentationSelectionPlan, unScheduleEventsCurrentSearchTerm, currentUnScheduleOrderBy} = this.props;
+        const { currentSummit, currentTrack, currentEventType , currentPresentationSelectionStatus, currentPresentationSelectionPlan, unScheduleEventsCurrentSearchTerm, currentUnScheduleOrderBy} = this.props;
         let trackId = currentTrack == null ? null : currentTrack.id;
         let eventTypeId = currentEventType == null ? null : currentEventType.id;
         this.props.getUnScheduleEventsPage(currentSummit.id, currentPage, 20, eventTypeId, trackId, currentPresentationSelectionStatus, currentPresentationSelectionPlan, unScheduleEventsCurrentSearchTerm, currentUnScheduleOrderBy);
     }
 
     onEventTypeChanged(eventType){
-        let { currentSummit, currentTrack, currentPresentationSelectionStatus, currentPresentationSelectionPlan, unScheduleEventsCurrentSearchTerm, currentUnScheduleOrderBy} = this.props;
+        const { currentSummit, currentTrack, currentPresentationSelectionStatus, currentPresentationSelectionPlan, unScheduleEventsCurrentSearchTerm, currentUnScheduleOrderBy} = this.props;
         let trackId = currentTrack == null ? null : currentTrack.id;
         let eventTypeId = eventType == null ? null : eventType.id;
         let selectionStatus = currentPresentationSelectionStatus;
@@ -265,7 +255,7 @@ class ScheduleAdminDashBoard extends React.Component {
     }
 
     onTrackChanged(track){
-        let { currentSummit, currentEventType , currentPresentationSelectionStatus, currentPresentationSelectionPlan, unScheduleEventsCurrentSearchTerm, currentUnScheduleOrderBy} = this.props;
+        const { currentSummit, currentEventType , currentPresentationSelectionStatus, currentPresentationSelectionPlan, unScheduleEventsCurrentSearchTerm, currentUnScheduleOrderBy} = this.props;
         let eventTypeId = currentEventType == null ? null : currentEventType.id;
         let trackId     = track == null ? null : track.id;
         this.props.changeCurrentTrack(track);
@@ -273,7 +263,7 @@ class ScheduleAdminDashBoard extends React.Component {
     }
 
     onPresentationSelectionStatusChanged(presentationSelectionStatus){
-        let { currentSummit, currentEventType, currentTrack, unScheduleEventsCurrentSearchTerm, currentPresentationSelectionPlan, currentUnScheduleOrderBy } = this.props;
+        const { currentSummit, currentEventType, currentTrack, unScheduleEventsCurrentSearchTerm, currentPresentationSelectionPlan, currentUnScheduleOrderBy } = this.props;
         let eventTypeId = currentEventType == null ? null : currentEventType.id;
         let trackId = currentTrack == null ? null : currentTrack.id;
         let order = currentUnScheduleOrderBy;
@@ -291,7 +281,7 @@ class ScheduleAdminDashBoard extends React.Component {
     }
 
     onPresentationSelectionPlanChanged(presentationSelectionPlan){
-        let { currentSummit, currentEventType, currentTrack, currentPresentationSelectionStatus, unScheduleEventsCurrentSearchTerm, currentUnScheduleOrderBy } = this.props;
+        const { currentSummit, currentEventType, currentTrack, currentPresentationSelectionStatus, unScheduleEventsCurrentSearchTerm, currentUnScheduleOrderBy } = this.props;
         let eventTypeId = currentEventType == null ? null : currentEventType.id;
         let trackId = currentTrack == null ? null : currentTrack.id;
         let order = currentUnScheduleOrderBy;
@@ -301,7 +291,7 @@ class ScheduleAdminDashBoard extends React.Component {
     }
 
     onUnscheduledEventsFilterTextChanged(term){
-        let { currentSummit, currentEventType, currentTrack, currentPresentationSelectionStatus, currentPresentationSelectionPlan} = this.props;
+        const { currentSummit, currentEventType, currentTrack, currentPresentationSelectionStatus, currentPresentationSelectionPlan} = this.props;
         let eventTypeId = currentEventType == null ? null : currentEventType.id;
         let trackId    = currentTrack == null ? null : currentTrack.id;
         this.props.changeCurrentUnscheduleSearchTerm(term)
@@ -355,28 +345,27 @@ class ScheduleAdminDashBoard extends React.Component {
         this.shouldTestDeepLink = false;
     }
 
-    testDeepLinks(){
+    testDeepLinks() {
         if(this.timeoutHandler != null){
             window.clearTimeout(this.timeoutHandler)
         }
+
         this.timeoutHandler =  window.setTimeout(() => {
             if (this.filters.hasOwnProperty('currentTime')) {
-                let time = this.filters['currentTime'];
-                // clear param
+                this.scrollToElement(this.filters.currentTime);
                 this.fragmentParser.deleteParam('time');
                 this.byPassHashRefresh = true;
                 window.location.hash = this.fragmentParser.serialize();
                 this.filters = this.parseFilterFromFragment();
-                this.scrollToElement(time);
             }
 
             if (this.filters.hasOwnProperty('currentEvent')) {
-                let eventId = this.filters['currentEvent'];
+                this.scrollToElement(`event_${this.filters.currentEvent}`);
                 this.fragmentParser.deleteParam('event');
                 this.byPassHashRefresh = true;
                 window.location.hash = this.fragmentParser.serialize();
                 this.filters = this.parseFilterFromFragment();
-                this.scrollToElement(`event_${eventId}`);
+
             }
         }, 1500);
     }
@@ -472,7 +461,7 @@ class ScheduleAdminDashBoard extends React.Component {
     }
 
     onClickSpot(spot){
-        let { currentSummit } = this.props;
+        const { currentSummit } = this.props;
         let start_date = moment.tz(spot.start_date * 1000, currentSummit.time_zone.name);
         this.fragmentParser.setParam('q','');
         this.fragmentParser.setParam('event','');
@@ -557,25 +546,21 @@ class ScheduleAdminDashBoard extends React.Component {
 
 
         // parse summits dates
-        let days = [];
-
-        let summitLocalStartDate         = moment(currentSummit.start_date * 1000).tz(currentSummit.time_zone.name);
-        let summitLocalEndDate           = moment(currentSummit.end_date * 1000).tz(currentSummit.time_zone.name);
+        const days = [];
+        const summitLocalStartDate       = epochToMomentTimeZone(currentSummit.start_date, currentSummit.time_zone_id);
+        const summitLocalEndDate         = epochToMomentTimeZone(currentSummit.end_date, currentSummit.time_zone_id);
         let currentAuxDay                = summitLocalStartDate.clone();
-        let currentDaySelectorItem       = null;
         let currentVenueSelectorItem     = null;
         let currentTrackSelectorItem     = null;
         let currentEventTypeSelectorItem = null;
+        const isNotSearchOrEmpty = !scheduleEventsCurrentSearchTerm && emptySpots.length === 0;
 
         do{
-            let option = { value: currentAuxDay.format("YYYY-MM-DD") , label: currentAuxDay.format('dddd Do , MMMM YYYY') };
-            if(currentDay != null && currentAuxDay.format("YYYY-MM-DD") === currentDay)
-                currentDaySelectorItem = option;
+            const option = { value: currentAuxDay.format("YYYY-MM-DD") , label: currentAuxDay.format('dddd Do , MMMM YYYY') };
             days.push(option);
             currentAuxDay = currentAuxDay.clone();
             currentAuxDay.add(1, 'day');
         } while(!currentAuxDay.isAfter(summitLocalEndDate));
-
 
         // parse summit venues
         // TBD location
@@ -592,6 +577,7 @@ class ScheduleAdminDashBoard extends React.Component {
         if(currentLocation != null && TBALocation.id === currentLocation.id){
             currentVenueSelectorItem = tbdOption;
         }
+
 
         for(let i = 0; i < currentSummit.locations.length; i++) {
             let location = currentSummit.locations[i];
@@ -652,7 +638,7 @@ class ScheduleAdminDashBoard extends React.Component {
             { value : 'id', label: 'Id' },
             { value : 'start_date', label: 'Start Date' },
             { value : 'trackchairsel', label: 'Track Chair Sel.' },
-        ]
+        ];
 
         // bulk options published
 
@@ -663,7 +649,7 @@ class ScheduleAdminDashBoard extends React.Component {
 
         let bulkOptionsUnPublished = [
             { value : BulkActionEdit, label:T.translate("published_bulk_actions_selector.options.edit")},
-        ]
+        ];
 
         return(
 
@@ -700,32 +686,28 @@ class ScheduleAdminDashBoard extends React.Component {
                         </Modal>
                     }
 
-                    {
-                        ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm === '' ) &&
-                        (emptySpots.length === 0 ) &&
-                        <ScheduleAdminDaySelector onDayChanged={this.onDayChanged} days={days}
-                                                  currentValue={currentDaySelectorItem}/>
+                    {isNotSearchOrEmpty &&
+                        <ScheduleAdminDaySelector 
+                            onDayChanged={this.onDayChanged} 
+                            days={days} 
+                            currentValue={currentDay} 
+                        />
                     }
-                    { ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm === '' ) &&
-                        ( emptySpots.length === 0 ) &&
-                        <ScheduleAdminVenueSelector onVenueChanged={this.onVenueChanged}
-                                                    venues={venues} currentValue={currentVenueSelectorItem} />
+                    {isNotSearchOrEmpty &&
+                        <ScheduleAdminVenueSelector 
+                            onVenueChanged={this.onVenueChanged}
+                            venues={venues} 
+                            currentValue={currentVenueSelectorItem} 
+                        />
                     }
-                    { ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm === '' )
-                      && ( emptySpots.length === 0 )
-                      && ( scheduleEvents.length > 0)
-                      && <ScheduleAdminsBulkActionsSelector
+                    {isNotSearchOrEmpty && scheduleEvents.length > 0 && 
+                        <ScheduleAdminsBulkActionsSelector
                             bulkOptions={bulkOptionsPublished}
                             onSelectAll={this.onSelectAllPublished}
                             onSelectedBulkAction={this.onSelectedBulkActionPublished}
-                         >
-                         </ScheduleAdminsBulkActionsSelector>
+                        />
                     }
-                    { ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm === '' )
-                        && currentDay != null
-                        && currentLocation != null
-                        && (emptySpots.length === 0 )
-                        &&
+                    {isNotSearchOrEmpty && currentDay && currentLocation &&
                         <ScheduleEventList
                             startTime={"00:00"}
                             endTime={"23:50"}
@@ -749,10 +731,7 @@ class ScheduleAdminDashBoard extends React.Component {
                         searchTerm={scheduleEventsCurrentSearchTerm}
                         onEditEvent={this.onEditEvent}
                     />
-                    {
-                        ( scheduleEventsCurrentSearchTerm == null || scheduleEventsCurrentSearchTerm === '' ) &&
-                        (currentDay == null || currentLocation == null) &&
-                        (emptySpots.length === 0 ) &&
+                    {isNotSearchOrEmpty && (!currentDay || !currentLocation) &&
                         <p className="empty-list-message">{T.translate("errors.empty_list_schedule_events")}</p>
                     }
                 </div>

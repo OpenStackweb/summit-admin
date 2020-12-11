@@ -26,7 +26,7 @@ import RegistrationInvitationEmailActivity from "../../components/forms/registra
 class EditRegistrationInvitationPage extends React.Component {
 
     componentDidMount () {
-        let {getSentEmailsByTemplatesAndEmail} = this.props;
+        const {getSentEmailsByTemplatesAndEmail} = this.props;
         let registrationInvitationId = this.props.match.params.registration_invitation_id;
 
         if (!registrationInvitationId) {
@@ -43,12 +43,11 @@ class EditRegistrationInvitationPage extends React.Component {
                 payload.email
             )
         });
-
     }
 
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.registration_invitation_id;
-        let newId = newProps.match.params.registration_invitation_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.registration_invitation_id;
+        const newId = this.props.match.params.registration_invitation_id;
 
         if (newId !== oldId) {
             if (!newId) {
@@ -60,9 +59,9 @@ class EditRegistrationInvitationPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors, match, emailActivity} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.id : T.translate("general.new");
+        const {currentSummit, entity, errors, match, emailActivity} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.id : T.translate("general.new");
 
         return(
             <div className="container">

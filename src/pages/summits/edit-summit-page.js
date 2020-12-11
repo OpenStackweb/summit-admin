@@ -35,7 +35,7 @@ class EditSummitPage extends React.Component {
     }
 
     handleSPlanDelete(selectionPlanId) {
-        let {currentSummit, deleteSelectionPlan} = this.props;
+        const {currentSummit, deleteSelectionPlan} = this.props;
         let selectionPlan = currentSummit.selection_plans.find(sp => sp.id === selectionPlanId);
 
         Swal.fire({
@@ -53,7 +53,7 @@ class EditSummitPage extends React.Component {
     }
 
     handleAttributeTypeDelete(attributeTypeId) {
-        let {deleteRoomBookingAttributeType, currentSummit} = this.props;
+        const {deleteRoomBookingAttributeType, currentSummit} = this.props;
         let roomBookingType = currentSummit.meeting_booking_room_allowed_attributes.find(rb => rb.id === attributeTypeId);
 
         Swal.fire({
@@ -72,7 +72,7 @@ class EditSummitPage extends React.Component {
 
 
     render(){
-        let {currentSummit, attachLogo, deleteLogo, errors, history} = this.props;
+        const {currentSummit, attachLogo, deleteLogo, errors, history} = this.props;
 
         return(
             <div className="container">

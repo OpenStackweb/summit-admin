@@ -32,32 +32,24 @@ class EmailFlowEventListPage extends React.Component {
     }
 
     handleSearch(term) {
-        let {order, orderDir, page, perPage} = this.props;
+        const {order, orderDir, page, perPage} = this.props;
         this.props.getEmailFlowEvents(term, page, perPage, order, orderDir);
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            this.props.getEmailFlowEvents();
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
+        const {currentSummit} = this.props;
+        if(currentSummit) {
             this.props.getEmailFlowEvents();
         }
     }
 
     handleEdit(event_id) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/email-flow-events/${event_id}`);
     }
 
     handlePageChange(page) {
-        let {term, order, orderDir, perPage} = this.props;
+        const {term, order, orderDir, perPage} = this.props;
         this.props.getEmailFlowEvents(term, page, perPage, order, orderDir);
     }
 
@@ -66,15 +58,15 @@ class EmailFlowEventListPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, emailFlowEvents, order, orderDir, totalEmailFlowEvents, lastPage, currentPage, term} = this.props;
+        const {currentSummit, emailFlowEvents, order, orderDir, totalEmailFlowEvents, lastPage, currentPage, term} = this.props;
 
-        let columns = [
+        const columns = [
             { columnKey: 'flow_name', value: T.translate("email_flow_event_list.flow_name"), sortable: true },
             { columnKey: 'event_type_name', value: T.translate("email_flow_event_list.event_type_name") },
             { columnKey: 'email_template_identifier', value: T.translate("email_flow_event_list.email_template_identifier") }
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: order,
             sortDir: orderDir,
             actions: {

@@ -70,7 +70,7 @@ class NavMenu extends React.Component {
     }
 
     showMenu(item) {
-        let {currentSummit} = this.props;
+        const {currentSummit} = this.props;
         if (!currentSummit) return false;
         if (currentSummit.id === 0) return false;
 
@@ -111,7 +111,7 @@ class NavMenu extends React.Component {
 
     render() {
         let {menuOpen} = this.state;
-        let {currentSummit, member} = this.props;
+        const {currentSummit, member} = this.props;
         let memberObj = new Member(member);
         let summit_id = currentSummit.id;
         let canEditSummit = memberObj.canEditSummit();

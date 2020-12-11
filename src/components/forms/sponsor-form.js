@@ -108,8 +108,8 @@ class SponsorForm extends React.Component {
 
 
     render() {
-        let {entity} = this.state;
-        let { currentSummit, sponsorships, onCreateCompany } = this.props;
+        const {entity} = this.state;
+        const { currentSummit, sponsorships, onCreateCompany } = this.props;
 
         let sponsorship_ddl = sponsorships.map(s => ({label: s.name, value: s.id}));
 

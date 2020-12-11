@@ -46,23 +46,23 @@ export const SET_ATTENDEES_CURRENT_FLOW_EVENT = 'SET_ATTENDEES_CURRENT_FLOW_EVEN
 export const SET_SELECTED_ALL_ATTENDEES = 'SET_SELECTED_ALL_ATTENDEES';
 export const SEND_ATTENDEES_EMAILS = 'SEND_ATTENDEES_EMAILS';
 
-export const selectAttendee = (attendeeId) => (dispatch, getState) => {
+export const selectAttendee = (attendeeId) => (dispatch) => {
     dispatch(createAction(SELECT_ATTENDEE)(attendeeId));
 };
 
-export const unSelectAttendee = (attendeeId) => (dispatch, getState) => {
+export const unSelectAttendee = (attendeeId) => (dispatch) => {
     dispatch(createAction(UNSELECT_ATTENDEE)(attendeeId));
 };
 
-export const clearAllSelectedAttendees = () => (dispatch, getState) => {
+export const clearAllSelectedAttendees = () => (dispatch) => {
     dispatch(createAction(CLEAR_ALL_SELECTED_ATTENDEES)());
 }
 
-export const setCurrentFlowEvent = (value) => (dispatch, getState) => {
+export const setCurrentFlowEvent = (value) => (dispatch) => {
     dispatch(createAction(SET_ATTENDEES_CURRENT_FLOW_EVENT)(value));
 };
 
-export const setSelectedAll = (value) => (dispatch, getState) => {
+export const setSelectedAll = (value) => (dispatch) => {
     dispatch(createAction(SET_SELECTED_ALL_ATTENDEES)(value));
 };
 
@@ -71,19 +71,19 @@ export const getAttendees = ( term = null, page = 1, perPage = 10,
                               statusFilter= null, memberFilter= null, ticketsFilter = null
 ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let filter = [];
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const filter = [];
 
     dispatch(startLoading());
 
     if(term){
-        let escapedTerm = escapeFilterValue(term);
+        const escapedTerm = escapeFilterValue(term);
         filter.push(`first_name=@${escapedTerm},last_name=@${escapedTerm},email=@${escapedTerm},company=@${escapedTerm},ticket_type=@${escapedTerm},badge_type=@${escapedTerm}`);
     }
 
-    let params = {
+    const params = {
         expand       : '',
         page         : page,
         per_page     : perPage,
@@ -96,14 +96,14 @@ export const getAttendees = ( term = null, page = 1, perPage = 10,
 
     if(memberFilter){
         if(memberFilter === 'HAS_MEMBER')
-            filter.push(`has_member==true`)
+            filter.push(`has_member==true`);
         if(memberFilter === 'HAS_NO_MEMBER')
             filter.push(`has_member==false`)
     }
 
     if(ticketsFilter){
         if(ticketsFilter === 'HAS_TICKETS')
-            filter.push(`has_tickets==true`)
+            filter.push(`has_tickets==true`);
         if(ticketsFilter === 'HAS_NO_TICKETS')
             filter.push(`has_tickets==false`)
     }
@@ -114,7 +114,7 @@ export const getAttendees = ( term = null, page = 1, perPage = 10,
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '+' : '-';
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -136,17 +136,17 @@ export const exportAttendees = ( term = null,
                               statusFilter= null, memberFilter= null, ticketsFilter = null
 ) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
-    let filter = [];
-    let filename = currentSummit.name + '-Attendees.csv';
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const filter = [];
+    const filename = currentSummit.name + '-Attendees.csv';
     if(term){
-        let escapedTerm = escapeFilterValue(term);
+        const escapedTerm = escapeFilterValue(term);
         filter.push(`first_name=@${escapedTerm},last_name=@${escapedTerm},email=@${escapedTerm},company=@${escapedTerm},ticket_type=@${escapedTerm},badge_type=@${escapedTerm}`);
     }
 
-    let params = {
+    const params = {
         expand       : '',
         access_token : accessToken,
     };
@@ -157,16 +157,16 @@ export const exportAttendees = ( term = null,
 
     if(memberFilter){
         if(memberFilter === 'HAS_MEMBER')
-            filter.push(`has_member==true`)
+            filter.push(`has_member==true`);
         if(memberFilter === 'HAS_NO_MEMBER')
-            filter.push(`has_member==false`)
+            filter.push(`has_member==false`);
     }
 
     if(ticketsFilter){
         if(ticketsFilter === 'HAS_TICKETS')
-            filter.push(`has_tickets==true`)
+            filter.push(`has_tickets==true`);
         if(ticketsFilter === 'HAS_NO_TICKETS')
-            filter.push(`has_tickets==false`)
+            filter.push(`has_tickets==false`);
     }
 
     if(filter.length > 0){
@@ -175,7 +175,7 @@ export const exportAttendees = ( term = null,
 
     // order
     if(order != null && orderDir != null){
-        let orderDirSign = (orderDir === 1) ? '+' : '-';
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
@@ -184,13 +184,13 @@ export const exportAttendees = ( term = null,
 
 export const getAttendee = (attendeeId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let params = {
+    const params = {
         expand       : 'member, speaker, tickets, rsvp, schedule_summit_events, all_affiliations, extra_questions, tickets.badge, tickets.badge.type, tickets.promo_code',
         access_token : accessToken,
     };
@@ -206,21 +206,21 @@ export const getAttendee = (attendeeId) => (dispatch, getState) => {
     );
 };
 
-export const resetAttendeeForm = () => (dispatch, getState) => {
+export const resetAttendeeForm = () => (dispatch) => {
     dispatch(createAction(RESET_ATTENDEE_FORM)({}));
 };
 
 export const reassignTicket = (attendeeId, newMemberId, ticketId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
-    let success_message = {
+    const success_message = {
         title: T.translate("general.done"),
         html: T.translate("edit_attendee.ticket_reassigned"),
         type: 'success'
@@ -242,15 +242,15 @@ export const reassignTicket = (attendeeId, newMemberId, ticketId) => (dispatch, 
 };
 
 export const saveAttendee = (entity) => (dispatch, getState) => {
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
-    let normalizedEntity = normalizeEntity(entity);
+    const normalizedEntity = normalizeEntity(entity);
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -264,12 +264,12 @@ export const saveAttendee = (entity) => (dispatch, getState) => {
             authErrorHandler,
             entity
         )(params)(dispatch)
-            .then((payload) => {
+            .then(() => {
                 dispatch(showSuccessMessage(T.translate("edit_attendee.attendee_saved")));
             });
 
     } else {
-        let success_message = {
+        const success_message = {
             title: T.translate("general.done"),
             html: T.translate("edit_attendee.attendee_created"),
             type: 'success'
@@ -290,15 +290,15 @@ export const saveAttendee = (entity) => (dispatch, getState) => {
                 ));
             });
     }
-}
+};
 
 export const deleteAttendee = (attendeeId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -316,11 +316,11 @@ export const deleteAttendee = (attendeeId) => (dispatch, getState) => {
 
 export const deleteTicket = (attendeeId, ticketId) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -338,11 +338,11 @@ export const deleteTicket = (attendeeId, ticketId) => (dispatch, getState) => {
 
 export const saveTicket = (attendeeId, newTicket) => (dispatch, getState) => {
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
         expand:'tickets',
     };
@@ -361,10 +361,10 @@ export const saveTicket = (attendeeId, newTicket) => (dispatch, getState) => {
 
 export const deleteRsvp = (memberId, rsvpId) => (dispatch, getState) => {
 
-    let { loggedUserState } = getState();
-    let { accessToken }     = loggedUserState;
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
@@ -381,7 +381,7 @@ export const deleteRsvp = (memberId, rsvpId) => (dispatch, getState) => {
 };
 
 const normalizeEntity = (entity) => {
-    let normalizedEntity = {...entity};
+    const normalizedEntity = {...entity};
 
     normalizedEntity.member_id = (normalizedEntity.member != null) ? normalizedEntity.member.id : 0;
 
@@ -393,25 +393,25 @@ const normalizeEntity = (entity) => {
     delete normalizedEntity['last_edited'];
 
     return normalizedEntity;
-}
+};
 
 export const sendEmails = (currentFlowEvent, selectedAll = false , selectedIds = [],
                            term = null, statusFilter= null, memberFilter= null, ticketsFilter = null
                            ) => (dispatch, getState) => {
 
 
-    let { loggedUserState, currentSummitState } = getState();
-    let { accessToken }     = loggedUserState;
-    let { currentSummit }   = currentSummitState;
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
 
-    let filter = [];
+    const filter = [];
 
-    let params = {
+    const params = {
         access_token : accessToken,
     };
 
     if(term){
-        let escapedTerm = escapeFilterValue(term);
+        const escapedTerm = escapeFilterValue(term);
         filter.push(`first_name=@${escapedTerm},last_name=@${escapedTerm},email=@${escapedTerm},company=@${escapedTerm},ticket_type=@${escapedTerm},badge_type=@${escapedTerm}`);
     }
 
@@ -421,23 +421,23 @@ export const sendEmails = (currentFlowEvent, selectedAll = false , selectedIds =
 
     if(memberFilter){
         if(memberFilter === 'HAS_MEMBER')
-            filter.push(`has_member==true`)
+            filter.push(`has_member==true`);
         if(memberFilter === 'HAS_NO_MEMBER')
-            filter.push(`has_member==false`)
+            filter.push(`has_member==false`);
     }
 
     if(ticketsFilter){
         if(ticketsFilter === 'HAS_TICKETS')
-            filter.push(`has_tickets==true`)
+            filter.push(`has_tickets==true`);
         if(ticketsFilter === 'HAS_NO_TICKETS')
-            filter.push(`has_tickets==false`)
+            filter.push(`has_tickets==false`);
     }
 
     if(filter.length > 0){
         params['filter[]']= filter;
     }
 
-    let payload =  {
+    const payload =  {
         email_flow_event : currentFlowEvent
     };
 
@@ -447,7 +447,7 @@ export const sendEmails = (currentFlowEvent, selectedAll = false , selectedIds =
 
     dispatch(startLoading());
 
-    let success_message = {
+    const success_message = {
         title: T.translate("general.done"),
         html: T.translate("registration_invitation_list.resend_done"),
         type: 'success'
@@ -467,5 +467,5 @@ export const sendEmails = (currentFlowEvent, selectedAll = false , selectedIds =
             dispatch(stopLoading());
             return payload;
         });
-}
+};
 

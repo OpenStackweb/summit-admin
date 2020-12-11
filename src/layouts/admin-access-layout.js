@@ -23,7 +23,7 @@ import EditAdminAccessPage from "../pages/admin_access/edit-admin-access-page";
 class AdminAccessLayout extends React.Component {
 
     render(){
-        let { match } = this.props;
+        const { match } = this.props;
 
         return(
             <div>

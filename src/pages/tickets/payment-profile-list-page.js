@@ -30,12 +30,12 @@ class PaymentProfileListPage extends React.Component {
     }
 
     handleEdit(paymentProfileId) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/payment-profiles/${paymentProfileId}`);
     }
 
     handleDelete(paymentProfileId) {
-        let {deletePaymentProfile, paymentProfiles} = this.props;
+        const {deletePaymentProfile, paymentProfiles} = this.props;
         let paymentProfile = paymentProfiles.find(pp => parseInt(pp.id) === parseInt(paymentProfileId));
 
         Swal.fire({
@@ -57,37 +57,29 @@ class PaymentProfileListPage extends React.Component {
     }
 
     handleNewPaymentProfile(ev) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/payment-profiles/new`);
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            this.props.getPaymentProfiles(1, 100);
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
+        const {currentSummit} = this.props;
+        if(currentSummit) {
             this.props.getPaymentProfiles(1, 100);
         }
     }
 
     render(){
 
-        let {currentSummit, paymentProfiles, order, orderDir, totalPaymentProfiles, match} = this.props;
+        const {currentSummit, paymentProfiles, order, orderDir, totalPaymentProfiles, match} = this.props;
 
-        let columns = [
+        const columns = [
             { columnKey: 'id', value: T.translate("payment_profiles.id"), sortable: true },
             { columnKey: 'application_type', value: T.translate("payment_profiles.application_type") },
             { columnKey: 'provider', value: T.translate("payment_profiles.provider") },
             { columnKey: 'active', value: T.translate("payment_profiles.active") }
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: order,
             sortDir: orderDir,
             actions: {

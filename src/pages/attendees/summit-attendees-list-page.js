@@ -61,28 +61,28 @@ class SummitAttendeeListPage extends React.Component {
     }
 
     handleExport(ev) {
-        let {term, order, orderDir, statusFilter, memberFilter, ticketsFilter} = this.props;
+        const {term, order, orderDir, statusFilter, memberFilter, ticketsFilter} = this.props;
         ev.preventDefault();
         this.props.exportAttendees(term, order, orderDir, statusFilter, memberFilter, ticketsFilter);
     }
 
     handleSetMemberFilter(newMemberFilter){
-        let {term, order, page, orderDir, perPage, statusFilter, ticketsFilter} = this.props;
+        const {term, order, page, orderDir, perPage, statusFilter, ticketsFilter} = this.props;
         this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, newMemberFilter, ticketsFilter);
     }
 
     handleSetTicketsFilter(newTicketsFilter){
-        let {term, order, page, orderDir, perPage, statusFilter, memberFilter, ticketsFilter} = this.props;
+        const {term, order, page, orderDir, perPage, statusFilter, memberFilter, ticketsFilter} = this.props;
         this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, newTicketsFilter, ticketsFilter);
     }
 
     handleSetStatusFilter(newStatusFilter){
-        let {term, order, page, orderDir, perPage, memberFilter, ticketsFilter} = this.props;
+        const {term, order, page, orderDir, perPage, memberFilter, ticketsFilter} = this.props;
         this.props.getAttendees(term, page, perPage, order, orderDir, newStatusFilter, memberFilter, ticketsFilter);
     }
 
     handleChangeFlowEvent(ev){
-        let {value, id} = ev.target;
+        const {value, id} = ev.target;
         this.props.setCurrentFlowEvent(value);
     }
 
@@ -90,7 +90,7 @@ class SummitAttendeeListPage extends React.Component {
         ev.stopPropagation();
         ev.preventDefault();
 
-        let {
+        const {
             selectedAll,
             term,
             memberFilter,
@@ -132,29 +132,20 @@ class SummitAttendeeListPage extends React.Component {
     }
 
     componentDidMount() {
-        let {currentSummit} = this.props;
-        if(currentSummit !== null) {
-            let {term, order, page, orderDir, perPage, statusFilter, memberFilter, ticketsFilter} = this.props;
-            this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter);
-        }
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {currentSummit} = this.props;
-
-        if (currentSummit !== null && currentSummit.id !== newProps.currentSummit.id) {
-            let {term, order, page, orderDir, perPage, statusFilter, memberFilter, ticketsFilter} = this.props;
+        const {currentSummit} = this.props;
+        if(currentSummit) {
+            const {term, order, page, orderDir, perPage, statusFilter, memberFilter, ticketsFilter} = this.props;
             this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter);
         }
     }
 
     handleEdit(attendee_id) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/attendees/${attendee_id}`);
     }
 
     handleViewSchedule(attendee_id) {
-        let {attendees} = this.props;
+        const {attendees} = this.props;
         let attendee = attendees.find(a => a.id === attendee_id);
 
         this.setState({
@@ -166,7 +157,7 @@ class SummitAttendeeListPage extends React.Component {
 
     hasSchedule(attendee_id) {
 
-        let {attendees} = this.props;
+        const {attendees} = this.props;
         let attendee = attendees.find(a => a.id === attendee_id);
 
         return attendee.schedule_count > 0;
@@ -177,28 +168,28 @@ class SummitAttendeeListPage extends React.Component {
     }
 
     handlePageChange(page) {
-        let {term, order, orderDir, perPage,  statusFilter, memberFilter, ticketsFilter} = this.props;
+        const {term, order, orderDir, perPage,  statusFilter, memberFilter, ticketsFilter} = this.props;
         this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter);
     }
 
     handleSort(index, key, dir, func) {
-        let {term, page, perPage,  statusFilter, memberFilter, ticketsFilter} = this.props;
+        const {term, page, perPage,  statusFilter, memberFilter, ticketsFilter} = this.props;
         key = (key === 'name') ? 'full_name' : key;
         this.props.getAttendees(term, page, perPage, key, dir, statusFilter, memberFilter, ticketsFilter);
     }
 
     handleSearch(term) {
-        let {order, orderDir, page, perPage, statusFilter, memberFilter, ticketsFilter} = this.props;
+        const {order, orderDir, page, perPage, statusFilter, memberFilter, ticketsFilter} = this.props;
         this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter);
     }
 
     handleNewAttendee(ev) {
-        let {currentSummit, history} = this.props;
+        const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/attendees/new`);
     }
 
     handleDeleteAttendee(attendeeId) {
-        let {deleteAttendee, attendees} = this.props;
+        const {deleteAttendee, attendees} = this.props;
         let attendee = attendees.find(a => a.id === attendeeId);
 
         Swal.fire({
@@ -216,7 +207,7 @@ class SummitAttendeeListPage extends React.Component {
     }
 
     render(){
-        let {currentSummit, attendees,
+        const {currentSummit, attendees,
             lastPage, currentPage,
             term, order, orderDir, totalAttendees,
             selectedIds,
@@ -225,9 +216,9 @@ class SummitAttendeeListPage extends React.Component {
             statusFilter, memberFilter,
             ticketsFilter
         } = this.props;
-        let {showModal, modalSchedule, modalTitle} = this.state;
+        const {showModal, modalSchedule, modalTitle} = this.state;
 
-        let columns = [
+        const columns = [
             { columnKey: 'member_id', value: T.translate("attendee_list.member_id"), sortable: true},
             { columnKey: 'name', value: T.translate("general.name"), sortable: true },
             { columnKey: 'email', value: T.translate("general.email") , sortable: true},
@@ -236,7 +227,7 @@ class SummitAttendeeListPage extends React.Component {
             { columnKey: 'status', value: T.translate("attendee_list.status") , sortable: true},
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: (order === 'full_name') ? 'name' : order,
             sortDir: orderDir,
             actions: {

@@ -46,11 +46,11 @@ class EditBadgeTypePage extends React.Component {
         if (!currentSummit.access_level_types) props.getAccessLevels();
     }
 
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.badge_type_id;
-        let newId = newProps.match.params.badge_type_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.badge_type_id;
+        const newId = this.props.match.params.badge_type_id;
 
-        if (newId !== oldId) {
+        if (oldId !== newId) {
             if (!newId) {
                 this.props.resetBadgeTypeForm();
             } else {
@@ -60,9 +60,9 @@ class EditBadgeTypePage extends React.Component {
     }
 
     render(){
-        let {currentSummit, entity, errors, match, history} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+        const {currentSummit, entity, errors, match, history} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
         return(
             <div className="container">

@@ -41,34 +41,34 @@ class MediaFileTypeListPage extends React.Component {
     }
 
     handleEdit(media_file_type_id) {
-        let {history} = this.props;
+        const {history} = this.props;
         history.push(`/app/media-file-types/${media_file_type_id}`);
     }
 
     handlePageChange(page) {
-        let {term, order, orderDir, perPage} = this.props;
+        const {term, order, orderDir, perPage} = this.props;
         this.props.getMediaFileTypes(term, page, perPage, order, orderDir);
     }
 
     handleSort(index, key, dir, func) {
-        let {term, page, perPage} = this.props;
+        const {term, page, perPage} = this.props;
         this.props.getMediaFileTypes(term, page, perPage, key, dir);
     }
 
     handleSearch(term) {
-        let {order, orderDir, page, perPage} = this.props;
+        const {order, orderDir, page, perPage} = this.props;
         this.props.getMediaFileTypes(term, page, perPage, order, orderDir);
     }
 
     handleNewMediaFileType(ev) {
-        let {history} = this.props;
+        const {history} = this.props;
         ev.preventDefault();
 
         history.push(`/app/media-file-types/new`);
     }
 
     handleDelete(typeId) {
-        let {deleteMediaFileType, media_file_types} = this.props;
+        const {deleteMediaFileType, media_file_types} = this.props;
         let media_file_type = media_file_types.find(t => t.id === typeId);
 
         Swal.fire({
@@ -88,16 +88,16 @@ class MediaFileTypeListPage extends React.Component {
     canEdit = (item) => !item.is_system_defined;
 
     render(){
-        let {media_file_types, lastPage, currentPage, term, order, orderDir} = this.props;
+        const {media_file_types, lastPage, currentPage, term, order, orderDir} = this.props;
 
-        let columns = [
+        const columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
             { columnKey: 'name', value: T.translate("media_file_type.name"), sortable: true },
             { columnKey: 'description', value: T.translate("media_file_type.description") },
             { columnKey: 'allowed_extensions', value: T.translate("media_file_type.allowed_extensions")},
         ];
 
-        let table_options = {
+        const table_options = {
             sortCol: order,
             sortDir: orderDir,
             actions: {

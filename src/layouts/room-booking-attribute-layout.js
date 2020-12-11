@@ -21,7 +21,7 @@ import {connect} from "react-redux";
 class RoomBookingAttributeLayout extends React.Component {
 
     render(){
-        let { match, currentSummit } = this.props;
+        const { match, currentSummit } = this.props;
 
         return(
             <div>

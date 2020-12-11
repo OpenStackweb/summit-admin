@@ -81,7 +81,7 @@ class RegistrationInvitationForm extends React.Component {
     }
 
     render() {
-        let {entity} = this.state;
+        const {entity} = this.state;
 
         return (
             <form className="registration-invitation-form">

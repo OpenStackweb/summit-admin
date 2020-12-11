@@ -38,9 +38,9 @@ class EditOrderExtraQuestionPage extends React.Component {
         this.handleValueDelete = this.handleValueDelete.bind(this);
     }
 
-    componentWillReceiveProps(newProps) {
-        let oldId = this.props.match.params.order_extra_question_id;
-        let newId = newProps.match.params.order_extra_question_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.order_extra_question_id;
+        const newId = this.props.match.params.order_extra_question_id;
 
         if (newId !== oldId) {
             if (!newId) {
@@ -52,7 +52,7 @@ class EditOrderExtraQuestionPage extends React.Component {
     }
 
     handleValueDelete(valueId) {
-        let {deleteOrderExtraQuestionValue, currentSummit, entity} = this.props;
+        const {deleteOrderExtraQuestionValue, currentSummit, entity} = this.props;
         let value = entity.values.find(v => v.id === valueId);
 
         Swal.fire({
@@ -70,14 +70,14 @@ class EditOrderExtraQuestionPage extends React.Component {
     }
 
     handleValueSave(valueEntity) {
-        let {entity, currentSummit} = this.props;
+        const {entity, currentSummit} = this.props;
         this.props.saveOrderExtraQuestionValue(entity.id, valueEntity);
     }
 
     render(){
-        let {currentSummit, entity, errors, match, allClasses} = this.props;
-        let title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        let breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
+        const {currentSummit, entity, errors, match, allClasses} = this.props;
+        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+        const breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
         return(
             <div className="container">

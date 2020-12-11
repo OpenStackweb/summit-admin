@@ -38,11 +38,11 @@ class EditTagGroupPage extends React.Component {
         this.handleCopyTagsToCategory = this.handleCopyTagsToCategory.bind(this);
     }
 
-    componentWillReceiveProps(newProps) {
-        const oldId = this.props.match.params.tag_group_id;
-        const newId = newProps.match.params.tag_group_id;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const oldId = prevProps.match.params.tag_group_id;
+        const newId = this.props.match.params.tag_group_id;
 
-        if (oldId !== newId) {
+        if (newId !== oldId) {
             if (!newId) {
                 this.props.resetTagGroupForm();
             } else {

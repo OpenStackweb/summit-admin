@@ -63,7 +63,7 @@ class ImageForm extends React.Component {
     }
 
     handleSubmit(ev) {
-        let {entity, file} = this.state;
+        const {entity, file} = this.state;
         let {locationId} = this.props;
 
         ev.preventDefault();
@@ -98,7 +98,7 @@ class ImageForm extends React.Component {
     }
 
     render() {
-        let {entity} = this.state;
+        const {entity} = this.state;
         let {valueField} = this.props;
 
         return (
