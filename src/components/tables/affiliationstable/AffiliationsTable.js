@@ -9,6 +9,7 @@ import ReactTooltip from "react-tooltip";
 
 import './affiliationstable.css';
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
+import {shallowEqual} from "../../../utils/methods";
 
 const createRow = (row, actions) => {
     var cells = [];
@@ -131,7 +132,7 @@ class AffiliationsTable extends React.Component {
 
         this.state = {
             rows: props.data,
-            new_row: {...this.new_row}
+            new_row: {...this.new_row},
         };
 
         this.actions = {};
@@ -149,7 +150,13 @@ class AffiliationsTable extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        this.setState({ rows: this.props.data, new_row: {...this.new_row} });
+        if(!shallowEqual(this.props.data, prevProps.data)) {
+            this.setState({rows: this.props.data})
+        }
+
+        if (this.props.ownerId !== prevProps.ownerId) {
+            this.setState({owner_id: this.props.ownerId});
+        }
     }
 
     saveRow(id) {
@@ -245,6 +252,8 @@ class AffiliationsTable extends React.Component {
 
         let new_row = {...this.state.new_row};
         new_row.owner_id = this.props.ownerId;
+
+        this.setState({ new_row: {...this.new_row }});
 
         this.props.addAffiliation(new_row);
     }

@@ -140,11 +140,11 @@ class RoomBookingListPage extends React.Component {
         const {currentSummit, roomBookings, lastPage, currentPage, term, order, orderDir, totalRoomBookings} = this.props;
         const {showModal, modalBooking, modalAmount} = this.state;
 
-        roomBookings = roomBookings.map(rb => {
+        const roomBookingsFormatted = roomBookings.map(rb => {
             let start_datetime = epochToMomentTimeZone(rb.start_datetime, currentSummit.time_zone_id).format('YYYY-MM-DD h:mm a');
             let end_datetime   = epochToMomentTimeZone(rb.end_datetime, currentSummit.time_zone_id).format('YYYY-MM-DD h:mm a');
             return {...rb, start_datetime: start_datetime, end_datetime: end_datetime}
-        })
+        });
 
         const columns = [
             { columnKey: 'created', value: T.translate("room_booking_list.created"), sortable: true },
@@ -202,7 +202,7 @@ class RoomBookingListPage extends React.Component {
                     <div>
                         <Table
                             options={table_options}
-                            data={roomBookings}
+                            data={roomBookingsFormatted}
                             columns={columns}
                             onSort={this.handleSort}
                         />

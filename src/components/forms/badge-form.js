@@ -32,7 +32,7 @@ class BadgeForm extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if(prevProps.entity.id !== this.props.entity.id) {
+        if(!shallowEqual(prevProps.entity, this.props.entity)) {
             this.setState({
                 entity: {...this.props.entity},
             });

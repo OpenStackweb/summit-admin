@@ -46,7 +46,7 @@ class EditRoomBookingAttributePage extends React.Component {
     }
 
     render(){
-        const {currentSummit, entity, match} = this.props;
+        const {currentSummit, entity, match, errors} = this.props;
         const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
 
         const breadcrumb = (entity.id) ? entity.type : `${T.translate("general.new")} ${T.translate("room_bookings.attribute")}`;
@@ -60,6 +60,7 @@ class EditRoomBookingAttributePage extends React.Component {
                 <RoomBookingAttributeForm
                     history={this.props.history}
                     entity={entity}
+                    errors={errors}
                     onSubmit={this.props.saveRoomBookingAttributeType}
                     onSaveAttribute={this.props.saveRoomBookingAttribute}
                     onDeleteAttribute={this.props.deleteRoomBookingAttribute}

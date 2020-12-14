@@ -38,8 +38,8 @@ export const groupByDate = function(array, prop, sortBy) {
 
 export const scrollToError = (errors) => {
     if(Object.keys(errors).length > 0) {
-        let firstError = Object.keys(errors)[0]
-        let firstNode = document.getElementById(firstError);
+        const firstError = Object.keys(errors)[0];
+        const firstNode = document.getElementById(firstError);
         if (firstNode) window.scrollTo(0, findElementPos(firstNode));
     }
 };

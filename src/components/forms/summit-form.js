@@ -53,7 +53,7 @@ class SummitForm extends React.Component {
         const state = {};
         scrollToError(this.props.errors);
 
-        if(prevProps.entity.id !== this.props.entity.id) {
+        if(!shallowEqual(prevProps.entity, this.props.entity)) {
             state.entity = {...this.props.entity};
             state.errors = {};
         }

@@ -44,7 +44,7 @@ class SpeakerForm extends React.Component {
         const state = {};
         scrollToError(this.props.errors);
 
-        if(prevProps.entity.id !== this.props.entity.id) {
+        if(!shallowEqual(prevProps.entity, this.props.entity)) {
             state.entity = {...this.props.entity};
             state.errors = {};
         }
@@ -69,6 +69,7 @@ class SpeakerForm extends React.Component {
 
         if (ev.target.type === 'memberinput') {
             entity.email = '';
+            entity.affiliations = [...value.affiliations];
         }
 
         errors[id] = '';
@@ -290,7 +291,7 @@ class SpeakerForm extends React.Component {
                         <TextEditor id="bio" value={entity.bio} onChange={this.handleChange} />
                     </div>
                 </div>
-                {entity.id !== 0 && entity.member != null &&
+                {entity.id !== 0 && entity.member && entity.member.id === this.props.entity.member.id &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_speaker.affiliations")} </label>

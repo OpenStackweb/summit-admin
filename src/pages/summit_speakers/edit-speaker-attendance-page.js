@@ -49,7 +49,7 @@ class EditSpeakerAttendancePage extends React.Component {
     render(){
         const {currentSummit, entity, errors, match} = this.props;
         const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        const breadcrumb = T.translate("general.new");
+        let breadcrumb = T.translate("general.new");
 
         if(entity.id) {
             breadcrumb = entity.id;
