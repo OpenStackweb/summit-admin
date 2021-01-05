@@ -41,7 +41,7 @@ export const getEventMaterial = (eventMaterialId) => (dispatch, getState) => {
 
     dispatch(startLoading());
 
-    const material = event.materials.find(m => m.id === eventMaterialId);
+    const material = event.materials.find(m => m.id === parseInt(eventMaterialId));
 
     if (material) {
         dispatch(createAction(RECEIVE_EVENT_MATERIAL)({material}));

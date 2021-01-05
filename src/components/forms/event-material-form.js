@@ -137,7 +137,7 @@ class EventMaterialForm extends React.Component {
             id: 'slide',
             max_size: 500 * 1024,
             type: {
-                allowed_extensions: ['ppt', 'ppx', 'pdf']
+                allowed_extensions: ['jpg','jpeg','ppt', 'pptx', 'pdf']
             }
         };
 
