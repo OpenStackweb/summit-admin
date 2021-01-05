@@ -15,6 +15,7 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import { Dropdown, SimpleLinkList } from 'openstack-uicore-foundation/lib/components';
+import {shallowEqual} from "../../utils/methods";
 
 
 class BadgeForm extends React.Component {
