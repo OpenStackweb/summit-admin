@@ -48,7 +48,7 @@ export default class QuestionAnswersInput extends React.Component {
 
         let answers = this.state.answers.map(ans => {
             let newValue = ans.answer;
-            if (ans.question_id === id) newValue = `${value}`;
+            if (ans.question_id == id) newValue = `${value}`;
 
             return ({question_id: ans.question_id, answer: newValue})
         });
