@@ -25,7 +25,7 @@ class AuthorizationCallbackRoute extends AbstractAuthorizationCallbackRoute {
     }
 
     _callback(backUrl) {
-        this.props.getUserInfo(backUrl, history);
+        this.props.getUserInfo('groups', backUrl, history);
     }
 
     _redirect2Error(error){
