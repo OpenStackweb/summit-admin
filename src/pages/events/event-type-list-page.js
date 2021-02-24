@@ -106,7 +106,7 @@ class EventTypeListPage extends React.Component {
                 </div>
 
                 {eventTypes.length === 0 &&
-                <div>{T.translate("event_type_list.no_items")}</div>
+                <div className="no-items">{T.translate("event_type_list.no_items")}</div>
                 }
 
                 {eventTypes.length > 0 &&

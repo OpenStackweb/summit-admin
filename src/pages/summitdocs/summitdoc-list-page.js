@@ -124,7 +124,7 @@ class SummitDocListPage extends React.Component {
                 </div>
 
                 {summitDocs.length === 0 &&
-                <div>{T.translate("summitdoc.no_items")}</div>
+                <div className="no-items">{T.translate("summitdoc.no_items")}</div>
                 }
 
                 {summitDocs.length > 0 &&

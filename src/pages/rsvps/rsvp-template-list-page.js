@@ -124,7 +124,7 @@ class RsvpTemplateListPage extends React.Component {
                 </div>
 
                 {rsvpTemplates.length === 0 &&
-                <div>{T.translate("rsvp_template_list.no_items")}</div>
+                <div className="no-items">{T.translate("rsvp_template_list.no_items")}</div>
                 }
 
                 {rsvpTemplates.length > 0 &&

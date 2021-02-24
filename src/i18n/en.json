@@ -43,11 +43,13 @@
     "drop_files"          : "Drop images or click to select files to upload.",
     "search"              : "Search",
     "save"                : "Save",
+    "cancel"              : "Cancel",
     "save_and_publish"    : "Save & Publish",
     "save_and_add_next"   : "Save & Add Next",
     "export"              : "Export",
     "are_you_sure"        : "Are you sure?",
     "yes_delete"          : "Yes, delete.",
+    "yes_remove"          : "Yes, remove.",
     "id"                  : "Id",
     "label"               : "Label",
     "value"               : "Value",
@@ -124,7 +126,8 @@
     "admin_access"            : "Admin Access Groups",
     "registration_invitation_list": "Registration Invitations",
     "media_file_types"        : "Media File Types",
-    "media_uploads"           : "Media Upload Types"
+    "media_uploads"           : "Media Upload Types",
+    "track_chairs"            : "Track Chairs"
   },
   "schedule": {
     "schedule"                              : "Schedule",
@@ -1637,6 +1640,22 @@
     "no_speakers": "No Featured Speakers found.",
     "placeholders": {
       "search_featured_speakers": "Search speakers by Name or Email"
+    }
+  },
+  "track_chairs": {
+    "track_chairs"            : "Track Chairs",
+    "track_chair"             : "Track Chair",
+    "list"                    : "Track Chair List",
+    "add"                     : "Add Track Chair",
+    "no_items"                : "No items found for this search criteria.",
+    "name"                    : "Name",
+    "track"                   : "Track",
+    "delete_warning"          : "Are you sure you want to remove track chair ",
+    "saved"                   : "Track chair assigned successfully.",
+    "placeholders": {
+      "search" : "Search track chairs by name",
+      "select_track" : "Select Track",
+      "select_track_chair" : "Choose Track Chair"
     }
   }
 }
