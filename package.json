@@ -78,7 +78,7 @@
     "style-loader": "^0.19.1",
     "superagent": "^3.8.1",
     "sweetalert2": "^8.15.2",
-    "urijs": "^1.19.1",
+    "urijs": "^1.19.6",
     "url-loader": "^0.6.2",
     "validator": "^9.4.1",
     "video.js": "^7.8.2",
