@@ -185,8 +185,8 @@
   },
   "directory": {
     "select"              : "Select",
-    "summits"             : "Summits",
-    "add_summit"          : "Add Summit",
+    "summits"             : "Events",
+    "add_summit"          : "Add Event",
     "remove_warning"      : "Are you sure you want to delete summit",
     "invitation_only"     : "Invitation Only"
   },
