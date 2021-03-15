@@ -332,7 +332,7 @@
     "selection_plan"      : "Selection Plan",
     "delete_material"     : "Are you sure you want to delete event material ",
     "placeholders": {
-      "select_venue"        : "Select a Summit Venue ...",
+      "select_venue"        : "Select an Event Venue ...",
       "start_date"          : "Start Date",
       "end_date"            : "End Date",
       "select_event_type"   : "Select an Event Type ...",
@@ -644,7 +644,7 @@
     "import"                : "Import",
     "import_events"         : "Import Events",
     "ingest"                : "Ingest",
-    "send_speaker_email"    : "Send Speaker Email (Email Flow Event SUMMIT_SUBMISSIONS_IMPORT_EVENT_SPEAKER)",
+    "send_speaker_email"    : "Send Speaker Email (Email Flow Event EVENTS_SUBMISSIONS_IMPORT_EVENT_SPEAKER)",
     "placeholders": {
       "search_events"       : "Search by Id, Title, Abstract, Speaker"
     }
@@ -1481,10 +1481,10 @@
     }
   },
   "summitdoc": {
-    "summitdocs"              : "Summit Docs",
-    "summitdoc"               : "Summit Doc",
-    "list"                    : "Summit Doc List",
-    "add"                     : "Add Summit Doc",
+    "summitdocs"              : "Event Docs",
+    "summitdoc"               : "Event Doc",
+    "list"                    : "Event Doc List",
+    "add"                     : "Add Event Doc",
     "no_items"                : "No items found for this search criteria.",
     "id"                      : "Id",
     "name"                    : "Name",
@@ -1531,13 +1531,13 @@
     "id"                      : "Id",
     "title"                   : "Title",
     "members"                 : "Members",
-    "summits"                 : "Summits",
+    "summits"                 : "Events",
     "delete_warning"          : "Are you sure you want to delete group ",
     "saved"                   : "Admin Access Group saved successfully.",
     "created"                 : "Admin Access Group created successfully.",
     "placeholders": {
       "search" : "Search groups by name",
-      "select_summits" : "Select Summits",
+      "select_summits" : "Select Events",
       "select_members" : "Select Members"
     }
   },
