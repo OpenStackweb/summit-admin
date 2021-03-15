@@ -124,7 +124,7 @@ class NavMenu extends React.Component {
                     {name:'merge_speakers', linkUrl:`speakers/merge`}
                 ]
             },
-            {name: 'companies', iconClass: 'fa fa-copyright', linkUrl: 'companies'},
+            {name: 'companies', iconClass: 'fa fa-copyright', linkUrl: 'companies', accessRoute: 'companies'},
             {name: 'emails', iconClass: 'fa-envelope-o', accessRoute: 'emails',
                 childs: [
                     {name:'email_templates', linkUrl:`emails/templates`},
@@ -194,7 +194,7 @@ class NavMenu extends React.Component {
                     {name:'badge_type_list', linkUrl:`summits/${summit_id}/badge-types`}
                 ]
             },
-            {name: 'room_bookings', iconClass: 'fa-bookmark', linkUrl:`summits/${summit_id}/room-bookings`, accessRoute: 'room-bookings', exclusive: 'room-booking'},
+            {name: 'room_bookings', iconClass: 'fa-bookmark', linkUrl:`summits/${summit_id}/room-bookings`, accessRoute: 'room-bookings', exclusive: 'room-bookings'},
             {name: 'push_notifications', iconClass: 'fa-paper-plane', linkUrl:`summits/${summit_id}/push-notifications`, accessRoute: 'push-notifications' },
             {name: 'room_occupancy', iconClass: 'fa-male', linkUrl:`summits/${summit_id}/room-occupancy`, accessRoute: 'room-occupancy' },
             {name: 'tag_groups', iconClass: 'fa-tags', linkUrl:`summits/${summit_id}/tag-groups`, accessRoute: 'tag-groups' },

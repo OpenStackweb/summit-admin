@@ -59,7 +59,7 @@ const trackChairListReducer = (state = DEFAULT_STATE, action) => {
         case TRACK_CHAIR_ADDED: {
             const newTrackChair = payload.response;
             newTrackChair.trackNames = newTrackChair.categories.map(c => c.name).join(', ');
-            newTrackChair.name = `${tc.member.first_name} ${tc.member.last_name}`;
+            newTrackChair.name = `${newTrackChair.member.first_name} ${newTrackChair.member.last_name}`;
 
             return {...state, trackChairs: [...state.trackChairs, newTrackChair]};
         }
