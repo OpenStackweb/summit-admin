@@ -121,7 +121,7 @@
     "emails"                  : "Emails",
     "email_templates"         : "Templates",
     "sent_email"              : "Sent Emails",
-    "summitdocs"              : "Summit Docs",
+    "summitdocs"              : "Event Docs",
     "email_flow_events"       : "Email Events",
     "admin_access"            : "Admin Access Groups",
     "registration_invitation_list": "Registration Invitations",
@@ -139,15 +139,15 @@
       "search_unpublished"                  : "Search for UnPublished Events ...",
       "search_published"                    : "Search for Published Events ...",
       "select_order_by"                     : "Select Order By ...",
-      "select_day"                          : "Select a Summit Day ...",
-      "select_venue"                        : "Select a Summit Venue ...",
+      "select_day"                          : "Select an Event Day ...",
+      "select_venue"                        : "Select an Event Venue ...",
       "select_event_type"                   : "Select an Event Type ...",
       "select_track"                        : "Select a Track ..."
     }
   },
   "bulk_actions_page": {
     "bulk_actions": "Bulk Actions",
-    "title": "Summit Event Bulk Actions",
+    "title": "Event Bulk Actions",
     "event_id_label" : "Event Id",
     "event_name_label": "Event Title",
     "event_location_label": "Event Location",
@@ -187,7 +187,7 @@
     "select"              : "Select",
     "summits"             : "Events",
     "add_summit"          : "Add Event",
-    "remove_warning"      : "Are you sure you want to delete summit",
+    "remove_warning"      : "Are you sure you want to delete event",
     "invitation_only"     : "Invitation Only"
   },
   "dashboard": {
