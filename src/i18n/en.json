@@ -1156,17 +1156,17 @@
   },
   "room_occupancy": {
     "room_occupancy"        : "Room Occupancy",
-    "events"                : "Events",
-    "no_events"             : "No events found for current search criteria.",
+    "events"                : "Activites",
+    "no_events"             : "No activites found for current search criteria.",
     "title"                 : "Title",
     "room"                  : "Room",
     "start"                 : "Start",
     "speakers"              : "Speakers",
-    "currentEvents"         : "Show only current events",
-    "current_event_view"    : "Current Event View",
-    "no_current_event"      : "No current event for this room.",
+    "currentEvents"         : "Show only current activites",
+    "current_event_view"    : "Current Activity View",
+    "no_current_event"      : "No current activites for this room.",
     "placeholders": {
-      "search_events"       : "Search by Event Title or Speaker Name",
+      "search_events"       : "Search by Activity Title or Speaker Name",
       "select_room"         : "Select a Room"
     }
   },
@@ -1209,7 +1209,7 @@
     "feedback_report"               : "Feedback Report",
     "feedback_group_report"         : "Feedback Report",
     "rsvp_report"                   : "RSVP Report",
-    "rsvp_event_report"             : "RSVP Event Report",
+    "rsvp_event_report"             : "RSVP Activity Report",
     "room_report"                   : "Room Report",
     "presentation_video_report"     : "Video Output List",
     "speaker_report"                : "Speaker Report",
@@ -1439,7 +1439,7 @@
     "delete_setting_warning"  : "Are you sure you want to delete setting ",
     "setting_saved"           : "Setting saved successfully.",
     "setting_created"         : "Setting created successfully.",
-    "clone_settings_warning"  : "Do you want to clone all settings from this summit?",
+    "clone_settings_warning"  : "Do you want to clone all settings from this event?",
     "yes_clone"               : "Yes, clone!",
     "placeholders": {
       "search_settings" : "Search settings by key",
