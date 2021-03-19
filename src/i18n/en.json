@@ -633,7 +633,7 @@
   "event_list": {
     "event_list"            : "Activity List",
     "events"                : "Activities",
-    "no_events"             : "No events found for current search criteria.",
+    "no_events"             : "No activities found for current search criteria.",
     "add_event"             : "Add Activity",
     "title"                 : "Title",
     "type"                  : "Type",
@@ -1490,33 +1490,33 @@
     "name"                    : "Name",
     "label"                   : "Label",
     "description"             : "Description",
-    "event_types"             : "Event Types",
+    "event_types"             : "Activity Types",
     "file"                    : "File",
     "delete_warning"          : "Are you sure you want to delete doc ",
     "saved"                   : "Doc saved successfully.",
     "created"                 : "Doc created successfully.",
     "placeholders": {
       "search" : "Search docs by name",
-      "select_type" : "Select Event Type"
+      "select_type" : "Select Activity Type"
     }
   },
   "email_flow_event_list": {
-    "email_flow_events": "Email Events",
-    "email_flow_event_list": "Email Events",
-    "event_type_name": "Event",
+    "email_flow_events": "Email Activities",
+    "email_flow_event_list": "Email Activities",
+    "event_type_name": "Activity",
     "flow_name": "Flow",
     "email_template_identifier": "Email Template",
     "no_email_flow_events": "No items found for this search criteria.",
     "placeholders": {
-      "search" : "Search events by Name, Flow"
+      "search" : "Search activites by Name, Flow"
     }
 
   },
   "edit_email_flow_event": {
     "email_template_identifier": "Email Template (Associated with Event)",
-    "email_flow_event": "Email Event",
+    "email_flow_event": "Email Activity",
     "flow_name": "eFlow Name",
-    "event_type": "Event Type",
+    "event_type": "Activity Type",
     "saved": "Email template Flow saved successfully.",
     "placeholders": {
       "select_template" : "Select template"
