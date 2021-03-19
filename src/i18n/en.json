@@ -136,38 +136,38 @@
     "placeholders": {
       "select_presentation_selection_status": "Select a Selection Status ...",
       "select_presentation_selection_plan"  : "Select a Selection Plan ...",
-      "search_unpublished"                  : "Search for UnPublished Events ...",
-      "search_published"                    : "Search for Published Events ...",
+      "search_unpublished"                  : "Search for UnPublished Activities ...",
+      "search_published"                    : "Search for Published Activities ...",
       "select_order_by"                     : "Select Order By ...",
-      "select_day"                          : "Select an Event Day ...",
-      "select_venue"                        : "Select an Event Venue ...",
-      "select_event_type"                   : "Select an Event Type ...",
+      "select_day"                          : "Select an Activity Day ...",
+      "select_venue"                        : "Select an Activity Venue ...",
+      "select_event_type"                   : "Select an Activity Type ...",
       "select_track"                        : "Select a Track ..."
     }
   },
   "bulk_actions_page": {
     "bulk_actions": "Bulk Actions",
-    "title": "Event Bulk Actions",
-    "event_id_label" : "Event Id",
-    "event_name_label": "Event Title",
-    "event_location_label": "Event Location",
+    "title": "Activity Bulk Actions",
+    "event_id_label" : "Activity Id",
+    "event_name_label": "Activity Title",
+    "event_location_label": "Activity Location",
     "event_start_date_label": "Start Date",
     "event_end_date_label": "End Date",
     "btn_apply_changes": "Apply Changes",
     "btn_apply_publish_changes": "Apply And Publish Changes",
     "messages": {
-      "update_success" : "Events saved successfully.",
-      "update_publish_success": "Events saved and published successfully.",
+      "update_success" : "Activities saved successfully.",
+      "update_publish_success": "Activities saved and published successfully.",
       "validation_title": "Validation Errors",
       "validation_message": "Please check data before to continue"
     },
     "placeholders":{
-      "event_title": "Enter event title",
+      "event_title": "Enter Activity title",
       "start_date": "Enter start date",
       "end_date": "Enter end date"
     },
     "titles": {
-      "view_event": "View Event"
+      "view_event": "View Activity"
     }
   },
   "published_bulk_actions_selector": {
@@ -199,9 +199,9 @@
     "selection"           : "Selection",
     "attendees"           : "Attendees",
     "registration"        : "Registration",
-    "events"              : "Events & Attendees",
-    "submitted_events"    : "Submitted Events",
-    "published_events"    : "Published Events",
+    "events"              : "Activities & Attendees",
+    "submitted_events"    : "Submitted Activities",
+    "published_events"    : "Published Activities",
     "venues"              : "Venues",
     "voters"              : "Voters",
     "votes"               : "Votes",
