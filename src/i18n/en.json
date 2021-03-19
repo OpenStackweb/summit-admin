@@ -297,8 +297,8 @@
     "rsvp_max_user_wait_list_number"  : "RSVP Wait Max",
     "rsvp_template"                   : "RSVP Template",
     "location"                        : "Location",
-    "event_type"          : "Event Type",
-    "pic"                 : "Event Picture",
+    "event_type"          : "Activity Type",
+    "pic"                 : "Activity Picture",
     "track"               : "Track",
     "level"               : "Level",
     "feedback"            : "Feedback",
@@ -313,11 +313,11 @@
     "groups"              : "Groups",
     "attachment"          : "Attachment",
     "go_to_calendar"      : "Go to Calendar",
-    "view_event"          : "View Event",
+    "view_event"          : "View Activity",
     "unpublish"           : "Unpublish",
-    "event_saved"         : "Event saved successfully.",
-    "event_created"       : "Event created successfully.",
-    "saved_and_published" : "Event saved & published successfully.",
+    "event_saved"         : "Activity saved successfully.",
+    "event_created"       : "Activity created successfully.",
+    "saved_and_published" : "Activity saved & published successfully.",
     "proximity_alert"     : "Speaker/s have sessions 90min before or after:",
     "materials"           : "Materials",
     "add_material"        : "Add Material",
@@ -330,12 +330,12 @@
     "meeting_url_info"    : "Meeting URL could be a Zoom, Jitsy, or Google Meet",
     "etherpad_link"       : "EtherPad URL",
     "selection_plan"      : "Selection Plan",
-    "delete_material"     : "Are you sure you want to delete event material ",
+    "delete_material"     : "Are you sure you want to delete activity material ",
     "placeholders": {
-      "select_venue"        : "Select an Event Venue ...",
+      "select_venue"        : "Select an Activity Venue ...",
       "start_date"          : "Start Date",
       "end_date"            : "End Date",
-      "select_event_type"   : "Select an Event Type ...",
+      "select_event_type"   : "Select an Activity Type ...",
       "select_track"        : "Select a Track ...",
       "select_level"        : "Select a Level ...",
       "select_rsvp_template": "Select a Template ...",
@@ -463,8 +463,8 @@
   },
   "schedule_builder_page":{
     "messages":{
-      "unpublish_confirmation": "You are about to UnPublish this event!",
-      "bulk_unpublish_confirmation": "You are about to UnPublish these events!"
+      "unpublish_confirmation": "You are about to UnPublish this activity!",
+      "bulk_unpublish_confirmation": "You are about to UnPublish these activities!"
     },
     "titles":{
       "unpublish_confirmation": "Are you sure?",
@@ -537,7 +537,7 @@
     "attendee_saved"              : "Attendee saved successfully.",
     "attendee_created"            : "Attendee created successfully.",
     "ticket_reassigned"           : "Ticket reassigned successfully.",
-    "event"                       : "Event",
+    "event"                       : "Activity",
     "created"                     : "Created Date",
     "seat"                        : "Seat",
     "extra_questions"             : "Registration Extra Questions",
@@ -631,36 +631,36 @@
     "attendance_created"  : "Speaker Attendance created successfully."
   },
   "event_list": {
-    "event_list"            : "Event List",
-    "events"                : "Events",
+    "event_list"            : "Activity List",
+    "events"                : "Activities",
     "no_events"             : "No events found for current search criteria.",
-    "add_event"             : "Add Event",
+    "add_event"             : "Add Activity",
     "title"                 : "Title",
     "type"                  : "Type",
     "status"                : "Status",
     "published"             : "Published",
     "speakers"              : "Speakers",
-    "delete_event_warning"  : "Are you sure you want to delete event",
+    "delete_event_warning"  : "Are you sure you want to delete activity",
     "import"                : "Import",
-    "import_events"         : "Import Events",
+    "import_events"         : "Import Activity",
     "ingest"                : "Ingest",
-    "send_speaker_email"    : "Send Speaker Email (Email Flow Event EVENTS_SUBMISSIONS_IMPORT_EVENT_SPEAKER)",
+    "send_speaker_email"    : "Send Speaker Email (Email Flow Event ACTIVITES_SUBMISSIONS_IMPORT_ACTIVITY_SPEAKER)",
     "placeholders": {
       "search_events"       : "Search by Id, Title, Abstract, Speaker"
     }
   },
   "event_type_list": {
-    "event_type_list"      : "Event Type List",
-    "event_types"          : "Event Types",
-    "no_items"             : "No event types found.",
-    "add_event_type"       : "Add Event Type",
+    "event_type_list"      : "Activity Type List",
+    "event_types"          : "Activity Types",
+    "no_items"             : "No Activity types found.",
+    "add_event_type"       : "Add Activity Type",
     "name"                 : "Name",
     "class"                : "Class",
     "seed_event_types"     : "Seed Types",
-    "remove_warning"       : "Are you sure you want to delete event type "
+    "remove_warning"       : "Are you sure you want to delete activity type "
   },
   "edit_event_type": {
-    "event_type"              : "Event Type",
+    "event_type"              : "Activity Type",
     "name"                    : "Name",
     "class"                   : "Class",
     "color"                   : "Color",
@@ -680,25 +680,25 @@
     "min_moderators"          : "Min Moderators",
     "max_moderators"          : "Max Moderators",
     "media_upload_types"      : "Media Upload Types",
-    "event_type_saved"        : "Event Type saved successfully.",
-    "event_type_created"      : "Event Type created successfully.",
+    "event_type_saved"        : "Activity Type saved successfully.",
+    "event_type_created"      : "Activity Type created successfully.",
     "placeholders": {
       "select_class"     : "Select Class"
     }
   },
   "event_category_list": {
-    "event_category_list"   : "Event Category List",
-    "event_categories"      : "Event Categories",
+    "event_category_list"   : "Activity Category List",
+    "event_categories"      : "Activity Categories",
     "copy_categories"       : "Copy Categories",
-    "no_items"              : "No event categories found.",
-    "add_category"          : "Add Event Category",
+    "no_items"              : "No activity categories found.",
+    "add_category"          : "Add Activity Category",
     "name"                  : "Name",
     "code"                  : "Code",
     "color"                 : "Color",
-    "delete_warning"        : "Are you sure you want to delete event category "
+    "delete_warning"        : "Are you sure you want to delete activity category "
   },
   "edit_event_category": {
-    "event_category"              : "Event Category",
+    "event_category"              : "Activity Category",
     "name"                        : "Name",
     "code"                        : "Code",
     "color"                       : "Color",
@@ -715,8 +715,8 @@
     "group"                       : "Group",
     "questions"                   : "Extra Questions",
     "add_question"                : "New Question",
-    "category_saved"              : "Event Category saved successfully.",
-    "category_created"            : "Event Category created successfully.",
+    "category_saved"              : "Activity Category saved successfully.",
+    "category_created"            : "Activity Category created successfully.",
     "delete_warning"              : "Are you sure you want to delete extra question "
   },
   "edit_event_category_question": {
@@ -742,18 +742,18 @@
     }
   },
   "event_category_group_list": {
-    "event_category_group_list"   : "Event Category Groups",
-    "event_category_groups"       : "Event Category Groups",
-    "no_items"                    : "No event category groups found.",
+    "event_category_group_list"   : "Activity Category Groups",
+    "event_category_groups"       : "Activity Category Groups",
+    "no_items"                    : "No activity category groups found.",
     "add_category_group"          : "Add Group",
     "name"                        : "Name",
     "type"                        : "Type",
     "categories"                  : "Categories",
     "color"                       : "Color",
-    "delete_warning"              : "Are you sure you want to delete event category group "
+    "delete_warning"              : "Are you sure you want to delete activity category group "
   },
   "edit_event_category_group": {
-    "event_category_group"            : "Event Category Group",
+    "event_category_group"            : "Activity Category Group",
     "name"                            : "Name",
     "color"                           : "Color",
     "description"                     : "Description",
@@ -763,8 +763,8 @@
     "submission_end_date"             : "Submission End",
     "max_submission_allowed_per_user" : "Max Submissions",
     "allowed_groups"                  : "Allowed Groups",
-    "group_saved"                 : "Event Category Group saved successfully.",
-    "group_created"               : "Event Category Group created successfully.",
+    "group_saved"                 : "Activity Category Group saved successfully.",
+    "group_created"               : "Activity Category Group created successfully.",
     "placeholders": {
       "select_class"     : "Select Class"
     }
