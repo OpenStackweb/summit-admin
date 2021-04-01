@@ -10,8 +10,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-import T from "i18n-react/dist/i18n-react";
-import history from '../history'
 import {
     getRequest,
     deleteRequest,
@@ -20,19 +18,22 @@ import {
     createAction,
     stopLoading,
     startLoading,
-    showMessage,
     authErrorHandler,
-    escapeFilterValue, getCSV
+    escapeFilterValue,
+    getCSV
 } from 'openstack-uicore-foundation/lib/methods';
 
 export const REQUEST_TRACK_CHAIRS       = 'REQUEST_TRACK_CHAIRS';
 export const RECEIVE_TRACK_CHAIRS       = 'RECEIVE_TRACK_CHAIRS';
-export const RECEIVE_TRACK_CHAIR        = 'RECEIVE_TRACK_CHAIR';
-export const RESET_TRACK_CHAIR_FORM     = 'RESET_TRACK_CHAIR_FORM';
-export const UPDATE_TRACK_CHAIR         = 'UPDATE_TRACK_CHAIR';
 export const TRACK_CHAIR_UPDATED        = 'TRACK_CHAIR_UPDATED';
 export const TRACK_CHAIR_ADDED          = 'TRACK_CHAIR_ADDED';
 export const TRACK_CHAIR_DELETED        = 'TRACK_CHAIR_DELETED';
+
+export const RECEIVE_PROGRESS_FLAGS       = 'RECEIVE_PROGRESS_FLAGS';
+export const PROGRESS_FLAG_UPDATED        = 'PROGRESS_FLAG_UPDATED';
+export const PROGRESS_FLAG_ADDED          = 'PROGRESS_FLAG_ADDED';
+export const PROGRESS_FLAG_DELETED        = 'PROGRESS_FLAG_DELETED';
+export const PROGRESS_FLAG_REORDERED      = 'PROGRESS_FLAG_REORDERED';
 
 export const getTrackChairs = (trackId = null, term = '', page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
 
@@ -215,3 +216,122 @@ export const exportTrackChairs = ( ) => (dispatch, getState) => {
 
 };
 
+
+
+/************************************************************************************************************/
+/*                          PROGRESS FLAGS                                                                  */
+/************************************************************************************************************/
+
+
+export const getProgressFlags = () => (dispatch, getState) => {
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token : accessToken,
+    };
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_PROGRESS_FLAGS),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/presentation-action-types`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const addProgressFlag = (flagName) => (dispatch, getState) => {
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token : accessToken,
+    };
+
+    return postRequest(
+        null,
+        createAction(PROGRESS_FLAG_ADDED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/presentation-action-types`,
+        {label: flagName},
+        authErrorHandler,
+    )(params)(dispatch)
+        .then(() => {
+            dispatch(stopLoading());
+        });
+};
+
+export const saveProgressFlag = (progressFlagId, flag) => (dispatch, getState) => {
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token : accessToken,
+    };
+
+    return putRequest(
+        null,
+        createAction(PROGRESS_FLAG_UPDATED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/presentation-action-types/${progressFlagId}`,
+        flag,
+        authErrorHandler,
+    )(params)(dispatch)
+        .then(() => {
+            dispatch(stopLoading());
+        });
+};
+
+export const deleteProgressFlag = (progressFlagId) => (dispatch, getState) => {
+
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+
+    const params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(PROGRESS_FLAG_DELETED)({progressFlagId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/presentation-action-types/${progressFlagId}`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const reorderProgressFlags = (flags, progressFlagId, newOrder) => (dispatch, getState) => {
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token : accessToken,
+    };
+
+    return putRequest(
+        null,
+        createAction(PROGRESS_FLAG_REORDERED)(flags),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/presentation-action-types/${progressFlagId}`,
+        {order: newOrder},
+        authErrorHandler,
+    )(params)(dispatch)
+        .then(() => {
+            dispatch(stopLoading());
+        });
+};

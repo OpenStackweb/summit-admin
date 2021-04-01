@@ -127,7 +127,9 @@
     "registration_invitation_list": "Registration Invitations",
     "media_file_types"        : "Media File Types",
     "media_uploads"           : "Media Upload Types",
-    "track_chairs"            : "Track Chairs"
+    "track_chairs"            : "Track Chairs",
+    "track_chair_list"        : "Track Chair List",
+    "progress_flags"          : "Progress Flags"
   },
   "schedule": {
     "schedule"                              : "Schedule",
@@ -1657,5 +1659,14 @@
       "select_track" : "Select Track",
       "select_track_chair" : "Choose Track Chair"
     }
+  },
+  "progress_flags": {
+    "progress_flags"          : "Progress Flags",
+    "flag"                    : "Flag",
+    "list"                    : "Progress Flag List",
+    "add"                     : "Add Flag",
+    "no_items"                : "No items found.",
+    "label"                   : "Label",
+    "delete_warning"          : "Are you sure you want to remove flag "
   }
 }

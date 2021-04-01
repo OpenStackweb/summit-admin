@@ -101,6 +101,7 @@ import companyListReducer from './reducers/companies/company-list-reducer';
 import companyReducer from './reducers/companies/company-reducer';
 import featuredSpeakersReducer from './reducers/summit_speakers/featured-speakers-reducer';
 import trackChairListReducer from "./reducers/track_chairs/track-chair-list-reducer";
+import progressFlagsReducer from "./reducers/track_chairs/progress-flags-reducer";
 
 
 import thunk from 'redux-thunk';
@@ -203,6 +204,7 @@ const reducers = persistCombineReducers(config, {
     currentCompanyState: companyReducer,
     featuredSpeakersState: featuredSpeakersReducer,
     trackChairListState: trackChairListReducer,
+    progressFlagsState: progressFlagsReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

@@ -156,7 +156,12 @@ class NavMenu extends React.Component {
                     {name:'featured_speakers', iconClass: 'fa-star', linkUrl:`summits/${summit_id}/featured-speakers`, accessRoute: 'speakers'},
                 ]
             },
-            {name: 'track_chairs', iconClass: 'fa-user-circle-o', linkUrl:`summits/${summit_id}/track-chairs`, accessRoute: 'track-chairs' },
+            {name: 'track_chairs', iconClass: 'fa-user-circle-o', accessRoute: 'track-chairs',
+                childs: [
+                    {name:'track_chair_list', linkUrl:`summits/${summit_id}/track-chairs`},
+                    {name:'progress_flags', linkUrl:`summits/${summit_id}/progress-flags`},
+                ]
+            },
             {name: 'sponsors', iconClass: 'fa-handshake-o', accessRoute: 'sponsors',
                 childs: [
                     {name:'sponsor_list', linkUrl:`summits/${summit_id}/sponsors`},

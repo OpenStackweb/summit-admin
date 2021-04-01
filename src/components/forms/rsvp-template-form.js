@@ -106,7 +106,7 @@ class RsvpTemplateForm extends React.Component {
                 edit: { onClick: this.handleEditQuestion },
                 delete: { onClick: onQuestionDelete }
             }
-        }
+        };
 
         let sortedQuestions = [...entity.questions];
         sortedQuestions.sort(
