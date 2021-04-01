@@ -72,7 +72,7 @@ class EditSummitPage extends React.Component {
 
 
     render(){
-        const {currentSummit, attachLogo, deleteLogo, errors, history} = this.props;
+        const {currentSummit, attachLogo, deleteLogo, errors, history, timezones} = this.props;
 
         return(
             <div className="container">
@@ -81,6 +81,7 @@ class EditSummitPage extends React.Component {
                 <SummitForm
                     history={history}
                     entity={currentSummit}
+                    timezones={timezones}
                     errors={errors}
                     onSubmit={this.props.saveSummit}
                     onSPlanDelete={this.handleSPlanDelete}
@@ -93,10 +94,11 @@ class EditSummitPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState }) => ({
+const mapStateToProps = ({ currentSummitState, baseState }) => ({
     currentSummit: currentSummitState.currentSummit,
-    errors: currentSummitState.errors
-})
+    errors: currentSummitState.errors,
+    timezones: baseState.timezones
+});
 
 export default Restrict(connect (
     mapStateToProps,

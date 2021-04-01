@@ -27,6 +27,7 @@ import CustomErrorPage from "./pages/custom-error-page";
 import history from './history'
 import exclusiveSections from 'js-yaml-loader!./exclusive-sections.yml';
 import IdTokenVerifier from 'idtoken-verifier';
+import {getTimezones} from './actions/base-actions';
 
 
 // here is set by default user lang as en
@@ -71,6 +72,10 @@ class App extends React.PureComponent {
 
     onClickLogin(){
         doLogin(getBackURL());
+    }
+
+    componentDidMount() {
+        this.props.getTimezones();
     }
 
     render() {
@@ -132,5 +137,6 @@ export default connect(mapStateToProps, {
     onUserAuth,
     doLogout,
     getUserInfo,
-    resetLoading
+    resetLoading,
+    getTimezones
 })(App)

@@ -155,54 +155,54 @@ class SummitForm extends React.Component {
 
     render() {
         const {entity, showSection} = this.state;
-        let {onSPlanDelete, onAttributeTypeDelete} = this.props;
-        let time_zones_ddl = moment.tz.names().map(tz => ({label: tz, value: tz}));
-        let dates_enabled = (entity.hasOwnProperty('time_zone_id') && entity.time_zone_id !== '');
+        const {timezones, onSPlanDelete, onAttributeTypeDelete} = this.props;
+        const time_zones_ddl = timezones.map(tz => ({label: tz, value: tz}));
+        const dates_enabled = (entity.hasOwnProperty('time_zone_id') && entity.time_zone_id !== '');
 
-        let splan_columns = [
+        const splan_columns = [
             { columnKey: 'name', value: T.translate("edit_summit.name") },
             { columnKey: 'enabled', value: T.translate("edit_summit.enabled") }
         ];
 
-        let splan_table_options = {
+        const splan_table_options = {
             actions: {
                 edit: { onClick: this.handleSPlanEdit },
                 delete: { onClick: onSPlanDelete }
             }
-        }
+        };
 
-        let api_feed_type_ddl = [
+        const api_feed_type_ddl = [
             {label: 'None', value: 'none'},
             {label: 'Sched', value: 'Sched'},
             {label: 'Vanderpoel', value: 'Vanderpoel'}
         ];
 
-        let external_registration_feed_type_ddl = [
+        const external_registration_feed_type_ddl = [
             {label: 'None', value: 'none'},
             {label: 'Eventbrite', value: 'Eventbrite'},
         ];
 
-        let attribute_columns = [
+        const attribute_columns = [
             { columnKey: 'id', value: T.translate("general.id") },
             { columnKey: 'type', value: T.translate("general.type") },
             { columnKey: 'values', value: T.translate("general.values") },
         ];
 
-        let attribute_options = {
+        const attribute_options = {
             actions: {
                 edit: {onClick: this.handleAttributeTypeEdit},
                 delete: { onClick: onAttributeTypeDelete }
             }
         };
 
-        let attributes = entity.meeting_booking_room_allowed_attributes.map(at => {
+        const attributes = entity.meeting_booking_room_allowed_attributes.map(at => {
             return {id: at.id, type: at.type, values: at.values.map(v => v.value).join(' ,')}
         });
 
-        let room_booking_start = entity.meeting_room_booking_start_time ? epochToMomentTimeZone(entity.meeting_room_booking_start_time, 'UTC') : moment.utc(0);
-        let room_booking_end = entity.meeting_room_booking_end_time ? epochToMomentTimeZone(entity.meeting_room_booking_end_time, 'UTC') : moment.utc(0);
+        const room_booking_start = entity.meeting_room_booking_start_time ? epochToMomentTimeZone(entity.meeting_room_booking_start_time, 'UTC') : moment.utc(0);
+        const room_booking_end = entity.meeting_room_booking_end_time ? epochToMomentTimeZone(entity.meeting_room_booking_end_time, 'UTC') : moment.utc(0);
 
-        let timezone_error = !dates_enabled ? 'Please choose a timezone first.' : '';
+        const timezone_error = !dates_enabled ? 'Please choose a timezone first.' : '';
 
         return (
             <form>

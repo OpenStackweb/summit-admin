@@ -12,11 +12,13 @@
  **/
 
 import { START_LOADING, STOP_LOADING, RESET_LOADING, RECEIVE_COUNTRIES, LOGOUT_USER } from "openstack-uicore-foundation/lib/actions";
+import {RECEIVE_TIMEZONES} from '../actions/base-actions';
 
 const DEFAULT_STATE = {
     loading: 0,
-    countries: []
-}
+    countries: [],
+    timezones: [],
+};
 
 const baseReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
@@ -40,6 +42,9 @@ const baseReducer = (state = DEFAULT_STATE, action) => {
         break;
         case RECEIVE_COUNTRIES:
             return {...state, countries: payload};
+        case RECEIVE_TIMEZONES:
+            const {data} = payload.response;
+            return {...state, timezones: data};
         default:
             return state;
         break;
