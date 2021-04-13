@@ -102,7 +102,10 @@ import companyReducer from './reducers/companies/company-reducer';
 import featuredSpeakersReducer from './reducers/summit_speakers/featured-speakers-reducer';
 import trackChairListReducer from "./reducers/track_chairs/track-chair-list-reducer";
 import progressFlagsReducer from "./reducers/track_chairs/progress-flags-reducer";
-
+import sponsoredProjectListReducer from "./reducers/sponsored_projects/sponsored-project-list-reducer";
+import sponsoredProjectReducer from "./reducers/sponsored_projects/sponsored-project-reducer";
+import sponsoredProjectSponsorshipTypeReducer from "./reducers/sponsored_projects/sponsored-project-sponsorship-type-reducer";
+import sponsoredProjectSponsorshipTypeSupportingCompanyReducer from "./reducers/sponsored_projects/sponsored-project-sponsorship-type-supporting-company-reducer";
 
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
@@ -205,6 +208,10 @@ const reducers = persistCombineReducers(config, {
     featuredSpeakersState: featuredSpeakersReducer,
     trackChairListState: trackChairListReducer,
     progressFlagsState: progressFlagsReducer,
+    sponsoredProjectListState: sponsoredProjectListReducer,
+    sponsoredProjectState : sponsoredProjectReducer,
+    sponsoredProjectSponsorshipTypeState : sponsoredProjectSponsorshipTypeReducer,
+    sponsoredProjectSponsorshipTypeSupportingCompanyState: sponsoredProjectSponsorshipTypeSupportingCompanyReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

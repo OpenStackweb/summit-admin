@@ -17,7 +17,6 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import Restrict from "../routes/restrict";
 import { Breadcrumbs, Breadcrumb } from 'react-breadcrumbs'
 import NavMenu from '../components/nav-menu'
-
 import SummitLayout from './summit-layout';
 import SummitDirectoryPage from '../pages/summits/summit-directory-page';
 import SpeakerLayout from './speaker-layout';
@@ -25,6 +24,7 @@ import CompanyLayout from './company-layout';
 import EmailLayout from "./email-layout";
 import AdminAccessLayout from "./admin-access-layout";
 import MediaFileTypeLayout from "./media-file-type-layout";
+import SponsoredProjectLayout from "./sponsored-project-layout";
 
 
 class PrimaryLayout extends React.Component {
@@ -50,6 +50,7 @@ class PrimaryLayout extends React.Component {
                         <Route strict exact path="/app/directory" component={SummitDirectoryPage}/>
                         <Route path="/app/speakers" component={SpeakerLayout}/>
                         <Route path="/app/companies" component={CompanyLayout}/>
+                        <Route path="/app/sponsored-projects" component={SponsoredProjectLayout}/>
                         <Route path={"/app/emails"} component={EmailLayout}/>
                         <Route path={"/app/admin-access"} component={AdminAccessLayout}/>
                         <Route path={"/app/media-file-types"} component={MediaFileTypeLayout}/>

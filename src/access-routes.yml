@@ -40,6 +40,10 @@ companies:
   - super-admins
   - administrators
 
+sponsored-projects:
+  - super-admins
+  - administrators
+
 attendees:
   - super-admins
   - administrators

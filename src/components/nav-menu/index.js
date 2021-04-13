@@ -125,6 +125,7 @@ class NavMenu extends React.Component {
                 ]
             },
             {name: 'companies', iconClass: 'fa fa-copyright', linkUrl: 'companies', accessRoute: 'companies'},
+            {name: 'sponsored_projects', iconClass: 'fa fa-cubes', linkUrl: 'sponsored-projects', accessRoute: 'sponsored-projects',  exclusive: 'sponsored-projects'},
             {name: 'emails', iconClass: 'fa-envelope-o', accessRoute: 'emails',
                 childs: [
                     {name:'email_templates', linkUrl:`emails/templates`},
