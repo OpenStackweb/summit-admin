@@ -42,6 +42,7 @@ const fieldNames = [
     {label: 'Published', key: 'published', simple: true},
     {label: 'Videos', key: 'mediaUploadVideos', simple: true},
     {label: 'Slides', key: 'mediaUploadSlides', simple: true},
+    {label: 'All Materials', key: 'allMediaUploads', simple: true},
     {label: 'Stream URL', key: 'streamingUrl', simple: true},
     {label: 'Meeting URL', key: 'meetingUrl', simple: true},
     {label: 'Etherpad URL', key: 'etherpadLink', simple: true},
