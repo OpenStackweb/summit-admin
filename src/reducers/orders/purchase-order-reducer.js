@@ -10,7 +10,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-
+import React from "react";
+import history from "../../history";
 import
 {
     RECEIVE_PURCHASE_ORDER,
@@ -82,6 +83,8 @@ const purchaseOrderReducer = (state = DEFAULT_STATE, action) => {
             entity.tickets = entity.tickets.map(t => {
                 let owner_full_name = 'N/A';
                 let owner_email = 'N/A';
+                let owner_link = 'N/A';
+                let email_link = 'N/A';
                 let ticket_type_name = t.ticket_type ? t.ticket_type.name : 'N/A';
                 const final_amount_formatted = `$${t.final_amount}`;
 
@@ -93,9 +96,12 @@ const purchaseOrderReducer = (state = DEFAULT_STATE, action) => {
                     } else if (t.owner.first_name && t.owner.last_name) {
                         owner_full_name = `${t.owner.first_name} ${t.owner.last_name}`;
                     }
+
+                    owner_link = <a href="" onClick={ev => { ev.stopPropagation(); history.push(`/app/summits/${entity.summit_id}/attendees/${t.owner.id}`)}}>{owner_full_name}</a>;
+                    email_link = <a href="" onClick={ev => { ev.stopPropagation(); window.open(`mailto:${owner_email}`, '_blank')}} target="_blank">{owner_email}</a>
                 }
 
-                return ({...t, ticket_type_name, owner_full_name, owner_email, final_amount_formatted})
+                return ({...t, ticket_type_name, owner_full_name, owner_email, owner_link, email_link, final_amount_formatted})
             });
 
             return {...state,  entity: {...entity}, errors: {} };

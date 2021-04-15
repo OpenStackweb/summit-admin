@@ -109,22 +109,14 @@ class EditPurchaseOrderPage extends React.Component {
                     {title} {T.translate("edit_purchase_order.purchase_order")}
                     {entity.id !== 0 &&
                     <div className="pull-right form-inline">
-                        {
-                            (entity.status === 'RefundRequested' || entity.status === 'Paid') &&
-                            < input
-                            className="form-control"
-                            type="number"
-                            min="0"
-                            value={refund_amount}
-                            onChange={this.handleRefundChange}
-                            />
-                        }
-                        {
-                            (entity.status === 'RefundRequested' || entity.status === 'Paid') &&
-                            <button className="btn btn-sm btn-primary right-space"
-                                    onClick={this.handleRefundOrder.bind(this, entity)}>
-                                {T.translate("edit_purchase_order.refund")}
-                            </button>
+                        {(entity.status === 'RefundRequested' || entity.status === 'Paid') &&
+                            <>
+                                <input className="form-control" type="number" min="0" value={refund_amount} onChange={this.handleRefundChange} />
+                                <button className="btn btn-sm btn-primary right-space"
+                                        onClick={this.handleRefundOrder.bind(this, entity)}>
+                                    {T.translate("edit_purchase_order.refund")}
+                                </button>
+                            </>
                         }
                         {
                             entity.status === 'RefundRequested' &&

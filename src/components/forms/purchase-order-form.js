@@ -107,8 +107,8 @@ class PurchaseOrderForm extends React.Component {
         let ticket_columns = [
             { columnKey: 'number', value: T.translate("edit_purchase_order.ticket_number") },
             { columnKey: 'ticket_type_name', value: T.translate("edit_purchase_order.ticket_type_name") },
-            { columnKey: 'owner_full_name', value: T.translate("edit_purchase_order.owner_full_name") },
-            { columnKey: 'owner_email', value: T.translate("edit_purchase_order.owner_email") },
+            { columnKey: 'owner_link', value: T.translate("edit_purchase_order.attendee") },
+            { columnKey: 'email_link', value: T.translate("edit_purchase_order.owner_email") },
             { columnKey: 'final_amount_formatted', value: T.translate("edit_purchase_order.paid_amount_per_tix")}
         ];
 

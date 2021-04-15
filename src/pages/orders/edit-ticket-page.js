@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getTicket, refundTicket, saveTicket, reassignTicket, addBadgeToTicket, reSendTicketEmail, cancelRefundTicket } from "../../actions/ticket-actions";
+import { getTicket, saveTicket, reassignTicket, addBadgeToTicket, reSendTicketEmail } from "../../actions/ticket-actions";
 import TicketForm from "../../components/forms/ticket-form";
 import BadgeForm from "../../components/forms/badge-form";
 import {getBadgeFeatures, getBadgeTypes, deleteBadge, addFeatureToBadge, removeFeatureFromBadge, changeBadgeType,
@@ -33,10 +33,6 @@ class EditTicketPage extends React.Component {
         const new_ticket_id = match.params.ticket_id;
         super(props);
 
-        this.state = {
-            refund_amount: 0
-        };
-
         props.getTicket(new_ticket_id);
 
         if (!currentSummit.badge_features) props.getBadgeFeatures();
@@ -45,8 +41,6 @@ class EditTicketPage extends React.Component {
         this.handlePrintBadge = this.handlePrintBadge.bind(this);
         this.handleAddBadgeToTicket = this.handleAddBadgeToTicket.bind(this);
         this.handleDeleteBadge = this.handleDeleteBadge.bind(this);
-        this.handleRefundTicket = this.handleRefundTicket.bind(this);
-        this.handleRefundChange = this.handleRefundChange.bind(this);
         this.handleResendEmail = this.handleResendEmail.bind(this);
     }
 
@@ -64,46 +58,6 @@ class EditTicketPage extends React.Component {
         ev.preventDefault();
 
         this.props.printBadge(entity.id);
-    }
-
-    handleRefundChange(ev) {
-        let value = parseInt(ev.target.value);
-        this.setState({refund_amount: value});
-    }
-
-    handleCancelRefundTicket(ticket, ev){
-        const {cancelRefundTicket} = this.props;
-
-        Swal.fire({
-            title: T.translate("general.are_you_sure"),
-            text: T.translate("edit_ticket.cancel_refund_warning"),
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: T.translate("edit_ticket.yes_cancel_refund")
-        }).then(function(result){
-            if (result.value) {
-                cancelRefundTicket(ticket.order_id, ticket.id);
-            }
-        });
-    }
-
-    handleRefundTicket(ticket, ev) {
-        const {refundTicket} = this.props;
-        const {refund_amount} = this.state;
-
-        Swal.fire({
-            title: T.translate("general.are_you_sure"),
-            text: T.translate("edit_ticket.refund_warning"),
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: T.translate("edit_ticket.yes_refund")
-        }).then(function(result){
-            if (result.value) {
-                refundTicket(ticket.id, refund_amount);
-            }
-        });
     }
 
     handleResendEmail(ticket, ev){
@@ -134,7 +88,6 @@ class EditTicketPage extends React.Component {
 
     render(){
         const {currentSummit, currentOrder, loading,  entity, errors, match} = this.props;
-        const {refund_amount} = this.state;
 
         const breadcrumb = `...${entity.number.slice(-20)}`;
 
@@ -144,56 +97,17 @@ class EditTicketPage extends React.Component {
         return(
             <div className="container">
                 <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
-                <h3>
-                    {T.translate("edit_ticket.ticket")}
-
-                </h3>
-
-                <div className="row">
-                    <div className="col-md-6">
-                        {
-                            (entity.status === 'RefundRequested' || entity.status === 'Paid') &&
-                            <div className="pull-left form-inline">
-                                <input
-                                    className="form-control"
-                                    type="number"
-                                    min="0"
-                                    value={refund_amount}
-                                    onChange={this.handleRefundChange}
-                                />
-                                <button className="btn btn-sm btn-primary pull-right"
-                                        onClick={this.handleRefundTicket.bind(this, entity)}>
-                                    {T.translate("edit_ticket.refund_ticket")}
-                                </button>
-                            </div>
-                        }
-                    </div>
-                    <div className="col-md-6">
-                        {
-                            entity.status === 'RefundRequested' &&
-                            <button className="btn btn-sm btn-primary right-space" onClick={this.handleCancelRefundTicket.bind(this, entity)}>
-                                {T.translate("edit_ticket.cancel_refund")}
-                            </button>
-                        }
-                        {entity.status === 'Paid' &&
-                        <div>
-
-                            <button className="btn btn-sm btn-primary left-space"
-                                    onClick={this.handleResendEmail.bind(this, entity)}>
-                                {T.translate("edit_ticket.resend_email")}
-                            </button>
-                        </div>
-                        }
-                    </div>
-                </div>
+                <h3>{T.translate("edit_ticket.ticket")}</h3>
                 <hr/>
                 <TicketForm
                     history={this.props.history}
                     currentSummit={currentSummit}
                     entity={entity}
+                    order={currentOrder}
                     errors={errors}
                     onReassing={this.props.reassignTicket}
                     onSaveTicket={this.props.saveTicket}
+                    onResendEmail={this.handleResendEmail}
                 />
 
                 <br/>
@@ -214,10 +128,7 @@ class EditTicketPage extends React.Component {
                                 {T.translate("edit_ticket.delete_badge")}
                             </button>
                         </h3>
-
                         <hr/>
-
-
                         <BadgeForm
                             history={this.props.history}
                             currentSummit={currentSummit}
@@ -247,7 +158,6 @@ export default connect (
     {
         getSummitById,
         getTicket,
-        refundTicket,
         saveTicket,
         reassignTicket,
         deleteBadge,
@@ -259,6 +169,5 @@ export default connect (
         addBadgeToTicket,
         printBadge,
         reSendTicketEmail,
-        cancelRefundTicket,
     }
 )(EditTicketPage);

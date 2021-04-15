@@ -12,6 +12,7 @@
  **/
 
 import React from 'react';
+import history from "../../../history";
 import T from 'i18n-react/dist/i18n-react';
 import Swal from "sweetalert2";
 import { Modal } from 'react-bootstrap';
@@ -107,6 +108,12 @@ export default class TicketComponent extends React.Component {
         this.setState({newTicket: newTicket});
     }
 
+    handleTicketLink = (ev, ticket) => {
+        const {summit} = this.props;
+        ev.preventDefault();
+        history.push(`/app/summits/${summit.id}/purchase-orders/${ticket.order_id}/tickets/${ticket.id}`);
+    };
+
     render() {
         let {tickets, summit} = this.props;
         let {showEditModal, showAddModal, editTicket, newTicket} = this.state;
@@ -121,20 +128,29 @@ export default class TicketComponent extends React.Component {
             <div className="ticket-component">
                 <div className="row form-group">
                     <div className="col-md-12">
-                        <legend>{T.translate("edit_attendee.tickets")}</legend>
+                        <legend>
+                            {T.translate("edit_attendee.tickets")}
+                            <a href="" className="btn btn-default btn-xs add-ticket pull-right" onClick={this.onAdd}>
+                                {T.translate("edit_attendee.add_ticket")}
+                            </a>
+                        </legend>
                         {tickets.map(t =>
                             <div key={'tix_' + t.id} className="btn-group btn-group-xs ticket-btn">
-                                <a href="" className="ticket btn btn-default" onClick={this.onEdit.bind(this, t)}>
+                                <a href="" className="ticket btn btn-default" onClick={ev => this.handleTicketLink(ev, t)}>
                                     {t.external_order_id || t.number}
                                 </a>
-                                <a href="" className="del-ticket btn btn-danger" onClick={this.onDelete.bind(this, t.id)}>
+                                <a href="" className="del-ticket btn btn-primary"
+                                   onClick={this.onEdit.bind(this, t)}>
+                                    <i className="fa fa-list-ul"/>
+                                </a>
+                                {this.props.onDelete &&
+                                <a href="" className="del-ticket btn btn-danger"
+                                   onClick={this.onDelete.bind(this, t.id)}>
                                     <i className="fa fa-trash-o"/>
                                 </a>
+                                }
                             </div>
                         )}
-                        <a href="" className="btn btn-default btn-xs add-ticket" onClick={this.onAdd}>
-                            {T.translate("edit_attendee.add_ticket")}
-                        </a>
                     </div>
                 </div>
                 <Modal show={showEditModal} onHide={this.onCloseModal} dialogClassName="ticket-edit-modal">

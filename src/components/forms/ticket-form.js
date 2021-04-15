@@ -31,6 +31,7 @@ class TicketForm extends React.Component {
 
         this.handlePromocodeClick = this.handlePromocodeClick.bind(this);
         this.handleOwnerClick = this.handleOwnerClick.bind(this);
+        this.handleOrderClick = this.handleOrderClick.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleReassign = this.handleReassign.bind(this);
         this.handleAssign = this.handleAssign.bind(this);
@@ -109,6 +110,13 @@ class TicketForm extends React.Component {
         history.push(`/app/summits/${currentSummit.id}/promocodes/${entity.promo_code.id}`);
     }
 
+    handleOrderClick(ev) {
+        const {currentSummit, entity, history} = this.props;
+
+        ev.preventDefault();
+        history.push(`/app/summits/${currentSummit.id}/purchase-orders/${entity.order_id}`);
+    }
+
     hasErrors(field) {
         let {errors} = this.state;
         if(field in errors) {
@@ -121,6 +129,7 @@ class TicketForm extends React.Component {
 
     render() {
         const {entity, canReassign} = this.state;
+        const {order} = this.props;
         let member = entity.member ? entity.member : (entity.owner ? entity.owner.member : null);
 
         return (
@@ -138,12 +147,18 @@ class TicketForm extends React.Component {
                     </div>
                     <div className="col-md-3">
                         <label> {T.translate("edit_ticket.email")}:&nbsp;</label>
-                        <span>{entity.owner.email}</span>
+                        <a href={`mailto:${entity.owner.email}`} target="_blank">{entity.owner.email}</a>
                     </div>
-                    <div className="col-md-2">
-                        <button onClick={this.handleReassign} className="btn btn-default">
+                    <div className="col-md-3">
+                        <button onClick={this.handleReassign} className="btn btn-sm btn-default">
                             {T.translate("edit_ticket.reassign")}
                         </button>
+                        {entity.status === 'Paid' &&
+                        <button className="btn btn-sm btn-primary left-space"
+                                onClick={() => this.props.onResendEmail(entity) }>
+                            {T.translate("edit_ticket.resend_email")}
+                        </button>
+                        }
                     </div>
                 </div>
                 }
@@ -208,6 +223,10 @@ class TicketForm extends React.Component {
                     <div className="col-md-3">
                         <label> {T.translate("edit_ticket.paid_amount")}:&nbsp;</label>
                         {entity.final_amount_formatted}
+                    </div>
+                    <div className="col-md-9">
+                        <label> {T.translate("edit_ticket.order_number")}:&nbsp;</label>
+                        <a href="" onClick={this.handleOrderClick}>{order.number}</a>
                     </div>
                 </div>
 

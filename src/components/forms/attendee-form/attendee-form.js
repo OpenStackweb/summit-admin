@@ -245,7 +245,6 @@ class AttendeeForm extends React.Component {
                         summit={currentSummit}
                         onReassign={this.props.onTicketReassign}
                         onSave={this.props.onSaveTicket}
-                        onDelete={this.props.onDeleteTicket}
                     />
                     }
 
