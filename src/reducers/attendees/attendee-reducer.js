@@ -20,7 +20,7 @@ import
     ATTENDEE_UPDATED,
     TICKET_ADDED,
     TICKET_DELETED,
-    RSVP_DELETED
+    RSVP_DELETED, RECEIVE_ATTENDEE_ORDERS
 } from '../../actions/attendee-actions';
 
 import {AFFILIATION_ADDED, AFFILIATION_DELETED} from "../../actions/member-actions";
@@ -40,8 +40,9 @@ export const DEFAULT_ENTITY = {
     summit_hall_checked_in: 0,
     disclaimer_accepted: 0,
     tickets: [],
-    extra_question_answers: []
-}
+    extra_question_answers: [],
+    orders: []
+};
 
 const DEFAULT_STATE = {
     entity: DEFAULT_ENTITY,
@@ -59,16 +60,13 @@ const attendeeReducer = (state = DEFAULT_STATE, action) => {
                 return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
             }
         }
-        break;
         case SET_CURRENT_SUMMIT:
         case RESET_ATTENDEE_FORM: {
             return DEFAULT_STATE;
         }
-        break;
         case UPDATE_ATTENDEE: {
             return {...state,  entity: {...payload}, errors: {} };
         }
-        break;
         case RECEIVE_ATTENDEE: {
             let entity = {...payload.response};
 
@@ -85,25 +83,24 @@ const attendeeReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state,  entity: {...DEFAULT_ENTITY, ...entity}, errors: {} };
         }
-        break;
+        case RECEIVE_ATTENDEE_ORDERS: {
+            const {data} = payload.response;
+            return {...state,  entity: {...state.entity, orders: data} };
+        }
         case ATTENDEE_UPDATED: {
             return state;
         }
-        break;
         case CHANGE_MEMBER: {
             return {...state };
         }
-        break;
         case TICKET_ADDED: {
             let newTicket = payload.response;
             return {...state, entity: {...state.entity, tickets: [...state.entity.tickets, newTicket] }};
         }
-        break;
         case TICKET_DELETED: {
             let {ticketId} = payload;
             return {...state, entity: {...state.entity, tickets: state.entity.tickets.filter(t => t.id !== ticketId)}};
         }
-        break;
         case RSVP_DELETED: {
             let {rsvpId} = payload;
 
@@ -118,7 +115,6 @@ const attendeeReducer = (state = DEFAULT_STATE, action) => {
                 }
             };
         }
-        break;
         case AFFILIATION_ADDED: {
             let affiliation = {...payload.response};
 
@@ -138,7 +134,6 @@ const attendeeReducer = (state = DEFAULT_STATE, action) => {
             }
 
         }
-        break;
         case AFFILIATION_DELETED: {
             let {affiliationId} = payload;
             if (state.entity.member && state.entity.member.hasOwnProperty('affiliations')) {
@@ -159,11 +154,9 @@ const attendeeReducer = (state = DEFAULT_STATE, action) => {
             }
 
         }
-        break;
         case VALIDATE: {
             return {...state,  errors: payload.errors };
         }
-        break;
         default:
             return state;
     }

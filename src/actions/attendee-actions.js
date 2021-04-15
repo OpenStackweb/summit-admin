@@ -26,10 +26,12 @@ import {
     authErrorHandler,
     escapeFilterValue, getCSV
 } from "openstack-uicore-foundation/lib/methods";
+import {RECEIVE_PURCHASE_ORDERS, REQUEST_PURCHASE_ORDERS} from "./order-actions";
 
 export const REQUEST_ATTENDEES          = 'REQUEST_ATTENDEES';
 export const RECEIVE_ATTENDEES          = 'RECEIVE_ATTENDEES';
 export const RECEIVE_ATTENDEE           = 'RECEIVE_ATTENDEE';
+export const RECEIVE_ATTENDEE_ORDERS    = 'RECEIVE_ATTENDEE_ORDERS';
 export const CHANGE_MEMBER              = 'CHANGE_MEMBER';
 export const RESET_ATTENDEE_FORM        = 'RESET_ATTENDEE_FORM';
 export const UPDATE_ATTENDEE            = 'UPDATE_ATTENDEE';
@@ -199,6 +201,30 @@ export const getAttendee = (attendeeId) => (dispatch, getState) => {
         null,
         createAction(RECEIVE_ATTENDEE),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}`,
+        authErrorHandler
+    )(params)(dispatch).then(({response}) => {
+            getAttendeeOrders(response)(dispatch, getState);
+        }
+    );
+};
+
+export const getAttendeeOrders = ( attendee ) => (dispatch, getState) => {
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+
+    const params = {
+        expand       : 'tickets',
+        page         : 1,
+        per_page     : 30,
+        access_token : accessToken,
+        'filter[]'   : [`owner_email==${attendee.email}`]
+    };
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_ATTENDEE_ORDERS),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/orders`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

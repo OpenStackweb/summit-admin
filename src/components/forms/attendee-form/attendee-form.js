@@ -16,6 +16,7 @@ import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import { MemberInput, Input, Panel } from 'openstack-uicore-foundation/lib/components'
 import TicketComponent from './ticket-component'
+import OrderComponent from './order-component'
 import RsvpComponent from './rsvp-component'
 import { AffiliationsTable } from '../../tables/affiliationstable'
 import QuestionAnswersInput from '../../inputs/question-answers-input'
@@ -245,6 +246,13 @@ class AttendeeForm extends React.Component {
                         summit={currentSummit}
                         onReassign={this.props.onTicketReassign}
                         onSave={this.props.onSaveTicket}
+                    />
+                    }
+
+                    {entity.hasOwnProperty('orders') &&
+                    <OrderComponent
+                        orders={entity.orders}
+                        summit={currentSummit}
                     />
                     }
 
