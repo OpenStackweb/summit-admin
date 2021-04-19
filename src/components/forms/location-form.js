@@ -261,14 +261,21 @@ class LocationForm extends React.Component {
                         <label> {T.translate("edit_location.name")} *</label>
                         <Input id="name" value={entity.name} onChange={this.handleChange} error={this.hasErrors('name')} />
                     </div>
-                    {this.display('website_url') &&
                     <div className="col-md-4">
+                        <label> {T.translate("edit_location.short_name")}</label>
+                        <Input id="short_name" value={entity.short_name} onChange={this.handleChange} error={this.hasErrors('short_name')} />
+                    </div>
+
+                </div>
+                {this.display('website_url') &&
+                <div className="row form-group">
+                    <div className="col-md-12">
                         <label> {T.translate("edit_location.website")}</label>
                         <Input id="website_url" value={entity.website_url} onChange={this.handleChange}
                                error={this.hasErrors('website_url')}/>
                     </div>
-                    }
                 </div>
+                }
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_location.description")} </label>

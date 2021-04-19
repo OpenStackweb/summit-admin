@@ -787,6 +787,7 @@
     "floor": "Floor",
     "type": "Type",
     "name": "Name",
+    "short_name": "Short Name",
     "website": "Website",
     "description": "Description",
     "display_on_site": "Should Display On Site",
