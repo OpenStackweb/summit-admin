@@ -32,7 +32,7 @@ export const SUMMITDOC_UPDATED        = 'SUMMITDOC_UPDATED';
 export const SUMMITDOC_ADDED          = 'SUMMITDOC_ADDED';
 export const SUMMITDOC_DELETED        = 'SUMMITDOC_DELETED';
 
-export const getSummitDocs = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
+export const getSummitDocs = (term = '', page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
 
     const { loggedUserState, currentSummitState } = getState();
     const { accessToken }     = loggedUserState;
@@ -188,7 +188,7 @@ const normalizeEntity = (entity) => {
     delete(normalizedEntity['has_file']);
     delete(normalizedEntity['event_types']);
 
-    if (entity.event_types) {
+    if (!entity.show_always && entity.event_types) {
         normalizedEntity['event_types[]'] = entity.event_types;
     }
 

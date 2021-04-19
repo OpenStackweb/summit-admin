@@ -1496,6 +1496,7 @@
     "label": "Label",
     "description": "Description",
     "event_types": "Activity Types",
+    "show_always": "Show Always",
     "file": "File",
     "delete_warning": "Are you sure you want to delete doc ",
     "saved": "Doc saved successfully.",

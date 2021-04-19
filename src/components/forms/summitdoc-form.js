@@ -66,6 +66,11 @@ class SummitDocForm extends React.Component {
 
         errors[id] = '';
         entity[id] = value;
+
+        if (id === 'show_always' && value) {
+            entity.event_types = [];
+        }
+
         this.setState({entity: entity, errors: errors});
     }
 
@@ -141,6 +146,7 @@ class SummitDocForm extends React.Component {
                             options={event_types_ddl}
                             onChange={this.handleChange}
                             isMulti
+                            disabled={entity.show_always}
                         />
                     </div>
                 </div>
@@ -154,6 +160,15 @@ class SummitDocForm extends React.Component {
                             className="form-control"
                             error={this.hasErrors('description')}
                         />
+                    </div>
+                    <div className="col-md-4 checkboxes-div">
+                        <div className="form-check abc-checkbox">
+                            <input type="checkbox" id="show_always" checked={entity.show_always}
+                                   onChange={this.handleChange} className="form-check-input"/>
+                            <label className="form-check-label" htmlFor="show_always">
+                                {T.translate("summitdoc.show_always")}
+                            </label>
+                        </div>
                     </div>
                 </div>
                 <div className="row form-group">

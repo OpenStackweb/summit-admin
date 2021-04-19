@@ -29,6 +29,7 @@ export const DEFAULT_ENTITY = {
     description  : '',
     event_types  : [],
     file_preview : '',
+    show_always : false,
 }
 
 const DEFAULT_STATE = {

@@ -22,7 +22,7 @@ import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
 
 const DEFAULT_STATE = {
     summitDocs      : [],
-    term            : null,
+    term            : '',
     order           : 'id',
     orderDir        : 1,
     currentPage     : 1,
