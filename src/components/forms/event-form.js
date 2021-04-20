@@ -636,8 +636,7 @@ class EventForm extends React.Component {
                         </div>
                     </div>
                 </Panel>
-
-                {entity.id !== 0 &&
+                {entity.id !== 0 && this.isEventType('Presentation') &&
                 <Panel show={showSection === 'materials'} title={T.translate("edit_event.materials")}
                        handleClick={this.toggleSection.bind(this, 'materials')}>
                     <button className="btn btn-primary pull-right left-space" onClick={this.handleNewMaterial}>
