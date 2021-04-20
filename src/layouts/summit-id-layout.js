@@ -59,6 +59,7 @@ import MediaUploadLayout from "./media-upload-layout";
 import FeaturedSpeakersPage from '../pages/summit_speakers/featured-speakers-page';
 import TrackChairListPage from "../pages/track_chairs/track-chair-list-page";
 import ProgressFlagsPage from "../pages/track_chairs/progress-flags-page";
+import EditSummitScheduleSettingsPage from "../pages/schedule_settings/edit-summit-schedule-settings-page";
 
 class SummitIdLayout extends React.Component {
 
@@ -139,6 +140,7 @@ class SummitIdLayout extends React.Component {
                     <Route path={`${match.url}/media-uploads`} component={MediaUploadLayout}/>
                     <Route path={`${match.url}/track-chairs`} component={TrackChairListPage}/>
                     <Route path={`${match.url}/progress-flags`} component={ProgressFlagsPage}/>
+                    <Route path={`${match.url}/schedule-settings`} component={EditSummitScheduleSettingsPage}/>
                     <Route component={NoMatchPage}/>
                 </Switch>
             </div>

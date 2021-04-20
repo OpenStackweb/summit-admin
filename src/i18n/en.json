@@ -116,7 +116,7 @@
     "sponsor_list": "Sponsor List",
     "sponsorship_list": "Sponsorships",
     "badge_scans": "Badge Scans",
-    "marketing": "Marketing Settings",
+    "marketing": "Marketing",
     "payment_profiles_list": "Payment Profiles",
     "emails": "Emails",
     "email_templates": "Templates",
@@ -130,7 +130,9 @@
     "track_chairs": "Track Chairs",
     "track_chair_list": "Track Chair List",
     "progress_flags": "Progress Flags",
-    "sponsored_projects": "Sponsored Projects"
+    "sponsored_projects": "Sponsored Projects",
+    "settings": "Settings",
+    "schedule_settings": "Schedule"
   },
   "schedule": {
     "schedule": "Schedule",
@@ -1716,5 +1718,12 @@
     "company": "Company",
     "saved": "Supporting Company successfully.",
     "created": "Supporting Company created successfully."
+  },
+  "schedule_settings": {
+    "schedule_settings" : "Schedule Settings",
+    "filter_title": "Filter",
+    "filter_subtitle": "Activate filters to by displayed on side panel",
+    "color_title": "Color By",
+    "color_subtitle": "The selected option will be use as color codification on schedule"
   }
 }

@@ -110,6 +110,7 @@ import sponsoredProjectSponsorshipTypeSupportingCompanyReducer from "./reducers/
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
 import storage from 'redux-persist/es/storage'
+import scheduleSettingsReducer from "./reducers/schedule-settings/schedule-settings-reducer";
  // default: localStorage if web, AsyncStorage if react-native
 
 const config = {
@@ -212,6 +213,7 @@ const reducers = persistCombineReducers(config, {
     sponsoredProjectState : sponsoredProjectReducer,
     sponsoredProjectSponsorshipTypeState : sponsoredProjectSponsorshipTypeReducer,
     sponsoredProjectSponsorshipTypeSupportingCompanyState: sponsoredProjectSponsorshipTypeSupportingCompanyReducer,
+    scheduleSettingState: scheduleSettingsReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

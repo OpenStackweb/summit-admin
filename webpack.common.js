@@ -45,7 +45,26 @@ module.exports = {
             },
             {
                 test: /\.less/,
+                exclude: /\.module\.less/,
                 use: [MiniCssExtractPlugin.loader, "css-loader", "less-loader"]
+            },
+            {
+                test: /\.module.less/,
+                use: [
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                    },
+                    {
+                        loader: "css-loader",
+                        options: {
+                            sourceMap: true,
+                            modules: true,
+                        }
+                    },
+                    {
+                        loader: "less-loader"
+                    }
+                ]
             },
             {
                 test: /\.scss/,
