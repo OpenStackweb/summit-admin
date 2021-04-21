@@ -477,7 +477,7 @@ export const saveEventCategoryQuestionValue = (questionId, entity) => (dispatch,
         T.translate("general.done");
         T.translate("edit_event_category_question.question_created");
 
-        normalizedEntity.tracks = [currentEventCategory.id];
+        entity.tracks = [currentEventCategory.id];
 
         postRequest(
             null,
