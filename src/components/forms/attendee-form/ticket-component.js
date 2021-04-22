@@ -139,12 +139,21 @@ export default class TicketComponent extends React.Component {
                                 <a href="" className="ticket btn btn-default" onClick={ev => this.handleTicketLink(ev, t)}>
                                     {t.external_order_id || t.number}
                                 </a>
-                                <a href="" className="del-ticket btn btn-primary"
-                                   onClick={this.onEdit.bind(this, t)}>
-                                    <i className="fa fa-list-ul"/>
-                                </a>
+                                {t.is_active &&
+                                    <a href="#" className="del-ticket btn btn-primary"
+                                       onClick={this.onEdit.bind(this, t)}>
+                                        <i className="fa fa-list-ul"/>
+                                    </a>
+                                }
+                                {!t.is_active &&
+                                <a href="#" className="del-ticket btn btn-danger"
+                                   title={T.translate("edit_attendee.inactive_ticket")}
+                                   onClick={(ev) => ev.preventDefault()}>
+                                    <i className="fa fa-ban"/>
+                                    </a>
+                                }
                                 {this.props.onDelete &&
-                                <a href="" className="del-ticket btn btn-danger"
+                                <a href="#" className="del-ticket btn btn-danger"
                                    onClick={this.onDelete.bind(this, t.id)}>
                                     <i className="fa fa-trash-o"/>
                                 </a>

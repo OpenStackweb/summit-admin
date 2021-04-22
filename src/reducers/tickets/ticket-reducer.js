@@ -47,6 +47,7 @@ export const DEFAULT_ENTITY = {
     applied_taxes: [],
     attendee: {},
     attendee_company: '',
+    is_active: true,
 }
 
 const DEFAULT_STATE = {
@@ -99,7 +100,8 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case TICKET_UPDATED: {
-            return state;
+            let entity = {...payload.response};
+            return {...state, entity:{...state.entity, is_active: entity.is_active}};
         }
         break;
         case TICKET_MEMBER_REASSIGNED: {
