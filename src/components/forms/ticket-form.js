@@ -18,7 +18,6 @@ import { Input } from 'openstack-uicore-foundation/lib/components'
 import OwnerInput from "../inputs/owner-input";
 import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 
-
 class TicketForm extends React.Component {
     constructor(props) {
         super(props);
@@ -122,10 +121,8 @@ class TicketForm extends React.Component {
         if(field in errors) {
             return errors[field];
         }
-
         return '';
     }
-
 
     render() {
         const {entity, canReassign} = this.state;
@@ -133,7 +130,7 @@ class TicketForm extends React.Component {
         let member = entity.member ? entity.member : (entity.owner ? entity.owner.member : null);
 
         return (
-            <form className="ticket-form">
+            <form className="ticket-form" onSubmit={(ev)=> ev.preventDefault()}>
                 <input type="hidden" id="ticket_id" value={entity.id} />
                 {!canReassign && entity.owner &&
                 <div className="row form-group">
@@ -141,7 +138,7 @@ class TicketForm extends React.Component {
                         <label> {T.translate("edit_ticket.attendee")}:&nbsp;</label>
                         <a href="" onClick={this.handleOwnerClick}>{entity.attendee_full_name}</a>
                     </div>
-                    <div className="col-md-3">
+                    <div className="col-md-2">
                         <label> {T.translate("edit_ticket.company")}:&nbsp;</label>
                         <span>{entity.owner.company}</span>
                     </div>
@@ -149,15 +146,11 @@ class TicketForm extends React.Component {
                         <label> {T.translate("edit_ticket.email")}:&nbsp;</label>
                         <a href={`mailto:${entity.owner.email}`} target="_blank">{entity.owner.email}</a>
                     </div>
-                    <div className="col-md-3">
-                        <button onClick={this.handleReassign} className="btn btn-sm btn-default">
-                            {T.translate("edit_ticket.reassign")}
-                        </button>
-                        {entity.status === 'Paid' &&
-                        <button className="btn btn-sm btn-primary left-space"
-                                onClick={() => this.props.onResendEmail(entity) }>
-                            {T.translate("edit_ticket.resend_email")}
-                        </button>
+                    <div className="col-md-4">
+                        { entity.is_active &&
+                            <button onClick={this.handleReassign} className="btn btn-sm btn-default">
+                                {T.translate("edit_ticket.reassign")}
+                            </button>
                         }
                     </div>
                 </div>
@@ -184,7 +177,6 @@ class TicketForm extends React.Component {
                     </div>
                     <div className="col-md-1">
                         <br/>
-
                         <button onClick={this.handleAssign} className="btn btn-default">
                             {T.translate("edit_ticket.assign")}
                         </button>
@@ -229,9 +221,6 @@ class TicketForm extends React.Component {
                         <a href="" onClick={this.handleOrderClick}>{order.number}</a>
                     </div>
                 </div>
-
-
-
             </form>
         );
     }

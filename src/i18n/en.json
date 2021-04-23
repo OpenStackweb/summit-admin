@@ -551,6 +551,8 @@
     "has_pending_questions": "Has Pending Questions?",
     "promo_code": "Promo Code",
     "disclaimer_accepted": "Disclaimer Accepted?",
+    "orders": "Orders",
+    "inactive_ticket": "Inactive Ticket",
     "placeholders": {
       "start_date": "Start Date",
       "end_date": "End Date",
@@ -1043,7 +1045,11 @@
     "cancel_refund": "Cancel Refund",
     "cancel_refund_warning": "Are you sure you want to cancel the refund request for this ticket?",
     "yes_cancel_refund": "Yes, cancel refund!",
-    "ticket_cancel_refund": "Ticket refund request cancelled successfully."
+    "ticket_cancel_refund": "Ticket refund request cancelled successfully.",
+    "deactivate": "Deactivate",
+    "activate": "Reactivate",
+    "deactivate_warning": "Are you sure you want to Deactivate this Ticket?",
+    "activate_warning": "Are you sure you want to Reactivate this Ticket?"
   },
   "ticket_type_list": {
     "ticket_types": "Ticket Types",

@@ -245,6 +245,42 @@ export const saveTicket = (orderId, ticket) => (dispatch, getState) => {
         });
 };
 
+export const activateTicket = (orderId, ticketId, isActive) => (dispatch, getState) => {
+
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+
+    const params = {
+        access_token : accessToken,
+    };
+
+    dispatch(startLoading());
+
+    if(isActive)
+        return putRequest(
+            null,
+            createAction(TICKET_UPDATED),
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/orders/${orderId}/tickets/${ticketId}/activate`,
+            {},
+            authErrorHandler
+        )(params)(dispatch)
+            .then((payload) => {
+                dispatch(stopLoading());
+            });
+
+    return deleteRequest(
+        null,
+        createAction(TICKET_UPDATED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/orders/${orderId}/tickets/${ticketId}/activate`,
+        {},
+        authErrorHandler
+    )(params)(dispatch)
+        .then((payload) => {
+            dispatch(stopLoading());
+        });
+}
+
 export const reassignTicket = (ticketId, attendeeId, firstName, lastName, email, company ) => (dispatch, getState) => {
 
     const { loggedUserState, currentSummitState } = getState();

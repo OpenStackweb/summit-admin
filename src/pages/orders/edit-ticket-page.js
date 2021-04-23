@@ -16,10 +16,12 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getTicket, saveTicket, reassignTicket, addBadgeToTicket, reSendTicketEmail } from "../../actions/ticket-actions";
+import { getTicket, saveTicket, reassignTicket,
+    addBadgeToTicket, reSendTicketEmail, activateTicket } from "../../actions/ticket-actions";
 import TicketForm from "../../components/forms/ticket-form";
 import BadgeForm from "../../components/forms/badge-form";
-import {getBadgeFeatures, getBadgeTypes, deleteBadge, addFeatureToBadge, removeFeatureFromBadge, changeBadgeType,
+import {getBadgeFeatures, getBadgeTypes, deleteBadge,
+    addFeatureToBadge, removeFeatureFromBadge, changeBadgeType,
     printBadge} from "../../actions/badge-actions";
 import Swal from "sweetalert2";
 
@@ -42,6 +44,7 @@ class EditTicketPage extends React.Component {
         this.handleAddBadgeToTicket = this.handleAddBadgeToTicket.bind(this);
         this.handleDeleteBadge = this.handleDeleteBadge.bind(this);
         this.handleResendEmail = this.handleResendEmail.bind(this);
+        this.handleActivateDeactivate = this.handleActivateDeactivate.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -61,7 +64,27 @@ class EditTicketPage extends React.Component {
     }
 
     handleResendEmail(ticket, ev){
+        ev.preventDefault();
         this.props.reSendTicketEmail(ticket.order_id, ticket.id);
+    }
+
+    handleActivateDeactivate(ticket, ev){
+        ev.preventDefault();
+        let activate = !ticket.is_active;
+        let {activateTicket, currentOrder} = this.props;
+        Swal.fire({
+            title: T.translate("general.are_you_sure"),
+            text: activate ? T.translate("edit_ticket.activate_warning") : T.translate("edit_ticket.deactivate_warning"),
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: T.translate("general.yes_delete")
+        }).then(function(result){
+            if (result.value) {
+                activateTicket(currentOrder.id, ticket.id, activate);
+            }
+        });
+
     }
 
     handleDeleteBadge(ticketId, ev) {
@@ -97,8 +120,24 @@ class EditTicketPage extends React.Component {
         return(
             <div className="container">
                 <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
-                <h3>{T.translate("edit_ticket.ticket")}</h3>
+                <h3>{T.translate("edit_ticket.ticket")}
+                    {entity.id !== 0 &&
+                    <div className="pull-right form-inline">
+                        { entity.status === 'Paid' && entity.is_active &&
+                        <button className="btn btn-sm btn-primary left-space"
+                                onClick={(ev) => this.handleResendEmail(entity, ev) }>
+                            {T.translate("edit_ticket.resend_email")}
+                        </button>
+                        }
+                        <button className={"btn btn-sm left-space " + ( entity.is_active ? "btn-danger":"btn-primary")}
+                                onClick={(ev) => {this.handleActivateDeactivate(entity, ev)}}>
+                            { entity.is_active ? T.translate("edit_ticket.deactivate"): T.translate("edit_ticket.activate")}
+                        </button>
+                    </div>
+                    }
+                </h3>
                 <hr/>
+
                 <TicketForm
                     history={this.props.history}
                     currentSummit={currentSummit}
@@ -107,20 +146,18 @@ class EditTicketPage extends React.Component {
                     errors={errors}
                     onReassing={this.props.reassignTicket}
                     onSaveTicket={this.props.saveTicket}
-                    onResendEmail={this.handleResendEmail}
                 />
-
                 <br/>
                 <br/>
                 <br/>
 
-                {!entity.badge &&
+                { entity.is_active && !entity.badge &&
                     <button className="btn btn-primary" onClick={this.handleAddBadgeToTicket}>
                         {T.translate("edit_ticket.add_badge")}
                     </button>
                 }
 
-                {entity.badge &&
+                { entity.is_active && entity.badge &&
                     <div>
                         <h3>
                             {T.translate("edit_ticket.badge")}
@@ -169,5 +206,6 @@ export default connect (
         addBadgeToTicket,
         printBadge,
         reSendTicketEmail,
+        activateTicket,
     }
 )(EditTicketPage);
