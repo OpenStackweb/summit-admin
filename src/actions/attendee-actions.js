@@ -209,9 +209,8 @@ export const getAttendee = (attendeeId) => (dispatch, getState) => {
 };
 
 export const getAttendeeOrders = ( attendee ) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
+    const { loggedUserState } = getState();
     const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
 
     const params = {
         expand       : 'tickets',
@@ -224,7 +223,7 @@ export const getAttendeeOrders = ( attendee ) => (dispatch, getState) => {
     return getRequest(
         null,
         createAction(RECEIVE_ATTENDEE_ORDERS),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/orders`,
+        `${window.API_BASE_URL}/api/v1/summits/${attendee.summit_id}/orders`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

@@ -21,9 +21,9 @@ import { MemberInput, Dropdown } from 'openstack-uicore-foundation/lib/component
 export default class OrderComponent extends React.Component {
 
     handleOrderLink = (ev, order) => {
-        const {summit} = this.props;
+        const {summitId} = this.props;
         ev.preventDefault();
-        history.push(`/app/summits/${summit.id}/purchase-orders/${order.id}`);
+        history.push(`/app/summits/${summitId}/purchase-orders/${order.id}`);
     };
 
     render() {

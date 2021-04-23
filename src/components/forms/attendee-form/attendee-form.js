@@ -239,7 +239,7 @@ class AttendeeForm extends React.Component {
                     </div>
                     }
 
-                    {entity.hasOwnProperty('tickets') &&
+                    {entity.tickets && entity.tickets.length > 0 &&
                     <TicketComponent
                         attendeeId={entity.id}
                         tickets={entity.tickets}
@@ -248,11 +248,10 @@ class AttendeeForm extends React.Component {
                         onSave={this.props.onSaveTicket}
                     />
                     }
-
-                    {entity.hasOwnProperty('orders') &&
+                    {entity.orders && entity.orders.length > 0 &&
                     <OrderComponent
                         orders={entity.orders}
-                        summit={currentSummit}
+                        summitId={entity.summit_id}
                     />
                     }
 
