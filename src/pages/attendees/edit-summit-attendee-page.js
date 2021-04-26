@@ -23,20 +23,18 @@ import '../../styles/edit-summit-attendee-page.less';
 
 class EditSummitAttendeePage extends React.Component {
 
-    constructor(props) {
-        const {currentSummit, match} = props;
+    componentDidMount() {
+        const {currentSummit, match} = this.props;
         const new_attendee_id = match.params.attendee_id;
 
-        super(props);
-
         if(!new_attendee_id) {
-            props.resetAttendeeForm();
+            this.props.resetAttendeeForm();
         } else {
-            props.getAttendee(new_attendee_id);
+            this.props.getAttendee(new_attendee_id);
         }
 
         if (!currentSummit.attendee_extra_questions) {
-            props.getOrderExtraQuestions();
+            this.props.getOrderExtraQuestions();
         }
     }
 
