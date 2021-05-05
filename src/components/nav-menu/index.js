@@ -93,6 +93,7 @@ class NavMenu extends React.Component {
                         key={item.name}
                         subMenuOpen={subMenuOpen}
                         {...item}
+                        memberObj={memberObj}
                         onClick={(e) => this.toggleSubMenu(e, item.name)}
                         onItemClick={this.onMenuItemClick.bind(this)}
                     />
@@ -160,7 +161,7 @@ class NavMenu extends React.Component {
             {name: 'track_chairs', iconClass: 'fa-user-circle-o', accessRoute: 'track-chairs',
                 childs: [
                     {name:'track_chair_list', linkUrl:`summits/${summit_id}/track-chairs`},
-                    {name:'progress_flags', linkUrl:`summits/${summit_id}/progress-flags`},
+                    {name:'progress_flags', linkUrl:`summits/${summit_id}/progress-flags`, accessRoute: 'progress-flags'},
                 ]
             },
             {name: 'sponsors', iconClass: 'fa-handshake-o', accessRoute: 'sponsors',

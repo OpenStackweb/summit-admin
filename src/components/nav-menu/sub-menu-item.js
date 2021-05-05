@@ -14,13 +14,17 @@
 import React from 'react';
 import T from 'i18n-react/dist/i18n-react';
 import MenuItem from './menu-item';
+import Member from "../../models/member";
 
 export default class SubMenuItem extends React.Component {
 
 
     render() {
-        let {name, iconClass, subMenuOpen, onClick, onItemClick, childs} = this.props;
 
+        let {name, iconClass, subMenuOpen, onClick, onItemClick, childs, memberObj} = this.props;
+        childs = childs.filter( item => {
+            return !item.hasOwnProperty('accessRoute') || memberObj.hasAccess(item.accessRoute);
+        });
         return (
             <div>
                 <a id={name + '-menu'} className="menu-item" onClick={onClick} >

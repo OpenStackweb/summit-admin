@@ -140,13 +140,19 @@ tag-groups:
   - summit-front-end-administrators
   - summit-registration-administrators
 
-marketing:
+settings:
   - super-admins
   - administrators
   - summit-front-end-administrators
   - summit-registration-administrators
 
 purchase_orders:
+  - super-admins
+  - administrators
+  - summit-front-end-administrators
+  - summit-registration-administrators
+
+progress-flags:
   - super-admins
   - administrators
   - summit-front-end-administrators
