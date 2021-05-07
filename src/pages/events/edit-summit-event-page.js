@@ -21,7 +21,7 @@ import { deleteEventMaterial } from '../../actions/event-material-actions';
 
 import '../../styles/edit-summit-event-page.less';
 import '../../components/form-validation/validate.less';
-
+import {addQAMember, removeQAMember} from "../../actions/user-chat-roles-actions"
 
 class EditSummitEventPage extends React.Component {
 
@@ -139,6 +139,8 @@ class EditSummitEventPage extends React.Component {
                     onUnpublish={this.props.unPublishEvent}
                     onMaterialDelete={this.props.deleteEventMaterial}
                     onRemoveImage={this.props.removeImage}
+                    onAddQAMember={this.props.addQAMember}
+                    onDeleteQAMember={this.props.removeQAMember}
                 />
                 }
             </div>
@@ -163,6 +165,8 @@ export default connect (
         unPublishEvent,
         deleteEventMaterial,
         getEvents,
-        removeImage
+        removeImage,
+        addQAMember,
+        removeQAMember
     }
 )(EditSummitEventPage);

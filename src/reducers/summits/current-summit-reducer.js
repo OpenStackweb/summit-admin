@@ -24,6 +24,11 @@ import {
     RECEIVE_BADGE_FEATURES
 } from "../../actions/badge-actions";
 
+import {
+    REQUEST_USER_ROLES_BY_SUMMIT,
+    RECEIVE_USER_ROLES_BY_SUMMIT
+} from "../../actions/user-chat-roles-actions.js";
+
 import { RECEIVE_REFUND_POLICIES } from "../../actions/ticket-actions";
 import {RECEIVE_ORDER_EXTRA_QUESTIONS} from "../../actions/order-actions";
 
@@ -99,6 +104,7 @@ export const DEFAULT_ENTITY = {
     external_registration_feed_api_key: null,
     virtual_site_url: null,
     marketing_site_url: null,
+    help_users : [],
 };
 
 const DEFAULT_STATE = {
@@ -331,6 +337,10 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  errors: payload.errors };
         }
         break;
+        case RECEIVE_USER_ROLES_BY_SUMMIT:{
+            let helpUsers = payload.response;
+            return {...state, currentSummit: {...state.currentSummit, help_users: helpUsers} }
+        }
         default:
             return state;
     }

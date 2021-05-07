@@ -29,6 +29,7 @@ import {
     getCSV,
     escapeFilterValue, postFile
 } from "openstack-uicore-foundation/lib/methods";
+import {getQAUsersBySummitEvent} from "../actions/user-chat-roles-actions"
 
 export const REQUEST_EVENTS                         = 'REQUEST_EVENTS';
 export const RECEIVE_EVENTS                         = 'RECEIVE_EVENTS';
@@ -223,7 +224,8 @@ export const getEvent = (eventId) => (dispatch, getState) => {
         createAction(RECEIVE_EVENT),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/${eventId}`,
         authErrorHandler
-    )(params)(dispatch).then(() => {
+    )(params)(dispatch).then(({response}) => {
+            getQAUsersBySummitEvent(currentSummit.id, eventId)(dispatch, getState)
             dispatch(stopLoading());
         }
     );

@@ -20,6 +20,7 @@ import SummitForm from '../../components/forms/summit-form';
 import { getSummitById, resetSummitForm, saveSummit, attachLogo, deleteLogo }  from '../../actions/summit-actions';
 import { deleteSelectionPlan } from '../../actions/selection-plan-actions';
 import { deleteRoomBookingAttributeType } from "../../actions/room-booking-actions";
+import {addHelpMember, removeHelpMember} from "../../actions/user-chat-roles-actions"
 import '../../styles/edit-summit-page.less';
 import '../../components/form-validation/validate.less';
 
@@ -88,6 +89,8 @@ class EditSummitPage extends React.Component {
                     onAttributeTypeDelete={this.handleAttributeTypeDelete}
                     onLogoAttach={attachLogo}
                     onLogoDelete={deleteLogo}
+                    onAddHelpMember={this.props.addHelpMember}
+                    onDeleteHelpMember={this.props.removeHelpMember}
                 />
             </div>
         )
@@ -110,5 +113,7 @@ export default Restrict(connect (
         deleteRoomBookingAttributeType,
         attachLogo,
         deleteLogo,
+        addHelpMember,
+        removeHelpMember
     }
 )(EditSummitPage), 'summit-edit');

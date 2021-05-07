@@ -18,6 +18,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
 
 import { getSummitById, resetSummitForm, getAllSummits }  from '../actions/summit-actions';
+import {getUserRolesBySummit} from "../actions/user-chat-roles-actions";
 
 import SummitDashboardPage from '../pages/summits/summit-dashboard-page'
 import EditSummitPage from '../pages/summits/edit-summit-page'
@@ -69,7 +70,7 @@ class SummitIdLayout extends React.Component {
         if (!summitId) {
             this.props.resetSummitForm();
         } else {
-            this.props.getSummitById(summitId);
+            this.props.getSummitById(summitId).then(() => { this.props.getUserRolesBySummit()});
 
             // this is needed for summit dropdown, runs on background
             this.props.getAllSummits();
@@ -158,7 +159,8 @@ export default connect (
     {
         getSummitById,
         resetSummitForm,
-        getAllSummits
+        getAllSummits,
+        getUserRolesBySummit
     }
 )(SummitIdLayout);
 

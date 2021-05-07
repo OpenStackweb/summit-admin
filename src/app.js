@@ -58,6 +58,7 @@ window.SCOPES                   = process.env['SCOPES'];
 window.ALLOWED_USER_GROUPS      = process.env['ALLOWED_USER_GROUPS'];
 window.EXCLUSIVE_SECTIONS       = [];
 window.PUBLIC_STORAGES          = process.env['PUBLIC_STORAGES'] || "S3";
+window.CHAT_API_BASE_URL        = process.env['CHAT_API_BASE_URL'];
 
 if (exclusiveSections.hasOwnProperty(process.env['APP_CLIENT_NAME'])) {
     window.EXCLUSIVE_SECTIONS = exclusiveSections[process.env['APP_CLIENT_NAME']];

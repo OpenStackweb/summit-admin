@@ -265,6 +265,8 @@
     "marketing_site_oauth2_client_id": "Marketing Site OAUTH2 Client ID",
     "virtual_site_oauth2_client_id": "Virtual Event Site OAUTH2 Client ID",
     "support_email": "Support Email",
+    "help_users": "Help Users",
+    "help_users_info": "Users designated as Help Users on A2A Widget ( Chat ).",
     "placeholders": {
       "api_feed_type": "Select API feed type...",
       "external_registration_feed_type": "Select Ext. Reg. feed type..."
@@ -336,6 +338,8 @@
     "etherpad_link": "EtherPad URL",
     "selection_plan": "Selection Plan",
     "delete_material": "Are you sure you want to delete activity material ",
+    "qa_users": "Q&A Users",
+    "qa_users_info": "Users designated as Questions & Answers Users on A2A Widget ( Chat ).",
     "placeholders": {
       "select_venue": "Select an Activity Venue ...",
       "start_date": "Start Date",

@@ -22,12 +22,13 @@ import {
     Panel,
     Dropdown,
     Table,
-    UploadInput, TextEditor
+    UploadInput,
+    TextEditor,
+    MemberInput
 } from 'openstack-uicore-foundation/lib/components'
+
 import {Exclusive} from 'openstack-uicore-foundation/lib/components'
 import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
-
-
 
 class SummitForm extends React.Component {
     constructor(props) {
@@ -47,6 +48,7 @@ class SummitForm extends React.Component {
         this.handleNewAttributeType = this.handleNewAttributeType.bind(this);
         this.handleUploadFile = this.handleUploadFile.bind(this);
         this.handleRemoveFile = this.handleRemoveFile.bind(this);
+        this.getHelpUsersOptionLabel = this.getHelpUsersOptionLabel.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -67,10 +69,72 @@ class SummitForm extends React.Component {
         }
     }
 
+    getHelpUsersOptionLabel(member){
+        if(member.hasOwnProperty("full_name")){
+            return member.full_name;
+        }
+        //default
+        return `${member.first_name} ${member.last_name} (${member.id})`;
+    }
+
     handleChange(ev) {
         let entity = {...this.state.entity};
+        let {onAddHelpMember, onDeleteHelpMember} = this.props;
         let {errors} = this.state;
         let {value, id} = ev.target;
+        let currentError = '';
+
+        // logic for summit help users ( chat roles )
+        if (ev.target.type === 'memberinput') {
+            let oldHelpUsers =  entity[id];
+            let currentOldOnes = [];
+            try {
+                // remap to chat api payload format
+                let newHelpUsers = value.map((member) => {
+                    if (member.hasOwnProperty("email")) {
+                        // if has email property then its cames from main api
+                        // we need to remap but first only users with idp id set
+                        // are valid
+                        if (!member.user_external_id) {
+                            throw "Invalid user";
+                        }
+                        let newMember = {
+                            member_id: member.id,
+                            idp_user_id: member.user_external_id,
+                            full_name: `${member.first_name} ${member.last_name}`,
+                            summit_event_id: 0,
+                            summit_id: entity.id
+                        };
+                        onAddHelpMember(newMember);
+                        return newMember;
+                    }
+                    currentOldOnes.push(member)
+                    return member;
+                });
+
+                // check if we delete something
+                if (oldHelpUsers.length != currentOldOnes.length) {
+                    // get missing one
+                    let missingOne = oldHelpUsers.filter((oldOne) => {
+                        let matches = currentOldOnes.filter(newOne => {
+                            return newOne.member_id == oldOne.member_id;
+                        });
+                        return matches.length == 0;
+                    })
+                    if (missingOne.length > 0) {
+                        // remove it
+                        onDeleteHelpMember(missingOne[0]);
+                    }
+                }
+
+                value = newHelpUsers;
+            }
+            catch (e){
+                console.log(e);
+                value = oldHelpUsers;
+                currentError = e;
+            }
+        }
 
         if (ev.target.type === 'radio') {
             id = ev.target.name;
@@ -89,7 +153,7 @@ class SummitForm extends React.Component {
             value = parseInt(value);
         }
 
-        errors[id] = '';
+        errors[id] = currentError;
         entity[id] = value;
         this.setState({entity: entity, errors: errors});
     }
@@ -118,7 +182,6 @@ class SummitForm extends React.Component {
         if(field in errors) {
             return errors[field];
         }
-
         return '';
     }
 
@@ -349,6 +412,19 @@ class SummitForm extends React.Component {
                             onChange={this.handleChange}
                         />
                     </div>
+                    { entity.id > 0 &&
+                        <div className="col-md-6">
+                            <label> {T.translate("edit_summit.help_users")}  <i title={T.translate("edit_summit.help_users_info")} className="fa fa-info-circle"/></label>
+                            <MemberInput
+                                id="help_users"
+                                value={entity.help_users}
+                                onChange={this.handleChange}
+                                error={this.hasErrors('help_users')}
+                                getOptionLabel={this.getHelpUsersOptionLabel}
+                                multi={true}
+                            />
+                        </div>
+                    }
                 </div>
                 <div className="row form-group">
                     <div className="col-md-12">
