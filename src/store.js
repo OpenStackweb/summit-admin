@@ -32,7 +32,6 @@ import eventTypeListReducer from './reducers/events/event-type-list-reducer';
 import eventTypeReducer from './reducers/events/event-type-reducer';
 import eventCategoryListReducer from './reducers/events/event-category-list-reducer';
 import eventCategoryReducer from './reducers/events/event-category-reducer';
-import eventCategoryQuestionReducer from './reducers/events/event-category-question-reducer';
 import eventCategoryGroupListReducer from './reducers/events/event-category-group-list-reducer';
 import eventCategoryGroupReducer from './reducers/events/event-category-group-reducer';
 import eventMaterialReducer from './reducers/events/event-material-reducer';
@@ -111,6 +110,7 @@ import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
 import storage from 'redux-persist/es/storage'
 import scheduleSettingsReducer from "./reducers/schedule-settings/schedule-settings-reducer";
+import selectionPlanExtraQuestionReducer from "./reducers/summits/selection-plan-extra-question-reducer";
  // default: localStorage if web, AsyncStorage if react-native
 
 const config = {
@@ -140,7 +140,6 @@ const reducers = persistCombineReducers(config, {
     currentEventTypeState: eventTypeReducer,
     currentEventCategoryListState: eventCategoryListReducer,
     currentEventCategoryState: eventCategoryReducer,
-    currentEventCategoryQuestionState: eventCategoryQuestionReducer,
     currentEventCategoryGroupListState: eventCategoryGroupListReducer,
     currentEventCategoryGroupState: eventCategoryGroupReducer,
     currentEventMaterialState: eventMaterialReducer,
@@ -214,6 +213,7 @@ const reducers = persistCombineReducers(config, {
     sponsoredProjectSponsorshipTypeState : sponsoredProjectSponsorshipTypeReducer,
     sponsoredProjectSponsorshipTypeSupportingCompanyState: sponsoredProjectSponsorshipTypeSupportingCompanyReducer,
     scheduleSettingState: scheduleSettingsReducer,
+    currentSelectionPlanExtraQuestionState: selectionPlanExtraQuestionReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

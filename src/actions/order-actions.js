@@ -300,16 +300,10 @@ export const deleteOrderExtraQuestionValue = (orderExtraQuestionId, orderExtraQu
     );
 };
 
-
-
 const normalizeQuestion = (entity) => {
     const normalizedEntity = {...entity};
-
     return normalizedEntity;
-
 }
-
-
 
 /***************************  PURCHASE ORDERS  ******************************/
 

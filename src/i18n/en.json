@@ -288,7 +288,11 @@
     "max_submissions": "Max Submissions Per User",
     "allow_new_presentations": "Allow New Presentations",
     "selection_plan_saved": "Selection Plan saved successfully.",
-    "selection_plan_created": "Selection Plan created successfully."
+    "selection_plan_created": "Selection Plan created successfully.",
+    "extra_questions": "Extra Questions",
+    "add_extra_questions": "Add Extra Question",
+    "no_extra_questions":"No extra questions found.",
+    "extra_question_remove_warning": "Are you sure you want to remove question "
   },
   "edit_event": {
     "title": "Title",
@@ -549,7 +553,7 @@
     "event": "Activity",
     "created": "Created Date",
     "seat": "Seat",
-    "extra_questions": "Registration Extra Questions",
+    "extra_questions": "Extra Questions",
     "admin_notes": "Notes",
     "has_idp_account": "Has IDP Account?",
     "has_pending_questions": "Has Pending Questions?",
@@ -1299,7 +1303,7 @@
     "access_level_created": "Access Level created successfully"
   },
   "order_extra_question_list": {
-    "order_extra_questions": "Registration Extra Questions",
+    "order_extra_questions": "Extra Questions",
     "question_type": "Question Type",
     "question_id": "Question Identifier",
     "visible_question": "Visible Question (as appears on site)",
@@ -1309,7 +1313,7 @@
     "remove_warning": "Are you sure you want to remove question "
   },
   "edit_order_extra_question": {
-    "order_extra_question": "Registration Extra Question",
+    "order_extra_question": "Extra Question",
     "order_extra_question_saved": "Extra Question saved successfully.",
     "order_extra_question_created": "Extra Question created successfully.",
     "remove_value_warning": "Are you sure you want to remove value ",

@@ -10,58 +10,82 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-
 import React from 'react'
 import { connect } from 'react-redux';
-import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
 import SelectionPlanForm from '../../components/forms/selection-plan-form';
-import { getSummitById }  from '../../actions/summit-actions';
-import { getSelectionPlan, resetSelectionPlanForm, saveSelectionPlan, addTrackGroupToSelectionPlan, removeTrackGroupFromSelectionPlan } from "../../actions/selection-plan-actions";
+import {
+    saveSelectionPlan,
+    addTrackGroupToSelectionPlan,
+    removeTrackGroupFromSelectionPlan,
+    deleteSelectionPlanExtraQuestion,
+    updateSelectionPlanExtraQuestionOrder,
+} from "../../actions/selection-plan-actions";
+import Swal from "sweetalert2";
 
 class EditSelectionPlanPage extends React.Component {
-    constructor(props) {
-        const selectionPlanId = props.match.params.selection_plan_id;
-        super(props);
 
-        if (!selectionPlanId) {
-            props.resetSelectionPlanForm();
-        } else {
-            props.getSelectionPlan(selectionPlanId);
-        }
+    constructor(props) {
+        super(props);
+        this.onAddNewExtraQuestion = this.onAddNewExtraQuestion.bind(this);
+        this.onDeleteExtraQuestion = this.onDeleteExtraQuestion.bind(this);
+        this.onEditExtraQuestion = this.onEditExtraQuestion.bind(this);
+        this.onUpdateExtraQuestionOrder = this.onUpdateExtraQuestionOrder.bind(this);
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        const oldId = prevProps.match.params.selection_plan_id;
-        const newId = this.props.match.params.selection_plan_id;
-
-        if (newId !== oldId) {
-            if (!newId) {
-                this.props.resetSelectionPlanForm();
-            } else {
-                this.props.getSelectionPlan(newId);
+    onDeleteExtraQuestion(questionId){
+        const {deleteSelectionPlanExtraQuestion, entity} = this.props;
+        let extraQuestion = entity.extra_questions.find(t => t.id === questionId);
+        Swal.fire({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("edit_selection_plan.extra_question_remove_warning") + ' ' + extraQuestion.name,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: T.translate("general.yes_delete")
+        }).then(function(result){
+            if (result.value) {
+                deleteSelectionPlanExtraQuestion(entity.id, questionId);
             }
-        }
+        });
+    }
+
+    onUpdateExtraQuestionOrder(questions, questionId){
+        const {entity} = this.props;
+        this.props.updateSelectionPlanExtraQuestionOrder(entity.id, questions, questionId);
+    }
+
+    onEditExtraQuestion(questionId){
+        const {currentSummit, history, entity} = this.props;
+        history.push(`/app/summits/${currentSummit.id}/selection-plans/${entity.id}/extra-questions/${questionId}`);
+    }
+
+    onAddNewExtraQuestion(){
+        const {currentSummit, history, entity} = this.props;
+        history.push(`/app/summits/${currentSummit.id}/selection-plans/${entity.id}/extra-questions/new`);
     }
 
     render(){
-        const {currentSummit, entity, errors, match} = this.props;
+        const {currentSummit, entity, errors, match, extraQuestionsOrder, extraQuestionsOrderDir} = this.props;
         const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        const breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
-
 
         return(
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("edit_selection_plan.selection_plan")}</h3>
                 <hr/>
                 <SelectionPlanForm
                     entity={entity}
                     currentSummit={currentSummit}
                     errors={errors}
+                    extraQuestionsOrder={extraQuestionsOrder}
+                    extraQuestionsOrderDir={extraQuestionsOrderDir}
                     onTrackGroupLink={this.props.addTrackGroupToSelectionPlan}
                     onTrackGroupUnLink={this.props.removeTrackGroupFromSelectionPlan}
                     onSubmit={this.props.saveSelectionPlan}
+                    updateExtraQuestionOrder={this.onUpdateExtraQuestionOrder}
+                    onAddNewExtraQuestion={this.onAddNewExtraQuestion}
+                    onDeleteExtraQuestion={this.onDeleteExtraQuestion}
+                    onEditExtraQuestion={this.onEditExtraQuestion}
                 />
             </div>
         )
@@ -76,11 +100,10 @@ const mapStateToProps = ({ currentSummitState, currentSelectionPlanState }) => (
 export default connect (
     mapStateToProps,
     {
-        getSummitById,
-        getSelectionPlan,
-        resetSelectionPlanForm,
         saveSelectionPlan,
         addTrackGroupToSelectionPlan,
-        removeTrackGroupFromSelectionPlan
+        removeTrackGroupFromSelectionPlan,
+        updateSelectionPlanExtraQuestionOrder,
+        deleteSelectionPlanExtraQuestion
     }
 )(EditSelectionPlanPage);

@@ -101,7 +101,7 @@ class EditSummitEventPage extends React.Component {
     };
 
     render(){
-        const {currentSummit, entity, errors, levelOptions, rsvpTemplateOptions} = this.props;
+        const {currentSummit, entity, errors, levelOptions, rsvpTemplateOptions, extraQuestions} = this.props;
         const header = !entity.id ? T.translate("general.summit_event") : `${entity.title} - ID ${entity.id}`;
 
         return(
@@ -125,6 +125,7 @@ class EditSummitEventPage extends React.Component {
                 {currentSummit &&
                 <EventForm
                     history={this.props.history}
+                    extraQuestions={extraQuestions}
                     currentSummit={currentSummit}
                     levelOpts={levelOptions}
                     trackOpts={currentSummit.tracks}
@@ -154,6 +155,7 @@ const mapStateToProps = ({ currentSummitState, currentSummitEventState, currentR
     rsvpTemplateOptions: currentRsvpTemplateListState.rsvpTemplates,
     entity: currentSummitEventState.entity,
     errors: currentSummitEventState.errors,
+    extraQuestions: currentSummitEventState.extraQuestions,
     allEventsData: currentEventListState
 });
 

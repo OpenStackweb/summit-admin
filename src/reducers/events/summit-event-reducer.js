@@ -57,10 +57,12 @@ export const DEFAULT_ENTITY = {
     materials: [],
     image: null,
     qa_users:[],
+    extra_questions: [],
 }
 
 const DEFAULT_STATE = {
     levelOptions: ['N/A', 'Beginner', 'Intermediate', 'Advanced' ],
+    extraQuestions: [],
     entity: DEFAULT_ENTITY,
     errors: {}
 };
@@ -92,6 +94,8 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
             let links = entity.slides || [];
             let videos = entity.videos || [];
             let slides = entity.links || [];
+            let extraQuestionAnswers = entity.extra_questions || [];
+            let extraQuestions = entity.hasOwnProperty("selection_plan") && entity.selection_plan.extra_questions ? entity.selection_plan.extra_questions : [];
             let media_uploads = entity.media_uploads || [];
 
             for(var key in entity) {
@@ -115,7 +119,13 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
                 display_on_site_label:m.display_on_site ? 'Yes' : 'No',
                 }
                 ))];
-            return {...state, entity: {...DEFAULT_ENTITY, ...entity}, errors: {} };
+
+            if (extraQuestionAnswers.length) {
+                entity.extra_questions = extraQuestionAnswers.map
+                (q => ({question_id: q.question_id, answer: q.value}))
+            }
+
+            return {...state, entity: {...DEFAULT_ENTITY, ...entity}, errors: {}, extraQuestions: extraQuestions };
         }
         break;
         case EVENT_PUBLISHED: {

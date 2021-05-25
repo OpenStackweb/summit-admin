@@ -133,14 +133,18 @@ class ExtraQuestionForm extends React.Component {
                         />
                     </div>
                     <div className="col-md-3">
-                        <label> {T.translate("question_form.usage")} *</label>
-                        <Dropdown
-                            id="usage"
-                            value={entity.usage}
-                            placeholder={T.translate("question_form.placeholders.select_usage")}
-                            options={question_usage_ddl}
-                            onChange={this.handleChange}
-                        />
+                        {this.props.shouldShowUsage &&
+                            <>
+                                <label> {T.translate("question_form.usage")} *</label>
+                                <Dropdown
+                                id="usage"
+                                value={entity.usage}
+                                placeholder={T.translate("question_form.placeholders.select_usage")}
+                                options={question_usage_ddl}
+                                onChange={this.handleChange}
+                                />
+                            </>
+                        }
                     </div>
                 </div>
                 <div className="row form-group">
@@ -169,15 +173,17 @@ class ExtraQuestionForm extends React.Component {
 
                 </div>
                 <div className="row form-group">
-                    <div className="col-md-3 checkboxes-div">
-                        <div className="form-check abc-checkbox">
-                            <input type="checkbox" id="printable" checked={entity.printable}
-                                   onChange={this.handleChange} className="form-check-input" />
-                            <label className="form-check-label" htmlFor="printable">
-                                {T.translate("question_form.printable")}
-                            </label>
+                    {this.props.shouldShowPrintable &&
+                        <div className="col-md-3 checkboxes-div">
+                            <div className="form-check abc-checkbox">
+                                <input type="checkbox" id="printable" checked={entity.printable}
+                                       onChange={this.handleChange} className="form-check-input"/>
+                                <label className="form-check-label" htmlFor="printable">
+                                    {T.translate("question_form.printable")}
+                                </label>
+                            </div>
                         </div>
-                    </div>
+                    }
                     <div className="col-md-3 checkboxes-div">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="mandatory" checked={entity.mandatory}
@@ -188,7 +194,6 @@ class ExtraQuestionForm extends React.Component {
                         </div>
                     </div>
                 </div>
-
 
                 {this.shouldShowField('values') && entity.id !== 0 &&
                 <div className="row">

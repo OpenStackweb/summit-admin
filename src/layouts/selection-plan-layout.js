@@ -17,6 +17,9 @@ import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import EditSelectionPlanPage from "../pages/summits/edit-selection-plan-page";
 import {connect} from "react-redux";
+import EditSelectionPlanExtraQuestionPage from "../pages/summits/edit-selection-plan-extra-question-page";
+import SelectionPlanIdLayout from "./selection-plan-id-layout";
+import NoMatchPage from "../pages/no-match-page";
 
 
 class SelectionPlanLayout extends React.Component {
@@ -28,8 +31,8 @@ class SelectionPlanLayout extends React.Component {
                 <Breadcrumb data={{ title: T.translate("edit_selection_plan.selection_plans"), pathname: match.url }} />
                 <Switch>
                     <Route strict exact path={`${match.url}/new`} component={EditSelectionPlanPage} />
-                    <Route strict exact path={`${match.url}/:selection_plan_id(\\d+)`} component={EditSelectionPlanPage} />
-                    <Redirect to={`/app/summits/${currentSummit.id}`} />
+                    <Route path={`${match.url}/:selection_plan_id(\\d+)`} component={SelectionPlanIdLayout} />
+                    <Route component={NoMatchPage}/>
                 </Switch>
             </div>
         );

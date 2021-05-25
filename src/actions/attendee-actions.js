@@ -416,7 +416,7 @@ const normalizeEntity = (entity) => {
     delete normalizedEntity['id'];
     delete normalizedEntity['created'];
     delete normalizedEntity['last_edited'];
-
+    delete normalizedEntity['last_edited'];
     return normalizedEntity;
 };
 

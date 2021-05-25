@@ -16,43 +16,61 @@ import { connect } from 'react-redux';
 import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
 import ExtraQuestionForm from '../../components/forms/extra-question-form';
-import { getSummitById }  from '../../actions/summit-actions';
-import { getOrderExtraQuestionMeta, getOrderExtraQuestion, resetOrderExtraQuestionForm, saveOrderExtraQuestion, deleteOrderExtraQuestionValue, saveOrderExtraQuestionValue } from "../../actions/order-actions";
+
+import {
+    getExtraQuestionMeta,
+    resetSelectionPlanExtraQuestionForm,
+    getSelectionPlanExtraQuestion,
+    saveSelectionPlanExtraQuestion,
+    deleteSelectionPlanExtraQuestion,
+    updateSelectionPlanExtraQuestionOrder,
+    saveSelectionPlanExtraQuestionValue,
+    deleteSelectionPlanExtraQuestionValue
+} from "../../actions/selection-plan-actions";
 import Swal from "sweetalert2";
 
-class EditOrderExtraQuestionPage extends React.Component {
+class EditSelectionPlanExtraQuestionPage extends React.Component {
 
     constructor(props) {
-        const orderExtraQuestionId = props.match.params.order_extra_question_id;
+        const questionId = props.match.params.extra_question_id;
+        const selectionPlanId = props.currentSelectionPlan.id;
         super(props);
 
-        if (!orderExtraQuestionId) {
-            props.resetOrderExtraQuestionForm();
+        if (!questionId) {
+            props.resetSelectionPlanExtraQuestionForm();
         } else {
-            props.getOrderExtraQuestion(orderExtraQuestionId);
+            props.getSelectionPlanExtraQuestion(selectionPlanId, questionId);
         }
 
-        props.getOrderExtraQuestionMeta();
+        props.getExtraQuestionMeta();
 
         this.handleValueSave = this.handleValueSave.bind(this);
         this.handleValueDelete = this.handleValueDelete.bind(this);
+        this.onSaveSelectionPlanExtraQuestion = this.onSaveSelectionPlanExtraQuestion.bind(this);
+    }
+
+    onSaveSelectionPlanExtraQuestion(entity){
+        const selectionPlanId = this.props.currentSelectionPlan.id;
+        this.props.saveSelectionPlanExtraQuestion(selectionPlanId, entity);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const oldId = prevProps.match.params.order_extra_question_id;
-        const newId = this.props.match.params.order_extra_question_id;
-
+        const oldId = prevProps.match.params.extra_question_id;
+        const newId = this.props.match.params.extra_question_id;
+        const selectionPlanId = this.props.currentSelectionPlan.id;
         if (newId !== oldId) {
             if (!newId) {
-                this.props.resetOrderExtraQuestionForm();
+                this.props.resetSelectionPlanExtraQuestionForm();
             } else {
-                this.props.getOrderExtraQuestion(newId);
+                this.props.getSelectionPlanExtraQuestion(selectionPlanId, newId);
             }
         }
     }
 
     handleValueDelete(valueId) {
-        const {deleteOrderExtraQuestionValue, currentSummit, entity} = this.props;
+        const {deleteSelectionPlanExtraQuestionValue
+            ,entity, currentSelectionPlan} = this.props;
+
         let value = entity.values.find(v => v.id === valueId);
 
         Swal.fire({
@@ -64,14 +82,14 @@ class EditOrderExtraQuestionPage extends React.Component {
             confirmButtonText: T.translate("general.yes_delete")
         }).then(function(result){
             if (result.value) {
-                deleteOrderExtraQuestionValue(entity.id, valueId);
+                deleteSelectionPlanExtraQuestionValue(currentSelectionPlan.id, entity.id, valueId);
             }
         });
     }
 
     handleValueSave(valueEntity) {
-        const {entity, currentSummit} = this.props;
-        this.props.saveOrderExtraQuestionValue(entity.id, valueEntity);
+        const {entity, currentSelectionPlan} = this.props;
+        this.props.saveSelectionPlanExtraQuestionValue(currentSelectionPlan.id, entity.id, valueEntity);
     }
 
     render(){
@@ -86,14 +104,14 @@ class EditOrderExtraQuestionPage extends React.Component {
                 <hr/>
                 {currentSummit &&
                 <ExtraQuestionForm
+                    shouldShowUsage={false}
+                    shouldShowPrintable={false}
                     questionClasses={allClasses}
                     entity={entity}
                     errors={errors}
-                    shouldShowUsage={true}
-                    shouldShowPrintable={true}
                     onValueDelete={this.handleValueDelete}
                     onValueSave={this.handleValueSave}
-                    onSubmit={this.props.saveOrderExtraQuestion}
+                    onSubmit={this.onSaveSelectionPlanExtraQuestion}
                 />
                 }
             </div>
@@ -101,20 +119,22 @@ class EditOrderExtraQuestionPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentOrderExtraQuestionState }) => ({
+const mapStateToProps = ({ currentSelectionPlanState, currentSummitState, currentSelectionPlanExtraQuestionState }) => ({
     currentSummit : currentSummitState.currentSummit,
-    ...currentOrderExtraQuestionState
+    currentSelectionPlan : currentSelectionPlanState.entity,
+    ...currentSelectionPlanExtraQuestionState
 });
 
 export default connect (
     mapStateToProps,
     {
-        getSummitById,
-        getOrderExtraQuestion,
-        getOrderExtraQuestionMeta,
-        resetOrderExtraQuestionForm,
-        deleteOrderExtraQuestionValue,
-        saveOrderExtraQuestionValue,
-        saveOrderExtraQuestion,
+        getSelectionPlanExtraQuestion,
+        getExtraQuestionMeta,
+        saveSelectionPlanExtraQuestion,
+        deleteSelectionPlanExtraQuestion,
+        updateSelectionPlanExtraQuestionOrder,
+        saveSelectionPlanExtraQuestionValue,
+        deleteSelectionPlanExtraQuestionValue,
+        resetSelectionPlanExtraQuestionForm
     }
-)(EditOrderExtraQuestionPage);
+)(EditSelectionPlanExtraQuestionPage);

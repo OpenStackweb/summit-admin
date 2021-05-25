@@ -7,7 +7,11 @@ import {
     SELECTION_PLAN_UPDATED,
     SELECTION_PLAN_ADDED,
     TRACK_GROUP_REMOVED,
-    TRACK_GROUP_ADDED
+    TRACK_GROUP_ADDED,
+    SELECTION_PLAN_EXTRA_QUESTION_ADDED,
+    SELECTION_PLAN_EXTRA_QUESTION_DELETED,
+    SELECTION_PLAN_EXTRA_QUESTION_UPDATED,
+    SELECTION_PLAN_EXTRA_QUESTION_ORDER_UPDATED
 } from '../../actions/selection-plan-actions';
 
 export const DEFAULT_ENTITY = {
@@ -21,7 +25,10 @@ export const DEFAULT_ENTITY = {
     submission_end_date: 0,
     voting_begin_date: 0,
     voting_end_date: 0,
-    track_groups: []
+    track_groups: [],
+    extra_questions:[],
+    extraQuestionsOrder: 'order',
+    extraQuestionsOrderDir : 1,
 }
 
 const DEFAULT_STATE = {
@@ -78,6 +85,45 @@ const selectionPlanReducer = (state = DEFAULT_STATE, action) => {
             return {...state, entity: {...state.entity, track_groups: [...state.entity.track_groups, trackGroup]} };
         }
         break;
+        case SELECTION_PLAN_EXTRA_QUESTION_ADDED:{
+            let question = {...payload.response};
+            return {...state, entity: {...state.entity, extra_questions:[...state.entity.extra_questions, question]}}
+        }
+        break
+        case SELECTION_PLAN_EXTRA_QUESTION_DELETED:{
+            let {questionId} = payload;
+            return {...state, entity: {...state.entity, extra_questions:state.entity.extra_questions.filter(t => t.id !== questionId)}}
+        }
+        break
+        case SELECTION_PLAN_EXTRA_QUESTION_UPDATED:
+        {
+            let question = {...payload.response};
+            let extra_questions = state.entity.extra_questions.map((q) => {
+                if (q.id !== question.id) {
+                    return q
+                }
+                return {
+                    ...q,
+                    ...question
+                }
+            });
+            return {...state, entity: {...state.entity, extra_questions : extra_questions}}
+        }
+        break;
+
+        case SELECTION_PLAN_EXTRA_QUESTION_ORDER_UPDATED: {
+            let extra_questions = payload.map(q => {
+                return {
+                    id: q.id,
+                    name: q.name,
+                    label: q.label,
+                    type: q.type,
+                    order: parseInt(q.order)
+                };
+            })
+
+            return {...state, entity: {...state.entity, extra_questions : extra_questions}}
+        }
         case VALIDATE: {
             return {...state,  errors: payload.errors };
         }

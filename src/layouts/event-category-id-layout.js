@@ -17,7 +17,6 @@ import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import Restrict from '../routes/restrict';
 import EditEventCategoryPage from '../pages/events/edit-event-category-page';
-import EditEventCategoryQuestionPage from '../pages/events/edit-event-category-question-page';
 import NoMatchPage from "../pages/no-match-page";
 import {connect} from "react-redux";
 import {getEventCategory, resetEventCategoryForm} from "../actions/event-category-actions";
@@ -57,20 +56,7 @@ class EventCategoryIdLayout extends React.Component {
         return(
             <div>
                 <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
-
                 <Switch>
-                    <Route path={`${match.url}/questions`} render={
-                        props => (
-                            <div>
-                                <Breadcrumb data={{ title: T.translate("edit_event_category.questions"), pathname: match.url }} />
-                                <Switch>
-                                    <Route exact strict path={`${props.match.url}/new`} component={EditEventCategoryQuestionPage} />
-                                    <Route exact strict path={`${props.match.url}/:category_question_id(\\d+)`} component={EditEventCategoryQuestionPage} />
-                                    <Route component={NoMatchPage}/>
-                                </Switch>
-                            </div>
-                        )}
-                    />
                     <Route strict exact path={match.url} component={EditEventCategoryPage} />
                     <Route component={NoMatchPage}/>
                 </Switch>

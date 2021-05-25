@@ -18,13 +18,10 @@ import {
     Input,
     TextEditor,
     TagInput,
-    Panel,
-    SimpleLinkList,
     UploadInput
 } from 'openstack-uicore-foundation/lib/components'
-import {queryQuestions} from '../../actions/event-category-actions';
-import {isEmpty, scrollToError, shallowEqual, hasErrors} from "../../utils/methods";
 
+import {isEmpty, scrollToError, shallowEqual, hasErrors} from "../../utils/methods";
 
 class EventCategoryForm extends React.Component {
     constructor(props) {
@@ -33,15 +30,12 @@ class EventCategoryForm extends React.Component {
         this.state = {
             entity: {...props.entity},
             errors: props.errors,
-            showQuestions: false,
         };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleTagLink = this.handleTagLink.bind(this);
         this.handleTagUnLink = this.handleTagUnLink.bind(this);
-        this.handleEditQuestion = this.handleEditQuestion.bind(this);
-        this.handleNewQuestion = this.handleNewQuestion.bind(this);
         this.handleUploadPic = this.handleUploadPic.bind(this);
         this.handleRemovePic = this.handleRemovePic.bind(this);
     }
@@ -83,22 +77,6 @@ class EventCategoryForm extends React.Component {
         this.props.onSubmit(this.state.entity);
     }
 
-    toggleQuestions(ev) {
-        ev.preventDefault();
-        this.setState({showQuestions: !this.state.showQuestions});
-    }
-
-    handleEditQuestion(questionId) {
-        const {currentSummit, entity, history} = this.props;
-        history.push(`/app/summits/${currentSummit.id}/event-categories/${entity.id}/questions/${questionId}`);
-    }
-
-    handleNewQuestion(ev) {
-        const {currentSummit, entity, history} = this.props;
-        ev.preventDefault();
-        history.push(`/app/summits/${currentSummit.id}/event-categories/${entity.id}/questions/new`);
-    }
-
     handleTagLink(value) {
         const tags = [...this.state.entity.tags];
         tags.push(value);
@@ -124,29 +102,10 @@ class EventCategoryForm extends React.Component {
     }
 
     render() {
-        const {entity, showQuestions, errors} = this.state;
-        const { currentSummit, onQuestionUnLink, onQuestionLink } = this.props;
-        const { handleEditQuestion } = this;
+        const {entity, errors} = this.state;
+        const { currentSummit } = this.props;
 
-        const questionColumns = [
-            { columnKey: 'id', value: T.translate("general.id") },
-            { columnKey: 'class_name', value: T.translate("edit_event_category_question.class") },
-            { columnKey: 'name', value: T.translate("edit_event_category_question.name") },
-            { columnKey: 'label', value: T.translate("edit_event_category_question.label") },
-            { columnKey: 'is_mandatory', value: T.translate("edit_event_category_question.mandatory") }
-        ];
 
-        const questionOptions = {
-            valueKey: "id",
-            labelKey: "name",
-            defaultOptions: true,
-            actions: {
-                edit: {onClick: handleEditQuestion},
-                delete: { onClick: onQuestionUnLink},
-                search: queryQuestions,
-                add: { onClick: onQuestionLink }
-            }
-        };
 
         return (
             <form className="event-type-form">
@@ -262,20 +221,6 @@ class EventCategoryForm extends React.Component {
                 </div>
 
                 <hr />
-                {entity.id !== 0 &&
-                <Panel show={showQuestions} title={T.translate("edit_event_category.questions")}
-                       handleClick={this.toggleQuestions.bind(this)}>
-                    <button className="btn btn-primary pull-right left-space" onClick={this.handleNewQuestion}>
-                        {T.translate("edit_event_category.add_question")}
-                    </button>
-
-                    <SimpleLinkList
-                        values={entity.extra_questions}
-                        columns={questionColumns}
-                        options={questionOptions}
-                    />
-                </Panel>
-                }
 
                 <div className="row form-group">
                     <div className="col-md-12">

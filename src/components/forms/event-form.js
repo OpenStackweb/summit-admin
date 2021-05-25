@@ -31,6 +31,7 @@ import {
     Table, MemberInput
 } from 'openstack-uicore-foundation/lib/components'
 import {isEmpty, scrollToError, shallowEqual, hasErrors} from "../../utils/methods";
+import QuestionAnswersInput from "../inputs/question-answers-input";
 
 
 class EventForm extends React.Component {
@@ -83,7 +84,7 @@ class EventForm extends React.Component {
 
     handleChange(ev) {
         const entity = {...this.state.entity};
-        let {onAddQAMember, onDeleteQAMember, currentSummit} = this.props;
+        let {onAddQAMember, onDeleteQAMember, currentSummit, extraQuestions} = this.props;
         const {errors} = this.state;
         let {value, id} = ev.target;
         let currentError = '';
@@ -299,7 +300,8 @@ class EventForm extends React.Component {
 
     render() {
         const {entity, showSection, errors} = this.state;
-        const { currentSummit, levelOpts, typeOpts, trackOpts, locationOpts, rsvpTemplateOpts, selectionPlansOpts, history } = this.props;
+        const { currentSummit, levelOpts, typeOpts, trackOpts,
+            locationOpts, rsvpTemplateOpts, selectionPlansOpts, history, extraQuestions } = this.props;
 
         const event_types_ddl = typeOpts.map(
             t => {
@@ -722,6 +724,18 @@ class EventForm extends React.Component {
                         options={material_options}
                         data={entity.materials}
                         columns={material_columns}
+                    />
+                </Panel>
+                }
+
+                {entity.id !== 0 && extraQuestions && extraQuestions.length > 0 &&
+                <Panel show={showSection === 'extra_questions'} title={T.translate("edit_attendee.extra_questions")}
+                       handleClick={this.toggleSection.bind(this, 'extra_questions')}>
+                    <QuestionAnswersInput
+                        id="extra_questions"
+                        answers={entity.extra_questions}
+                        questions={extraQuestions}
+                        onChange={this.handleChange}
                     />
                 </Panel>
                 }
