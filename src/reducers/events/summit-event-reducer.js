@@ -58,6 +58,8 @@ export const DEFAULT_ENTITY = {
     image: null,
     qa_users:[],
     extra_questions: [],
+    disclaimer_accepted: false,
+    disclaimer_accepted_date: null,
 }
 
 const DEFAULT_STATE = {

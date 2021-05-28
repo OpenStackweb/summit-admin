@@ -491,16 +491,14 @@ class EventForm extends React.Component {
                     }
                 </div>
                 <div className="row form-group">
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_event.feedback")} </label>
+                    <div className="col-md-3">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="allow_feedback" checked={entity.allow_feedback} onChange={this.handleChange} className="form-check-input" />
                             <label className="form-check-label" htmlFor="allow_feedback"> {T.translate("edit_event.allow_feedback")} </label>
                         </div>
                     </div>
                     {this.isEventType('PresentationType') &&
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_event.recording")} </label>
+                    <div className="col-md-3">
                         <div className="form-check abc-checkbox">
                             <input id="to_record" onChange={this.handleChange} checked={entity.to_record} className="form-check-input" type="checkbox" />
                             <label className="form-check-label" htmlFor="to_record"> {T.translate("edit_event.to_record")} </label>
@@ -508,11 +506,18 @@ class EventForm extends React.Component {
                     </div>
                     }
                     {this.isEventType('PresentationType') &&
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_event.attending_media")} </label>
+                    <div className="col-md-3">
                         <div className="form-check abc-checkbox">
                             <input id="attending_media" onChange={this.handleChange} checked={entity.attending_media} className="form-check-input" type="checkbox" />
                             <label className="form-check-label" htmlFor="attending_media"> {T.translate("edit_event.attending_media")} </label>
+                        </div>
+                    </div>
+                    }
+                    {this.isEventType('PresentationType') &&
+                    <div className="col-md-3">
+                        <div className="form-check abc-checkbox">
+                            <input id="disclaimer_accepted" onChange={this.handleChange} checked={entity.disclaimer_accepted} className="form-check-input" type="checkbox" />
+                            <label className="form-check-label" htmlFor="disclaimer_accepted"> {T.translate("edit_event.disclaimer_accepted")} </label>
                         </div>
                     </div>
                     }

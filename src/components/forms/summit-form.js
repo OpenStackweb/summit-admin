@@ -224,7 +224,7 @@ class SummitForm extends React.Component {
 
         const splan_columns = [
             { columnKey: 'name', value: T.translate("edit_summit.name") },
-            { columnKey: 'enabled', value: T.translate("edit_summit.enabled") }
+            { columnKey: 'is_enabled', value: T.translate("edit_summit.enabled") }
         ];
 
         const splan_table_options = {
@@ -562,7 +562,7 @@ class SummitForm extends React.Component {
                                className="btn btn-primary pull-right" value={T.translate("edit_summit.add_splan")}/>
                         <Table
                             options={splan_table_options}
-                            data={entity.selection_plans}
+                            data={entity.selection_plans.map((sl) => { return {id:sl.id,name:sl.name,is_enabled:sl.is_enabled? 'True':'False'}})}
                             columns={splan_columns}
                         />
                     </div>

@@ -32,7 +32,7 @@ class SelectionPlanLayout extends React.Component {
                 <Switch>
                     <Route strict exact path={`${match.url}/new`} component={EditSelectionPlanPage} />
                     <Route path={`${match.url}/:selection_plan_id(\\d+)`} component={SelectionPlanIdLayout} />
-                    <Route component={NoMatchPage}/>
+                    <Redirect to={`/app/summits/${currentSummit.id}`} />
                 </Switch>
             </div>
         );

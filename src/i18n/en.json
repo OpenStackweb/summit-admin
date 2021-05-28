@@ -344,6 +344,7 @@
     "delete_material": "Are you sure you want to delete activity material ",
     "qa_users": "Q&A Users",
     "qa_users_info": "Users designated as Questions & Answers Users on A2A Widget ( Chat ).",
+    "disclaimer_accepted": "Disclaimer Accepted?",
     "placeholders": {
       "select_venue": "Select an Activity Venue ...",
       "start_date": "Start Date",
