@@ -71,3 +71,7 @@ export const shallowEqual = (object1, object2) => {
 export const isEmpty = (obj) => {
     return Object.keys(obj).length === 0;
 };
+
+export const stripTags = (s) => {
+    return s.replace(/(<([^>]+)>)/gi, "");
+}

@@ -13,7 +13,8 @@
 
 import React from 'react';
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { Input, Dropdown, RadioList, CheckboxList } from 'openstack-uicore-foundation/lib/components'
+import { Input, Dropdown, RadioList, CheckboxList, RawHTML } from 'openstack-uicore-foundation/lib/components'
+import '../../styles/question-answers-input.less';
 
 export default class QuestionAnswersInput extends React.Component {
 
@@ -67,12 +68,15 @@ export default class QuestionAnswersInput extends React.Component {
 
     getInput(question, answerValue) {
         let questionValues = question.values;
-
+        let label = question.label;
+        if(question.mandatory){
+            label = `${label}<span>&nbsp;*</span>`;
+        }
         switch(question.type) {
             case 'Text':
                 return (
                     <div>
-                        <label> {question.label} </label>
+                        <label><RawHTML>{label}</RawHTML></label>
                         <Input
                             id={question.id}
                             value={answerValue}
@@ -84,7 +88,7 @@ export default class QuestionAnswersInput extends React.Component {
             case 'TextArea':
                 return (
                     <div>
-                        <label> {question.label} </label>
+                        <label><RawHTML>{label}</RawHTML></label>
                         <textarea
                             id={question.id}
                             value={answerValue}
@@ -99,7 +103,7 @@ export default class QuestionAnswersInput extends React.Component {
                         <input type="checkbox" id={question.id} checked={(answerValue === "true")}
                                onChange={this.handleChange} className="form-check-input" />
                         <label className="form-check-label" htmlFor={question.id}>
-                            {question.label}
+                            <RawHTML>{label}</RawHTML>
                         </label>
                     </div>
                 );
@@ -108,7 +112,7 @@ export default class QuestionAnswersInput extends React.Component {
                 questionValues = questionValues.map(val => ({...val, value: val.id}));
                 return (
                     <div>
-                        <label> {question.label} </label>
+                        <label><RawHTML>{label}</RawHTML></label>
                         <Dropdown
                             id={question.id}
                             value={value}
@@ -122,12 +126,13 @@ export default class QuestionAnswersInput extends React.Component {
                 answerValue = answerValue ? answerValue.split(',').map(ansVal => parseInt(ansVal)) : [];
                 return (
                     <div>
-                        <label> {question.label} </label>
+                        <label><RawHTML>{label}</RawHTML></label>
                         <CheckboxList
                             id={question.id}
                             value={answerValue}
                             options={questionValues}
                             onChange={this.handleChange}
+                            html
                         />
                     </div>
                 );
@@ -135,13 +140,14 @@ export default class QuestionAnswersInput extends React.Component {
                 questionValues = questionValues.map(val => ({...val, value: val.id}));
                 return (
                     <div>
-                        <label> {question.label} </label>
+                        <label><RawHTML>{label}</RawHTML></label>
                         <RadioList
                             id={question.id}
                             value={answerValue}
                             options={questionValues}
                             onChange={this.handleChange}
                             inline
+                            html
                         />
                     </div>
                 );
@@ -152,9 +158,8 @@ export default class QuestionAnswersInput extends React.Component {
     render() {
         let { answers } = this.state;
         let { questions } = this.props;
-
         return (
-            <div>
+            <div className="extra-questions">
                 {questions.map( q => {
                     let answer = answers.find(ans => ans.question_id === q.id);
                     let answerValue = answer ? answer.answer : null;

@@ -19,8 +19,9 @@ import {
     queryTrackGroups
 } from 'openstack-uicore-foundation/lib/methods'
 import { Input, DateTimePicker, SimpleLinkList } from 'openstack-uicore-foundation/lib/components';
-import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
+import {isEmpty, scrollToError, shallowEqual, stripTags} from "../../utils/methods";
 import { SortableTable } from 'openstack-uicore-foundation/lib/components';
+
 
 class SelectionPlanForm extends React.Component {
     constructor(props) {
@@ -290,7 +291,9 @@ class SelectionPlanForm extends React.Component {
                         {entity.extra_questions.length > 0 &&
                             <SortableTable
                                 options={extraQuestionsOptions}
-                                data={entity.extra_questions}
+                                data={entity.extra_questions.map((q) => {
+                                    return {...q, label: stripTags(q.label)}
+                                })}
                                 columns={extraQuestionColumns}
                                 dropCallback={this.props.updateExtraQuestionOrder}
                                 orderField="order"
