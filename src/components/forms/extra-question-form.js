@@ -71,7 +71,7 @@ class ExtraQuestionForm extends React.Component {
     shouldShowField(field){
         const {entity} = this.state;
         if (!entity.type) return false;
-        const entity_type = this.props.questionClasses.find(c => c.type === entity.type);
+        const entity_type = this.props.questionClasses.find(c => c.type == entity.type);
 
         return (entity_type.hasOwnProperty(field) && entity_type[field]);
     }
@@ -202,6 +202,7 @@ class ExtraQuestionForm extends React.Component {
                             options={value_options}
                             data={sortedValues}
                             columns={value_columns}
+                            textArea
                         />
                     </div>
                 </div>
