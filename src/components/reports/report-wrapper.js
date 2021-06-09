@@ -114,8 +114,7 @@ const wrapReport = (ReportComponent, specs) => {
             let grouped = specs.hasOwnProperty('grouped') ? true : false;
             let query = this.buildQuery(1, true);
             let name = this.refs.childCmp.getName();
-
-            this.props.exportReport(query, name, grouped, this.refs.childCmp.preProcessData);
+            this.props.exportReport(query, name, grouped, this.refs.childCmp.preProcessData.bind(this.refs.childCmp));
         }
 
         handleGetReport(page) {

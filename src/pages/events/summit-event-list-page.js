@@ -16,9 +16,10 @@ import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import Swal from "sweetalert2";
 import {Modal, Pagination } from 'react-bootstrap';
-import {FreeTextSearch, Table, UploadInput} from 'openstack-uicore-foundation/lib/components';
+import {FreeTextSearch, Table, UploadInput, Input} from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getEvents, deleteEvent, exportEvents, importEventsCSV } from "../../actions/event-actions";
+import { getEvents, deleteEvent, exportEvents, importEventsCSV, importMP4AssetsFromMUX } from "../../actions/event-actions";
+import {hasErrors} from "../../utils/methods";
 
 class SummitEventListPage extends React.Component {
 
@@ -34,16 +35,49 @@ class SummitEventListPage extends React.Component {
         this.handleExport = this.handleExport.bind(this);
         this.handleChangeSendSpeakerEmail = this.handleChangeSendSpeakerEmail.bind(this);
         this.handleImportEvents = this.handleImportEvents.bind(this);
-
+        this.handleMUXImport = this.handleMUXImport.bind(this);
+        this.handleChangeMUXModal = this.handleChangeMUXModal.bind(this);
+        this.handleImportAssetsFromMUX = this.handleImportAssetsFromMUX.bind(this);
         this.state = {
             showImportModal: false,
             send_speaker_email:false,
+            showImportFromMUXModal: false,
             importFile:null,
+            muxModalState: {
+                mux_token_id: "",
+                mux_token_secret: "",
+                mux_email_to:"",
+            },
+            errors:{},
         }
     }
 
     handleChangeSendSpeakerEmail(ev){
         this.setState({...this.state, send_speaker_email: ev.target.checked});
+    }
+
+    handleChangeMUXModal(ev){
+        const errors = {...this.state.errors};
+        const muxModalState = {...this.state.muxModalState};
+        let {value, id} = ev.target;
+        errors[id] = '';
+        muxModalState[id] = value;
+        this.setState({...this.state, muxModalState: muxModalState, errors: errors});
+    }
+
+    handleMUXImport(ev){
+        ev.preventDefault();
+        this.setState({...this.state , showImportFromMUXModal: true});
+    }
+
+    handleImportAssetsFromMUX(ev){
+        ev.preventDefault();
+        this.props.importMP4AssetsFromMUX
+        (
+            this.state.muxModalState.mux_token_id,
+            this.state.muxModalState.mux_token_secret,
+            this.state.muxModalState.mux_email_to
+        ).then(() => this.setState({...this.state, muxModalState:{mux_token_id:"",  mux_token_secret:"", mux_email_to:""}}))
     }
 
     handleImportEvents() {
@@ -68,7 +102,6 @@ class SummitEventListPage extends React.Component {
     handleExport(ev) {
         const {term, order, orderDir} = this.props;
         ev.preventDefault();
-
         this.props.exportEvents(term, order, orderDir);
     }
 
@@ -149,8 +182,11 @@ class SummitEventListPage extends React.Component {
                         <button className="btn btn-primary right-space" onClick={this.handleNewEvent}>
                             {T.translate("event_list.add_event")}
                         </button>
-                        <button className="btn btn-defaul right-space" onClick={this.handleExport}>
+                        <button className="btn btn-default right-space" onClick={this.handleExport}>
                             {T.translate("general.export")}
+                        </button>
+                        <button className="btn btn-default right-space" onClick={this.handleMUXImport}>
+                            {T.translate("event_list.mux_import")}
                         </button>
                         <button className="btn btn-default" onClick={() => this.setState({showImportModal:true})}>
                             {T.translate("event_list.import")}
@@ -227,6 +263,58 @@ class SummitEventListPage extends React.Component {
                         </button>
                     </Modal.Footer>
                 </Modal>
+
+                <Modal show={this.state.showImportFromMUXModal} onHide={() => this.setState({showImportFromMUXModal:false})} >
+                    <Modal.Header closeButton>
+                        <Modal.Title>{T.translate("event_list.mux_import")}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="row">
+                            <div className="col-md-4">
+                                <label> {T.translate("event_list.mux_token_id")}</label>
+                                &nbsp;
+                                <i className="fa fa-info-circle" aria-hidden="true" title={T.translate("event_list.mux_token_id_info")} />
+                                <Input
+                                    id="mux_token_id"
+                                    value={this.state.muxModalState.mux_token_id}
+                                    onChange={this.handleChangeMUXModal}
+                                    className="form-control"
+                                    error={hasErrors('mux_token_id', this.state.errors)}
+                                />
+                            </div>
+                            <div className="col-md-4">
+                                <label> {T.translate("event_list.mux_token_secret")}</label>
+                                &nbsp;
+                                <i className="fa fa-info-circle" aria-hidden="true" title={T.translate("event_list.mux_token_secret_info")} />
+                                <Input
+                                    id="mux_token_secret"
+                                    value={this.state.muxModalState.mux_token_secret}
+                                    onChange={this.handleChangeMUXModal}
+                                    className="form-control"
+                                    error={hasErrors('mux_token_secret', this.state.errors)}
+                                />
+                            </div>
+                            <div className="col-md-4">
+                                <label> {T.translate("event_list.mux_email_to")}</label>
+                                &nbsp;
+                                <i className="fa fa-info-circle" aria-hidden="true" title={T.translate("event_list.mux_email_to_info")} />
+                                <Input
+                                    id="mux_email_to"
+                                    type="email"
+                                    value={this.state.muxModalState.mux_email_to}
+                                    onChange={this.handleChangeMUXModal}
+                                    className="form-control"
+                                    error={hasErrors('mux_email_to', this.state.errors)}
+                                />
+                            </div>
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <button className="btn btn-primary" onClick={this.handleImportAssetsFromMUX}>
+                            {T.translate("event_list.import")}
+                        </button>
+                    </Modal.Footer>
+                </Modal>
             </div>
         )
     }
@@ -245,5 +333,6 @@ export default connect (
         deleteEvent,
         exportEvents,
         importEventsCSV,
+        importMP4AssetsFromMUX,
     }
 )(SummitEventListPage);

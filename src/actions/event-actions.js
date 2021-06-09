@@ -49,7 +49,7 @@ export const IMAGE_ATTACHED                         = 'IMAGE_ATTACHED';
 export const IMAGE_DELETED                          = 'IMAGE_DELETED';
 export const RECEIVE_PROXIMITY_EVENTS               = 'RECEIVE_PROXIMITY_EVENTS';
 export const EVENTS_IMPORTED                        = 'EVENTS_IMPORTED';
-
+export const IMPORT_FROM_MUX                        = 'IMPORT_FROM_MUX';
 
 
 export const getEvents = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
@@ -575,6 +575,42 @@ export const exportEvents = ( term = null, order = 'id', orderDir = 1 ) => (disp
     dispatch(getCSV(`${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/csv`, params, filename));
 
 };
+
+export const importMP4AssetsFromMUX = (MUXTokenId, MUXTokenSecret, emailTo) => (dispatch, getState) => {
+
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const params = {
+        access_token : accessToken
+    };
+
+    dispatch(startLoading());
+    return postRequest(
+        null,
+        createAction(IMPORT_FROM_MUX),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/presentations/all/import/mux`,
+        {
+           mux_token_id : MUXTokenId,
+           mux_token_secret: MUXTokenSecret,
+           email_to : emailTo
+        },
+        authErrorHandler
+    )(params)(dispatch)
+        .then(() => {
+            const success_message = {
+                title: T.translate("general.done"),
+                html: T.translate("event_list.mux_import_done"),
+                type: 'success'
+            };
+
+            dispatch(stopLoading());
+            dispatch(showMessage(
+                success_message,
+                () => {  window.location.reload();}
+            ));
+        });
+}
 
 export const importEventsCSV =  (file, send_speaker_email) => (dispatch, getState) => {
     const { loggedUserState, currentSummitState } = getState();

@@ -366,6 +366,7 @@
     "link": "Link",
     "slide": "Slide",
     "youtube_id": "Youtube Id",
+    "external_url": "External Url",
     "media_upload_type": "Media Upload Type",
     "media_upload_file": "Media Upload File",
     "event_material_saved": "Material saved successfully.",
@@ -661,6 +662,15 @@
     "import_events": "Import Activity",
     "ingest": "Ingest",
     "send_speaker_email": "Send Speaker Email (Email Flow Event ACTIVITES_SUBMISSIONS_IMPORT_ACTIVITY_SPEAKER)",
+    "mux_import": "Import MP4 From MUX",
+    "mux_token_id": "MUX Token ID",
+    "mux_token_id_info": "MUX Token ID",
+    "mux_token_secret": "MUX Token Secret",
+    "mux_token_secret_info": "MUX Token Secret",
+    "mux_email_to": "Email to",
+    "mux_email_to_info": "Recipient to send process excerpt.",
+    "export": "Export",
+    "mux_import_done": "MUX MP4 Import Process Requested Successfuly.",
     "placeholders": {
       "search_events": "Search by Id, Title, Abstract, Speaker"
     }

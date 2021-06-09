@@ -49,7 +49,19 @@ class PresentationVideoReport extends React.Component {
         let location = new Query("location");
         location.find(["id", {"venueroom": venueroom}]);
         let results = new Query("results", filters);
-        results.find(["id", "title", "startDate", "endDate", "tagNames", "youtubeId", {"location": location}]);
+        results.find
+        (
+            [
+                "id",
+                "title",
+                "startDate",
+                "endDate",
+                "tagNames",
+                "youtubeId",
+                "externalUrl",
+                {"location": location}
+                ]
+        );
 
         query.find([{"results": results}, "totalCount"]);
 
@@ -73,6 +85,7 @@ class PresentationVideoReport extends React.Component {
                 room: it.location_venueroom_name,
                 venue: it.location_venueroom_venue_name,
                 youtubeId: it.youtubeId,
+                externalUrl: it.externalUrl,
             });
         });
 
@@ -84,6 +97,7 @@ class PresentationVideoReport extends React.Component {
             { columnKey: 'room', value: 'Room' },
             { columnKey: 'venue', value: 'Venue' },
             { columnKey: 'youtubeId', value: 'Youtube Id' },
+            { columnKey: 'externalUrl', value: 'External Url' },
         ];
 
         return {reportData: processedData, tableColumns: columns};
@@ -91,7 +105,6 @@ class PresentationVideoReport extends React.Component {
 
     translateSortKey(key) {
         let sortKey = key;
-
         return sortKey;
     }
 

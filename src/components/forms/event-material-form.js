@@ -266,6 +266,20 @@ class EventMaterialForm extends React.Component {
                     </div>
                 </div>
                 }
+                {entity.class_name === 'PresentationVideo' &&
+                <div className="row form-group">
+                    <div className="col-md-6">
+                        <label> {T.translate("edit_event_material.external_url")} *</label>
+                        <Input
+                            id="external_url"
+                            value={entity.external_url}
+                            onChange={this.handleChange}
+                            className="form-control"
+                            error={hasErrors('external_url', errors)}
+                        />
+                    </div>
+                </div>
+                }
 
                 {entity.class_name === 'PresentationMediaUpload' && media_type && media_type.type &&
                 <div className="row form-group">
