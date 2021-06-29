@@ -554,7 +554,7 @@ export const exportEvents = ( term = null, order = 'id', orderDir = 1 ) => (disp
     const { accessToken }     = loggedUserState;
     const { currentSummit }   = currentSummitState;
     const filter = [];
-    const filename = currentSummit.name + '-Events.csv';
+    const filename = currentSummit.name + '-Activities.csv';
     const params = {
         access_token : accessToken
     };
