@@ -17,7 +17,7 @@ import
     RESET_BADGE_FEATURE_FORM,
     UPDATE_BADGE_FEATURE,
     BADGE_FEATURE_UPDATED,
-    BADGE_FEATURE_ADDED
+    BADGE_FEATURE_ADDED, BADGE_FEATURE_IMAGE_ATTACHED, BADGE_FEATURE_IMAGE_DELETED
 } from '../../actions/badge-actions';
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
@@ -28,6 +28,7 @@ export const DEFAULT_ENTITY = {
     name                : '',
     description         : '',
     template_content    : '',
+    image               : null,
 }
 
 const DEFAULT_STATE = {
@@ -77,6 +78,16 @@ const badgeFeatureReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  errors: payload.errors };
         }
         break;
+        case BADGE_FEATURE_IMAGE_ATTACHED: {
+            let image = {...payload.response};
+            //let image = {...state.entity.image, url:  state.entity.image.url + '?' + new Date().getTime()};
+            return {...state, entity: {...state.entity, image: image.url} };
+        }
+            break;
+        case BADGE_FEATURE_IMAGE_DELETED: {
+            return {...state, entity: {...state.entity, image: null} };
+        }
+            break;
         default:
             return state;
     }

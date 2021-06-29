@@ -1291,7 +1291,8 @@
     "template_content": "Template Content",
     "tag_name": "Tag Name",
     "badge_feature_saved": "Badge Feature saved successfully",
-    "badge_feature_created": "Badge Feature created successfully"
+    "badge_feature_created": "Badge Feature created successfully",
+    "image": "Image"
   },
   "access_level_list": {
     "access_levels": "Access Level",

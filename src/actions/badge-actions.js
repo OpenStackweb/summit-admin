@@ -26,7 +26,6 @@ import {
     authErrorHandler
 } from 'openstack-uicore-foundation/lib/methods';
 
-
 export const BADGE_DELETED              = 'BADGE_DELETED';
 export const FEATURE_BADGE_REMOVED      = 'FEATURE_BADGE_REMOVED';
 export const FEATURE_BADGE_ADDED        = 'FEATURE_BADGE_ADDED';
@@ -42,6 +41,8 @@ export const UPDATE_BADGE_FEATURE         = 'UPDATE_BADGE_FEATURE';
 export const BADGE_FEATURE_UPDATED        = 'BADGE_FEATURE_UPDATED';
 export const BADGE_FEATURE_ADDED          = 'BADGE_FEATURE_ADDED';
 export const BADGE_FEATURE_DELETED        = 'BADGE_FEATURE_DELETED';
+export const BADGE_FEATURE_IMAGE_ATTACHED = 'BADGE_FEATURE_IMAGE_ATTACHED';
+export const BADGE_FEATURE_IMAGE_DELETED  = 'BADGE_FEATURE_IMAGE_DELETED';
 
 export const REQUEST_ACCESS_LEVELS       = 'REQUEST_ACCESS_LEVELS';
 export const RECEIVE_ACCESS_LEVELS       = 'RECEIVE_ACCESS_LEVELS';
@@ -557,6 +558,49 @@ export const deleteBadgeFeature = (badgeFeatureId) => (dispatch, getState) => {
         null,
         createAction(BADGE_FEATURE_DELETED)({badgeFeatureId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-feature-types/${badgeFeatureId}`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const uploadBadgeFeatureImage = (entity, file) => (dispatch, getState) => {
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+
+    const params = {
+        access_token : accessToken
+    };
+
+    postRequest(
+        null,
+        createAction(BADGE_FEATURE_IMAGE_ATTACHED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-feature-types/${entity.id}/image`,
+        file,
+        authErrorHandler
+    )(params)(dispatch)
+        .then(() => {
+            history.push(`/app/summits/${currentSummit.id}/badge-features/${entity.id}`);
+            dispatch(stopLoading());
+        });
+};
+
+export const removeBadgeFeatureImage = (badgeFeatureId) => (dispatch, getState) => {
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+
+    const params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(BADGE_FEATURE_IMAGE_DELETED)({}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-feature-types/${badgeFeatureId}/image`,
         null,
         authErrorHandler
     )(params)(dispatch).then(() => {

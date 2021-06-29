@@ -15,9 +15,11 @@ import React from 'react'
 import { connect } from 'react-redux';
 import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
-import { SimpleForm } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getBadgeFeature, resetBadgeFeatureForm, saveBadgeFeature } from "../../actions/badge-actions";
+import BadgeFeatureTypeForm from '../../components/forms/badge-feature-type-form';
+
+import { getBadgeFeature, resetBadgeFeatureForm,
+    saveBadgeFeature, removeBadgeFeatureImage, uploadBadgeFeatureImage } from "../../actions/badge-actions";
 
 class EditBadgeFeaturePage extends React.Component {
 
@@ -69,11 +71,13 @@ class EditBadgeFeaturePage extends React.Component {
                 <h3>{title} {T.translate("edit_badge_feature.badge_feature")}</h3>
                 <hr/>
                 {currentSummit &&
-                <SimpleForm
+                <BadgeFeatureTypeForm
+                    history={this.props.history}
                     entity={entity}
                     errors={errors}
-                    fields={fields}
-                    onSubmit={this.handleSubmit}
+                    onSubmit={this.props.saveBadgeFeature}
+                    onUploadImage={this.props.uploadBadgeFeatureImage}
+                    onRemoveImage={this.props.removeBadgeFeatureImage}
                 />
                 }
             </div>
@@ -93,5 +97,7 @@ export default connect (
         getBadgeFeature,
         resetBadgeFeatureForm,
         saveBadgeFeature,
+        removeBadgeFeatureImage,
+        uploadBadgeFeatureImage
     }
 )(EditBadgeFeaturePage);
