@@ -506,6 +506,8 @@ const normalizeEntity = (entity) => {
     if (!normalizedEntity.rsvp_link) delete normalizedEntity['rsvp_link'];
     if (!normalizedEntity.rsvp_template_id) delete normalizedEntity['rsvp_template_id'];
 
+    if(normalizedEntity.hasOwnProperty("links")) delete normalizedEntity['links'];
+
     normalizedEntity.tags = normalizedEntity.tags.map((t) => {
         if (typeof t === 'string') return t;
         else return t.tag;
