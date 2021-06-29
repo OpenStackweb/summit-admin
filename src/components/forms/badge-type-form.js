@@ -17,8 +17,8 @@ import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css';
 import { Input, SimpleLinkList } from 'openstack-uicore-foundation/lib/components';
 import {isEmpty, scrollToError, shallowEqual, hasErrors} from "../../utils/methods";
 
-
 class BadgeTypeForm extends React.Component {
+
     constructor(props) {
         super(props);
 

@@ -575,6 +575,8 @@ export const uploadBadgeFeatureImage = (entity, file) => (dispatch, getState) =>
         access_token : accessToken
     };
 
+    dispatch(startLoading());
+
     postRequest(
         null,
         createAction(BADGE_FEATURE_IMAGE_ATTACHED),
@@ -583,8 +585,8 @@ export const uploadBadgeFeatureImage = (entity, file) => (dispatch, getState) =>
         authErrorHandler
     )(params)(dispatch)
         .then(() => {
-            history.push(`/app/summits/${currentSummit.id}/badge-features/${entity.id}`);
             dispatch(stopLoading());
+            history.push(`/app/summits/${currentSummit.id}/badge-features/${entity.id}`);
         });
 };
 
@@ -596,6 +598,8 @@ export const removeBadgeFeatureImage = (badgeFeatureId) => (dispatch, getState) 
     const params = {
         access_token : accessToken
     };
+
+    dispatch(startLoading());
 
     return deleteRequest(
         null,
