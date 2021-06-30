@@ -147,7 +147,7 @@
       "select_day": "Select an Activity Day ...",
       "select_venue": "Select an Activity Venue ...",
       "select_event_type": "Select an Activity Type ...",
-      "select_track": "Select a Track ..."
+      "select_track": "Select an Activity Category ..."
     }
   },
   "bulk_actions_page": {
@@ -310,7 +310,7 @@
     "location": "Location",
     "event_type": "Activity Type",
     "pic": "Activity Picture",
-    "track": "Track",
+    "track": "Activity Category",
     "level": "Level",
     "feedback": "Feedback",
     "allow_feedback": "Allow feedback ?",
@@ -350,7 +350,7 @@
       "start_date": "Start Date",
       "end_date": "End Date",
       "select_event_type": "Select an Activity Type ...",
-      "select_track": "Select a Track ...",
+      "select_track": "Select an Activity Category ...",
       "select_level": "Select a Level ...",
       "select_rsvp_template": "Select a Template ...",
       "select_selection_plan": "Select a Selection Plan ..."

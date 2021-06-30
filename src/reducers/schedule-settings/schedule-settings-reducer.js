@@ -60,7 +60,7 @@ const SCHEDULE_FILTER_BY_SPEAKERS_DEFAULT_VALUE = 'Speakers';
 const SCHEDULE_FILTER_BY_TAGS_DEFAULT_VALUE = 'Tags';
 const SCHEDULE_FILTER_BY_VENUES_DEFAULT_VALUE = 'Venues';
 const SCHEDULE_FILTER_BY_TRACK_GROUPS_DEFAULT_VALUE = 'Categories Groups';
-const SCHEDULE_FILTER_BY_EVENT_TYPES_DEFAULT_VALUE = 'Event Types';
+const SCHEDULE_FILTER_BY_EVENT_TYPES_DEFAULT_VALUE = 'Activity Types';
 
 const deepClone = (obj) => {
     return JSON.parse(JSON.stringify(obj));

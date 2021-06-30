@@ -392,7 +392,7 @@ class EventForm extends React.Component {
                 </div>
                 <div className="row form-group">
                     <div className="col-md-12">
-                        <label> {T.translate("edit_event.short_description")} </label>
+                        <label> {T.translate("edit_event.short_description")} *</label>
                         <TextEditor
                             id="description"
                             value={entity.description}
