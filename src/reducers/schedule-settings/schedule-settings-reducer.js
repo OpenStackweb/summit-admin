@@ -111,9 +111,9 @@ const DEFAULT_STATE = {
     filters: deepClone(DEFAULT_FILTERS),
     errors: {},
     eventColorOrigins:[
-        {label:SCHEDULE_FILTER_BY_EVENT_TYPES_DEFAULT_VALUE, value:'EVENT_TYPE'},
+        {label:SCHEDULE_FILTER_BY_EVENT_TYPES_DEFAULT_VALUE, value:'EVENT_TYPES'},
         {label:SCHEDULE_FILTER_BY_TRACK_DEFAULT_VALUE, value:'TRACK'},
-        {label:SCHEDULE_FILTER_BY_TRACK_GROUPS_DEFAULT_VALUE, value:'TRACK_GROUP'},
+        {label:SCHEDULE_FILTER_BY_TRACK_GROUPS_DEFAULT_VALUE, value:'TRACK_GROUPS'},
     ],
     eventColorOrigin: deepClone(DEFAULT_EVENT_COLOR_ORIGIN),
 };
