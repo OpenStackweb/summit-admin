@@ -64,7 +64,7 @@ export const getEvents = ( term = null, page = 1, perPage = 10, order = 'id', or
 
     if(term){
         const escapedTerm = escapeFilterValue(term);
-        let searchString = `title=@${escapedTerm},abstract=@${escapedTerm},tags=@${escapedTerm},speaker=@${escapedTerm},speaker_email=@${escapedTerm}`;
+        let searchString = `title=@${escapedTerm},abstract=@${escapedTerm},tags=@${escapedTerm},speaker=@${escapedTerm},speaker_email=@${escapedTerm},speaker_title=@${escapedTerm},speaker_company=@${escapedTerm}`;
 
         if (parseInt(term)) {
             searchString += `,id==${parseInt(term)}`;
@@ -561,7 +561,13 @@ export const exportEvents = ( term = null, order = 'id', orderDir = 1 ) => (disp
 
     if(term){
         const escapedTerm = escapeFilterValue(term);
-        filter.push(`title=@${escapedTerm},abstract=@${escapedTerm},tags=@${escapedTerm},speaker=@${escapedTerm},speaker_email=@${escapedTerm},id==${escapedTerm}`);
+        let searchString = `title=@${escapedTerm},abstract=@${escapedTerm},tags=@${escapedTerm},speaker=@${escapedTerm},speaker_email=@${escapedTerm},speaker_title=@${escapedTerm},speaker_company=@${escapedTerm}`;
+
+        if (parseInt(term)) {
+            searchString += `,id==${parseInt(term)}`;
+        }
+
+        filter.push(searchString);
     }
 
     if(filter.length > 0){

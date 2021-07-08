@@ -672,7 +672,7 @@
     "export": "Export",
     "mux_import_done": "MUX MP4 Import Process Requested Successfuly.",
     "placeholders": {
-      "search_events": "Search by Id, Title, Abstract, Speaker"
+      "search_events": "Search by Id, Title, Abstract, Speaker, Speaker Company, Speaker Title"
     }
   },
   "event_type_list": {
