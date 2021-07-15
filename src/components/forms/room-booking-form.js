@@ -160,6 +160,13 @@ class RoomBookingForm extends React.Component {
                             id="owner"
                             value={entity.owner}
                             onChange={this.handleChange}
+                            getOptionLabel={
+                                (member) => {
+                                    return member.hasOwnProperty("email") ?
+                                        `${member.first_name} ${member.last_name} (${member.email})`:
+                                        `${member.first_name} ${member.last_name} (${member.id})`;
+                                }
+                            }
                         />
                     </div>
                 </div>

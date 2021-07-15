@@ -236,6 +236,7 @@ class SpeakerForm extends React.Component {
                         <MemberInput
                             id="member"
                             value={entity.member}
+                            getOptionLabel={(member) => { return `${member.first_name} ${member.last_name} (${member.email})`}}
                             onChange={this.handleChange}
                             isClearable={true}
                         />

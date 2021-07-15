@@ -129,6 +129,13 @@ class AttendeeForm extends React.Component {
                         <MemberInput
                             id="member"
                             value={entity.member}
+                            getOptionLabel={
+                                (member) => {
+                                    return member.hasOwnProperty("email") ?
+                                        `${member.first_name} ${member.last_name} (${member.email})`:
+                                        `${member.first_name} ${member.last_name} (${member.id})`;
+                                }
+                            }
                             onChange={this.handleChange}
                             disabled
                         />

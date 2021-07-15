@@ -146,7 +146,6 @@ class TrackChairListPage extends React.Component {
 
         const tracks_ddl = currentSummit.tracks.filter(t => t.chair_visible).map(t => ({label: t.name, value: t.id}));
 
-
         if(!currentSummit.id) return(<div />);
 
         return(
@@ -188,6 +187,13 @@ class TrackChairListPage extends React.Component {
                                     id="member"
                                     value={member}
                                     onChange={this.handleChange}
+                                    getOptionLabel={
+                                        (member) => {
+                                            return member.hasOwnProperty("email") ?
+                                                `${member.first_name} ${member.last_name} (${member.email})`:
+                                                `${member.first_name} ${member.last_name} (${member.id})`;
+                                        }
+                                    }
                                     placeholder={T.translate("track_chairs.placeholders.select_track_chair")}
                                 />
                             </div>

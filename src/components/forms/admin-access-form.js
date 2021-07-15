@@ -88,6 +88,13 @@ class AdminAccessForm extends React.Component {
                         <MemberInput
                             id="members"
                             value={entity.members}
+                            getOptionLabel={
+                                (member) => {
+                                    return member.hasOwnProperty("email") ?
+                                        `${member.first_name} ${member.last_name} (${member.email})`:
+                                        `${member.first_name} ${member.last_name} (${member.id})`;
+                                }
+                            }
                             onChange={this.handleChange}
                             multi={true}
                         />
@@ -116,3 +123,4 @@ class AdminAccessForm extends React.Component {
 }
 
 export default AdminAccessForm;
+

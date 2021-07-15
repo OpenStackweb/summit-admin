@@ -146,6 +146,13 @@ class PushNotificationForm extends React.Component {
                             value={entity.members}
                             onChange={this.handleChange}
                             multi={true}
+                            getOptionLabel={
+                                (member) => {
+                                    return member.hasOwnProperty("email") ?
+                                        `${member.first_name} ${member.last_name} (${member.email})`:
+                                        `${member.first_name} ${member.last_name} (${member.id})`;
+                                }
+                            }
                         />
                     </div>
                     }

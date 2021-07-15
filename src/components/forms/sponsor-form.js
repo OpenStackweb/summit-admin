@@ -152,6 +152,13 @@ class SponsorForm extends React.Component {
                             value={entity.members}
                             onChange={this.handleChangeMember}
                             multi={true}
+                            getOptionLabel={
+                                (member) => {
+                                    return member.hasOwnProperty("email") ?
+                                        `${member.first_name} ${member.last_name} (${member.email})`:
+                                        `${member.first_name} ${member.last_name} (${member.id})`;
+                                }
+                            }
                         />
                     </div>
                 </div>

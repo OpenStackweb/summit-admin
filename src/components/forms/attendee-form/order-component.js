@@ -14,9 +14,6 @@
 import React from 'react';
 import history from "../../../history";
 import T from 'i18n-react/dist/i18n-react';
-import Swal from "sweetalert2";
-import { Modal } from 'react-bootstrap';
-import { MemberInput, Dropdown } from 'openstack-uicore-foundation/lib/components'
 
 export default class OrderComponent extends React.Component {
 

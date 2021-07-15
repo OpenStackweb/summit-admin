@@ -50,7 +50,7 @@ const trackChairListReducer = (state = DEFAULT_STATE, action) => {
 
             const trackChairs = data.map(tc => ({
                 ...tc,
-                name: `${tc.member.first_name} ${tc.member.last_name}`,
+                name: `${tc.member.first_name} ${tc.member.last_name} (${tc.member.email})`,
                 trackNames: tc.categories.map(c => c.name).join(', ')
             }));
 

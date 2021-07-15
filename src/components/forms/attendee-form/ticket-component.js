@@ -213,6 +213,13 @@ export default class TicketComponent extends React.Component {
                                 <label>{T.translate("edit_attendee.assign_to_member")}</label><br/>
                                 <MemberInput
                                     id="member"
+                                    getOptionLabel={
+                                        (member) => {
+                                            return member.hasOwnProperty("email") ?
+                                                `${member.first_name} ${member.last_name} (${member.email})`:
+                                                `${member.first_name} ${member.last_name} (${member.id})`;
+                                        }
+                                    }
                                     value={this.state.newOwner}
                                     onChange={this.handleMemberChange}
                                 />
