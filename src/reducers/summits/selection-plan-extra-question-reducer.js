@@ -20,7 +20,6 @@ import
     SELECTION_PLAN_EXTRA_QUESTION_ADDED,
     RECEIVE_SELECTION_PLAN_EXTRA_QUESTION_META,
     SELECTION_PLAN_EXTRA_QUESTION_VALUE_DELETED,
-    QUESTION_VALUE_SELECTION_PLAN_UPDATED,
     SELECTION_PLAN_EXTRA_QUESTION_VALUE_ADDED,
     SELECTION_PLAN_EXTRA_QUESTION_VALUE_UPDATED
 } from '../../actions/selection-plan-actions';
@@ -87,11 +86,6 @@ const selectionPlanExtraQuestionReducer = (state = DEFAULT_STATE, action) => {
             break;
         case SELECTION_PLAN_EXTRA_QUESTION_UPDATED: {
             return state;
-        }
-            break;
-        case QUESTION_VALUE_SELECTION_PLAN_UPDATED: {
-            let values = [...payload];
-            return {...state, entity: {...state.entity, values: values}}
         }
             break;
         case SELECTION_PLAN_EXTRA_QUESTION_VALUE_ADDED: {

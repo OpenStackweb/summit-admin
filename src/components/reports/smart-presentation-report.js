@@ -40,8 +40,6 @@ const fieldNames = [
     {label: 'Status', key: 'status', simple: true},
     {label: 'Level', key: 'level', simple: true},
     {label: 'Published', key: 'published', simple: true},
-    {label: 'Videos', key: 'mediaUploadVideos', simple: true},
-    {label: 'Slides', key: 'mediaUploadSlides', simple: true},
     {label: 'All Materials', key: 'allMediaUploads', simple: true},
     {label: 'Stream URL', key: 'streamingUrl', simple: true},
     {label: 'Meeting URL', key: 'meetingUrl', simple: true},

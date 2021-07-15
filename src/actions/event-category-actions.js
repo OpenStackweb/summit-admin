@@ -11,7 +11,6 @@
  * limitations under the License.
  **/
 import T from "i18n-react/dist/i18n-react";
-import _ from 'lodash';
 import history from '../history'
 import {
     getRequest,
@@ -23,8 +22,6 @@ import {
     startLoading,
     showMessage,
     showSuccessMessage,
-    fetchResponseHandler,
-    fetchErrorHandler,
     authErrorHandler
 } from "openstack-uicore-foundation/lib/methods";
 

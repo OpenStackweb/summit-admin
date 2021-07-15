@@ -17,9 +17,6 @@ import
     RESET_EVENT_CATEGORY_FORM,
     EVENT_CATEGORY_ADDED,
     UPDATE_EVENT_CATEGORY,
-    EVENT_CATEGORY_QUESTION_DELETED,
-    EVENT_CATEGORY_QUESTION_ADDED,
-    EVENT_CATEGORY_QUESTION_ASSIGNED,
     EVENT_CATEGORY_IMAGE_ATTACHED,
     EVENT_CATEGORY_IMAGE_DELETED
 } from '../../actions/event-category-actions';
@@ -83,27 +80,6 @@ const eventCategoryReducer = (state = DEFAULT_STATE, action) => {
             }
 
             return {...state, errors: {}, entity: {...DEFAULT_ENTITY, ...entity} };
-        }
-        break;
-        case EVENT_CATEGORY_QUESTION_DELETED: {
-            let {questionId} = payload;
-            let extra_questions = state.entity.extra_questions.filter(eq => eq.id !== questionId);
-
-            return {...state, entity: { ...state.entity, extra_questions: extra_questions}};
-        }
-        break;
-        case EVENT_CATEGORY_QUESTION_ADDED: {
-            let entity = {...payload.response};
-            let extra_questions = [...state.entity.extra_questions, entity];
-
-            return {...state, entity: { ...state.entity, extra_questions: extra_questions}};
-        }
-        break;
-        case EVENT_CATEGORY_QUESTION_ASSIGNED: {
-            let entity = {...payload};
-            let extra_questions = [...state.entity.extra_questions, entity];
-
-            return {...state, entity: { ...state.entity, extra_questions: extra_questions}};
         }
         break;
         case EVENT_CATEGORY_IMAGE_ATTACHED: {
