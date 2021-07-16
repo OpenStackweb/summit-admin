@@ -44,7 +44,6 @@ export const DEFAULT_ENTITY = {
     quantity_used           : 0,
     valid_since_date        : '',
     valid_until_date        : '',
-    badge_type_id           : 0,
     badge_features          : [],
     allowed_ticket_types    : [],
     ticket_types_rules      : [],

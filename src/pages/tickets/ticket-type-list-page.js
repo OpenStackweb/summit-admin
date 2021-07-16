@@ -84,6 +84,7 @@ class TicketTypeListPage extends React.Component {
 
         const columns = [
             { columnKey: 'name', value: T.translate("ticket_type_list.name"), sortable: true },
+            { columnKey: 'badge_type_name', value: T.translate("ticket_type_list.badge_type_name") },
             { columnKey: 'external_id', value: T.translate("ticket_type_list.external_id") }
         ];
 

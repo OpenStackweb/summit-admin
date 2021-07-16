@@ -435,6 +435,7 @@ export const getTicketTypes = ( order = 'name', orderDir = 1 ) => (dispatch, get
         page         : 1,
         per_page     : 100,
         access_token : accessToken,
+        expand: 'badge_type',
     };
 
     // order

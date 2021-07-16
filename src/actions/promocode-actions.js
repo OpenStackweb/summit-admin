@@ -302,10 +302,6 @@ const normalizeEntity = (entity) => {
 
     }
 
-    if (!entity.badge_type_id) {
-        delete normalizedEntity['badge_type_id'];
-    }
-
     // clear dates
 
     if (entity.valid_since_date === 0) {

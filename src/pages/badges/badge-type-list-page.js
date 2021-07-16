@@ -73,10 +73,14 @@ class BadgeTypeListPage extends React.Component {
     }
 
     render(){
-        const {currentSummit, badgeTypes, order, orderDir, totalBadgeTypes} = this.props;
+
+        let {currentSummit, badgeTypes, order, orderDir, totalBadgeTypes} = this.props;
+
+        badgeTypes = badgeTypes.map((bt) => { return {...bt, is_default: bt.is_default ? 'Yes': 'No'}});
 
         const columns = [
             { columnKey: 'name', value: T.translate("badge_type_list.name"), sortable: true },
+            { columnKey: 'is_default', value: T.translate("badge_type_list.is_default") },
             { columnKey: 'description', value: T.translate("badge_type_list.description") },
             { columnKey: 'access_level_names', value: T.translate("badge_type_list.access_levels") }
         ];

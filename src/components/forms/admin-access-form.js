@@ -109,8 +109,6 @@ class AdminAccessForm extends React.Component {
                         />
                     </div>
                 </div>
-
-
                 <div className="row">
                     <div className="col-md-12 submit-buttons">
                         <input type="button" onClick={this.handleSubmit}

@@ -48,7 +48,8 @@ const ticketTypeListReducer = (state = DEFAULT_STATE, action) => {
                 return {
                     id: t.id,
                     name: t.name,
-                    external_id: t.external_id
+                    external_id: t.external_id,
+                    badge_type_name: t.hasOwnProperty("badge_type") ? t.badge_type.name : 'TBD',
                 };
             })
 

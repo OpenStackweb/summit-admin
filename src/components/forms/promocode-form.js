@@ -55,7 +55,6 @@ const EmailRedeemForm = (props) => (
 const BasePCForm = (props) => {
 
     let badge_features_ddl = props.summit.badge_features.map(f => ({label:f.name, value:f.id}));
-    let badge_types_ddl = props.summit.badge_types.map(f => ({label:f.name, value:f.id}));
 
     return (
         <>
@@ -105,17 +104,7 @@ const BasePCForm = (props) => {
                 </div>
             </div>
             <div className="row form-group">
-                <div className="col-md-4">
-                    <label> {T.translate("edit_promocode.badge_type_id")}</label>
-                    <Dropdown
-                        id="badge_type_id"
-                        value={props.entity.badge_type_id}
-                        onChange={props.handleChange}
-                        placeholder={T.translate("edit_promocode.placeholders.select_badge_type")}
-                        options={badge_types_ddl}
-                    />
-                </div>
-                <div className="col-md-8">
+                <div className="col-md-12">
                     <label> {T.translate("edit_promocode.badge_features")}</label>
                     <Dropdown
                         id="badge_features"
