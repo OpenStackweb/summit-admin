@@ -109,7 +109,7 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
             if (!entity.rsvp_external) entity.rsvp_link = null;
             media_uploads = media_uploads.map((m) => (
                 {...m,
-                 media_upload_type_id:m.media_upload_type.id
+                 media_upload_type_id: m.media_upload_type.id
                 }
             ));
             entity.materials = [...media_uploads, ...links, ...videos, ...slides];
