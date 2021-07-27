@@ -10,6 +10,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
+import React from "react";
+import {RawHTML} from "openstack-uicore-foundation/lib/components";
 
 import
 {
@@ -36,20 +38,20 @@ const orderExtraQuestionListReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case REQUEST_ORDER_EXTRA_QUESTIONS: {
-            let {order, orderDir} = payload;
+            const {order, orderDir} = payload;
 
             return {...state, order, orderDir }
         }
         break;
         case RECEIVE_ORDER_EXTRA_QUESTIONS: {
-            let { total } = payload.response;
-            let orderExtraQuestions = payload.response.data;
+            const { total } = payload.response;
+            const orderExtraQuestions = payload.response.data.map(eq => ({...eq, label: <RawHTML>{eq.label}</RawHTML>}));
 
             return {...state, orderExtraQuestions: orderExtraQuestions, totalOrderExtraQuestions: total };
         }
         break;
         case ORDER_EXTRA_QUESTION_ORDER_UPDATED: {
-            let questions = payload.map(q => {
+            const questions = payload.map(q => {
 
                 return {
                     id: q.id,
@@ -58,13 +60,13 @@ const orderExtraQuestionListReducer = (state = DEFAULT_STATE, action) => {
                     type: q.type,
                     order: parseInt(q.order)
                 };
-            })
+            });
 
             return {...state, orderExtraQuestions: questions };
         }
         break;
         case ORDER_EXTRA_QUESTION_DELETED: {
-            let {orderExtraQuestionId} = payload;
+            const {orderExtraQuestionId} = payload;
             return {...state, orderExtraQuestions: state.orderExtraQuestions.filter(t => t.id !== orderExtraQuestionId)};
         }
         break;
