@@ -45,9 +45,8 @@ const orderExtraQuestionListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case RECEIVE_ORDER_EXTRA_QUESTIONS: {
             const { total } = payload.response;
-            const orderExtraQuestions = payload.response.data.map(eq => ({...eq, label: <RawHTML>{eq.label}</RawHTML>}));
 
-            return {...state, orderExtraQuestions: orderExtraQuestions, totalOrderExtraQuestions: total };
+            return {...state, orderExtraQuestions: payload.response.data, totalOrderExtraQuestions: total };
         }
         break;
         case ORDER_EXTRA_QUESTION_ORDER_UPDATED: {
