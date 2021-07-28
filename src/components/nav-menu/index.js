@@ -121,8 +121,8 @@ class NavMenu extends React.Component {
             {name: 'directory', iconClass: 'fa-fw fa-list-ul', linkUrl: 'directory'},
             {name: 'speakers', iconClass: 'fa-users', accessRoute: 'speakers',
                 childs: [
-                    {name:'speaker_list', linkUrl:`speakers`},
-                    {name:'merge_speakers', linkUrl:`speakers/merge`}
+                    {name:'speaker_list', linkUrl:`speakers`, accessRoute: 'speaker-list'},
+                    {name:'merge_speakers', linkUrl:`speakers/merge`, accessRoute: 'speakers-merge'}
                 ]
             },
             {name: 'companies', iconClass: 'fa fa-copyright', linkUrl: 'companies', accessRoute: 'companies'},

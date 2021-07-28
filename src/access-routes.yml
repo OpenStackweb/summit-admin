@@ -32,7 +32,32 @@ summit-delete:
   - super-admins
   - administrators
 
+
 speakers:
+  - super-admins
+  - administrators
+  - summit-front-end-administrators
+
+speakers-list:
+  - super-admins
+  - administrators
+  - summit-front-end-administrators
+
+speakers-edit:
+  - super-admins
+  - administrators
+  - summit-front-end-administrators
+
+speakers-add:
+  - super-admins
+  - administrators
+  - summit-front-end-administrators
+
+speakers-merge:
+  - super-admins
+  - administrators
+
+speakers-delete:
   - super-admins
   - administrators
 

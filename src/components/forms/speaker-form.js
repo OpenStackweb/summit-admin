@@ -69,7 +69,16 @@ class SpeakerForm extends React.Component {
 
         if (ev.target.type === 'memberinput') {
             entity.email = '';
-            entity.affiliations = [...value.affiliations];
+            if(value) {
+                entity.affiliations = [...value.affiliations];
+                entity.first_name = value.first_name ??  entity.first_name;
+                entity.last_name = value.last_name ?? entity.last_name;
+                entity.bio = value.bio ?? entity.bio;
+                entity.irc = value.irc ?? entity.irc;
+                entity.twitter = value.twitter ?? entity.twitter;
+                entity.company = value?.company ?? entity.company;
+                entity.company = value?.phone_number ?? entity.company;
+            }
         }
 
         errors[id] = '';

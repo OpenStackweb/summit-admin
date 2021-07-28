@@ -52,6 +52,7 @@ class EditSummitSpeakerPage extends React.Component {
     }
 
     render(){
+
         const {entity, errors, summits, history, saveSpeaker, attachPicture, match} = this.props;
         const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         const breadcrumb = (entity.id) ? entity.first_name+' '+entity.last_name : T.translate("general.new");

@@ -53,6 +53,26 @@ class Member {
         return false;
     }
 
+    canDeleteSpeakers(){
+        for (var i in this._member.groups) {
+            if (access['speakers-delete'].includes(this._member.groups[i].code)) return true;
+        }
+        return false;
+    }
+
+    canEditSpeakers(){
+        for (var i in this._member.groups) {
+            if (access['speakers-edit'].includes(this._member.groups[i].code)) return true;
+        }
+        return false;
+    }
+
+    canAddSpeakers(){
+        for (var i in this._member.groups) {
+            if (access['speakers-add'].includes(this._member.groups[i].code)) return true;
+        }
+        return false;
+    }
 }
 
 export default Member;

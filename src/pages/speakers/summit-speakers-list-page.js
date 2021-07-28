@@ -18,7 +18,7 @@ import Swal from "sweetalert2";
 import { Pagination } from 'react-bootstrap';
 import { FreeTextSearch, Table } from 'openstack-uicore-foundation/lib/components';
 import { getSpeakers, deleteSpeaker } from "../../actions/speaker-actions";
-
+import Member from '../../models/member'
 
 class SummitSpeakerListPage extends React.Component {
 
@@ -81,7 +81,7 @@ class SummitSpeakerListPage extends React.Component {
     }
 
     render(){
-        const {speakers, lastPage, currentPage, term, order, orderDir, totalSpeakers } = this.props;
+        const {speakers, lastPage, currentPage, term, order, orderDir, totalSpeakers, member } = this.props;
 
         const columns = [
             { columnKey: 'id', value: 'Id', sortable: true },
@@ -93,11 +93,18 @@ class SummitSpeakerListPage extends React.Component {
         const table_options = {
             sortCol: (order === 'last_name') ? 'name' : order,
             sortDir: orderDir,
-            actions: {
-                edit: {onClick: this.handleEdit},
-                delete: {onClick: this.handleDelete}
-            }
+            actions: {}
         };
+
+        const memberObj = new Member(member);
+
+        if(memberObj.canDeleteSpeakers()){
+            table_options.actions['delete'] = {onClick: this.handleDelete};
+        }
+
+        if(memberObj.canEditSpeakers()){
+            table_options.actions['edit'] = {onClick: this.handleEdit};
+        }
 
         return(
             <div className="container">
@@ -111,9 +118,11 @@ class SummitSpeakerListPage extends React.Component {
                         />
                     </div>
                     <div className="col-md-6 text-right">
-                        <button className="btn btn-primary" onClick={this.handleNewSpeaker}>
-                            {T.translate("speaker_list.add_speaker")}
-                        </button>
+                        { memberObj.canAddSpeakers() &&
+                            <button className="btn btn-primary" onClick={this.handleNewSpeaker}>
+                                {T.translate("speaker_list.add_speaker")}
+                            </button>
+                        }
                     </div>
                 </div>
 
@@ -145,8 +154,9 @@ class SummitSpeakerListPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSpeakerListState }) => ({
-    ...currentSpeakerListState
+const mapStateToProps = ({ currentSpeakerListState, loggedUserState }) => ({
+    ...currentSpeakerListState,
+    member: loggedUserState.member,
 });
 
 export default connect (
