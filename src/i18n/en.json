@@ -227,7 +227,7 @@
     "registration_disclaimer_content": "Disclaimer",
     "registration_disclaimer_mandatory": "Disclaimer Mandatory",
     "secondary_registration_link": "Sec. Registration Link",
-    "registration_reminder_email_days_interval": "Reg. Email Reminder (# days before)",
+    "registration_reminder_email_days_interval": "Day interval to send reminder reg emails",
     "dates_label": "Date Label",
     "secondary_registration_label": "Sec. Registration Label",
     "active": "This is the active event?",
