@@ -92,12 +92,12 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
         break;
         case EVENT_ADDED:
         case RECEIVE_EVENT: {
-            let entity = payload.response;
-            let links = entity.slides || [];
-            let videos = entity.videos || [];
-            let slides = entity.links || [];
-            let extraQuestionAnswers = entity.extra_questions || [];
-            let extraQuestions = entity.hasOwnProperty("selection_plan") && entity.selection_plan.extra_questions ? entity.selection_plan.extra_questions : [];
+            const entity = payload.response;
+            const links = entity.slides || [];
+            const videos = entity.videos || [];
+            const slides = entity.links || [];
+            const extraQuestionAnswers = entity.extra_questions || [];
+            const extraQuestions = entity.hasOwnProperty("selection_plan") && entity.selection_plan.extra_questions ? entity.selection_plan.extra_questions : [];
             let media_uploads = entity.media_uploads || [];
 
             for(var key in entity) {
@@ -127,7 +127,9 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
                 (q => ({question_id: q.question_id, answer: q.value}))
             }
 
-            return {...state, entity: {...DEFAULT_ENTITY, ...entity}, errors: {}, extraQuestions: extraQuestions };
+            entity.selection_plan_id = entity.selection_plan?.id || null;
+
+            return {...state, entity: {...DEFAULT_ENTITY, ...entity}, errors: {}, extraQuestions };
         }
         break;
         case EVENT_PUBLISHED: {
