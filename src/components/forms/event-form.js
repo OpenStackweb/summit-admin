@@ -28,7 +28,8 @@ import {
     UploadInput,
     Input,
     Panel,
-    Table, MemberInput
+    Table,
+    MemberInput
 } from 'openstack-uicore-foundation/lib/components'
 import {isEmpty, scrollToError, shallowEqual, hasErrors} from "../../utils/methods";
 import QuestionAnswersInput from "../inputs/question-answers-input";
@@ -586,6 +587,7 @@ class EventForm extends React.Component {
                             onChange={this.handleChange}
                             multi={true}
                             history={history}
+                            getOptionLabel={(speaker) => `${speaker.first_name} ${speaker.last_name} (${speaker.email})`}
                         />
                     </div>
                 </div>
@@ -599,6 +601,7 @@ class EventForm extends React.Component {
                             value={entity.moderator}
                             onChange={this.handleChange}
                             history={history}
+                            getOptionLabel={(speaker) => `${speaker.first_name} ${speaker.last_name} (${speaker.email})`}
                         />
                     </div>
                 </div>
