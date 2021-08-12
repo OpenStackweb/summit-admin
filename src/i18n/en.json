@@ -1368,6 +1368,7 @@
     "number": "Order Number",
     "ticket_number": "Ticket Number",
     "ticket_type": "Ticket Type",
+    "ticket_qty": "Number of Tickets",
     "status": "Status",
     "paid_amount": "Amount Paid",
     "paid_amount_per_tix": "Amount Paid Per Ticket",
@@ -1400,7 +1401,8 @@
     "cancel_refund": "Cancel Refund",
     "cancel_refund_warning": "Are you sure you want to cancel the refund request for this order?",
     "yes_cancel_refund": "Yes, cancel refund request!",
-    "order_cancel_refund": "Cancelled refund request successfully"
+    "order_cancel_refund": "Cancelled refund request successfully",
+    "promo_code": "Promo Code"
   },
   "sponsor_list": {
     "sponsors": "Sponsors",

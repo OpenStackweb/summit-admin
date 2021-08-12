@@ -17,7 +17,8 @@ import
     RECEIVE_PURCHASE_ORDER,
     RESET_PURCHASE_ORDER_FORM,
     UPDATE_PURCHASE_ORDER,
-    PURCHASE_ORDER_CANCEL_REFUND
+    PURCHASE_ORDER_CANCEL_REFUND,
+    PURCHASE_ORDER_UPDATED,
 } from '../../actions/order-actions';
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
@@ -26,6 +27,7 @@ import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 export const DEFAULT_ENTITY = {
     id: 0,
     number: '',
+    ticket_qty: 1,
     owner_company: '',
     owner_email: '',
     owner_first_name: '',
@@ -41,6 +43,7 @@ export const DEFAULT_ENTITY = {
     billing_address_country_iso_code: '',
     extra_question_answers: [],
     tickets: [],
+    promo_code: '',
 }
 
 const DEFAULT_STATE = {
@@ -65,6 +68,7 @@ const purchaseOrderReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
         }
         break;
+        case PURCHASE_ORDER_UPDATED:
         case RECEIVE_PURCHASE_ORDER: {
             let entity = {...payload.response};
 

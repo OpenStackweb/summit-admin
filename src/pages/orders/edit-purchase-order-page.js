@@ -15,11 +15,20 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import { getSummitById }  from '../../actions/summit-actions';
-import { getPurchaseOrder, savePurchaseOrder, refundPurchaseOrder, deletePurchaseOrder, reSendOrderEmail, cancelRefundPurchaseOrder } from "../../actions/order-actions";
+
+import { getPurchaseOrder,
+         savePurchaseOrder,
+         addTicketsToOrder,
+        refundPurchaseOrder,
+        deletePurchaseOrder,
+        reSendOrderEmail,
+        cancelRefundPurchaseOrder
+} from "../../actions/order-actions";
+
 import PurchaseOrderForm from "../../components/forms/purchase-order-form";
 import Swal from "sweetalert2";
 
-//import '../../styles/edit-purchase-order-page.less';
+import '../../styles/edit-purchase-order-page.less';
 
 class EditPurchaseOrderPage extends React.Component {
 
@@ -150,6 +159,7 @@ class EditPurchaseOrderPage extends React.Component {
                     entity={entity}
                     errors={errors}
                     onSubmit={this.props.savePurchaseOrder}
+                    addTickets={this.props.addTicketsToOrder}
                 />
             </div>
         )
@@ -167,6 +177,7 @@ export default connect (
         getSummitById,
         getPurchaseOrder,
         savePurchaseOrder,
+        addTicketsToOrder,
         refundPurchaseOrder,
         deletePurchaseOrder,
         reSendOrderEmail,

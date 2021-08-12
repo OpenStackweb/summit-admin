@@ -27,48 +27,47 @@ import {
     escapeFilterValue
 } from 'openstack-uicore-foundation/lib/methods';
 
-export const REQUEST_ORDER_EXTRA_QUESTIONS       = 'REQUEST_ORDER_EXTRA_QUESTIONS';
-export const RECEIVE_ORDER_EXTRA_QUESTIONS       = 'RECEIVE_ORDER_EXTRA_QUESTIONS';
-export const RECEIVE_ORDER_EXTRA_QUESTION        = 'RECEIVE_ORDER_EXTRA_QUESTION';
-export const RESET_ORDER_EXTRA_QUESTION_FORM     = 'RESET_ORDER_EXTRA_QUESTION_FORM';
-export const UPDATE_ORDER_EXTRA_QUESTION         = 'UPDATE_ORDER_EXTRA_QUESTION';
-export const ORDER_EXTRA_QUESTION_UPDATED        = 'ORDER_EXTRA_QUESTION_UPDATED';
-export const ORDER_EXTRA_QUESTION_ADDED          = 'ORDER_EXTRA_QUESTION_ADDED';
-export const ORDER_EXTRA_QUESTION_DELETED        = 'ORDER_EXTRA_QUESTION_DELETED';
-export const RECEIVE_ORDER_EXTRA_QUESTION_META   = 'RECEIVE_ORDER_EXTRA_QUESTION_META';
-export const QUESTION_VALUE_ORDER_UPDATED        = 'QUESTION_VALUE_ORDER_UPDATED';
-export const ORDER_EXTRA_QUESTION_VALUE_DELETED  = 'ORDER_EXTRA_QUESTION_VALUE_DELETED';
-export const ORDER_EXTRA_QUESTION_VALUE_ADDED    = 'ORDER_EXTRA_QUESTION_VALUE_ADDED';
-export const ORDER_EXTRA_QUESTION_VALUE_UPDATED  = 'ORDER_EXTRA_QUESTION_VALUE_UPDATED';
-export const RECEIVE_ORDER_EXTRA_QUESTION_VALUE  = 'RECEIVE_ORDER_EXTRA_QUESTION_VALUE';
-export const RESET_ORDER_EXTRA_QUESTION_VALUE_FORM  = 'RESET_ORDER_EXTRA_QUESTION_VALUE_FORM';
-export const UPDATE_ORDER_EXTRA_QUESTION_VALUE   = 'UPDATE_ORDER_EXTRA_QUESTION_VALUE';
-export const ORDER_EXTRA_QUESTION_ORDER_UPDATED   = 'ORDER_EXTRA_QUESTION_ORDER_UPDATED';
+export const REQUEST_ORDER_EXTRA_QUESTIONS = 'REQUEST_ORDER_EXTRA_QUESTIONS';
+export const RECEIVE_ORDER_EXTRA_QUESTIONS = 'RECEIVE_ORDER_EXTRA_QUESTIONS';
+export const RECEIVE_ORDER_EXTRA_QUESTION = 'RECEIVE_ORDER_EXTRA_QUESTION';
+export const RESET_ORDER_EXTRA_QUESTION_FORM = 'RESET_ORDER_EXTRA_QUESTION_FORM';
+export const UPDATE_ORDER_EXTRA_QUESTION = 'UPDATE_ORDER_EXTRA_QUESTION';
+export const ORDER_EXTRA_QUESTION_UPDATED = 'ORDER_EXTRA_QUESTION_UPDATED';
+export const ORDER_EXTRA_QUESTION_ADDED = 'ORDER_EXTRA_QUESTION_ADDED';
+export const ORDER_EXTRA_QUESTION_DELETED = 'ORDER_EXTRA_QUESTION_DELETED';
+export const RECEIVE_ORDER_EXTRA_QUESTION_META = 'RECEIVE_ORDER_EXTRA_QUESTION_META';
+export const QUESTION_VALUE_ORDER_UPDATED = 'QUESTION_VALUE_ORDER_UPDATED';
+export const ORDER_EXTRA_QUESTION_VALUE_DELETED = 'ORDER_EXTRA_QUESTION_VALUE_DELETED';
+export const ORDER_EXTRA_QUESTION_VALUE_ADDED = 'ORDER_EXTRA_QUESTION_VALUE_ADDED';
+export const ORDER_EXTRA_QUESTION_VALUE_UPDATED = 'ORDER_EXTRA_QUESTION_VALUE_UPDATED';
+export const RECEIVE_ORDER_EXTRA_QUESTION_VALUE = 'RECEIVE_ORDER_EXTRA_QUESTION_VALUE';
+export const RESET_ORDER_EXTRA_QUESTION_VALUE_FORM = 'RESET_ORDER_EXTRA_QUESTION_VALUE_FORM';
+export const UPDATE_ORDER_EXTRA_QUESTION_VALUE = 'UPDATE_ORDER_EXTRA_QUESTION_VALUE';
+export const ORDER_EXTRA_QUESTION_ORDER_UPDATED = 'ORDER_EXTRA_QUESTION_ORDER_UPDATED';
 
-export const REQUEST_PURCHASE_ORDERS    = 'REQUEST_PURCHASE_ORDERS';
-export const RECEIVE_PURCHASE_ORDERS    = 'RECEIVE_PURCHASE_ORDERS';
-export const RECEIVE_PURCHASE_ORDER     = 'RECEIVE_PURCHASE_ORDER';
-export const UPDATE_PURCHASE_ORDER      = 'UPDATE_PURCHASE_ORDER';
-export const PURCHASE_ORDER_UPDATED     = 'PURCHASE_ORDER_UPDATED';
-export const PURCHASE_ORDER_ADDED       = 'PURCHASE_ORDER_ADDED';
-export const PURCHASE_ORDER_DELETED     = 'PURCHASE_ORDER_DELETED';
-export const PURCHASE_ORDER_REFUNDED     = 'PURCHASE_ORDER_REFUNDED';
-export const PURCHASE_ORDER_CANCEL_REFUND     = 'PURCHASE_ORDER_CANCEL_REFUND';
-export const RESET_PURCHASE_ORDER_FORM  = 'RESET_PURCHASE_ORDER_FORM';
+export const REQUEST_PURCHASE_ORDERS = 'REQUEST_PURCHASE_ORDERS';
+export const RECEIVE_PURCHASE_ORDERS = 'RECEIVE_PURCHASE_ORDERS';
+export const RECEIVE_PURCHASE_ORDER = 'RECEIVE_PURCHASE_ORDER';
+export const UPDATE_PURCHASE_ORDER = 'UPDATE_PURCHASE_ORDER';
+export const PURCHASE_ORDER_UPDATED = 'PURCHASE_ORDER_UPDATED';
+export const PURCHASE_ORDER_ADDED = 'PURCHASE_ORDER_ADDED';
+export const PURCHASE_ORDER_DELETED = 'PURCHASE_ORDER_DELETED';
+export const PURCHASE_ORDER_REFUNDED = 'PURCHASE_ORDER_REFUNDED';
+export const PURCHASE_ORDER_CANCEL_REFUND = 'PURCHASE_ORDER_CANCEL_REFUND';
+export const RESET_PURCHASE_ORDER_FORM = 'RESET_PURCHASE_ORDER_FORM';
 export const ORDER_EMAIL_SENT = 'ORDER_EMAIL_SENT';
-
 
 
 /***********************  ORDER EXTRA QUESTIONS  *******************************************/
 
 export const getOrderExtraQuestionMeta = () => (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken,
+        access_token: accessToken,
     };
 
     return getRequest(
@@ -85,18 +84,18 @@ export const getOrderExtraQuestionMeta = () => (dispatch, getState) => {
 
 export const getOrderExtraQuestions = () => (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const params = {
-        page         : 1,
-        per_page     : 100,
-        order        : '+order',
-        access_token : accessToken,
-        expand       : 'values'
+        page: 1,
+        per_page: 100,
+        order: '+order',
+        access_token: accessToken,
+        expand: 'values'
     };
 
     return getRequest(
@@ -112,14 +111,14 @@ export const getOrderExtraQuestions = () => (dispatch, getState) => {
 
 export const getOrderExtraQuestion = (orderExtraQuestionId) => (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const params = {
-        access_token : accessToken,
+        access_token: accessToken,
         expand: "values"
     };
 
@@ -139,12 +138,12 @@ export const resetOrderExtraQuestionForm = () => (dispatch, getState) => {
 };
 
 export const saveOrderExtraQuestion = (entity) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken,
+        access_token: accessToken,
     };
 
     dispatch(startLoading());
@@ -183,7 +182,9 @@ export const saveOrderExtraQuestion = (entity) => (dispatch, getState) => {
             .then((payload) => {
                 dispatch(showMessage(
                     success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/order-extra-questions/${payload.response.id}`) }
+                    () => {
+                        history.push(`/app/summits/${currentSummit.id}/order-extra-questions/${payload.response.id}`)
+                    }
                 ));
             });
     }
@@ -191,12 +192,12 @@ export const saveOrderExtraQuestion = (entity) => (dispatch, getState) => {
 
 export const deleteOrderExtraQuestion = (orderExtraQuestionId) => (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     return deleteRequest(
@@ -213,12 +214,12 @@ export const deleteOrderExtraQuestion = (orderExtraQuestionId) => (dispatch, get
 
 export const updateOrderExtraQuestionOrder = (questions, questionId, newOrder) => (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     const question = questions.find(q => q.id === questionId);
@@ -238,14 +239,14 @@ export const updateOrderExtraQuestionOrder = (questions, questionId, newOrder) =
 
 
 export const saveOrderExtraQuestionValue = (orderExtraQuestionId, entity) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const params = {
-        access_token : accessToken,
+        access_token: accessToken,
     };
 
     if (entity.id) {
@@ -280,12 +281,12 @@ export const saveOrderExtraQuestionValue = (orderExtraQuestionId, entity) => (di
 
 export const deleteOrderExtraQuestionValue = (orderExtraQuestionId, orderExtraQuestionValueId) => (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     return deleteRequest(
@@ -307,35 +308,35 @@ const normalizeQuestion = (entity) => {
 
 /***************************  PURCHASE ORDERS  ******************************/
 
-export const getPurchaseOrders = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
+export const getPurchaseOrders = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1) => (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
     const filter = [];
 
     dispatch(startLoading());
 
-    if(term){
+    if (term) {
         const escapedTerm = escapeFilterValue(term);
         filter.push(`ticket_number=@${escapedTerm},ticket_owner_email=@${escapedTerm},ticket_owner_name=@${escapedTerm},number=@${escapedTerm},owner_name=@${escapedTerm},owner_email=@${escapedTerm},owner_company=@${escapedTerm}`);
     }
 
     const params = {
-        expand       : 'tickets',
-        page         : page,
-        per_page     : perPage,
-        access_token : accessToken,
+        expand: 'tickets',
+        page: page,
+        per_page: perPage,
+        access_token: accessToken,
     };
 
-    if(filter.length > 0){
-        params['filter[]']= filter;
+    if (filter.length > 0) {
+        params['filter[]'] = filter;
     }
 
     // order
-    if(order != null && orderDir != null){
+    if (order != null && orderDir != null) {
         const orderDirSign = (orderDir === 1) ? '+' : '-';
-        params['order']= `${orderDirSign}${order}`;
+        params['order'] = `${orderDirSign}${order}`;
     }
 
 
@@ -353,15 +354,15 @@ export const getPurchaseOrders = ( term = null, page = 1, perPage = 10, order = 
 
 export const getPurchaseOrder = (orderId) => (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const params = {
-        expand       : 'extra_questions, tickets, tickets.owner, tickets.owner.member, tickets.ticket_type',
-        access_token : accessToken,
+        expand: 'extra_questions, tickets, tickets.owner, tickets.owner.member, tickets.ticket_type',
+        access_token: accessToken,
     };
 
     return getRequest(
@@ -376,28 +377,29 @@ export const getPurchaseOrder = (orderId) => (dispatch, getState) => {
 };
 
 
-
 export const resetPurchaseOrderForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_PURCHASE_ORDER_FORM)({}));
 };
 
 
 export const savePurchaseOrder = (entity) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const params = {
-        access_token : accessToken,
+        access_token: accessToken,
+        expand: 'extra_questions, tickets, tickets.owner, tickets.owner.member, tickets.ticket_type',
     };
 
     const normalizedEntity = normalizePurchaseOrder(entity);
 
     if (entity.id) {
 
-        putRequest(
+        return putRequest(
             createAction(UPDATE_PURCHASE_ORDER),
             createAction(PURCHASE_ORDER_UPDATED),
             `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/orders/${entity.id}`,
@@ -409,42 +411,76 @@ export const savePurchaseOrder = (entity) => (dispatch, getState) => {
                 dispatch(showSuccessMessage(T.translate("edit_purchase_order.order_saved")));
             });
 
-    } else {
-
-        const success_message = {
-            title: T.translate("general.done"),
-            html: T.translate("edit_purchase_order.order_created"),
-            type: 'success'
-        };
-
-        postRequest(
-            createAction(UPDATE_PURCHASE_ORDER),
-            createAction(PURCHASE_ORDER_ADDED),
-            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/orders`,
-            normalizedEntity,
-            authErrorHandler,
-            entity
-        )(params)(dispatch)
-            .then((payload) => {
-                dispatch(showMessage(
-                    success_message,
-                    () => {
-                        history.push(`/app/summits/${currentSummit.id}/purchase-orders/${payload.response.id}`)
-                    }
-                ));
-            });
     }
+
+    const success_message = {
+        title: T.translate("general.done"),
+        html: T.translate("edit_purchase_order.order_created"),
+        type: 'success'
+    };
+
+    return postRequest(
+        createAction(UPDATE_PURCHASE_ORDER),
+        createAction(PURCHASE_ORDER_ADDED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/orders`,
+        normalizedEntity,
+        authErrorHandler,
+        entity
+    )(params)(dispatch)
+        .then((payload) => {
+            dispatch(showMessage(
+                success_message,
+                () => {
+                    history.push(`/app/summits/${currentSummit.id}/purchase-orders/${payload.response.id}`)
+                }
+            ));
+        });
+
+};
+
+export const addTicketsToOrder = (orderId, typeId, qty, promoCode = null) => (dispatch, getState) => {
+
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token: accessToken,
+        expand: 'extra_questions, tickets, tickets.owner, tickets.owner.member, tickets.ticket_type',
+    };
+
+    let payload = {
+        ticket_type_id: typeId,
+        ticket_qty: qty,
+    };
+
+    if (promoCode) {
+        payload.promo_code = promoCode;
+    }
+
+    return postRequest(
+        null,
+        createAction(PURCHASE_ORDER_UPDATED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/orders/${orderId}/tickets`,
+        payload,
+        authErrorHandler
+    )(params)(dispatch)
+        .then((payload) => {
+            dispatch(stopLoading());
+        }).catch(_ => dispatch(stopLoading()));
 };
 
 
 export const deletePurchaseOrder = (orderId) => (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     const success_message = {
@@ -472,12 +508,12 @@ export const deletePurchaseOrder = (orderId) => (dispatch, getState) => {
 };
 
 export const cancelRefundPurchaseOrder = (orderId) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     const success_message = {
@@ -501,14 +537,14 @@ export const cancelRefundPurchaseOrder = (orderId) => (dispatch, getState) => {
 
 export const refundPurchaseOrder = (orderId, refundAmount) => (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     return deleteRequest(
@@ -527,11 +563,11 @@ export const refundPurchaseOrder = (orderId, refundAmount) => (dispatch, getStat
 
 export const reSendOrderEmail = (orderId) => (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     dispatch(startLoading());
@@ -552,31 +588,31 @@ export const reSendOrderEmail = (orderId) => (dispatch, getState) => {
 const normalizePurchaseOrder = (entity) => {
     const normalizedEntity = {...entity};
 
-    delete(normalizedEntity.amount);
-    delete(normalizedEntity.created);
-    delete(normalizedEntity.discount_amount);
-    delete(normalizedEntity.extra_question_answers);
-    delete(normalizedEntity.hash_creation_date);
-    delete(normalizedEntity.hash);
-    delete(normalizedEntity.id);
-    delete(normalizedEntity.last_edited);
-    delete(normalizedEntity.payment_gateway_cart_id);
-    delete(normalizedEntity.payment_gateway_client_token);
-    delete(normalizedEntity.payment_method);
-    delete(normalizedEntity.raw_amount);
-    delete(normalizedEntity.status);
-    delete(normalizedEntity.taxes_amount);
-    delete(normalizedEntity.owner_id);
+    delete (normalizedEntity.amount);
+    delete (normalizedEntity.created);
+    delete (normalizedEntity.discount_amount);
+    delete (normalizedEntity.extra_question_answers);
+    delete (normalizedEntity.hash_creation_date);
+    delete (normalizedEntity.hash);
+    delete (normalizedEntity.id);
+    delete (normalizedEntity.last_edited);
+    delete (normalizedEntity.payment_gateway_cart_id);
+    delete (normalizedEntity.payment_gateway_client_token);
+    delete (normalizedEntity.payment_method);
+    delete (normalizedEntity.raw_amount);
+    delete (normalizedEntity.status);
+    delete (normalizedEntity.taxes_amount);
+    delete (normalizedEntity.owner_id);
 
     if (normalizedEntity.owner != null) {
         normalizedEntity.owner_email = normalizedEntity.owner.email;
         normalizedEntity.owner_first_name = normalizedEntity.owner.first_name;
         normalizedEntity.owner_last_name = normalizedEntity.owner.last_name;
-        delete(normalizedEntity.owner);
+        delete (normalizedEntity.owner);
     }
 
 
-    delete(normalizedEntity.extra_questions);
+    delete (normalizedEntity.extra_questions);
 
     return normalizedEntity;
 

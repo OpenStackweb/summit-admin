@@ -20,6 +20,7 @@ import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 
 
 class PurchaseOrderForm extends React.Component {
+
     constructor(props) {
         super(props);
 
@@ -27,11 +28,10 @@ class PurchaseOrderForm extends React.Component {
             entity: {...props.entity},
             errors: props.errors,
             showSection: 'billing',
+            addTicketTypeId : 0,
+            addTicketQty: 0,
+            addPromoCode: ''
         };
-
-        this.handleTicketEdit = this.handleTicketEdit.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -52,12 +52,12 @@ class PurchaseOrderForm extends React.Component {
         }
     }
 
-    handleTicketEdit(ticketId) {
+    handleTicketEdit = (ticketId) => {
         const {currentSummit, entity, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/purchase-orders/${entity.id}/tickets/${ticketId}`);
-    }
+    };
 
-    handleChange(ev) {
+    handleChange = (ev) => {
         let entity = {...this.state.entity};
         let errors = {...this.state.errors};
         let {value, id} = ev.target;
@@ -73,32 +73,49 @@ class PurchaseOrderForm extends React.Component {
         errors[id] = '';
         entity[id] = value;
         this.setState({entity: entity, errors: errors});
-    }
+    };
 
-    handleSubmit(ev) {
+    handleSubmit = (ev) => {
         let entity = {...this.state.entity};
+        ev.preventDefault();
+        this.props.onSubmit(entity);
+    };
 
+    handleAddTickets = (ev) => {
         ev.preventDefault();
 
-        this.props.onSubmit(entity);
-    }
+        let {addTicketTypeId, addTicketQty, addPromoCode} = this.state;
+        if(!addTicketTypeId) return;
+        if(!addTicketQty) return;
 
-    hasErrors(field) {
+        this.props.addTickets
+        (
+            this.state.entity.id,
+            addTicketTypeId,
+            addTicketQty,
+            addPromoCode
+        ).then(_ => this.setState({...this.state,
+            addTicketTypeId : 0,
+            addTicketQty: 0,
+            addPromoCode: ''}));
+    };
+
+    hasErrors = (field) => {
         let {errors} = this.state;
         if(field in errors) {
             return errors[field];
         }
 
         return '';
-    }
+    };
 
-    toggleSection(section, ev) {
+    toggleSection = (section, ev) => {
         let {showSection} = this.state;
         let newShowSection = (showSection === section) ? 'main' : section;
         ev.preventDefault();
 
         this.setState({showSection: newShowSection});
-    }
+    };
 
     render() {
         const {entity, showSection} = this.state;
@@ -156,6 +173,28 @@ class PurchaseOrderForm extends React.Component {
                             options={ticket_type_ddl}
                         />
                     </div>
+                    <div className="col-md-3">
+                        <label> {T.translate("edit_purchase_order.promo_code")}</label>
+                        <Input
+                            id="promo_code"
+                            value={entity.promo_code}
+                            onChange={this.handleChange}
+                            type="text"
+                            className="form-control"
+                        />
+                    </div>
+                    <div className="col-md-3">
+                        <label> {T.translate("edit_purchase_order.ticket_qty")}</label>
+                        <Input
+                            id="ticket_qty"
+                            value={entity.ticket_qty}
+                            onChange={this.handleChange}
+                            type="number"
+                            className="form-control"
+                            min="1"
+                            max="100"
+                        />
+                    </div>
                 </div>
                 }
                 <div className="row form-group">
@@ -179,7 +218,7 @@ class PurchaseOrderForm extends React.Component {
                     </div>
                 </div>
                 <Panel show={showSection === 'billing'} title={T.translate("edit_purchase_order.billing")}
-                       handleClick={this.toggleSection.bind(this, 'billing')}>
+                       handleClick={() => this.toggleSection( 'billing')}>
                 <div className="row form-group">
                     <div className="col-md-4">
                         <label> {T.translate("edit_purchase_order.billing_address_1")}</label>
@@ -249,7 +288,7 @@ class PurchaseOrderForm extends React.Component {
                 {/*{entity.id != 0 && currentSummit.order_only_extra_questions && currentSummit.order_only_extra_questions.length > 0 &&
                 <Panel show={showSection == 'extra_questions'}
                        title={T.translate("edit_purchase_order.extra_questions")}
-                       handleClick={this.toggleSection.bind(this, 'extra_questions')}>
+                       handleClick={() => this.toggleSection('extra_questions')}>
                     <QuestionAnswersInput
                         id="extra_questions"
                         answers={entity.extra_questions}
@@ -260,16 +299,59 @@ class PurchaseOrderForm extends React.Component {
                 }*/}
 
                 {entity.id !== 0 &&
-                    <Table
-                        options={ticket_options}
-                        data={entity.tickets}
-                        columns={ticket_columns}
-                    />
+                    <div>
+                        <Table
+                            options={ticket_options}
+                            data={entity.tickets}
+                            columns={ticket_columns}
+                        />
+                        <div className="row form-group add-tickets-wrapper">
+                            <div className="col-md-5">
+                                <label> {T.translate("edit_purchase_order.ticket_type")}</label>
+                                <Dropdown
+                                    clearable={true}
+                                    options={ticket_type_ddl}
+                                    value={this.state.addTicketTypeId}
+                                    onChange={(ev)=>{
+                                        this.setState({...this.state, addTicketTypeId: parseInt(ev.target.value)})
+                                    }}
+                                />
+                            </div>
+                            <div className="col-md-2">
+                                <label> {T.translate("edit_purchase_order.promo_code")}</label>
+                                <Input
+                                    onChange={(ev)=>{
+                                        this.setState({...this.state, addPromoCode: ev.target.value})
+                                    }}
+                                    value={this.state.addPromoCode}
+                                    type="text"
+                                    className="form-control"
+                                />
+                            </div>
+                            <div className="col-md-3">
+                                <label> {T.translate("edit_purchase_order.ticket_qty")}</label>
+                                <Input
+                                    onChange={(ev)=>{
+                                        this.setState({...this.state, addTicketQty: parseInt(ev.target.value)})
+                                    }}
+                                    value={this.state.addTicketQty}
+                                    type="number"
+                                    className="form-control"
+                                    min="1"
+                                    max="100"
+                                />
+                            </div>
+                            <div className="col-md-2">
+                                <input type="button" onClick={this.handleAddTickets}
+                                       className="btn btn-primary pull-right" value="Add Tickets" />
+                            </div>
+                        </div>
+                    </div>
                 }
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">
-                        <input type="button" onClick={this.handleSubmit.bind(this)}
+                        <input type="button" onClick={this.handleSubmit}
                                className="btn btn-primary pull-right" value={T.translate("general.save")}/>
                     </div>
                 </div>
