@@ -827,6 +827,7 @@ function mapStateToProps({ currentScheduleBuilderState, currentSummitState, summ
         unScheduleEventsCurrentPage        : currentScheduleBuilderState.unScheduleEventsCurrentPage,
         unScheduleEventsLasPage            : currentScheduleBuilderState.unScheduleEventsLasPage,
         currentPresentationSelectionStatus : currentScheduleBuilderState.currentPresentationSelectionStatus,
+        currentPresentationSelectionPlan : currentScheduleBuilderState.currentPresentationSelectionPlan,
         unScheduleEventsCurrentSearchTerm  : currentScheduleBuilderState.unScheduleEventsCurrentSearchTerm,
         scheduleEventsCurrentSearchTerm    : currentScheduleBuilderState.scheduleEventsCurrentSearchTerm,
         scheduleEventsSearch               : currentScheduleBuilderState.scheduleEventsSearch,
