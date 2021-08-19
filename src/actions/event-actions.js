@@ -521,6 +521,10 @@ const normalizeEntity = (entity) => {
         delete(normalizedEntity.moderator);
 
     delete(normalizedEntity.creator);
+    // if selection plan is null remove it
+    if(normalizedEntity.hasOwnProperty("selection_plan_id") && normalizedEntity.selection_plan_id == null){
+        delete(normalizedEntity.selection_plan_id )
+    }
 
     return normalizedEntity;
 
