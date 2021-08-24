@@ -301,7 +301,7 @@ class SpeakerForm extends React.Component {
                         <TextEditor id="bio" value={entity.bio} onChange={this.handleChange} />
                     </div>
                 </div>
-                {entity.id !== 0 && entity.member && entity.member.id === this.props.entity.member.id &&
+                {entity.id !== 0 && entity.member && this.props.entity.member && entity.member.id === this.props.entity.member.id &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_speaker.affiliations")} </label>
