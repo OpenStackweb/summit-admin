@@ -124,7 +124,6 @@ class RegistrationInvitationsListPage extends React.Component {
     }
 
     handleSendEmails(ev){
-
         ev.stopPropagation();
         ev.preventDefault();
 
@@ -241,6 +240,7 @@ class RegistrationInvitationsListPage extends React.Component {
         if(!currentSummit.id) return (<div />);
 
         let flowEventsDDL = [
+            {label: '-- SELECT EMAIL EVENT --', value: ''},
             {label: 'Initial Invite', value: 'SUMMIT_REGISTRATION_INVITE_REGISTRATION'},
             {label: 'Reminder', value: 'SUMMIT_REGISTRATION_REINVITE_REGISTRATION'},
         ];
@@ -295,12 +295,21 @@ class RegistrationInvitationsListPage extends React.Component {
                                 </div>
                             </div>
                             <div className="col-md-6 text-right">
-                                <ActionDropdown
-                                    options={flowEventsDDL}
-                                    actionLabel={T.translate("registration_invitation_list.send_emails")}
-                                    placeholder="-- SELECT EMAIL EVENT --"
-                                    onClick={this.handleSendEmails}
-                                />
+                                <div className={'row'}>
+                                    <div className={'col-md-5'}>
+                                        <Dropdown
+                                            id="flow_event"
+                                            value={currentFlowEvent}
+                                            onChange={this.handleChangeFlowEvent}
+                                            options={flowEventsDDL}
+                                        />
+                                    </div>
+                                    <div className={'col-md-1'}>
+                                        <button className="btn btn-primary right-space" onClick={this.handleSendEmails}>
+                                            {T.translate("registration_invitation_list.send_emails")}
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
