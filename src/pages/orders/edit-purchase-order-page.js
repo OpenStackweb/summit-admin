@@ -27,7 +27,7 @@ class EditPurchaseOrderPage extends React.Component {
         super(props);
 
         this.state = {
-            refund_amount: 0
+            refund_amount: ''
         };
 
         this.handleDeleteOrder = this.handleDeleteOrder.bind(this);
@@ -38,8 +38,11 @@ class EditPurchaseOrderPage extends React.Component {
     }
 
     handleRefundChange(ev) {
-        let value = parseInt(ev.target.value);
-        this.setState({refund_amount: value});
+        let val = ev.target.value;
+        if(val != '' ){
+            if(!/^\d*(\.\d{0,2})?$/.test(val)) return;
+        }
+        this.setState({refund_amount: parseFloat(ev.target.value)});
     }
 
     handleCancelRefundOrder(order, ev){
@@ -65,7 +68,6 @@ class EditPurchaseOrderPage extends React.Component {
 
     handleDeleteOrder(order, ev) {
         const {deletePurchaseOrder} = this.props;
-
         Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("edit_purchase_order.remove_warning"),
@@ -83,19 +85,20 @@ class EditPurchaseOrderPage extends React.Component {
     handleRefundOrder(order, ev) {
         const {refundPurchaseOrder} = this.props;
         const {refund_amount} = this.state;
-
-        Swal.fire({
-            title: T.translate("general.are_you_sure"),
-            text: T.translate("edit_purchase_order.refund_warning"),
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: T.translate("edit_purchase_order.yes_refund")
-        }).then(function(result){
-            if (result.value) {
-                refundPurchaseOrder(order.id, refund_amount);
-            }
-        });
+        if(refund_amount > 0 && refund_amount <= order.raw_amount) {
+            Swal.fire({
+                title: T.translate("general.are_you_sure"),
+                text: T.translate("edit_purchase_order.refund_warning"),
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: T.translate("edit_purchase_order.yes_refund")
+            }).then(function (result) {
+                if (result.value) {
+                    refundPurchaseOrder(order.id, refund_amount);
+                }
+            });
+        }
     }
 
     render(){
@@ -111,7 +114,10 @@ class EditPurchaseOrderPage extends React.Component {
                     <div className="pull-right form-inline">
                         {(entity.status === 'RefundRequested' || entity.status === 'Paid') &&
                             <>
-                                <input className="form-control" type="number" min="0" value={refund_amount} onChange={this.handleRefundChange} />
+                                <input className="form-control" type="number" min="0"
+                                       step=".01"
+                                       placeholder="0.00"
+                                       value={refund_amount} onChange={this.handleRefundChange} />
                                 <button className="btn btn-sm btn-primary right-space"
                                         onClick={this.handleRefundOrder.bind(this, entity)}>
                                     {T.translate("edit_purchase_order.refund")}
