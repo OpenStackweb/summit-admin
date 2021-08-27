@@ -505,6 +505,8 @@ export const refundPurchaseOrder = (orderId, refundAmount) => (dispatch, getStat
     const { accessToken }     = loggedUserState;
     const { currentSummit }   = currentSummitState;
 
+    dispatch(startLoading());
+
     const params = {
         access_token : accessToken
     };
@@ -518,6 +520,7 @@ export const refundPurchaseOrder = (orderId, refundAmount) => (dispatch, getStat
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
             dispatch(showSuccessMessage(T.translate("edit_purchase_order.order_refunded")));
+            window.setTimeout(_ => history.push(`/app/summits/${currentSummit.id}/purchase-orders`), 1000);
         }
     );
 };
