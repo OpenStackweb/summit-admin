@@ -48,6 +48,12 @@ const ENTRIES_MAPPING = {
     // EVENT TYPES
     SCHEDULE_FILTER_BY_EVENT_TYPES_ENABLED: "SCHEDULE_FILTER_BY_EVENT_TYPES",
     SCHEDULE_FILTER_BY_EVENT_TYPES_LABEL: "SCHEDULE_FILTER_BY_EVENT_TYPES",
+    // COMPANY
+    SCHEDULE_FILTER_BY_COMPANY_ENABLED: "SCHEDULE_FILTER_BY_COMPANY",
+    SCHEDULE_FILTER_BY_COMPANY_LABEL: "SCHEDULE_FILTER_BY_COMPANY",
+    // TITLE
+    SCHEDULE_FILTER_BY_TITLE_ENABLED: "SCHEDULE_FILTER_BY_TITLE",
+    SCHEDULE_FILTER_BY_TITLE_LABEL: "SCHEDULE_FILTER_BY_TITLE",
 };
 
 const VALUE_KEY = 'value';
@@ -61,6 +67,9 @@ const SCHEDULE_FILTER_BY_TAGS_DEFAULT_VALUE = 'Tags';
 const SCHEDULE_FILTER_BY_VENUES_DEFAULT_VALUE = 'Venues';
 const SCHEDULE_FILTER_BY_TRACK_GROUPS_DEFAULT_VALUE = 'Categories Groups';
 const SCHEDULE_FILTER_BY_EVENT_TYPES_DEFAULT_VALUE = 'Activity Types';
+const SCHEDULE_FILTER_BY_COMPANY_DEFAULT_VALUE = 'Company';
+const SCHEDULE_FILTER_BY_TITLE_DEFAULT_VALUE = 'Title';
+
 
 const deepClone = (obj) => {
     return JSON.parse(JSON.stringify(obj));
@@ -98,7 +107,15 @@ const DEFAULT_FILTERS = {
     SCHEDULE_FILTER_BY_EVENT_TYPES: {
         value: SCHEDULE_FILTER_BY_EVENT_TYPES_DEFAULT_VALUE,
         checked: false
-    }
+    },
+    SCHEDULE_FILTER_BY_COMPANY: {
+        value: SCHEDULE_FILTER_BY_COMPANY_DEFAULT_VALUE,
+        checked: false
+    },
+    SCHEDULE_FILTER_BY_TITLE: {
+        value: SCHEDULE_FILTER_BY_TITLE_DEFAULT_VALUE,
+        checked: false
+    },
 };
 
 const DEFAULT_EVENT_COLOR_ORIGIN = {
@@ -153,8 +170,9 @@ const scheduleSettingsReducer = (state = DEFAULT_STATE, action) => {
                 // check the type of the setting ( label or flag )
                 let subKey = key.endsWith("_ENABLED") ? CHECKED_KEY : VALUE_KEY;
                 // if the setting is flag, convert to boolean
-                if (subKey == CHECKED_KEY)
-                    value = value == "1" ? true : false;
+                if (subKey === CHECKED_KEY)
+                    value = (value === "1");
+
                 // set new setting value and store the setting id so we could process it later
                 newFilters[filterKey][subKey] = value;
                 newFilters[filterKey][subKey+'_id'] = id;
@@ -168,8 +186,8 @@ const scheduleSettingsReducer = (state = DEFAULT_STATE, action) => {
             let {value, id} = entity;
             let filterKey = ENTRIES_MAPPING[entity.key];
             let subKey = entity.key.endsWith("_ENABLED") ? CHECKED_KEY : VALUE_KEY;
-            if (subKey == CHECKED_KEY)
-                value = value == "1" ? true : false;
+            if (subKey === CHECKED_KEY)
+                value = (value === "1");
 
             let newFilters = {};
 
