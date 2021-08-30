@@ -353,7 +353,8 @@
       "select_track": "Select an Activity Category ...",
       "select_level": "Select a Level ...",
       "select_rsvp_template": "Select a Template ...",
-      "select_selection_plan": "Select a Selection Plan ..."
+      "select_selection_plan": "Select a Selection Plan ...",
+      "select_submitter": "Select Submitter ..."
     }
   },
   "edit_event_material": {
@@ -676,6 +677,7 @@
     "mux_email_to": "Email to",
     "mux_email_to_info": "Recipient to send process excerpt.",
     "export": "Export",
+    "created_by": "Created By",
     "mux_import_done": "MUX MP4 Import Process Requested Successfuly.",
     "placeholders": {
       "search_events": "Search by Id, Title, Abstract, Speaker, Speaker Company, Speaker Title"

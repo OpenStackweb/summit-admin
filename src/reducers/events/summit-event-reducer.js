@@ -60,6 +60,7 @@ export const DEFAULT_ENTITY = {
     extra_questions: [],
     disclaimer_accepted: false,
     disclaimer_accepted_date: null,
+    created_by: null,
 }
 
 const DEFAULT_STATE = {
@@ -126,7 +127,6 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
                 entity.extra_questions = extraQuestionAnswers.map
                 (q => ({question_id: q.question_id, answer: q.value}))
             }
-
             entity.selection_plan_id = entity.selection_plan?.id || null;
 
             return {...state, entity: {...DEFAULT_ENTITY, ...entity}, errors: {}, extraQuestions };

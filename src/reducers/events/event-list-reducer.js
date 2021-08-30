@@ -57,6 +57,7 @@ const eventListReducer = (state = DEFAULT_STATE, action) => {
                     title: e.title,
                     status: e.status,
                     published: published,
+                    created_by_fullname: e.hasOwnProperty('created_by') ? `${e.created_by.first_name} ${e.created_by.last_name}`:'TBD',
                     speakers: (e.speakers) ? e.speakers.map(s => s.first_name + ' ' + s.last_name).join(',') : ''
                 };
             });

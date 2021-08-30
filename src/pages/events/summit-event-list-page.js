@@ -153,6 +153,7 @@ class SummitEventListPage extends React.Component {
             { columnKey: 'title', value: T.translate("event_list.title"), sortable: true },
             { columnKey: 'status', value: T.translate("event_list.status") },
             { columnKey: 'speakers', value: T.translate("event_list.speakers") },
+            { columnKey: 'created_by_fullname', value: T.translate("event_list.created_by") },
             { columnKey: 'published', value: T.translate("event_list.published") },
         ];
 
@@ -195,7 +196,7 @@ class SummitEventListPage extends React.Component {
                 </div>
 
                 {events.length === 0 &&
-                <div>{T.translate("event_list.no_events")}</div>
+                    <div>{T.translate("event_list.no_events")}</div>
                 }
 
                 {events.length > 0 &&

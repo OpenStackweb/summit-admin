@@ -90,7 +90,7 @@ class EventForm extends React.Component {
         let {value, id} = ev.target;
         let currentError = '';
         // logic for summit help users ( chat roles )
-        if (ev.target.type === 'memberinput') {
+        if (ev.target.type === 'memberinput' && id == 'qa_users') {
             let oldHelpUsers =  entity[id];
             let currentOldOnes = [];
             try {
@@ -365,9 +365,6 @@ class EventForm extends React.Component {
             }
         };
 
-        const creator = (entity.id && entity.creator) ? `${entity.creator.first_name} ${entity.creator.last_name} (${entity.creator.email})` : 'N/A';
-
-
         return (
             <form>
                 <input type="hidden" id="id" value={entity.id} />
@@ -382,11 +379,26 @@ class EventForm extends React.Component {
                             onChange={this.handleChange}
                         />
                     </div>
-                    <div className="col-md-2">
+                    <div className="col-md-3">
                         <label> {T.translate("edit_event.submitter")} </label>
-                        <div>{creator}</div>
+                        <div>
+                            <MemberInput
+                                id="created_by"
+                                value={entity.created_by}
+                                getOptionLabel={
+                                    (member) => {
+                                        return member.hasOwnProperty("email") ?
+                                            `${member.first_name} ${member.last_name} (${member.email})`:
+                                            `${member.first_name} ${member.last_name} (${member.id})`;
+                                    }
+                                }
+                                onChange={this.handleChange}
+                                error={hasErrors('created_by_id', errors)}
+                                placeholder={T.translate("edit_event.placeholders.select_submitter")}
+                            />
+                        </div>
                     </div>
-                    <div className="col-md-2 published">
+                    <div className="col-md-1 published">
                         <label> {T.translate("edit_event.published")} </label>
                         <div><i className={"fa fa-2x " + (entity.is_published ? 'fa-check' : 'fa-times')} /></div>
                     </div>
@@ -549,7 +561,6 @@ class EventForm extends React.Component {
                     </div>
                     }
                 </div>
-
                 }
                 <div className="row form-group">
                     <div className="col-md-12">
