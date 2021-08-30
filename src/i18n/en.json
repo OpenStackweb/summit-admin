@@ -471,8 +471,14 @@
     "color": "Color",
     "company_saved": "Company saved successfully.",
     "company_created": "Company created successfully.",
+    "project_name":"Sponsored Project",
+    "sponsorship_type":"Sponsorship Type",
+    "add_project_sponsorship": "Add Project Sponsorship",
+    "delete_supporting_company_warning": "",
     "placeholders": {
-      "select_country": "Select Country"
+      "select_country": "Select Country",
+      "sponsored_project": "Select Sponsored Project",
+      "sponsorship_type": "Select Sponsorship Type"
     }
   },
   "schedule_builder_page": {

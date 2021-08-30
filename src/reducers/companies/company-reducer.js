@@ -21,6 +21,10 @@ import
     LOGO_ATTACHED,
     BIG_LOGO_ATTACHED
 } from '../../actions/company-actions';
+import {
+    SPONSORED_PROJECT_SPONSORSHIP_TYPE_SUPPORTING_COMPANY_DELETED,
+    SPONSORED_PROJECT_SPONSORSHIP_TYPE_SUPPORTING_COMPANY_ADDED
+} from "../../actions/sponsored-project-actions";
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
 
@@ -46,18 +50,20 @@ export const DEFAULT_ENTITY = {
     logo: '',
     big_logo: '',
     color: '#DADADA',
+    project_sponsorships: [],
 };
 
 const DEFAULT_STATE = {
     entity: DEFAULT_ENTITY,
-    errors: {}
+    errors: {},
+    sponsored_projects:[],
 };
 
 const companyReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
         case LOGOUT_USER: {
-            // we need this in case the token expired while editing the form
+            // we need this in ce the token expired while editing the form
             if (payload.hasOwnProperty('persistStore')) {
                 return state;
             } else {
@@ -102,6 +108,20 @@ const companyReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  errors: payload.errors };
         }
         break;
+        case SPONSORED_PROJECT_SPONSORSHIP_TYPE_SUPPORTING_COMPANY_DELETED:{
+            let {project_sponsorships} = state.entity;
+            let f = project_sponsorships.find((ps) => {
+                let e = ps.supporting_companies.find((sp) => sp.id == payload.supportingCompanyId)
+                return e;
+            })
+            project_sponsorships = project_sponsorships.filter(e=> e.id != f.id)
+            return {...state, entity: {...state.entity, project_sponsorships: project_sponsorships} };
+        }
+        case SPONSORED_PROJECT_SPONSORSHIP_TYPE_SUPPORTING_COMPANY_ADDED:{
+            let entity = {...payload.response};
+            let {project_sponsorships} = entity.company;
+            return {...state, entity: {...state.entity, project_sponsorships: project_sponsorships} }
+        }
         default:
             return state;
     }

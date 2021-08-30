@@ -90,7 +90,7 @@ export const getCompany = (companyId) => (dispatch, getState) => {
 
     const params = {
         access_token : accessToken,
-        expand: 'sponsorships,project_sponsorships',
+        expand: 'project_sponsorships,project_sponsorships.sponsored_project,project_sponsorships.supporting_companies',
     };
 
     return getRequest(

@@ -17,7 +17,9 @@ import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import CompanyForm from '../../components/forms/company-form';
 import { getCompany, resetCompanyForm, saveCompany, attachLogo } from "../../actions/company-actions";
+import {getSponsoredProjects, saveSupportingCompany, deleteSupportingCompany } from "../../actions/sponsored-project-actions";
 import '../../styles/edit-company-page.less';
+import Swal from "sweetalert2";
 
 class EditCompanyPage extends React.Component {
 
@@ -30,6 +32,7 @@ class EditCompanyPage extends React.Component {
         } else {
             props.getCompany(companyId);
         }
+        props.getSponsoredProjects("",1, 100);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -46,7 +49,7 @@ class EditCompanyPage extends React.Component {
     }
 
     render(){
-        const {entity, errors, summits, history, saveCompany, attachLogo, match} = this.props;
+        const {entity, errors, summits, history, saveCompany, attachLogo, match, sponsoredProjects} = this.props;
         const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         const breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
@@ -62,14 +65,52 @@ class EditCompanyPage extends React.Component {
                     errors={errors}
                     onSubmit={saveCompany}
                     onAttach={attachLogo}
+                    sponsoredProjects={sponsoredProjects}
+                    onDeleteSponsorship={(id) => {
+
+                        let sponsorship = entity.project_sponsorships.find( (ps) => ps.id == id);
+                        if(!sponsorship) return;
+                        let supportingCompany = sponsorship.supporting_companies.find( (sc) => sc.company_id == entity.id);
+                        if(!supportingCompany) return;
+
+                        Swal.fire({
+                            title: T.translate("general.are_you_sure"),
+                            text: T.translate("edit_company.delete_supporting_company_warning"),
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: T.translate("general.yes_delete")
+                        }).then(function(result){
+                            if (result.value) {
+                                this.props.deleteSupportingCompany
+                                (
+                                    sponsorship.sponsored_project.id,
+                                    id,
+                                    supportingCompany.id
+                                );
+                            }
+                        });
+
+                    }}
+                    addSponsoreProjectSponsorship={(companyId, selectedSponsoredProject, selectedSponsorShipType ) => {
+                        this.props.saveSupportingCompany(
+                            selectedSponsoredProject,
+                            selectedSponsorShipType,
+                            {
+                                id: 0,
+                                company: {id: companyId}
+                            }
+                        )
+                    }}
                 />
             </div>
         )
     }
 }
 
-const mapStateToProps = ({ currentCompanyState }) => ({
-    ...currentCompanyState
+const mapStateToProps = ({ currentCompanyState, sponsoredProjectListState }) => ({
+    ...currentCompanyState,
+    sponsoredProjects: sponsoredProjectListState.sponsoredProjects,
 });
 
 export default connect (
@@ -78,6 +119,9 @@ export default connect (
         getCompany,
         resetCompanyForm,
         saveCompany,
-        attachLogo
+        attachLogo,
+        getSponsoredProjects,
+        saveSupportingCompany,
+        deleteSupportingCompany,
     }
 )(EditCompanyPage);

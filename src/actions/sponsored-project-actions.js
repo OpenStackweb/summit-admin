@@ -53,6 +53,7 @@ export const getSponsoredProjects = (term = null, page = 1, perPage = 10, order 
         page: page,
         per_page: perPage,
         access_token: accessToken,
+        expand: 'sponsorship_types',
     };
 
     if (filter.length > 0) {
@@ -418,14 +419,14 @@ export const saveSupportingCompany = (projectId, sponsorshipTypeId, entity) => (
 
     const params = {
         access_token: accessToken,
-        expand:"company"
+        expand: "company, company.project_sponsorships, company.project_sponsorships.sponsored_project,company.project_sponsorships.supporting_companies"
     };
 
     let normalizedEntity = normalizeCompany(entity);
 
     if (normalizedEntity.id) {
 
-        putRequest(
+        return putRequest(
             createAction(UPDATE_PROJECT_SPONSORSHIP_TYPE_SUPPORTING_COMPANY),
             createAction(SPONSORED_PROJECT_SPONSORSHIP_TYPE_SUPPORTING_COMPANY_UPDATED),
             `${window.API_BASE_URL}/api/v1/sponsored-projects/${projectId}/sponsorship-types/${sponsorshipTypeId}/supporting-companies/${normalizedEntity.id}`,
@@ -437,28 +438,26 @@ export const saveSupportingCompany = (projectId, sponsorshipTypeId, entity) => (
                 dispatch(showSuccessMessage(T.translate("edit_sponsored_project_sponsorship_type_supporting_company.saved")));
             });
 
-    } else {
-        const success_message = {
-            title: T.translate("general.done"),
-            html: T.translate("edit_sponsored_project_sponsorship_type_supporting_company.created"),
-            type: 'success'
-        };
-
-        postRequest(
-            createAction(UPDATE_PROJECT_SPONSORSHIP_TYPE_SUPPORTING_COMPANY),
-            createAction(SPONSORED_PROJECT_SPONSORSHIP_TYPE_SUPPORTING_COMPANY_ADDED),
-            `${window.API_BASE_URL}/api/v1/sponsored-projects/${projectId}/sponsorship-types/${sponsorshipTypeId}/supporting-companies`,
-            normalizedEntity,
-            authErrorHandler,
-            entity
-        )(params)(dispatch)
-            .then(() => {
-                dispatch(showMessage(
-                    success_message,
-                    () => {
-                        history.push(`/app/sponsored-projects/${projectId}/sponsorship-types/${sponsorshipTypeId}`)
-                    }
-                ));
-            });
     }
+    const success_message = {
+        title: T.translate("general.done"),
+        html: T.translate("edit_sponsored_project_sponsorship_type_supporting_company.created"),
+        type: 'success'
+    };
+
+    return postRequest(
+        createAction(UPDATE_PROJECT_SPONSORSHIP_TYPE_SUPPORTING_COMPANY),
+        createAction(SPONSORED_PROJECT_SPONSORSHIP_TYPE_SUPPORTING_COMPANY_ADDED),
+        `${window.API_BASE_URL}/api/v1/sponsored-projects/${projectId}/sponsorship-types/${sponsorshipTypeId}/supporting-companies`,
+        normalizedEntity,
+        authErrorHandler,
+        entity
+    )(params)(dispatch)
+        .then(() => {
+            dispatch(showMessage(
+                success_message,
+                () => {
+                }
+            ));
+        });
 };

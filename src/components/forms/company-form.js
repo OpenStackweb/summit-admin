@@ -14,8 +14,16 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import {TextEditor, UploadInput, Input, CountryDropdown, Dropdown} from 'openstack-uicore-foundation/lib/components';
+import {
+    TextEditor,
+    UploadInput,
+    Input,
+    CountryDropdown,
+    Dropdown,
+    Table
+} from 'openstack-uicore-foundation/lib/components';
 import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
+import {Pagination} from "react-bootstrap";
 
 
 class CompanyForm extends React.Component {
@@ -25,6 +33,9 @@ class CompanyForm extends React.Component {
         this.state = {
             entity: {...props.entity},
             errors: props.errors,
+            selectedSponsoredProject:null,
+            selectedSponsorShipType: null,
+            sponsorShipTypes:[],
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -32,6 +43,9 @@ class CompanyForm extends React.Component {
         this.handleUploadBigLogo = this.handleUploadBigLogo.bind(this);
         this.handleRemoveFile = this.handleRemoveFile.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleSelectedSponsoredProject = this.handleSelectedSponsoredProject.bind(this);
+        this.handleSelectedSponsorshipType = this.handleSelectedSponsorshipType.bind(this);
+        this.onAddSponsorshipType = this.onAddSponsorshipType.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -92,9 +106,38 @@ class CompanyForm extends React.Component {
         ev.preventDefault();
         this.props.onSubmit(this.state.entity);
     }
+
+    handleSelectedSponsoredProject(ev){
+        const {sponsoredProjects} = this.props;
+        let {value} = ev.target;
+
+        console.log(`handleSelectedSponsoredProject ${value}`);
+
+        let project = sponsoredProjects.find(e => e.id == value);
+
+        this.setState({...this.state,
+            selectedSponsoredProject : value,
+            sponsorShipTypes :project ? project.sponsorship_types.map((s) => { return {label: s.name, value:s.id }}): [],
+            selectedSponsorShipType:null
+        });
+    }
+
+    handleSelectedSponsorshipType(ev){
+        let {value, id} = ev.target;
+        this.setState({...this.state, selectedSponsorShipType : value});
+    }
+
+    onAddSponsorshipType(ev){
+        ev.preventDefault();
+        let{selectedSponsoredProject, selectedSponsorShipType, entity} = this.state;
+        if(!selectedSponsoredProject) return;
+        if(!selectedSponsorShipType) return;
+        this.props.addSponsoreProjectSponsorship(entity.id, selectedSponsoredProject, selectedSponsorShipType);
+    }
     
     render() {
         const {entity} = this.state;
+        const {sponsoredProjects} = this.props;
 
         const member_levels_ddl = [
             {label: 'Platinum', value: 'Platinum'},
@@ -104,6 +147,23 @@ class CompanyForm extends React.Component {
             {label: 'Mention', value: 'Mention'},
             {label: 'None', value: 'None'},
         ];
+
+        const sponsored_projects_ddl = sponsoredProjects.map((sp) => { return {
+                label: sp.name,
+                value: sp.id,
+            }
+        });
+
+        const columns = [
+            { columnKey: 'project_name', value: T.translate("edit_company.project_name") },
+            { columnKey: 'name', value: T.translate("edit_company.sponsorship_type") }
+        ];
+
+        const table_options = {
+            actions: {
+                delete: { onClick: this.props.onDeleteSponsorship}
+            }
+        }
 
         return (
             <form className="company-form">
@@ -193,6 +253,46 @@ class CompanyForm extends React.Component {
                         <TextEditor id="commitment" value={entity.commitment} onChange={this.handleChange} />
                     </div>
                 </div>
+                {entity.id > 0 &&
+                    <div className="row form-group">
+                        <div className="col-md-4">
+                            <Dropdown
+                                id="sponsored_project"
+                                options={sponsored_projects_ddl}
+                                clearable
+                                value={this.state.selectedSponsoredProject}
+                                onChange={this.handleSelectedSponsoredProject}
+                                placeholder={T.translate("edit_company.placeholders.sponsored_project")}
+                            />
+                        </div>
+                        <div className="col-md-4">
+                            <Dropdown
+                                id="sponsorship_type"
+                                clearable
+                                value={this.state.selectedSponsorShipType}
+                                options={this.state.sponsorShipTypes}
+                                onChange={this.handleSelectedSponsorshipType}
+                                placeholder={T.translate("edit_company.placeholders.sponsorship_type")}
+                            />
+                        </div>
+                        <div className="col-md-4">
+                            <button className="btn btn-primary right-space" onClick={this.onAddSponsorshipType}>
+                                {T.translate("edit_company.add_project_sponsorship")}
+                            </button>
+                        </div>
+                    </div>
+                }
+                {entity.project_sponsorships.length > 0 &&
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <Table
+                            options={table_options}
+                            data={entity.project_sponsorships.map((sp) => { return {...sp, project_name:sp.sponsored_project.name}}) }
+                            columns={columns}
+                        />
+                    </div>
+                </div>
+                }
                 <div className="row form-group">
                     <div className="col-md-6">
                         <label> {T.translate("edit_company.logo")} </label>
