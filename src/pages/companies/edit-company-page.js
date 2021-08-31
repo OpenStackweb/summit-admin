@@ -49,7 +49,18 @@ class EditCompanyPage extends React.Component {
     }
 
     render(){
-        const {entity, errors, summits, history, saveCompany, attachLogo, match, sponsoredProjects} = this.props;
+        const { entity,
+            errors,
+            summits,
+            history,
+            saveCompany,
+            attachLogo,
+            match,
+            sponsoredProjects,
+            deleteSupportingCompany,
+            saveSupportingCompany
+        } = this.props;
+
         const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         const breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
@@ -80,9 +91,9 @@ class EditCompanyPage extends React.Component {
                             showCancelButton: true,
                             confirmButtonColor: "#DD6B55",
                             confirmButtonText: T.translate("general.yes_delete")
-                        }).then(function(result){
+                        }).then((result) => {
                             if (result.value) {
-                                this.props.deleteSupportingCompany
+                                deleteSupportingCompany
                                 (
                                     sponsorship.sponsored_project.id,
                                     id,
@@ -92,8 +103,9 @@ class EditCompanyPage extends React.Component {
                         });
 
                     }}
+
                     addSponsoreProjectSponsorship={(companyId, selectedSponsoredProject, selectedSponsorShipType ) => {
-                        this.props.saveSupportingCompany(
+                        saveSupportingCompany(
                             selectedSponsoredProject,
                             selectedSponsorShipType,
                             {
