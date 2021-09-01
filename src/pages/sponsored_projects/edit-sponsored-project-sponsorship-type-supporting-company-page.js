@@ -14,12 +14,11 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react";
 import SponsoredProjectSponsorshipTypeSupportingCompanyForm from "../../components/forms/sponsored-project-sponsorship-type-supporting-company-form";
-import Swal from "sweetalert2";
+import history from '../../history';
 
 import {
     saveSupportingCompany,
 } from "../../actions/sponsored-project-actions";
-import SponsoredProjectSponsorshipTypeForm from "../../components/forms/sponsored-project-sponsorship-type-form";
 
 class EditSponsoredProjectSponsorshipTypeSupportingCompanyPage extends React.Component {
 
@@ -34,7 +33,9 @@ class EditSponsoredProjectSponsorshipTypeSupportingCompanyPage extends React.Com
             this.props.currentSponsoredProject.id,
             this.props.currentSponsorshipType.id,
             entity
-        );
+        ).then(() => {
+            history.push(`/app/sponsored-projects/${this.props.currentSponsoredProject.id}/sponsorship-types/${this.props.currentSponsorshipType.id}`)
+        });
     }
 
     render(){
