@@ -144,7 +144,7 @@ export const saveSponsoredProject = (entity) => (dispatch, getState) => {
 
         putRequest(
             createAction(UPDATE_SPONSORED_PROJECT),
-            createAction(SPONSORED_PROJECT_UPDATED_UPDATED),
+            createAction(SPONSORED_PROJECT_UPDATED),
             `${window.API_BASE_URL}/api/v1/sponsored-projects/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
