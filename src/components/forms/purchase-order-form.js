@@ -84,20 +84,15 @@ class PurchaseOrderForm extends React.Component {
     handleAddTickets = (ev) => {
         ev.preventDefault();
 
-        let {addTicketTypeId, addTicketQty, addPromoCode} = this.state;
-        if(!addTicketTypeId) return;
-        if(!addTicketQty) return;
+        let {addTicketTypeId, addTicketQty, addPromoCode, entity} = this.state;
+        if(!entity || !addTicketTypeId || !addTicketQty) return;
 
-        this.props.addTickets
-        (
-            this.state.entity.id,
-            addTicketTypeId,
-            addTicketQty,
-            addPromoCode
-        ).then(_ => this.setState({...this.state,
-            addTicketTypeId : 0,
-            addTicketQty: 0,
-            addPromoCode: ''}));
+        this.props.addTickets(entity.id, addTicketTypeId, addTicketQty, addPromoCode)
+            .then(() => this.setState({
+                addTicketTypeId : null,
+                addTicketQty: 0,
+                addPromoCode: ''
+            }));
     };
 
     hasErrors = (field) => {
