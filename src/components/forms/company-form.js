@@ -148,11 +148,11 @@ class CompanyForm extends React.Component {
             {label: 'None', value: 'None'},
         ];
 
-        const sponsored_projects_ddl = sponsoredProjects.map((sp) => { return {
+        const sponsored_projects_ddl = sponsoredProjects && Array.isArray(sponsoredProjects) ? sponsoredProjects.map((sp) => { return {
                 label: sp.name,
                 value: sp.id,
             }
-        });
+        }): [];
 
         const columns = [
             { columnKey: 'project_name', value: T.translate("edit_company.project_name") },
@@ -253,7 +253,7 @@ class CompanyForm extends React.Component {
                         <TextEditor id="commitment" value={entity.commitment} onChange={this.handleChange} />
                     </div>
                 </div>
-                {entity.id > 0 &&
+                {entity.id > 0 && window.APP_CLIENT_NAME == 'openstack' &&
                     <div className="row form-group">
                         <div className="col-md-4">
                             <Dropdown
@@ -282,16 +282,16 @@ class CompanyForm extends React.Component {
                         </div>
                     </div>
                 }
-                {entity.project_sponsorships.length > 0 &&
-                <div className="row form-group">
-                    <div className="col-md-12">
-                        <Table
-                            options={table_options}
-                            data={entity.project_sponsorships.map((sp) => { return {...sp, project_name:sp.sponsored_project.name}}) }
-                            columns={columns}
-                        />
+                {entity.project_sponsorships.length > 0 && window.APP_CLIENT_NAME == 'openstack' &&
+                    <div className="row form-group">
+                        <div className="col-md-12">
+                            <Table
+                                options={table_options}
+                                data={entity.project_sponsorships.map((sp) => { return {...sp, project_name:sp.sponsored_project.name}}) }
+                                columns={columns}
+                            />
+                        </div>
                     </div>
-                </div>
                 }
                 <div className="row form-group">
                     <div className="col-md-6">

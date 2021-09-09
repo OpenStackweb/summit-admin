@@ -32,7 +32,8 @@ class EditCompanyPage extends React.Component {
         } else {
             props.getCompany(companyId);
         }
-        props.getSponsoredProjects("",1, 100);
+        if(window.APP_CLIENT_NAME == 'openstack')
+            props.getSponsoredProjects("",1, 100);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {

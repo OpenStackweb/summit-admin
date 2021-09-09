@@ -21,7 +21,7 @@ import
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
 
 const DEFAULT_STATE = {
-    sponsoredProjects : {},
+    sponsoredProjects : [],
     term            : '',
     order           : 'id',
     orderDir        : 1,
