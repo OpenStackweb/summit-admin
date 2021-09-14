@@ -81,6 +81,7 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
             let promocode_name = 'N/A';
             const final_amount_formatted = `$${entity.final_amount}`;
             const refunded_amount_formatted = `$${entity.refunded_amount}`;
+            const final_amount_adjusted_formatted = `$${(entity.final_amount - entity.refunded_amount)}`;
             for(var key in entity) {
                 if(entity.hasOwnProperty(key)) {
                     entity[key] = (entity[key] == null) ? '' : entity[key] ;
@@ -110,7 +111,11 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
             return {...state, entity: {...DEFAULT_ENTITY,
                     ...entity,
                     attendee_full_name,
-                    bought_date, promocode_name, final_amount_formatted, refunded_amount_formatted} };
+                    bought_date, promocode_name,
+                    final_amount_formatted,
+                    refunded_amount_formatted,
+                    final_amount_adjusted_formatted
+                } };
         }
         break;
         case TICKET_REFUNDED:

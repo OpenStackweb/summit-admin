@@ -221,15 +221,28 @@ class TicketForm extends React.Component {
                         <a href="" onClick={this.handleOrderClick}>{order.number}</a>
                     </div>
                 </div>
-                <div className="row form-group">
-                    <div className="col-md-3">
-                        <label> {T.translate("edit_ticket.refunded_amount")}:&nbsp;</label>
-                        {entity.refunded_amount_formatted}
+                { entity.refunded_amount > 0.00 &&
+                    <>
+                    <div className="row form-group">
+                        <div className="col-md-3">
+                            <label> {T.translate("edit_ticket.refunded_amount")}:&nbsp;</label>
+                            {entity.refunded_amount_formatted}
+                        </div>
+                        <div className="col-md-9">
+                            &nbsp;
+                        </div>
                     </div>
-                    <div className="col-md-9">
-                        &nbsp;
+                    <div className="row form-group">
+                        <div className="col-md-3">
+                            <label> {T.translate("edit_ticket.paid_amount_adjusted")}:&nbsp;</label>
+                            {entity.final_amount_adjusted_formatted}
+                        </div>
+                        <div className="col-md-9">
+                            &nbsp;
+                        </div>
                     </div>
-                </div>
+                    </>
+                }
             </form>
         );
     }
