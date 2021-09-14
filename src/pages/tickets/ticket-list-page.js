@@ -34,7 +34,7 @@ class TicketListPage extends React.Component {
         this.handleIngestTickets = this.handleIngestTickets.bind(this);
         this.handleImportTickets = this.handleImportTickets.bind(this);
         this.handleExportTickets = this.handleExportTickets.bind(this);
-
+        this.handleChangeShowRefundRequestPending = this.handleChangeShowRefundRequestPending.bind(this);
         this.state = {
             showIngestModal: false,
             showImportModal: false,
@@ -50,9 +50,16 @@ class TicketListPage extends React.Component {
         }
     }
 
+    handleChangeShowRefundRequestPending(ev){
+        const {order, orderDir, page, perPage, term} = this.props;
+        let value = ev.target.checked;
+        this.props.getTickets(term, page, perPage, order, orderDir, value);
+
+    }
+
     handleSearch(term) {
-        const {order, orderDir, page, perPage} = this.props;
-        this.props.getTickets(term, page, perPage, order, orderDir);
+        const {order, orderDir, page, perPage, showOnlyPendingRefundRequests} = this.props;
+        this.props.getTickets(term, page, perPage, order, orderDir, showOnlyPendingRefundRequests);
     }
 
     handleEdit(ticket_id) {
@@ -67,8 +74,8 @@ class TicketListPage extends React.Component {
     }
 
     handlePageChange(page) {
-        const {term, order, orderDir, perPage} = this.props;
-        this.props.getTickets(term, page, perPage, order, orderDir);
+        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests} = this.props;
+        this.props.getTickets(term, page, perPage, order, orderDir, showOnlyPendingRefundRequests);
     }
 
     handleIngestTickets() {
@@ -91,11 +98,15 @@ class TicketListPage extends React.Component {
     }
 
     render(){
-        const {currentSummit, tickets, term, order, orderDir, totalTickets, lastPage, currentPage, match} = this.props;
+        const {currentSummit, tickets, term, order,
+            orderDir, totalTickets, lastPage, currentPage, match, showOnlyPendingRefundRequests} = this.props;
         const {showIngestModal, showImportModal, importFile} = this.state;
 
         const columns = [
-            { columnKey: 'number', value: T.translate("ticket_list.number"), sortable: true },
+            { columnKey: 'number', value: T.translate("ticket_list.number"), sortable: true, render: (item, val) => {
+                const hasRequested =  item.refund_requests.some((r) => r.status === 'Requested');
+                return `${val}` + (hasRequested ? '&nbsp;<span class="label label-danger">Refund Requested</span>' :'')
+            } },
             { columnKey: 'ticket_type', value: T.translate("ticket_list.ticket_type") },
             { columnKey: 'bought_date', value: T.translate("ticket_list.bought_date") },
             { columnKey: 'owner_name', value: T.translate("ticket_list.owner_name") },
@@ -117,7 +128,6 @@ class TicketListPage extends React.Component {
         return(
             <div>
                 <Breadcrumb data={{ title: T.translate("ticket_list.ticket_list"), pathname: match.url }} />
-
                 <div className="container">
                     <h3> {T.translate("ticket_list.ticket_list")} ({totalTickets})</h3>
                     <div className={'row'}>
@@ -127,6 +137,7 @@ class TicketListPage extends React.Component {
                                 placeholder={T.translate("ticket_list.placeholders.search_tickets")}
                                 onSearch={this.handleSearch}
                             />
+
                         </div>
                         <div className="col-md-6 text-right">
                             <button className="btn btn-primary right-space" onClick={() => this.setState({showIngestModal:true})}>
@@ -138,6 +149,17 @@ class TicketListPage extends React.Component {
                             <button className="btn btn-default" onClick={this.handleExportTickets}>
                                 {T.translate("ticket_list.export")}
                             </button>
+                        </div>
+                    </div>
+                    <div className={'row'}>
+                        <div className={'col-md-12'}>
+                            <div className="form-check abc-checkbox">
+                                <input type="checkbox" id="show_refund_request_pending" checked={showOnlyPendingRefundRequests}
+                                       onChange={this.handleChangeShowRefundRequestPending} className="form-check-input" />
+                                <label className="form-check-label" htmlFor="show_refund_request_pending">
+                                    {T.translate("ticket_list.show_refund_request_pending")}
+                                </label>
+                            </div>
                         </div>
                     </div>
 

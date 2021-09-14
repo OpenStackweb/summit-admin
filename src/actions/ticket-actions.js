@@ -40,7 +40,7 @@ export const TICKET_CANCEL_REFUND       = 'TICKET_CANCEL_REFUND';
 export const TICKET_MEMBER_ASSIGNED     = 'TICKET_MEMBER_ASSIGNED';
 export const TICKET_MEMBER_REASSIGNED   = 'TICKET_MEMBER_REASSIGNED';
 export const BADGE_ADDED_TO_TICKET      = 'BADGE_ADDED_TO_TICKET';
-export const TICKET_EMAIL_SENT = 'TICKET_EMAIL_SENT';
+export const TICKET_EMAIL_SENT          = 'TICKET_EMAIL_SENT';
 
 export const REQUEST_TICKET_TYPES       = 'REQUEST_TICKET_TYPES';
 export const RECEIVE_TICKET_TYPES       = 'RECEIVE_TICKET_TYPES';
@@ -94,7 +94,7 @@ export const reSendTicketEmail = (orderId, ticketId) => (dispatch, getState) => 
     );
 };
 
-export const getTickets = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
+export const getTickets = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1, showOnlyPendingRefundRequests = false ) => (dispatch, getState) => {
 
     const { loggedUserState, currentSummitState } = getState();
     const { accessToken }     = loggedUserState;
@@ -107,12 +107,16 @@ export const getTickets = ( term = null, page = 1, perPage = 10, order = 'id', o
         page         : page,
         per_page     : perPage,
         access_token : accessToken,
-        expand       : 'owner,order,ticket_type,badge,promo_code'
+        expand       : 'owner,order,ticket_type,badge,promo_code,refund_requests'
     };
 
     if(term){
         const escapedTerm = escapeFilterValue(term);
         filter.push(`number=@${escapedTerm},owner_email=@${escapedTerm},owner_name=@${escapedTerm},owner_company=@${escapedTerm}`);
+    }
+
+    if(showOnlyPendingRefundRequests){
+        filter.push('has_requested_refund_requests==1');
     }
 
     if(filter.length > 0){
@@ -130,7 +134,7 @@ export const getTickets = ( term = null, page = 1, perPage = 10, order = 'id', o
         createAction(RECEIVE_TICKETS),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets`,
         authErrorHandler,
-        {page, perPage, order, orderDir, term}
+        {page, perPage, order, orderDir, term, showOnlyPendingRefundRequests}
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
@@ -205,7 +209,7 @@ export const getTicket = (ticketId) => (dispatch, getState) => {
 
     const params = {
         access_token : accessToken,
-        expand: 'badge, badge.features, promo_code, ticket_type, owner, owner.member'
+        expand: 'badge, badge.features, promo_code, ticket_type, owner, owner.member, refund_requests, refund_requests.requested_by, refund_requests.action_by'
     };
 
     return getRequest(
@@ -319,13 +323,18 @@ export const reassignTicket = (ticketId, attendeeId, firstName, lastName, email,
         });
 };
 
-export const cancelRefundTicket = (orderId, ticketId) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
+/** TICKET REFUNDS **/
+
+export const cancelRefundTicket = (orderId, ticketId, refundNotes = '') => (dispatch, getState) => {
+
+    dispatch(startLoading());
+
+    const { loggedUserState } = getState();
     const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
 
     const params = {
-        access_token : accessToken
+        access_token : accessToken,
+        expand: 'refund_requests, refund_requests.requested_by, refund_requests.action_by',
     };
 
     const success_message = {
@@ -336,9 +345,11 @@ export const cancelRefundTicket = (orderId, ticketId) => (dispatch, getState) =>
 
     return deleteRequest(
         null,
-        createAction(TICKET_CANCEL_REFUND)({ticketId}),
+        createAction(TICKET_CANCEL_REFUND),
         `${window.API_BASE_URL}/api/v1/summits/all/orders/${orderId}/tickets/${ticketId}/refund/cancel`,
-        {},
+        {
+            notes: refundNotes
+        },
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -347,21 +358,27 @@ export const cancelRefundTicket = (orderId, ticketId) => (dispatch, getState) =>
     );
 }
 
-export const refundTicket = (ticketId, refundAmount) => (dispatch, getState) => {
+export const refundTicket = (ticketId, refundAmount, refundNotes = '') => (dispatch, getState) => {
+
+    dispatch(startLoading());
 
     const { loggedUserState, currentSummitState } = getState();
     const { accessToken }     = loggedUserState;
     const { currentSummit }   = currentSummitState;
 
     const params = {
-        access_token : accessToken
+        access_token : accessToken,
+        expand: 'refund_requests, refund_requests.requested_by, refund_requests.action_by',
     };
 
     return deleteRequest(
         null,
-        createAction(TICKET_REFUNDED)({ticketId}),
+        createAction(TICKET_REFUNDED),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets/${ticketId}/refund`,
-        {amount: refundAmount},
+        {
+            amount: refundAmount,
+            notes: refundNotes
+        },
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());

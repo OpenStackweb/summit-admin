@@ -12,18 +12,20 @@
  **/
 
 import React from 'react'
+import {Modal } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getTicket, saveTicket, reassignTicket,
-    addBadgeToTicket, reSendTicketEmail, activateTicket } from "../../actions/ticket-actions";
+    addBadgeToTicket, reSendTicketEmail, activateTicket, refundTicket, cancelRefundTicket } from "../../actions/ticket-actions";
 import TicketForm from "../../components/forms/ticket-form";
 import BadgeForm from "../../components/forms/badge-form";
 import {getBadgeFeatures, getBadgeTypes, deleteBadge,
     addFeatureToBadge, removeFeatureFromBadge, changeBadgeType,
     printBadge} from "../../actions/badge-actions";
 import Swal from "sweetalert2";
+import {Table} from "openstack-uicore-foundation/lib/components";
 
 
 //import '../../styles/edit-ticket-page.less';
@@ -45,6 +47,32 @@ class EditTicketPage extends React.Component {
         this.handleDeleteBadge = this.handleDeleteBadge.bind(this);
         this.handleResendEmail = this.handleResendEmail.bind(this);
         this.handleActivateDeactivate = this.handleActivateDeactivate.bind(this);
+        this.handleRefundChange = this.handleRefundChange.bind(this);
+        this.handleRefundTicket = this.handleRefundTicket.bind(this);
+        this.handleRejectRefundRequest = this.handleRejectRefundRequest.bind(this);
+        this.shouldDisplayRejectRefundRequest = this.shouldDisplayRejectRefundRequest.bind(this);
+
+        this.state = {
+            refundAmount: '',
+            refundNotes: '',
+            showRefundModal: false,
+            showRefundRejectModal:false,
+            refundRejectNotes: ''
+        };
+    }
+
+    shouldDisplayRejectRefundRequest(id){
+        const {entity} = this.props;
+        const request = entity.refund_requests.find(r => r.id === id);
+        return request.status == 'Requested';
+    }
+
+    handleRefundChange(ev) {
+        let val = ev.target.value;
+        if(val != '' ){
+            if(!/^\d*(\.\d{0,2})?$/.test(val)) return;
+        }
+        this.setState({refundAmount: isNaN(val) ? 0.00: parseFloat(val)});
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -59,7 +87,6 @@ class EditTicketPage extends React.Component {
     handlePrintBadge(ev) {
         const {entity} = this.props;
         ev.preventDefault();
-
         this.props.printBadge(entity.id);
     }
 
@@ -84,7 +111,6 @@ class EditTicketPage extends React.Component {
                 activateTicket(currentOrder.id, ticket.id, activate);
             }
         });
-
     }
 
     handleDeleteBadge(ticketId, ev) {
@@ -109,6 +135,58 @@ class EditTicketPage extends React.Component {
         this.props.addBadgeToTicket(this.props.entity.id);
     }
 
+    handleRejectRefundRequest(ticket, ev){
+
+        const { cancelRefundTicket, entity, currentOrder} = this.props;
+        const { refundRejectNotes} = this.state;
+
+        this.setState({...this.state,
+            refundRejectNotes: '',
+            showRefundRejectModal: false
+        });
+
+        Swal.fire({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("edit_ticket.cancel_refund_warning"),
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: T.translate("edit_ticket.yes_cancel_refund")
+        }).then(function (result) {
+            if (result.value) {
+                cancelRefundTicket(currentOrder.id, entity.id, refundRejectNotes);
+            }
+        });
+    }
+
+    handleRefundTicket(ticket, ev) {
+
+        const { refundAmount, refundNotes} = this.state;
+        const { refundTicket, entity} = this.props;
+
+        if(refundAmount > 0 && refundAmount <= entity.raw_cost) {
+
+            this.setState({...this.state,
+                refundAmount: '',
+                refundNotes: '',
+                showRefundModal: false
+            });
+
+            Swal.fire({
+                title: T.translate("general.are_you_sure"),
+                text: T.translate("edit_ticket.refund_warning"),
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: T.translate("edit_ticket.yes_refund")
+            }).then(function (result) {
+                if (result.value) {
+                    refundTicket(entity.id, refundAmount, refundNotes);
+                }
+            });
+        }
+    }
+
     render(){
         const {currentSummit, currentOrder, loading,  entity, errors, match} = this.props;
 
@@ -117,12 +195,43 @@ class EditTicketPage extends React.Component {
         if (!entity || !entity.id) return (<div />);
         if (entity.order_id !== currentOrder.id) return (<div />);
 
+        const refundRequestColumns = [
+            { columnKey: 'id', value: T.translate("edit_ticket.refund_request_id") },
+            { columnKey: 'requested_by_fullname', value: T.translate("edit_ticket.refund_request_requested_by") },
+            { columnKey: 'action_by_fullname', value: T.translate("edit_ticket.refund_request_action_by") },
+            { columnKey: 'action_date', value: T.translate("edit_ticket.refund_request_action_date") },
+            { columnKey: 'status', value: T.translate("edit_ticket.refund_request_status") },
+            { columnKey: 'refunded_amount', value: T.translate("edit_ticket.refunded_amount") },
+            { columnKey: 'notes', value: T.translate("edit_ticket.refund_request_notes") },
+        ];
+
+        const refundRequestOptions = {
+            actions: {
+                custom: [
+                    {
+                        name: 'Reject',
+                        tooltip: T.translate("edit_ticket.cancel_refund"),
+                        icon: <i className="fa fa-ban"/>,
+                        onClick: _ => this.setState({...this.state, showRefundRejectModal: true}),
+                        display: this.shouldDisplayRejectRefundRequest
+                    }
+
+                ],
+            }
+        };
+
         return(
-            <div className="container">
+           <div className="container">
                 <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{T.translate("edit_ticket.ticket")}
                     {entity.id !== 0 &&
                     <div className="pull-right form-inline">
+
+                        {entity.status === 'Paid' &&
+                            <button className="btn btn-sm btn-primary right-space" onClick={() => this.setState({showRefundModal : true})}>
+                                {T.translate("edit_ticket.refund")}
+                            </button>
+                        }
                         { entity.status === 'Paid' && entity.is_active &&
                         <button className="btn btn-sm btn-primary left-space"
                                 onClick={(ev) => this.handleResendEmail(entity, ev) }>
@@ -147,6 +256,20 @@ class EditTicketPage extends React.Component {
                     onReassing={this.props.reassignTicket}
                     onSaveTicket={this.props.saveTicket}
                 />
+
+               { entity?.refund_requests?.length > 0 &&
+                   <div>
+                       <h3>
+                           {T.translate("edit_ticket.refund_requests")}
+                       </h3>
+                       <hr/>
+                       <Table
+                           options={refundRequestOptions}
+                           data={entity?.refund_requests}
+                           columns={refundRequestColumns}
+                       />
+                   </div>
+               }
                 <br/>
                 <br/>
                 <br/>
@@ -178,6 +301,57 @@ class EditTicketPage extends React.Component {
                         />
                     </div>
                 }
+                <Modal show={this.state.showRefundModal} onHide={() => this.setState({showRefundModal:false})} >
+                    <Modal.Header closeButton>
+                        <Modal.Title>{T.translate("edit_ticket.refund_modal_title")}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="row form-group">
+                            <div className="col-md-12">
+                                <input className="form-control" type="number" min="0"
+                                       step=".01"
+                                       placeholder="0.00"
+                                       value={this.state.refundAmount}
+                                       onChange={this.handleRefundChange} />
+                            </div>
+                        </div>
+                        <div className="row form-group">
+                            <div className="col-md-12">
+                                <textarea className="form-control"
+                                          id="refundNotes"
+                                          placeholder={T.translate("edit_ticket.placeholders.refund_notes")}
+                                          value={this.state.refundNotes}
+                                          onChange={(ev) => this.setState({...this.state, refundNotes:ev.target.value}) } />
+                            </div>
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <button className="btn btn-primary" onClick={ (ev) => this.handleRefundTicket(entity, ev)}>
+                            {T.translate("edit_ticket.refund")}
+                        </button>
+                    </Modal.Footer>
+                </Modal>
+               <Modal show={this.state.showRefundRejectModal} onHide={() => this.setState({showRefundRejectModal:false})} >
+                   <Modal.Header closeButton>
+                       <Modal.Title>{T.translate("edit_ticket.refund_reject_modal_title")}</Modal.Title>
+                   </Modal.Header>
+                   <Modal.Body>
+                       <div className="row form-group">
+                           <div className="col-md-12">
+                                <textarea className="form-control"
+                                          id="refundRejectNotes"
+                                          placeholder={T.translate("edit_ticket.placeholders.refund_reject_notes")}
+                                          value={this.state.refundRejectNotes}
+                                          onChange={(ev) => this.setState({...this.state, refundRejectNotes:ev.target.value}) } />
+                           </div>
+                       </div>
+                   </Modal.Body>
+                   <Modal.Footer>
+                       <button className="btn btn-primary" onClick={ (ev) => this.handleRejectRefundRequest(entity, ev)}>
+                           {T.translate("edit_ticket.refund_reject")}
+                       </button>
+                   </Modal.Footer>
+               </Modal>
             </div>
         )
     }
@@ -207,5 +381,7 @@ export default connect (
         printBadge,
         reSendTicketEmail,
         activateTicket,
+        refundTicket,
+        cancelRefundTicket
     }
 )(EditTicketPage);

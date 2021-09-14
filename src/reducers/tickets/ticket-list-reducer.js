@@ -23,6 +23,7 @@ import {epochToMoment} from "openstack-uicore-foundation/lib/methods";
 const DEFAULT_STATE = {
     tickets             : [],
     term                : null,
+    showOnlyPendingRefundRequests : false,
     order               : 'id',
     orderDir            : 1,
     currentPage         : 1,
@@ -39,9 +40,8 @@ const ticketListReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case REQUEST_TICKETS: {
-            let {order, orderDir, page, perPage, term} = payload;
-
-            return {...state, order, orderDir, currentPage: page, perPage, term }
+            let {order, orderDir, page, perPage, term, showOnlyPendingRefundRequests} = payload;
+            return {...state, order, orderDir, currentPage: page, perPage, term, showOnlyPendingRefundRequests }
         }
         break;
         case RECEIVE_TICKETS: {
@@ -59,7 +59,8 @@ const ticketListReducer = (state = DEFAULT_STATE, action) => {
                     owner_name: t.owner ? t.owner.first_name + ' ' + t.owner.last_name : 'N/A',
                     owner_email: t.owner ? t.owner.email : 'N/A',
                     status: t.status,
-                    final_amount_formatted: `$${t.final_amount}`
+                    final_amount_formatted: `$${t.final_amount}`,
+                    refund_requests: [...t.refund_requests],
                 };
             })
 

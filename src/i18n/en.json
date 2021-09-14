@@ -1029,8 +1029,9 @@
     "send_email": "Send results to email (optional)",
     "ingest_tickets": "Ingest Tickets from external source",
     "import_tickets": "Import Tickets from csv",
+    "show_refund_request_pending": "Show Only with Refund Requested",
     "placeholders": {
-      "search_orders": "Search by Order #, Buyer, Attendee "
+      "search_tickets": "Search by Ticket #, Buyer, Attendee "
     }
   },
   "edit_ticket": {
@@ -1076,7 +1077,22 @@
     "deactivate": "Deactivate",
     "activate": "Reactivate",
     "deactivate_warning": "Are you sure you want to Deactivate this Ticket?",
-    "activate_warning": "Are you sure you want to Reactivate this Ticket?"
+    "activate_warning": "Are you sure you want to Reactivate this Ticket?",
+    "refund": "Refund",
+    "refund_modal_title": "Refund Ticket",
+    "refund_request_status" : "Status",
+    "refund_request_id" : "#",
+    "refund_requests" : "Refund Requests",
+    "refund_request_requested_by": "Requested By",
+    "refund_request_action_by": "Action By",
+    "refund_request_action_date": "Action Date",
+    "refund_request_notes" : "Notes",
+    "refund_reject_modal_title": "Reject Refund Request",
+    "refund_reject": "Reject Refund",
+    "placeholders": {
+      "refund_notes": "Provide Optional Notes",
+      "refund_reject_notes": "Provide Optional Notes"
+    }
   },
   "ticket_type_list": {
     "ticket_types": "Ticket Types",

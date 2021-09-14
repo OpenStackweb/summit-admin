@@ -16,7 +16,7 @@ import {
     UPDATE_TICKET,
     TICKET_UPDATED,
     TICKET_MEMBER_REASSIGNED,
-    BADGE_ADDED_TO_TICKET, TICKET_CANCEL_REFUND
+    BADGE_ADDED_TO_TICKET, TICKET_CANCEL_REFUND, TICKET_REFUNDED
 } from '../../actions/ticket-actions';
 import {
     BADGE_DELETED,
@@ -26,6 +26,7 @@ import {
 } from '../../actions/badge-actions'
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
 import {epochToMoment} from "openstack-uicore-foundation/lib/methods";
+import moment from "moment-timezone";
 
 export const DEFAULT_ENTITY = {
     id: 28,
@@ -48,6 +49,7 @@ export const DEFAULT_ENTITY = {
     attendee: {},
     attendee_company: '',
     is_active: true,
+    refund_requests:[],
 }
 
 const DEFAULT_STATE = {
@@ -72,12 +74,13 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case RECEIVE_TICKET: {
+
             let entity = {...payload.response};
             let bought_date = entity.bought_date ? epochToMoment(entity.bought_date).format('MMMM Do YYYY, h:mm:ss a') : null;
             let attendee_full_name = 'N/A';
             let promocode_name = 'N/A';
             const final_amount_formatted = `$${entity.final_amount}`;
-
+            const refunded_amount_formatted = `$${entity.refunded_amount}`;
             for(var key in entity) {
                 if(entity.hasOwnProperty(key)) {
                     entity[key] = (entity[key] == null) ? '' : entity[key] ;
@@ -96,9 +99,34 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
                 }
             }
 
-            return {...state, entity: {...DEFAULT_ENTITY, ...entity, attendee_full_name, bought_date, promocode_name, final_amount_formatted} };
+            if(entity.hasOwnProperty("refund_requests")){
+                entity.refund_requests = entity.refund_requests.map( r => ({...r,
+                    action_date : r.action_date ? moment(r.action_date * 1000).tz('UTC').format('MMMM Do YYYY, h:mm a') : 'TBD',
+                    requested_by_fullname: r.requested_by ? `${r.requested_by.first_name} ${r.requested_by.last_name}`:'TBD',
+                    action_by_fullname: r.action_by ? `${r.action_by.first_name} ${r.action_by.last_name}`:'TBD',
+                }))
+            }
+
+            return {...state, entity: {...DEFAULT_ENTITY,
+                    ...entity,
+                    attendee_full_name,
+                    bought_date, promocode_name, final_amount_formatted, refunded_amount_formatted} };
         }
         break;
+        case TICKET_REFUNDED:
+        case TICKET_CANCEL_REFUND:
+        {
+            let entity = {...payload.response};
+            const refunded_amount_formatted = `$${entity.refunded_amount}`;
+            if(entity.hasOwnProperty("refund_requests")){
+                entity.refund_requests = entity.refund_requests.map( r => ({...r,
+                action_date : r.action_date ? moment(r.action_date * 1000).tz('UTC').format('MMMM Do YYYY, h:mm a') : 'TBD',
+                requested_by_fullname: r.requested_by ? `${r.requested_by.first_name} ${r.requested_by.last_name}`:'TBD',
+                action_by_fullname: r.action_by ? `${r.action_by.first_name} ${r.action_by.last_name}`:'TBD',
+                }))
+            }
+            return {...state, entity:{...state.entity, refund_requests: entity.refund_requests, refunded_amount_formatted:refunded_amount_formatted}};
+        }
         case TICKET_UPDATED: {
             let entity = {...payload.response};
             return {...state, entity:{...state.entity, is_active: entity.is_active}};
@@ -133,10 +161,6 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
             let badgeFeatures = [...state.entity.badge.features, newBadgeFeature];
 
             return {...state, entity: {...state.entity,  badge: {...state.entity.badge, features: badgeFeatures}} };
-        }
-        case TICKET_CANCEL_REFUND:{
-            const { entity} = state;
-            return {...state,  entity: {...entity, status: 'Paid' }};
         }
         break;
         default:
