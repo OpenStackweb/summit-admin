@@ -507,60 +507,6 @@ export const deletePurchaseOrder = (orderId) => (dispatch, getState) => {
     );
 };
 
-export const cancelRefundPurchaseOrder = (orderId) => (dispatch, getState) => {
-    const {loggedUserState, currentSummitState} = getState();
-    const {accessToken} = loggedUserState;
-    const {currentSummit} = currentSummitState;
-
-    const params = {
-        access_token: accessToken
-    };
-
-    const success_message = {
-        title: T.translate("general.done"),
-        html: T.translate("edit_purchase_order.order_cancel_refund"),
-        type: 'success'
-    };
-
-    return deleteRequest(
-        null,
-        createAction(PURCHASE_ORDER_CANCEL_REFUND)({orderId}),
-        `${window.API_BASE_URL}/api/v1/summits/all/orders/${orderId}/refund/cancel`,
-        {},
-        authErrorHandler
-    )(params)(dispatch).then(() => {
-            dispatch(stopLoading());
-            dispatch(showMessage(success_message));
-        }
-    );
-}
-
-export const refundPurchaseOrder = (orderId, refundAmount) => (dispatch, getState) => {
-
-    const {loggedUserState, currentSummitState} = getState();
-    const {accessToken} = loggedUserState;
-    const {currentSummit} = currentSummitState;
-
-    dispatch(startLoading());
-
-    const params = {
-        access_token: accessToken
-    };
-
-    return deleteRequest(
-        null,
-        createAction(PURCHASE_ORDER_REFUNDED)({orderId}),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/orders/${orderId}/refund`,
-        {amount: refundAmount},
-        authErrorHandler
-    )(params)(dispatch).then(() => {
-            dispatch(stopLoading());
-            dispatch(showSuccessMessage(T.translate("edit_purchase_order.order_refunded")));
-            window.setTimeout(_ => history.push(`/app/summits/${currentSummit.id}/purchase-orders`), 1000);
-        }
-    );
-};
-
 export const reSendOrderEmail = (orderId) => (dispatch, getState) => {
 
     const {loggedUserState, currentSummitState} = getState();

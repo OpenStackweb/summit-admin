@@ -19,10 +19,8 @@ import { getSummitById }  from '../../actions/summit-actions';
 import { getPurchaseOrder,
          savePurchaseOrder,
          addTicketsToOrder,
-        refundPurchaseOrder,
         deletePurchaseOrder,
         reSendOrderEmail,
-        cancelRefundPurchaseOrder
 } from "../../actions/order-actions";
 
 import PurchaseOrderForm from "../../components/forms/purchase-order-form";
@@ -34,41 +32,8 @@ class EditPurchaseOrderPage extends React.Component {
 
     constructor(props) {
         super(props);
-
-        this.state = {
-            refund_amount: ''
-        };
-
         this.handleDeleteOrder = this.handleDeleteOrder.bind(this);
-        this.handleRefundOrder = this.handleRefundOrder.bind(this);
-        this.handleRefundChange = this.handleRefundChange.bind(this);
         this.handleResendEmail = this.handleResendEmail.bind(this);
-        this.handleCancelRefundOrder = this.handleCancelRefundOrder.bind(this);
-    }
-
-    handleRefundChange(ev) {
-        let val = ev.target.value;
-        if(val != '' ){
-            if(!/^\d*(\.\d{0,2})?$/.test(val)) return;
-        }
-        this.setState({refund_amount: parseFloat(ev.target.value)});
-    }
-
-    handleCancelRefundOrder(order, ev){
-        const {cancelRefundPurchaseOrder} = this.props;
-
-        Swal.fire({
-            title: T.translate("general.are_you_sure"),
-            text: T.translate("edit_purchase_order.cancel_refund_warning"),
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: T.translate("edit_purchase_order.yes_cancel_refund")
-        }).then(function(result){
-            if (result.value) {
-                cancelRefundPurchaseOrder(order.id);
-            }
-        });
     }
 
     handleResendEmail(order, ev){
@@ -91,28 +56,8 @@ class EditPurchaseOrderPage extends React.Component {
         });
     }
 
-    handleRefundOrder(order, ev) {
-        const {refundPurchaseOrder} = this.props;
-        const {refund_amount} = this.state;
-        if(refund_amount > 0 && refund_amount <= order.raw_amount) {
-            Swal.fire({
-                title: T.translate("general.are_you_sure"),
-                text: T.translate("edit_purchase_order.refund_warning"),
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: T.translate("edit_purchase_order.yes_refund")
-            }).then(function (result) {
-                if (result.value) {
-                    refundPurchaseOrder(order.id, refund_amount);
-                }
-            });
-        }
-    }
-
     render(){
         const {currentSummit, entity, errors, match} = this.props;
-        const {refund_amount} = this.state;
         const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
 
         return(
@@ -121,24 +66,6 @@ class EditPurchaseOrderPage extends React.Component {
                     {title} {T.translate("edit_purchase_order.purchase_order")}
                     {entity.id !== 0 &&
                     <div className="pull-right form-inline">
-                        {(entity.status === 'RefundRequested' || entity.status === 'Paid') &&
-                            <>
-                                <input className="form-control" type="number" min="0"
-                                       step=".01"
-                                       placeholder="0.00"
-                                       value={refund_amount} onChange={this.handleRefundChange} />
-                                <button className="btn btn-sm btn-primary right-space"
-                                        onClick={this.handleRefundOrder.bind(this, entity)}>
-                                    {T.translate("edit_purchase_order.refund")}
-                                </button>
-                            </>
-                        }
-                        {
-                            entity.status === 'RefundRequested' &&
-                            <button className="btn btn-sm btn-primary right-space" onClick={this.handleCancelRefundOrder.bind(this, entity)}>
-                                {T.translate("edit_purchase_order.cancel_refund")}
-                            </button>
-                        }
                         <button className="btn btn-sm btn-danger" onClick={this.handleDeleteOrder.bind(this, entity)}>
                             {T.translate("edit_purchase_order.delete_order")}
                         </button>
@@ -178,9 +105,7 @@ export default connect (
         getPurchaseOrder,
         savePurchaseOrder,
         addTicketsToOrder,
-        refundPurchaseOrder,
         deletePurchaseOrder,
         reSendOrderEmail,
-        cancelRefundPurchaseOrder
     }
 )(EditPurchaseOrderPage);

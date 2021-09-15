@@ -201,7 +201,7 @@ class EditTicketPage extends React.Component {
             { columnKey: 'action_by_fullname', value: T.translate("edit_ticket.refund_request_action_by") },
             { columnKey: 'action_date', value: T.translate("edit_ticket.refund_request_action_date") },
             { columnKey: 'status', value: T.translate("edit_ticket.refund_request_status") },
-            { columnKey: 'refunded_amount', value: T.translate("edit_ticket.refunded_amount") },
+            { columnKey: 'refunded_amount_formatted', value: T.translate("edit_ticket.refunded_amount") },
             { columnKey: 'notes', value: T.translate("edit_ticket.refund_request_notes") },
         ];
 

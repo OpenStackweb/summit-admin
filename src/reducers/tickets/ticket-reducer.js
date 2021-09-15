@@ -79,9 +79,9 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
             let bought_date = entity.bought_date ? epochToMoment(entity.bought_date).format('MMMM Do YYYY, h:mm:ss a') : null;
             let attendee_full_name = 'N/A';
             let promocode_name = 'N/A';
-            const final_amount_formatted = `$${entity.final_amount}`;
-            const refunded_amount_formatted = `$${entity.refunded_amount}`;
-            const final_amount_adjusted_formatted = `$${(entity.final_amount - entity.refunded_amount)}`;
+            const final_amount_formatted = `$${entity.final_amount.toFixed(2)}`;
+            const refunded_amount_formatted = `$${entity.refunded_amount.toFixed(2)}`;
+            const final_amount_adjusted_formatted = `$${((entity.final_amount - entity.refunded_amount).toFixed(2))}`;
             for(var key in entity) {
                 if(entity.hasOwnProperty(key)) {
                     entity[key] = (entity[key] == null) ? '' : entity[key] ;
@@ -105,6 +105,7 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
                     action_date : r.action_date ? moment(r.action_date * 1000).tz('UTC').format('MMMM Do YYYY, h:mm a') : 'TBD',
                     requested_by_fullname: r.requested_by ? `${r.requested_by.first_name} ${r.requested_by.last_name}`:'TBD',
                     action_by_fullname: r.action_by ? `${r.action_by.first_name} ${r.action_by.last_name}`:'TBD',
+                    refunded_amount_formatted: `$${r.refunded_amount.toFixed(2)}`
                 }))
             }
 
@@ -122,15 +123,23 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
         case TICKET_CANCEL_REFUND:
         {
             let entity = {...payload.response};
-            const refunded_amount_formatted = `$${entity.refunded_amount}`;
+
+            const refunded_amount_formatted = `$${entity.refunded_amount.toFixed(2)}`;
+            const final_amount_adjusted_formatted = `$${((entity.final_amount - entity.refunded_amount).toFixed(2))}`;
             if(entity.hasOwnProperty("refund_requests")){
                 entity.refund_requests = entity.refund_requests.map( r => ({...r,
-                action_date : r.action_date ? moment(r.action_date * 1000).tz('UTC').format('MMMM Do YYYY, h:mm a') : 'TBD',
-                requested_by_fullname: r.requested_by ? `${r.requested_by.first_name} ${r.requested_by.last_name}`:'TBD',
-                action_by_fullname: r.action_by ? `${r.action_by.first_name} ${r.action_by.last_name}`:'TBD',
+                    action_date : r.action_date ? moment(r.action_date * 1000).tz('UTC').format('MMMM Do YYYY, h:mm a') : 'TBD',
+                    requested_by_fullname: r.requested_by ? `${r.requested_by.first_name} ${r.requested_by.last_name}`:'TBD',
+                    action_by_fullname: r.action_by ? `${r.action_by.first_name} ${r.action_by.last_name}`:'TBD',
+                    refunded_amount_formatted: `$${r.refunded_amount.toFixed(2)}`
                 }))
             }
-            return {...state, entity:{...state.entity, refund_requests: entity.refund_requests, refunded_amount_formatted:refunded_amount_formatted}};
+            return {...state, entity:{...state.entity,
+                    refund_requests : entity.refund_requests,
+                    refunded_amount: entity.refunded_amount,
+                    refunded_amount_formatted : refunded_amount_formatted,
+                    final_amount_adjusted_formatted : final_amount_adjusted_formatted
+                }};
         }
         case TICKET_UPDATED: {
             let entity = {...payload.response};
