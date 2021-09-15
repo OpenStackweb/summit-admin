@@ -164,7 +164,7 @@ class EditTicketPage extends React.Component {
         const { refundAmount, refundNotes} = this.state;
         const { refundTicket, entity} = this.props;
 
-        if(refundAmount > 0 && refundAmount <= entity.raw_cost) {
+        if(parseFloat(refundAmount) > 0 &&  parseFloat(refundAmount) <= parseFloat(entity.final_amount)) {
 
             this.setState({...this.state,
                 refundAmount: '',
@@ -181,7 +181,7 @@ class EditTicketPage extends React.Component {
                 confirmButtonText: T.translate("edit_ticket.yes_refund")
             }).then(function (result) {
                 if (result.value) {
-                    refundTicket(entity.id, refundAmount, refundNotes);
+                    refundTicket(entity.id, parseFloat(refundAmount), refundNotes);
                 }
             });
         }
