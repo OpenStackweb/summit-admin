@@ -230,13 +230,16 @@ export const saveTicket = (orderId, ticket) => (dispatch, getState) => {
     const { accessToken }     = loggedUserState;
     const { currentSummit }   = currentSummitState;
 
+    dispatch(startLoading());
+
     const params = {
         access_token : accessToken,
+        expand: 'badge, badge.features, promo_code, ticket_type, owner, owner.member, refund_requests, refund_requests.requested_by, refund_requests.action_by'
     };
 
     const normalizedEntity = normalizeTicket(ticket);
 
-    putRequest(
+    return putRequest(
         null,
         createAction(TICKET_UPDATED),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/orders/${orderId}/tickets/${ticket.id}`,
@@ -245,7 +248,6 @@ export const saveTicket = (orderId, ticket) => (dispatch, getState) => {
     )(params)(dispatch)
         .then((payload) => {
             dispatch(stopLoading());
-            window.location.reload();
         });
 };
 
@@ -440,17 +442,16 @@ const normalizeTicket = (entity) => {
 /**************************   TICKET TYPES   ******************************************/
 
 
-export const getTicketTypes = ( order = 'name', orderDir = 1 ) => (dispatch, getState) => {
+export const getTicketTypes = (summit, order = 'name', orderDir = 1, page = 1, per_page = 100 ) => (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
+    const { loggedUserState } = getState();
     const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
 
     const params = {
-        page         : 1,
-        per_page     : 100,
+        page         : page,
+        per_page     : per_page,
         access_token : accessToken,
         expand: 'badge_type',
     };
@@ -465,7 +466,7 @@ export const getTicketTypes = ( order = 'name', orderDir = 1 ) => (dispatch, get
     return getRequest(
         createAction(REQUEST_TICKET_TYPES),
         createAction(RECEIVE_TICKET_TYPES),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/ticket-types`,
+        `${window.API_BASE_URL}/api/v1/summits/${summit.id}/ticket-types`,
         authErrorHandler,
         {order, orderDir}
     )(params)(dispatch).then(() => {

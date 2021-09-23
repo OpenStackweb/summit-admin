@@ -17,8 +17,11 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getTicket, saveTicket, reassignTicket,
-    addBadgeToTicket, reSendTicketEmail, activateTicket, refundTicket, cancelRefundTicket } from "../../actions/ticket-actions";
+import {
+    getTicket, saveTicket, reassignTicket,
+    addBadgeToTicket, reSendTicketEmail, activateTicket,
+    getTicketTypes, refundTicket, cancelRefundTicket } from "../../actions/ticket-actions";
+
 import TicketForm from "../../components/forms/ticket-form";
 import BadgeForm from "../../components/forms/badge-form";
 import {getBadgeFeatures, getBadgeTypes, deleteBadge,
@@ -28,7 +31,6 @@ import Swal from "sweetalert2";
 import {Table} from "openstack-uicore-foundation/lib/components";
 
 
-//import '../../styles/edit-ticket-page.less';
 
 class EditTicketPage extends React.Component {
 
@@ -37,7 +39,10 @@ class EditTicketPage extends React.Component {
         const new_ticket_id = match.params.ticket_id;
         super(props);
 
-        props.getTicket(new_ticket_id);
+        props.getTicket(new_ticket_id).then(() => {
+            if(this.props.currentSummit)
+                this.props.getTicketTypes(this.props.currentSummit)
+        });
 
         if (!currentSummit.badge_features) props.getBadgeFeatures();
         if (!currentSummit.badge_types) props.getBadgeTypes();
@@ -80,7 +85,10 @@ class EditTicketPage extends React.Component {
         const newId = this.props.match.params.ticket_id;
 
         if (oldId !== newId) {
-            this.props.getTicket(newId);
+            this.props.getTicket(newId).then(() => {
+                if(this.props.currentSummit)
+                    this.props.getTicketTypes(this.props.currentSummit)
+            });
         }
     }
 
@@ -255,6 +263,7 @@ class EditTicketPage extends React.Component {
                     errors={errors}
                     onReassing={this.props.reassignTicket}
                     onSaveTicket={this.props.saveTicket}
+                    ticketTypes={this.props.ticketTypes}
                 />
 
                { entity?.refund_requests?.length > 0 &&
@@ -357,11 +366,12 @@ class EditTicketPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ baseState, currentSummitState, currentPurchaseOrderState, currentTicketState }) => ({
+const mapStateToProps = ({ baseState, currentSummitState, currentPurchaseOrderState, currentTicketState, currentTicketTypeListState }) => ({
     currentSummit : currentSummitState.currentSummit,
     currentOrder: currentPurchaseOrderState.entity,
     loading : baseState.loading,
-    ...currentTicketState
+    ...currentTicketState,
+    ticketTypes : currentTicketTypeListState.ticketTypes,
 });
 
 export default connect (
@@ -382,6 +392,7 @@ export default connect (
         reSendTicketEmail,
         activateTicket,
         refundTicket,
-        cancelRefundTicket
+        cancelRefundTicket,
+        getTicketTypes,
     }
 )(EditTicketPage);

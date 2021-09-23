@@ -1121,7 +1121,8 @@
     "ticket_type_saved": "Ticket Type saved successfully",
     "ticket_type_created": "Ticket Type created successfully",
     "placeholders": {
-      "select_currency": "Select currency"
+      "select_currency": "Select currency",
+      "select_ticket_type": "Select Ticket Type"
     }
   },
   "tax_type_list": {

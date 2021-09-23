@@ -37,7 +37,7 @@ class TicketTypeListPage extends React.Component {
     componentDidMount() {
         const {currentSummit} = this.props;
         if(currentSummit) {
-            this.props.getTicketTypes();
+            this.props.getTicketTypes(currentSummit);
         }
     }
 
@@ -71,7 +71,7 @@ class TicketTypeListPage extends React.Component {
     }
 
     handleSort(index, key, dir, func) {
-        this.props.getTicketTypes(key, dir);
+        this.props.getTicketTypes(this.props.currentSummit,key, dir);
     }
 
     handleNewTicketType(ev) {

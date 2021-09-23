@@ -50,6 +50,7 @@ export const DEFAULT_ENTITY = {
     attendee_company: '',
     is_active: true,
     refund_requests:[],
+    ticket_type_id:0,
 }
 
 const DEFAULT_STATE = {
@@ -74,11 +75,11 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case RECEIVE_TICKET: {
-
             let entity = {...payload.response};
             let bought_date = entity.bought_date ? epochToMoment(entity.bought_date).format('MMMM Do YYYY, h:mm:ss a') : null;
             let attendee_full_name = 'N/A';
             let promocode_name = 'N/A';
+            let attendee_email = null;
             const final_amount_formatted = `$${entity.final_amount.toFixed(2)}`;
             const refunded_amount_formatted = `$${entity.refunded_amount.toFixed(2)}`;
             const final_amount_adjusted_formatted = `$${((entity.final_amount - entity.refunded_amount).toFixed(2))}`;
@@ -93,6 +94,7 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
             }
 
             if (entity.owner) {
+                attendee_email = entity.owner.email;
                 if (entity.owner.first_name && entity.owner.last_name) {
                     attendee_full_name = `${entity.owner.first_name} ${entity.owner.last_name}`;
                 } else if (entity.owner.member) {
@@ -112,10 +114,13 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
             return {...state, entity: {...DEFAULT_ENTITY,
                     ...entity,
                     attendee_full_name,
-                    bought_date, promocode_name,
+                    bought_date,
+                    promocode_name,
                     final_amount_formatted,
                     refunded_amount_formatted,
-                    final_amount_adjusted_formatted
+                    final_amount_adjusted_formatted,
+                    ticket_type_id: entity?.ticket_type?.id,
+                    attendee_email: attendee_email
                 } };
         }
         break;
@@ -143,7 +148,7 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
         }
         case TICKET_UPDATED: {
             let entity = {...payload.response};
-            return {...state, entity:{...state.entity, is_active: entity.is_active}};
+            return {...state, entity:{...state.entity, is_active: entity.is_active, ticket_type_id: entity?.ticket_type?.id}};
         }
         break;
         case TICKET_MEMBER_REASSIGNED: {
