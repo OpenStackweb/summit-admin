@@ -112,7 +112,9 @@ class TicketListPage extends React.Component {
             { columnKey: 'owner_name', value: T.translate("ticket_list.owner_name") },
             { columnKey: 'owner_email', value: T.translate("ticket_list.owner_email") },
             { columnKey: 'status', value: T.translate("ticket_list.status") },
-            { columnKey: 'final_amount_formatted', value: T.translate("ticket_list.paid_amount") }
+            { columnKey: 'final_amount_formatted', value: T.translate("ticket_list.paid_amount") },
+            { columnKey: 'refunded_amount_formatted', value: T.translate("ticket_list.refunded_amount") },
+            { columnKey: 'final_amount_adjusted_formatted', value: T.translate("ticket_list.paid_amount_adjusted") },
         ];
 
         const table_options = {

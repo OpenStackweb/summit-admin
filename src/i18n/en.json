@@ -1030,6 +1030,8 @@
     "ingest_tickets": "Ingest Tickets from external source",
     "import_tickets": "Import Tickets from csv",
     "show_refund_request_pending": "Show Only with Refund Requested",
+    "refunded_amount": "Refunded Amount",
+    "paid_amount_adjusted": "Amount Paid Adjusted",
     "placeholders": {
       "search_tickets": "Search by Ticket #, Buyer, Attendee "
     }
@@ -1420,7 +1422,9 @@
     "cancel_refund_warning": "Are you sure you want to cancel the refund request for this order?",
     "yes_cancel_refund": "Yes, cancel refund request!",
     "order_cancel_refund": "Cancelled refund request successfully",
-    "promo_code": "Promo Code"
+    "promo_code": "Promo Code",
+    "refunded_amount": "Refunded Amount",
+    "paid_amount_adjusted": "Amount Paid Adjusted"
   },
   "sponsor_list": {
     "sponsors": "Sponsors",

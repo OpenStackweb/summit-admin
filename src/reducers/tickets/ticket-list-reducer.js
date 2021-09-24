@@ -47,8 +47,13 @@ const ticketListReducer = (state = DEFAULT_STATE, action) => {
         case RECEIVE_TICKETS: {
             let { total, last_page, data } = payload.response;
             let tickets = data.map(t => {
+
                 let bought_date = t.bought_date ? epochToMoment(t.bought_date).format('MMMM Do YYYY, h:mm:ss a') : '';
                 let number = t.external_order_id || `...${t.number.slice(-15)}`;
+
+                const final_amount_formatted = `$${t.final_amount.toFixed(2)}`;
+                const refunded_amount_formatted = `$${t.refunded_amount.toFixed(2)}`;
+                const final_amount_adjusted_formatted = `$${((t.final_amount - t.refunded_amount).toFixed(2))}`;
 
                 return {
                     id: t.id,
@@ -59,7 +64,9 @@ const ticketListReducer = (state = DEFAULT_STATE, action) => {
                     owner_name: t.owner ? t.owner.first_name + ' ' + t.owner.last_name : 'N/A',
                     owner_email: t.owner ? t.owner.email : 'N/A',
                     status: t.status,
-                    final_amount_formatted: `$${t.final_amount}`,
+                    final_amount_formatted,
+                    refunded_amount_formatted,
+                    final_amount_adjusted_formatted,
                     refund_requests: [...t.refund_requests],
                 };
             })

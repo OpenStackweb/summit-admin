@@ -121,7 +121,9 @@ class PurchaseOrderForm extends React.Component {
             { columnKey: 'ticket_type_name', value: T.translate("edit_purchase_order.ticket_type_name") },
             { columnKey: 'owner_link', value: T.translate("edit_purchase_order.attendee") },
             { columnKey: 'email_link', value: T.translate("edit_purchase_order.owner_email") },
-            { columnKey: 'final_amount_formatted', value: T.translate("edit_purchase_order.paid_amount_per_tix")}
+            { columnKey: 'final_amount_formatted', value: T.translate("edit_purchase_order.paid_amount")},
+            { columnKey: 'refunded_amount_formatted', value: T.translate("edit_purchase_order.refunded_amount")},
+            { columnKey: 'final_amount_adjusted_formatted', value: T.translate("edit_purchase_order.paid_amount_adjusted")}
         ];
 
         let ticket_options = {
@@ -136,26 +138,55 @@ class PurchaseOrderForm extends React.Component {
             <form className="purchase-order-form">
                 <input type="hidden" id="id" value={entity.id} />
                 {entity.id !== 0 &&
-                <div className="row form-group">
-                    <div className="col-md-6">
-                        <label> {T.translate("edit_purchase_order.number")}</label>
-                        <Input
-                            id="number"
-                            value={entity.number}
-                            onChange={this.handleChange}
-                            className="form-control"
-                            disabled
-                        />
+                    <>
+                    <div className="row form-group">
+                        <div className="col-md-6">
+                            <label> {T.translate("edit_purchase_order.number")}</label>
+                            <Input
+                                id="number"
+                                value={entity.number}
+                                onChange={this.handleChange}
+                                className="form-control"
+                                disabled
+                            />
+                        </div>
+                        <div className="col-md-6">
+                            <label> {T.translate("edit_purchase_order.status")}</label><br/>
+                            {entity.status}
+                        </div>
                     </div>
-                    <div className="col-md-3">
-                        <label> {T.translate("edit_purchase_order.status")}</label><br/>
-                        {entity.status}
+                    <div className="row form-group">
+                        <div className="col-md-3">
+                        <label> {T.translate("edit_purchase_order.paid_amount")}:&nbsp;</label>
+                        {entity.final_amount_formatted}
+                        </div>
+                        <div className="col-md-9">
+                            &nbsp;
+                        </div>
                     </div>
-                    <div className="col-md-3">
-                        <label> {T.translate("edit_purchase_order.paid_amount")}</label><br/>
-                        ${entity.amount}
-                    </div>
-                </div>
+                        { entity.refunded_amount > 0.00 &&
+                        <>
+                            <div className="row form-group">
+                                <div className="col-md-3">
+                                    <label> {T.translate("edit_purchase_order.refunded_amount")}:&nbsp;</label>
+                                    {entity.refunded_amount_formatted}
+                                </div>
+                                <div className="col-md-9">
+                                    &nbsp;
+                                </div>
+                            </div>
+                            <div className="row form-group">
+                                <div className="col-md-3">
+                                    <label> {T.translate("edit_purchase_order.paid_amount_adjusted")}:&nbsp;</label>
+                                    {entity.final_amount_adjusted_formatted}
+                                </div>
+                                <div className="col-md-9">
+                                    &nbsp;
+                                </div>
+                            </div>
+                        </>
+                        }
+                    </>
                 }
                 {entity.id === 0 &&
                 <div className="row form-group">

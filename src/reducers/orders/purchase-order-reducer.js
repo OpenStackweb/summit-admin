@@ -72,6 +72,10 @@ const purchaseOrderReducer = (state = DEFAULT_STATE, action) => {
         case RECEIVE_PURCHASE_ORDER: {
             let entity = {...payload.response};
 
+            const final_amount_formatted = `$${entity.amount.toFixed(2)}`;
+            const refunded_amount_formatted = `$${entity.refunded_amount.toFixed(2)}`;
+            const final_amount_adjusted_formatted = `$${((entity.amount - entity.refunded_amount).toFixed(2))}`;
+
             for(var key in entity) {
                 if(entity.hasOwnProperty(key)) {
                     entity[key] = (entity[key] == null) ? '' : entity[key] ;
@@ -90,7 +94,10 @@ const purchaseOrderReducer = (state = DEFAULT_STATE, action) => {
                 let owner_link = 'N/A';
                 let email_link = 'N/A';
                 let ticket_type_name = t.ticket_type ? t.ticket_type.name : 'N/A';
-                const final_amount_formatted = `$${t.final_amount}`;
+
+                const final_amount_formatted = `$${t.final_amount.toFixed(2)}`;
+                const refunded_amount_formatted = `$${t.refunded_amount.toFixed(2)}`;
+                const final_amount_adjusted_formatted = `$${((t.final_amount - t.refunded_amount).toFixed(2))}`;
 
                 if (t.owner) {
                     owner_email = t.owner.email;
@@ -105,10 +112,16 @@ const purchaseOrderReducer = (state = DEFAULT_STATE, action) => {
                     email_link = <a href="" onClick={ev => { ev.stopPropagation(); window.open(`mailto:${owner_email}`, '_blank')}} target="_blank">{owner_email}</a>
                 }
 
-                return ({...t, ticket_type_name, owner_full_name, owner_email, owner_link, email_link, final_amount_formatted})
+                return ({...t, ticket_type_name, owner_full_name, owner_email, owner_link, email_link,
+                    final_amount_formatted,
+                    refunded_amount_formatted,
+                    final_amount_adjusted_formatted,})
             });
 
-            return {...state,  entity: {...entity}, errors: {} };
+            return {...state,  entity: {...entity,
+                    final_amount_formatted,
+                    refunded_amount_formatted,
+                    final_amount_adjusted_formatted,}, errors: {} };
         }
         break;
         case UPDATE_PURCHASE_ORDER: {
