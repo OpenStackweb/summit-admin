@@ -1092,6 +1092,8 @@
     "refund_reject_modal_title": "Reject Refund Request",
     "refund_reject": "Reject Refund",
     "paid_amount_adjusted": "Amount Paid Adjusted",
+    "activate_yes": "Yes, reactivate",
+    "deactivate_yes": "Yes, deactivate",
     "placeholders": {
       "refund_notes": "Provide Optional Notes",
       "refund_reject_notes": "Provide Optional Notes"

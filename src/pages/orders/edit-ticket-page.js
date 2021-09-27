@@ -113,7 +113,8 @@ class EditTicketPage extends React.Component {
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
-            confirmButtonText: T.translate("general.yes_delete")
+            confirmButtonText: activate ? T.translate("edit_ticket.activate_yes") :
+                T.translate("edit_ticket.deactivate_yes"),
         }).then(function(result){
             if (result.value) {
                 activateTicket(currentOrder.id, ticket.id, activate);
