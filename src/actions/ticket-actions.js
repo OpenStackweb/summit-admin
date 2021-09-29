@@ -241,7 +241,7 @@ export const saveTicket = (orderId, ticket) => (dispatch, getState) => {
 
     return putRequest(
         null,
-        createAction(TICKET_UPDATED),
+        createAction(RECEIVE_TICKET),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/orders/${orderId}/tickets/${ticket.id}`,
         normalizedEntity,
         authErrorHandler

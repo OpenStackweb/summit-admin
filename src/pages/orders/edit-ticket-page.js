@@ -31,7 +31,6 @@ import Swal from "sweetalert2";
 import {Table} from "openstack-uicore-foundation/lib/components";
 
 
-
 class EditTicketPage extends React.Component {
 
     constructor(props) {
