@@ -340,6 +340,7 @@
     "streaming_url_info": "Streaming URL could be a HLS/DASH feed (.m3u8/.mpd)",
     "meeting_url_info": "Meeting URL could be a Zoom, Jitsy, or Google Meet",
     "etherpad_link": "EtherPad URL",
+    "streaming_type": "Streaming Type",
     "selection_plan": "Selection Plan",
     "delete_material": "Are you sure you want to delete activity material ",
     "qa_users": "Q&A Users",

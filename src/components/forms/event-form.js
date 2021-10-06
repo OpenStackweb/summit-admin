@@ -365,6 +365,8 @@ class EventForm extends React.Component {
             }
         };
 
+        const streaming_type_ddl = [{label: 'LIVE', value: 'LIVE'}, {label: 'VOD', value: 'VOD'}];
+
         return (
             <form>
                 <input type="hidden" id="id" value={entity.id} />
@@ -677,27 +679,37 @@ class EventForm extends React.Component {
                        handleClick={this.toggleSection.bind(this, 'live')}>
                     <div className="row form-group">
                         <div className="col-md-6">
-                            <label>
-                                {T.translate("edit_event.streaming_url")}&nbsp;
-                                <i className="fa fa-info-circle" aria-hidden="true" title={T.translate("edit_event.streaming_url_info")} />
-                            </label>
-                            <input className="form-control" id="streaming_url" value={entity.streaming_url} onChange={this.handleChange} />
+                            <div className="form-group">
+                                <label>
+                                    {T.translate("edit_event.streaming_url")}&nbsp;
+                                    <i className="fa fa-info-circle" aria-hidden="true" title={T.translate("edit_event.streaming_url_info")} />
+                                </label>
+                                <input className="form-control" id="streaming_url" value={entity.streaming_url} onChange={this.handleChange} />
+                            </div>
+                            <div className="form-group">
+                                <label> {T.translate("edit_event.meeting_url")}&nbsp;
+                                    <i className="fa fa-info-circle" aria-hidden="true" title={T.translate("edit_event.meeting_url_info")} />
+                                </label>
+                                <input className="form-control" id="meeting_url" value={entity.meeting_url} onChange={this.handleChange} />
+                            </div>
+                            <div className="form-group">
+                                <label> {T.translate("edit_event.etherpad_link")} </label>
+                                <input className="form-control" id="etherpad_link" value={entity.etherpad_link} onChange={this.handleChange} />
+                            </div>
+                        </div>
+                        <div className="col-md-6">
+                            <div>
+                                <label> {T.translate("edit_event.streaming_type")}</label>
+                                <Dropdown
+                                    id="streaming_type"
+                                    value={entity.streaming_type}
+                                    onChange={this.handleChange}
+                                    options={streaming_type_ddl}
+                                    error={hasErrors('streaming_type', errors)}
+                                />
+                            </div>
                         </div>
                      </div>
-                    <div className="row form-group">
-                        <div className="col-md-6">
-                            <label> {T.translate("edit_event.meeting_url")}&nbsp;
-                                <i className="fa fa-info-circle" aria-hidden="true" title={T.translate("edit_event.meeting_url_info")} />
-                            </label>
-                            <input className="form-control" id="meeting_url" value={entity.meeting_url} onChange={this.handleChange} />
-                        </div>
-                    </div>
-                    <div className="row form-group">
-                        <div className="col-md-6">
-                            <label> {T.translate("edit_event.etherpad_link")} </label>
-                            <input className="form-control" id="etherpad_link" value={entity.etherpad_link} onChange={this.handleChange} />
-                        </div>
-                    </div>
                 </Panel>
                 <Panel show={showSection === 'rsvp'} title={T.translate("edit_event.rsvp")}
                        handleClick={this.toggleSection.bind(this, 'rsvp')}>
