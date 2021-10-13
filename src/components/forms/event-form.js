@@ -578,7 +578,7 @@ class EventForm extends React.Component {
                 </div>
                 {this.shouldShowField('use_sponsors') &&
                 <div className="row form-group">
-                    <div className="col-md-12">
+                    <div className="col-md-8">
                         <label> {T.translate("edit_event.sponsors")} </label>
                         <CompanyInput
                             id="sponsors"
@@ -587,6 +587,12 @@ class EventForm extends React.Component {
                             summitId={currentSummit.id}
                             multi
                         />
+                    </div>
+                    <div className="col-md-4">
+                        <div className="form-check abc-checkbox" style={{marginTop: 30}}>
+                            <input id="show_sponsors" onChange={this.handleChange} checked={entity.show_sponsors} className="form-check-input" type="checkbox" />
+                            <label className="form-check-label" htmlFor="show_sponsors"> {T.translate("edit_event.show_sponsors")} </label>
+                        </div>
                     </div>
                 </div>
                 }
