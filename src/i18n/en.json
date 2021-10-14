@@ -747,6 +747,8 @@
     "visible_voters": "This category is visible to voters?",
     "visible_track_chairs": "This category is visible to track chairs?",
     "tags": "Allowed Tags",
+    "allowed_access_levels": "Allowed Access Levels",
+    "allowed_access_levels_info": "Set the access levels that end-user badged should have in order to access to activities under this track.",
     "tag": "Tag",
     "group": "Group",
     "questions": "Extra Questions",

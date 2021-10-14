@@ -18,7 +18,8 @@ import {
     Input,
     TextEditor,
     TagInput,
-    UploadInput
+    UploadInput,
+    AccessLevelsInput
 } from 'openstack-uicore-foundation/lib/components'
 
 import {isEmpty, scrollToError, shallowEqual, hasErrors} from "../../utils/methods";
@@ -234,11 +235,26 @@ class EventCategoryForm extends React.Component {
                         />
                     </div>
                 </div>
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <label> {T.translate("edit_event_category.allowed_access_levels")}&nbsp;
+                            <i className="fa fa-info-circle" aria-hidden="true" title={T.translate("edit_event_category.allowed_access_levels_info")} />
+                        </label>
+                        <AccessLevelsInput
+                            id="allowed_access_levels"
+                            value={entity.allowed_access_levels}
+                            summitId={currentSummit.id}
+                            onChange={this.handleChange}
+                            isMulti={true}
+                            error={hasErrors('allowed_access_levels', errors)}
+                        />
+                    </div>
+                </div>
 
                 {entity.id !== 0 &&
                 <div className="row form-group">
                     <div className="col-md-12">
-                        <label> {T.translate("edit_event_category.pic")} </label>
+                        <label> {T.translate("edit_event_category.pic")}</label>
                         <UploadInput
                             value={entity.icon_url}
                             handleUpload={this.handleUploadPic}

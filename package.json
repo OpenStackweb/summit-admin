@@ -6,7 +6,7 @@
   "scripts": {
     "build-dev": "./node_modules/.bin/webpack --config webpack.dev.js",
     "build": "./node_modules/.bin/webpack --config webpack.prod.js",
-    "serve": "webpack-dev-server --open --https --config webpack.dev.js"
+    "serve": "webpack-dev-server  --port 8080 --open --https --config webpack.dev.js"
   },
   "author": "",
   "license": "ISC",
@@ -47,7 +47,7 @@
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
     "node-sass": "^4.14.1",
-    "openstack-uicore-foundation": "2.1.15",
+    "openstack-uicore-foundation": "2.1.16",
     "optimize-css-assets-webpack-plugin": "^5.0.4",
     "postcss-loader": "^2.1.6",
     "react": "^16.13.1",

@@ -89,7 +89,7 @@ export const getEventCategory = (eventCategoryId) => (dispatch, getState) => {
     dispatch(startLoading());
 
     const params = {
-        expand       : "track_groups,allowed_tags,extra_questions",
+        expand       : "track_groups,allowed_tags,extra_questions,allowed_access_levels",
         access_token : accessToken,
     };
 
@@ -253,8 +253,8 @@ const normalizeEntity = (entity) => {
     normalizedEntity.alternate_count            = parseInt(entity.alternate_count);
     normalizedEntity.lightning_count            = parseInt(entity.lightning_count);
     normalizedEntity.lightning_alternate_count  = parseInt(entity.lightning_alternate_count);
-
     normalizedEntity.allowed_tags = entity.allowed_tags.map(t => t.tag);
+    normalizedEntity.allowed_access_levels = entity.allowed_access_levels.map(al => al.id);
 
     return normalizedEntity;
 

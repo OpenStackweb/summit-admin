@@ -39,7 +39,8 @@ export const DEFAULT_ENTITY = {
     allowed_tags                : [],
     track_groups                : [],
     extra_questions             : [],
-    icon_url                    : null
+    icon_url                    : null,
+    allowed_access_levels       : [],
 };
 
 const DEFAULT_STATE = {
