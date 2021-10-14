@@ -319,6 +319,7 @@
     "attending_media": "Allow attending media?",
     "tags": "Tags",
     "sponsors": "Sponsors",
+    "show_sponsors": "Display sponsors",
     "moderator": "Moderator",
     "discussion_leader": "Discussion Leader",
     "groups": "Groups",
