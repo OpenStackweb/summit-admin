@@ -49,7 +49,7 @@ export const getSummitById = (summitId) => (dispatch, getState) => {
 
     const params = {
         access_token : accessToken,
-        expand: 'event_types,tracks,values,locations,locations.rooms'
+        expand: 'event_types,tracks,values,locations,locations.rooms,registration_stats'
     };
 
     return getRequest(
@@ -73,7 +73,7 @@ export const setCurrentSummit = (summit) => (dispatch, getState) =>
 
         const params = {
             access_token : accessToken,
-            expand: 'event_types,tracks,locations,locations.rooms'
+            expand: 'event_types,tracks,locations,locations.rooms,registration_stats'
         };
 
         return getRequest(

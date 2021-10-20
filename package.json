@@ -6,7 +6,7 @@
   "scripts": {
     "build-dev": "./node_modules/.bin/webpack --config webpack.dev.js",
     "build": "./node_modules/.bin/webpack --config webpack.prod.js",
-    "serve": "webpack-dev-server  --port 8080 --open --https --config webpack.dev.js"
+    "serve": "fuser -k 8080/tcp;webpack-dev-server  --port 8080 --open --https --config webpack.dev.js"
   },
   "author": "",
   "license": "ISC",
@@ -25,6 +25,8 @@
     "awesome-bootstrap-checkbox": "^1.0.1",
     "babel-cli": "^6.26.0",
     "babel-loader": "^8.1.0",
+    "chart.js": "^3.5.1",
+    "chartjs-plugin-datalabels": "^2.0.0",
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^3.5.1",
     "dotenv-webpack": "^1.7.0",
@@ -54,6 +56,7 @@
     "react-bootstrap": "^0.31.5",
     "react-breadcrumbs": "^2.1.6",
     "react-burger-menu": "^2.6.10",
+    "react-chartjs-2": "^3.1.0",
     "react-data-export": "^0.5.0",
     "react-datetime": "^2.15.0",
     "react-dnd": "^2.6.0",
