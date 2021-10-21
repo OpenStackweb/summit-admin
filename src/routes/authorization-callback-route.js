@@ -26,7 +26,7 @@ class AuthorizationCallbackRoute extends AbstractAuthorizationCallbackRoute {
 
     _callback(backUrl) {
         if(!backUrl) backUrl = '/app/directory';
-        this.props.getUserInfo('groups', backUrl, history);
+        this.props.getUserInfo('groups','', backUrl, history);
     }
 
     _redirect2Error(error){
