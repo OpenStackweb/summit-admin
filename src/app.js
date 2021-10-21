@@ -21,7 +21,7 @@ import AuthButton from './components/auth-button'
 import DefaultRoute from './routes/default-route'
 import { connect } from 'react-redux'
 import { AjaxLoader, OPSessionChecker } from "openstack-uicore-foundation/lib/components";
-import { getBackURL,onUserAuth, doLogin, doLogout, initLogOut, getUserInfo, resetLoading } from "openstack-uicore-foundation/lib/methods";
+import { getBackURL,onUserAuth, doLoginBasicLogin, doLogout, initLogOut, getUserInfo, resetLoading } from "openstack-uicore-foundation/lib/methods";
 import T from 'i18n-react';
 import CustomErrorPage from "./pages/custom-error-page";
 import history from './history'
@@ -73,7 +73,7 @@ class App extends React.PureComponent {
     }
 
     onClickLogin(){
-        doLogin(getBackURL());
+        doLoginBasicLogin(getBackURL());
     }
 
     componentDidMount() {
