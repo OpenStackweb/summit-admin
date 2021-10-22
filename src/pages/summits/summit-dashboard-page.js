@@ -64,11 +64,17 @@ class SummitDashboardPage extends React.Component {
             this.setState({...this.state,
                 localtime: localtime,
                 dataTickets : {
-                    labels: ['Actives', 'Inactives'],
+                    labels: [
+                        `Actives : ${this.props.currentSummit.total_active_tickets}`,
+                        `Inactives : ${this.props.currentSummit.total_inactive_tickets}`,
+                    ],
                     datasets: [
                         {
                             label: '# of Tickets',
-                            data: [this.props.currentSummit.total_active_tickets, this.props.currentSummit.total_inactive_tickets],
+                            data: [
+                                this.props.currentSummit.total_active_tickets,
+                                this.props.currentSummit.total_inactive_tickets
+                            ],
                             backgroundColor: [
                                 'rgba(75, 192, 192, 1)',
                                 'rgba(255, 99, 132, 1)',
@@ -82,7 +88,7 @@ class SummitDashboardPage extends React.Component {
                     ],
                 },
                 dataTicketTypes : {
-                    labels: this.props.currentSummit.total_tickets_per_type.map(tt => tt.type),
+                    labels: this.props.currentSummit.total_tickets_per_type.map(tt => `${tt.type} : ${parseInt(tt.qty)}`),
                     datasets: [
                         {
                             label: 'Ticket Types',
@@ -100,8 +106,9 @@ class SummitDashboardPage extends React.Component {
                 totalTicketTypes: this.props.currentSummit.total_tickets_per_type.reduce(function(accumulator, currentValue) {
                     return accumulator + parseInt(currentValue.qty);
                 }, 0),
+
                 dataBadgeTypes : {
-                    labels: this.props.currentSummit.total_badges_per_type.map(tt => tt.type),
+                    labels: this.props.currentSummit.total_badges_per_type.map(tt => `${tt.type} : ${parseInt(tt.qty)}`),
                     datasets: [
                         {
                             label: 'Badge Types',
@@ -144,7 +151,7 @@ class SummitDashboardPage extends React.Component {
                     ],
                 },
                 dataTicketsPerBadgeFeatures:{
-                    labels: this.props.currentSummit.total_tickets_per_badge_feature.map(tt => tt.type),
+                    labels: this.props.currentSummit.total_tickets_per_badge_feature.map(tt => `${tt.type} : ${parseInt(tt.tickets_qty)}`),
                     datasets: [
                         {
                             label: 'Badge Features1',
@@ -160,7 +167,7 @@ class SummitDashboardPage extends React.Component {
                     ],
                 },
                 dataCheckinsPerBadgeFeatures:{
-                    labels: this.props.currentSummit.total_tickets_per_badge_feature.map(tt => tt.type),
+                    labels: this.props.currentSummit.total_tickets_per_badge_feature.map(tt => `${tt.type} : ${parseInt(tt.checkin_qty)}`),
                     datasets: [
                         {
                             label: 'Badge Features1',
@@ -205,6 +212,35 @@ class SummitDashboardPage extends React.Component {
     }
 
     render() {
+        const chartOptions = {
+            maintainAspectRatio: false,
+                plugins: {
+                    tooltip:{
+                        callbacks: {
+                            label: (context) => {
+                                return context.label || '';
+                            }
+                        }
+                    },
+                    legend: {
+                        display: true,
+                        position: 'left',
+                    },
+                    datalabels: {
+                        formatter: (value, ctx) => {
+                            let datasets = ctx.chart.data.datasets;
+                            if (datasets.indexOf(ctx.dataset) === datasets.length - 1) {
+                                let sum = datasets[0].data.reduce((a, b) => a + b, 0);
+                                if(!sum) return '0%';
+                                return Math.round((value / sum) * 100) + '%';
+                            }
+                            return '';
+                        },
+                        color: '#000000',
+                    }
+                },
+        };
+
         const { currentSummit, match, member } = this.props;
         let memberObj = new Member(member);
         let currentSummitTime = (new Date).getTime();
@@ -273,40 +309,30 @@ class SummitDashboardPage extends React.Component {
                                 <div className="row">
                                     <div className="col-md-6">
                                         <i className="fa fa-money"/>&nbsp;{T.translate("dashboard.payment_amount_collected")}&nbsp;
-                                        <strong>$&nbsp;{currentSummit.total_payment_amount_collected}</strong>
+                                        <strong>$&nbsp;{parseFloat(currentSummit.total_payment_amount_collected).toFixed(2)}</strong>
                                     </div>
                                     <div className="col-md-6">
                                         {T.translate("dashboard.refund_amount_emitted")}&nbsp;
-                                        <strong>$&nbsp;{currentSummit.total_refund_amount_emitted}</strong>
+                                        <strong>$&nbsp;{parseFloat(currentSummit.total_refund_amount_emitted).toFixed(2)}</strong>
                                     </div>
                                 </div>
-                                <h5><i className="fa fa-ticket"/>&nbsp;{T.translate("dashboard.total_tickets")} ({currentSummit.total_active_tickets+currentSummit.total_inactive_tickets}) / {T.translate("dashboard.orders")} ({currentSummit.total_orders})</h5>
-                                <div className="row">
-                                    <div className="col-md-12">
-                                        <Pie data={this.state.dataTickets}
-                                             width={325}
-                                             height={325}
-                                             options = {{
-                                                 maintainAspectRatio: false,
-                                                 plugins: {
-                                                     datalabels: {
-                                                         formatter: (value, ctx) => {
-                                                             let datasets = ctx.chart.data.datasets;
-                                                             if (datasets.indexOf(ctx.dataset) === datasets.length - 1) {
-                                                                 let sum = datasets[0].data.reduce((a, b) => a + b, 0);
-                                                                 let percentage = Math.round((value / sum) * 100) + '%';
-                                                                 return percentage;
-                                                             } else {
-                                                                 return percentage;
-                                                             }
-                                                         },
-                                                         color: '#000000',
-                                                     }
-                                                 },
-                                             }}
-                                        />
+                                {(currentSummit.total_active_tickets + currentSummit.total_inactive_tickets) > 0 &&
+                                <>
+                                    <h5><i
+                                        className="fa fa-ticket"/>&nbsp;{T.translate("dashboard.total_tickets")} ({currentSummit.total_active_tickets + currentSummit.total_inactive_tickets})
+                                        / {T.translate("dashboard.orders")} ({currentSummit.total_orders})</h5>
+                                    <div className="row">
+                                        <div className="col-md-12">
+                                            <Pie data={this.state.dataTickets}
+                                                 width={325}
+                                                 height={325}
+                                                 options={chartOptions}
+                                            />
+                                        </div>
                                     </div>
-                                </div>
+                                </>
+                                }
+                                {this.state.totalTicketTypes > 0 &&
                                 <div className="row">
                                     <div className="col-md-6">
                                         <h5>{T.translate("dashboard.ticket_types")} ({this.state.totalTicketTypes})</h5>
@@ -315,58 +341,26 @@ class SummitDashboardPage extends React.Component {
                                                 <Pie data={this.state.dataTicketTypes}
                                                      width={325}
                                                      height={325}
-                                                     options = {{
-                                                         maintainAspectRatio: false,
-                                                         plugins: {
-                                                             datalabels: {
-                                                                 formatter: (value, ctx) => {
-                                                                     let datasets = ctx.chart.data.datasets;
-                                                                     if (datasets.indexOf(ctx.dataset) === datasets.length - 1) {
-                                                                         let sum = datasets[0].data.reduce((a, b) => a + b, 0);
-                                                                         let percentage = Math.round((value / sum) * 100) + '%';
-                                                                         return percentage;
-                                                                     } else {
-                                                                         return percentage;
-                                                                     }
-                                                                 },
-                                                                 color: '#fff',
-                                                             }
-                                                         },
-                                                     }}
+                                                     options={chartOptions}
                                                 />
                                             </div>
                                         </div>
                                     </div>
                                     <div className="col-md-6">
-                                        <h5>{T.translate("dashboard.badge_types")}  ({this.state.totalBadgeTypes})</h5>
+                                        <h5>{T.translate("dashboard.badge_types")} ({this.state.totalBadgeTypes})</h5>
                                         <div className="row">
                                             <div className="col-md-12">
                                                 <Pie data={this.state.dataBadgeTypes}
                                                      width={325}
                                                      height={325}
-                                                     options = {{
-                                                         maintainAspectRatio: false,
-                                                         plugins: {
-                                                             datalabels: {
-                                                                 formatter: (value, ctx) => {
-                                                                     let datasets = ctx.chart.data.datasets;
-                                                                     if (datasets.indexOf(ctx.dataset) === datasets.length - 1) {
-                                                                         let sum = datasets[0].data.reduce((a, b) => a + b, 0);
-                                                                         let percentage = Math.round((value / sum) * 100) + '%';
-                                                                         return percentage;
-                                                                     } else {
-                                                                         return percentage;
-                                                                     }
-                                                                 },
-                                                                 color: '#fff',
-                                                             }
-                                                         },
-                                                     }}
+                                                     options={chartOptions}
                                                 />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                }
+                                { this.props.currentSummit.total_tickets_per_badge_feature.some(t => t.tickets_qty > 0) &&
                                 <div className="row">
                                     <div className="col-md-6">
                                         <h5>{T.translate("dashboard.badge_features_tickets")}</h5>
@@ -375,25 +369,8 @@ class SummitDashboardPage extends React.Component {
                                                 <Pie data={this.state.dataTicketsPerBadgeFeatures}
                                                      width={325}
                                                      height={325}
-                                                     options = {{
-                                                         maintainAspectRatio: false,
-                                                         plugins: {
-                                                             datalabels: {
-                                                                 formatter: (value, ctx) => {
-                                                                     let datasets = ctx.chart.data.datasets;
-                                                                     if (datasets.indexOf(ctx.dataset) === datasets.length - 1) {
-                                                                         let sum = datasets[0].data.reduce((a, b) => a + b, 0);
-                                                                         let percentage = Math.round((value / sum) * 100) + '%';
-                                                                         return percentage;
-                                                                     } else {
-                                                                         return percentage;
-                                                                     }
-                                                                 },
-                                                                 color: '#fff',
-                                                             }
-                                                         },
-                                                     }}
-                                            />
+                                                     options={chartOptions}
+                                                />
                                             </div>
                                         </div>
                                     </div>
@@ -404,58 +381,32 @@ class SummitDashboardPage extends React.Component {
                                                 <Pie data={this.state.dataCheckinsPerBadgeFeatures}
                                                      width={325}
                                                      height={325}
-                                                     options = {{
-                                                         maintainAspectRatio: false,
-                                                         plugins: {
-                                                             datalabels: {
-                                                                 formatter: (value, ctx) => {
-                                                                     let datasets = ctx.chart.data.datasets;
-                                                                     if (datasets.indexOf(ctx.dataset) === datasets.length - 1) {
-                                                                         let sum = datasets[0].data.reduce((a, b) => a + b, 0);
-                                                                         let percentage = Math.round((value / sum) * 100) + '%';
-                                                                         return percentage;
-                                                                     } else {
-                                                                         return percentage;
-                                                                     }
-                                                                 },
-                                                                 color: '#fff',
-                                                             }
-                                                         },
-                                                     }}
+                                                     options={chartOptions}
                                                 />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <h5><i className="fa fa-users"/>&nbsp;{T.translate("dashboard.attendees")} ({this.props.currentSummit.total_checked_in_attendees+
-                                    this.props.currentSummit.total_non_checked_in_attendees+
+                                }
+                                {(this.props.currentSummit.total_checked_in_attendees +
+                                    this.props.currentSummit.total_non_checked_in_attendees +
+                                    this.props.currentSummit.total_virtual_attendees) > 0 &&
+                                <>
+                                    <h5><i
+                                        className="fa fa-users"/>&nbsp;{T.translate("dashboard.attendees")} ({this.props.currentSummit.total_checked_in_attendees +
+                                    this.props.currentSummit.total_non_checked_in_attendees +
                                     this.props.currentSummit.total_virtual_attendees})</h5>
-                                <div className="row">
-                                   <div className="col-md-12">
-                                       <Pie data={this.state.dataAttendees}
-                                            width={325}
-                                            height={325}
-                                            options = {{
-                                                maintainAspectRatio: false,
-                                                plugins: {
-                                                    datalabels: {
-                                                        formatter: (value, ctx) => {
-                                                            let datasets = ctx.chart.data.datasets;
-                                                            if (datasets.indexOf(ctx.dataset) === datasets.length - 1) {
-                                                                let sum = datasets[0].data.reduce((a, b) => a + b, 0);
-                                                                let percentage = Math.round((value / sum) * 100) + '%';
-                                                                return percentage;
-                                                            } else {
-                                                                return percentage;
-                                                            }
-                                                        },
-                                                        color: '#000',
-                                                    }
-                                                },
-                                            }}
-                                       />
-                                   </div>
-                                </div>
+                                    <div className="row">
+                                        <div className="col-md-12">
+                                            <Pie data={this.state.dataAttendees}
+                                                 width={325}
+                                                 height={325}
+                                                 options={chartOptions}
+                                            />
+                                        </div>
+                                    </div>
+                                </>
+                                }
                             </div>
                         }
                         <hr/>
