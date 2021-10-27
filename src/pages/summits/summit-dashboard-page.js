@@ -21,6 +21,7 @@ import { Pie } from 'react-chartjs-2';
 import {Chart} from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import '../../styles/summit-dashboard-page.less'
+import { trim } from '../../utils/methods';
 
 class SummitDashboardPage extends React.Component {
 
@@ -88,7 +89,7 @@ class SummitDashboardPage extends React.Component {
                     ],
                 },
                 dataTicketTypes : {
-                    labels: this.props.currentSummit.total_tickets_per_type.map(tt => `${tt.type} : ${parseInt(tt.qty)}`),
+                    labels: this.props.currentSummit.total_tickets_per_type.map(tt => `${trim(tt.type , 75)} : ${parseInt(tt.qty)}`),
                     datasets: [
                         {
                             label: 'Ticket Types',
@@ -108,7 +109,7 @@ class SummitDashboardPage extends React.Component {
                 }, 0),
 
                 dataBadgeTypes : {
-                    labels: this.props.currentSummit.total_badges_per_type.map(tt => `${tt.type} : ${parseInt(tt.qty)}`),
+                    labels: this.props.currentSummit.total_badges_per_type.map(tt => `${trim(tt.type, 75)} : ${parseInt(tt.qty)}`),
                     datasets: [
                         {
                             label: 'Badge Types',
@@ -127,7 +128,9 @@ class SummitDashboardPage extends React.Component {
                     return accumulator + parseInt(currentValue.qty);
                 }, 0),
                 dataAttendees:{
-                    labels: ['Checked In', 'Non Checked In', 'Virtual Check In'],
+                    labels: [`Checked In : ${this.props.currentSummit.total_checked_in_attendee}`,
+                             `Non Checked In: ${this.props.currentSummit.total_non_checked_in_attendees}`,
+                             `Virtual Check In ${this.props.currentSummit.total_virtual_attendees}`],
                     datasets: [
                         {
                             label: 'Attendees',
@@ -224,7 +227,9 @@ class SummitDashboardPage extends React.Component {
                     },
                     legend: {
                         display: true,
-                        position: 'left',
+                        position: 'bottom',
+                        maxWidth: 100,
+                        align: 'start',
                     },
                     datalabels: {
                         formatter: (value, ctx) => {

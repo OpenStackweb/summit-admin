@@ -13,7 +13,11 @@ import {findElementPos} from "openstack-uicore-foundation/lib/methods";
  * limitations under the License.
  **/
 
-
+export const trim = (string, length) => {
+    return string.length > length ?
+        string.substring(0, length - 3) + "..." :
+        string;
+}
 export const groupByDate = function(array, prop, sortBy) {
     let grouped_unordered = array.reduce(function(groups, item) {
         var val = item[prop];
