@@ -8,7 +8,7 @@ import {exportReport, getReport} from "../../actions/report-actions";
 import T from "i18n-react/dist/i18n-react";
 import FragmentParser from "../../utils/fragmen-parser";
 import { getMembersForEventCSV } from '../../actions/member-actions'
-import {TrackFilter, RoomFilter, PublishedFilter, PublishedInFilter, StatusFilter, AttendanceFilter, MediaFilter} from '../filters'
+import {TrackFilter, TypeFilter, RoomFilter, PublishedFilter, PublishedInFilter, StatusFilter, AttendanceFilter, MediaFilter} from '../filters'
 import ExportData from '../export'
 
 
@@ -111,7 +111,7 @@ const wrapReport = (ReportComponent, specs) => {
 
         handleExportReport(ev) {
             ev.preventDefault();
-            let grouped = specs.hasOwnProperty('grouped') ? true : false;
+            let grouped = specs.hasOwnProperty('grouped');
             let query = this.buildQuery(1, true);
             let name = this.refs.childCmp.getName();
             this.props.exportReport(query, name, grouped, this.refs.childCmp.preProcessData.bind(this.refs.childCmp));
@@ -124,7 +124,7 @@ const wrapReport = (ReportComponent, specs) => {
         }
 
         handleFilterChange(filter, value) {
-            let multiFilters = ['track', 'room'];
+            let multiFilters = ['track', 'room', 'type'];
             let theValue = null;
 
             if (multiFilters.includes(filter)) {
@@ -149,6 +149,15 @@ const wrapReport = (ReportComponent, specs) => {
                 filterHtml.push(
                     <div className="col-md-3" key="track-filter">
                         <TrackFilter value={filterValue} tracks={currentSummit.tracks} onChange={(value) => {this.handleFilterChange('track',value)}} isMulti/>
+                    </div>
+                );
+            }
+
+            if (specs.filters.includes('type')) {
+                let filterValue = filters.hasOwnProperty('type') ? filters.type : null;
+                filterHtml.push(
+                    <div className="col-md-3" key="type-filter">
+                        <TypeFilter value={filterValue} types={currentSummit.event_types} onChange={(value) => {this.handleFilterChange('type',value)}} isMulti/>
                     </div>
                 );
             }
@@ -215,7 +224,7 @@ const wrapReport = (ReportComponent, specs) => {
             let {sort, sortdir, search, ...filters} = this.fragmentParser.getParams();
             let pageCount = Math.ceil(totalCount / perPage);
             let reportName = this.refs.childCmp ? this.refs.childCmp.getName() : 'report';
-            let grouped = specs.hasOwnProperty('grouped') ? true : false;
+            let grouped = specs.hasOwnProperty('grouped');
             let searchPlaceholder =
                 this.refs.childCmp && this.refs.childCmp.getSearchPlaceholder ?
                     this.refs.childCmp.getSearchPlaceholder() :

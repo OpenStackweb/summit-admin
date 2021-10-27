@@ -41,7 +41,7 @@ class RoomReport extends React.Component {
             filters.ordering = `${order}${querySortKey},start_date`;
         }
 
-        let query = new Query("presentations", listFilters);
+        let query = new Query("events", listFilters);
         let category = new Query("category");
         category.find(["code"]);
         let venue = new Query("venue");
@@ -196,4 +196,4 @@ class RoomReport extends React.Component {
 }
 
 
-export default wrapReport(RoomReport, {pagination: false, filters:['track', 'room'], grouped: true});
+export default wrapReport(RoomReport, {pagination: false, filters:['track', 'room', 'type'], grouped: true});

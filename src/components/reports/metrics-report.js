@@ -220,7 +220,7 @@ class MetricsReport extends React.Component {
                         { columnKey: 'uniqueMetrics', value: 'Metric' },
                     ];
                 }
-            } else {
+            } else if (data.uniqueMetrics) {
                 processedData = data.uniqueMetrics.map(it => ({metric: it}));
             }
         }

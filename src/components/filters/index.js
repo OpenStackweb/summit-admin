@@ -11,6 +11,7 @@
  * limitations under the License.
  **/
 
+import TypeFilter from './type-filter'
 import TrackFilter from './track-filter'
 import RoomFilter from './room-filter'
 import PublishedFilter from './published-filter'
@@ -20,6 +21,7 @@ import AttendanceFilter from './attendance-filter'
 import MediaFilter from './media-filter'
 
 export {
+    TypeFilter,
     TrackFilter,
     RoomFilter,
     PublishedFilter,
