@@ -128,7 +128,7 @@ class SummitDashboardPage extends React.Component {
                     return accumulator + parseInt(currentValue.qty);
                 }, 0),
                 dataAttendees:{
-                    labels: [`Checked In : ${this.props.currentSummit.total_checked_in_attendee}`,
+                    labels: [`Checked In : ${this.props.currentSummit.total_checked_in_attendees}`,
                              `Non Checked In: ${this.props.currentSummit.total_non_checked_in_attendees}`,
                              `Virtual Check In ${this.props.currentSummit.total_virtual_attendees}`],
                     datasets: [
@@ -241,7 +241,7 @@ class SummitDashboardPage extends React.Component {
                             }
                             return '';
                         },
-                        color: '#000000',
+                        color: '#FFFFFF',
                     }
                 },
         };
