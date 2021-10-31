@@ -33,7 +33,7 @@ const fieldNames = [
     {label: 'Emails', key: 'speakerEmails', simple: true},
     {label: 'Track', key: 'category_title', sortable: true},
     {label: 'Tags', key: 'tagNames', simple: true},
-    {label: 'Event Type', key: 'type_name', sortable: true},
+    {label: 'Event Type', key: 'type_type', sortable: true},
     {label: 'Head Count', key: 'headCount', simple: true},
     {label: 'Attending Media', key: 'attendingMedia', simple: true},
     {label: 'To Record', key: 'toRecord', simple: true},
@@ -74,9 +74,9 @@ class SmartPresentationReport extends React.Component {
             filters.ordering = order + '' + querySortKey;
         }
 
-        if (showFields.includes("type_name")) {
+        if (showFields.includes("type_type")) {
             const type = new Query("type");
-            type.find(["id", "name"]);
+            type.find(["id", "type"]);
             reportData.push({"type": type})
         }
 
@@ -135,15 +135,16 @@ class SmartPresentationReport extends React.Component {
             { columnKey: 'title', value: 'Presentation' }
         ];
 
-
         let showColumns = fieldNames
             .filter(f => showFields.includes(f.key) )
-            .map( f2 => ({columnKey: f2.key, value: f2.label, sortable: f2.sortable}));
+            .map( f2 => (
+                {   columnKey: f2.key,
+                    value: f2.label,
+                    sortable: f2.sortable
+                }));
 
 
         columns = [...columns, ...showColumns];
-
-
         return {reportData: flatData, tableColumns: columns};
     }
 
