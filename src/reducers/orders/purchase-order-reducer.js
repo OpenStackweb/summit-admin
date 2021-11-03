@@ -68,7 +68,6 @@ const purchaseOrderReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
         }
         break;
-        case PURCHASE_ORDER_UPDATED:
         case RECEIVE_PURCHASE_ORDER: {
             let entity = {...payload.response};
 

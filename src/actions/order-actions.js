@@ -408,9 +408,9 @@ export const savePurchaseOrder = (entity) => (dispatch, getState) => {
             entity
         )(params)(dispatch)
             .then((payload) => {
+                dispatch(stopLoading());
                 dispatch(showSuccessMessage(T.translate("edit_purchase_order.order_saved")));
-            });
-
+            }).catch(() => dispatch(stopLoading()));
     }
 
     const success_message = {
