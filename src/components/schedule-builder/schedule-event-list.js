@@ -188,6 +188,7 @@ class ScheduleEventList extends React.Component
         console.log(`currentDay ${currentDay} startTime ${startTime}`);
         console.log(dayStartDateTime,``)
         let minutes            = eventStartDateTime.diff(dayStartDateTime, 'minutes');
+        console.log(`event.id ${event.id} minutes ${minutes}`)
         return minutes * pixelsPerMinute;
     }
 
