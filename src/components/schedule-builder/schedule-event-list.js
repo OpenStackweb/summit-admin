@@ -182,7 +182,11 @@ class ScheduleEventList extends React.Component
     calculateInitialTop(event){
         let { currentDay, startTime, pixelsPerMinute, currentSummit} = this.props;
         let eventStartDateTime = moment(event.start_date * 1000).tz(currentSummit.time_zone.name);
+        console.log(`event.id ${event.id} event.start_date ${event.start_date} currentSummit.time_zone.name ${currentSummit.time_zone.name} ${currentSummit.time_zone_id}`)
+        console.log(eventStartDateTime,`${eventStartDateTime.format('YYYY-MM-DD HH:mm')}`)
         let dayStartDateTime   = moment.tz(currentDay+' '+ startTime, 'YYYY-MM-DD HH:mm', currentSummit.time_zone.name);
+        console.log(`currentDay ${currentDay} startTime ${startTime}`);
+        console.log(dayStartDateTime,``)
         let minutes            = eventStartDateTime.diff(dayStartDateTime, 'minutes');
         return minutes * pixelsPerMinute;
     }
