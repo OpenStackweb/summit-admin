@@ -30,7 +30,7 @@ export default class TypeFilter extends React.Component {
     render() {
         let {types, value, onChange, ...rest} = this.props;
         let theValue = null;
-        let options = types.map(t => ({value: t.name.toLowerCase(), label: t.name}));
+        let options = types.map(t => ({value: t.id, label: t.name}));
 
         if (value) {
             theValue = this.props.isMulti ? options.filter(op => value.includes(op.value)) : options.find(op => op.value === value);
