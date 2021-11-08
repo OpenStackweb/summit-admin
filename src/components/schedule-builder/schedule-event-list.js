@@ -210,8 +210,8 @@ class ScheduleEventList extends React.Component
 
         let timeSlotsList = [];
         let done          = false;
-        startTime         = moment.tz(startTime, 'HH:mm', currentSummit.time_zone.nam);
-        endTime           = moment.tz(endTime, 'HH:mm', currentSummit.time_zone.nam);
+        startTime         = moment.tz(startTime, 'HH:mm', currentSummit.time_zone.name);
+        endTime           = moment.tz(endTime, 'HH:mm', currentSummit.time_zone.name);
         // create UI
         let slot = startTime;
         do
