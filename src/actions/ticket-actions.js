@@ -24,7 +24,8 @@ import {
     showMessage,
     showSuccessMessage,
     authErrorHandler,
-    getCSV,
+    getRawCSV,
+    downloadFileByContent,
     escapeFilterValue
 } from 'openstack-uicore-foundation/lib/methods';
 
@@ -185,18 +186,48 @@ export const importTicketsCSV = (file) => (dispatch, getState) => {
         });
 };
 
-export const exportTicketsCSV = ( ) => (dispatch, getState) => {
+export const exportTicketsCSV = (pageSize = 500) => (dispatch, getState) => {
+    dispatch(startLoading());
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const csvMIME = 'text/csv;charset=utf-8';
+    const { loggedUserState, currentSummitState, currentTicketListState} = getState();
+    const { accessToken } = loggedUserState;
+    const { currentSummit } = currentSummitState;
+    const { totalTickets } = currentTicketListState;
     const filename = currentSummit.name + '-Tickets.csv';
-    const params = {
-        access_token : accessToken
-    };
+    const totalPages = Math.ceil(totalTickets / pageSize);
+    const endpoint = `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets/csv`;
 
-    dispatch(getCSV(`${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets/csv`, params, filename));
+    // create the params for the promises all ( only diff is the page nbr)
 
+    let params = Array.from({length: totalPages}, (_, i) =>
+    ({
+        page : i + 1,
+        access_token : accessToken,
+        per_page:pageSize,
+    }))
+    // export CSV file by chunks ...
+    Promise.all(params.map((p) => getRawCSV(endpoint, p)))
+        .then((files) => {
+            if(files.length > 0) {
+                // if we get result try to get first the header
+                let header = files[0].split('\n')[0];
+                // and rebuild all the chunks using reduce
+                let csv = files.reduce((final, currentCvs) => {
+                    let lines = currentCvs.split('\n');
+                    // remove one line, starting at the first position
+                    lines.splice(0, 1);
+                    let rawContent = lines.join('\n');
+                    return final === '' ? rawContent : `${final}${rawContent}`;
+                }, '');
+                // then simulate the file download
+                downloadFileByContent(filename, `${header}\n${csv}`, csvMIME);
+            }
+            dispatch(stopLoading());
+        })
+        .catch(err => {
+            dispatch(stopLoading());
+        });
 };
 
 export const getTicket = (ticketId) => (dispatch, getState) => {

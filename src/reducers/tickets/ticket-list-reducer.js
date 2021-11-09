@@ -29,7 +29,7 @@ const DEFAULT_STATE = {
     currentPage         : 1,
     lastPage            : 1,
     perPage             : 10,
-    totaltickets        : 0
+    totalTickets        : 0
 };
 
 const ticketListReducer = (state = DEFAULT_STATE, action) => {
@@ -70,7 +70,6 @@ const ticketListReducer = (state = DEFAULT_STATE, action) => {
                     refund_requests: [...t.refund_requests],
                 };
             })
-
             return {...state, tickets: tickets, lastPage: last_page, totalTickets: total };
         }
         break;
