@@ -119,7 +119,6 @@ class MetricsReport extends React.Component {
 
     buildReportQuery(filters, listFilters) {
         let query = null;
-
         if (listFilters.search) {
             this.memberReport = true;
             query = this.buildMemberQuery(filters, listFilters);
@@ -194,7 +193,7 @@ class MetricsReport extends React.Component {
 
             if (eventType === 'EVENT') {
                 processedData = data.rooms.map(rm => {
-                    return {...rm, events: rm.events.filter(ev => ev.uniqueMetrics.length)};
+                    return {...rm, events: rm.events.filter(ev => ev?.uniqueMetrics?.length)};
                 }).filter(rm => rm.events.length);
 
                 if (forExport) {
@@ -225,8 +224,6 @@ class MetricsReport extends React.Component {
             }
         }
 
-
-
         return {reportData: processedData, tableColumns: columns};
     }
 
@@ -237,7 +234,6 @@ class MetricsReport extends React.Component {
     handleFilterChange(ev) {
         let {id, value} = ev.target;
         const {state} = this;
-
         state[id] = value;
         this.setState(state);
     }
