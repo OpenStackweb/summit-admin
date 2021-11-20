@@ -130,24 +130,49 @@ class SummitDashboardPage extends React.Component {
                 dataAttendees:{
                     labels: [`Checked In : ${this.props.currentSummit.total_checked_in_attendees}`,
                              `Non Checked In: ${this.props.currentSummit.total_non_checked_in_attendees}`,
-                             `Virtual Check In ${this.props.currentSummit.total_virtual_attendees}`],
+                            // `Virtual Check In ${this.props.currentSummit.total_virtual_attendees}`
+                    ],
                     datasets: [
                         {
                             label: 'Attendees',
                             data: [
                                 this.props.currentSummit.total_checked_in_attendees,
                                 this.props.currentSummit.total_non_checked_in_attendees,
-                                this.props.currentSummit.total_virtual_attendees
+                                //this.props.currentSummit.total_virtual_attendees
                             ],
                             backgroundColor: [
                                 'rgba(75, 192, 192, 1)',
                                 'rgba(255, 99, 132, 1)',
-                                'rgba(255, 159, 64, 1)',
+                                //'rgba(255, 159, 64, 1)',
                             ],
                             borderColor: [
                                 'rgba(75, 192, 192, 1)',
                                 'rgba(255, 99, 132, 1)',
+                               // 'rgba(255, 159, 64, 1)',
+                            ],
+                            borderWidth: 1,
+                        },
+                    ],
+                },
+                dataVirtualAttendees:{
+                    labels: [
+                        `Virtual Check In ${this.props.currentSummit.total_virtual_attendees}`,
+                        `Non Virtual Checked In: ${(this.props.currentSummit.total_checked_in_attendees + this.props.currentSummit.total_non_checked_in_attendees) - this.props.currentSummit.total_virtual_attendees}`,
+                    ],
+                    datasets: [
+                        {
+                            label: 'Attendees',
+                            data: [
+                                this.props.currentSummit.total_virtual_attendees,
+                                (this.props.currentSummit.total_checked_in_attendees + this.props.currentSummit.total_non_checked_in_attendees) - this.props.currentSummit.total_virtual_attendees,
+                            ],
+                            backgroundColor: [
                                 'rgba(255, 159, 64, 1)',
+                                'rgba(255, 99, 132, 1)',
+                            ],
+                            borderColor: [
+                                'rgba(255, 159, 64, 1)',
+                                'rgba(255, 99, 132, 1)',
                             ],
                             borderWidth: 1,
                         },
@@ -399,11 +424,17 @@ class SummitDashboardPage extends React.Component {
                                 <>
                                     <h5><i
                                         className="fa fa-users"/>&nbsp;{T.translate("dashboard.attendees")} ({this.props.currentSummit.total_checked_in_attendees +
-                                    this.props.currentSummit.total_non_checked_in_attendees +
-                                    this.props.currentSummit.total_virtual_attendees})</h5>
+                                    this.props.currentSummit.total_non_checked_in_attendees})</h5>
                                     <div className="row">
-                                        <div className="col-md-12">
+                                        <div className="col-md-6">
                                             <Pie data={this.state.dataAttendees}
+                                                 width={325}
+                                                 height={325}
+                                                 options={chartOptions}
+                                            />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <Pie data={this.state.dataVirtualAttendees}
                                                  width={325}
                                                  height={325}
                                                  options={chartOptions}
