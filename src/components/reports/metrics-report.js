@@ -13,11 +13,12 @@
 
 import React from 'react'
 import moment from 'moment-timezone'
-import {DateTimePicker, Dropdown, Panel, Table} from 'openstack-uicore-foundation/lib/components'
+import {CompanyInput, DateTimePicker, Dropdown, Panel, Table} from 'openstack-uicore-foundation/lib/components'
 const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
 import {groupByDate} from '../../utils/methods'
 import {flattenData} from "../../actions/report-actions";
+import T from "i18n-react";
 
 class MetricsReport extends React.Component {
     constructor(props) {
@@ -31,9 +32,11 @@ class MetricsReport extends React.Component {
         this.getTable = this.getTable.bind(this);
 
         this.state = {
+            sponsor: null,
             eventType: null,
             fromDate: null,
             toDate: null,
+            showAnswers: false,
         };
 
         this.memberReport = false;
@@ -41,47 +44,58 @@ class MetricsReport extends React.Component {
 
     buildMetricsQuery = (filters, listFilters) => {
         const {currentSummit} = this.props;
-        const {fromDate, toDate, eventType} = this.state;
-        const overallFilter = [];
-        const dateFilter = [];
+        const {fromDate, toDate, eventType, sponsor, showAnswers} = this.state;
+        const overallFilter = {};
+        const metricsFields = ["name"];
+        const sponsorsMessage = ["sponsors"];
+        const roomsMessage = ["rooms"];
+        const eventsMessage = ["events"];
+
+        if (showAnswers) {
+            metricsFields.push("answers");
+        }
+
+        if (sponsor) {
+            const sponsorId = parseInt(sponsor.id);
+            sponsorsMessage.push({company: sponsorId});
+            roomsMessage.push({events_Sponsors_Id: sponsorId});
+            eventsMessage.push({sponsors_Id: sponsorId});
+        }
 
         listFilters.id = currentSummit.id;
 
         if (eventType) {
-            overallFilter.push(`metricType: "${eventType}"`);
+            overallFilter.metricType = eventType;
         }
 
         if (fromDate) {
-            overallFilter.push(`fromDate: "${moment(fromDate).format('YYYY-MM-DDTHH:mm:ss+00:00')}"`);
-            dateFilter.push(`fromDate: "${moment(fromDate).format('YYYY-MM-DDTHH:mm:ss+00:00')}"`);
+            overallFilter.fromDate = moment(fromDate).format('YYYY-MM-DDTHH:mm:ss+00:00');
         }
 
         if (toDate) {
-            overallFilter.push(`toDate: "${moment(toDate).format('YYYY-MM-DDTHH:mm:ss+00:00')}"`);
-            dateFilter.push(`toDate: "${moment(toDate).format('YYYY-MM-DDTHH:mm:ss+00:00')}"`);
+            overallFilter.toDate = moment(toDate).format('YYYY-MM-DDTHH:mm:ss+00:00');
         }
-
-        let overallMetrics = 'uniqueMetrics';
-        let metrics = 'uniqueMetrics';
-
-        if (overallFilter.length) {
-            overallMetrics = overallMetrics + `(${overallFilter.join(', ')})`
-        }
-
-        if (dateFilter.length) {
-            metrics = metrics + `(${dateFilter.join(', ')})`
-        }
-
 
         let query = new Query("summits", listFilters);
-        let sponsors = new Query("sponsors");
-        sponsors.find(["id", "companyName", metrics]);
-        let events = new Query("events");
-        events.find(["id", "title", metrics]);
-        let rooms = new Query("rooms");
+        let metrics = new Query("uniqueMetrics", overallFilter)
+        metrics.find(metricsFields)
+        let sponsors = new Query(...sponsorsMessage);
+        sponsors.find(["id", "companyName", {"metrics": metrics}]);
+        let events = new Query(...eventsMessage);
+        events.find(["id", "title", {"metrics": metrics}]);
+        let rooms = new Query(...roomsMessage);
         rooms.find(["id", "name", {"events": events}]);
+        let extraQuestions = new Query("orderExtraQuestions");
+        extraQuestions.find(["id", "name"]);
 
-        query.find(["id", "title", overallMetrics, {"rooms": rooms}, {"sponsors": sponsors}]);
+        query.find([
+            "id",
+            "title",
+            {"metrics": metrics},
+            {"rooms": rooms},
+            {"sponsors": sponsors},
+            {"extraQuestions": extraQuestions}
+        ]);
 
         return query;
     };
@@ -89,8 +103,6 @@ class MetricsReport extends React.Component {
     buildMemberQuery = (filters, listFilters) => {
         const {currentSummit} = this.props;
         const {fromDate, toDate, eventType} = this.state;
-        const overallFilter = [];
-        const dateFilter = [];
 
         listFilters.summitId = currentSummit.id;
         filters.ordering = 'ingress_date';
@@ -156,12 +168,25 @@ class MetricsReport extends React.Component {
         return this.memberReport ? 'Member Metrics' : 'Metrics Report';
     }
 
+    parseMetricData = (metric) => {
+        const {showAnswers} = this.state;
+        let result = {metric: metric.name};
+        if (showAnswers) {
+            const answers = metric.answers?.split('|').reduce((result, qa) => {
+                const qaArray = qa.split(':');
+                return { ...result, [qaArray[0]]: qaArray[1] || 'n/a'};
+            }, {}) || {};
+            result = {metric: metric.name, ...answers}
+        }
+        return result;
+    }
+
     getSearchPlaceholder() {
         return 'Search by User Email or User Last Name';
     }
 
     preProcessData(data, extraData, forExport=false) {
-        let {eventType} = this.state;
+        let {eventType, showAnswers} = this.state;
         let processedData = [];
         let columns = [];
 
@@ -191,10 +216,24 @@ class MetricsReport extends React.Component {
                 { columnKey: 'metric', value: 'Metric' }
             ];
 
+            if (showAnswers && data.extraQuestions) {
+                columns = [...columns, ...data.extraQuestions.map(q => ({ columnKey: q.id, value: q.name}))]
+            }
+
             if (eventType === 'EVENT') {
-                processedData = data.rooms.map(rm => {
-                    return {...rm, events: rm.events.filter(ev => ev?.uniqueMetrics?.length)};
-                }).filter(rm => rm.events.length);
+                processedData = data.rooms
+                    .map(rm => {
+                        return {
+                            ...rm,
+                            events: rm.events
+                                .filter(ev => ev?.metrics?.length)
+                                .map(ev => {
+                                    const metrics = ev.metrics.map(this.parseMetricData);
+                                    return ({...ev, metrics})
+                                })
+                        };
+                    })
+                    .filter(rm => rm.events.length);
 
                 if (forExport) {
                     processedData = processedData.reduce((result, item) => {
@@ -205,22 +244,29 @@ class MetricsReport extends React.Component {
                     columns = [
                         { columnKey: 'id', value: 'Event Id' },
                         { columnKey: 'title', value: 'Event' },
-                        { columnKey: 'uniqueMetrics', value: 'Metric' }
+                        { columnKey: 'metrics_metric', value: 'Metric' },
+                        ...data.extraQuestions.map(q => ({ columnKey: `metrics_${q.id}`, value: q.name}))
                     ];
                 }
             } else if (eventType === 'SPONSOR') {
-                processedData = data.sponsors.filter(s => s.uniqueMetrics.length);
+                processedData = data.sponsors
+                    .filter(s => s.metrics.length)
+                    .map(sp => {
+                        const metrics = sp.metrics.map(this.parseMetricData);
+                        return ({...sp, metrics})
+                    });
 
                 if (forExport) {
                     processedData = flattenData(processedData);
                     columns = [
                         { columnKey: 'id', value: 'Id' },
                         { columnKey: 'companyName', value: 'Sponsor' },
-                        { columnKey: 'uniqueMetrics', value: 'Metric' },
+                        { columnKey: 'metrics_metric', value: 'Metric' },
+                        ...data.extraQuestions.map(q => ({ columnKey: `metrics_${q.id}`, value: q.name}))
                     ];
                 }
-            } else if (data.uniqueMetrics) {
-                processedData = data.uniqueMetrics.map(it => ({metric: it}));
+            } else if (data.metrics) {
+                processedData = data.metrics.map(this.parseMetricData);
             }
         }
 
@@ -232,9 +278,9 @@ class MetricsReport extends React.Component {
     }
 
     handleFilterChange(ev) {
-        let {id, value} = ev.target;
+        let {id, value, type, checked} = ev.target;
         const {state} = this;
-        state[id] = value;
+        state[id] = type === 'checkbox' ? checked : value;
         this.setState(state);
     }
 
@@ -272,17 +318,16 @@ class MetricsReport extends React.Component {
             });
         } else if (eventType === 'SPONSOR') {
             tables = data.map(grp => {
-                const tableData = grp.uniqueMetrics.map(it => ({metric: it}));
                 const name = grp.companyName;
                 const sectionId = `section_${grp.id}`;
 
                 return (
-                    <Panel show={showSection === sectionId} title={`${name} (${tableData.length})`}
+                    <Panel show={showSection === sectionId} title={`${name} (${grp.metrics.length})`}
                            handleClick={() => toggleSection(sectionId)} key={sectionId}>
                         <div className="table-responsive">
                             <Table
                                 options={options}
-                                data={tableData}
+                                data={grp.metrics}
                                 columns={tableCols}
                                 onSort={this.props.onSort}
                             />
@@ -300,16 +345,15 @@ class MetricsReport extends React.Component {
                         <div className="panel-heading">{name}</div>
                         <div style={{padding: 10}}>
                             {room.events.map(ev => {
-                                const tableData = ev.uniqueMetrics.map(it => ({metric: it}));
                                 const sectionId = `section_${ev.id}`;
 
                                 return (
-                                    <Panel show={showSection === sectionId} title={`${ev.title} (${ev.uniqueMetrics.length})`}
+                                    <Panel show={showSection === sectionId} title={`${ev.title} (${ev.metrics.length})`}
                                            handleClick={() => toggleSection(sectionId)} key={sectionId}>
                                         <div className="table-responsive">
                                             <Table
                                                 options={options}
-                                                data={tableData}
+                                                data={ev.metrics}
                                                 columns={tableCols}
                                                 onSort={this.props.onSort}
                                             />
@@ -341,9 +385,9 @@ class MetricsReport extends React.Component {
     }
 
     render() {
-        let {data, sortKey, sortDir} = this.props;
+        let {data, sortKey, sortDir, currentSummit} = this.props;
         let storedDataName = this.props.name;
-        const {eventType} = this.state;
+        const {eventType, sponsor, showAnswers} = this.state;
 
         if (!data || ( Array.isArray(data) && !data.length ) || storedDataName !== this.getName()) return (<div />);
 
@@ -366,17 +410,27 @@ class MetricsReport extends React.Component {
             <div>
                 <div className="report-filters">
                     <div className="row">
-                        <div className="col-md-3">
+                        <div className="col-md-2">
                             <label>Type</label>
                             <Dropdown
                                 id="eventType"
                                 options={event_types_ddl}
                                 onChange={this.handleFilterChange}
-                                value={this.state.eventType}
+                                value={eventType}
                                 clearable
                             />
                         </div>
-                        <div className="col-md-6">
+                        <div className="col-md-2">
+                            <label>Sponsor</label>
+                            <CompanyInput
+                                id="sponsor"
+                                value={sponsor}
+                                onChange={this.handleFilterChange}
+                                summitId={currentSummit.id}
+                                clearable
+                            />
+                        </div>
+                        <div className="col-md-4">
                             <label>Ingress date</label>
                             <div className="inline">
                                 From: &nbsp;&nbsp;
@@ -395,7 +449,16 @@ class MetricsReport extends React.Component {
                                 />
                             </div>
                         </div>
-                        <div className="col-md-3">
+                        <div className="col-md-2 checkboxes-div">
+                            <div className="form-check abc-checkbox">
+                                <input type="checkbox" id="showAnswers" checked={showAnswers}
+                                       onChange={this.handleFilterChange} className="form-check-input" />
+                                <label className="form-check-label" htmlFor="showAnswers">
+                                    Show Answers
+                                </label>
+                            </div>
+                        </div>
+                        <div className="col-md-2">
                             <button className="btn btn-primary" onClick={this.filterReport}> GO </button>
                         </div>
                     </div>

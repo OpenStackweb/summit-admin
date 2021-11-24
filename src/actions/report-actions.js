@@ -63,7 +63,7 @@ const jsonToCsv = (items) => {
 
 export const exportReport = ( query, reportName, grouped, preProcessData=null ) => (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
+    const { loggedUserState } = getState();
     const { accessToken }     = loggedUserState;
 
     dispatch(startLoading());
