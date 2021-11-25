@@ -18,7 +18,6 @@ const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
 import {groupByDate} from '../../utils/methods'
 import {flattenData} from "../../actions/report-actions";
-import T from "i18n-react";
 
 class MetricsReport extends React.Component {
     constructor(props) {
@@ -244,9 +243,12 @@ class MetricsReport extends React.Component {
                     columns = [
                         { columnKey: 'id', value: 'Event Id' },
                         { columnKey: 'title', value: 'Event' },
-                        { columnKey: 'metrics_metric', value: 'Metric' },
-                        ...data.extraQuestions.map(q => ({ columnKey: `metrics_${q.id}`, value: q.name}))
+                        { columnKey: 'metrics_metric', value: 'Metric' }
                     ];
+
+                    if (showAnswers && data.extraQuestions) {
+                        columns = [...columns, ...data.extraQuestions.map(q => ({ columnKey: `metrics_${q.id}`, value: q.name}))]
+                    }
                 }
             } else if (eventType === 'SPONSOR') {
                 processedData = data.sponsors
@@ -261,9 +263,12 @@ class MetricsReport extends React.Component {
                     columns = [
                         { columnKey: 'id', value: 'Id' },
                         { columnKey: 'companyName', value: 'Sponsor' },
-                        { columnKey: 'metrics_metric', value: 'Metric' },
-                        ...data.extraQuestions.map(q => ({ columnKey: `metrics_${q.id}`, value: q.name}))
+                        { columnKey: 'metrics_metric', value: 'Metric' }
                     ];
+
+                    if (showAnswers && data.extraQuestions) {
+                        columns = [...columns, ...data.extraQuestions.map(q => ({ columnKey: `metrics_${q.id}`, value: q.name}))]
+                    }
                 }
             } else if (data.metrics) {
                 processedData = data.metrics.map(this.parseMetricData);
@@ -410,7 +415,7 @@ class MetricsReport extends React.Component {
             <div>
                 <div className="report-filters">
                     <div className="row">
-                        <div className="col-md-2">
+                        <div className="col-md-3">
                             <label>Type</label>
                             <Dropdown
                                 id="eventType"
@@ -420,7 +425,7 @@ class MetricsReport extends React.Component {
                                 clearable
                             />
                         </div>
-                        <div className="col-md-2">
+                        <div className="col-md-3">
                             <label>Sponsor</label>
                             <CompanyInput
                                 id="sponsor"
@@ -430,7 +435,21 @@ class MetricsReport extends React.Component {
                                 clearable
                             />
                         </div>
-                        <div className="col-md-4">
+                        <div className="col-md-2 checkboxes-div">
+                            <div className="form-check abc-checkbox">
+                                <input type="checkbox" id="showAnswers" checked={showAnswers}
+                                       onChange={this.handleFilterChange} className="form-check-input" />
+                                <label className="form-check-label" htmlFor="showAnswers">
+                                    Show Answers
+                                </label>
+                            </div>
+                        </div>
+                        <div className="col-md-2" style={{marginTop: 20}}>
+                            <button className="btn btn-primary" onClick={this.filterReport}> GO </button>
+                        </div>
+                    </div>
+                    <div className="row" style={{marginTop: 20}}>
+                        <div className="col-md-6">
                             <label>Ingress date</label>
                             <div className="inline">
                                 From: &nbsp;&nbsp;
@@ -448,18 +467,6 @@ class MetricsReport extends React.Component {
                                     value={this.state.toDate}
                                 />
                             </div>
-                        </div>
-                        <div className="col-md-2 checkboxes-div">
-                            <div className="form-check abc-checkbox">
-                                <input type="checkbox" id="showAnswers" checked={showAnswers}
-                                       onChange={this.handleFilterChange} className="form-check-input" />
-                                <label className="form-check-label" htmlFor="showAnswers">
-                                    Show Answers
-                                </label>
-                            </div>
-                        </div>
-                        <div className="col-md-2">
-                            <button className="btn btn-primary" onClick={this.filterReport}> GO </button>
                         </div>
                     </div>
                 </div>
