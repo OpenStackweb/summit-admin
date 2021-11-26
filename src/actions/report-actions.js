@@ -25,7 +25,7 @@ export const RECEIVE_REPORT         = 'RECEIVE_REPORT';
 export const REQUEST_EXPORT_REPORT  = 'REQUEST_EXPORT_REPORT';
 export const RECEIVE_EXPORT_REPORT  = 'RECEIVE_EXPORT_REPORT';
 export const RESET_EXPORT_REPORT    = 'RESET_EXPORT_REPORT';
-
+const TIMEOUT = 300 ;//secs
 
 export const getReport = (query, reportName, page) => (dispatch, getState) => {
 
@@ -44,7 +44,9 @@ export const getReport = (query, reportName, page) => (dispatch, getState) => {
         createAction(RECEIVE_REPORT),
         `${window.REPORT_API_BASE_URL}/reports`,
         authErrorHandler,
-        {name: reportName, page}
+        {name: reportName, page},
+        TIMEOUT,
+        TIMEOUT
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
@@ -77,7 +79,10 @@ export const exportReport = ( query, reportName, grouped, preProcessData=null ) 
         createAction(REQUEST_EXPORT_REPORT),
         createAction('DUMMY_ACTION'),
         `${window.REPORT_API_BASE_URL}/reports`,
-        authErrorHandler
+        authErrorHandler,
+        {},
+        TIMEOUT,
+        TIMEOUT
     )(params)(dispatch).then((payload) => {
         dispatch(stopLoading());
 
