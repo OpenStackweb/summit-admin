@@ -439,6 +439,28 @@ class SummitForm extends React.Component {
                     </div>
                 </div>
                 <div className="row form-group">
+                        <div className="col-md-6 checkboxes-div">
+                            <div className="form-check abc-checkbox">
+                                <input type="checkbox" id="registration_send_qr_as_image_attachment_on_ticket_email"
+                                       checked={entity.registration_send_qr_as_image_attachment_on_ticket_email} onChange={this.handleChange}
+                                       className="form-check-input"/>
+                                <label className="form-check-label" htmlFor="registration_send_qr_as_image_attachment_on_ticket_email">
+                                    {T.translate("edit_summit.registration_send_qr_as_image_attachment_on_ticket_email")}
+                                </label>
+                            </div>
+                        </div>
+                        <div className="col-md-6 checkboxes-div">
+                            <div className="form-check abc-checkbox">
+                                <input type="checkbox" id="registration_send_ticket_as_pdf_attachment_on_ticket_email"
+                                       checked={entity.registration_send_ticket_as_pdf_attachment_on_ticket_email} onChange={this.handleChange}
+                                       className="form-check-input"/>
+                                <label className="form-check-label" htmlFor="registration_send_ticket_as_pdf_attachment_on_ticket_email">
+                                    {T.translate("edit_summit.registration_send_ticket_as_pdf_attachment_on_ticket_email")}
+                                </label>
+                            </div>
+                        </div>
+                </div>
+                <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("general.logo")} </label>
                         <UploadInput

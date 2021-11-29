@@ -25,7 +25,6 @@ import {
 } from "../../actions/badge-actions";
 
 import {
-    REQUEST_USER_ROLES_BY_SUMMIT,
     RECEIVE_USER_ROLES_BY_SUMMIT
 } from "../../actions/user-chat-roles-actions.js";
 
@@ -105,6 +104,8 @@ export const DEFAULT_ENTITY = {
     virtual_site_url: null,
     marketing_site_url: null,
     help_users : [],
+    registration_send_qr_as_image_attachment_on_ticket_email : false,
+    registration_send_ticket_as_pdf_attachment_on_ticket_email : false,
 };
 
 const DEFAULT_STATE = {
