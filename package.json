@@ -49,7 +49,7 @@
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
     "node-sass": "^4.14.1",
-    "openstack-uicore-foundation": "2.1.25",
+    "openstack-uicore-foundation": "2.1.28",
     "optimize-css-assets-webpack-plugin": "^5.0.4",
     "postcss-loader": "^2.1.6",
     "react": "^16.13.1",

@@ -68,6 +68,7 @@ export const resetEventMaterialForm = () => (dispatch, getState) => {
 };
 
 export const saveEventMaterial = (entity) => (dispatch, getState) => {
+
     const { loggedUserState, currentSummitState, currentSummitEventState } = getState();
     const { accessToken }     = loggedUserState;
     const { currentSummit }   = currentSummitState;
@@ -79,7 +80,9 @@ export const saveEventMaterial = (entity) => (dispatch, getState) => {
     else if (entity.class_name === 'PresentationVideo') slug = 'videos';
     else if (entity.class_name === 'PresentationSlide') slug = 'slides';
     else slug = 'media-uploads';
-
+    let withCredentials = false;
+    if(slug == 'media-uploads')
+        withCredentials = true;
     dispatch(startLoading());
 
     const normalizedEntity = normalizeEntity(entity);
@@ -96,7 +99,8 @@ export const saveEventMaterial = (entity) => (dispatch, getState) => {
             `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/presentations/${eventId}/${slug}/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
-            entity
+            entity,
+            withCredentials
         )(params)(dispatch)
             .then((payload) => {
                 dispatch(showSuccessMessage(T.translate("edit_event_material.event_material_saved")));
@@ -115,7 +119,8 @@ export const saveEventMaterial = (entity) => (dispatch, getState) => {
             `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/presentations/${eventId}/${slug}`,
             normalizedEntity,
             authErrorHandler,
-            entity
+            entity,
+            withCredentials
         )(params)(dispatch)
             .then((payload) => {
                 dispatch(showMessage(
@@ -140,7 +145,6 @@ export const saveEventMaterialWithFile = (entity, file, slug) => (dispatch, getS
     };
 
     const normalizedEntity = normalizeEntity(entity);
-
 
     if (entity.id) {
 
@@ -213,11 +217,9 @@ export const deleteEventMaterial = (eventMaterialId) => (dispatch, getState) => 
             break;
     }
 
-
     const params = {
         access_token : accessToken
     };
-
 
     return deleteRequest(
         null,
