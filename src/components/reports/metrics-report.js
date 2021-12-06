@@ -479,4 +479,4 @@ class MetricsReport extends React.Component {
 }
 
 
-export default wrapReport(MetricsReport, {pagination: false});
+export default wrapReport(MetricsReport, {pagination: false, preventInitialLoad: true});

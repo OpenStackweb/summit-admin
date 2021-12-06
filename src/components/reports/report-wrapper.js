@@ -35,7 +35,9 @@ const wrapReport = (ReportComponent, specs) => {
         componentDidMount () {
             if (!this.props.currentSummit) return;
 
-            this.handleGetReport(1);
+            if (!specs?.preventInitialLoad) {
+                this.handleGetReport(1);
+            }
         }
 
         buildFiltersForQuery(filters, summitId) {
