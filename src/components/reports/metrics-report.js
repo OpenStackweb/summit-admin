@@ -87,14 +87,17 @@ class MetricsReport extends React.Component {
         let extraQuestions = new Query("orderExtraQuestions");
         extraQuestions.find(["id", "name"]);
 
-        query.find([
-            "id",
-            "title",
-            {"metrics": metrics},
-            {"rooms": rooms},
-            {"sponsors": sponsors},
-            {"extraQuestions": extraQuestions}
-        ]);
+        const findQueries = ["id", "title", {"extraQuestions": extraQuestions}];
+
+        if (eventType === 'EVENT') {
+            findQueries.push({"rooms": rooms});
+        } else if (eventType === 'SPONSOR') {
+            findQueries.push({"sponsors": sponsors});
+        } else {
+            findQueries.push({"metrics": metrics});
+        }
+
+        query.find(findQueries);
 
         return query;
     };
@@ -295,6 +298,7 @@ class MetricsReport extends React.Component {
 
     getTable(data, options, tableCols) {
         const {eventType, showSection} = this.state;
+        const {name: storedDataName} = this.props;
         let tables = [];
 
         const toggleSection = (sectionName) => {
@@ -302,6 +306,8 @@ class MetricsReport extends React.Component {
             const newSection = showSection === sectionName ? null : sectionName;
             this.setState({showSection: newSection})
         };
+
+        if (!data || ( Array.isArray(data) && !data.length ) || storedDataName !== this.getName()) return (<div />);
 
         if (this.memberReport) {
             tables = Object.entries(data).map(([user, metricData]) => {
@@ -391,10 +397,7 @@ class MetricsReport extends React.Component {
 
     render() {
         let {data, sortKey, sortDir, currentSummit} = this.props;
-        let storedDataName = this.props.name;
         const {eventType, sponsor, showAnswers} = this.state;
-
-        if (!data || ( Array.isArray(data) && !data.length ) || storedDataName !== this.getName()) return (<div />);
 
         let report_options = {
             sortCol: sortKey,
