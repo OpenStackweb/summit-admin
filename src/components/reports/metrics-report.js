@@ -45,7 +45,7 @@ class MetricsReport extends React.Component {
         const {currentSummit} = this.props;
         const {fromDate, toDate, eventType, sponsor, showAnswers} = this.state;
         const overallFilter = {};
-        const metricsFields = ["name"];
+        const metricsFields = ["name", "company"];
         const sponsorsMessage = ["sponsors"];
         const roomsMessage = ["rooms"];
         const eventsMessage = ["events"];
@@ -172,13 +172,13 @@ class MetricsReport extends React.Component {
 
     parseMetricData = (metric) => {
         const {showAnswers} = this.state;
-        let result = {metric: metric.name};
+        let result = {metric: metric.name, company: metric.company};
         if (showAnswers) {
             const answers = metric.answers?.split('|').reduce((result, qa) => {
                 const qaArray = qa.split(':');
                 return { ...result, [qaArray[0]]: qaArray[1] || 'n/a'};
             }, {}) || {};
-            result = {metric: metric.name, ...answers}
+            result = {metric: metric.name, company: metric.company, ...answers}
         }
         return result;
     }
@@ -192,7 +192,8 @@ class MetricsReport extends React.Component {
         let processedData = [];
         let columns = [];
 
-        if (Array.isArray(data) && data.length === 0) return [];
+        if (!data || ( Array.isArray(data) && !data.length ))
+            return {reportData: processedData, tableColumns: columns};
 
         if (this.memberReport) {
             const newData = data.map(d => {
@@ -215,7 +216,8 @@ class MetricsReport extends React.Component {
             ];
         } else {
             columns = [
-                { columnKey: 'metric', value: 'Metric' }
+                { columnKey: 'metric', value: 'Metric' },
+                { columnKey: 'company', value: 'Company' }
             ];
 
             if (showAnswers && data.extraQuestions) {
@@ -223,6 +225,9 @@ class MetricsReport extends React.Component {
             }
 
             if (eventType === 'EVENT') {
+                if (!data.rooms)
+                    return {reportData: processedData, tableColumns: columns};
+
                 processedData = data.rooms
                     .map(rm => {
                         return {
@@ -254,6 +259,9 @@ class MetricsReport extends React.Component {
                     }
                 }
             } else if (eventType === 'SPONSOR') {
+                if (!data.sponsors)
+                    return {reportData: processedData, tableColumns: columns};
+
                 processedData = data.sponsors
                     .filter(s => s.metrics.length)
                     .map(sp => {
