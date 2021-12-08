@@ -45,7 +45,7 @@ class MetricsReport extends React.Component {
         const {currentSummit} = this.props;
         const {fromDate, toDate, eventType, sponsor, showAnswers} = this.state;
         const overallFilter = {};
-        const metricsFields = ["name", "company"];
+        const metricsFields = ["name", "email", "company"];
         const sponsorsMessage = ["sponsors"];
         const roomsMessage = ["rooms"];
         const eventsMessage = ["events"];
@@ -172,13 +172,13 @@ class MetricsReport extends React.Component {
 
     parseMetricData = (metric) => {
         const {showAnswers} = this.state;
-        let result = {metric: metric.name, company: metric.company};
+        let result = {metric: metric.name, email: metric.email, company: metric.company};
         if (showAnswers) {
             const answers = metric.answers?.split('|').reduce((result, qa) => {
                 const qaArray = qa.split(':');
                 return { ...result, [qaArray[0]]: qaArray[1] || 'n/a'};
             }, {}) || {};
-            result = {metric: metric.name, company: metric.company, ...answers}
+            result = {metric: metric.name, email: metric.email, company: metric.company, ...answers}
         }
         return result;
     }
@@ -217,6 +217,7 @@ class MetricsReport extends React.Component {
         } else {
             columns = [
                 { columnKey: 'metric', value: 'Metric' },
+                { columnKey: 'email', value: 'Email' },
                 { columnKey: 'company', value: 'Company' }
             ];
 
@@ -251,7 +252,9 @@ class MetricsReport extends React.Component {
                     columns = [
                         { columnKey: 'id', value: 'Event Id' },
                         { columnKey: 'title', value: 'Event' },
-                        { columnKey: 'metrics_metric', value: 'Metric' }
+                        { columnKey: 'metrics_metric', value: 'Metric' },
+                        { columnKey: 'metrics_email', value: 'Email' },
+                        { columnKey: 'metrics_company', value: 'Company' }
                     ];
 
                     if (showAnswers && data.extraQuestions) {
@@ -274,7 +277,9 @@ class MetricsReport extends React.Component {
                     columns = [
                         { columnKey: 'id', value: 'Id' },
                         { columnKey: 'companyName', value: 'Sponsor' },
-                        { columnKey: 'metrics_metric', value: 'Metric' }
+                        { columnKey: 'metrics_metric', value: 'Metric' },
+                        { columnKey: 'metrics_email', value: 'Email' },
+                        { columnKey: 'metrics_company', value: 'Company' }
                     ];
 
                     if (showAnswers && data.extraQuestions) {
