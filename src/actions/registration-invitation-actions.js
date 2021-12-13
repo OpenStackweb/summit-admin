@@ -154,31 +154,6 @@ export const exportInvitationsCSV = (term, order, orderDir, showNonAccepted) => 
 
 };
 
-export const getInvitation = (invitationId) => (dispatch, getState) => {
-
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
-
-    dispatch(startLoading());
-
-    const params = {
-        access_token : accessToken,
-        expand: 'order,member'
-    };
-
-    return getRequest(
-        null,
-        createAction(RECEIVE_INVITATION),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/registration-invitations/${invitationId}`,
-        authErrorHandler
-    )(params)(dispatch).then((data) => {
-            dispatch(stopLoading());
-            return data.response;
-        }
-    );
-};
-
 export const selectInvitation = (invitationId) => (dispatch, getState) => {
     dispatch(createAction(SELECT_INVITATION)(invitationId));
 };
@@ -200,6 +175,7 @@ export const getRegistrationInvitation = (invitationId) => (dispatch, getState) 
 
     const params = {
         access_token : accessToken,
+        expand: 'allowed_ticket_types',
     };
 
     return getRequest(
@@ -278,13 +254,14 @@ export const saveRegistrationInvitation = (entity) => (dispatch, getState) => {
     const params = {
         access_token : accessToken,
     };
+    const normalizedEntity = normalizeEntity(entity);
 
     if (entity.id) {
         putRequest(
             createAction(UPDATE_REGISTRATION_INVITATION),
             createAction(REGISTRATION_INVITATION_UPDATED),
             `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/registration-invitations/${entity.id}`,
-            entity,
+            normalizedEntity,
             authErrorHandler,
             entity
         )(params)(dispatch)
@@ -304,7 +281,7 @@ export const saveRegistrationInvitation = (entity) => (dispatch, getState) => {
         createAction(UPDATE_REGISTRATION_INVITATION),
         createAction(REGISTRATION_INVITATION_ADDED),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/registration-invitations`,
-        entity,
+        entnormalizedEntityity,
         authErrorHandler
     ) (params)(dispatch)
         .then((payload) => {
@@ -313,6 +290,12 @@ export const saveRegistrationInvitation = (entity) => (dispatch, getState) => {
                 () => { history.push(`/app/summits/${currentSummit.id}/registration-invitations/${payload.response.id}`) }
             ));
         });
+};
+
+const normalizeEntity = (entity) => {
+    const normalizedEntity = {...entity};
+    normalizedEntity.allowed_ticket_types = entity.allowed_ticket_types.map(tt => tt.id);
+    return normalizedEntity;
 };
 
 export const sendEmails = (currentFlowEvent, selectedAll = false , selectedInvitationsIds = [],

@@ -1721,7 +1721,9 @@
     "email": "Email",
     "email_info": "",
     "registration_invitation_created": "Invitation created successfully.",
-    "registration_invitation_saved": "Invitation saved successfully."
+    "registration_invitation_saved": "Invitation saved successfully.",
+    "allowed_ticket_types": "Allowed Ticket Types",
+    "allowed_ticket_types_info": "Allowed Ticket Types that Attendee is allowed to buy"
   },
   "featured_speakers": {
     "featured_speakers": "Featured Speakers",

@@ -355,6 +355,7 @@ class RegistrationInvitationsListPage extends React.Component {
                                 <b>email</b>: invitee email<br />
                                 <b>first_name</b>: invitee First Name<br />
                                 <b>last_name</b>: invitee Last Name<br />
+                                <b>allowed_ticket_types (optional) </b>: Pipe Separated list of ticket types ids<br />
                             </div>
                             <div className="col-md-12 invitation-import-upload-wrapper">
                                 <UploadInput

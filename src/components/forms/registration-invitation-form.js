@@ -12,8 +12,8 @@
  **/
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
-import { Input } from 'openstack-uicore-foundation/lib/components';
-import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
+import {TicketTypesInput, Input} from 'openstack-uicore-foundation/lib/components';
+import {hasErrors, isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 
 class RegistrationInvitationForm extends React.Component {
     constructor(props) {
@@ -71,17 +71,9 @@ class RegistrationInvitationForm extends React.Component {
         this.props.onSubmit(this.state.entity);
     }
 
-    hasErrors(field) {
-        let {errors} = this.state;
-        if(field in errors) {
-            return errors[field];
-        }
-
-        return '';
-    }
-
     render() {
-        const {entity} = this.state;
+        const {entity, errors} = this.state;
+        const { currentSummit } = this.props;
 
         return (
             <form className="registration-invitation-form">
@@ -93,9 +85,9 @@ class RegistrationInvitationForm extends React.Component {
                         <Input
                             id="first_name"
                             className="form-control"
-                            error={this.hasErrors('first_name')}
                             onChange={this.handleChange}
                             value={entity.first_name}
+                            error={hasErrors('first_name', errors)}
                         />
                     </div>
                     <div className="col-md-6">
@@ -104,7 +96,7 @@ class RegistrationInvitationForm extends React.Component {
                         <Input
                             id="last_name"
                             className="form-control"
-                            error={this.hasErrors('last_name')}
+                            error={hasErrors('last_name', errors)}
                             onChange={this.handleChange}
                             value={entity.last_name}
                         />
@@ -117,9 +109,24 @@ class RegistrationInvitationForm extends React.Component {
                         <Input
                             id="email"
                             className="form-control"
-                            error={this.hasErrors('email')}
+                            error={hasErrors('email', errors)}
                             onChange={this.handleChange}
                             value={entity.email}
+                        />
+                    </div>
+                </div>
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <label> {T.translate("edit_registration_invitation.allowed_ticket_types")}&nbsp;
+                            <i className="fa fa-info-circle" aria-hidden="true" title={T.translate("edit_registration_invitation.allowed_ticket_types_info")} />
+                        </label>
+                        <TicketTypesInput
+                            id="allowed_ticket_types"
+                            value={entity.allowed_ticket_types}
+                            summitId={currentSummit.id}
+                            onChange={this.handleChange}
+                            isMulti={true}
+                            error={hasErrors('allowed_ticket_types', errors)}
                         />
                     </div>
                 </div>

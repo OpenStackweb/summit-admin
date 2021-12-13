@@ -106,8 +106,6 @@ class EventCategoryForm extends React.Component {
         const {entity, errors} = this.state;
         const { currentSummit } = this.props;
 
-
-
         return (
             <form className="event-type-form">
                 <input type="hidden" id="id" value={entity.id} />
