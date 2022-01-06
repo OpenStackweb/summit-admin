@@ -439,28 +439,6 @@ class SummitForm extends React.Component {
                     </div>
                 </div>
                 <div className="row form-group">
-                        <div className="col-md-6 checkboxes-div">
-                            <div className="form-check abc-checkbox">
-                                <input type="checkbox" id="registration_send_qr_as_image_attachment_on_ticket_email"
-                                       checked={entity.registration_send_qr_as_image_attachment_on_ticket_email} onChange={this.handleChange}
-                                       className="form-check-input"/>
-                                <label className="form-check-label" htmlFor="registration_send_qr_as_image_attachment_on_ticket_email">
-                                    {T.translate("edit_summit.registration_send_qr_as_image_attachment_on_ticket_email")}
-                                </label>
-                            </div>
-                        </div>
-                        <div className="col-md-6 checkboxes-div">
-                            <div className="form-check abc-checkbox">
-                                <input type="checkbox" id="registration_send_ticket_as_pdf_attachment_on_ticket_email"
-                                       checked={entity.registration_send_ticket_as_pdf_attachment_on_ticket_email} onChange={this.handleChange}
-                                       className="form-check-input"/>
-                                <label className="form-check-label" htmlFor="registration_send_ticket_as_pdf_attachment_on_ticket_email">
-                                    {T.translate("edit_summit.registration_send_ticket_as_pdf_attachment_on_ticket_email")}
-                                </label>
-                            </div>
-                        </div>
-                </div>
-                <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("general.logo")} </label>
                         <UploadInput
@@ -590,6 +568,44 @@ class SummitForm extends React.Component {
                     </div>
                     }
 
+                </Panel>
+
+                <Panel show={showSection === 'reg-email-settings'} title={T.translate("edit_summit.reg_email_settings")}
+                       handleClick={this.toggleSection.bind(this, 'reg-email-settings')}>
+                    <div className="row form-group">
+                        <div className="col-md-6 checkboxes-div">
+                            <div className="form-check abc-checkbox">
+                                <input type="checkbox" id="registration_send_qr_as_image_attachment_on_ticket_email"
+                                       checked={entity.registration_send_qr_as_image_attachment_on_ticket_email} onChange={this.handleChange}
+                                       className="form-check-input"/>
+                                <label className="form-check-label" htmlFor="registration_send_qr_as_image_attachment_on_ticket_email">
+                                    {T.translate("edit_summit.registration_send_qr_as_image_attachment_on_ticket_email")}
+                                </label>
+                            </div>
+                        </div>
+                        <div className="col-md-6 checkboxes-div">
+                            <div className="form-check abc-checkbox">
+                                <input type="checkbox" id="registration_send_ticket_as_pdf_attachment_on_ticket_email"
+                                       checked={entity.registration_send_ticket_as_pdf_attachment_on_ticket_email} onChange={this.handleChange}
+                                       className="form-check-input"/>
+                                <label className="form-check-label" htmlFor="registration_send_ticket_as_pdf_attachment_on_ticket_email">
+                                    {T.translate("edit_summit.registration_send_ticket_as_pdf_attachment_on_ticket_email")}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row form-group">
+                        <div className="col-md-6 checkboxes-div">
+                            <div className="form-check abc-checkbox">
+                                <input type="checkbox" id="registration_send_ticket_email_automatically"
+                                       checked={entity.registration_send_ticket_email_automatically} onChange={this.handleChange}
+                                       className="form-check-input"/>
+                                <label className="form-check-label" htmlFor="registration_send_ticket_email_automatically">
+                                    {T.translate("edit_summit.registration_send_ticket_email_automatically")}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </Panel>
 
                 <Panel show={showSection === 'calendar'} title={T.translate("edit_summit.calendar_sync")}
