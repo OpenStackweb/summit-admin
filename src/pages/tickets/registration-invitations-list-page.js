@@ -21,7 +21,6 @@ import {
     SelectableTable,
     UploadInput,
     Dropdown,
-    ActionDropdown
 } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
 import {
@@ -159,9 +158,9 @@ class RegistrationInvitationsListPage extends React.Component {
     }
 
     handleSelectedAll(ev){
-        let selectedAll = ev.target.checked;
-        this.props.setSelectedAll(selectedAll);
-        if(!selectedAll){
+        let selectedAllCb = ev.target.checked;
+        this.props.setSelectedAll(selectedAllCb);
+        if(!selectedAllCb){
             //clear all selected
             this.props.clearAllSelectedInvitations();
         }
