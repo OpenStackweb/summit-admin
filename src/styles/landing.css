@@ -25,6 +25,7 @@ body {
     right: 30px;
     height: 40px;
     width: 140px;
+    cursor: pointer;
 }
 
 .login {
