@@ -107,7 +107,7 @@ class App extends React.PureComponent {
                     />
                     }
                     <div className="header" id="page-header">
-                        <div className={"header-title " + (isLoggedUser ? '' : 'center')}>
+                        <div className="header-title">
                             {T.translate("landing.os_summit_admin")}
                             <AuthButton isLoggedUser={isLoggedUser} picture={profile_pic} doLogin={this.onClickLogin.bind(this)} initLogOut={initLogOut}/>
                         </div>
