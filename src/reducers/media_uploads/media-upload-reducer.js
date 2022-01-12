@@ -33,7 +33,9 @@ export const DEFAULT_ENTITY = {
     is_mandatory        : false,
     private_storage_type: 'None',
     public_storage_type : 'None',
-    presentation_types  : []
+    presentation_types  : [],
+    use_temporary_links_on_public_storage: false,
+    temporary_links_public_storage_ttl:0,
 };
 
 const DEFAULT_STATE = {

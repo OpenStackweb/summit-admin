@@ -35,7 +35,7 @@ class MediaUploadForm extends React.Component {
         const state = {};
         scrollToError(this.props.errors);
 
-        if(!shallowEqual(prevProps.entity, this.props.entity)) {
+        if (!shallowEqual(prevProps.entity, this.props.entity)) {
             state.entity = {...this.props.entity};
             state.errors = {};
         }
@@ -72,7 +72,7 @@ class MediaUploadForm extends React.Component {
 
     hasErrors(field) {
         let {errors} = this.state;
-        if(field in errors) {
+        if (field in errors) {
             return errors[field];
         }
 
@@ -82,24 +82,24 @@ class MediaUploadForm extends React.Component {
 
     render() {
         const {entity} = this.state;
-        const { currentSummit, mediaFileTypes } = this.props;
+        const {currentSummit, mediaFileTypes} = this.props;
 
         let private_storage_ddl = [
-            {value: 'None', label:'None'},
-            {value: 'DropBox', label:'DropBox'},
-            {value: 'Local', label:'Local'}
+            {value: 'None', label: 'None'},
+            {value: 'DropBox', label: 'DropBox'},
+            {value: 'Local', label: 'Local'}
         ];
 
         let public_storage_ddl = [
-            {value: 'None', label:'None'},
-            {value: 'Local', label:'Local'}
+            {value: 'None', label: 'None'},
+            {value: 'Local', label: 'Local'}
         ];
 
-        if(window.PUBLIC_STORAGES.includes("S3"))
-            public_storage_ddl.push({value: 'S3', label:'S3'});
+        if (window.PUBLIC_STORAGES.includes("S3"))
+            public_storage_ddl.push({value: 'S3', label: 'S3'});
 
-        if(window.PUBLIC_STORAGES.includes("SWIFT"))
-            public_storage_ddl.push({value: 'Swift', label:'Swift'});
+        if (window.PUBLIC_STORAGES.includes("SWIFT"))
+            public_storage_ddl.push({value: 'Swift', label: 'Swift'});
 
         let presentation_types_ddl = currentSummit.event_types
             .filter(t => t.class_name === 'PresentationType')
@@ -107,7 +107,7 @@ class MediaUploadForm extends React.Component {
 
         return (
             <form className="media-upload-form">
-                <input type="hidden" id="id" value={entity.id} />
+                <input type="hidden" id="id" value={entity.id}/>
                 <div className="row form-group">
                     <div className="col-md-4">
                         <label> {T.translate("media_upload.name")} *</label>
@@ -122,6 +122,7 @@ class MediaUploadForm extends React.Component {
                     <div className="col-md-4">
                         <label> {T.translate("media_upload.max_size")} *</label>
                         <Input
+                            type="number"
                             id="max_size"
                             className="form-control"
                             error={this.hasErrors('max_size')}
@@ -132,7 +133,7 @@ class MediaUploadForm extends React.Component {
                     <div className="col-md-4 checkboxes-div">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="is_mandatory" checked={entity.is_mandatory}
-                                   onChange={this.handleChange} className="form-check-input" />
+                                   onChange={this.handleChange} className="form-check-input"/>
                             <label className="form-check-label" htmlFor="is_mandatory">
                                 {T.translate("media_upload.is_mandatory")}
                             </label>
@@ -174,15 +175,53 @@ class MediaUploadForm extends React.Component {
                         />
                     </div>
                     <div className="col-md-4">
-                        <label> {T.translate("media_upload.public_storage_type")}</label>
-                        <Dropdown
-                            id="public_storage_type"
-                            className="right-space"
-                            value={entity.public_storage_type}
-                            placeholder={T.translate("media_upload.placeholders.select_public_storage")}
-                            options={public_storage_ddl}
-                            onChange={this.handleChange}
-                        />
+                        <div className="row">
+                            <div className="col-md-12">
+                                <div className="row">
+                                    <div className="col-md-12">
+                                        <label> {T.translate("media_upload.public_storage_type")}</label>
+                                        <Dropdown
+                                            id="public_storage_type"
+                                            className="right-space"
+                                            value={entity.public_storage_type}
+                                            placeholder={T.translate("media_upload.placeholders.select_public_storage")}
+                                            options={public_storage_ddl}
+                                            onChange={this.handleChange}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-12">
+                                        <div className="form-check abc-checkbox">
+                                            <input type="checkbox" id="use_temporary_links_on_public_storage"
+                                                   checked={entity.use_temporary_links_on_public_storage}
+                                                   onChange={this.handleChange} className="form-check-input"/>
+                                            <label className="form-check-label"
+                                                   htmlFor="use_temporary_links_on_public_storage">
+                                                {T.translate("media_upload.use_temporary_links_on_public_storage")}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-12">
+                                        <i className="fa fa-info-circle info-help" aria-hidden="true"
+                                           title={T.translate("media_upload.temporary_links_public_storage_ttl_info")}/>
+                                        &nbsp;
+                                        <Input
+                                            type="number"
+                                            id="temporary_links_public_storage_ttl"
+                                            className="form-control"
+                                            style={{width: '100px'}}
+                                            error={this.hasErrors('temporary_links_public_storage_ttl')}
+                                            onChange={this.handleChange}
+                                            placeholder={T.translate("media_upload.placeholders.temporary_links_public_storage_ttl")}
+                                            value={entity.temporary_links_public_storage_ttl}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div className="row form-group">

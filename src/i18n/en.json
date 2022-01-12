@@ -1706,12 +1706,15 @@
     "delete_warning": "Are you sure you want to delete media media type ",
     "saved": "Media Upload Type saved successfully.",
     "created": "Media Upload Type created successfully.",
+    "use_temporary_links_on_public_storage": "Use Temporary Links",
+    "temporary_links_public_storage_ttl_info": "Temporary Link Time To Live (TTL) in minutess",
     "placeholders": {
       "search": "Search types by name",
       "select_type": "Select File Type",
       "select_private_storage": "Select Public Storage",
       "select_public_storage": "Select Private Storage",
-      "select_presentation_types": "Select Presentation Types"
+      "select_presentation_types": "Select Presentation Types",
+      "temporary_links_public_storage_ttl": "TTL"
     }
   },
   "edit_registration_invitation": {

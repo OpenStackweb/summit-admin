@@ -269,6 +269,10 @@ const normalizeEntity = (entity) => {
     delete(normalizedEntity['created']);
     delete(normalizedEntity['modified']);
 
+    if(normalizedEntity.hasOwnProperty("temporary_links_public_storage_ttl") && normalizedEntity.temporary_links_public_storage_ttl == ''){
+        normalizedEntity.temporary_links_public_storage_ttl = 0;
+    }
+
 
     return normalizedEntity;
 
