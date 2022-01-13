@@ -67,8 +67,8 @@ class RegistrationInvitationsListPage extends React.Component {
     }
 
     handleSearch(term) {
-        const {order, orderDir, page, perPage, showNonAccepted} = this.props;
-        this.props.getInvitations(term, page, perPage, order, orderDir, showNonAccepted);
+        const {order, orderDir, page, perPage, showNonAccepted, showNotSent} = this.props;
+        this.props.getInvitations(term, page, perPage, order, orderDir, showNonAccepted, showNotSent);
     }
 
     handleEdit(invitation_id) {
@@ -167,13 +167,14 @@ class RegistrationInvitationsListPage extends React.Component {
     }
 
     handleSort(index, key, dir, func) {
-        const {term, page, perPage, showNonAccepted} = this.props;
-        this.props.getInvitations(term, page, perPage, key, dir, showNonAccepted);
+        const {term, page, perPage, showNonAccepted, showNotSent} = this.props;
+        this.props.getInvitations(term, page, perPage, key, dir, showNonAccepted, showNotSent);
     }
 
     handlePageChange(page) {
-        const {term, order, orderDir, perPage, showNonAccepted} = this.props;
-        this.props.getInvitations(term, page, perPage, order, orderDir, showNonAccepted);
+
+        const {term, order, orderDir, perPage, showNonAccepted, showNotSent} = this.props;
+        this.props.getInvitations(term, page, perPage, order, orderDir, showNonAccepted, showNotSent);
     }
 
     handleImportInvitations() {
@@ -186,8 +187,8 @@ class RegistrationInvitationsListPage extends React.Component {
     }
 
     handleExportInvitations() {
-        const {term, order, orderDir, showNonAccepted} = this.props;
-        this.props.exportInvitationsCSV(term, order, orderDir, showNonAccepted);
+        const {term, order, orderDir, showNonAccepted, showNotSent} = this.props;
+        this.props.exportInvitationsCSV(term, order, orderDir, showNonAccepted, showNotSent);
     }
 
     handleChangeNonAccepted() {
