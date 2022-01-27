@@ -16,7 +16,8 @@ import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import { TextEditor, MemberInput, UploadInput, Input, Panel } from 'openstack-uicore-foundation/lib/components';
 import { AffiliationsTable } from '../tables/affiliationstable';
-import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
+import {isEmpty, isEmptyString, scrollToError, shallowEqual, stripTags} from "../../utils/methods";
+import { mustReplaceSpeakerFieldsWithMemberInfo } from '../../models/app-config';
 
 
 class SpeakerForm extends React.Component {
@@ -69,15 +70,15 @@ class SpeakerForm extends React.Component {
 
         if (ev.target.type === 'memberinput') {
             entity.email = '';
-            if(value) {
+            if (value && mustReplaceSpeakerFieldsWithMemberInfo()) {
                 entity.affiliations = [...value.affiliations];
-                entity.first_name = value.first_name ??  entity.first_name;
-                entity.last_name = value.last_name ?? entity.last_name;
-                entity.bio = value.bio ?? entity.bio;
-                entity.irc = value.irc ?? entity.irc;
-                entity.twitter = value.twitter ?? entity.twitter;
-                entity.company = value?.company ?? entity.company;
-                entity.company = value?.phone_number ?? entity.company;
+                entity.first_name = !isEmptyString(value.first_name) ? value.first_name : entity.first_name;
+                entity.last_name = !isEmptyString(value.last_name) ? value.last_name : entity.last_name;
+                entity.bio = !isEmptyString(stripTags(value.bio)) ? value.bio : entity.bio;
+                entity.irc = !isEmptyString(value.irc) ? value.irc : entity.irc;
+                entity.twitter = !isEmptyString(value.twitter) ? value.twitter : entity.twitter;
+                entity.company = !isEmptyString(value.company) ? value.company : entity.company;
+                entity.company = !isEmptyString(value.phone_number) ? value.phone_number : entity.company;
             }
         }
 

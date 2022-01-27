@@ -76,6 +76,10 @@ export const isEmpty = (obj) => {
     return Object.keys(obj).length === 0;
 };
 
+export const isEmptyString = (str) => {
+    return !str || str.trim().length === 0;
+};
+
 export const stripTags = (s) => {
     return s.replace(/(<([^>]+)>)/gi, "");
 }
