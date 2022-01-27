@@ -7,6 +7,8 @@ import {
     startLoading,
     authErrorHandler,
 } from 'openstack-uicore-foundation/lib/methods';
+import Swal from "sweetalert2";
+import {VALIDATE} from "openstack-uicore-foundation/lib/actions";
 
 export const REQUEST_USER_ROLES_BY_SUMMIT = 'REQUEST_USER_ROLES_BY_SUMMIT';
 export const RECEIVE_USER_ROLES_BY_SUMMIT = 'RECEIVE_USER_ROLES_BY_SUMMIT';
@@ -36,7 +38,9 @@ export const getUserRolesBySummit = () => (dispatch, getState) => {
         createAction(REQUEST_USER_ROLES_BY_SUMMIT),
         createAction(RECEIVE_USER_ROLES_BY_SUMMIT),
         `${window.CHAT_API_BASE_URL}/api/public/v1/user-roles`,
-        authErrorHandler,
+        (err, res) => (dispatch, state) => {
+            dispatch(stopLoading())
+        },
         {}
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
