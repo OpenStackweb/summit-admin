@@ -70,13 +70,7 @@ class SummitIdLayout extends React.Component {
         if (!summitId) {
             this.props.resetSummitForm();
         } else {
-<<<<<<< Updated upstream
             this.props.getSummitById(summitId).then(() => { this.props.getUserRolesBySummit()});
-=======
-            this.props.getSummitById(summitId)
-                .then(() => { this.props.getUserRolesBySummit()});
->>>>>>> Stashed changes
-
             // this is needed for summit dropdown, runs on background
             this.props.getAllSummits();
         }
