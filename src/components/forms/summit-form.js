@@ -605,6 +605,16 @@ class SummitForm extends React.Component {
                                 </label>
                             </div>
                         </div>
+                        <div className="col-md-6 checkboxes-div">
+                            <div className="form-check abc-checkbox">
+                                <input type="checkbox" id="allow_update_attendee_extra_questions"
+                                    checked={entity.allow_update_attendee_extra_questions} onChange={this.handleChange}
+                                    className="form-check-input"/>
+                                <label className="form-check-label" htmlFor="allow_update_attendee_extra_questions">
+                                    {T.translate("edit_summit.allow_update_attendee_extra_questions")}
+                                </label>
+                            </div>
+                        </div>                                            
                     </div>
                 </Panel>
 

@@ -35,6 +35,7 @@ export const DEFAULT_ENTITY = {
     id: 0,
     name: '',
     active: false,
+    allow_update_attendee_extra_questions: false,
     attendees_count: 0,
     available_on_api: false,
     calendar_sync_desc: '',
