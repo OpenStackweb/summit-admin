@@ -236,13 +236,18 @@ export const resetEventForm = () => (dispatch, getState) => {
 };
 
 export const saveEvent = (entity, publish) => (dispatch, getState) => {
-    const {loggedUserState, currentSummitState} = getState();
+    const {loggedUserState, currentSummitState, currentEventTypeState} = getState();
     const {accessToken} = loggedUserState;
     const {currentSummit} = currentSummitState;
+    const eventTypeConfig = {
+        allow_custom_ordering: currentEventTypeState.entity.allow_custom_ordering,
+        allows_location: currentEventTypeState.entity.allows_location,
+        allows_publishing_dates: currentEventTypeState.entity.allows_publishing_dates,
+    }
 
     dispatch(startLoading());
 
-    const normalizedEntity = normalizeEntity(entity);
+    const normalizedEntity = normalizeEntity(entity, eventTypeConfig);
 
     const params = {
         access_token: accessToken
@@ -500,7 +505,7 @@ export const removeImage = (eventId) => (dispatch, getState) => {
     );
 };
 
-const normalizeEntity = (entity) => {
+const normalizeEntity = (entity, eventTypeConfig) => {
     const normalizedEntity = {...entity};
     if (!normalizedEntity.start_date) delete normalizedEntity['start_date'];
     if (!normalizedEntity.end_date) delete normalizedEntity['end_date'];
@@ -530,8 +535,23 @@ const normalizeEntity = (entity) => {
         delete (normalizedEntity.selection_plan_id)
     }
 
-    return normalizedEntity;
+    if (eventTypeConfig) {
+        // if allows custom ordering in event type is false then remove custom_order
+        if (!eventTypeConfig.allow_custom_ordering) {
+            delete (normalizedEntity.custom_order)
+        }
+        // if allows location in event type is false then remove location_id
+        if (!eventTypeConfig.allows_location) {
+            delete (normalizedEntity.location_id)
+        }
+        // if allows publishing dates in event type is false then remove those dates
+        if (!eventTypeConfig.allows_publishing_dates) {
+            delete (normalizedEntity.start_date)
+            delete (normalizedEntity.end_date)
+        }
+    }
 
+    return normalizedEntity;
 }
 
 export const deleteEvent = (eventId) => (dispatch, getState) => {

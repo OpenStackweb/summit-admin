@@ -208,6 +208,26 @@ class EventTypeForm extends React.Component {
                         </div>
                     </div>
                 </div>
+                <div className="row form-group checkboxes-div">
+                    <div className="col-md-4">
+                        <div className="form-check abc-checkbox">
+                            <input type="checkbox" id="allows_location" checked={entity.allows_location}
+                                   onChange={this.handleChange} className="form-check-input" />
+                            <label className="form-check-label" htmlFor="allows_location">
+                                {T.translate("edit_event_type.allows_location")}
+                            </label>
+                        </div>
+                    </div>
+                    <div className="col-md-4">
+                        <div className="form-check abc-checkbox">
+                            <input type="checkbox" id="allows_publishing_dates" checked={entity.allows_publishing_dates}
+                                   onChange={this.handleChange} className="form-check-input" />
+                            <label className="form-check-label" htmlFor="allows_publishing_dates">
+                                {T.translate("edit_event_type.allows_publishing_dates")}
+                            </label>
+                        </div>
+                    </div>
+                </div>
 
                 {entity.class_name === 'PRESENTATION_TYPE' &&
                 <div>
@@ -311,6 +331,28 @@ class EventTypeForm extends React.Component {
                                 className="form-control"
                                 error={hasErrors('max_moderators', errors)}
                             />
+                        </div>
+                    </div>
+                    <hr />
+                    <div className="row form-group checkboxes-div">
+                        <div className="col-md-4">
+                            <div className="form-check abc-checkbox">
+                                <input type="checkbox" id="allow_custom_ordering" checked={entity.allow_custom_ordering}
+                                       onChange={this.handleChange} className="form-check-input"/>
+                                <label className="form-check-label" htmlFor="allow_custom_ordering">
+                                    {T.translate("edit_event_type.allow_custom_ordering")}
+                                </label>
+                            </div>
+                        </div>
+                        <div className="col-md-4">
+                            <div className="form-check abc-checkbox">
+                                <input type="checkbox" id="allow_attendee_vote"
+                                       checked={entity.allow_attendee_vote}
+                                       onChange={this.handleChange} className="form-check-input"/>
+                                <label className="form-check-label" htmlFor="allow_attendee_vote">
+                                    {T.translate("edit_event_type.allow_attendee_vote")}
+                                </label>
+                            </div>
                         </div>
                     </div>
                     {entity.id !== 0 &&

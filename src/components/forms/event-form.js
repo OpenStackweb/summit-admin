@@ -431,6 +431,7 @@ class EventForm extends React.Component {
                 </div>
                 }
                 <div className="row form-group">
+                    {this.shouldShowField('allows_location') &&
                     <div className="col-md-4">
                         <label> {T.translate("edit_event.location")} </label>
                         <GroupedDropdown
@@ -442,32 +443,37 @@ class EventForm extends React.Component {
                             error={hasErrors('location_id', errors)}
                         />
                     </div>
-                    <div className="col-md-4" style={{paddingTop: '24px'}}>
-                        <DateTimePicker
-                            id="start_date"
-                            onChange={this.handleChange}
-                            validation={{after: currentSummit.start_date, before: currentSummit.end_date}}
-                            format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                            value={epochToMomentTimeZone(entity.start_date, currentSummit.time_zone_id)}
-                            inputProps={{placeholder: T.translate("edit_event.placeholders.start_date")}}
-                            timezone={currentSummit.time_zone_id}
-                            error={hasErrors('start_date', errors)}
-                            viewDate={epochToMomentTimeZone(currentSummit.start_date, currentSummit.time_zone_id)}
-                        />
-                    </div>
-                    <div className="col-md-4" style={{paddingTop: '24px'}}>
-                        <DateTimePicker
-                            id="end_date"
-                            onChange={this.handleChange}
-                            validation={{after: currentSummit.start_date, before: currentSummit.end_date}}
-                            format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                            value={epochToMomentTimeZone(entity.end_date, currentSummit.time_zone_id)}
-                            inputProps={{placeholder: T.translate("edit_event.placeholders.end_date")}}
-                            timezone={currentSummit.time_zone_id}
-                            error={hasErrors('end_date', errors)}
-                            viewDate={epochToMomentTimeZone(currentSummit.start_date, currentSummit.time_zone_id)}
-                        />
-                    </div>
+                    }
+                    {this.shouldShowField('allows_publishing_dates') &&
+                    <>
+                        <div className="col-md-4" style={{paddingTop: '24px'}}>
+                            <DateTimePicker
+                                id="start_date"
+                                onChange={this.handleChange}
+                                validation={{after: currentSummit.start_date, before: currentSummit.end_date}}
+                                format={{date:"YYYY-MM-DD", time: "HH:mm"}}
+                                value={epochToMomentTimeZone(entity.start_date, currentSummit.time_zone_id)}
+                                inputProps={{placeholder: T.translate("edit_event.placeholders.start_date")}}
+                                timezone={currentSummit.time_zone_id}
+                                error={hasErrors('start_date', errors)}
+                                viewDate={epochToMomentTimeZone(currentSummit.start_date, currentSummit.time_zone_id)}
+                            />
+                        </div>
+                        <div className="col-md-4" style={{paddingTop: '24px'}}>
+                            <DateTimePicker
+                                id="end_date"
+                                onChange={this.handleChange}
+                                validation={{after: currentSummit.start_date, before: currentSummit.end_date}}
+                                format={{date:"YYYY-MM-DD", time: "HH:mm"}}
+                                value={epochToMomentTimeZone(entity.end_date, currentSummit.time_zone_id)}
+                                inputProps={{placeholder: T.translate("edit_event.placeholders.end_date")}}
+                                timezone={currentSummit.time_zone_id}
+                                error={hasErrors('end_date', errors)}
+                                viewDate={epochToMomentTimeZone(currentSummit.start_date, currentSummit.time_zone_id)}
+                            />
+                        </div>
+                    </>
+                    }
                 </div>
                 <div className="row form-group">
                     <div className="col-md-4">
@@ -492,6 +498,19 @@ class EventForm extends React.Component {
                             error={hasErrors('track_id', errors)}
                         />
                     </div>
+                    {this.isEventType('PresentationType') && this.shouldShowField('allow_custom_ordering') &&
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_event.custom_order")} </label>
+                        <Input
+                            id="custom_order"
+                            type="number"
+                            className="form-control"
+                            error={hasErrors('custom_order ', errors)}
+                            value={entity.custom_order}
+                            onChange={this.handleChange}
+                        />
+                    </div>
+                    }
                     {this.isEventTypeAllowsLevel() &&
                     <div className="col-md-4">
                         <label> {T.translate("edit_event.level")} </label>

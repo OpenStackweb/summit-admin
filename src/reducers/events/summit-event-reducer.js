@@ -61,6 +61,7 @@ export const DEFAULT_ENTITY = {
     disclaimer_accepted: false,
     disclaimer_accepted_date: null,
     created_by: null,
+    custom_order: 0,
 }
 
 const DEFAULT_STATE = {
