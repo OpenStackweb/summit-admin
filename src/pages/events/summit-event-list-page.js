@@ -38,6 +38,7 @@ class SummitEventListPage extends React.Component {
         this.handleMUXImport = this.handleMUXImport.bind(this);
         this.handleChangeMUXModal = this.handleChangeMUXModal.bind(this);
         this.handleImportAssetsFromMUX = this.handleImportAssetsFromMUX.bind(this);
+        this.handleExtraFilterChange = this.handleExtraFilterChange.bind(this);
         this.state = {
             showImportModal: false,
             send_speaker_email:false,
@@ -49,6 +50,12 @@ class SummitEventListPage extends React.Component {
                 mux_email_to:"",
             },
             errors:{},
+        };
+
+        this.extraFilters = {
+            allows_attendee_vote_filter: false,
+            allows_location_filter: false,
+            allows_publishing_dates_filter: false,
         }
     }
 
@@ -107,18 +114,18 @@ class SummitEventListPage extends React.Component {
 
     handlePageChange(page) {
         const {term, order, orderDir, perPage} = this.props;
-        this.props.getEvents(term, page, perPage, order, orderDir);
+        this.props.getEvents(term, page, perPage, order, orderDir, this.extraFilters);
     }
 
     handleSort(index, key, dir, func) {
         const {term, page, perPage} = this.props;
         key = (key === 'name') ? 'last_name' : key;
-        this.props.getEvents(term, page, perPage, key, dir);
+        this.props.getEvents(term, page, perPage, key, dir, this.extraFilters);
     }
 
     handleSearch(term) {
         const {order, orderDir, page, perPage} = this.props;
-        this.props.getEvents(term, page, perPage, order, orderDir);
+        this.props.getEvents(term, page, perPage, order, orderDir, this.extraFilters);
     }
 
     handleNewEvent(ev) {
@@ -142,6 +149,12 @@ class SummitEventListPage extends React.Component {
                 deleteEvent(eventId);
             }
         });
+    }
+
+    handleExtraFilterChange(ev) {
+        let {value, id} = ev.target;
+        value = ev.target.checked;
+        this.extraFilters[id] = value;
     }
 
     render(){
@@ -174,7 +187,7 @@ class SummitEventListPage extends React.Component {
                 <div className={'row'}>
                     <div className={'col-md-6'}>
                         <FreeTextSearch
-                            value={term}
+                            value={term ?? ''}
                             placeholder={T.translate("event_list.placeholders.search_events")}
                             onSearch={this.handleSearch}
                         />
@@ -194,7 +207,33 @@ class SummitEventListPage extends React.Component {
                         </button>
                     </div>
                 </div>
-
+                <div className={'row'}>
+                    <div className={'col-md-6'}>
+                        <div className='panel panel-default'>
+                            <div className="panel-body">
+                                <div className="form-check abc-checkbox checkbox-inline">
+                                    <input type="checkbox" id="allows_attendee_vote_filter" 
+                                        onChange={this.handleExtraFilterChange} className="form-check-input" />
+                                    <label className="form-check-label" htmlFor="allows_attendee_vote_filter"> 
+                                        {T.translate("event_list.allows_attendee_vote_filter")} </label>
+                                </div>
+                                <div className="form-check abc-checkbox checkbox-inline">
+                                    <input type="checkbox" id="allows_location_filter" 
+                                        onChange={this.handleExtraFilterChange}  className="form-check-input" />
+                                    <label className="form-check-label" htmlFor="allows_location_filter"> 
+                                        {T.translate("event_list.allows_location_filter")} </label>
+                                </div>
+                                <div className="form-check abc-checkbox checkbox-inline">
+                                    <input type="checkbox" id="allows_publishing_dates_filter" 
+                                        onChange={this.handleExtraFilterChange}  className="form-check-input" />
+                                    <label className="form-check-label" htmlFor="allows_publishing_dates_filter"> 
+                                        {T.translate("event_list.allows_publishing_dates_filter")} </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+ 
                 {events.length === 0 &&
                     <div>{T.translate("event_list.no_events")}</div>
                 }

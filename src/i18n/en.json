@@ -703,6 +703,9 @@
     "export": "Export",
     "created_by": "Created By",
     "mux_import_done": "MUX MP4 Import Process Requested Successfuly.",
+    "allows_attendee_vote_filter": "Allows attendee vote",
+    "allows_location_filter": "Allows location",
+    "allows_publishing_dates_filter": "Allows publishing dates",
     "placeholders": {
       "search_events": "Search by Id, Title, Abstract, Speaker, Speaker Company, Speaker Title"
     }

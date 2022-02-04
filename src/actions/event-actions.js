@@ -52,7 +52,7 @@ export const EVENTS_IMPORTED = 'EVENTS_IMPORTED';
 export const IMPORT_FROM_MUX = 'IMPORT_FROM_MUX';
 
 
-export const getEvents = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1) => (dispatch, getState) => {
+export const getEvents = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1, extraFilters = null) => (dispatch, getState) => {
 
     const {loggedUserState, currentSummitState} = getState();
     const {accessToken} = loggedUserState;
@@ -71,6 +71,18 @@ export const getEvents = (term = null, page = 1, perPage = 10, order = 'id', ord
         }
 
         filter.push(searchString);
+    }
+
+    if (extraFilters) {
+        if (extraFilters.allows_attendee_vote_filter) {
+            filter.push('type_allows_attendee_vote==1');
+        }
+        if (extraFilters.allows_location_filter) {
+            filter.push('type_allows_location==1');
+        }
+        if (extraFilters.allows_publishing_dates_filter) {
+            filter.push('type_allows_publishing_dates==1');
+        }
     }
 
     const params = {
