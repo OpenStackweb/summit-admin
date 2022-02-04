@@ -182,6 +182,38 @@ class EventCategoryGroupForm extends React.Component {
                         />
                     </div>
                 </div>
+                <div className="row form-group">
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_event_category_group.begin_attendee_voting_period_date")}</label>
+                        <DateTimePicker
+                            id="begin_attendee_voting_period_date"
+                            onChange={this.handleChange}
+                            format={{date:"YYYY-MM-DD", time: "HH:mm"}}
+                            timezone={currentSummit.time_zone_id}
+                            value={epochToMomentTimeZone(entity.begin_attendee_voting_period_date, currentSummit.time_zone_id)}
+                        />
+                    </div>
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_event_category_group.end_attendee_voting_period_date")}</label>
+                        <DateTimePicker
+                            id="end_attendee_voting_period_date"
+                            onChange={this.handleChange}
+                            format={{date:"YYYY-MM-DD", time: "HH:mm"}}
+                            timezone={currentSummit.time_zone_id}                            
+                            value={epochToMomentTimeZone(entity.end_attendee_voting_period_date, currentSummit.time_zone_id)}
+                        />
+                    </div>
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_event_category_group.max_attendee_votes")}</label>
+                        <Input
+                            id="max_attendee_votes"
+                            type="number"
+                            value={entity.max_attendee_votes}
+                            onChange={this.handleChange}
+                            className="form-control"
+                        />
+                    </div>
+                </div>
                 {this.shouldShowField('submission_begin_date') &&
                 <div className="row form-group">
                     <div className="col-md-4">

@@ -28,16 +28,19 @@ import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 export const DEFAULT_ENTITY = {
-    id                              : 0,
-    class_name                      : null,
-    name                            : '',
-    color                           : '',
-    description                     : '',
-    submission_begin_date           : 0,
-    submission_end_date             : 0,
-    max_submission_allowed_per_user : 0,
-    tracks                          : [],
-    allowed_groups                  : []
+    id                                  : 0,
+    class_name                          : null,
+    name                                : '',
+    color                               : '',
+    description                         : '',
+    begin_attendee_voting_period_date   : 0,
+    end_attendee_voting_period_date     : 0,
+    max_attendee_votes                  : 0,
+    submission_begin_date               : 0,
+    submission_end_date                 : 0,
+    max_submission_allowed_per_user     : 0,
+    tracks                              : [],
+    allowed_groups                      : []
 }
 
 const DEFAULT_STATE = {
