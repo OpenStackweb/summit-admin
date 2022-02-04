@@ -152,9 +152,11 @@ class SummitEventListPage extends React.Component {
     }
 
     handleExtraFilterChange(ev) {
+        const {term, order, orderDir, page, perPage} = this.props;
         let {value, id} = ev.target;
         value = ev.target.checked;
         this.extraFilters[id] = value;
+        this.props.getEvents(term, page, perPage, order, orderDir, this.extraFilters);
     }
 
     render(){
