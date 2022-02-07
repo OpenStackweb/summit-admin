@@ -334,7 +334,7 @@ export const saveOccupancy = (entity) => (dispatch, getState) => {
 }
 
 const publishEvent = (entity, cb = null) => (dispatch, getState) => {
-    const {loggedUserState, currentSummitState} = getState();
+    const {loggedUserState, currentSummitState, currentEventTypeState} = getState();
     const {accessToken} = loggedUserState;
     const {currentSummit} = currentSummitState;
 
@@ -354,7 +354,17 @@ const publishEvent = (entity, cb = null) => (dispatch, getState) => {
         authErrorHandler
     )(params)(dispatch)
         .then((payload) => {
-            dispatch(checkProximityEvents(entity, cb));
+            if (currentEventTypeState.entity.hasOwnProperty("allows_publishing_dates") &&
+                currentEventTypeState.entity.allows_publishing_dates) {
+                dispatch(checkProximityEvents(entity, cb));
+            } else {
+                const success_message = {
+                    title: T.translate("general.done"),
+                    html: T.translate("edit_event.saved_and_published"),
+                    type: 'success'
+                };
+                dispatch(showMessage(success_message, cb));
+            }
         });
 }
 
