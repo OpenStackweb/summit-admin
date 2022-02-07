@@ -49,14 +49,14 @@ const eventListReducer = (state = DEFAULT_STATE, action) => {
         case RECEIVE_EVENTS: {
             let {current_page, total, last_page} = payload.response;
             let events = payload.response.data.map(e => {
-                let published = (e.is_published ? moment(e.start_date * 1000).tz(state.summitTZ).format('MMMM Do YYYY, h:mm a') : 'No');
+                let published_date = (e.is_published ? moment(e.published_date * 1000).tz(state.summitTZ).format('MMMM Do YYYY, h:mm a') : 'No');
 
                 return {
                     id: e.id,
                     type: e.type.name,
                     title: e.title,
                     status: e.status,
-                    published: published,
+                    published_date: published_date,
                     created_by_fullname: e.hasOwnProperty('created_by') ? `${e.created_by.first_name} ${e.created_by.last_name}`:'TBD',
                     speakers: (e.speakers) ? e.speakers.map(s => s.first_name + ' ' + s.last_name).join(',') : ''
                 };

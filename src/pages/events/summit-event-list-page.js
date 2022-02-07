@@ -169,7 +169,7 @@ class SummitEventListPage extends React.Component {
             { columnKey: 'status', value: T.translate("event_list.status") },
             { columnKey: 'speakers', value: T.translate("event_list.speakers") },
             { columnKey: 'created_by_fullname', value: T.translate("event_list.created_by") },
-            { columnKey: 'published', value: T.translate("event_list.published") },
+            { columnKey: 'published_date', value: T.translate("event_list.published") },
         ];
 
         const table_options = {
