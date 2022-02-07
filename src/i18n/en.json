@@ -250,6 +250,7 @@
     "available_on_api": "Is this Event available through API? (If True this Event will be available to Mobile Apps)",
     "dates": "Dates",
     "time_zone": "Time Zone",
+    "time_zone_label": "Time Zone Label",
     "start_date": "Event Start",
     "end_date": "Event End",
     "reassign_ticket_till_date": "Reassign Ticket Limit Date",

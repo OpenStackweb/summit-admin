@@ -464,6 +464,16 @@ class SummitForm extends React.Component {
                                 options={time_zones_ddl}
                             />
                         </div>
+                        <div className="col-md-6">
+                            <label> {T.translate("edit_summit.time_zone_label")}</label>
+                            <Input
+                                className="form-control"
+                                id="time_zone_label"
+                                value={entity.time_zone_label}
+                                onChange={this.handleChange}
+                                error={this.hasErrors('time_zone_label')}
+                            />
+                        </div>
                     </div>
                     <div className="row form-group">
                         <div className="col-md-6">

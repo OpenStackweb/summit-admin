@@ -77,6 +77,7 @@ export const DEFAULT_ENTITY = {
     ticket_types: [],
     time_zone: {},
     time_zone_id: '',
+    time_zone_label: '',
     timestamp: 0,
     tracks: [],
     type_id: 0,
