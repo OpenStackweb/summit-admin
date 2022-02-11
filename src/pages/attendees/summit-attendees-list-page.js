@@ -252,11 +252,12 @@ class SummitAttendeeListPage extends React.Component {
         }
 
         if(!currentSummit.id) return (<div />);
-
+        
         let flowEventsDDL = [
             {label: '-- SELECT EMAIL EVENT --', value: ''},
             {label: 'SUMMIT_REGISTRATION__ATTENDEE_TICKET_REGENERATE_HASH', value: 'SUMMIT_REGISTRATION__ATTENDEE_TICKET_REGENERATE_HASH'},
             {label: 'SUMMIT_REGISTRATION_INVITE_ATTENDEE_TICKET_EDITION', value: 'SUMMIT_REGISTRATION_INVITE_ATTENDEE_TICKET_EDITION'},
+            {label: 'SUMMIT_REGISTRATION_ATTENDEE_ALL_TICKETS_EDITION', value: 'SUMMIT_REGISTRATION_ATTENDEE_ALL_TICKETS_EDITION'},
         ];
 
         return(
