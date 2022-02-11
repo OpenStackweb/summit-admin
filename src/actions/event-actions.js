@@ -248,13 +248,15 @@ export const resetEventForm = () => (dispatch, getState) => {
 };
 
 export const saveEvent = (entity, publish) => (dispatch, getState) => {
-    const {loggedUserState, currentSummitState, currentEventTypeState} = getState();
+    const {loggedUserState, currentSummitState} = getState();
     const {accessToken} = loggedUserState;
     const {currentSummit} = currentSummitState;
+    const { type_id } = entity;
+    const type = currentSummit.event_types.find((e) => e.id == type_id);
     const eventTypeConfig = {
-        allow_custom_ordering: currentEventTypeState.entity.allow_custom_ordering,
-        allows_location: currentEventTypeState.entity.allows_location,
-        allows_publishing_dates: currentEventTypeState.entity.allows_publishing_dates,
+        allow_custom_ordering: type.allow_custom_ordering,
+        allows_location: type.allows_location,
+        allows_publishing_dates: type.allows_publishing_dates,
     }
 
     dispatch(startLoading());
@@ -334,10 +336,11 @@ export const saveOccupancy = (entity) => (dispatch, getState) => {
 }
 
 const publishEvent = (entity, cb = null) => (dispatch, getState) => {
-    const {loggedUserState, currentSummitState, currentEventTypeState} = getState();
+    const {loggedUserState, currentSummitState} = getState();
     const {accessToken} = loggedUserState;
     const {currentSummit} = currentSummitState;
-
+    const { type_id } = entity;
+    const type = currentSummit.event_types.find((e) => e.id == type_id);
     const params = {
         access_token: accessToken
     };
@@ -354,8 +357,8 @@ const publishEvent = (entity, cb = null) => (dispatch, getState) => {
         authErrorHandler
     )(params)(dispatch)
         .then((payload) => {
-            if (currentEventTypeState.entity.hasOwnProperty("allows_publishing_dates") &&
-                currentEventTypeState.entity.allows_publishing_dates) {
+            if (type.hasOwnProperty("allows_publishing_dates") &&
+                type.allows_publishing_dates) {
                 dispatch(checkProximityEvents(entity, cb));
             } else {
                 const success_message = {
