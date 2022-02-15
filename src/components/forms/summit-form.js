@@ -172,9 +172,21 @@ class SummitForm extends React.Component {
         this.props.onLogoDelete();
     }
 
+    validateForm = (entity) => {
+        if (!entity.time_zone_label) {
+            entity.time_zone_label = entity.time_zone_id;
+        }
+
+        return true;
+    }
+
     handleSubmit(ev) {
+        const {entity} = this.state;
+
         ev.preventDefault();
-        this.props.onSubmit(this.state.entity);
+        if (this.validateForm(entity)) {
+            this.props.onSubmit(entity);
+        }
     }
 
     hasErrors(field) {
@@ -465,7 +477,7 @@ class SummitForm extends React.Component {
                             />
                         </div>
                         <div className="col-md-6">
-                            <label> {T.translate("edit_summit.time_zone_label")}</label>
+                            <label> {T.translate("edit_summit.time_zone_label")} *</label>
                             <Input
                                 className="form-control"
                                 id="time_zone_label"
