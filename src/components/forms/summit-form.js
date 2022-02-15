@@ -626,6 +626,18 @@ class SummitForm extends React.Component {
                             </div>
                         </div>                                            
                     </div>
+                    <div className="row form-group">
+                        <div className="col-md-6 checkboxes-div">
+                            <div className="form-check abc-checkbox">
+                                <input type="checkbox" id="registration_allow_automatic_reminder_emails"
+                                       checked={entity.registration_allow_automatic_reminder_emails} onChange={this.handleChange}
+                                       className="form-check-input"/>
+                                <label className="form-check-label" htmlFor="registration_allow_automatic_reminder_emails">
+                                    {T.translate("edit_summit.registration_allow_automatic_reminder_emails")}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </Panel>
 
                 <Panel show={showSection === 'calendar'} title={T.translate("edit_summit.calendar_sync")}

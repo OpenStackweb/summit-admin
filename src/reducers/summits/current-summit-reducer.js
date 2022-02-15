@@ -108,6 +108,7 @@ export const DEFAULT_ENTITY = {
     help_users : [],
     registration_send_qr_as_image_attachment_on_ticket_email : false,
     registration_send_ticket_as_pdf_attachment_on_ticket_email : false,
+    registration_allow_automatic_reminder_emails : true,
 };
 
 const DEFAULT_STATE = {
