@@ -1822,14 +1822,36 @@
   "edit_sponsored_project_sponsorship_type_supporting_company": {
     "supporting_company": "Supporting Company",
     "company": "Company",
-    "saved": "Supporting Company successfully.",
+    "saved": "Supporting Company saved successfully.",
     "created": "Supporting Company created successfully."
   },
-  "schedule_settings": {
+  "schedule_settings_list": {
+    "schedule_settings" : "Settings for Site Schedules",
+    "no_schedule_settings": "No schedules settings found",
+    "add_schedule_settings": "Add new setting",
+    "seed_defaults": "Seed default schedules",
+    "remove_warning": "Are you sure you want do delete schedule "
+  },
+  "edit_schedule_settings": {
     "schedule_settings" : "Schedule Settings",
+    "key" : "Key",
+    "enabled" : "Enabled",
+    "color_source" : "Color Source",
+    "is_my_schedule" : "Is my schedule?",
+    "access_levels_only" : "Filter events by Access Levels",
     "filter_title": "Filter",
     "filter_subtitle": "Activate filters to by displayed on side panel",
     "color_title": "Color By",
-    "color_subtitle": "The selected option will be use as color codification on schedule"
+    "color_subtitle": "The selected option will be use as color codification on schedule",
+    "track": "Track",
+    "track_groups": "Track Groups",
+    "locations": "Locations",
+    "levels": "Levels",
+    "event_types": "Activity Types",
+    "tags": "Tags",
+    "companies": "Companies",
+    "speakers": "Speakers",
+    "saved": "Schedule settings saved successfully.",
+    "created": "Schedule settings created successfully."
   }
 }

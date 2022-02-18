@@ -83,3 +83,7 @@ export const isEmptyString = (str) => {
 export const stripTags = (s) => {
     return s.replace(/(<([^>]+)>)/gi, "");
 }
+
+export const boolToStr = boolean => {
+    return boolean ? 'Yes' : 'No';
+}

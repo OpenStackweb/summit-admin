@@ -54,17 +54,24 @@ class EditNameInput extends Component {
 
     render(){
         let { editing, value} = this.state;
-        let { id } = this.props;
+        let { id, disabled } = this.props;
         return (
             <>
             {
-                !editing &&
+                !editing && !disabled &&
                 <a className={styles.action_link} href="#" onClick={this.onEdit}>Edit Name</a>
             }
             {
                 editing &&
                 <span>
-                    <input className={styles.input_text} type="text" id={id} name={id} value={value} onChange={this.handleChange}/>
+                    <input
+                        className={styles.input_text}
+                        type="text"
+                        id={id}
+                        name={id}
+                        value={value}
+                        onChange={this.handleChange}
+                    />
                     <a className={styles.action_link} href="#" onClick={this.onSave}>Save</a>
                     <a className={styles.action_link} href="#" onClick={this.onCancel}>Cancel</a>
                 </span>
@@ -83,15 +90,17 @@ export default class EditLabelSlider extends Component {
     }
 
     handleChange(checked) {
-        this.props.onStatusChanged(this.props.id, checked);
+        const {id, value} = this.props;
+        this.props.onChange(id, checked, value);
     }
 
     onSave(value){
-        this.props.onValueChanged(this.props.id, value);
+        const {id, checked} = this.props;
+        this.props.onChange(id, checked, value);
     }
 
     render() {
-        let {value, id, checked} = this.props;
+        let {value, id, checked, disabled} = this.props;
         return (
                 <label htmlFor="material-switch" className={styles.editLabelSlider}>
                     <Switch
@@ -101,9 +110,10 @@ export default class EditLabelSlider extends Component {
                         checkedIcon={false}
                         className="react-switch"
                         id={id}
+                        disabled={disabled}
                     />
                     <span className={styles.label}>{value}</span>
-                    <EditNameInput value={value} id={id} onSave={this.onSave}/>
+                    <EditNameInput value={value} id={id} onSave={this.onSave} disabled={disabled} />
                 </label>
         )
     }

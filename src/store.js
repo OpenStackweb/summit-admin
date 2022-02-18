@@ -105,12 +105,14 @@ import sponsoredProjectListReducer from "./reducers/sponsored_projects/sponsored
 import sponsoredProjectReducer from "./reducers/sponsored_projects/sponsored-project-reducer";
 import sponsoredProjectSponsorshipTypeReducer from "./reducers/sponsored_projects/sponsored-project-sponsorship-type-reducer";
 import sponsoredProjectSponsorshipTypeSupportingCompanyReducer from "./reducers/sponsored_projects/sponsored-project-sponsorship-type-supporting-company-reducer";
+import scheduleSettingsReducer from "./reducers/schedule-settings/schedule-settings-reducer";
+import scheduleSettingsListReducer from "./reducers/schedule-settings/schedule-settings-list-reducer";
+import selectionPlanExtraQuestionReducer from "./reducers/summits/selection-plan-extra-question-reducer";
 
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
 import storage from 'redux-persist/es/storage'
-import scheduleSettingsReducer from "./reducers/schedule-settings/schedule-settings-reducer";
-import selectionPlanExtraQuestionReducer from "./reducers/summits/selection-plan-extra-question-reducer";
+
  // default: localStorage if web, AsyncStorage if react-native
 
 const config = {
@@ -212,7 +214,8 @@ const reducers = persistCombineReducers(config, {
     sponsoredProjectState : sponsoredProjectReducer,
     sponsoredProjectSponsorshipTypeState : sponsoredProjectSponsorshipTypeReducer,
     sponsoredProjectSponsorshipTypeSupportingCompanyState: sponsoredProjectSponsorshipTypeSupportingCompanyReducer,
-    scheduleSettingState: scheduleSettingsReducer,
+    scheduleSettingsState: scheduleSettingsReducer,
+    scheduleSettingsListState: scheduleSettingsListReducer,
     currentSelectionPlanExtraQuestionState: selectionPlanExtraQuestionReducer,
 });
 

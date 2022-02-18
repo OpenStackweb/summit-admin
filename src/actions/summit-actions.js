@@ -49,7 +49,7 @@ export const getSummitById = (summitId) => (dispatch, getState) => {
 
     const params = {
         access_token : accessToken,
-        expand: 'event_types,tracks,values,locations,locations.rooms,registration_stats'
+        expand: 'event_types,tracks,track_groups,values,locations,locations.rooms,registration_stats'
     };
 
     return getRequest(
