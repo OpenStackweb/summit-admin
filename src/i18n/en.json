@@ -288,8 +288,8 @@
     "registration_send_qr_as_image_attachment_on_ticket_email" : "Send QR as Attachment (Image) on ticket Email",
     "registration_send_ticket_as_pdf_attachment_on_ticket_email" : "Send Ticket as Attachment (PDF) on ticket Email",
     "registration_send_ticket_email_automatically" : "Send Ticket Email Automatically?",
-    "registration_allow_automatic_reminder_emails" : "Allow Automatic Reminder Emails?",
-    "allow_update_attendee_extra_questions": "Allow Update Attende Extra Questions?",
+    "registration_allow_automatic_reminder_emails" : "Allow Automatic Reminder Emails (Incomplete Order/Tickets)?",
+    "allow_update_attendee_extra_questions": "Allow Attendee to update extra questions?",
     "placeholders": {
       "api_feed_type": "Select API feed type...",
       "external_registration_feed_type": "Select Ext. Reg. feed type..."
