@@ -67,8 +67,8 @@ export const seedDefaultScheduleSettings = () => (dispatch, getState) => {
         null,
         createAction(DEFAULT_SCHEDULE_SETTINGS_SEEDED),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/schedule-settings/seed`,
-        authErrorHandler,
-        {}
+        {},
+        authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
