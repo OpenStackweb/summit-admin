@@ -62,7 +62,7 @@ const PreFilterInput = ({type, values, onChange, summit, disabled}) => {
             input = (
                 <>
                     <label>{T.translate("edit_schedule_settings.tags")}</label>
-                    <TagInput id={type} value={values} summitId={summit.id} onChange={onChange} isDisabled={disabled} />
+                    <TagInput id={type} value={values} summitId={summit.id} onChange={onChange} isDisabled={disabled} multi/>
                 </>
             );
             break;
@@ -92,6 +92,7 @@ const PreFilterInput = ({type, values, onChange, summit, disabled}) => {
                         value={values}
                         onChange={onChange}
                         summitId={summit.id}
+                        multi
                         isDisabled={disabled}
                     />
                 </>

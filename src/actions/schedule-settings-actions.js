@@ -75,7 +75,6 @@ export const seedDefaultScheduleSettings = () => (dispatch, getState) => {
     );
 }
 
-
 export const getAllScheduleSettings = ( order = 'key', orderDir = 1 ) => (dispatch, getState) => {
     const { loggedUserState, currentSummitState } = getState();
     const { accessToken }     = loggedUserState;
@@ -115,7 +114,7 @@ export const getScheduleSetting = (scheduleSettingId) => (dispatch, getState) =>
 
     const params = {
         access_token : accessToken,
-        expand: 'filters,pre_filters',
+        expand: 'filters,pre_filters,pre_filters.values',
     };
 
     return getRequest(
@@ -206,14 +205,24 @@ export const saveScheduleSettings = (entity) => (dispatch, getState) => {
     }
 };
 
-
-
 const normalizeEntity = (entity) => {
     const normalized = {...entity};
     delete(normalized.id);
 
     normalized.filters = entity.filters.map(f => ({type: f.type, label: f.label, is_enabled: f.is_enabled}));
-    normalized.pre_filters = entity.pre_filters.map(pf => ({type: pf.type, values: pf.values}));
+    normalized.pre_filters = entity.pre_filters.map(pf => {
+        let values = pf.values;
+        if(pf.type === FILTER_TYPES.company){
+            values = values.map( v => v.id);
+        }
+        if(pf.type === FILTER_TYPES.speakers){
+            values = values.map( v => v.id);
+        }
+        if(pf.type === FILTER_TYPES.tags){
+            values = values.map( v => v.tag);
+        }
+        return ({type: pf.type, values})
+    });
 
     return normalized;
 }

@@ -8,7 +8,7 @@ const TrackGroupDropdown = ({id, value, onChange, trackGroups, ...rest}) => {
     return (
         <Dropdown
             id={id}
-            value={value}
+            value={value.map( v => parseInt(v))}
             onChange={onChange}
             options={options}
             {...rest}

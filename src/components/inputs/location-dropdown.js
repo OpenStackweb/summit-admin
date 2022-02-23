@@ -7,7 +7,7 @@ const LocationDropdown = ({id, value, onChange, locations, ...rest}) => {
     return (
         <Dropdown
             id={id}
-            value={value}
+            value={value.map( v => parseInt(v))}
             options={options}
             onChange={onChange}
             {...rest}
