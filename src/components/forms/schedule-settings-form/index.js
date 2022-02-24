@@ -105,6 +105,8 @@ class ScheduleSettingsForm extends React.Component {
     render() {
         const {entity, errors} = this.state;
         const {summit} = this.props;
+        const disabledPreFilters = ['CUSTOM_ORDER', 'ABSTRACT', 'DATE'];
+        const enabledPreFilters = entity.pre_filters.filter(pf => !disabledPreFilters.includes(pf.type));
 
         const color_source_ddl = [
             {label: 'Track', value: 'TRACK'},
@@ -188,7 +190,7 @@ class ScheduleSettingsForm extends React.Component {
                 <br/><br/>
                 <legend>Pre Filters</legend>
                 <div className="row form-group pre-filters">
-                    {entity.pre_filters.map(pf =>
+                    {enabledPreFilters.map(pf =>
                         <div className="col-md-6" key={pf.type}>
                             <PreFilterInput type={pf.type} values={pf.values} onChange={this.onPreFilterChange} summit={summit} disabled={!entity.is_enabled} />
                         </div>
