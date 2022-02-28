@@ -75,17 +75,22 @@ class MetricsReport extends React.Component {
             overallFilter.toDate = moment(toDate).format('YYYY-MM-DDTHH:mm:ss+00:00');
         }
 
-        let query = new Query("summits", listFilters);
-        let metrics = new Query("uniqueMetrics", overallFilter)
+        const query = new Query("summits", listFilters);
+        const metrics = new Query("uniqueMetrics", overallFilter)
         metrics.find(metricsFields)
-        let sponsors = new Query(...sponsorsMessage);
+        const sponsors = new Query(...sponsorsMessage);
         sponsors.find(["id", "companyName", {"metrics": metrics}]);
-        let events = new Query(...eventsMessage);
+        const events = new Query(...eventsMessage);
         events.find(["id", "title", {"metrics": metrics}]);
-        let rooms = new Query(...roomsMessage);
+        const rooms = new Query(...roomsMessage);
         rooms.find(["id", "name", {"events": events}]);
-        let extraQuestions = new Query("orderExtraQuestions");
+        const extraQuestions = new Query("orderExtraQuestions");
         extraQuestions.find(["id", "name"]);
+
+        const posterMetrics = new Query("uniqueMetrics", {...overallFilter, metricType: 'POSTER'})
+        posterMetrics.find(metricsFields)
+        const posters = new Query("events", {type_Type: "Poster"});
+        posters.find(["id", "title", {"metrics": posterMetrics}]);
 
         const findQueries = ["id", "title", {"extraQuestions": extraQuestions}];
 
@@ -93,6 +98,8 @@ class MetricsReport extends React.Component {
             findQueries.push({"rooms": rooms});
         } else if (eventType === 'SPONSOR') {
             findQueries.push({"sponsors": sponsors});
+        } else if (eventType === 'POSTER') {
+            findQueries.push({"posters": posters});
         } else {
             findQueries.push({"metrics": metrics});
         }
@@ -286,6 +293,31 @@ class MetricsReport extends React.Component {
                         columns = [...columns, ...data.extraQuestions.map(q => ({ columnKey: `metrics_${q.id}`, value: q.name}))]
                     }
                 }
+            } else if (eventType === 'POSTER') {
+                if (!data.posters)
+                    return {reportData: processedData, tableColumns: columns};
+
+                processedData = data.posters
+                    .filter(p => p.metrics.length)
+                    .map(pos => {
+                        const metrics = pos.metrics.map(this.parseMetricData);
+                        return ({...pos, metrics})
+                    });
+
+                if (forExport) {
+                    processedData = flattenData(processedData);
+                    columns = [
+                        { columnKey: 'id', value: 'Id' },
+                        { columnKey: 'title', value: 'Poster' },
+                        { columnKey: 'metrics_metric', value: 'Metric' },
+                        { columnKey: 'metrics_email', value: 'Email' },
+                        { columnKey: 'metrics_company', value: 'Company' }
+                    ];
+
+                    if (showAnswers && data.extraQuestions) {
+                        columns = [...columns, ...data.extraQuestions.map(q => ({ columnKey: `metrics_${q.id}`, value: q.name}))]
+                    }
+                }
             } else if (data.metrics) {
                 processedData = data.metrics.map(this.parseMetricData);
             }
@@ -343,6 +375,25 @@ class MetricsReport extends React.Component {
         } else if (eventType === 'SPONSOR') {
             tables = data.map(grp => {
                 const name = grp.companyName;
+                const sectionId = `section_${grp.id}`;
+
+                return (
+                    <Panel show={showSection === sectionId} title={`${name} (${grp.metrics.length})`}
+                           handleClick={() => toggleSection(sectionId)} key={sectionId}>
+                        <div className="table-responsive">
+                            <Table
+                                options={options}
+                                data={grp.metrics}
+                                columns={tableCols}
+                                onSort={this.props.onSort}
+                            />
+                        </div>
+                    </Panel>
+                );
+            });
+        } else if (eventType === 'POSTER') {
+            tables = data.map(grp => {
+                const name = grp.title;
                 const sectionId = `section_${grp.id}`;
 
                 return (
@@ -423,6 +474,7 @@ class MetricsReport extends React.Component {
         let event_types_ddl = [
             {label: 'Lobby', value: 'LOBBY'},
             {label: 'Event', value: 'EVENT'},
+            {label: 'Poster', value: 'POSTER'},
             {label: 'Sponsor', value: 'SPONSOR'},
             {label: 'General', value: 'GENERAL'},
         ];
