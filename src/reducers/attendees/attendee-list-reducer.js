@@ -105,7 +105,7 @@ const attendeeListReducer = (state = DEFAULT_STATE, action) => {
         }
             break;
         case SET_SELECTED_ALL_ATTENDEES:{
-            return {...state, selectedAll : payload};
+            return {...state, selectedAll : payload, selectedIds: []};
         }
         break;
         case SEND_ATTENDEES_EMAILS:{

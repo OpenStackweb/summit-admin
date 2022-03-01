@@ -90,7 +90,7 @@ const RegistrationInvitationListReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case SET_SELECTED_ALL:{
-            return {...state, selectedAll : payload};
+            return {...state, selectedAll : payload, selectedIds: []};
             break;
         }
         default:
