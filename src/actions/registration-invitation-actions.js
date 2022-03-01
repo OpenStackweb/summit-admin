@@ -30,7 +30,7 @@ import history from "../history";
 export const REQUEST_INVITATIONS = 'REQUEST_INVITATIONS';
 export const RECEIVE_INVITATIONS = 'RECEIVE_INVITATIONS';
 export const INVITATIONS_IMPORTED = 'INVITATIONS_IMPORTED';
-export const RECEIVE_INVITATION = 'RECEIVE_INVITATION';
+export const SEND_INVITATIONS_EMAILS = 'SEND_INVITATIONS_EMAILS';
 export const SELECT_INVITATION = 'SELECT_INVITATION';
 export const UNSELECT_INVITATION = 'UNSELECT_INVITATION';
 export const CLEAR_ALL_SELECTED_INVITATIONS = 'CLEAR_ALL_SELECTED_INVITATIONS';
@@ -347,7 +347,7 @@ export const sendEmails = (currentFlowEvent, selectedAll = false , selectedInvit
 
     return putRequest(
         null,
-        createAction(RECEIVE_INVITATION),
+        createAction(SEND_INVITATIONS_EMAILS),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/registration-invitations/all/send`,
         payload,
         authErrorHandler

@@ -22,7 +22,7 @@ import
     REGISTRATION_INVITATION_ALL_DELETED,
     SET_CURRENT_FLOW_EVENT,
     SET_SELECTED_ALL,
-    RECEIVE_INVITATION,
+    SEND_INVITATIONS_EMAILS,
 } from '../../actions/registration-invitation-actions';
 
 import {LOGOUT_USER} from 'openstack-uicore-foundation/lib/actions';
@@ -72,9 +72,13 @@ const RegistrationInvitationListReducer = (state = DEFAULT_STATE, action) => {
             return {...state, selectedInvitationsIds: state.selectedInvitationsIds.filter(element => element !== payload), selectedAll: false};
         }
         case CLEAR_ALL_SELECTED_INVITATIONS:
-        case RECEIVE_INVITATION:
         {
             return {...state, selectedInvitationsIds: [], selectedAll: false, currentFlowEvent: ''};
+        }
+        break;
+        case SEND_INVITATIONS_EMAILS:
+        {
+            return {...state, selectedInvitationsIds: [], selectedAll: false};
         }
         break;
         case REGISTRATION_INVITATION_DELETED: {
