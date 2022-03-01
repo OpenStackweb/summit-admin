@@ -73,12 +73,12 @@ const RegistrationInvitationListReducer = (state = DEFAULT_STATE, action) => {
         }
         case CLEAR_ALL_SELECTED_INVITATIONS:
         {
-            return {...state, selectedInvitationsIds: [], selectedAll: false, currentFlowEvent: ''};
+            return {...state, selectedInvitationsIds: [], selectedAll: false};
         }
         break;
         case SEND_INVITATIONS_EMAILS:
         {
-            return {...state, selectedInvitationsIds: [], selectedAll: false};
+            return {...state, selectedInvitationsIds: [], selectedAll: false, currentFlowEvent: ''};
         }
         break;
         case REGISTRATION_INVITATION_DELETED: {
