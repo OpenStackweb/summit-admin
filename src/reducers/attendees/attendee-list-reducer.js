@@ -19,7 +19,9 @@ import
     SELECT_ATTENDEE,
     UNSELECT_ATTENDEE,
     CLEAR_ALL_SELECTED_ATTENDEES,
-    SET_ATTENDEES_CURRENT_FLOW_EVENT, SET_SELECTED_ALL_ATTENDEES,
+    SET_ATTENDEES_CURRENT_FLOW_EVENT,
+    SET_SELECTED_ALL_ATTENDEES,
+    SEND_ATTENDEES_EMAILS,
 } from '../../actions/attendee-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
@@ -92,11 +94,11 @@ const attendeeListReducer = (state = DEFAULT_STATE, action) => {
         }
             break;
         case UNSELECT_ATTENDEE:{
-            return {...state, selectedIds: state.selectedIds.filter(element => element !== payload)};
+            return {...state, selectedIds: state.selectedIds.filter(element => element !== payload), selectedAll: false};
         }
         case CLEAR_ALL_SELECTED_ATTENDEES:
         {
-            return {...state, selectedIds: []};
+            return {...state, selectedIds: [], selectedAll: false};
         }
         case SET_ATTENDEES_CURRENT_FLOW_EVENT:{
             return {...state, currentFlowEvent : payload};
@@ -104,9 +106,15 @@ const attendeeListReducer = (state = DEFAULT_STATE, action) => {
             break;
         case SET_SELECTED_ALL_ATTENDEES:{
             return {...state, selectedAll : payload};
-
         }
         break;
+        case SEND_ATTENDEES_EMAILS:{
+            return {...state,
+                selectedIds: [],
+                currentFlowEvent: '',
+                selectedAll: false
+            }
+        }
         default:
             return state;
     }
