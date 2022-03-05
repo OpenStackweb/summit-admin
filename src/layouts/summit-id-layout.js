@@ -61,6 +61,7 @@ import ScheduleSettingsLayout from "./schedule-settings-layout";
 import FeaturedSpeakersPage from '../pages/summit_speakers/featured-speakers-page';
 import TrackChairListPage from "../pages/track_chairs/track-chair-list-page";
 import ProgressFlagsPage from "../pages/track_chairs/progress-flags-page";
+import SummitPresentationsVotesPage from "../pages/events/summit-presentations-votes-page";
 
 class SummitIdLayout extends React.Component {
 
@@ -105,6 +106,7 @@ class SummitIdLayout extends React.Component {
                     <Route strict exact path={match.url} component={EditSummitPage} />
                     <Route path={`${match.url}/room-booking-attributes`} component={RoomBookingAttributeLayout}/>
                     <Route path={`${match.url}/events`} component={EventLayout}/>
+                    <Route path={`${match.url}/voteable-presentations`} component={SummitPresentationsVotesPage}/>
                     <Route path={`${match.url}/event-types`} component={EventTypeLayout}/>
                     <Route path={`${match.url}/event-categories`} component={EventCategoryLayout}/>
                     <Route path={`${match.url}/event-category-groups`} component={EventCategoryGroupLayout}/>

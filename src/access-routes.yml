@@ -79,6 +79,11 @@ events:
   - super-admins
   - administrators
   - summit-front-end-administrators
+  -
+voteable-presentations:
+  - super-admins
+  - administrators
+  - summit-front-end-administrators
 
 locations:
   - super-admins

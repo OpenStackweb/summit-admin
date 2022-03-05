@@ -112,6 +112,7 @@ import selectionPlanExtraQuestionReducer from "./reducers/summits/selection-plan
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
 import storage from 'redux-persist/es/storage'
+import presentationVotesReducer from "./reducers/events/summit-presentation-votes-reducer";
 
  // default: localStorage if web, AsyncStorage if react-native
 
@@ -217,6 +218,7 @@ const reducers = persistCombineReducers(config, {
     scheduleSettingsState: scheduleSettingsReducer,
     scheduleSettingsListState: scheduleSettingsListReducer,
     currentSelectionPlanExtraQuestionState: selectionPlanExtraQuestionReducer,
+    currentPresentationVotesState: presentationVotesReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
