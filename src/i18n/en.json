@@ -1864,8 +1864,11 @@
     "voters": "Voters",
     "show_voters_col": "Show Voters?",
     "filter_by_date": "Search by Date",
+    "presentations": "Voted Presentations",
+    "attendees_vote_list": "Attendees Votes ",
     "placeholders": {
-      "search_presentations": "Search By Title"
+      "search_presentations": "Search By Title",
+      "search_attendees": "Search By Full Name / Email"
     }
   }
 }

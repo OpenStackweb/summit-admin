@@ -14,11 +14,13 @@
 import React from 'react'
 import {connect} from "react-redux"
 import T from "i18n-react";
-import {DateTimePicker, FreeTextSearch, Table} from "openstack-uicore-foundation/lib/components";
+import {DateTimePicker, Dropdown, FreeTextSearch, Table} from "openstack-uicore-foundation/lib/components";
 import {Pagination} from "react-bootstrap";
-import {getPresentationsVotes, exportPresentationsVotes} from "../../actions/presentation-votes-actions";
+import {getPresentationsVotes, getAttendeeVotes} from "../../actions/presentation-votes-actions";
 import {Breadcrumb} from "react-breadcrumbs";
-import {epochToMomentTimeZone} from "openstack-uicore-foundation/lib/methods";
+import {epochToMomentTimeZone, escapeFilterValue} from "openstack-uicore-foundation/lib/methods";
+
+const REPORT_TYPE_BY_PRESENTATION = 'BY_PRESENTATION';
 
 class SummitPresentationsVotesPage extends React.Component {
 
@@ -26,19 +28,49 @@ class SummitPresentationsVotesPage extends React.Component {
         super(props);
 
         this.handleSort = this.handleSort.bind(this);
-        this.handleExport = this.handleExport.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
-        this.handleShowVoterColClick = this.handleShowVoterColClick.bind(this);
         this.handleChangeFilters = this.handleChangeFilters.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.handleFilterByDate = this.handleFilterByDate.bind(this);
+        this.handleChangeReportType = this.handleChangeReportType.bind(this);
+        this.buildExtraFilters = this.buildExtraFilters.bind(this);
         this.state = {
-            showVotersColumn:false,
             errors:{},
             begin_presentation_attendee_vote_date:0,
             end_presentation_attendee_vote_date:0,
             term: '',
+            current_report_type: REPORT_TYPE_BY_PRESENTATION,
         };
+    }
+
+    buildExtraFilters(reportType){
+
+        const {begin_presentation_attendee_vote_date, end_presentation_attendee_vote_date, term} = this.state;
+        let filters = [];
+        if(term !== ''){
+            const escapedTerm = escapeFilterValue(term);
+            if(reportType === REPORT_TYPE_BY_PRESENTATION)
+                filters.push(`title=@${escapedTerm}`);
+            else
+                filters.push(`full_name=@${escapedTerm},first_name=@${escapedTerm},last_name=@${escapedTerm},email=@${escapedTerm}`);
+        }
+        if(
+            begin_presentation_attendee_vote_date > 0 &&
+            end_presentation_attendee_vote_date > 0 &&
+            begin_presentation_attendee_vote_date < end_presentation_attendee_vote_date){
+            if(reportType === REPORT_TYPE_BY_PRESENTATION) {
+                filters.push(`presentation_attendee_vote_date>=${begin_presentation_attendee_vote_date}`);
+                filters.push(`presentation_attendee_vote_date<=${end_presentation_attendee_vote_date}`);
+            }
+            else{
+                filters.push(`presentation_votes_date>=${begin_presentation_attendee_vote_date}`);
+                filters.push(`presentation_votes_date<=${end_presentation_attendee_vote_date}`);
+            }
+        }
+        if(reportType!== REPORT_TYPE_BY_PRESENTATION){
+            filters.push(`presentation_votes_track_group_id==${reportType}`);
+        }
+        return filters;
     }
 
     componentDidMount() {
@@ -48,52 +80,49 @@ class SummitPresentationsVotesPage extends React.Component {
         }
     }
 
-    handleShowVoterColClick(ev){
-        let {checked} = ev.target;
-        this.setState({...this.state, showVotersColumn: checked});
-    }
-
-    handleExport(ev) {
-        const {order, orderDir} = this.props;
-        ev.preventDefault();
-        const {begin_presentation_attendee_vote_date, end_presentation_attendee_vote_date, term} = this.state;
-        let filters = [];
-        if(
-            begin_presentation_attendee_vote_date > 0 &&
-            end_presentation_attendee_vote_date > 0 &&
-            begin_presentation_attendee_vote_date < end_presentation_attendee_vote_date){
-            filters.push(`presentation_attendee_vote_date>=${begin_presentation_attendee_vote_date}`);
-            filters.push(`presentation_attendee_vote_date<=${end_presentation_attendee_vote_date}`);
+    handleChangeReportType(ev){
+        const {value, id} = ev.target;
+        this.setState({...this.state, current_report_type : value});
+        let filters = this.buildExtraFilters(value)
+        if(value === REPORT_TYPE_BY_PRESENTATION){
+            this.props.getPresentationsVotes(1, 10, 'votes_count', 0, filters);
+            return;
         }
-        if(term !== ''){
-            filters.push(`title=@${term}`);
-        }
-        this.props.exportPresentationsVotes(order, orderDir, filters);
+        this.props.getAttendeeVotes(1,10,'presentation_votes_count',0, filters);
     }
 
     handlePageChange(page) {
         const { order, orderDir, perPage} = this.props;
-        this.props.getPresentationsVotes(page, perPage, order, orderDir);
+        const {current_report_type} = this.state;
+        const filters = this.buildExtraFilters(current_report_type);
+        if(current_report_type === REPORT_TYPE_BY_PRESENTATION) {
+            this.props.getPresentationsVotes(page, perPage, order, orderDir, filters);
+            return;
+        }
+        this.props.getAttendeeVotes(page, perPage, (order ==='votes_count'? 'presentation_votes_count': order), orderDir, filters);
     }
 
     handleSort(index, key, dir, func) {
         const { page, perPage} = this.props;
-        this.props.getPresentationsVotes( page, perPage, key, dir);
+        const {current_report_type} = this.state;
+        const filters = this.buildExtraFilters(current_report_type);
+        if(current_report_type === REPORT_TYPE_BY_PRESENTATION) {
+            this.props.getPresentationsVotes(page, perPage, key, dir, filters);
+            return;
+        }
+        this.props.getAttendeeVotes(page, perPage, (key ==='votes_count'? 'presentation_votes_count': key), dir, filters);
     }
 
     handleFilterByDate(ev){
         ev.preventDefault();
-        const {order, orderDir, page, perPage} = this.props;
-        const {begin_presentation_attendee_vote_date, end_presentation_attendee_vote_date} = this.state;
-        let filters = [];
-        if(
-            begin_presentation_attendee_vote_date > 0 &&
-            end_presentation_attendee_vote_date > 0 &&
-            begin_presentation_attendee_vote_date < end_presentation_attendee_vote_date){
-            filters.push(`presentation_attendee_vote_date>=${begin_presentation_attendee_vote_date}`);
-            filters.push(`presentation_attendee_vote_date<=${end_presentation_attendee_vote_date}`);
+        const { order, orderDir, perPage} = this.props;
+        const {current_report_type} = this.state;
+        const filters = this.buildExtraFilters(current_report_type);
+        if(current_report_type === REPORT_TYPE_BY_PRESENTATION){
+            this.props.getPresentationsVotes(1, perPage, order, orderDir, filters)
+            return;
         }
-        this.props.getPresentationsVotes(page, perPage, order, orderDir, filters);
+        this.props.getAttendeeVotes(1,perPage, (order ==='votes_count'? 'presentation_votes_count': order), orderDir, filters)
     }
 
     handleChangeFilters(ev) {
@@ -114,34 +143,32 @@ class SummitPresentationsVotesPage extends React.Component {
     }
 
     handleSearch(term) {
-        const {order, orderDir, page, perPage} = this.props;
-        this.setState({...this.state, term: term});
-        const {begin_presentation_attendee_vote_date, end_presentation_attendee_vote_date} = this.state;
-        let filters = [`title=@${term}`];
-        if(
-            begin_presentation_attendee_vote_date > 0 &&
-            end_presentation_attendee_vote_date > 0 &&
-            begin_presentation_attendee_vote_date < end_presentation_attendee_vote_date){
-            filters.push(`presentation_attendee_vote_date>=${begin_presentation_attendee_vote_date}`);
-            filters.push(`presentation_attendee_vote_date<=${end_presentation_attendee_vote_date}`);
-        }
-        this.props.getPresentationsVotes(page, perPage, order, orderDir, filters);
+        const {order, orderDir} = this.props;
+        const {current_report_type} = this.state;
+        this.setState({...this.state, term: term}, () => {
+            const filters = this.buildExtraFilters(current_report_type);
+            if(current_report_type === REPORT_TYPE_BY_PRESENTATION){
+                this.props.getPresentationsVotes(1, 10, order, orderDir, filters)
+                return;
+            }
+            this.props.getAttendeeVotes(1,10, (order ==='votes_count'? 'presentation_votes_count': order), orderDir, filters)
+        });
     }
 
     render(){
-        const {currentSummit, presentations, lastPage, currentPage, order, orderDir, totalPresentations, match} = this.props;
-        const {begin_presentation_attendee_vote_date, end_presentation_attendee_vote_date, term} = this.state;
-        const columns = [
+        const {currentSummit, items, lastPage, currentPage, order, orderDir, totalItems, match} = this.props;
+        const {begin_presentation_attendee_vote_date, end_presentation_attendee_vote_date, term, current_report_type} = this.state;
+
+        let columns = current_report_type === REPORT_TYPE_BY_PRESENTATION ? [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
             { columnKey: 'title', value: T.translate("presentation_votes_page.title"), sortable: true },
             { columnKey: 'votes_count', value: T.translate("presentation_votes_page.votes_count"), sortable: true }
+        ]:[
+            { columnKey: 'first_name', value: 'First Name', sortable: true },
+            { columnKey: 'last_name', value: 'Last Name', sortable: true },
+            { columnKey: 'votes_count', value: T.translate("presentation_votes_page.votes_count"), sortable: true },
+            { columnKey: 'presentations', value: T.translate("presentation_votes_page.presentations") }
         ];
-
-        if(this.state.showVotersColumn){
-            columns.push(
-                { columnKey: 'voters', value: T.translate("presentation_votes_page.voters")}
-            )
-        }
 
         const table_options = {
             sortCol: order,
@@ -151,11 +178,31 @@ class SummitPresentationsVotesPage extends React.Component {
 
         if(!currentSummit.id) return(<div />);
 
+        let extraOptions = currentSummit.track_groups.map((tg) => ({label:`View by attendee for ${tg.name}`, value:tg.id}));
+        let reportTypeDDL = [
+            {label: 'View By Presentation', value: REPORT_TYPE_BY_PRESENTATION}, ...extraOptions
+        ];
+
         return(
             <div>
                 <Breadcrumb data={{ title: T.translate("presentation_votes_page.presentation_votes_page"), pathname: match.url }} />
                 <div className="container">
-                <h3> {T.translate("presentation_votes_page.presentation_vote_list")} ({totalPresentations})</h3>
+                <h3> {current_report_type === REPORT_TYPE_BY_PRESENTATION ?
+                    T.translate("presentation_votes_page.presentation_vote_list"):
+                    T.translate("presentation_votes_page.attendees_vote_list")
+                } ({totalItems})</h3>
+                <div className={'row'} style={{"padding-bottom":"1em"}}>
+                    <div className={'col-md-6'}>
+                        <Dropdown
+                            id="report_type"
+                            value={this.state.current_report_type}
+                            onChange={this.handleChangeReportType}
+                            options={reportTypeDDL}
+                        />
+                    </div>
+                    <div className="col-md-6 text-right">
+                    </div>
+                </div>
                 <div className={'row'}>
                     <div className={'col-md-12'}>
                         <div className={'row'}>
@@ -165,6 +212,7 @@ class SummitPresentationsVotesPage extends React.Component {
                                     onChange={this.handleChangeFilters}
                                     format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                                     timezone={currentSummit.time_zone_id}
+                                    inputProps={{ placeholder:"From"}}
                                     value={epochToMomentTimeZone(begin_presentation_attendee_vote_date, currentSummit.time_zone_id)}
                                 />
                             </div>
@@ -174,6 +222,7 @@ class SummitPresentationsVotesPage extends React.Component {
                                     onChange={this.handleChangeFilters}
                                     format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                                     timezone={currentSummit.time_zone_id}
+                                    inputProps={{ placeholder:"To"}}
                                     value={epochToMomentTimeZone(end_presentation_attendee_vote_date, currentSummit.time_zone_id)}
                                 />
                             </div>
@@ -185,42 +234,26 @@ class SummitPresentationsVotesPage extends React.Component {
                             <div className={'col-md-6'}>
                                     <FreeTextSearch
                                         value={term ?? ''}
-                                        placeholder={T.translate("presentation_votes_page.placeholders.search_presentations")}
+                                        placeholder={current_report_type === REPORT_TYPE_BY_PRESENTATION ?
+                                            T.translate("presentation_votes_page.placeholders.search_presentations"):
+                                            T.translate("presentation_votes_page.placeholders.search_attendees")
+                                        }
                                         onSearch={this.handleSearch}
                                     />
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className={'row'}>
-                    <div className={'col-md-6'}>
-                        <div className='panel panel-default'>
-                            <div className="panel-body">
-                                <div className="form-check abc-checkbox checkbox-inline">
-                                    <input type="checkbox" id="show_voters_col"
-                                           onChange={this.handleShowVoterColClick} className="form-check-input" />
-                                    <label className="form-check-label" htmlFor="show_voters_col">
-                                        {T.translate("presentation_votes_page.show_voters_col")}</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-md-6 text-right">
-                        <button className="btn btn-default right-space" onClick={this.handleExport}>
-                            {T.translate("general.export")}
-                        </button>
-                    </div>
-                </div>
 
-                {totalPresentations === 0 &&
+                {totalItems === 0 &&
                     <div>{T.translate("presentation_votes_page.no_presentations")}</div>
                 }
 
-                {totalPresentations > 0 &&
+                {totalItems > 0 &&
                 <div>
                     <Table
                         options={table_options}
-                        data={presentations}
+                        data={items}
                         columns={columns}
                         onSort={this.handleSort}
                     />
@@ -257,6 +290,6 @@ export default connect (
     mapStateToProps,
     {
         getPresentationsVotes,
-        exportPresentationsVotes,
+        getAttendeeVotes
     }
 )(SummitPresentationsVotesPage);
