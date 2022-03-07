@@ -16,7 +16,7 @@ import {connect} from "react-redux"
 import T from "i18n-react";
 import {DateTimePicker, Dropdown, FreeTextSearch, Table} from "openstack-uicore-foundation/lib/components";
 import {Pagination} from "react-bootstrap";
-import {getPresentationsVotes, getAttendeeVotes} from "../../actions/presentation-votes-actions";
+import {clearVotesReport, getPresentationsVotes, getAttendeeVotes} from "../../actions/presentation-votes-actions";
 import {Breadcrumb} from "react-breadcrumbs";
 import {epochToMomentTimeZone, escapeFilterValue} from "openstack-uicore-foundation/lib/methods";
 
@@ -91,10 +91,12 @@ class SummitPresentationsVotesPage extends React.Component {
     }
 
     componentDidMount() {
+        this.props.clearVotesReport();
     }
 
     handleChangeReportType(ev){
         const {value, id} = ev.target;
+        this.props.clearVotesReport();
         this.setState({...this.state, current_report_type : value});
         let filters = this.buildExtraFilters(value)
         if(this.isReportByPresentation(value)){
@@ -175,12 +177,13 @@ class SummitPresentationsVotesPage extends React.Component {
         let columns = this.isReportByPresentation(current_report_type) ? [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
             { columnKey: 'title', value: T.translate("presentation_votes_page.title"), sortable: true },
-            { columnKey: 'votes_count', value: T.translate("presentation_votes_page.votes_count"), sortable: true }
+            { columnKey: 'votes_count', value: T.translate("presentation_votes_page.votes_count"), sortable: true },
+            { columnKey: 'custom_order', value: T.translate("presentation_votes_page.custom_order"), sortable: true },
         ]:[
             { columnKey: 'first_name', value: 'First Name', sortable: true },
             { columnKey: 'last_name', value: 'Last Name', sortable: true },
             { columnKey: 'votes_count', value: T.translate("presentation_votes_page.votes_count"), sortable: true },
-            { columnKey: 'presentations', value: T.translate("presentation_votes_page.presentations") }
+            { columnKey: 'presentations', value: T.translate("presentation_votes_page.presentations") },
         ];
 
         const table_options = {
@@ -302,6 +305,7 @@ const mapStateToProps = ({
 export default connect (
     mapStateToProps,
     {
+        clearVotesReport,
         getPresentationsVotes,
         getAttendeeVotes
     }

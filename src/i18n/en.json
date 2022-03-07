@@ -1869,6 +1869,7 @@
     "filter_by_date": "Search by Date",
     "presentations": "Voted Presentations",
     "attendees_vote_list": "Attendees Votes ",
+    "custom_order": "Poster Number",
     "placeholders": {
       "search_presentations": "Search By Title",
       "search_attendees": "Search By Full Name / Email"

@@ -10,6 +10,7 @@ export const REQUEST_PRESENTATION_VOTES = 'REQUEST_PRESENTATION_VOTES';
 export const RECEIVE_PRESENTATION_VOTES = 'RECEIVE_PRESENTATION_VOTES';
 export const REQUEST_ATTENDEES_VOTES = 'REQUEST_ATTENDEES_VOTES';
 export const RECEIVE_ATTENDEES_VOTES = 'RECEIVE_ATTENDEES_VOTES';
+export const CLEAR_VOTES = 'CLEAR_VOTES';
 
 export const getPresentationsVotes =
     (
@@ -29,7 +30,7 @@ export const getPresentationsVotes =
 
     const params = {
         expand: 'voters',
-        fields: 'id,title,votes_count',
+        fields: 'id,title,votes_count,custom_order',
         relations: 'none',
         page: page,
         per_page: perPage,
@@ -112,3 +113,7 @@ export const getAttendeeVotes =
             }
         );
     };
+
+export const clearVotesReport = () => (dispatch, getState) => {
+    dispatch(createAction(CLEAR_VOTES)());
+}

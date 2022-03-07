@@ -15,7 +15,8 @@ import {
     RECEIVE_ATTENDEES_VOTES,
     RECEIVE_PRESENTATION_VOTES,
     REQUEST_ATTENDEES_VOTES,
-    REQUEST_PRESENTATION_VOTES
+    REQUEST_PRESENTATION_VOTES,
+    CLEAR_VOTES
 } from "../../actions/presentation-votes-actions";
 
 const DEFAULT_STATE = {
@@ -54,6 +55,10 @@ const presentationVotesReducer = (state = DEFAULT_STATE, action) => {
                 return idx === 0 ? res : prevVal + ', ' + res;
             },"" )})), currentPage: current_page, totalItems: total, lastPage: last_page };
 
+        }
+        case CLEAR_VOTES:{
+            const {summitId} = state;
+            return {...DEFAULT_STATE, summitId};
         }
         default:
             return state;
