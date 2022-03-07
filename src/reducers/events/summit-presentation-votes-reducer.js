@@ -33,7 +33,7 @@ const presentationVotesReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
         case LOGOUT_USER: {
-            return state;
+            return DEFAULT_STATE;
         }
         case REQUEST_PRESENTATION_VOTES:
         case REQUEST_ATTENDEES_VOTES:

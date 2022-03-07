@@ -20,7 +20,6 @@ import {getPresentationsVotes, getAttendeeVotes} from "../../actions/presentatio
 import {Breadcrumb} from "react-breadcrumbs";
 import {epochToMomentTimeZone, escapeFilterValue} from "openstack-uicore-foundation/lib/methods";
 
-const REPORT_TYPE_BY_PRESENTATION = 'BY_PRESENTATION';
 
 class SummitPresentationsVotesPage extends React.Component {
 
@@ -34,13 +33,27 @@ class SummitPresentationsVotesPage extends React.Component {
         this.handleFilterByDate = this.handleFilterByDate.bind(this);
         this.handleChangeReportType = this.handleChangeReportType.bind(this);
         this.buildExtraFilters = this.buildExtraFilters.bind(this);
+        this.isReportByPresentation = this.isReportByPresentation.bind(this);
+        this.getCurrentTrackGroupId = this.getCurrentTrackGroupId.bind(this);
+
         this.state = {
             errors:{},
             begin_presentation_attendee_vote_date:0,
             end_presentation_attendee_vote_date:0,
             term: '',
-            current_report_type: REPORT_TYPE_BY_PRESENTATION,
+            current_report_type: "",
+            track_group_id: 0
         };
+    }
+
+    getCurrentTrackGroupId(reportType){
+        let parts = reportType.split("_");
+        return parts.length > 1 ? parseInt(parts[1]) : 0;
+    }
+
+    isReportByPresentation(reportType){
+        let parts = reportType.split("_");
+        return parts[0] === "PRESENTATION";
     }
 
     buildExtraFilters(reportType){
@@ -49,7 +62,7 @@ class SummitPresentationsVotesPage extends React.Component {
         let filters = [];
         if(term !== ''){
             const escapedTerm = escapeFilterValue(term);
-            if(reportType === REPORT_TYPE_BY_PRESENTATION)
+            if(this.isReportByPresentation(reportType))
                 filters.push(`title=@${escapedTerm}`);
             else
                 filters.push(`full_name=@${escapedTerm},first_name=@${escapedTerm},last_name=@${escapedTerm},email=@${escapedTerm}`);
@@ -58,7 +71,7 @@ class SummitPresentationsVotesPage extends React.Component {
             begin_presentation_attendee_vote_date > 0 &&
             end_presentation_attendee_vote_date > 0 &&
             begin_presentation_attendee_vote_date < end_presentation_attendee_vote_date){
-            if(reportType === REPORT_TYPE_BY_PRESENTATION) {
+            if(this.isReportByPresentation(reportType)) {
                 filters.push(`presentation_attendee_vote_date>=${begin_presentation_attendee_vote_date}`);
                 filters.push(`presentation_attendee_vote_date<=${end_presentation_attendee_vote_date}`);
             }
@@ -67,24 +80,24 @@ class SummitPresentationsVotesPage extends React.Component {
                 filters.push(`presentation_votes_date<=${end_presentation_attendee_vote_date}`);
             }
         }
-        if(reportType!== REPORT_TYPE_BY_PRESENTATION){
-            filters.push(`presentation_votes_track_group_id==${reportType}`);
+        const trackGroupId = this.getCurrentTrackGroupId(reportType);
+        if(this.isReportByPresentation(reportType)){
+            filters.push(`track_group_id==${trackGroupId}`);
+        }
+        else{
+            filters.push(`presentation_votes_track_group_id==${trackGroupId}`);
         }
         return filters;
     }
 
     componentDidMount() {
-        const {currentSummit} = this.props;
-        if(currentSummit) {
-            this.props.getPresentationsVotes();
-        }
     }
 
     handleChangeReportType(ev){
         const {value, id} = ev.target;
         this.setState({...this.state, current_report_type : value});
         let filters = this.buildExtraFilters(value)
-        if(value === REPORT_TYPE_BY_PRESENTATION){
+        if(this.isReportByPresentation(value)){
             this.props.getPresentationsVotes(1, 10, 'votes_count', 0, filters);
             return;
         }
@@ -95,7 +108,7 @@ class SummitPresentationsVotesPage extends React.Component {
         const { order, orderDir, perPage} = this.props;
         const {current_report_type} = this.state;
         const filters = this.buildExtraFilters(current_report_type);
-        if(current_report_type === REPORT_TYPE_BY_PRESENTATION) {
+        if(this.isReportByPresentation(current_report_type)) {
             this.props.getPresentationsVotes(page, perPage, order, orderDir, filters);
             return;
         }
@@ -106,7 +119,7 @@ class SummitPresentationsVotesPage extends React.Component {
         const { page, perPage} = this.props;
         const {current_report_type} = this.state;
         const filters = this.buildExtraFilters(current_report_type);
-        if(current_report_type === REPORT_TYPE_BY_PRESENTATION) {
+        if(this.isReportByPresentation(current_report_type)) {
             this.props.getPresentationsVotes(page, perPage, key, dir, filters);
             return;
         }
@@ -118,7 +131,7 @@ class SummitPresentationsVotesPage extends React.Component {
         const { order, orderDir, perPage} = this.props;
         const {current_report_type} = this.state;
         const filters = this.buildExtraFilters(current_report_type);
-        if(current_report_type === REPORT_TYPE_BY_PRESENTATION){
+        if(this.isReportByPresentation(current_report_type)){
             this.props.getPresentationsVotes(1, perPage, order, orderDir, filters)
             return;
         }
@@ -147,7 +160,7 @@ class SummitPresentationsVotesPage extends React.Component {
         const {current_report_type} = this.state;
         this.setState({...this.state, term: term}, () => {
             const filters = this.buildExtraFilters(current_report_type);
-            if(current_report_type === REPORT_TYPE_BY_PRESENTATION){
+            if(this.isReportByPresentation(current_report_type)){
                 this.props.getPresentationsVotes(1, 10, order, orderDir, filters)
                 return;
             }
@@ -159,7 +172,7 @@ class SummitPresentationsVotesPage extends React.Component {
         const {currentSummit, items, lastPage, currentPage, order, orderDir, totalItems, match} = this.props;
         const {begin_presentation_attendee_vote_date, end_presentation_attendee_vote_date, term, current_report_type} = this.state;
 
-        let columns = current_report_type === REPORT_TYPE_BY_PRESENTATION ? [
+        let columns = this.isReportByPresentation(current_report_type) ? [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
             { columnKey: 'title', value: T.translate("presentation_votes_page.title"), sortable: true },
             { columnKey: 'votes_count', value: T.translate("presentation_votes_page.votes_count"), sortable: true }
@@ -177,21 +190,21 @@ class SummitPresentationsVotesPage extends React.Component {
         }
 
         if(!currentSummit.id) return(<div />);
-
-        let extraOptions = currentSummit.track_groups.map((tg) => ({label:`View by attendee for ${tg.name}`, value:tg.id}));
+        let byPresentationOptions = currentSummit.track_groups.map((tg) => ({label:`View by Presentation for ${tg.name}`, value:`PRESENTATION_${tg.id}`}));
+        let byAttendeeOptions = currentSummit.track_groups.map((tg) => ({label:`View by Attendee for ${tg.name}`, value:`ATTENDEE_${tg.id}`}));
         let reportTypeDDL = [
-            {label: 'View By Presentation', value: REPORT_TYPE_BY_PRESENTATION}, ...extraOptions
+            {label: '-- SELECT A REPORT TYPE --', value: ""}, ...byPresentationOptions, ...byAttendeeOptions
         ];
 
         return(
             <div>
                 <Breadcrumb data={{ title: T.translate("presentation_votes_page.presentation_votes_page"), pathname: match.url }} />
                 <div className="container">
-                <h3> {current_report_type === REPORT_TYPE_BY_PRESENTATION ?
+                <h3> { this.isReportByPresentation(current_report_type) ?
                     T.translate("presentation_votes_page.presentation_vote_list"):
                     T.translate("presentation_votes_page.attendees_vote_list")
                 } ({totalItems})</h3>
-                <div className={'row'} style={{"padding-bottom":"1em"}}>
+                <div className={'row'} style={{"paddingBottom":"1em"}}>
                     <div className={'col-md-6'}>
                         <Dropdown
                             id="report_type"
@@ -234,7 +247,7 @@ class SummitPresentationsVotesPage extends React.Component {
                             <div className={'col-md-6'}>
                                     <FreeTextSearch
                                         value={term ?? ''}
-                                        placeholder={current_report_type === REPORT_TYPE_BY_PRESENTATION ?
+                                        placeholder={this.isReportByPresentation(current_report_type) ?
                                             T.translate("presentation_votes_page.placeholders.search_presentations"):
                                             T.translate("presentation_votes_page.placeholders.search_attendees")
                                         }
