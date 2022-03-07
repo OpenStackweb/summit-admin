@@ -25,7 +25,7 @@ import {
     showSuccessMessage,
     getCSV,
     authErrorHandler,
-    escapeFilterValue
+    escapeFilterValue, postFile
 } from 'openstack-uicore-foundation/lib/methods';
 
 export const REQUEST_PROMOCODES       = 'REQUEST_PROMOCODES';
@@ -38,7 +38,7 @@ export const PROMOCODE_UPDATED        = 'PROMOCODE_UPDATED';
 export const PROMOCODE_ADDED          = 'PROMOCODE_ADDED';
 export const PROMOCODE_DELETED        = 'PROMOCODE_DELETED';
 export const EMAIL_SENT               = 'EMAIL_SENT';
-
+export const PROMO_CODES_IMPORTED     = 'PROMO_CODES_IMPORTED';
 
 export const DISCOUNT_TICKET_ADDED    = 'DISCOUNT_TICKET_ADDED';
 export const DISCOUNT_TICKET_DELETED  = 'DISCOUNT_TICKET_DELETED';
@@ -420,4 +420,27 @@ export const deleteDiscountTicket = (promocodeId, ticketId, ticketTypeId) => (di
             dispatch(stopLoading());
         }
     );
+};
+
+export const importPromoCodesCSV = (file) => (dispatch, getState) => {
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
+
+    const params = {
+        access_token: accessToken
+    };
+
+    postFile(
+        null,
+        createAction(PROMO_CODES_IMPORTED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes/csv`,
+        file,
+        {},
+        authErrorHandler,
+    )(params)(dispatch)
+        .then(() => {
+            dispatch(stopLoading());
+            window.location.reload();
+        });
 };

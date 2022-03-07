@@ -15,10 +15,10 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import Swal from "sweetalert2";
-import { Pagination } from 'react-bootstrap';
-import { FreeTextSearch, Dropdown, Table } from 'openstack-uicore-foundation/lib/components';
+import {Modal, Pagination} from 'react-bootstrap';
+import {FreeTextSearch, Dropdown, Table, UploadInput} from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getPromocodes, getPromocodeMeta, deletePromocode, exportPromocodes } from "../../actions/promocode-actions";
+import { getPromocodes, getPromocodeMeta, deletePromocode, exportPromocodes, importPromoCodesCSV } from "../../actions/promocode-actions";
 
 class PromocodeListPage extends React.Component {
 
@@ -36,9 +36,12 @@ class PromocodeListPage extends React.Component {
         this.handleSearch = this.handleSearch.bind(this);
         this.handleNewPromocode = this.handleNewPromocode.bind(this);
         this.handleExport = this.handleExport.bind(this);
+        this.handleImport = this.handleImport.bind(this);
 
-        this.state = {}
-
+        this.state = {
+            showImportModal: false,
+            importFile:null,
+        }
     }
 
     componentDidMount() {
@@ -46,6 +49,13 @@ class PromocodeListPage extends React.Component {
         if(currentSummit) {
             this.props.getPromocodes();
         }
+    }
+
+    handleImport() {
+        if (this.state.importFile) {
+            this.props.importPromoCodesCSV(this.state.importFile);
+        }
+        this.setState({...this.state, showImportModal:false, importFile: null});
     }
 
     handleEdit(promocode_id) {
@@ -114,6 +124,7 @@ class PromocodeListPage extends React.Component {
 
     render(){
         const {currentSummit, promocodes, lastPage, currentPage, term, order, orderDir, totalPromocodes, allTypes, allClasses, type} = this.props;
+        const {showImportModal} = this.state;
 
         const columns = [
             { columnKey: 'code', value: T.translate("promocode_list.code"), sortable: true },
@@ -150,21 +161,29 @@ class PromocodeListPage extends React.Component {
                         />
                     </div>
                     <div className="col-md-6 text-right">
-                        <div className="col-md-6 text-left">
                             <Dropdown
-                                id="ticket_type"
+                                id="promo_code_type"
                                 className="right-space"
                                 value={type}
                                 placeholder={T.translate("promocode_list.placeholders.select_type")}
                                 options={promocode_types_ddl}
                                 onChange={this.handleTypeChange}
                             />
-                        </div>
+                    </div>
+                </div>
+
+                <div className={'row'}>
+                    <div className={'col-md-6'}>
+                    </div>
+                    <div className="col-md-6 text-right">
                         <button className="btn btn-primary right-space" onClick={this.handleNewPromocode}>
                             {T.translate("promocode_list.add_promocode")}
                         </button>
-                        <button className="btn btn-default" onClick={this.handleExport}>
+                        <button className="btn btn-default right-space" onClick={this.handleExport}>
                             {T.translate("general.export")}
+                        </button>
+                        <button className="btn btn-default" onClick={() => this.setState({showImportModal:true})}>
+                            {T.translate("promocode_list.import")}
                         </button>
                     </div>
                 </div>
@@ -196,7 +215,37 @@ class PromocodeListPage extends React.Component {
                     />
                 </div>
                 }
-
+                <Modal show={showImportModal} onHide={() => this.setState({showImportModal:false})} >
+                    <Modal.Header closeButton>
+                        <Modal.Title>{T.translate("promocode_list.import_promocodes")}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="row">
+                            <div className="col-md-12">
+                                Format must be the following:<br />
+                                (Minimal data required)<br />
+                                * code ( text )<br />
+                                * classname (text )<br />
+                                * quantity_available (int)<br />
+                            </div>
+                            <div className="col-md-12 ticket-import-upload-wrapper">
+                                <UploadInput
+                                    value={this.state.importFile && this.state.importFile.name}
+                                    handleUpload={(file) => this.setState({importFile: file})}
+                                    handleRemove={() => this.setState({importFile: null})}
+                                    className="dropzone col-md-6"
+                                    multiple={false}
+                                    accept=".csv"
+                                />
+                            </div>
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <button disabled={!this.state.importFile} className="btn btn-primary" onClick={this.handleImport}>
+                            {T.translate("promocode_list.ingest")}
+                        </button>
+                    </Modal.Footer>
+                </Modal>
             </div>
         )
     }
@@ -214,6 +263,7 @@ export default connect (
         getPromocodes,
         getPromocodeMeta,
         deletePromocode,
-        exportPromocodes
+        exportPromocodes,
+        importPromoCodesCSV,
     }
 )(PromocodeListPage);

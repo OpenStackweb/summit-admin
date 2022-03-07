@@ -616,6 +616,9 @@
     "redeemed": "Redeemed",
     "creator": "Creator",
     "remove_promocode_warning": "Are you sure you want to delete promocode for attendee",
+    "import": "Import",
+    "import_promocodes": "Import Promo Codes",
+    "ingest": "Ingest File",
     "placeholders": {
       "search_promocodes": "Search by Code, Speaker, Member, Email, Company",
       "select_type": "Select a Type"

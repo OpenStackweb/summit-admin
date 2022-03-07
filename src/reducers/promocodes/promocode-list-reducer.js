@@ -52,7 +52,7 @@ const promocodeListReducer = (state = DEFAULT_STATE, action) => {
             let types = [...DEFAULT_STATE.allTypes];
             let allClasses = [...DEFAULT_STATE.allClasses, ...payload.response];
 
-            payload.response.forEach(t => {
+            payload.response.filter(t => t.hasOwnProperty("type")).forEach(t => {
                 types = types.concat(t.type)
             });
 
@@ -104,7 +104,7 @@ const promocodeListReducer = (state = DEFAULT_STATE, action) => {
                     owner_email: owner_email,
                     email_sent: (p.email_sent ? 'Yes' : 'No'),
                     redeemed: (p.redeemed ? 'Yes' : 'No'),
-                    creator: p.creator.first_name + ' ' + p.creator.last_name
+                    creator: p.hasOwnProperty("creator") ? `${p?.creator?.first_name} ${p?.creator?.last_name}` : 'TBD'
                 };
             })
 
