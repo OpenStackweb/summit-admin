@@ -29,7 +29,6 @@ export const getPresentationsVotes =
     dispatch(startLoading());
 
     const params = {
-        expand: 'voters',
         fields: 'id,title,votes_count,custom_order',
         relations: 'none',
         page: page,
