@@ -70,7 +70,7 @@ export const setSelectedAll = (value) => (dispatch) => {
 
 export const getAttendees = ( term = null, page = 1, perPage = 10,
                               order = 'id', orderDir = 1,
-                              statusFilter= null, memberFilter= null, ticketsFilter = null
+                              statusFilter= null, memberFilter= null, ticketsFilter = null, virtualCheckInFilter = null
 ) => (dispatch, getState) => {
 
     const { loggedUserState, currentSummitState } = getState();
@@ -110,6 +110,13 @@ export const getAttendees = ( term = null, page = 1, perPage = 10,
             filter.push(`has_tickets==false`)
     }
 
+    if(virtualCheckInFilter){
+        if(virtualCheckInFilter === 'HAS_VIRTUAL_CHECKIN')
+            filter.push(`has_virtual_checkin==true`);
+        if(virtualCheckInFilter === 'HAS_NO_VIRTUAL_CHECKIN')
+            filter.push(`has_virtual_checkin==false`)
+    }
+
     if(filter.length > 0){
         params['filter[]']= filter;
     }
@@ -125,7 +132,7 @@ export const getAttendees = ( term = null, page = 1, perPage = 10,
         createAction(RECEIVE_ATTENDEES),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/attendees`,
         authErrorHandler,
-        {page, perPage, order, orderDir, term, statusFilter, memberFilter, ticketsFilter}
+        {page, perPage, order, orderDir, term, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter}
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
@@ -135,7 +142,7 @@ export const getAttendees = ( term = null, page = 1, perPage = 10,
 
 export const exportAttendees = ( term = null,
                               order = 'id', orderDir = 1,
-                              statusFilter= null, memberFilter= null, ticketsFilter = null
+                              statusFilter= null, memberFilter= null, ticketsFilter = null, virtualCheckInFilter = null
 ) => (dispatch, getState) => {
 
     const { loggedUserState, currentSummitState } = getState();
@@ -169,6 +176,13 @@ export const exportAttendees = ( term = null,
             filter.push(`has_tickets==true`);
         if(ticketsFilter === 'HAS_NO_TICKETS')
             filter.push(`has_tickets==false`);
+    }
+
+    if(virtualCheckInFilter){
+        if(virtualCheckInFilter === 'HAS_VIRTUAL_CHECKIN')
+            filter.push(`has_virtual_checkin==true`);
+        if(virtualCheckInFilter === 'HAS_NO_VIRTUAL_CHECKIN')
+            filter.push(`has_virtual_checkin==false`)
     }
 
     if(filter.length > 0){
@@ -421,7 +435,7 @@ const normalizeEntity = (entity) => {
 };
 
 export const sendEmails = (currentFlowEvent, selectedAll = false , selectedIds = [],
-                           term = null, statusFilter= null, memberFilter= null, ticketsFilter = null
+                           term = null, statusFilter= null, memberFilter= null, ticketsFilter = null, virtualCheckInFilter = null
                            ) => (dispatch, getState) => {
 
 
@@ -456,6 +470,13 @@ export const sendEmails = (currentFlowEvent, selectedAll = false , selectedIds =
             filter.push(`has_tickets==true`);
         if(ticketsFilter === 'HAS_NO_TICKETS')
             filter.push(`has_tickets==false`);
+    }
+
+    if(virtualCheckInFilter){
+        if(virtualCheckInFilter === 'HAS_VIRTUAL_CHECKIN')
+            filter.push(`has_virtual_checkin==true`);
+        if(virtualCheckInFilter === 'HAS_NO_VIRTUAL_CHECKIN')
+            filter.push(`has_virtual_checkin==false`)
     }
 
     if(filter.length > 0){

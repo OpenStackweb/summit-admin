@@ -52,6 +52,7 @@ class SummitAttendeeListPage extends React.Component {
         this.handleSetMemberFilter = this.handleSetMemberFilter.bind(this);
         this.handleSetStatusFilter = this.handleSetStatusFilter.bind(this);
         this.handleSetTicketsFilter = this.handleSetTicketsFilter.bind(this);
+        this.handleSetVirtualCheckInFilter = this.handleSetVirtualCheckInFilter.bind(this);
         this.handleExport = this.handleExport.bind(this);
         this.state = {
             showModal: false,
@@ -61,24 +62,29 @@ class SummitAttendeeListPage extends React.Component {
     }
 
     handleExport(ev) {
-        const {term, order, orderDir, statusFilter, memberFilter, ticketsFilter} = this.props;
+        const {term, order, orderDir, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter} = this.props;
         ev.preventDefault();
-        this.props.exportAttendees(term, order, orderDir, statusFilter, memberFilter, ticketsFilter);
+        this.props.exportAttendees(term, order, orderDir, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter);
     }
 
     handleSetMemberFilter(newMemberFilter){
-        const {term, order, page, orderDir, perPage, statusFilter, ticketsFilter} = this.props;
-        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, newMemberFilter, ticketsFilter);
+        const {term, order, page, orderDir, perPage, statusFilter, ticketsFilter, virtualCheckInFilter} = this.props;
+        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, newMemberFilter, ticketsFilter, virtualCheckInFilter);
     }
 
     handleSetTicketsFilter(newTicketsFilter){
-        const {term, order, page, orderDir, perPage, statusFilter, memberFilter, ticketsFilter} = this.props;
-        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, newTicketsFilter, ticketsFilter);
+        const {term, order, page, orderDir, perPage, statusFilter, memberFilter, virtualCheckInFilter} = this.props;
+        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, newTicketsFilter, virtualCheckInFilter);
     }
 
     handleSetStatusFilter(newStatusFilter){
-        const {term, order, page, orderDir, perPage, memberFilter, ticketsFilter} = this.props;
-        this.props.getAttendees(term, page, perPage, order, orderDir, newStatusFilter, memberFilter, ticketsFilter);
+        const {term, order, page, orderDir, perPage, memberFilter, ticketsFilter, virtualCheckInFilter} = this.props;
+        this.props.getAttendees(term, page, perPage, order, orderDir, newStatusFilter, memberFilter, ticketsFilter, virtualCheckInFilter);
+    }
+
+    handleSetVirtualCheckInFilter(newVirtualCheckInFilter){
+        const {term, order, page, orderDir, perPage, statusFilter, memberFilter, ticketsFilter} = this.props;
+        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter, newVirtualCheckInFilter);
     }
 
     handleChangeFlowEvent(ev){
@@ -96,6 +102,7 @@ class SummitAttendeeListPage extends React.Component {
             memberFilter,
             statusFilter,
             ticketsFilter,
+            virtualCheckInFilter,
             selectedIds,
             currentFlowEvent,
             sendEmails
@@ -111,7 +118,7 @@ class SummitAttendeeListPage extends React.Component {
             return false;
         }
 
-        sendEmails(currentFlowEvent, selectedAll , selectedIds, term, statusFilter, memberFilter, ticketsFilter);
+        sendEmails(currentFlowEvent, selectedAll , selectedIds, term, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter);
     }
 
     handleSelected(attendee_id, isSelected){
@@ -213,8 +220,10 @@ class SummitAttendeeListPage extends React.Component {
             selectedIds,
             currentFlowEvent,
             selectedAll,
-            statusFilter, memberFilter,
-            ticketsFilter
+            statusFilter, 
+            memberFilter,
+            ticketsFilter,
+            virtualCheckInFilter
         } = this.props;
         const {showModal, modalSchedule, modalTitle} = this.state;
 
@@ -267,7 +276,7 @@ class SummitAttendeeListPage extends React.Component {
                 <div className={'row'}>
                     <div className={'col-md-8'}>
                         <FreeTextSearch
-                            value={term}
+                            value={term ?? ''}
                             placeholder={T.translate("attendee_list.placeholders.search_attendees")}
                             onSearch={this.handleSearch}
                         />
@@ -315,6 +324,18 @@ class SummitAttendeeListPage extends React.Component {
                                 { label: "Without Tickets", value: "HAS_NO_TICKETS",default: ticketsFilter === "HAS_NO_TICKETS" },
                             ]}
                             setValue={newValue => this.handleSetTicketsFilter(newValue)}
+                            style={{ width: "100%", height:40, color: '#337ab7', fontSize: '10px' }}
+                        />
+                    </div>
+                    <div className="col-md-4">
+                         <SegmentedControl
+                            name="virtualCheckInFilter"
+                            options={[
+                                { label: "All", value: null, default: virtualCheckInFilter === null},
+                                { label: "Has Virtual Checkin", value: "HAS_VIRTUAL_CHECKIN", default: virtualCheckInFilter === "HAS_TICKETS" },
+                                { label: "Has Not Virtual Checkin", value: "HAS_NO_VIRTUAL_CHECKIN", default: virtualCheckInFilter === "HAS_NO_TICKETS" },
+                            ]}
+                            setValue={newValue => this.handleSetVirtualCheckInFilter(newValue)}
                             style={{ width: "100%", height:40, color: '#337ab7', fontSize: '10px' }}
                         />
                     </div>
