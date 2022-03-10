@@ -67,6 +67,7 @@ const promocodeListReducer = (state = DEFAULT_STATE, action) => {
                 let owner = '', owner_email = '';
 
                 switch (p.class_name) {
+                    case 'MEMBER_DISCOUNT_CODE':
                     case 'MEMBER_PROMO_CODE':
                         if (p.owner) {
                             owner = p.owner.first_name + ' ' + p.owner.last_name;
@@ -76,12 +77,14 @@ const promocodeListReducer = (state = DEFAULT_STATE, action) => {
                             owner_email = (p.email) ? p.email : '';
                         }
                         break;
+                    case 'SPEAKER_DISCOUNT_CODE':
                     case 'SPEAKER_PROMO_CODE':
                         if (p.speaker) {
                             owner = p.speaker.first_name + ' ' + p.speaker.last_name;
                             owner_email = p.speaker.email;
                         }
                         break;
+                    case 'SPONSOR_DISCOUNT_CODE':
                     case 'SPONSOR_PROMO_CODE':
                         if (p.owner) {
                             owner = p.owner.first_name + ' ' + p.owner.last_name;
