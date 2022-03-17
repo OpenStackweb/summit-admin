@@ -29,6 +29,7 @@ export const DEFAULT_ENTITY = {
     extra_questions:[],
     extraQuestionsOrder: 'order',
     extraQuestionsOrderDir : 1,
+    allow_new_presentations: false,
 }
 
 const DEFAULT_STATE = {

@@ -18,12 +18,11 @@ import Swal from "sweetalert2";
 import Restrict from '../../routes/restrict'
 import SummitForm from '../../components/forms/summit-form';
 import { getSummitById, resetSummitForm, saveSummit, attachLogo, deleteLogo }  from '../../actions/summit-actions';
-import { deleteSelectionPlan } from '../../actions/selection-plan-actions';
+import { deleteSelectionPlan, resetSelectionPlanForm } from '../../actions/selection-plan-actions';
 import { deleteRoomBookingAttributeType } from "../../actions/room-booking-actions";
 import {addHelpMember, removeHelpMember} from "../../actions/user-chat-roles-actions"
 import '../../styles/edit-summit-page.less';
 import '../../components/form-validation/validate.less';
-
 
 class EditSummitPage extends React.Component {
 
@@ -32,7 +31,8 @@ class EditSummitPage extends React.Component {
 
         this.handleSPlanDelete = this.handleSPlanDelete.bind(this);
         this.handleAttributeTypeDelete = this.handleAttributeTypeDelete.bind(this);
-
+        // reset selection plan
+        this.props.resetSelectionPlanForm();
     }
 
     handleSPlanDelete(selectionPlanId) {
@@ -114,6 +114,7 @@ export default Restrict(connect (
         attachLogo,
         deleteLogo,
         addHelpMember,
-        removeHelpMember
+        removeHelpMember,
+        resetSelectionPlanForm
     }
 )(EditSummitPage), 'summit-edit');
