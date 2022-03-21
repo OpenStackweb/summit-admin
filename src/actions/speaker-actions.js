@@ -58,7 +58,6 @@ export const FEATURED_SPEAKER_DELETED       = 'FEATURED_SPEAKER_DELETED';
 export const FEATURED_SPEAKER_ADDED         = 'FEATURED_SPEAKER_ADDED';
 
 
-
 export const getSpeakers = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
 
     const { loggedUserState } = getState();
@@ -324,9 +323,10 @@ const normalizeEntity = (entity) => {
     delete normalizedEntity['gender'];
     delete normalizedEntity['pic'];
     delete normalizedEntity['member'];
-    delete normalizedEntity['summit_assistance'];
+    delete normalizedEntity['summit_assistances'];
     delete normalizedEntity['code_redeemed'];
-
+    delete normalizedEntity['active_involvements'];
+    delete normalizedEntity['travel_preferences'];
     return normalizedEntity;
 }
 
