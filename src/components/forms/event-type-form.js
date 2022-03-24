@@ -227,7 +227,6 @@ class EventTypeForm extends React.Component {
                             </label>
                         </div>
                     </div>
-                    {entity.class_name === 'EVENT_TYPE' &&
                     <div className="col-md-4">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="allows_location_timeframe_collision" checked={entity.allows_location_timeframe_collision}
@@ -237,7 +236,6 @@ class EventTypeForm extends React.Component {
                             </label>
                         </div>
                     </div>
-                    }
                     {entity.class_name === 'PRESENTATION_TYPE' &&
                     <div className="col-md-4">
                         <div className="form-check abc-checkbox">
