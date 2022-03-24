@@ -236,19 +236,20 @@ class EventTypeForm extends React.Component {
                             </label>
                         </div>
                     </div>
-                    {entity.class_name === 'PRESENTATION_TYPE' &&
+                </div>
+                { entity.class_name === 'PRESENTATION_TYPE' &&
+                <div className="row form-group checkboxes-div">
                     <div className="col-md-4">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="allows_speaker_event_collision" checked={entity.allows_speaker_event_collision}
-                                onChange={this.handleChange} className="form-check-input" />
+                                   onChange={this.handleChange} className="form-check-input" />
                             <label className="form-check-label" htmlFor="allows_speaker_event_collision">
                                 {T.translate("edit_event_type.allows_speaker_event_collision")}
                             </label>
                         </div>
                     </div>
-                    }
                 </div>
-
+                }
                 {entity.class_name === 'PRESENTATION_TYPE' &&
                 <div>
                     <hr/>
