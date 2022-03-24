@@ -56,6 +56,7 @@ export const REQUEST_FEATURED_SPEAKERS      = 'REQUEST_FEATURED_SPEAKERS';
 export const RECEIVE_FEATURED_SPEAKERS      = 'RECEIVE_FEATURED_SPEAKERS';
 export const FEATURED_SPEAKER_DELETED       = 'FEATURED_SPEAKER_DELETED';
 export const FEATURED_SPEAKER_ADDED         = 'FEATURED_SPEAKER_ADDED';
+export const FEATURED_SPEAKER_ORDER_UPDATED = 'FEATURED_SPEAKER_ORDER_UPDATED';
 
 
 export const getSpeakers = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
@@ -562,7 +563,7 @@ const normalizeAttendance = (entity) => {
 /* FEATURED SPEAKERS */
 /****************************************************************************************************/
 
-export const getFeaturedSpeakers = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = '1' ) => (dispatch, getState) => {
+export const getFeaturedSpeakers = ( term = null, page = 1, perPage = 100 ) => (dispatch, getState) => {
 
     const { loggedUserState, currentSummitState } = getState();
     const { accessToken }     = loggedUserState;
@@ -578,8 +579,6 @@ export const getFeaturedSpeakers = ( term = null, page = 1, perPage = 10, order 
     }
 
     const req_params = {
-        order: order,
-        orderDir: parseInt(orderDir),
         term: term
     };
 
@@ -587,17 +586,12 @@ export const getFeaturedSpeakers = ( term = null, page = 1, perPage = 10, order 
         expand       : 'speaker',
         page         : page,
         per_page     : perPage,
+        order        : '+order',
         access_token : accessToken,
     };
 
     if(filter.length > 0){
         params['filter[]']= filter;
-    }
-
-    // order
-    if(order != null && orderDir != null){
-        orderDir = (orderDir === '1') ? '+' : '-';
-        params['order']= `${orderDir}${order}`;
     }
 
     return getRequest(
@@ -624,17 +618,40 @@ export const addFeaturedSpeaker = (speaker) => (dispatch, getState) => {
         access_token : accessToken,
     };
 
-    return putRequest(
+    return postRequest(
         null,
         createAction(FEATURED_SPEAKER_ADDED)({speaker}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/featured-speakers/${speaker.id}`,
-        null,
-        authErrorHandler
+        {},
+        authErrorHandler,
+        speaker
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
     );
 };
+
+export const updateFeaturedSpeakerOrder = (speakers, speakerId, newOrder) => (dispatch, getState) => {
+
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+
+    const params = {
+        access_token : accessToken
+    };
+
+    putRequest(
+        null,
+        createAction(FEATURED_SPEAKER_ORDER_UPDATED)(speakers),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/featured-speakers/${speakerId}`,
+        { order : newOrder },
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+}
 
 export const removeFeaturedSpeaker = (speakerId) => (dispatch, getState) => {
 

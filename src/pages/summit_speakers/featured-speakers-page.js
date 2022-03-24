@@ -15,16 +15,14 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import { Pagination } from 'react-bootstrap';
-import {FreeTextSearch, SpeakerInput, Table} from 'openstack-uicore-foundation/lib/components';
-import { getFeaturedSpeakers, removeFeaturedSpeaker, addFeaturedSpeaker } from "../../actions/speaker-actions";
+import {FreeTextSearch, SpeakerInput, SortableTable, Table} from 'openstack-uicore-foundation/lib/components';
+import { getFeaturedSpeakers, removeFeaturedSpeaker, addFeaturedSpeaker, updateFeaturedSpeakerOrder } from "../../actions/speaker-actions";
 
 class FeaturedSpeakersPage extends React.Component {
 
     constructor(props) {
         super(props);
 
-        this.handlePageChange = this.handlePageChange.bind(this);
-        this.handleSort = this.handleSort.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
         this.handleAdd = this.handleAdd.bind(this);
@@ -43,19 +41,9 @@ class FeaturedSpeakersPage extends React.Component {
         }
     }
 
-    handlePageChange(page) {
-        const {term, order, orderDir, perPage} = this.props;
-        this.props.getFeaturedSpeakers(term, page, perPage, order, orderDir);
-    }
-
-    handleSort(index, key, dir, func) {
-        const {term, page, perPage} = this.props;
-        this.props.getFeaturedSpeakers(term, page, perPage, key, dir);
-    }
-
     handleSearch(term) {
-        const {order, orderDir, page, perPage} = this.props;
-        this.props.getFeaturedSpeakers(term, page, perPage, order, orderDir);
+        const {page, perPage} = this.props;
+        this.props.getFeaturedSpeakers(term, page, perPage);
     }
 
     handleDelete(speakerId) {
@@ -81,7 +69,7 @@ class FeaturedSpeakersPage extends React.Component {
     }
 
     render(){
-        const {currentSummit, speakers, lastPage, currentPage, term, order, orderDir, totalSpeakers} = this.props;
+        const {currentSummit, speakers, term, totalSpeakers} = this.props;
         const {speakerToAdd} = this.state;
 
         const columns = [
@@ -94,8 +82,6 @@ class FeaturedSpeakersPage extends React.Component {
         ];
 
         const table_options = {
-            sortCol: order,
-            sortDir: orderDir,
             actions: {
                 edit: {onClick: this.handleLink},
                 delete: { onClick: this.handleDelete }
@@ -110,7 +96,7 @@ class FeaturedSpeakersPage extends React.Component {
                 <div className={'row'}>
                     <div className={'col-md-6'}>
                         <FreeTextSearch
-                            value={term}
+                            value={term ?? ''}
                             placeholder={T.translate("featured_speakers.placeholders.search_featured_speakers")}
                             onSearch={this.handleSearch}
                         />
@@ -138,24 +124,12 @@ class FeaturedSpeakersPage extends React.Component {
 
                 {speakers.length > 0 &&
                 <div>
-                    <Table
+                    <SortableTable
                         options={table_options}
                         data={speakers}
                         columns={columns}
-                        onSort={this.handleSort}
-                    />
-                    <Pagination
-                        bsSize="medium"
-                        prev
-                        next
-                        first
-                        last
-                        ellipsis
-                        boundaryLinks
-                        maxButtons={10}
-                        items={lastPage}
-                        activePage={currentPage}
-                        onSelect={this.handlePageChange}
+                        dropCallback={this.props.updateFeaturedSpeakerOrder}
+                        orderField="order"
                     />
                 </div>
                 }
@@ -175,6 +149,7 @@ export default connect (
     {
         getFeaturedSpeakers,
         removeFeaturedSpeaker,
-        addFeaturedSpeaker
+        addFeaturedSpeaker,
+        updateFeaturedSpeakerOrder
     }
 )(FeaturedSpeakersPage);

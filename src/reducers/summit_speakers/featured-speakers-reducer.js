@@ -16,7 +16,8 @@ import
     REQUEST_FEATURED_SPEAKERS,
     RECEIVE_FEATURED_SPEAKERS,
     FEATURED_SPEAKER_DELETED,
-    FEATURED_SPEAKER_ADDED
+    FEATURED_SPEAKER_ADDED,
+    FEATURED_SPEAKER_ORDER_UPDATED
 } from '../../actions/speaker-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
@@ -75,7 +76,17 @@ const featuredSpeakersReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, speakers: [...state.speakers, speaker]};
         }
-            break;
+        break;
+        case FEATURED_SPEAKER_ORDER_UPDATED: {
+            let speakers = payload.map(s => {
+                return {
+                    ...s,
+                    order: parseInt(s.order)
+                };
+            })
+            return {...state, speakers: speakers };
+        }
+        break;
         default:
             return state;
     }
