@@ -733,6 +733,8 @@
     "color": "Color",
     "black_out_times": "Blackout Times",
     "use_sponsors": "Should use Sponsors?",
+    "allows_location_timeframe_collision": "Allows Location/Timeframe Collision?",
+    "allows_speaker_event_collision": "Allows Speaker/Event Collision?",
     "are_sponsors_mandatory": "Are Sponsors Mandatory?",
     "allows_location": "Allows Location",
     "allows_publishing_dates": "Allows Publishing Dates",
