@@ -117,7 +117,7 @@ class PurchaseOrderListPage extends React.Component {
                 <div className={'row'}>
                     <div className={'col-md-6'}>
                         <FreeTextSearch
-                            value={term}
+                            value={term ?? ''}
                             placeholder={T.translate("purchase_order_list.placeholders.search_orders")}
                             onSearch={this.handleSearch}
                         />

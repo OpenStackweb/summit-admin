@@ -51,6 +51,38 @@ const DEFAULT_STATE = {
     errors: {}
 };
 
+const assembleTicketsState = (tickets) => {
+    return tickets.map(t => {
+        let owner_full_name = 'N/A';
+        let owner_email = 'N/A';
+        let owner_link = 'N/A';
+        let email_link = 'N/A';
+        let ticket_type_name = t.ticket_type ? t.ticket_type.name : 'N/A';
+
+        const final_amount_formatted = `$${t.final_amount.toFixed(2)}`;
+        const refunded_amount_formatted = `$${t.refunded_amount.toFixed(2)}`;
+        const final_amount_adjusted_formatted = `$${((t.final_amount - t.refunded_amount).toFixed(2))}`;
+
+        if (t.owner) {
+            owner_email = t.owner.email;
+
+            if (t.owner.member) {
+                owner_full_name = `${t.owner.member.first_name} ${t.owner.member.last_name}`;
+            } else if (t.owner.first_name && t.owner.last_name) {
+                owner_full_name = `${t.owner.first_name} ${t.owner.last_name}`;
+            }
+
+            owner_link = <a href="" onClick={ev => { ev.stopPropagation(); history.push(`/app/summits/${entity.summit_id}/attendees/${t.owner.id}`)}}>{owner_full_name}</a>;
+            email_link = <a href="" onClick={ev => { ev.stopPropagation(); window.open(`mailto:${owner_email}`, '_blank')}} target="_blank">{owner_email}</a>
+        }
+
+        return ({...t, ticket_type_name, owner_full_name, owner_email, owner_link, email_link,
+            final_amount_formatted,
+            refunded_amount_formatted,
+            final_amount_adjusted_formatted,})
+    });
+}
+
 const purchaseOrderReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
@@ -87,35 +119,7 @@ const purchaseOrderReducer = (state = DEFAULT_STATE, action) => {
                 last_name: entity.owner_last_name,
             };
 
-            entity.tickets = entity.tickets.map(t => {
-                let owner_full_name = 'N/A';
-                let owner_email = 'N/A';
-                let owner_link = 'N/A';
-                let email_link = 'N/A';
-                let ticket_type_name = t.ticket_type ? t.ticket_type.name : 'N/A';
-
-                const final_amount_formatted = `$${t.final_amount.toFixed(2)}`;
-                const refunded_amount_formatted = `$${t.refunded_amount.toFixed(2)}`;
-                const final_amount_adjusted_formatted = `$${((t.final_amount - t.refunded_amount).toFixed(2))}`;
-
-                if (t.owner) {
-                    owner_email = t.owner.email;
-
-                    if (t.owner.member) {
-                        owner_full_name = `${t.owner.member.first_name} ${t.owner.member.last_name}`;
-                    } else if (t.owner.first_name && t.owner.last_name) {
-                        owner_full_name = `${t.owner.first_name} ${t.owner.last_name}`;
-                    }
-
-                    owner_link = <a href="" onClick={ev => { ev.stopPropagation(); history.push(`/app/summits/${entity.summit_id}/attendees/${t.owner.id}`)}}>{owner_full_name}</a>;
-                    email_link = <a href="" onClick={ev => { ev.stopPropagation(); window.open(`mailto:${owner_email}`, '_blank')}} target="_blank">{owner_email}</a>
-                }
-
-                return ({...t, ticket_type_name, owner_full_name, owner_email, owner_link, email_link,
-                    final_amount_formatted,
-                    refunded_amount_formatted,
-                    final_amount_adjusted_formatted,})
-            });
+            entity.tickets = assembleTicketsState(entity.tickets);
 
             return {...state,  entity: {...entity,
                     final_amount_formatted,
@@ -124,7 +128,11 @@ const purchaseOrderReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case UPDATE_PURCHASE_ORDER: {
-            return {...state,  entity: {...payload}, errors: {} };
+            return {...state,  entity: {...payload }, errors: {} };
+        }
+        case PURCHASE_ORDER_UPDATED: {
+            let entity = {...payload.response};
+            return {...state,  entity: {...entity, tickets: assembleTicketsState(entity.tickets) }, errors: {} };
         }
         case VALIDATE: {
             return {...state,  errors: payload.errors };
