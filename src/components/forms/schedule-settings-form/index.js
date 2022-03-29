@@ -109,8 +109,8 @@ class ScheduleSettingsForm extends React.Component {
         const enabledPreFilters = entity.pre_filters.filter(pf => !disabledPreFilters.includes(pf.type));
 
         const color_source_ddl = [
-            {label: 'Track', value: 'TRACK'},
-            {label: 'Track Groups', value: 'TRACK_GROUP'},
+            {label: 'Category', value: 'TRACK'},
+            {label: 'Category Groups', value: 'TRACK_GROUP'},
             {label: 'Activity Type', value: 'EVENT_TYPES'},
         ];
 
