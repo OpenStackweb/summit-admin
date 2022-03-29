@@ -649,6 +649,16 @@ class SummitForm extends React.Component {
                                 </label>
                             </div>
                         </div>
+                        <div className="col-md-6 checkboxes-div">
+                            <div className="form-check abc-checkbox">
+                                <input type="checkbox" id="registration_send_order_email_automatically"
+                                       checked={entity.registration_send_order_email_automatically} onChange={this.handleChange}
+                                       className="form-check-input"/>
+                                <label className="form-check-label" htmlFor="registration_send_order_email_automatically">
+                                    {T.translate("edit_summit.registration_send_order_email_automatically")}
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </Panel>
 

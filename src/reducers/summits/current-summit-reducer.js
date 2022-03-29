@@ -109,6 +109,7 @@ export const DEFAULT_ENTITY = {
     registration_send_qr_as_image_attachment_on_ticket_email : false,
     registration_send_ticket_as_pdf_attachment_on_ticket_email : false,
     registration_allow_automatic_reminder_emails : true,
+    registration_send_order_email_automatically: true,
 };
 
 const DEFAULT_STATE = {
