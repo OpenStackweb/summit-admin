@@ -310,6 +310,7 @@
     "selection_end_date": "TC Selections End",
     "track_groups": "Category Groups",
     "description": "Description",
+    "submission_period_disclaimer": "Disclaimer",
     "max_submissions": "Max Submissions Per User",
     "allow_new_presentations": "Allow New Presentations",
     "selection_plan_saved": "Selection Plan saved successfully.",

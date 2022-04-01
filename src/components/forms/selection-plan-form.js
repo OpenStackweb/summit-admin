@@ -14,13 +14,10 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import {
-    epochToMomentTimeZone,
-    queryTrackGroups
-} from 'openstack-uicore-foundation/lib/methods'
-import { Input, DateTimePicker, SimpleLinkList } from 'openstack-uicore-foundation/lib/components';
+import {epochToMomentTimeZone, queryTrackGroups} from 'openstack-uicore-foundation/lib/methods'
+import {Input, DateTimePicker, SimpleLinkList, TextEditor} from 'openstack-uicore-foundation/lib/components';
 import {isEmpty, scrollToError, shallowEqual, stripTags} from "../../utils/methods";
-import { SortableTable } from 'openstack-uicore-foundation/lib/components';
+import { SortableTable, Panel } from 'openstack-uicore-foundation/lib/components';
 
 
 class SelectionPlanForm extends React.Component {
@@ -29,7 +26,8 @@ class SelectionPlanForm extends React.Component {
 
         this.state = {
             entity: {...props.entity},
-            errors: props.errors
+            errors: props.errors,
+            showSection: 'main'
         };
 
         this.handleTrackGroupLink = this.handleTrackGroupLink.bind(this);
@@ -39,6 +37,7 @@ class SelectionPlanForm extends React.Component {
         this.handleEditExtraQuestion = this.handleEditExtraQuestion.bind(this);
         this.handleDeleteExtraQuestion = this.handleDeleteExtraQuestion.bind(this);
         this.handleNewExtraQuestion = this.handleNewExtraQuestion.bind(this);
+        this.toggleSection = this.toggleSection.bind(this);
     }
 
     handleEditExtraQuestion(questionId){
@@ -115,9 +114,17 @@ class SelectionPlanForm extends React.Component {
         this.props.onTrackGroupUnLink(entity.id, valueId);
     }
 
+    toggleSection(section, ev) {
+        let {showSection} = this.state;
+        let newShowSection = (showSection === section) ? 'main' : section;
+        ev.preventDefault();
+
+        this.setState({showSection: newShowSection});
+    }
+
 
     render() {
-        const {entity} = this.state;
+        const {entity, showSection} = this.state;
         const { currentSummit, extraQuestionsOrderDir, extraQuestionsOrder } = this.props;
 
         let trackGroupsColumns = [
@@ -126,7 +133,6 @@ class SelectionPlanForm extends React.Component {
         ];
 
         let trackGroupsOptions = {
-            title: T.translate("edit_selection_plan.track_groups"),
             valueKey: "name",
             labelKey: "name",
             defaultOptions: true,
@@ -265,41 +271,62 @@ class SelectionPlanForm extends React.Component {
                     </div>
                 </div>
 
-                <hr />
-                {entity.id !== 0 &&
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <label> {T.translate("edit_selection_plan.submission_period_disclaimer")} *</label>
+                        <TextEditor
+                            id="submission_period_disclaimer"
+                            value={entity.submission_period_disclaimer}
+                            onChange={this.handleChange}
+                            error={this.hasErrors('submission_period_disclaimer')}
+                        />
+                    </div>
+                </div>
 
+                <hr/>
+
+                {entity.id !== 0 &&
+                <Panel
+                    show={showSection === 'track_groups'}
+                    title={T.translate("edit_selection_plan.track_groups")}
+                    handleClick={() => {this.toggleSection('track_groups')}}
+                >
                     <SimpleLinkList
                         values={entity.track_groups}
                         columns={trackGroupsColumns}
                         options={trackGroupsOptions}
                     />
+                </Panel>
                 }
 
                 {entity.id !== 0 &&
-                    <>
-                        <h3> {T.translate("edit_selection_plan.extra_questions")} ({entity.extra_questions.length})</h3>
-                        <div className={'row'}>
-                            <div className="col-md-6 text-right col-md-offset-6">
-                                <button className="btn btn-primary right-space" onClick={this.handleNewExtraQuestion}>
-                                    {T.translate("edit_selection_plan.add_extra_questions")}
-                                </button>
-                            </div>
+                <Panel
+                    show={showSection === 'extra_questions'}
+                    title={T.translate("edit_selection_plan.extra_questions")}
+                    handleClick={() => {this.toggleSection('extra_questions')}}
+                >
+                    <div className={'row'}>
+                        <div className="col-md-6 text-right col-md-offset-6">
+                            <button className="btn btn-primary right-space" onClick={this.handleNewExtraQuestion}>
+                                {T.translate("edit_selection_plan.add_extra_questions")}
+                            </button>
                         </div>
-                        { entity.extra_questions.length === 0 &&
-                            <div>{T.translate("edit_selection_plan.no_extra_questions")}</div>
-                        }
-                        {entity.extra_questions.length > 0 &&
-                            <SortableTable
-                                options={extraQuestionsOptions}
-                                data={entity.extra_questions.map((q) => {
-                                    return {...q, label: stripTags(q.label)}
-                                })}
-                                columns={extraQuestionColumns}
-                                dropCallback={this.props.updateExtraQuestionOrder}
-                                orderField="order"
-                            />
-                        }
-                    </>
+                    </div>
+                    { entity.extra_questions.length === 0 &&
+                    <div>{T.translate("edit_selection_plan.no_extra_questions")}</div>
+                    }
+                    {entity.extra_questions.length > 0 &&
+                    <SortableTable
+                        options={extraQuestionsOptions}
+                        data={entity.extra_questions.map((q) => {
+                            return {...q, label: stripTags(q.label)}
+                        })}
+                        columns={extraQuestionColumns}
+                        dropCallback={this.props.updateExtraQuestionOrder}
+                        orderField="order"
+                    />
+                    }
+                </Panel>
                 }
 
                 <div className="row">
