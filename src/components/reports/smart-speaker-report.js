@@ -29,7 +29,7 @@ const fieldNames = [
     {label: 'Job Title', key: 'currentJobTitle', simple: true},
     {label: 'Bio', key: 'bio', simple: true},
     {label: 'IRC', key: 'ircHandle', simple: true},
-    {label: 'Twitter', key: 'twitter', simple: true},
+    {label: 'Twitter', key: 'twitterName', simple: true},
     {label: 'Member ID', key: 'member_id'},
     {label: 'PromoCode', key: 'promoCodes_code'},
     {label: 'Code Type', key: 'promoCodes_type'},
