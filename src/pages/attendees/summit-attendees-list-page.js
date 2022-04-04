@@ -141,8 +141,8 @@ class SummitAttendeeListPage extends React.Component {
     componentDidMount() {
         const {currentSummit} = this.props;
         if(currentSummit) {
-            const {term, order, page, orderDir, perPage, statusFilter, memberFilter, ticketsFilter} = this.props;
-            this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter);
+            const {term, order, page, orderDir, perPage, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter} = this.props;
+            this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter);
         }
     }
 
@@ -175,19 +175,19 @@ class SummitAttendeeListPage extends React.Component {
     }
 
     handlePageChange(page) {
-        const {term, order, orderDir, perPage,  statusFilter, memberFilter, ticketsFilter} = this.props;
-        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter);
+        const {term, order, orderDir, perPage,  statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter} = this.props;
+        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter);
     }
 
     handleSort(index, key, dir, func) {
-        const {term, page, perPage,  statusFilter, memberFilter, ticketsFilter} = this.props;
+        const {term, page, perPage,  statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter} = this.props;
         key = (key === 'name') ? 'full_name' : key;
-        this.props.getAttendees(term, page, perPage, key, dir, statusFilter, memberFilter, ticketsFilter);
+        this.props.getAttendees(term, page, perPage, key, dir, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter);
     }
 
     handleSearch(term) {
-        const {order, orderDir, page, perPage, statusFilter, memberFilter, ticketsFilter} = this.props;
-        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter);
+        const {order, orderDir, page, perPage, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter} = this.props;
+        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter);
     }
 
     handleNewAttendee(ev) {
