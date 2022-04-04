@@ -48,6 +48,7 @@ class SummitAttendeeListPage extends React.Component {
         this.handleSelected = this.handleSelected.bind(this);
         this.handleSelectedAll = this.handleSelectedAll.bind(this);
         this.handleSendEmails = this.handleSendEmails.bind(this);
+        this.handleChangeTicketTypeFilter = this.handleChangeTicketTypeFilter.bind(this);
         this.handleChangeFlowEvent = this.handleChangeFlowEvent.bind(this);
         this.handleSetMemberFilter = this.handleSetMemberFilter.bind(this);
         this.handleSetStatusFilter = this.handleSetStatusFilter.bind(this);
@@ -62,29 +63,35 @@ class SummitAttendeeListPage extends React.Component {
     }
 
     handleExport(ev) {
-        const {term, order, orderDir, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter} = this.props;
+        const {term, order, orderDir, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, ticketTypeFilter} = this.props;
         ev.preventDefault();
-        this.props.exportAttendees(term, order, orderDir, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter);
+        this.props.exportAttendees(term, order, orderDir, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, ticketTypeFilter);
     }
 
     handleSetMemberFilter(newMemberFilter){
-        const {term, order, page, orderDir, perPage, statusFilter, ticketsFilter, virtualCheckInFilter} = this.props;
-        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, newMemberFilter, ticketsFilter, virtualCheckInFilter);
+        const {term, order, page, orderDir, perPage, statusFilter, ticketsFilter, virtualCheckInFilter, ticketTypeFilter} = this.props;
+        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, newMemberFilter, ticketsFilter, virtualCheckInFilter, ticketTypeFilter);
     }
 
     handleSetTicketsFilter(newTicketsFilter){
-        const {term, order, page, orderDir, perPage, statusFilter, memberFilter, virtualCheckInFilter} = this.props;
-        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, newTicketsFilter, virtualCheckInFilter);
+        const {term, order, page, orderDir, perPage, statusFilter, memberFilter, virtualCheckInFilter, ticketTypeFilter} = this.props;
+        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, newTicketsFilter, virtualCheckInFilter, ticketTypeFilter);
     }
 
     handleSetStatusFilter(newStatusFilter){
-        const {term, order, page, orderDir, perPage, memberFilter, ticketsFilter, virtualCheckInFilter} = this.props;
-        this.props.getAttendees(term, page, perPage, order, orderDir, newStatusFilter, memberFilter, ticketsFilter, virtualCheckInFilter);
+        const {term, order, page, orderDir, perPage, memberFilter, ticketsFilter, virtualCheckInFilter, ticketTypeFilter} = this.props;
+        this.props.getAttendees(term, page, perPage, order, orderDir, newStatusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, ticketTypeFilter);
     }
 
     handleSetVirtualCheckInFilter(newVirtualCheckInFilter){
-        const {term, order, page, orderDir, perPage, statusFilter, memberFilter, ticketsFilter} = this.props;
-        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter, newVirtualCheckInFilter);
+        const {term, order, page, orderDir, perPage, statusFilter, memberFilter, ticketsFilter, ticketTypeFilter} = this.props;
+        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter, newVirtualCheckInFilter, ticketTypeFilter);
+    }
+
+    handleChangeTicketTypeFilter(ev){
+        const {value} = ev.target;
+        const {term, order, page, orderDir, perPage, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter} = this.props;
+        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, value);
     }
 
     handleChangeFlowEvent(ev){
@@ -103,6 +110,7 @@ class SummitAttendeeListPage extends React.Component {
             statusFilter,
             ticketsFilter,
             virtualCheckInFilter,
+            ticketTypeFilter,
             selectedIds,
             currentFlowEvent,
             sendEmails
@@ -118,7 +126,7 @@ class SummitAttendeeListPage extends React.Component {
             return false;
         }
 
-        sendEmails(currentFlowEvent, selectedAll , selectedIds, term, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter);
+        sendEmails(currentFlowEvent, selectedAll , selectedIds, term, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, ticketTypeFilter);
     }
 
     handleSelected(attendee_id, isSelected){
@@ -141,8 +149,8 @@ class SummitAttendeeListPage extends React.Component {
     componentDidMount() {
         const {currentSummit} = this.props;
         if(currentSummit) {
-            const {term, order, page, orderDir, perPage, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter} = this.props;
-            this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter);
+            const {term, order, page, orderDir, perPage, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, ticketTypeFilter} = this.props;
+            this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, ticketTypeFilter);
         }
     }
 
@@ -175,19 +183,19 @@ class SummitAttendeeListPage extends React.Component {
     }
 
     handlePageChange(page) {
-        const {term, order, orderDir, perPage,  statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter} = this.props;
-        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter);
+        const {term, order, orderDir, perPage,  statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, ticketTypeFilter} = this.props;
+        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, ticketTypeFilter);
     }
 
     handleSort(index, key, dir, func) {
-        const {term, page, perPage,  statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter} = this.props;
+        const {term, page, perPage,  statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, ticketTypeFilter} = this.props;
         key = (key === 'name') ? 'full_name' : key;
-        this.props.getAttendees(term, page, perPage, key, dir, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter);
+        this.props.getAttendees(term, page, perPage, key, dir, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, ticketTypeFilter);
     }
 
     handleSearch(term) {
-        const {order, orderDir, page, perPage, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter} = this.props;
-        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter);
+        const {order, orderDir, page, perPage, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, ticketTypeFilter} = this.props;
+        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, ticketTypeFilter);
     }
 
     handleNewAttendee(ev) {
@@ -223,7 +231,8 @@ class SummitAttendeeListPage extends React.Component {
             statusFilter, 
             memberFilter,
             ticketsFilter,
-            virtualCheckInFilter
+            virtualCheckInFilter,
+            ticketTypeFilter,
         } = this.props;
         const {showModal, modalSchedule, modalTitle} = this.state;
 
@@ -268,6 +277,11 @@ class SummitAttendeeListPage extends React.Component {
             {label: 'SUMMIT_REGISTRATION_INVITE_ATTENDEE_TICKET_EDITION', value: 'SUMMIT_REGISTRATION_INVITE_ATTENDEE_TICKET_EDITION'},
             {label: 'SUMMIT_REGISTRATION_ATTENDEE_ALL_TICKETS_EDITION', value: 'SUMMIT_REGISTRATION_ATTENDEE_ALL_TICKETS_EDITION'},
             {label: 'SUMMIT_REGISTRATION_INCOMPLETE_ATTENDEE_REMINDER', value: 'SUMMIT_REGISTRATION_INCOMPLETE_ATTENDEE_REMINDER'},
+        ];
+
+        let ticketTypesDDL = [
+            {label: '-- SELECT A TICKET TYPE --', value: ''},
+            ...currentSummit.ticket_types.map(t => ({label: t.name, value: t.name}))
         ];
 
         return(
@@ -337,6 +351,14 @@ class SummitAttendeeListPage extends React.Component {
                             ]}
                             setValue={newValue => this.handleSetVirtualCheckInFilter(newValue)}
                             style={{ width: "100%", height:40, color: '#337ab7', fontSize: '10px' }}
+                        />
+                    </div>
+                    <div className="col-md-4" style={{ height: "61px", paddingTop: "8px" }}>
+                        <Dropdown
+                            id="ticketTypeFilter"
+                            value={ticketTypeFilter ?? ''}
+                            onChange={this.handleChangeTicketTypeFilter}
+                            options={ticketTypesDDL}
                         />
                     </div>
                 </div>
