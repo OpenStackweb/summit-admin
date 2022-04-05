@@ -45,7 +45,7 @@ export const getSelectionPlan = (selectionPlanId) => (dispatch, getState) => {
 
     const params = {
         access_token: accessToken,
-        expand: 'track_groups,extra_questions,extra_questions.values'
+        expand: 'track_groups,extra_questions,extra_questions.values,event_types'
     };
 
     return getRequest(
@@ -463,3 +463,57 @@ export const deleteSelectionPlanExtraQuestionValue = (selectionPlanId, questionI
         }
     );
 };
+
+
+/***********************  EVENT TYPES  *******************************************/
+
+export const EVENT_TYPE_ADDED               = 'EVENT_TYPE_ADDED';
+export const EVENT_TYPE_REMOVED             = 'EVENT_TYPE_REMOVED';
+
+export const addEventTypeSelectionPlan = (selectionPlanId, eventType) => (dispatch, getState) => {
+
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token: accessToken
+    };
+
+    return putRequest(
+        null,
+        createAction(EVENT_TYPE_ADDED)({eventType}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}/event-types/${eventType.id}`,
+        {},
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+
+}
+export const deleteEventTypeSelectionPlan = (selectionPlanId, eventTypeId) => (dispatch, getState) => {
+    
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token: accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(EVENT_TYPE_REMOVED)({eventTypeId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}/event-types/${eventTypeId}`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+}

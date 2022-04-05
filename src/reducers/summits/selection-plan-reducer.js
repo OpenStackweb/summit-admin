@@ -8,6 +8,8 @@ import {
     SELECTION_PLAN_ADDED,
     TRACK_GROUP_REMOVED,
     TRACK_GROUP_ADDED,
+    EVENT_TYPE_ADDED,
+    EVENT_TYPE_REMOVED,
     SELECTION_PLAN_EXTRA_QUESTION_ADDED,
     SELECTION_PLAN_EXTRA_QUESTION_DELETED,
     SELECTION_PLAN_EXTRA_QUESTION_UPDATED,
@@ -27,6 +29,7 @@ export const DEFAULT_ENTITY = {
     voting_begin_date: 0,
     voting_end_date: 0,
     track_groups: [],
+    event_types: [],
     extra_questions:[],
     extraQuestionsOrder: 'order',
     extraQuestionsOrderDir : 1,
@@ -85,6 +88,17 @@ const selectionPlanReducer = (state = DEFAULT_STATE, action) => {
         case TRACK_GROUP_ADDED: {
             let trackGroup = {...payload.trackGroup};
             return {...state, entity: {...state.entity, track_groups: [...state.entity.track_groups, trackGroup]} };
+        }
+        break;
+        case EVENT_TYPE_REMOVED: {
+            let {eventTypeId} = payload;
+            let eventTypes = state.entity.event_types.filter(t => t.id !== eventTypeId);
+            return {...state, entity: {...state.entity, event_types: eventTypes} };
+        }
+        break;
+        case EVENT_TYPE_ADDED: {
+            let eventType = {...payload.eventType};
+            return {...state, entity: {...state.entity, event_types: [...state.entity.event_types, eventType]} };
         }
         break;
         case SELECTION_PLAN_EXTRA_QUESTION_ADDED:{

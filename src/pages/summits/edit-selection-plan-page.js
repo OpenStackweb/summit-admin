@@ -20,6 +20,8 @@ import {
     removeTrackGroupFromSelectionPlan,
     deleteSelectionPlanExtraQuestion,
     updateSelectionPlanExtraQuestionOrder,
+    addEventTypeSelectionPlan,
+    deleteEventTypeSelectionPlan,
 } from "../../actions/selection-plan-actions";
 import Swal from "sweetalert2";
 
@@ -85,6 +87,8 @@ class EditSelectionPlanPage extends React.Component {
                     updateExtraQuestionOrder={this.onUpdateExtraQuestionOrder}
                     onAddNewExtraQuestion={this.onAddNewExtraQuestion}
                     onDeleteExtraQuestion={this.onDeleteExtraQuestion}
+                    onAddEventType={this.props.addEventTypeSelectionPlan}
+                    onDeleteEventType={this.props.deleteEventTypeSelectionPlan}
                     onEditExtraQuestion={this.onEditExtraQuestion}
                 />
             </div>
@@ -103,6 +107,8 @@ export default connect (
         saveSelectionPlan,
         addTrackGroupToSelectionPlan,
         removeTrackGroupFromSelectionPlan,
+        addEventTypeSelectionPlan,
+        deleteEventTypeSelectionPlan,
         updateSelectionPlanExtraQuestionOrder,
         deleteSelectionPlanExtraQuestion
     }

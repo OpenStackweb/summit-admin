@@ -14,7 +14,7 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import {epochToMomentTimeZone, queryTrackGroups} from 'openstack-uicore-foundation/lib/methods'
+import {epochToMomentTimeZone, queryTrackGroups, queryEventTypes} from 'openstack-uicore-foundation/lib/methods'
 import {Input, DateTimePicker, SimpleLinkList, TextEditor} from 'openstack-uicore-foundation/lib/components';
 import {isEmpty, scrollToError, shallowEqual, stripTags} from "../../utils/methods";
 import { SortableTable, Panel } from 'openstack-uicore-foundation/lib/components';
@@ -37,6 +37,8 @@ class SelectionPlanForm extends React.Component {
         this.handleEditExtraQuestion = this.handleEditExtraQuestion.bind(this);
         this.handleDeleteExtraQuestion = this.handleDeleteExtraQuestion.bind(this);
         this.handleNewExtraQuestion = this.handleNewExtraQuestion.bind(this);
+        this.handleDeleteEventType = this.handleDeleteEventType.bind(this);
+        this.handleAddEventType = this.handleAddEventType.bind(this);
         this.toggleSection = this.toggleSection.bind(this);
     }
 
@@ -114,15 +116,21 @@ class SelectionPlanForm extends React.Component {
         this.props.onTrackGroupUnLink(entity.id, valueId);
     }
 
-    toggleSection(section, ev) {
-        let {showSection} = this.state;
-        let newShowSection = (showSection === section) ? 'main' : section;
-        ev.preventDefault();
-
-        this.setState({showSection: newShowSection});
+    handleAddEventType(value) {
+        const {entity} = this.state;
+        this.props.onAddEventType(entity.id, value)
+    }
+    handleDeleteEventType(valueId) {
+        const {entity} = this.state;
+        this.props.onDeleteEventType(entity.id, valueId)
     }
 
-
+    toggleSection(section) {
+        let {showSection} = this.state;
+        let newShowSection = (showSection === section) ? 'main' : section;
+        this.setState({showSection: newShowSection});
+    }
+    
     render() {
         const {entity, showSection} = this.state;
         const { currentSummit, extraQuestionsOrderDir, extraQuestionsOrder } = this.props;
@@ -140,6 +148,21 @@ class SelectionPlanForm extends React.Component {
                 search: (input, callback) => { queryTrackGroups(currentSummit.id, input, callback); },
                 delete: { onClick: this.handleTrackGroupUnLink },
                 add: { onClick: this.handleTrackGroupLink }
+            }
+        };
+
+        let eventTypesColumns = [
+            { columnKey: 'name', value: T.translate("edit_selection_plan.name") },            
+        ];
+
+        let eventTypesOptions = {
+            valueKey: "name",
+            labelKey: "name",
+            defaultOptions: true,
+            actions: {
+                search: (input, callback) => { queryEventTypes(currentSummit.id, input, callback); },
+                delete: { onClick: this.handleDeleteEventType },
+                add: { onClick: this.handleAddEventType }
             }
         };
 
@@ -295,6 +318,20 @@ class SelectionPlanForm extends React.Component {
                         values={entity.track_groups}
                         columns={trackGroupsColumns}
                         options={trackGroupsOptions}
+                    />
+                </Panel>
+                }
+
+                {entity.id !== 0 &&
+                <Panel
+                    show={showSection === 'event_types'}
+                    title={T.translate("edit_selection_plan.event_types")}
+                    handleClick={() => {this.toggleSection('event_types')}}
+                >
+                    <SimpleLinkList
+                        values={entity.event_types}
+                        columns={eventTypesColumns}
+                        options={eventTypesOptions}
                     />
                 </Panel>
                 }

@@ -315,6 +315,7 @@
     "allow_new_presentations": "Allow New Presentations",
     "selection_plan_saved": "Selection Plan saved successfully.",
     "selection_plan_created": "Selection Plan created successfully.",
+    "event_types": "Activity Types",
     "extra_questions": "Extra Questions",
     "add_extra_questions": "Add Extra Question",
     "no_extra_questions":"No extra questions found.",
