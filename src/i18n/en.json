@@ -319,7 +319,16 @@
     "extra_questions": "Extra Questions",
     "add_extra_questions": "Add Extra Question",
     "no_extra_questions":"No extra questions found.",
-    "extra_question_remove_warning": "Are you sure you want to remove question "
+    "extra_question_remove_warning": "Are you sure you want to remove question ",
+    "email_templates": "Email Templates",
+    "creator_notification_email_template": "Creator emails",
+    "moderator_notification_email_template": "Moderator emails",
+    "speaker_notification_email_template": "Speaker emails",
+    "placeholders": {
+      "creator_notification_email_select_template": "Select a creator notification email template...",
+      "moderator_notification_email_select_template": "Select a moderator notification email template...",
+      "speaker_notification_email_select_template": "Select a speaker notification email template..."
+    }
   },
   "edit_event": {
     "title": "Title",

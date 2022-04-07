@@ -15,9 +15,9 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import {epochToMomentTimeZone, queryTrackGroups, queryEventTypes} from 'openstack-uicore-foundation/lib/methods'
-import {Input, DateTimePicker, SimpleLinkList, TextEditor} from 'openstack-uicore-foundation/lib/components';
+import {Input, DateTimePicker, SimpleLinkList, TextEditor, SortableTable, Panel} from 'openstack-uicore-foundation/lib/components';
 import {isEmpty, scrollToError, shallowEqual, stripTags} from "../../utils/methods";
-import { SortableTable, Panel } from 'openstack-uicore-foundation/lib/components';
+import EmailTemplateInput from "../inputs/email-template-input";
 
 
 class SelectionPlanForm extends React.Component {
@@ -40,6 +40,7 @@ class SelectionPlanForm extends React.Component {
         this.handleDeleteEventType = this.handleDeleteEventType.bind(this);
         this.handleAddEventType = this.handleAddEventType.bind(this);
         this.toggleSection = this.toggleSection.bind(this);
+        this.handleNotificationEmailTemplateChange = this.handleNotificationEmailTemplateChange.bind(this);
     }
 
     handleEditExtraQuestion(questionId){
@@ -88,6 +89,16 @@ class SelectionPlanForm extends React.Component {
         errors[id] = '';
         entity[id] = value;
         this.setState({entity: entity, errors: errors});
+    }
+
+    handleNotificationEmailTemplateChange(ev) {
+        let entity = {...this.state.entity};
+        let errors = {...this.state.errors};
+        let {value, id} = ev.target;
+
+        errors[id] = '';
+        entity[id] = value;
+        this.setState({...this.state, entity: entity, errors: errors});
     }
 
     handleSubmit(ev) {
@@ -309,61 +320,97 @@ class SelectionPlanForm extends React.Component {
                 <hr/>
 
                 {entity.id !== 0 &&
-                <Panel
-                    show={showSection === 'track_groups'}
-                    title={T.translate("edit_selection_plan.track_groups")}
-                    handleClick={() => {this.toggleSection('track_groups')}}
-                >
-                    <SimpleLinkList
-                        values={entity.track_groups}
-                        columns={trackGroupsColumns}
-                        options={trackGroupsOptions}
-                    />
-                </Panel>
-                }
-
-                {entity.id !== 0 &&
-                <Panel
-                    show={showSection === 'event_types'}
-                    title={T.translate("edit_selection_plan.event_types")}
-                    handleClick={() => {this.toggleSection('event_types')}}
-                >
-                    <SimpleLinkList
-                        values={entity.event_types}
-                        columns={eventTypesColumns}
-                        options={eventTypesOptions}
-                    />
-                </Panel>
-                }
-
-                {entity.id !== 0 &&
-                <Panel
-                    show={showSection === 'extra_questions'}
-                    title={T.translate("edit_selection_plan.extra_questions")}
-                    handleClick={() => {this.toggleSection('extra_questions')}}
-                >
-                    <div className={'row'}>
-                        <div className="col-md-6 text-right col-md-offset-6">
-                            <button className="btn btn-primary right-space" onClick={this.handleNewExtraQuestion}>
-                                {T.translate("edit_selection_plan.add_extra_questions")}
-                            </button>
-                        </div>
-                    </div>
-                    { entity.extra_questions.length === 0 &&
-                    <div>{T.translate("edit_selection_plan.no_extra_questions")}</div>
-                    }
-                    {entity.extra_questions.length > 0 &&
-                    <SortableTable
-                        options={extraQuestionsOptions}
-                        data={entity.extra_questions.map((q) => {
-                            return {...q, label: stripTags(q.label)}
-                        })}
-                        columns={extraQuestionColumns}
-                        dropCallback={this.props.updateExtraQuestionOrder}
-                        orderField="order"
-                    />
-                    }
-                </Panel>
+                    <>
+                        <Panel
+                            show={showSection === 'track_groups'}
+                            title={T.translate("edit_selection_plan.track_groups")}
+                            handleClick={() => {this.toggleSection('track_groups')}}
+                        >
+                            <SimpleLinkList
+                                values={entity.track_groups}
+                                columns={trackGroupsColumns}
+                                options={trackGroupsOptions}
+                            />
+                        </Panel>
+                        <Panel
+                            show={showSection === 'event_types'}
+                            title={T.translate("edit_selection_plan.event_types")}
+                            handleClick={() => {this.toggleSection('event_types')}}
+                        >
+                            <SimpleLinkList
+                                values={entity.event_types}
+                                columns={eventTypesColumns}
+                                options={eventTypesOptions}
+                            />
+                        </Panel>
+                        <Panel
+                            show={showSection === 'extra_questions'}
+                            title={T.translate("edit_selection_plan.extra_questions")}
+                            handleClick={() => {this.toggleSection('extra_questions')}}
+                        >
+                            <div className={'row'}>
+                                <div className="col-md-6 text-right col-md-offset-6">
+                                    <button className="btn btn-primary right-space" onClick={this.handleNewExtraQuestion}>
+                                        {T.translate("edit_selection_plan.add_extra_questions")}
+                                    </button>
+                                </div>
+                            </div>
+                            { entity.extra_questions.length === 0 &&
+                            <div>{T.translate("edit_selection_plan.no_extra_questions")}</div>
+                            }
+                            {entity.extra_questions.length > 0 &&
+                            <SortableTable
+                                options={extraQuestionsOptions}
+                                data={entity.extra_questions.map((q) => {
+                                    return {...q, label: stripTags(q.label)}
+                                })}
+                                columns={extraQuestionColumns}
+                                dropCallback={this.props.updateExtraQuestionOrder}
+                                orderField="order"
+                            />
+                            }
+                        </Panel>
+                        <Panel
+                            show={showSection === 'email_templates'}
+                            title={T.translate("edit_selection_plan.email_templates")}
+                            handleClick={() => {this.toggleSection('email_templates')}}
+                        >
+                             <div className="row form-group">
+                                <div className="col-md-6">
+                                    <label> {T.translate("edit_selection_plan.creator_notification_email_template")}</label>
+                                    <EmailTemplateInput
+                                        id="presentation_creator_notification_email_template"
+                                        value={entity.presentation_creator_notification_email_template}
+                                        placeholder={T.translate("edit_selection_plan.placeholders.creator_notification_email_select_template")}
+                                        onChange={this.handleNotificationEmailTemplateChange}
+                                        plainValue
+                                    />
+                                </div>
+                                <div className="col-md-6">
+                                    <label> {T.translate("edit_selection_plan.moderator_notification_email_template")}</label>
+                                    <EmailTemplateInput
+                                        id="presentation_moderator_notification_email_template"
+                                        value={entity.presentation_moderator_notification_email_template}
+                                        placeholder={T.translate("edit_selection_plan.placeholders.moderator_notification_email_select_template")}
+                                        onChange={this.handleNotificationEmailTemplateChange}
+                                        plainValue
+                                    />
+                                </div>
+                            </div>
+                            <div className="row form-group">
+                                <div className="col-md-6">
+                                    <label> {T.translate("edit_selection_plan.speaker_notification_email_template")}</label>
+                                    <EmailTemplateInput
+                                        id="presentation_speaker_notification_email_template"
+                                        value={entity.presentation_speaker_notification_email_template}
+                                        placeholder={T.translate("edit_selection_plan.placeholders.speaker_notification_email_select_template")}
+                                        onChange={this.handleNotificationEmailTemplateChange}
+                                        plainValue
+                                    />
+                                </div>
+                            </div>
+                        </Panel>
+                    </>
                 }
 
                 <div className="row">
