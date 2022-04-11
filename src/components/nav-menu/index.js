@@ -75,8 +75,6 @@ class NavMenu extends React.Component {
         if (currentSummit.id === 0) return false;
 
         switch (item.name) {
-            case 'purchase_orders':
-                return currentSummit.external_registration_feed_type === 'none';
             default:
                 return true;
         }
@@ -238,8 +236,7 @@ class NavMenu extends React.Component {
                 }
 
                 {summitItems.map(it => {
-                    let showMenu = this.showMenu(it);
-                    return this.drawMenuItem(it, showMenu, memberObj);
+                    return this.drawMenuItem(it, this.showMenu(it), memberObj);
                 })}
 
             </Menu>
