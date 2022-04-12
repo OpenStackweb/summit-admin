@@ -383,6 +383,7 @@ class SelectionPlanForm extends React.Component {
                                         value={entity.presentation_creator_notification_email_template}
                                         placeholder={T.translate("edit_selection_plan.placeholders.creator_notification_email_select_template")}
                                         onChange={this.handleNotificationEmailTemplateChange}
+                                        isClearable={true}
                                         plainValue
                                     />
                                 </div>
@@ -393,6 +394,7 @@ class SelectionPlanForm extends React.Component {
                                         value={entity.presentation_moderator_notification_email_template}
                                         placeholder={T.translate("edit_selection_plan.placeholders.moderator_notification_email_select_template")}
                                         onChange={this.handleNotificationEmailTemplateChange}
+                                        isClearable={true}
                                         plainValue
                                     />
                                 </div>
@@ -405,6 +407,7 @@ class SelectionPlanForm extends React.Component {
                                         value={entity.presentation_speaker_notification_email_template}
                                         placeholder={T.translate("edit_selection_plan.placeholders.speaker_notification_email_select_template")}
                                         onChange={this.handleNotificationEmailTemplateChange}
+                                        isClearable={true}
                                         plainValue
                                     />
                                 </div>

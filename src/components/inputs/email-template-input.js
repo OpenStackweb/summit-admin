@@ -24,9 +24,15 @@ export default class EmailTemplateInput extends React.Component {
         this.getTemplates = this.getTemplates.bind(this);
     }
 
-    handleChange(value) {
+    handleChange(value, {action}) {
         const {plainValue} = this.props;
-        const theValue = plainValue ? value.label : {id: value.value, identifier: value.label};
+        let theValue = null;
+
+        if (action === 'clear') {
+            theValue = plainValue ? '' : {id: '', identifier: ''};
+        } else {
+            theValue = plainValue ? value.label : {id: value.value, identifier: value.label};
+        }
 
         const ev = {target: {
                 id: this.props.id,
