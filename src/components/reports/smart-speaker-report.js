@@ -23,6 +23,7 @@ import {flattenData} from "../../actions/report-actions";
 const fieldNames = [
     {label: 'Id', key: 'id', simple: true},
     {label: 'Speaker', key: 'fullName', simple: true},
+    {label: 'Role', key: 'role', simple: true},
     {label: 'Emails', key: 'emails', simple: true},
     {label: 'Title', key: 'title', simple: true},
     {label: 'Company', key: 'currentCompany', simple: true},
@@ -63,7 +64,7 @@ class SmartSpeakerReport extends React.Component {
         }
 
         let query = new Query("speakers", listFilters);
-        let reportData = ["id", "title", "fullName"];
+        let reportData = ["id", "title", "fullName", "role"];
 
         if (sortKey) {
             let querySortKey = this.translateSortKey(sortKey);
@@ -127,7 +128,8 @@ class SmartSpeakerReport extends React.Component {
 
         let columns = [
             { columnKey: 'id', value: 'Id' },
-            { columnKey: 'fullName', value: 'Speaker' }
+            { columnKey: 'fullName', value: 'Speaker' },
+            { columnKey: 'role', value: 'Role' }
         ];
 
 
