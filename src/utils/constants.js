@@ -18,4 +18,6 @@ export const BulkActionEdit                    = 'BULK_ACTION_EDIT';
 export const BulkActionPublish                 = 'BULK_ACTION_PUBLISH';
 export const BulkActionUnPublish               = 'BULK_ACTION_UNPUBLISH';
 
+export const PresentationTypeClassName         = 'PRESENTATION_TYPE'
+
 export const TBALocation = {id : 0, name : 'TBD', class_name: 'SummitVenue'};

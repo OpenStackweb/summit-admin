@@ -18,6 +18,7 @@ import {epochToMomentTimeZone, queryTrackGroups, queryEventTypes} from 'openstac
 import {Input, DateTimePicker, SimpleLinkList, TextEditor, SortableTable, Panel} from 'openstack-uicore-foundation/lib/components';
 import {isEmpty, scrollToError, shallowEqual, stripTags} from "../../utils/methods";
 import EmailTemplateInput from "../inputs/email-template-input";
+import { PresentationTypeClassName } from '../../utils/constants';
 
 
 class SelectionPlanForm extends React.Component {
@@ -171,7 +172,7 @@ class SelectionPlanForm extends React.Component {
             labelKey: "name",
             defaultOptions: true,
             actions: {
-                search: (input, callback) => { queryEventTypes(currentSummit.id, input, callback); },
+                search: (input, callback) => { queryEventTypes(currentSummit.id, input, callback, PresentationTypeClassName); },
                 delete: { onClick: this.handleDeleteEventType },
                 add: { onClick: this.handleAddEventType }
             }
