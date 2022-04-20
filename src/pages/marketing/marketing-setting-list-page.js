@@ -20,6 +20,8 @@ import {FreeTextSearch, SummitDropdown, Table} from 'openstack-uicore-foundation
 import { getSummitById }  from '../../actions/summit-actions';
 import { getMarketingSettings, deleteSetting, cloneMarketingSettings } from "../../actions/marketing-actions";
 
+import '../../styles/table.less';
+
 class MarketingSettingListPage extends React.Component {
 
     constructor(props) {
@@ -112,12 +114,13 @@ class MarketingSettingListPage extends React.Component {
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
             { columnKey: 'key', value: T.translate("marketing.key"), sortable: true },
             { columnKey: 'type', value: T.translate("marketing.type") },
-            { columnKey: 'value', value: T.translate("marketing.value")},
+            { columnKey: 'value', value: T.translate("marketing.value"), title: true},
         ];
 
         const table_options = {
             sortCol: order,
             sortDir: orderDir,
+            className: 'marketing-table',
             actions: {
                 edit: {onClick: this.handleEdit},
                 delete: { onClick: this.handleDeleteSetting }

@@ -1,0 +1,16 @@
+.marketing-table {
+    td {
+        max-width: 700px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        @media (min-width: 768px) {
+            max-width: 450px;
+        }
+
+        @media only screen and (max-width: 768px) {
+            max-width: 150px;
+        }
+    }
+}
