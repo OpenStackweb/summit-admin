@@ -152,14 +152,24 @@ export const ingestExternalTickets = (email) => (dispatch, getState) => {
         access_token : accessToken
     };
 
+    const success_message = {
+        title: T.translate("general.done"),
+        html: T.translate("ticket_list.ingest_done"),
+        type: 'success'
+    };
+
     return postRequest(
         null,
         createAction(EXTERNAL_TICKETS_INGESTED),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets/ingest`,
-        {email},
+        {'email_to' : email},
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
+        dispatch(showMessage(
+            success_message,
+            () => { window.location.reload(); }
+        ));
         }
     );
 };

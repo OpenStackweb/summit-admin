@@ -1088,6 +1088,7 @@
     "show_refund_request_pending": "Show Only with Refund Requested",
     "refunded_amount": "Refunded Amount",
     "paid_amount_adjusted": "Amount Paid Adjusted",
+    "ingest_done": "External ticket ingestion was performed successfully.",
     "placeholders": {
       "search_tickets": "Search by Ticket #, Buyer, Attendee "
     }
