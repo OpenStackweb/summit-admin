@@ -62,6 +62,7 @@ import FeaturedSpeakersPage from '../pages/summit_speakers/featured-speakers-pag
 import TrackChairListPage from "../pages/track_chairs/track-chair-list-page";
 import ProgressFlagsPage from "../pages/track_chairs/progress-flags-page";
 import SummitPresentationsVotesPage from "../pages/events/summit-presentations-votes-page";
+import RegistrationCompaniesLayout from './registration-companies-layout';
 
 class SummitIdLayout extends React.Component {
 
@@ -143,6 +144,7 @@ class SummitIdLayout extends React.Component {
                     <Route path={`${match.url}/track-chairs`} component={TrackChairListPage}/>
                     <Route path={`${match.url}/progress-flags`} component={ProgressFlagsPage}/>
                     <Route path={`${match.url}/schedule-settings`} component={ScheduleSettingsLayout}/>
+                    <Route path={`${match.url}/registration-companies`} component={RegistrationCompaniesLayout}/>
                     <Route component={NoMatchPage}/>
                 </Switch>
             </div>

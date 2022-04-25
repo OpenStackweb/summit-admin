@@ -285,11 +285,11 @@
     "support_email": "Support Email",
     "help_users": "Help Users",
     "help_users_info": "Users designated as Help Users on A2A Widget ( Chat ).",
-    "reg_email_settings" : "Registration Settings",
-    "registration_send_qr_as_image_attachment_on_ticket_email" : "Send QR as Attachment (Image) on ticket Email",
-    "registration_send_ticket_as_pdf_attachment_on_ticket_email" : "Send Ticket as Attachment (PDF) on ticket Email",
-    "registration_send_ticket_email_automatically" : "Send Ticket Email Automatically?",
-    "registration_allow_automatic_reminder_emails" : "Allow Automatic Reminder Emails (Incomplete Order/Tickets)?",
+    "reg_email_settings": "Registration Settings",
+    "registration_send_qr_as_image_attachment_on_ticket_email": "Send QR as Attachment (Image) on ticket Email",
+    "registration_send_ticket_as_pdf_attachment_on_ticket_email": "Send Ticket as Attachment (PDF) on ticket Email",
+    "registration_send_ticket_email_automatically": "Send Ticket Email Automatically?",
+    "registration_allow_automatic_reminder_emails": "Allow Automatic Reminder Emails (Incomplete Order/Tickets)?",
     "registration_send_order_email_automatically": "Send Order Confirmation Email Automatically?",
     "allow_update_attendee_extra_questions": "Allow Attendee to update extra questions?",
     "placeholders": {
@@ -318,7 +318,7 @@
     "event_types": "Activity Types",
     "extra_questions": "Extra Questions",
     "add_extra_questions": "Add Extra Question",
-    "no_extra_questions":"No extra questions found.",
+    "no_extra_questions": "No extra questions found.",
     "extra_question_remove_warning": "Are you sure you want to remove question ",
     "email_templates": "Email Templates",
     "creator_notification_email_template": "Creator emails",
@@ -474,8 +474,7 @@
     "merge_and_delete": "Yes, merge and delete.",
     "merge_success": "Success! Speakers merged.",
     "merge_changes": "Changes made on: ",
-    "placeholders": {
-    }
+    "placeholders": {}
   },
   "company_list": {
     "company_list": "Company List",
@@ -511,8 +510,8 @@
     "color": "Color",
     "company_saved": "Company saved successfully.",
     "company_created": "Company created successfully.",
-    "project_name":"Sponsored Project",
-    "sponsorship_type":"Sponsorship Type",
+    "project_name": "Sponsored Project",
+    "sponsorship_type": "Sponsorship Type",
     "add_project_sponsorship": "Add Project Sponsorship",
     "delete_supporting_company_warning": "",
     "placeholders": {
@@ -1139,13 +1138,13 @@
     "activate_warning": "Are you sure you want to Reactivate this Ticket?",
     "refund": "Refund",
     "refund_modal_title": "Refund Ticket",
-    "refund_request_status" : "Status",
-    "refund_request_id" : "#",
-    "refund_requests" : "Refund Requests",
+    "refund_request_status": "Status",
+    "refund_request_id": "#",
+    "refund_requests": "Refund Requests",
     "refund_request_requested_by": "Requested By",
     "refund_request_action_by": "Action By",
     "refund_request_action_date": "Action Date",
-    "refund_request_notes" : "Notes",
+    "refund_request_notes": "Notes",
     "refund_reject_modal_title": "Reject Refund Request",
     "refund_reject": "Reject Refund",
     "paid_amount_adjusted": "Amount Paid Adjusted",
@@ -1264,6 +1263,15 @@
     "yes_approve": "Yes, approve.",
     "placeholders": {
       "select_channel": "Select Channel"
+    }
+  },
+  "registration_companies": {
+    "registration_companies": "Registration Companies",
+    "registration_companies_list": "Registration Companies List",
+    "no_registration_companies": "No companies found for current search criteria.",
+    "name": "Name",
+    "placeholders": {
+      "search_companies": "Search by Company Name"
     }
   },
   "edit_push_notification": {
@@ -1824,8 +1832,7 @@
     "created": "Sponsored Project created successfully.",
     "sponsorship_types": "Sponsorship Types",
     "remove_sponsorship_type_warning": "Are you sure you want to delete this Sponsorship Type",
-    "placeholders": {
-    }
+    "placeholders": {}
   },
   "edit_sponsored_project_sponsorship_type": {
     "supporting_companies": "Supporting Companies",
@@ -1845,19 +1852,19 @@
     "created": "Supporting Company created successfully."
   },
   "schedule_settings_list": {
-    "schedule_settings" : "Settings for Site Schedules",
+    "schedule_settings": "Settings for Site Schedules",
     "no_schedule_settings": "No schedules settings found",
     "add_schedule_settings": "Add new setting",
     "seed_defaults": "Seed default schedules",
     "remove_warning": "Are you sure you want do delete schedule "
   },
   "edit_schedule_settings": {
-    "schedule_settings" : "Schedule Settings",
-    "key" : "Key",
-    "enabled" : "Enabled",
-    "color_source" : "Color Source",
-    "is_my_schedule" : "Is my schedule?",
-    "access_levels_only" : "Filter events by Access Levels",
+    "schedule_settings": "Schedule Settings",
+    "key": "Key",
+    "enabled": "Enabled",
+    "color_source": "Color Source",
+    "is_my_schedule": "Is my schedule?",
+    "access_levels_only": "Filter events by Access Levels",
     "filter_title": "Filter",
     "filter_subtitle": "Activate filters to by displayed on side panel",
     "color_title": "Color By",
@@ -1877,7 +1884,7 @@
     "title": "Title",
     "votes_count": "Votes #",
     "presentation_vote_list": "Voteable Presentations",
-    "no_presentations" : "There is not any Presentations with votes",
+    "no_presentations": "There is not any Presentations with votes",
     "presentation_votes_page": "Voteable Presentations",
     "voters": "Voters",
     "show_voters_col": "Show Voters?",

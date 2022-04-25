@@ -108,6 +108,7 @@ import sponsoredProjectSponsorshipTypeSupportingCompanyReducer from "./reducers/
 import scheduleSettingsReducer from "./reducers/schedule-settings/schedule-settings-reducer";
 import scheduleSettingsListReducer from "./reducers/schedule-settings/schedule-settings-list-reducer";
 import selectionPlanExtraQuestionReducer from "./reducers/summits/selection-plan-extra-question-reducer";
+import registrationCompanyListReducer from "./reducers/companies/registration-companies-list-reducer";
 
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
@@ -219,6 +220,7 @@ const reducers = persistCombineReducers(config, {
     scheduleSettingsListState: scheduleSettingsListReducer,
     currentSelectionPlanExtraQuestionState: selectionPlanExtraQuestionReducer,
     currentPresentationVotesState: presentationVotesReducer,
+    currentRegistrationCompanyListState: registrationCompanyListReducer
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
