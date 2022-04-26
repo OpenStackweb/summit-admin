@@ -61,7 +61,7 @@ class RegistrationCompaniesListPage extends React.Component {
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
-            text: T.translate("badge_type_list.remove_warning") + ' ' + company.name,
+            text: T.translate("registration_companies.remove_warning") + ' ' + company.name,
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",

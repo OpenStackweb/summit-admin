@@ -86,7 +86,7 @@ export const addRegistrationCompany = (entity) => (dispatch, getState) => {
         entity
     )(params)(dispatch)
         .then((payload) => {
-            dispatch(showSuccessMessage(T.translate("edit_registration_invitation.registration_invitation_saved")));
+            dispatch(showSuccessMessage(T.translate("registration_companies.registration_company_saved")));
         });
     return;
 

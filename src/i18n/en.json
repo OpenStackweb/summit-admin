@@ -1270,6 +1270,8 @@
     "registration_companies": "Registration Companies",
     "registration_companies_list": "Registration Companies List",
     "no_registration_companies": "No companies found for current search criteria.",
+    "remove_warning": "Are you sure you want to delete company",
+    "registration_company_saved": "Company saved successfully.",
     "name": "Name",
     "placeholders": {
       "search_companies": "Search by Company Name"
