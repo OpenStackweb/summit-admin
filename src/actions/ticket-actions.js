@@ -14,70 +14,91 @@
 import T from "i18n-react/dist/i18n-react";
 import history from '../history'
 import {
-    getRequest,
-    putRequest,
-    postRequest,
-    deleteRequest,
+    authErrorHandler,
     createAction,
-    stopLoading,
-    startLoading,
+    deleteRequest,
+    downloadFileByContent,
+    escapeFilterValue,
+    getRawCSV,
+    getRequest,
+    postRequest,
+    putRequest,
     showMessage,
     showSuccessMessage,
-    authErrorHandler,
-    getRawCSV,
-    downloadFileByContent,
-    escapeFilterValue
+    startLoading,
+    stopLoading
 } from 'openstack-uicore-foundation/lib/methods';
+import URI from "urijs";
 
-export const REQUEST_TICKETS            = 'REQUEST_TICKETS';
-export const RECEIVE_TICKETS            = 'RECEIVE_TICKETS';
-export const EXTERNAL_TICKETS_INGESTED  = 'EXTERNAL_TICKETS_INGESTED';
-export const TICKETS_IMPORTED           = 'TICKETS_IMPORTED';
-export const RECEIVE_TICKET             = 'RECEIVE_TICKET';
-export const UPDATE_TICKET              = 'UPDATE_TICKET';
-export const TICKET_UPDATED             = 'TICKET_UPDATED';
-export const TICKET_REFUNDED            = 'TICKET_REFUNDED';
-export const TICKET_CANCEL_REFUND       = 'TICKET_CANCEL_REFUND';
-export const TICKET_MEMBER_ASSIGNED     = 'TICKET_MEMBER_ASSIGNED';
-export const TICKET_MEMBER_REASSIGNED   = 'TICKET_MEMBER_REASSIGNED';
-export const BADGE_ADDED_TO_TICKET      = 'BADGE_ADDED_TO_TICKET';
-export const TICKET_EMAIL_SENT          = 'TICKET_EMAIL_SENT';
+export const REQUEST_TICKETS = 'REQUEST_TICKETS';
+export const RECEIVE_TICKETS = 'RECEIVE_TICKETS';
+export const EXTERNAL_TICKETS_INGESTED = 'EXTERNAL_TICKETS_INGESTED';
+export const TICKETS_IMPORTED = 'TICKETS_IMPORTED';
+export const RECEIVE_TICKET = 'RECEIVE_TICKET';
+export const UPDATE_TICKET = 'UPDATE_TICKET';
+export const TICKET_UPDATED = 'TICKET_UPDATED';
+export const TICKET_REFUNDED = 'TICKET_REFUNDED';
+export const TICKET_CANCEL_REFUND = 'TICKET_CANCEL_REFUND';
+export const TICKET_MEMBER_REASSIGNED = 'TICKET_MEMBER_REASSIGNED';
+export const BADGE_ADDED_TO_TICKET = 'BADGE_ADDED_TO_TICKET';
+export const TICKET_EMAIL_SENT = 'TICKET_EMAIL_SENT';
 
-export const REQUEST_TICKET_TYPES       = 'REQUEST_TICKET_TYPES';
-export const RECEIVE_TICKET_TYPES       = 'RECEIVE_TICKET_TYPES';
-export const RECEIVE_TICKET_TYPE        = 'RECEIVE_TICKET_TYPE';
-export const RESET_TICKET_TYPE_FORM     = 'RESET_TICKET_TYPE_FORM';
-export const UPDATE_TICKET_TYPE         = 'UPDATE_TICKET_TYPE';
-export const TICKET_TYPE_UPDATED        = 'TICKET_TYPE_UPDATED';
-export const TICKET_TYPE_ADDED          = 'TICKET_TYPE_ADDED';
-export const TICKET_TYPE_DELETED        = 'TICKET_TYPE_DELETED';
-export const TICKET_TYPES_SEEDED        = 'TICKET_TYPES_SEEDED';
+export const REQUEST_TICKET_TYPES = 'REQUEST_TICKET_TYPES';
+export const RECEIVE_TICKET_TYPES = 'RECEIVE_TICKET_TYPES';
+export const RECEIVE_TICKET_TYPE = 'RECEIVE_TICKET_TYPE';
+export const RESET_TICKET_TYPE_FORM = 'RESET_TICKET_TYPE_FORM';
+export const UPDATE_TICKET_TYPE = 'UPDATE_TICKET_TYPE';
+export const TICKET_TYPE_UPDATED = 'TICKET_TYPE_UPDATED';
+export const TICKET_TYPE_ADDED = 'TICKET_TYPE_ADDED';
+export const TICKET_TYPE_DELETED = 'TICKET_TYPE_DELETED';
+export const TICKET_TYPES_SEEDED = 'TICKET_TYPES_SEEDED';
 
-export const REQUEST_REFUND_POLICIES    = 'REQUEST_REFUND_POLICIES';
-export const RECEIVE_REFUND_POLICIES    = 'RECEIVE_REFUND_POLICIES';
-export const REFUND_POLICY_ADDED        = 'REFUND_POLICY_ADDED';
-export const REFUND_POLICY_UPDATED      = 'REFUND_POLICY_UPDATED';
-export const REFUND_POLICY_DELETED      = 'REFUND_POLICY_DELETED';
+export const REQUEST_REFUND_POLICIES = 'REQUEST_REFUND_POLICIES';
+export const RECEIVE_REFUND_POLICIES = 'RECEIVE_REFUND_POLICIES';
+export const REFUND_POLICY_ADDED = 'REFUND_POLICY_ADDED';
+export const REFUND_POLICY_UPDATED = 'REFUND_POLICY_UPDATED';
+export const REFUND_POLICY_DELETED = 'REFUND_POLICY_DELETED';
 
-export const REQUEST_PAYMENT_PROFILES   = 'REQUEST_PAYMENT_PROFILES';
-export const UPDATE_PAYMENT_PROFILE     = 'UPDATE_PAYMENT_PROFILE';
-export const RECEIVE_PAYMENT_PROFILES   = 'RECEIVE_PAYMENT_PROFILES';
-export const PAYMENT_PROFILE_ADDED      = 'PAYMENT_PROFILE_ADDED';
-export const PAYMENT_PROFILE_UPDATED    = 'PAYMENT_PROFILE_UPDATED';
-export const PAYMENT_PROFILE_DELETED    = 'PAYMENT_PROFILE_DELETED';
-export const RECEIVE_PAYMENT_PROFILE    = 'RECEIVE_PAYMENT_PROFILE';
+export const REQUEST_PAYMENT_PROFILES = 'REQUEST_PAYMENT_PROFILES';
+export const UPDATE_PAYMENT_PROFILE = 'UPDATE_PAYMENT_PROFILE';
+export const RECEIVE_PAYMENT_PROFILES = 'RECEIVE_PAYMENT_PROFILES';
+export const PAYMENT_PROFILE_ADDED = 'PAYMENT_PROFILE_ADDED';
+export const PAYMENT_PROFILE_UPDATED = 'PAYMENT_PROFILE_UPDATED';
+export const PAYMENT_PROFILE_DELETED = 'PAYMENT_PROFILE_DELETED';
+export const RECEIVE_PAYMENT_PROFILE = 'RECEIVE_PAYMENT_PROFILE';
 export const RESET_PAYMENT_PROFILE_FORM = 'RESET_PAYMENT_PROFILE_FORM';
 
+// selection
+export const SELECT_TICKET = 'SELECT_TICKET';
+export const UNSELECT_TICKET = 'UNSELECT_TICKET';
+export const CLEAR_ALL_SELECTED_TICKETS = 'CLEAR_ALL_SELECTED_TICKETS';
+export const SET_SELECTED_ALL_TICKETS = 'SET_SELECTED_ALL_TICKETS';
+export const PRINT_TICKETS = 'PRINT_TICKETS';
 
 /**************************   TICKETS   ******************************************/
 
+export const selectTicket = (ticketId) => (dispatch) => {
+    dispatch(createAction(SELECT_TICKET)(ticketId));
+};
+
+export const unSelectTicket = (ticketId) => (dispatch) => {
+    dispatch(createAction(UNSELECT_TICKET)(ticketId));
+};
+
+export const clearAllSelectedTicket = () => (dispatch) => {
+    dispatch(createAction(CLEAR_ALL_SELECTED_TICKETS)());
+}
+export const setSelectedAll = (value) => (dispatch) => {
+    dispatch(createAction(SET_SELECTED_ALL_TICKETS)(value));
+};
+
 export const reSendTicketEmail = (orderId, ticketId) => (dispatch, getState) => {
 
-    const { loggedUserState } = getState();
-    const { accessToken }     = loggedUserState;
+    const {loggedUserState} = getState();
+    const {accessToken} = loggedUserState;
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     dispatch(startLoading());
@@ -95,61 +116,157 @@ export const reSendTicketEmail = (orderId, ticketId) => (dispatch, getState) => 
     );
 };
 
-export const getTickets = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1, showOnlyPendingRefundRequests = false ) => (dispatch, getState) => {
+export const printTickets = (filters, doAttendeeCheckinOnPrint = true) => (dispatch, getState) => {
 
     const { loggedUserState, currentSummitState } = getState();
     const { accessToken }     = loggedUserState;
     const { currentSummit }   = currentSummitState;
+
+    dispatch(createAction(PRINT_TICKETS));
+
     const filter = [];
-
-    dispatch(startLoading());
-
     const params = {
-        page         : page,
-        per_page     : perPage,
-        access_token : accessToken,
-        expand       : 'owner,order,ticket_type,badge,promo_code,refund_requests'
+        access_token: accessToken,
     };
 
-    if(term){
-        const escapedTerm = escapeFilterValue(term);
+    if (filters.hasOwnProperty('term') && filters.term) {
+        const escapedTerm = escapeFilterValue(filters.term);
         filter.push(`number=@${escapedTerm},owner_email=@${escapedTerm},owner_name=@${escapedTerm},owner_company=@${escapedTerm}`);
     }
 
-    if(showOnlyPendingRefundRequests){
+    if (filters.hasOwnProperty('showOnlyPendingRefundRequests') && filters.showOnlyPendingRefundRequests) {
         filter.push('has_requested_refund_requests==1');
     }
 
-    if(filter.length > 0){
-        params['filter[]']= filter;
+    if (filters.hasOwnProperty('hasOwnerFilter') && filters.hasOwnerFilter) {
+        if (filters.hasOwnerFilter === 'HAS_OWNER')
+            filter.push(`has_owner==1`);
+        if (filters.hasOwnerFilter === 'HAS_NO_OWNER')
+            filter.push(`has_owner==0`)
     }
 
-    // order
-    if(order != null && orderDir != null){
-        const orderDirSign = (orderDir === 1) ? '+' : '-';
-        params['order']= `${orderDirSign}${order}`;
+    if(filters.hasOwnProperty('ticketTypesFilter') && Array.isArray(filters.ticketTypesFilter) && filters.ticketTypesFilter.length > 0){
+        filter.push(filters.ticketTypesFilter.reduce(
+            (accumulator, tt) => accumulator +(accumulator !== '' ? ',':'') +`ticket_type_id==${tt.value}`,
+            ''
+        ));
     }
 
-    return getRequest(
-        createAction(REQUEST_TICKETS),
-        createAction(RECEIVE_TICKETS),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets`,
-        authErrorHandler,
-        {page, perPage, order, orderDir, term, showOnlyPendingRefundRequests}
-    )(params)(dispatch).then(() => {
-            dispatch(stopLoading());
-        }
-    );
+    if(filters.hasOwnProperty('completedFilter') && filters.completedFilter){
+        filter.push(`owner_status==${filters.completedFilter}`);
+    }
+
+    if(filters.hasOwnProperty('ownerFullNameStartWithFilter') && Array.isArray(filters.ownerFullNameStartWithFilter) && filters.ownerFullNameStartWithFilter.length > 0){
+        filter.push(filters.ownerFullNameStartWithFilter.reduce(
+            (accumulator, alpha) => accumulator +(accumulator !== '' ? ',':'') +`owner_first_name@@${alpha.value}`,
+            ''
+        ));
+    }
+
+    if (filter.length > 0) {
+        params['filter[]'] = filter;
+    }
+
+    if(filters.hasOwnProperty("selectedIds") && Array.isArray(filters.selectedIds) && filters.selectedIds.length > 0){
+        params['ids'] = filters.selectedIds.reduce(
+            (accumulator, id) => accumulator +(accumulator !== '' ? ',':'') +`${id}`,
+            ''
+        );
+    }
+    params['check_in'] = doAttendeeCheckinOnPrint;
+
+    let url = URI(`${process.env['PRINT_APP_URL']}/check-in/${currentSummit.slug}/tickets`);
+
+    window.open(url.query(params).toString(), '_blank');
+
 };
+
+export const getTickets =
+    (
+        page = 1,
+        perPage = 10,
+        order = 'id',
+        orderDir = 1,
+        filters = {}) => (dispatch, getState) => {
+
+        const {loggedUserState, currentSummitState} = getState();
+        const {accessToken} = loggedUserState;
+        const {currentSummit} = currentSummitState;
+        const filter = [];
+
+        dispatch(startLoading());
+
+        const params = {
+            page: page,
+            per_page: perPage,
+            access_token: accessToken,
+            expand: 'owner,order,ticket_type,badge,promo_code,refund_requests'
+        };
+
+        if (filters.hasOwnProperty('term') && filters.term) {
+            const escapedTerm = escapeFilterValue(filters.term);
+            filter.push(`number=@${escapedTerm},owner_email=@${escapedTerm},owner_name=@${escapedTerm},owner_company=@${escapedTerm}`);
+        }
+
+        if (filters.hasOwnProperty('showOnlyPendingRefundRequests') && filters.showOnlyPendingRefundRequests) {
+            filter.push('has_requested_refund_requests==1');
+        }
+
+        if (filters.hasOwnProperty('hasOwnerFilter') && filters.hasOwnerFilter) {
+            if (filters.hasOwnerFilter === 'HAS_OWNER')
+                filter.push(`has_owner==1`);
+            if (filters.hasOwnerFilter === 'HAS_NO_OWNER')
+                filter.push(`has_owner==0`)
+        }
+
+        if(filters.hasOwnProperty('ticketTypesFilter') && Array.isArray(filters.ticketTypesFilter) && filters.ticketTypesFilter.length > 0){
+            filter.push(filters.ticketTypesFilter.reduce(
+                (accumulator, tt) => accumulator +(accumulator !== '' ? ',':'') +`ticket_type_id==${tt.value}`,
+                ''
+            ));
+        }
+
+        if(filters.hasOwnProperty('completedFilter') && filters.completedFilter){
+            filter.push(`owner_status==${filters.completedFilter}`);
+        }
+
+        if(filters.hasOwnProperty('ownerFullNameStartWithFilter') && Array.isArray(filters.ownerFullNameStartWithFilter) && filters.ownerFullNameStartWithFilter.length > 0){
+            filter.push(filters.ownerFullNameStartWithFilter.reduce(
+                (accumulator, alpha) => accumulator +(accumulator !== '' ? ',':'') +`owner_first_name@@${alpha.value}`,
+                ''
+            ));
+        }
+
+        if (filter.length > 0) {
+            params['filter[]'] = filter;
+        }
+
+        // order
+        if (order != null && orderDir != null) {
+            const orderDirSign = (orderDir === 1) ? '+' : '-';
+            params['order'] = `${orderDirSign}${order}`;
+        }
+
+        return getRequest(
+            createAction(REQUEST_TICKETS),
+            createAction(RECEIVE_TICKETS),
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets`,
+            authErrorHandler,
+            {page, perPage, order, orderDir, ...filters}
+        )(params)(dispatch).then(() => {
+                dispatch(stopLoading());
+            }
+        );
+    };
 
 export const ingestExternalTickets = (email) => (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     const success_message = {
@@ -162,25 +279,27 @@ export const ingestExternalTickets = (email) => (dispatch, getState) => {
         null,
         createAction(EXTERNAL_TICKETS_INGESTED),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets/ingest`,
-        {'email_to' : email},
+        {'email_to': email},
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
-        dispatch(showMessage(
-            success_message,
-            () => { window.location.reload(); }
-        ));
+            dispatch(showMessage(
+                success_message,
+                () => {
+                    window.location.reload();
+                }
+            ));
         }
     );
 };
 
 export const importTicketsCSV = (file) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     postRequest(
@@ -200,10 +319,10 @@ export const exportTicketsCSV = (pageSize = 500) => (dispatch, getState) => {
     dispatch(startLoading());
 
     const csvMIME = 'text/csv;charset=utf-8';
-    const { loggedUserState, currentSummitState, currentTicketListState} = getState();
-    const { accessToken } = loggedUserState;
-    const { currentSummit } = currentSummitState;
-    const { totalTickets } = currentTicketListState;
+    const {loggedUserState, currentSummitState, currentTicketListState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
+    const {totalTickets} = currentTicketListState;
     const filename = currentSummit.name + '-Tickets.csv';
     const totalPages = Math.ceil(totalTickets / pageSize);
     const endpoint = `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets/csv`;
@@ -211,15 +330,15 @@ export const exportTicketsCSV = (pageSize = 500) => (dispatch, getState) => {
     // create the params for the promises all ( only diff is the page nbr)
 
     let params = Array.from({length: totalPages}, (_, i) =>
-    ({
-        page : i + 1,
-        access_token : accessToken,
-        per_page:pageSize,
-    }))
+        ({
+            page: i + 1,
+            access_token: accessToken,
+            per_page: pageSize,
+        }))
     // export CSV file by chunks ...
     Promise.all(params.map((p) => getRawCSV(endpoint, p)))
         .then((files) => {
-            if(files.length > 0) {
+            if (files.length > 0) {
                 // if we get result try to get first the header
                 let header = files[0].split('\n')[0];
                 // and rebuild all the chunks using reduce
@@ -242,14 +361,14 @@ export const exportTicketsCSV = (pageSize = 500) => (dispatch, getState) => {
 
 export const getTicket = (ticketId) => (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const params = {
-        access_token : accessToken,
+        access_token: accessToken,
         expand: 'badge, badge.features, promo_code, ticket_type, owner, owner.member, refund_requests, refund_requests.requested_by, refund_requests.action_by'
     };
 
@@ -267,14 +386,14 @@ export const getTicket = (ticketId) => (dispatch, getState) => {
 
 export const saveTicket = (orderId, ticket) => (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const params = {
-        access_token : accessToken,
+        access_token: accessToken,
         expand: 'badge, badge.features, promo_code, ticket_type, owner, owner.member, refund_requests, refund_requests.requested_by, refund_requests.action_by'
     };
 
@@ -294,17 +413,17 @@ export const saveTicket = (orderId, ticket) => (dispatch, getState) => {
 
 export const activateTicket = (orderId, ticketId, isActive) => (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken,
+        access_token: accessToken,
     };
 
     dispatch(startLoading());
 
-    if(isActive)
+    if (isActive)
         return putRequest(
             null,
             createAction(TICKET_UPDATED),
@@ -328,14 +447,14 @@ export const activateTicket = (orderId, ticketId, isActive) => (dispatch, getSta
         });
 }
 
-export const reassignTicket = (ticketId, attendeeId, firstName, lastName, email, company ) => (dispatch, getState) => {
+export const reassignTicket = (ticketId, attendeeId, firstName, lastName, email, company) => (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken,
+        access_token: accessToken,
     };
 
     const success_message = {
@@ -361,7 +480,9 @@ export const reassignTicket = (ticketId, attendeeId, firstName, lastName, email,
         .then((payload) => {
             dispatch(showMessage(
                 success_message,
-                () => { window.location.reload(); }
+                () => {
+                    window.location.reload();
+                }
             ));
         });
 };
@@ -372,11 +493,11 @@ export const cancelRefundTicket = (orderId, ticketId, refundNotes = '') => (disp
 
     dispatch(startLoading());
 
-    const { loggedUserState } = getState();
-    const { accessToken }     = loggedUserState;
+    const {loggedUserState} = getState();
+    const {accessToken} = loggedUserState;
 
     const params = {
-        access_token : accessToken,
+        access_token: accessToken,
         expand: 'refund_requests, refund_requests.requested_by, refund_requests.action_by',
     };
 
@@ -405,12 +526,12 @@ export const refundTicket = (ticketId, refundAmount, refundNotes = '') => (dispa
 
     dispatch(startLoading());
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken,
+        access_token: accessToken,
         expand: 'refund_requests, refund_requests.requested_by, refund_requests.action_by',
     };
 
@@ -432,12 +553,12 @@ export const refundTicket = (ticketId, refundAmount, refundNotes = '') => (dispa
 
 export const addBadgeToTicket = (ticketId) => (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     return postRequest(
@@ -462,18 +583,18 @@ const normalizeTicket = (entity) => {
         normalizedEntity.attendee_email = normalizedEntity.attendee.email;
     }
 
-    delete(normalizedEntity.id);
-    delete(normalizedEntity.badge);
-    delete(normalizedEntity.ticket_type);
-    delete(normalizedEntity.attendee);
-    delete(normalizedEntity.owner);
-    delete(normalizedEntity.owner_id);
-    delete(normalizedEntity.owner_full_name);
-    delete(normalizedEntity.created);
-    delete(normalizedEntity.last_edited);
-    delete(normalizedEntity.promocode);
-    delete(normalizedEntity.promocode_id);
-    delete(normalizedEntity.promocode_name);
+    delete (normalizedEntity.id);
+    delete (normalizedEntity.badge);
+    delete (normalizedEntity.ticket_type);
+    delete (normalizedEntity.attendee);
+    delete (normalizedEntity.owner);
+    delete (normalizedEntity.owner_id);
+    delete (normalizedEntity.owner_full_name);
+    delete (normalizedEntity.created);
+    delete (normalizedEntity.last_edited);
+    delete (normalizedEntity.promocode);
+    delete (normalizedEntity.promocode_id);
+    delete (normalizedEntity.promocode_name);
 
     return normalizedEntity;
 
@@ -483,24 +604,24 @@ const normalizeTicket = (entity) => {
 /**************************   TICKET TYPES   ******************************************/
 
 
-export const getTicketTypes = (summit, order = 'name', orderDir = 1, page = 1, per_page = 100 ) => (dispatch, getState) => {
+export const getTicketTypes = (summit, order = 'name', orderDir = 1, page = 1, per_page = 100) => (dispatch, getState) => {
 
-    const { loggedUserState } = getState();
-    const { accessToken }     = loggedUserState;
+    const {loggedUserState} = getState();
+    const {accessToken} = loggedUserState;
 
     dispatch(startLoading());
 
     const params = {
-        page         : page,
-        per_page     : per_page,
-        access_token : accessToken,
+        page: page,
+        per_page: per_page,
+        access_token: accessToken,
         expand: 'badge_type',
     };
 
     // order
-    if(order != null && orderDir != null){
+    if (order != null && orderDir != null) {
         const orderDirSign = (orderDir === 1) ? '+' : '-';
-        params['order']= `${orderDirSign}${order}`;
+        params['order'] = `${orderDirSign}${order}`;
     }
 
 
@@ -518,14 +639,14 @@ export const getTicketTypes = (summit, order = 'name', orderDir = 1, page = 1, p
 
 export const getTicketType = (ticketTypeId) => (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const params = {
-        access_token : accessToken,
+        access_token: accessToken,
     };
 
     return getRequest(
@@ -544,12 +665,12 @@ export const resetTicketTypeForm = () => (dispatch, getState) => {
 };
 
 export const saveTicketType = (entity) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken,
+        access_token: accessToken,
     };
 
     dispatch(startLoading());
@@ -588,7 +709,9 @@ export const saveTicketType = (entity) => (dispatch, getState) => {
             .then((payload) => {
                 dispatch(showMessage(
                     success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/ticket-types/${payload.response.id}`) }
+                    () => {
+                        history.push(`/app/summits/${currentSummit.id}/ticket-types/${payload.response.id}`)
+                    }
                 ));
             });
     }
@@ -596,12 +719,12 @@ export const saveTicketType = (entity) => (dispatch, getState) => {
 
 export const deleteTicketType = (ticketTypeId) => (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     return deleteRequest(
@@ -616,13 +739,13 @@ export const deleteTicketType = (ticketTypeId) => (dispatch, getState) => {
     );
 };
 
-export const seedTicketTypes = ( ) => (dispatch, getState) => {
+export const seedTicketTypes = () => (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     postRequest(
@@ -642,10 +765,10 @@ const normalizeEntity = (entity) => {
     const normalizedEntity = {...entity};
 
     if (!normalizedEntity.external_id)
-        delete(normalizedEntity.external_id);
+        delete (normalizedEntity.external_id);
 
     if (!normalizedEntity.badge_type_id)
-        delete(normalizedEntity.badge_type_id);
+        delete (normalizedEntity.badge_type_id);
 
     // clear dates
     if (entity.sales_start_date === 0) {
@@ -656,26 +779,25 @@ const normalizeEntity = (entity) => {
         normalizedEntity.sales_end_date = "";
     }
 
-    delete(normalizedEntity.id);
+    delete (normalizedEntity.id);
 
     return normalizedEntity;
 
 }
 
 
-
 /***************************   REFUND POLICIES   ******************************/
 
 export const getRefundPolicies = () => (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const params = {
-        access_token : accessToken,
+        access_token: accessToken,
     };
 
 
@@ -691,12 +813,12 @@ export const getRefundPolicies = () => (dispatch, getState) => {
 };
 
 export const saveRefundPolicy = (entity) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken,
+        access_token: accessToken,
     };
 
     if (entity.id) {
@@ -729,12 +851,12 @@ export const saveRefundPolicy = (entity) => (dispatch, getState) => {
 
 export const deleteRefundPolicy = (refundPolicyId) => (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     return deleteRequest(
@@ -753,23 +875,23 @@ export const deleteRefundPolicy = (refundPolicyId) => (dispatch, getState) => {
 
 /***************************   PAYMENT PROFILES   ******************************/
 
-export const getPaymentProfiles = (page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+export const getPaymentProfiles = (page = 1, perPage = 10, order = 'id', orderDir = 1) => (dispatch, getState) => {
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const params = {
-        page         : page,
-        per_page     : perPage,
-        access_token : accessToken,
+        page: page,
+        per_page: perPage,
+        access_token: accessToken,
     };
 
     // order
-    if(order != null && orderDir != null){
+    if (order != null && orderDir != null) {
         const orderDirSign = (orderDir === 1) ? '+' : '-';
-        params['order']= `${orderDirSign}${order}`;
+        params['order'] = `${orderDirSign}${order}`;
     }
 
     return getRequest(
@@ -785,12 +907,12 @@ export const getPaymentProfiles = (page = 1, perPage = 10, order = 'id', orderDi
 };
 
 export const savePaymentProfile = (entity) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken,
+        access_token: accessToken,
     };
 
     if (entity.id) {
@@ -815,28 +937,30 @@ export const savePaymentProfile = (entity) => (dispatch, getState) => {
     };
 
     postRequest(
-            createAction(UPDATE_PAYMENT_PROFILE),
-            createAction(PAYMENT_PROFILE_ADDED),
-            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/payment-gateway-profiles`,
-            entity,
-            authErrorHandler
-        ) (params)(dispatch)
+        createAction(UPDATE_PAYMENT_PROFILE),
+        createAction(PAYMENT_PROFILE_ADDED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/payment-gateway-profiles`,
+        entity,
+        authErrorHandler
+    )(params)(dispatch)
         .then((payload) => {
             dispatch(showMessage(
                 success_message,
-                () => { history.push(`/app/summits/${currentSummit.id}/payment-profiles/${payload.response.id}`) }
+                () => {
+                    history.push(`/app/summits/${currentSummit.id}/payment-profiles/${payload.response.id}`)
+                }
             ));
         });
 }
 
 export const deletePaymentProfile = (paymentProfileId) => (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     return deleteRequest(
@@ -853,14 +977,14 @@ export const deletePaymentProfile = (paymentProfileId) => (dispatch, getState) =
 
 export const getPaymentProfile = (paymentProfileId) => (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const params = {
-        access_token : accessToken,
+        access_token: accessToken,
     };
 
     return getRequest(

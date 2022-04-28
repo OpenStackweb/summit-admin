@@ -14,13 +14,26 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
-import { FreeTextSearch, Table, UploadInput} from 'openstack-uicore-foundation/lib/components';
+import { FreeTextSearch, Table, UploadInput, SelectableTable} from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getTickets, ingestExternalTickets, importTicketsCSV, exportTicketsCSV } from "../../actions/ticket-actions";
+import {
+    getTickets,
+    ingestExternalTickets,
+    importTicketsCSV,
+    exportTicketsCSV,
+    selectTicket,
+    unSelectTicket,
+    clearAllSelectedTicket,
+    setSelectedAll,
+    printTickets,
+} from "../../actions/ticket-actions";
 import {Modal, Pagination} from "react-bootstrap";
 import {Breadcrumb} from "react-breadcrumbs";
 
 import '../../styles/ticket-list-page.less';
+import {SegmentedControl} from "segmented-control";
+import Select from "react-select";
+import Swal from "sweetalert2";
 
 class TicketListPage extends React.Component {
 
@@ -35,31 +48,54 @@ class TicketListPage extends React.Component {
         this.handleImportTickets = this.handleImportTickets.bind(this);
         this.handleExportTickets = this.handleExportTickets.bind(this);
         this.handleChangeShowRefundRequestPending = this.handleChangeShowRefundRequestPending.bind(this);
+        this.handleSelected = this.handleSelected.bind(this);
+        this.handleSelectedAll = this.handleSelectedAll.bind(this);
+        this.handleSetHasOwnerFilter = this.handleSetHasOwnerFilter.bind(this);
+        this.handleSetTicketTypesFilter = this.handleSetTicketTypesFilter.bind(this);
+        this.handleSetCompletedFilter = this.handleSetCompletedFilter.bind(this);
+        this.handleSetOwnerFullNameStartWithFilter = this.handleSetOwnerFullNameStartWithFilter.bind(this);
+        this.handleSendTickets2Print = this.handleSendTickets2Print.bind(this);
         this.state = {
             showIngestModal: false,
             showImportModal: false,
             importFile: null
         }
+    }
 
+    handleSelected(attendee_id, isSelected){
+        if(isSelected){
+            this.props.selectTicket(attendee_id);
+            return;
+        }
+        this.props.unSelectTicket(attendee_id);
+    }
+
+    handleSelectedAll(ev){
+        let selectedAll = ev.target.checked;
+        this.props.setSelectedAll(selectedAll);
+        if(!selectedAll){
+            //clear all selected
+            this.props.clearAllSelectedTicket();
+        }
     }
 
     componentDidMount() {
         const {currentSummit} = this.props;
         if(currentSummit) {
-            this.props.getTickets('', 1, 10);
+            const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter} = this.props;
+            this.props.getTickets(1, 10, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter});
         }
     }
 
     handleChangeShowRefundRequestPending(ev){
-        const {order, orderDir, page, perPage, term} = this.props;
+        const {order, orderDir, page, perPage, term, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter} = this.props;
         let value = ev.target.checked;
-        this.props.getTickets(term, page, perPage, order, orderDir, value);
-
+        this.props.getTickets(page, perPage, order, orderDir, {showOnlyPendingRefundRequests : value, hasOwnerFilter, ticketTypesFilter, term , completedFilter, ownerFullNameStartWithFilter});
     }
 
     handleSearch(term) {
-        const {order, orderDir, page, perPage, showOnlyPendingRefundRequests} = this.props;
-        this.props.getTickets(term, page, perPage, order, orderDir, showOnlyPendingRefundRequests);
+        const {order, orderDir, page, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter} = this.props;
+        this.props.getTickets(page, perPage, order, orderDir, { term , showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter});
     }
 
     handleEdit(ticket_id) {
@@ -69,13 +105,13 @@ class TicketListPage extends React.Component {
     }
 
     handleSort(index, key, dir, func) {
-        const {term, page, perPage} = this.props;
-        this.props.getTickets(term, page, perPage, key, dir);
+        const {term, page, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter} = this.props;
+        this.props.getTickets(page, perPage, key, dir, { term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter});
     }
 
     handlePageChange(page) {
-        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests} = this.props;
-        this.props.getTickets(term, page, perPage, order, orderDir, showOnlyPendingRefundRequests);
+        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter} = this.props;
+        this.props.getTickets(page, perPage, order, orderDir, { term , showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter});
     }
 
     handleIngestTickets() {
@@ -97,9 +133,78 @@ class TicketListPage extends React.Component {
         this.props.exportTicketsCSV();
     }
 
+    handleSetHasOwnerFilter(newHasOwnerFilter){
+        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter} = this.props;
+        this.props.getTickets(1, perPage, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter: newHasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter});
+    }
+
+    handleSetTicketTypesFilter(newTicketTypesFilter){
+        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, completedFilter, ownerFullNameStartWithFilter} = this.props;
+        this.props.getTickets(1, perPage, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter : newTicketTypesFilter, completedFilter, ownerFullNameStartWithFilter});
+    }
+
+    handleSetCompletedFilter(newCompletedFilter){
+        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, ownerFullNameStartWithFilter} = this.props;
+        this.props.getTickets(1, perPage, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter:newCompletedFilter, ownerFullNameStartWithFilter});
+    }
+
+    handleSetOwnerFullNameStartWithFilter(newOwnerFullNameStartWithFilter){
+        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, completedFilter, ticketTypesFilter} = this.props;
+        this.props.getTickets(1, perPage, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter: newOwnerFullNameStartWithFilter});
+    }
+
+    handleSendTickets2Print(ev){
+        ev.stopPropagation();
+        ev.preventDefault();
+
+        const {
+            selectedIds,
+            selectedAll,
+            term,
+            showOnlyPendingRefundRequests,
+            hasOwnerFilter,
+            ticketTypesFilter,
+            completedFilter,
+            ownerFullNameStartWithFilter,
+        } = this.props;
+
+        if(!selectedAll && selectedIds.length === 0){
+            Swal.fire("Validation error", T.translate("ticket_list.select_items"), "warning");
+            return false;
+        }
+
+        this.props.printTickets({
+            selectedIds,
+            selectedAll,
+            term,
+            showOnlyPendingRefundRequests,
+            hasOwnerFilter,
+            ticketTypesFilter,
+            completedFilter,
+            ownerFullNameStartWithFilter,
+        }, false);
+    }
+
     render(){
-        const {currentSummit, tickets, term, order,
-            orderDir, totalTickets, lastPage, currentPage, match, showOnlyPendingRefundRequests} = this.props;
+        const {
+            currentSummit,
+            tickets,
+            term,
+            order,
+            orderDir,
+            totalTickets,
+            lastPage,
+            currentPage,
+            match,
+            showOnlyPendingRefundRequests,
+            selectedIds,
+            selectedAll,
+            hasOwnerFilter,
+            ticketTypesFilter,
+            completedFilter,
+            ownerFullNameStartWithFilter,
+        } = this.props;
+
         const {showIngestModal, showImportModal, importFile} = this.state;
 
         const columns = [
@@ -109,7 +214,7 @@ class TicketListPage extends React.Component {
             } },
             { columnKey: 'ticket_type', value: T.translate("ticket_list.ticket_type") },
             { columnKey: 'bought_date', value: T.translate("ticket_list.bought_date") },
-            { columnKey: 'owner_name', value: T.translate("ticket_list.owner_name") },
+            { columnKey: 'owner_name', value: T.translate("ticket_list.owner_name"), sortable: true },
             { columnKey: 'owner_email', value: T.translate("ticket_list.owner_email") },
             { columnKey: 'status', value: T.translate("ticket_list.status") },
             { columnKey: 'final_amount_formatted', value: T.translate("ticket_list.paid_amount") },
@@ -121,11 +226,24 @@ class TicketListPage extends React.Component {
             sortCol: order,
             sortDir: orderDir,
             actions: {
-                edit: { onClick: this.handleEdit },
-            }
+                edit: {
+                    onClick: this.handleEdit ,
+                    onSelected: this.handleSelected,
+                    onSelectedAll: this.handleSelectedAll,
+                },
+            },
+            selectedIds: selectedIds,
+            selectedAll: selectedAll,
         }
 
         if(!currentSummit.id) return (<div />);
+
+        let ticketTypesOptions = [
+            ...currentSummit.ticket_types.map(t => ({label: t.name, value: t.id}))
+        ];
+
+        const alpha = Array.from(Array(26)).map((e, i) => i + 65);
+        const alphabet = alpha.map((x) => ({ label : String.fromCharCode(x), value : String.fromCharCode(x)}));
 
         return(
             <div>
@@ -142,6 +260,9 @@ class TicketListPage extends React.Component {
 
                         </div>
                         <div className="col-md-6 text-right">
+                            <button className="btn btn-primary right-space" onClick={this.handleSendTickets2Print}>
+                                {T.translate("ticket_list.print")}
+                            </button>
                             <button className="btn btn-primary right-space" onClick={() => this.setState({showIngestModal:true})}>
                                 {T.translate("ticket_list.ingest")}
                             </button>
@@ -151,6 +272,58 @@ class TicketListPage extends React.Component {
                             <button className="btn btn-default" onClick={this.handleExportTickets}>
                                 {T.translate("ticket_list.export")}
                             </button>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-md-4">
+                            <SegmentedControl
+                                name="hasOwnerFilter"
+                                options={[
+                                    { label: T.translate("ticket_list.all"), value: null, default: hasOwnerFilter === null},
+                                    { label: T.translate("ticket_list.has_owner"), value: "HAS_OWNER",default: hasOwnerFilter === "HAS_OWNER" },
+                                    { label: T.translate("has_no_owner"), value: "HAS_NO_OWNER",default: hasOwnerFilter === "HAS_NO_OWNER" },
+                                ]}
+                                setValue={newValue => this.handleSetHasOwnerFilter(newValue)}
+                                style={{ width: "100%", height:40, color: '#337ab7' , fontSize: '10px' }}
+                            />
+                        </div>
+                        <div className="col-md-4">
+                            <SegmentedControl
+                                name="completedFilter"
+                                options={[
+                                    { label: T.translate("ticket_list.all"), value: null, default: completedFilter === null},
+                                    { label: T.translate("ticket_list.complete"), value: "Complete",default: completedFilter === "Complete" },
+                                    { label: T.translate("ticket_list.incomplete"), value: "Incomplete",default: completedFilter === "Incomplete" },
+                                ]}
+                                setValue={newValue => this.handleSetCompletedFilter(newValue)}
+                                style={{ width: "100%", height:40, color: '#337ab7' , fontSize: '10px' }}
+                            />
+                        </div>
+                        <div className="col-md-4">
+                            <Select
+                                placeholder={T.translate('ticket_list.placeholders.ticket_types')}
+                                name="ticketTypesFilter"
+                                value={ticketTypesFilter}
+                                onChange={this.handleSetTicketTypesFilter}
+                                options={ticketTypesOptions}
+                                isClearable={true}
+                                isMulti
+                                className="ticket-types-filter"
+                            />
+                        </div>
+                    </div>
+                    <div className={'row'}>
+                        <div className={'col-md-12'}>
+                            <Select
+                                placeholder={T.translate("ticket_list.placeholders.owner_first_name")}
+                                name="ownerFullNameStartWithFilter"
+                                value={ownerFullNameStartWithFilter}
+                                onChange={this.handleSetOwnerFullNameStartWithFilter}
+                                options={alphabet}
+                                isClearable={true}
+                                isMulti
+                                className="ticket-types-filter"
+                            />
                         </div>
                     </div>
                     <div className={'row'}>
@@ -171,7 +344,7 @@ class TicketListPage extends React.Component {
 
                     {tickets.length > 0 &&
                         <div>
-                            <Table
+                            <SelectableTable
                                 options={table_options}
                                 data={tickets}
                                 columns={columns}
@@ -277,5 +450,10 @@ export default connect (
         ingestExternalTickets,
         importTicketsCSV,
         exportTicketsCSV,
+        selectTicket,
+        unSelectTicket,
+        clearAllSelectedTicket,
+        setSelectedAll,
+        printTickets,
     }
 )(TicketListPage);

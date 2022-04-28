@@ -11,41 +11,51 @@
  * limitations under the License.
  **/
 
-import
-{
+import {
+    CLEAR_ALL_SELECTED_TICKETS,
     RECEIVE_TICKETS,
     REQUEST_TICKETS,
+    SELECT_TICKET,
+    SET_SELECTED_ALL_TICKETS,
+    UNSELECT_TICKET,
 } from '../../actions/ticket-actions';
 
-import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import {LOGOUT_USER} from 'openstack-uicore-foundation/lib/actions';
 import {epochToMoment} from "openstack-uicore-foundation/lib/methods";
 
 const DEFAULT_STATE = {
-    tickets             : [],
-    term                : null,
-    showOnlyPendingRefundRequests : false,
-    order               : 'id',
-    orderDir            : 1,
-    currentPage         : 1,
-    lastPage            : 1,
-    perPage             : 10,
-    totalTickets        : 0
+    tickets: [],
+    term: null,
+    order: 'id',
+    orderDir: 1,
+    currentPage: 1,
+    lastPage: 1,
+    perPage: 10,
+    totalTickets: 0,
+    selectedIds: [],
+    selectedAll: false,
+    // filters
+    showOnlyPendingRefundRequests: false,
+    ticketTypesFilter : [],
+    ownerFullNameStartWithFilter:[],
+    hasOwnerFilter:null,
+    completedFilter:null,
 };
 
 const ticketListReducer = (state = DEFAULT_STATE, action) => {
-    const { type, payload } = action
+    const {type, payload} = action
     switch (type) {
         case LOGOUT_USER: {
             return DEFAULT_STATE;
         }
-        break;
+            break;
         case REQUEST_TICKETS: {
-            let {order, orderDir, page, perPage, term, showOnlyPendingRefundRequests} = payload;
-            return {...state, order, orderDir, currentPage: page, perPage, term, showOnlyPendingRefundRequests }
+            let {order, orderDir, page, perPage, ...rest} = payload;
+            return {...state, order, orderDir, currentPage: page, perPage, ...rest}
         }
-        break;
+            break;
         case RECEIVE_TICKETS: {
-            let { total, last_page, data } = payload.response;
+            let {total, last_page, data} = payload.response;
             let tickets = data.map(t => {
 
                 let bought_date = t.bought_date ? epochToMoment(t.bought_date).format('MMMM Do YYYY, h:mm:ss a') : '';
@@ -70,9 +80,25 @@ const ticketListReducer = (state = DEFAULT_STATE, action) => {
                     refund_requests: [...t.refund_requests],
                 };
             })
-            return {...state, tickets: tickets, lastPage: last_page, totalTickets: total };
+            return {...state, tickets: tickets, lastPage: last_page, totalTickets: total};
         }
-        break;
+            break;
+        case SELECT_TICKET:
+            return {...state, selectedIds: [...state.selectedIds, payload]};
+            break;
+        case UNSELECT_TICKET:
+            return {
+                ...state,
+                selectedIds: state.selectedIds.filter(element => element !== payload),
+                selectedAll: false
+            };
+            break;
+        case SET_SELECTED_ALL_TICKETS:
+            return {...state, selectedAll: payload, selectedIds: []};
+            break;
+        case CLEAR_ALL_SELECTED_TICKETS:
+            return {...state, selectedIds: [], selectedAll: false};
+            break;
         default:
             return state;
     }

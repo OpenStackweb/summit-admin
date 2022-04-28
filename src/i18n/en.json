@@ -1089,8 +1089,17 @@
     "refunded_amount": "Refunded Amount",
     "paid_amount_adjusted": "Amount Paid Adjusted",
     "ingest_done": "External ticket ingestion was performed successfully.",
+    "all": "All",
+    "has_owner": "Has Owner",
+    "has_no_owner": "Has No Owner",
+    "complete":"Complete",
+    "incomplete": "Incomplete",
+    "print": "Print",
+    "select_items": "Select at least one ticket to perform the action.",
     "placeholders": {
-      "search_tickets": "Search by Ticket #, Buyer, Attendee "
+      "search_tickets": "Search by Ticket #, Buyer, Attendee ",
+      "ticket_types": "Filter By Ticket Types ...",
+      "owner_first_name": "First name starts with ..."
     }
   },
   "edit_ticket": {
