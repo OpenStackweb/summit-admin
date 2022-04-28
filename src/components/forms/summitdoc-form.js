@@ -113,6 +113,9 @@ class SummitDocForm extends React.Component {
             .filter( t => t.should_be_available_on_cfp )
             .map(et => ({value: et.id, label: et.name}));
 
+        let selection_plans_ddl = currentSummit.selection_plans
+            .map(et => ({value: et.id, label: et.name}));
+
         return (
             <form className="summitdoc-form">
                 <input type="hidden" id="id" value={entity.id} />
@@ -161,13 +164,26 @@ class SummitDocForm extends React.Component {
                             error={this.hasErrors('description')}
                         />
                     </div>
-                    <div className="col-md-4 checkboxes-div">
+                    <div className="col-md-4">
+                        <label> {T.translate("summitdoc.selection_plan")}</label>
+                        <Dropdown
+                            id="selection_plan_id"
+                            value={entity.selection_plan_id}
+                            isClearable={true}
+                            placeholder={T.translate("summitdoc.placeholders.selection_plan")}
+                            options={selection_plans_ddl}
+                            onChange={this.handleChange}
+                        />
+                    </div>
+                </div>
+                <div className='row form-group'>
+                    <div className="col-md-4 col-md-offset-8 checkboxes-div">
                         <div className="form-check abc-checkbox">
-                            <input type="checkbox" id="show_always" checked={entity.show_always}
-                                   onChange={this.handleChange} className="form-check-input"/>
-                            <label className="form-check-label" htmlFor="show_always">
-                                {T.translate("summitdoc.show_always")}
-                            </label>
+                                <input type="checkbox" id="show_always" checked={entity.show_always}
+                                    onChange={this.handleChange} className="form-check-input"/>
+                                <label className="form-check-label" htmlFor="show_always">
+                                    {T.translate("summitdoc.show_always")}
+                                </label>
                         </div>
                     </div>
                 </div>

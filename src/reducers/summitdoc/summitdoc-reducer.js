@@ -23,13 +23,14 @@ import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 export const DEFAULT_ENTITY = {
-    id           : 0,
-    name         : '',
-    label        : '',
-    description  : '',
-    event_types  : [],
-    file_preview : '',
-    show_always : false,
+    id                  : 0,
+    name                : '',
+    label               : '',
+    description         : '',
+    event_types         : [],
+    file_preview        : '',
+    selection_plan_id   : null,
+    show_always         : false,
 }
 
 const DEFAULT_STATE = {

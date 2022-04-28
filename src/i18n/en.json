@@ -1643,9 +1643,11 @@
     "delete_warning": "Are you sure you want to delete doc ",
     "saved": "Doc saved successfully.",
     "created": "Doc created successfully.",
+    "selection_plan": "Selection Plan",
     "placeholders": {
       "search": "Search docs by name",
-      "select_type": "Select Activity Type"
+      "select_type": "Select Activity Type",
+      "selection_plan": "Select a Selection Plan ..."
     }
   },
   "email_flow_event_list": {

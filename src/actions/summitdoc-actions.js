@@ -111,7 +111,6 @@ export const saveSummitDoc = (entity, file) => (dispatch, getState) => {
     const normalizedEntity = normalizeEntity(entity);
     const params = { access_token : accessToken };
 
-
     if (entity.id) {
 
         putFile(
@@ -190,6 +189,10 @@ const normalizeEntity = (entity) => {
 
     if (!entity.show_always && entity.event_types) {
         normalizedEntity['event_types[]'] = entity.event_types;
+    }
+
+    if(!entity.selection_plan_id) {
+        normalizedEntity['selection_plan_id'] = 0;
     }
 
     return normalizedEntity;
