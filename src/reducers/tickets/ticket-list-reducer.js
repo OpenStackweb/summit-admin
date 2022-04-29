@@ -38,8 +38,9 @@ const DEFAULT_STATE = {
     showOnlyPendingRefundRequests: false,
     ticketTypesFilter : [],
     ownerFullNameStartWithFilter:[],
-    hasOwnerFilter:null,
-    completedFilter:null,
+    hasOwnerFilter : null,
+    completedFilter : null,
+    hasBadgeFilter : null,
 };
 
 const ticketListReducer = (state = DEFAULT_STATE, action) => {

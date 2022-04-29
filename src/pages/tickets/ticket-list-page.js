@@ -55,10 +55,14 @@ class TicketListPage extends React.Component {
         this.handleSetCompletedFilter = this.handleSetCompletedFilter.bind(this);
         this.handleSetOwnerFullNameStartWithFilter = this.handleSetOwnerFullNameStartWithFilter.bind(this);
         this.handleSendTickets2Print = this.handleSendTickets2Print.bind(this);
+        this.handleSetHasBadgeFilter = this.handleSetHasBadgeFilter.bind(this);
+        this.handleDoPrinting = this.handleDoPrinting.bind(this);
         this.state = {
             showIngestModal: false,
             showImportModal: false,
-            importFile: null
+            importFile: null,
+            showPrintModal: false,
+            doCheckIn: false,
         }
     }
 
@@ -82,20 +86,20 @@ class TicketListPage extends React.Component {
     componentDidMount() {
         const {currentSummit} = this.props;
         if(currentSummit) {
-            const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter} = this.props;
-            this.props.getTickets(1, 10, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter});
+            const {term, order, orderDir, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter} = this.props;
+            this.props.getTickets(1, 10, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter});
         }
     }
 
     handleChangeShowRefundRequestPending(ev){
-        const {order, orderDir, page, perPage, term, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter} = this.props;
+        const {order, orderDir, page, perPage, term, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter} = this.props;
         let value = ev.target.checked;
-        this.props.getTickets(page, perPage, order, orderDir, {showOnlyPendingRefundRequests : value, hasOwnerFilter, ticketTypesFilter, term , completedFilter, ownerFullNameStartWithFilter});
+        this.props.getTickets(page, perPage, order, orderDir, {showOnlyPendingRefundRequests : value, hasOwnerFilter, ticketTypesFilter, term , completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter});
     }
 
     handleSearch(term) {
-        const {order, orderDir, page, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter} = this.props;
-        this.props.getTickets(page, perPage, order, orderDir, { term , showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter});
+        const {order, orderDir, page, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter} = this.props;
+        this.props.getTickets(page, perPage, order, orderDir, { term , showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter});
     }
 
     handleEdit(ticket_id) {
@@ -105,13 +109,13 @@ class TicketListPage extends React.Component {
     }
 
     handleSort(index, key, dir, func) {
-        const {term, page, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter} = this.props;
-        this.props.getTickets(page, perPage, key, dir, { term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter});
+        const {term, page, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter} = this.props;
+        this.props.getTickets(page, perPage, key, dir, { term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter});
     }
 
     handlePageChange(page) {
-        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter} = this.props;
-        this.props.getTickets(page, perPage, order, orderDir, { term , showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter});
+        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter} = this.props;
+        this.props.getTickets(page, perPage, order, orderDir, { term , showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter});
     }
 
     handleIngestTickets() {
@@ -134,26 +138,48 @@ class TicketListPage extends React.Component {
     }
 
     handleSetHasOwnerFilter(newHasOwnerFilter){
-        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter} = this.props;
-        this.props.getTickets(1, perPage, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter: newHasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter});
+        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter} = this.props;
+        this.props.getTickets(1, perPage, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter: newHasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter});
     }
 
     handleSetTicketTypesFilter(newTicketTypesFilter){
-        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, completedFilter, ownerFullNameStartWithFilter} = this.props;
-        this.props.getTickets(1, perPage, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter : newTicketTypesFilter, completedFilter, ownerFullNameStartWithFilter});
+        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter} = this.props;
+        this.props.getTickets(1, perPage, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter : newTicketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter});
     }
 
     handleSetCompletedFilter(newCompletedFilter){
-        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, ownerFullNameStartWithFilter} = this.props;
-        this.props.getTickets(1, perPage, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter:newCompletedFilter, ownerFullNameStartWithFilter});
+        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, ownerFullNameStartWithFilter, hasBadgeFilter} = this.props;
+        this.props.getTickets(1, perPage, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter:newCompletedFilter, ownerFullNameStartWithFilter, hasBadgeFilter});
     }
 
     handleSetOwnerFullNameStartWithFilter(newOwnerFullNameStartWithFilter){
-        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, completedFilter, ticketTypesFilter} = this.props;
-        this.props.getTickets(1, perPage, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter: newOwnerFullNameStartWithFilter});
+        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, completedFilter, ticketTypesFilter, hasBadgeFilter} = this.props;
+        this.props.getTickets(1, perPage, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter: newOwnerFullNameStartWithFilter, hasBadgeFilter});
+    }
+
+    handleSetHasBadgeFilter(newHasBadgeFilter){
+        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, completedFilter, ticketTypesFilter, ownerFullNameStartWithFilter} = this.props;
+        this.props.getTickets(1, perPage, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter: newHasBadgeFilter});
     }
 
     handleSendTickets2Print(ev){
+        ev.stopPropagation();
+        ev.preventDefault();
+
+        const {
+            selectedIds,
+            selectedAll,
+        } = this.props;
+
+        if(!selectedAll && selectedIds.length === 0){
+            Swal.fire("Validation error", T.translate("ticket_list.select_items"), "warning");
+            return false;
+        }
+
+        this.setState({...this.state, showPrintModal: true});
+    }
+
+    handleDoPrinting(ev){
         ev.stopPropagation();
         ev.preventDefault();
 
@@ -166,12 +192,8 @@ class TicketListPage extends React.Component {
             ticketTypesFilter,
             completedFilter,
             ownerFullNameStartWithFilter,
+            hasBadgeFilter,
         } = this.props;
-
-        if(!selectedAll && selectedIds.length === 0){
-            Swal.fire("Validation error", T.translate("ticket_list.select_items"), "warning");
-            return false;
-        }
 
         this.props.printTickets({
             selectedIds,
@@ -182,7 +204,9 @@ class TicketListPage extends React.Component {
             ticketTypesFilter,
             completedFilter,
             ownerFullNameStartWithFilter,
-        }, false);
+            hasBadgeFilter,
+        }, this.state.doCheckIn);
+
     }
 
     render(){
@@ -203,9 +227,10 @@ class TicketListPage extends React.Component {
             ticketTypesFilter,
             completedFilter,
             ownerFullNameStartWithFilter,
+            hasBadgeFilter,
         } = this.props;
 
-        const {showIngestModal, showImportModal, importFile} = this.state;
+        const {showIngestModal, showImportModal, importFile, showPrintModal} = this.state;
 
         const columns = [
             { columnKey: 'number', value: T.translate("ticket_list.number"), sortable: true, render: (item, val) => {
@@ -275,19 +300,19 @@ class TicketListPage extends React.Component {
                         </div>
                     </div>
                     <div className="row">
-                        <div className="col-md-4">
+                        <div className="col-md-6">
                             <SegmentedControl
                                 name="hasOwnerFilter"
                                 options={[
                                     { label: T.translate("ticket_list.all"), value: null, default: hasOwnerFilter === null},
                                     { label: T.translate("ticket_list.has_owner"), value: "HAS_OWNER",default: hasOwnerFilter === "HAS_OWNER" },
-                                    { label: T.translate("has_no_owner"), value: "HAS_NO_OWNER",default: hasOwnerFilter === "HAS_NO_OWNER" },
+                                    { label: T.translate("ticket_list.has_no_owner"), value: "HAS_NO_OWNER",default: hasOwnerFilter === "HAS_NO_OWNER" },
                                 ]}
                                 setValue={newValue => this.handleSetHasOwnerFilter(newValue)}
                                 style={{ width: "100%", height:40, color: '#337ab7' , fontSize: '10px' }}
                             />
                         </div>
-                        <div className="col-md-4">
+                        <div className="col-md-6">
                             <SegmentedControl
                                 name="completedFilter"
                                 options={[
@@ -299,7 +324,21 @@ class TicketListPage extends React.Component {
                                 style={{ width: "100%", height:40, color: '#337ab7' , fontSize: '10px' }}
                             />
                         </div>
-                        <div className="col-md-4">
+                        </div>
+                    <div className="row">
+                        <div className="col-md-6">
+                            <SegmentedControl
+                                name="hasBadgeFilter"
+                                options={[
+                                    { label: T.translate("ticket_list.all"), value: null, default: hasBadgeFilter === null},
+                                    { label: T.translate("ticket_list.has_badge"), value: "HAS_BADGE",default: hasBadgeFilter === "HAS_BADGE" },
+                                    { label: T.translate("ticket_list.has_no_badge"), value: "HAS_NO_BADGE",default: hasBadgeFilter === "HAS_NO_BADGE" },
+                                ]}
+                                setValue={newValue => this.handleSetHasBadgeFilter(newValue)}
+                                style={{ width: "100%", height:40, color: '#337ab7' , fontSize: '10px' }}
+                            />
+                        </div>
+                        <div className="col-md-6">
                             <Select
                                 placeholder={T.translate('ticket_list.placeholders.ticket_types')}
                                 name="ticketTypesFilter"
@@ -365,10 +404,8 @@ class TicketListPage extends React.Component {
                             />
                         </div>
                     }
-
                 </div>
-
-                <Modal show={showIngestModal} onHide={() => this.setState({showIngestModal:false})} >
+                <Modal show={showIngestModal} onHide={() => this.setState({...this.state, showIngestModal:false})} >
                     <Modal.Header closeButton>
                         <Modal.Title>{T.translate("ticket_list.ingest_tickets")}</Modal.Title>
                     </Modal.Header>
@@ -399,7 +436,7 @@ class TicketListPage extends React.Component {
                     </Modal.Footer>
                 </Modal>
 
-                <Modal show={showImportModal} onHide={() => this.setState({showImportModal:false})} >
+                <Modal show={showImportModal} onHide={() => this.setState({...this.state, showImportModal:false})} >
                     <Modal.Header closeButton>
                         <Modal.Title>{T.translate("ticket_list.import_tickets")}</Modal.Title>
                     </Modal.Header>
@@ -429,6 +466,36 @@ class TicketListPage extends React.Component {
                     <Modal.Footer>
                         <button disabled={!this.state.importFile} className="btn btn-primary" onClick={this.handleImportTickets}>
                             {T.translate("ticket_list.ingest")}
+                        </button>
+                    </Modal.Footer>
+                </Modal>
+
+                <Modal show={showPrintModal} onHide={() => this.setState({...this.state, showPrintModal:false})} >
+                    <Modal.Header closeButton>
+                        <Modal.Title>{T.translate("ticket_list.print_modal_title")}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="row">
+                            <div className="col-md-12">
+                                {T.translate("ticket_list.print_modal_body")}
+                            </div>
+                            <br />
+                            <br />
+                            <br />
+                            <div className="form-check abc-checkbox">
+                                <input type="checkbox" id="check_in"
+                                       onChange={(ev) => {
+                                           this.setState({...this.state, doCheckIn : ev.target.checked})
+                                       }} className="form-check-input" />
+                                <label className="form-check-label" htmlFor="check_in">
+                                    {T.translate("ticket_list.check_in")}
+                                </label>
+                            </div>
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <button className="btn btn-primary" onClick={this.handleDoPrinting}>
+                            {T.translate("ticket_list.print")}
                         </button>
                     </Modal.Footer>
                 </Modal>

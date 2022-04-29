@@ -124,10 +124,32 @@ export const printTickets = (filters, doAttendeeCheckinOnPrint = true) => (dispa
 
     dispatch(createAction(PRINT_TICKETS));
 
-    const filter = [];
     const params = {
         access_token: accessToken,
     };
+
+    const filter = parseFilters(filters);
+
+    if (filter.length > 0) {
+        params['filter[]'] = filter;
+    }
+    // extra params
+    if(filters.hasOwnProperty("selectedIds") && Array.isArray(filters.selectedIds) && filters.selectedIds.length > 0){
+        params['ids'] = filters.selectedIds.reduce(
+            (accumulator, id) => accumulator +(accumulator !== '' ? ',':'') +`${id}`,
+            ''
+        );
+    }
+    params['check_in'] = doAttendeeCheckinOnPrint;
+
+    let url = URI(`${process.env['PRINT_APP_URL']}/check-in/${currentSummit.slug}/tickets`);
+
+    window.open(url.query(params).toString(), '_blank');
+
+};
+
+const parseFilters = (filters) => {
+    const filter = [];
 
     if (filters.hasOwnProperty('term') && filters.term) {
         const escapedTerm = escapeFilterValue(filters.term);
@@ -143,6 +165,13 @@ export const printTickets = (filters, doAttendeeCheckinOnPrint = true) => (dispa
             filter.push(`has_owner==1`);
         if (filters.hasOwnerFilter === 'HAS_NO_OWNER')
             filter.push(`has_owner==0`)
+    }
+
+    if(filters.hasOwnProperty('hasBadgeFilter') && filters.hasBadgeFilter){
+        if (filters.hasBadgeFilter === 'HAS_BADGE')
+            filter.push(`has_badge==1`);
+        if (filters.hasBadgeFilter === 'HAS_NO_BADGE')
+            filter.push(`has_badge==0`)
     }
 
     if(filters.hasOwnProperty('ticketTypesFilter') && Array.isArray(filters.ticketTypesFilter) && filters.ticketTypesFilter.length > 0){
@@ -163,23 +192,8 @@ export const printTickets = (filters, doAttendeeCheckinOnPrint = true) => (dispa
         ));
     }
 
-    if (filter.length > 0) {
-        params['filter[]'] = filter;
-    }
-
-    if(filters.hasOwnProperty("selectedIds") && Array.isArray(filters.selectedIds) && filters.selectedIds.length > 0){
-        params['ids'] = filters.selectedIds.reduce(
-            (accumulator, id) => accumulator +(accumulator !== '' ? ',':'') +`${id}`,
-            ''
-        );
-    }
-    params['check_in'] = doAttendeeCheckinOnPrint;
-
-    let url = URI(`${process.env['PRINT_APP_URL']}/check-in/${currentSummit.slug}/tickets`);
-
-    window.open(url.query(params).toString(), '_blank');
-
-};
+    return filter;
+}
 
 export const getTickets =
     (
@@ -192,7 +206,7 @@ export const getTickets =
         const {loggedUserState, currentSummitState} = getState();
         const {accessToken} = loggedUserState;
         const {currentSummit} = currentSummitState;
-        const filter = [];
+
 
         dispatch(startLoading());
 
@@ -202,41 +216,7 @@ export const getTickets =
             access_token: accessToken,
             expand: 'owner,order,ticket_type,badge,promo_code,refund_requests'
         };
-
-        if (filters.hasOwnProperty('term') && filters.term) {
-            const escapedTerm = escapeFilterValue(filters.term);
-            filter.push(`number=@${escapedTerm},owner_email=@${escapedTerm},owner_name=@${escapedTerm},owner_company=@${escapedTerm}`);
-        }
-
-        if (filters.hasOwnProperty('showOnlyPendingRefundRequests') && filters.showOnlyPendingRefundRequests) {
-            filter.push('has_requested_refund_requests==1');
-        }
-
-        if (filters.hasOwnProperty('hasOwnerFilter') && filters.hasOwnerFilter) {
-            if (filters.hasOwnerFilter === 'HAS_OWNER')
-                filter.push(`has_owner==1`);
-            if (filters.hasOwnerFilter === 'HAS_NO_OWNER')
-                filter.push(`has_owner==0`)
-        }
-
-        if(filters.hasOwnProperty('ticketTypesFilter') && Array.isArray(filters.ticketTypesFilter) && filters.ticketTypesFilter.length > 0){
-            filter.push(filters.ticketTypesFilter.reduce(
-                (accumulator, tt) => accumulator +(accumulator !== '' ? ',':'') +`ticket_type_id==${tt.value}`,
-                ''
-            ));
-        }
-
-        if(filters.hasOwnProperty('completedFilter') && filters.completedFilter){
-            filter.push(`owner_status==${filters.completedFilter}`);
-        }
-
-        if(filters.hasOwnProperty('ownerFullNameStartWithFilter') && Array.isArray(filters.ownerFullNameStartWithFilter) && filters.ownerFullNameStartWithFilter.length > 0){
-            filter.push(filters.ownerFullNameStartWithFilter.reduce(
-                (accumulator, alpha) => accumulator +(accumulator !== '' ? ',':'') +`owner_first_name@@${alpha.value}`,
-                ''
-            ));
-        }
-
+        const filter = parseFilters(filters);
         if (filter.length > 0) {
             params['filter[]'] = filter;
         }
