@@ -16,9 +16,14 @@ import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import Swal from "sweetalert2";
 import { Table, SummitDropdown } from 'openstack-uicore-foundation/lib/components';
+import { SortableTable } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getEventCategories, deleteEventCategory, copyEventCategories } from "../../actions/event-category-actions";
-
+import {
+    getEventCategories,
+    deleteEventCategory,
+    copyEventCategories,
+    updateEventCategoryOrder
+} from "../../actions/event-category-actions";
 
 class EventCategoryListPage extends React.Component {
 
@@ -114,10 +119,12 @@ class EventCategoryListPage extends React.Component {
 
                 {eventCategories.length > 0 &&
                 <div>
-                    <Table
+                    <SortableTable
                         options={table_options}
                         data={eventCategories}
                         columns={columns}
+                        dropCallback={this.props.updateEventCategoryOrder}
+                        orderField="order"
                     />
                 </div>
                 }
@@ -139,6 +146,7 @@ export default connect (
         getSummitById,
         getEventCategories,
         deleteEventCategory,
-        copyEventCategories
+        copyEventCategories,
+        updateEventCategoryOrder,
     }
 )(EventCategoryListPage);

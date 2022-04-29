@@ -16,7 +16,7 @@ import
     RECEIVE_EVENT_CATEGORIES,
     REQUEST_EVENT_CATEGORIES,
     EVENT_CATEGORY_DELETED,
-    EVENT_CATEGORIES_SEEDED
+    EVENT_CATEGORIES_SEEDED, EVENT_CATEGORY_ORDER_UPDATED
 } from '../../actions/event-category-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
@@ -38,18 +38,28 @@ const eventCategoryListReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case RECEIVE_EVENT_CATEGORIES: {
-            let eventCategories = payload.response.data.map(e => {
+            return {...state, eventCategories: payload.response.data.map(e => {
+                    return {
+                        id: e.id,
+                        name: e.name,
+                        code: e.code,
+                        color: `<div style="background-color: ${e.color}">&nbsp;</div>`,
+                        order: e.order,
+                    };
+                }) };
+        }
+        case EVENT_CATEGORY_ORDER_UPDATED: {
+            const tracks = payload.map(t => {
                 return {
-                    id: e.id,
-                    name: e.name,
-                    code: e.code,
-                    color: `<div style="background-color: ${e.color}">&nbsp;</div>`
+                    id: t.id,
+                    name: t.name,
+                    code: t.code,
+                    color: t.color,
+                    order: parseInt(t.order)
                 };
-            }).sort(
-                (a, b) => (a.name > b.name ? 1 : (a.name < b.name ? -1 : 0))
-            );
+            });
 
-            return {...state, eventCategories };
+            return {...state, eventCategories: tracks };
         }
         break;
         case EVENT_CATEGORIES_SEEDED: {

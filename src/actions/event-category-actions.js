@@ -25,7 +25,6 @@ import {
     authErrorHandler
 } from "openstack-uicore-foundation/lib/methods";
 
-
 export const REQUEST_EVENT_CATEGORIES      = 'REQUEST_EVENT_CATEGORIES';
 export const RECEIVE_EVENT_CATEGORIES      = 'RECEIVE_EVENT_CATEGORIES';
 export const RECEIVE_EVENT_CATEGORY        = 'RECEIVE_EVENT_CATEGORY';
@@ -51,8 +50,7 @@ export const CATEGORY_ADDED_TO_GROUP             = 'CATEGORY_ADDED_TO_GROUP';
 export const CATEGORY_REMOVED_FROM_GROUP         = 'CATEGORY_REMOVED_FROM_GROUP';
 export const GROUP_ADDED_TO_GROUP                = 'GROUP_ADDED_TO_GROUP';
 export const GROUP_REMOVED_FROM_GROUP            = 'GROUP_REMOVED_FROM_GROUP';
-
-
+export const EVENT_CATEGORY_ORDER_UPDATED        = 'EVENT_CATEGORY_ORDER_UPDATED';
 
 export const getEventCategories = ( ) => (dispatch, getState) => {
 
@@ -67,6 +65,7 @@ export const getEventCategories = ( ) => (dispatch, getState) => {
         access_token : accessToken,
         page : 1,
         per_page: 100,
+        order: '+order',
     };
 
     return getRequest(
@@ -107,6 +106,31 @@ export const getEventCategory = (eventCategoryId) => (dispatch, getState) => {
 export const resetEventCategoryForm = () => (dispatch) => {
     dispatch(createAction(RESET_EVENT_CATEGORY_FORM)({}));
 };
+
+export const updateEventCategoryOrder = (tracks, trackId, newOrder) => (dispatch, getState) => {
+
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
+
+    const params = {
+        access_token: accessToken
+    };
+
+    const track = tracks.find(q => q.id === trackId);
+
+    putRequest(
+        null,
+        createAction(EVENT_CATEGORY_ORDER_UPDATED)(tracks),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tracks/${track.id}`,
+        { order: newOrder},
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+
+}
 
 export const saveEventCategory = (entity) => (dispatch, getState) => {
     const { loggedUserState, currentSummitState } = getState();

@@ -324,7 +324,7 @@ class TicketListPage extends React.Component {
                                 style={{ width: "100%", height:40, color: '#337ab7' , fontSize: '10px' }}
                             />
                         </div>
-                        </div>
+                    </div>
                     <div className="row">
                         <div className="col-md-6">
                             <SegmentedControl
