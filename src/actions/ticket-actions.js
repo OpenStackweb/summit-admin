@@ -116,7 +116,7 @@ export const reSendTicketEmail = (orderId, ticketId) => (dispatch, getState) => 
     );
 };
 
-export const printTickets = (filters, doAttendeeCheckinOnPrint = true) => (dispatch, getState) => {
+export const printTickets = (filters, order, orderDir, doAttendeeCheckinOnPrint = true) => (dispatch, getState) => {
 
     const { loggedUserState, currentSummitState } = getState();
     const { accessToken }     = loggedUserState;
@@ -142,6 +142,12 @@ export const printTickets = (filters, doAttendeeCheckinOnPrint = true) => (dispa
     }
     params['check_in'] = doAttendeeCheckinOnPrint;
 
+    // order
+    if (order != null && orderDir != null) {
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
+        params['order'] = `${orderDirSign}${order}`;
+    }
+
     let url = URI(`${process.env['PRINT_APP_URL']}/check-in/${currentSummit.slug}/tickets`);
 
     window.open(url.query(params).toString(), '_blank');
@@ -158,6 +164,10 @@ const parseFilters = (filters) => {
 
     if (filters.hasOwnProperty('showOnlyPendingRefundRequests') && filters.showOnlyPendingRefundRequests) {
         filter.push('has_requested_refund_requests==1');
+    }
+
+    if (filters.hasOwnProperty('showOnlyPrintable') && filters.showOnlyPrintable) {
+        filter.push('access_level_type_name==IN_PERSON');
     }
 
     if (filters.hasOwnProperty('hasOwnerFilter') && filters.hasOwnerFilter) {

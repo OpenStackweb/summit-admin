@@ -14,7 +14,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
-import { FreeTextSearch, Table, UploadInput, SelectableTable} from 'openstack-uicore-foundation/lib/components';
+import { FreeTextSearch, UploadInput, SelectableTable} from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
 import {
     getTickets,
@@ -27,6 +27,7 @@ import {
     setSelectedAll,
     printTickets,
 } from "../../actions/ticket-actions";
+
 import {Modal, Pagination} from "react-bootstrap";
 import {Breadcrumb} from "react-breadcrumbs";
 
@@ -34,8 +35,10 @@ import '../../styles/ticket-list-page.less';
 import {SegmentedControl} from "segmented-control";
 import Select from "react-select";
 import Swal from "sweetalert2";
+const BatchSize = 25;
 
 class TicketListPage extends React.Component {
+
 
     constructor(props) {
         super(props);
@@ -57,6 +60,7 @@ class TicketListPage extends React.Component {
         this.handleSendTickets2Print = this.handleSendTickets2Print.bind(this);
         this.handleSetHasBadgeFilter = this.handleSetHasBadgeFilter.bind(this);
         this.handleDoPrinting = this.handleDoPrinting.bind(this);
+        this.handleChangeShowOnlyPrintable = this.handleChangeShowOnlyPrintable.bind(this);
         this.state = {
             showIngestModal: false,
             showImportModal: false,
@@ -86,20 +90,26 @@ class TicketListPage extends React.Component {
     componentDidMount() {
         const {currentSummit} = this.props;
         if(currentSummit) {
-            const {term, order, orderDir, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter} = this.props;
-            this.props.getTickets(1, 10, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter});
+            const {term, order, orderDir, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter, showOnlyPrintable} = this.props;
+            this.props.getTickets(1, 10, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter, showOnlyPrintable});
         }
     }
 
     handleChangeShowRefundRequestPending(ev){
-        const {order, orderDir, page, perPage, term, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter} = this.props;
+        const {order, orderDir, page, perPage, term, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter, showOnlyPrintable} = this.props;
         let value = ev.target.checked;
-        this.props.getTickets(page, perPage, order, orderDir, {showOnlyPendingRefundRequests : value, hasOwnerFilter, ticketTypesFilter, term , completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter});
+        this.props.getTickets(page, perPage, order, orderDir, {showOnlyPendingRefundRequests : value, hasOwnerFilter, ticketTypesFilter, term , completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter, showOnlyPrintable});
+    }
+
+    handleChangeShowOnlyPrintable(ev){
+        const {order, orderDir, page, perPage, term, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter, showOnlyPendingRefundRequests} = this.props;
+        let value = ev.target.checked;
+        this.props.getTickets(page, perPage, order, orderDir, {showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, term , completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter, showOnlyPrintable: value});
     }
 
     handleSearch(term) {
-        const {order, orderDir, page, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter} = this.props;
-        this.props.getTickets(page, perPage, order, orderDir, { term , showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter});
+        const {order, orderDir, page, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter, showOnlyPrintable} = this.props;
+        this.props.getTickets(page, perPage, order, orderDir, { term , showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter, showOnlyPrintable});
     }
 
     handleEdit(ticket_id) {
@@ -109,13 +119,13 @@ class TicketListPage extends React.Component {
     }
 
     handleSort(index, key, dir, func) {
-        const {term, page, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter} = this.props;
-        this.props.getTickets(page, perPage, key, dir, { term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter});
+        const {term, page, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter, showOnlyPrintable} = this.props;
+        this.props.getTickets(page, perPage, key, dir, { term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter, showOnlyPrintable});
     }
 
     handlePageChange(page) {
-        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter} = this.props;
-        this.props.getTickets(page, perPage, order, orderDir, { term , showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter});
+        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter, showOnlyPrintable} = this.props;
+        this.props.getTickets(page, perPage, order, orderDir, { term , showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter, showOnlyPrintable});
     }
 
     handleIngestTickets() {
@@ -138,28 +148,28 @@ class TicketListPage extends React.Component {
     }
 
     handleSetHasOwnerFilter(newHasOwnerFilter){
-        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter} = this.props;
-        this.props.getTickets(1, perPage, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter: newHasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter});
+        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter, showOnlyPrintable} = this.props;
+        this.props.getTickets(1, perPage, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter: newHasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter, showOnlyPrintable});
     }
 
     handleSetTicketTypesFilter(newTicketTypesFilter){
-        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter} = this.props;
-        this.props.getTickets(1, perPage, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter : newTicketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter});
+        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter, showOnlyPrintable} = this.props;
+        this.props.getTickets(1, perPage, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter : newTicketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter, showOnlyPrintable});
     }
 
     handleSetCompletedFilter(newCompletedFilter){
-        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, ownerFullNameStartWithFilter, hasBadgeFilter} = this.props;
-        this.props.getTickets(1, perPage, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter:newCompletedFilter, ownerFullNameStartWithFilter, hasBadgeFilter});
+        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, ownerFullNameStartWithFilter, hasBadgeFilter, showOnlyPrintable} = this.props;
+        this.props.getTickets(1, perPage, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter:newCompletedFilter, ownerFullNameStartWithFilter, hasBadgeFilter, showOnlyPrintable});
     }
 
     handleSetOwnerFullNameStartWithFilter(newOwnerFullNameStartWithFilter){
-        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, completedFilter, ticketTypesFilter, hasBadgeFilter} = this.props;
-        this.props.getTickets(1, perPage, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter: newOwnerFullNameStartWithFilter, hasBadgeFilter});
+        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, completedFilter, ticketTypesFilter, hasBadgeFilter, showOnlyPrintable} = this.props;
+        this.props.getTickets(1, perPage, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter: newOwnerFullNameStartWithFilter, hasBadgeFilter, showOnlyPrintable});
     }
 
     handleSetHasBadgeFilter(newHasBadgeFilter){
-        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, completedFilter, ticketTypesFilter, ownerFullNameStartWithFilter} = this.props;
-        this.props.getTickets(1, perPage, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter: newHasBadgeFilter});
+        const {term, order, orderDir, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, completedFilter, ticketTypesFilter, ownerFullNameStartWithFilter , showOnlyPrintable} = this.props;
+        this.props.getTickets(1, perPage, order, orderDir,{ term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter: newHasBadgeFilter, showOnlyPrintable});
     }
 
     handleSendTickets2Print(ev){
@@ -173,6 +183,10 @@ class TicketListPage extends React.Component {
 
         if(!selectedAll && selectedIds.length === 0){
             Swal.fire("Validation error", T.translate("ticket_list.select_items"), "warning");
+            return false;
+        }
+        if(!selectedAll && selectedIds.length > BatchSize){
+            Swal.fire("Validation error", `You can not select more than ${BatchSize} Tickets To print.`, "warning");
             return false;
         }
 
@@ -193,6 +207,9 @@ class TicketListPage extends React.Component {
             completedFilter,
             ownerFullNameStartWithFilter,
             hasBadgeFilter,
+            order,
+            orderDir,
+            showOnlyPrintable,
         } = this.props;
 
         this.props.printTickets({
@@ -205,7 +222,8 @@ class TicketListPage extends React.Component {
             completedFilter,
             ownerFullNameStartWithFilter,
             hasBadgeFilter,
-        }, this.state.doCheckIn);
+            showOnlyPrintable,
+        }, order, orderDir, this.state.doCheckIn);
 
     }
 
@@ -228,6 +246,7 @@ class TicketListPage extends React.Component {
             completedFilter,
             ownerFullNameStartWithFilter,
             hasBadgeFilter,
+            showOnlyPrintable,
         } = this.props;
 
         const {showIngestModal, showImportModal, importFile, showPrintModal} = this.state;
@@ -282,7 +301,6 @@ class TicketListPage extends React.Component {
                                 placeholder={T.translate("ticket_list.placeholders.search_tickets")}
                                 onSearch={this.handleSearch}
                             />
-
                         </div>
                         <div className="col-md-6 text-right">
                             <button className="btn btn-primary right-space" onClick={this.handleSendTickets2Print}>
@@ -366,7 +384,7 @@ class TicketListPage extends React.Component {
                         </div>
                     </div>
                     <div className={'row'}>
-                        <div className={'col-md-12'}>
+                        <div className={'col-md-6'}>
                             <div className="form-check abc-checkbox">
                                 <input type="checkbox" id="show_refund_request_pending" checked={showOnlyPendingRefundRequests}
                                        onChange={this.handleChangeShowRefundRequestPending} className="form-check-input" />
@@ -375,14 +393,29 @@ class TicketListPage extends React.Component {
                                 </label>
                             </div>
                         </div>
+                        <div className={'col-md-6'}>
+                            <div className="form-check abc-checkbox">
+                                <input type="checkbox" id="show_printable" checked={showOnlyPrintable}
+                                       onChange={this.handleChangeShowOnlyPrintable} className="form-check-input" />
+                                <label className="form-check-label" htmlFor="show_printable">
+                                    {T.translate("ticket_list.show_printable")}
+                                </label>
+                            </div>
+                        </div>
                     </div>
 
                     {tickets.length === 0 &&
-                    <div>{T.translate("ticket_list.no_tickets")}</div>
+                        <div>{T.translate("ticket_list.no_tickets")}</div>
                     }
 
                     {tickets.length > 0 &&
                         <div>
+                            { selectedIds.length > 0 &&
+                                <span><b>{T.translate("ticket_list.items_qty", {qty:selectedIds.length})}</b></span>
+                            }
+                            { selectedAll &&
+                                <span><b>{T.translate("ticket_list.items_qty", {qty:totalTickets})}</b></span>
+                            }
                             <SelectableTable
                                 options={table_options}
                                 data={tickets}

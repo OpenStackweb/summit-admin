@@ -41,6 +41,7 @@ const DEFAULT_STATE = {
     hasOwnerFilter : null,
     completedFilter : null,
     hasBadgeFilter : null,
+    showOnlyPrintable: false,
 };
 
 const ticketListReducer = (state = DEFAULT_STATE, action) => {
