@@ -101,6 +101,7 @@ class RegistrationCompaniesListPage extends React.Component {
             sortCol: order,
             sortDir: orderDir,
             actions: {
+                edit: {onClick: (companyId) => { window.location = `/app/companies/${companyId}`}},
                 delete: { onClick: this.handleDeleteCompany }
             }
         }
