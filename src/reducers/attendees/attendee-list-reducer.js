@@ -42,6 +42,7 @@ const DEFAULT_STATE = {
     memberFilter: null,
     ticketsFilter: 'HAS_TICKETS',
     virtualCheckInFilter: null,
+    checkedInFilter: null,
     ticketTypeFilter: '',
 };
 
@@ -53,8 +54,8 @@ const attendeeListReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case REQUEST_ATTENDEES: {
-            let {order, orderDir, term, memberFilter, statusFilter, ticketsFilter, virtualCheckInFilter, ticketTypeFilter} = payload;
-            return {...state, order, orderDir, term , memberFilter , statusFilter, ticketsFilter, virtualCheckInFilter, ticketTypeFilter}
+            let {order, orderDir, term, memberFilter, statusFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter} = payload;
+            return {...state, order, orderDir, term , memberFilter , statusFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter}
         }
         break;
         case RECEIVE_ATTENDEES: {
