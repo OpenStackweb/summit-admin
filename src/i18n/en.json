@@ -87,6 +87,8 @@
     "merge_speakers": "Merge",
     "companies": "Companies",
     "attendees": "Attendees",
+    "attendee-list": "Attendee List",
+    "badge_checkin": "Check In",
     "promocodes": "Promocodes",
     "promocode_list": "Promocodes",
     "event_types": "Activity Types",
@@ -1917,5 +1919,11 @@
       "search_presentations": "Search By Title",
       "search_attendees": "Search By Full Name / Email"
     }
+  },
+  "badge_checkin": {
+    "checkin": "Check In",
+    "checked_in": "Checked In",
+    "wrong_qr_title": "QR Code Error",
+    "wrong_qr_text": "Wrong format on QR code."
   }
 }

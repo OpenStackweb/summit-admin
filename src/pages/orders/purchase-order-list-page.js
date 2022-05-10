@@ -20,6 +20,7 @@ import { getPurchaseOrders } from "../../actions/order-actions";
 import QrReaderInput from '../../components/inputs/qr-reader-input';
 import { getTicket } from '../../actions/ticket-actions'
 import Swal from "sweetalert2";
+import {validateTicketQR} from "../../utils/methods";
 
 
 class PurchaseOrderListPage extends React.Component {
@@ -47,16 +48,16 @@ class PurchaseOrderListPage extends React.Component {
 
     handleQRScan(qrCode) {
         const {currentSummit, history} = this.props;
-        let qrCodeArray = qrCode.split(currentSummit.qr_registry_field_delimiter);
+        const qrValid = validateTicketQR(qrCode, currentSummit);
 
-        if (qrCodeArray.length < 2 || qrCodeArray[0] !== currentSummit.ticket_qr_prefix) {
-            Swal.fire(T.translate("purchase_order_list.wrong_qr_title"), T.translate("purchase_order_list.wrong_qr_text"), "warning");
-        } else {
-            this.props.getTicket(qrCodeArray[1]).then(
+        if (qrValid) {
+            this.props.getTicket(qrValid[1]).then(
                 (data) => {
                     history.push(`/app/summits/${currentSummit.id}/purchase-orders/${data.order_id}/tickets/${data.id}`);
                 }
             );
+        } else {
+            Swal.fire(T.translate("purchase_order_list.wrong_qr_title"), T.translate("purchase_order_list.wrong_qr_text"), "warning");
         }
     }
 

@@ -16,11 +16,10 @@ import { Switch, Route, withRouter } from 'react-router-dom';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import Restrict from '../routes/restrict';
-
-
 import EditSummitAttendeePage from '../pages/attendees/edit-summit-attendee-page'
 import SummitAttendeeListPage from '../pages/attendees/summit-attendees-list-page'
 import NoMatchPage from "../pages/no-match-page";
+import BadgeCheckinPage from "../pages/attendees/badge-checkin-page";
 
 
 class AttendeeLayout extends React.Component {
@@ -33,6 +32,7 @@ class AttendeeLayout extends React.Component {
 
                 <Switch>
                     <Route strict exact path={match.url} component={SummitAttendeeListPage}/>
+                    <Route path={`${match.url}/checkin`} component={BadgeCheckinPage}/>
                     <Route exact strict path={`${match.url}/new`} component={EditSummitAttendeePage}/>
                     <Route exact path={`${match.url}/:attendee_id(\\d+)`} component={EditSummitAttendeePage}/>
                     <Route component={NoMatchPage}/>

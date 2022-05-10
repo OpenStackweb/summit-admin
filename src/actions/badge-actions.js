@@ -179,6 +179,32 @@ export const printBadge = (ticketId) => (dispatch, getState) => {
 };
 
 
+export const checkInBadge = (code) => (dispatch, getState) => {
+
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token : accessToken
+    };
+
+    return putRequest(
+        null,
+        createAction('DUMMY_ACTION'),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-scans/checkin`,
+        {qr_code: code},
+        authErrorHandler
+    )(params)(dispatch).then((ticket) => {
+            dispatch(stopLoading());
+            return ticket;
+        }
+    );
+};
+
+
 /***********************  BADGE TYPE  ************************************************/
 
 

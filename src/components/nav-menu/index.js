@@ -149,7 +149,12 @@ class NavMenu extends React.Component {
                     {name:'media_uploads', linkUrl:`summits/${summit_id}/media-uploads`}
                 ]
             },
-            {name: 'attendees', iconClass: 'fa-users', linkUrl:`summits/${summit_id}/attendees`, accessRoute: 'attendees' },
+            {name: 'attendees', iconClass: 'fa-users', accessRoute: 'attendees',
+                childs: [
+                    {name: 'attendee-list', linkUrl:`summits/${summit_id}/attendees`, accessRoute: 'attendees'},
+                    {name:'badge_checkin', linkUrl:`summits/${summit_id}/attendees/checkin`}
+                ]
+            },
             {
                 name: 'summit_speakers', iconClass: 'fa-users', accessRoute: 'events',
                 childs: [
@@ -198,7 +203,8 @@ class NavMenu extends React.Component {
                 childs: [
                     {name:'badge_feature_list', linkUrl:`summits/${summit_id}/badge-features`},
                     {name:'access_level_list', linkUrl:`summits/${summit_id}/access-levels`},
-                    {name:'badge_type_list', linkUrl:`summits/${summit_id}/badge-types`}
+                    {name:'badge_type_list', linkUrl:`summits/${summit_id}/badge-types`},
+                    {name:'badge_checkin', linkUrl:`summits/${summit_id}/badge-checkin`}
                 ]
             },
             {name: 'room_bookings', iconClass: 'fa-bookmark', linkUrl:`summits/${summit_id}/room-bookings`, accessRoute: 'room-bookings', exclusive: 'room-bookings'},
