@@ -1534,6 +1534,7 @@
     "name": "Name",
     "order": "Order",
     "company": "Company",
+    "is_published": "Is Published ?",
     "sponsorship": "Sponsorship",
     "sponsor_saved": "Sponsor saved successfully",
     "sponsor_created": "Sponsor created successfully",

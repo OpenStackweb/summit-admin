@@ -129,6 +129,15 @@ class SponsorForm extends React.Component {
                             error={this.hasErrors('company_id')}
                         />
                     </div>
+                    <div className="col-md-4 checkboxes-div">
+                        <div className="form-check abc-checkbox">
+                            <input type="checkbox" id="is_published" checked={entity.is_published}
+                                   onChange={this.handleChange} className="form-check-input"/>
+                            <label className="form-check-label" htmlFor="is_published">
+                                {T.translate("edit_sponsor.is_published")}
+                            </label>
+                        </div>
+                    </div>
                 </div>
                 <div className="row form-group">
                     <div className="col-md-6">

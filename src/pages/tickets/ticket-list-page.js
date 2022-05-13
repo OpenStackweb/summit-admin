@@ -290,7 +290,7 @@ class TicketListPage extends React.Component {
         const alphabet = alpha.map((x) => ({ label : String.fromCharCode(x), value : String.fromCharCode(x)}));
 
         return(
-            <div>
+            <div className="ticket-list-wrapper">
                 <Breadcrumb data={{ title: T.translate("ticket_list.ticket_list"), pathname: match.url }} />
                 <div className="container">
                     <h3> {T.translate("ticket_list.ticket_list")} ({totalTickets})</h3>

@@ -31,6 +31,7 @@ export const DEFAULT_ENTITY = {
     sponsorship_id  : null,
     members         : [],
     order           : 0,
+    is_published    : false,
 }
 
 const DEFAULT_STATE = {
