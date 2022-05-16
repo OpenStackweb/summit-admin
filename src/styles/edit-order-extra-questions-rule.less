@@ -1,0 +1,29 @@
+.sub-rule-form {
+    display: flex;
+    justify-content: space-between;
+
+    .radio-wrapper {
+        align-items: center;
+
+        span {
+            display: block;
+        }
+
+        >div {
+            display: flex;
+            flex-direction: column;
+
+            >div {
+                padding-left: 12px !important;
+                margin-left: 10px !important;
+            }
+        }
+    }
+
+    >div {
+        &:last-of-type {
+            display: grid;
+            align-items: center;
+        }
+    }
+}

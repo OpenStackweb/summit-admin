@@ -22,7 +22,8 @@ import
     ORDER_EXTRA_QUESTION_VALUE_DELETED,
     QUESTION_VALUE_ORDER_UPDATED,
     ORDER_EXTRA_QUESTION_VALUE_ADDED,
-    ORDER_EXTRA_QUESTION_VALUE_UPDATED
+    ORDER_EXTRA_QUESTION_VALUE_UPDATED,
+    ORDER_EXTRA_QUESTION_SUB_QUESTION_DELETED,
 } from '../../actions/order-actions';
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
@@ -38,7 +39,8 @@ export const DEFAULT_ENTITY = {
     printable           : false,
     placeholder         : '',
     usage               : 'Ticket',
-    values              : []
+    values              : [],
+    sub_question_rules  : [],
 }
 
 const DEFAULT_STATE = {
@@ -116,6 +118,11 @@ const orderExtraQuestionReducer = (state = DEFAULT_STATE, action) => {
         case ORDER_EXTRA_QUESTION_VALUE_DELETED: {
             let {orderExtraQuestionValueId} = payload;
             return {...state, entity: {...state.entity, values: state.entity.values.filter(v => v.id !== orderExtraQuestionValueId)}};
+        }
+        break;
+        case ORDER_EXTRA_QUESTION_SUB_QUESTION_DELETED: {
+            let {ruleId} = payload;
+            return {...state, entity: {...state.entity, sub_question_rules: state.entity.sub_question_rules.filter(v => v.id !== ruleId)}};
         }
         break;
         case VALIDATE: {

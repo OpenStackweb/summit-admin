@@ -20,4 +20,10 @@ export const BulkActionUnPublish               = 'BULK_ACTION_UNPUBLISH';
 
 export const PresentationTypeClassName         = 'PRESENTATION_TYPE'
 
+export const ExtraQuestionsTypeAllowSubQuestion = ['ComboBox','CheckBoxList' , 'RadioButtonList'];
+
+export const SubQuestionAnswerValuesOperators    = [{ value: 'And', label: 'And' }, { value: 'Or', label: 'Or' }];
+export const SubQuestionVisibilityOptions        = [{ value: 'Visible', label: 'Show' }, { value: 'NotVisible', label: 'Hide' }];
+export const SubQuestionVisibilityConditions     = [{ value: 'Equal', label: 'Equal' }, { value: 'NotEqual', label: 'Not Equal' }];
+
 export const TBALocation = {id : 0, name : 'TBD', class_name: 'SummitVenue'};

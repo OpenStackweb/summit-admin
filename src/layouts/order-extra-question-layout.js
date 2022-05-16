@@ -18,7 +18,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import Restrict from '../routes/restrict';
 
 import OrderExtraQuestionListPage from '../pages/orders/order-extra-question-list-page'
-import EditOrderExtraQuestionPage from '../pages/orders/edit-order-extra-question-page'
+import OrderExtraQuestionIdLayout from './order-extra-question-id-layout';
 import NoMatchPage from "../pages/no-match-page";
 
 
@@ -32,8 +32,8 @@ class OrderExtraQuestionLayout extends React.Component {
 
                 <Switch>
                     <Route strict exact path={match.url} component={OrderExtraQuestionListPage}/>
-                    <Route strict exact path={`${match.url}/new`} component={EditOrderExtraQuestionPage}/>
-                    <Route strict exact path={`${match.url}/:order_extra_question_id(\\d+)`} component={EditOrderExtraQuestionPage}/>
+                    <Route strict exact path={`${match.url}/new`} component={OrderExtraQuestionIdLayout}/>
+                    <Route path={`${match.url}/:order_extra_question_id(\\d+)`} component={OrderExtraQuestionIdLayout}/>
                     <Route component={NoMatchPage}/>
                 </Switch>
             </div>

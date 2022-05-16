@@ -109,6 +109,7 @@ import scheduleSettingsReducer from "./reducers/schedule-settings/schedule-setti
 import scheduleSettingsListReducer from "./reducers/schedule-settings/schedule-settings-list-reducer";
 import selectionPlanExtraQuestionReducer from "./reducers/summits/selection-plan-extra-question-reducer";
 import registrationCompanyListReducer from "./reducers/companies/registration-companies-list-reducer";
+import orderExtraQuestionRuleReducer from './reducers/orders/order-extra-question-rule-reducer';
 
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
@@ -178,6 +179,7 @@ const reducers = persistCombineReducers(config, {
     currentAccessLevelState: accessLevelReducer,
     currentOrderExtraQuestionListState: orderExtraQuestionListReducer,
     currentOrderExtraQuestionState: orderExtraQuestionReducer,
+    currentOrderExtraQuestionRuleState: orderExtraQuestionRuleReducer,
     currentPurchaseOrderListState: purchaseOrderListReducer,
     currentPurchaseOrderState: purchaseOrderReducer,
     currentSponsorListState: sponsorListReducer,

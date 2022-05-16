@@ -1031,10 +1031,26 @@
     "visible_option": "Visible Option (as appears on site)",
     "values": "Values",
     "add_value": "Add Value",
+    "sub_questions_rules": "Conditional Subquestions",
+    "sub_question_condition": "When Attendee Chooses",
+    "sub_question_rule": "SubQuestion",
+    "sub_questions_rules_add": "Add new Conditional Subquestion",
+    "no_sub_questions_rules": "No Sub Questions found",
     "placeholders": {
       "select_type": "Select a Type",
       "select_usage": "Select Usage",
       "select_default": "Select Default Value"
+    }
+  },
+  "question_rule_form": {
+    "attendee_chooses": "When Attendee Chooses",
+    "to": "To",
+    "with": "With",
+    "then": "Then",
+    "placeholders": {
+      "select_values": "Select Values",
+      "type_value": "Type Value",
+      "sub_question": "Select a Sub Question"
     }
   },
   "rsvp_template_list": {
@@ -1094,13 +1110,13 @@
     "all": "All",
     "has_owner": "Has Assignee",
     "has_no_owner": "Has No Assignee",
-    "complete":"Complete",
+    "complete": "Complete",
     "incomplete": "Incomplete",
     "print": "Print",
     "select_items": "Select at least one ticket to perform the action.",
     "has_badge": "Has Badge",
     "has_no_badge": "Has no Badge",
-    "print_modal_title" : "Print Badges",
+    "print_modal_title": "Print Badges",
     "check_in": "Should Perform Attendee CheckIn on Printing?",
     "print_modal_body": "You are about to send all selected tickets to print",
     "show_printable": "Show Printable Tickets",
@@ -1447,6 +1463,14 @@
     "order_extra_question_saved": "Extra Question saved successfully.",
     "order_extra_question_created": "Extra Question created successfully.",
     "remove_value_warning": "Are you sure you want to remove value ",
+    "order_extra_question_value_saved": "Extra Question Value saved successfully.",
+    "order_extra_question_value_created": "Extra Question Value created successfully."
+  },
+  "edit_order_extra_question_sub_rule": {    
+    "order_extra_question_sub_rule": "Sub Rule",
+    "order_extra_question_sub_rule_saved": "Sub Rule saved successfully.",
+    "order_extra_question_sub_rule_created": "Sub Rule created successfully.",
+    "remove_rule_warning": "Are you sure you want to remove this rule ",
     "order_extra_question_value_saved": "Extra Question Value saved successfully.",
     "order_extra_question_value_created": "Extra Question Value created successfully."
   },
