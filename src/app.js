@@ -83,7 +83,6 @@ class App extends React.PureComponent {
     render() {
         const { isLoggedUser, onUserAuth, doLogout, getUserInfo, idToken, backUrl, loading} = this.props;
 
-
         // get user pic from idtoken claims (IDP)
         let profile_pic = '';
 
@@ -100,12 +99,6 @@ class App extends React.PureComponent {
             <Router history={history}>
                 <div>
                     <AjaxLoader show={ loading } size={ 120 }/>
-                    {isLoggedUser &&
-                    <OPSessionChecker
-                        clientId={window.OAUTH2_CLIENT_ID}
-                        idpBaseUrl={window.IDP_BASE_URL}
-                    />
-                    }
                     <div className="header" id="page-header">
                         <div className="header-title">
                             {T.translate("landing.os_summit_admin")}

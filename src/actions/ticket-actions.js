@@ -226,7 +226,9 @@ export const getTickets =
             access_token: accessToken,
             expand: 'owner,order,ticket_type,badge,promo_code,refund_requests'
         };
+
         const filter = parseFilters(filters);
+
         if (filter.length > 0) {
             params['filter[]'] = filter;
         }
@@ -305,26 +307,49 @@ export const importTicketsCSV = (file) => (dispatch, getState) => {
         });
 };
 
-export const exportTicketsCSV = (pageSize = 500) => (dispatch, getState) => {
+export const exportTicketsCSV = (pageSize = 500,
+                                 order = 'id',
+                                 orderDir = 1, filters = {}) => (dispatch, getState) => {
     dispatch(startLoading());
-
     const csvMIME = 'text/csv;charset=utf-8';
-    const {loggedUserState, currentSummitState, currentTicketListState} = getState();
-    const {accessToken} = loggedUserState;
-    const {currentSummit} = currentSummitState;
-    const {totalTickets} = currentTicketListState;
+    const { loggedUserState, currentSummitState, currentTicketListState } = getState();
+    const { accessToken } = loggedUserState;
+    const { currentSummit } = currentSummitState;
+    const { totalTickets } = currentTicketListState;
+
     const filename = currentSummit.name + '-Tickets.csv';
     const totalPages = Math.ceil(totalTickets / pageSize);
+
+    console.log(`exportTicketsCSV: totalTickets ${totalTickets} pageSize ${pageSize} totalPages ${totalPages}`)
+
     const endpoint = `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets/csv`;
 
     // create the params for the promises all ( only diff is the page nbr)
 
-    let params = Array.from({length: totalPages}, (_, i) =>
-        ({
-            page: i + 1,
-            access_token: accessToken,
-            per_page: pageSize,
-        }))
+    const filter = parseFilters(filters);
+
+    let params = Array.from({length: totalPages}, (_, i) => {
+
+            let res = {
+                page: i + 1,
+                access_token: accessToken,
+                per_page: pageSize,
+            };
+
+            if (filter.length > 0) {
+                res['filter[]'] = filter;
+            }
+
+            // order
+            if (order != null && orderDir != null) {
+                const orderDirSign = (orderDir === 1) ? '+' : '-';
+                res['order'] = `${orderDirSign}${order}`;
+            }
+
+            return res;
+        }
+    )
+
     // export CSV file by chunks ...
     Promise.all(params.map((p) => getRawCSV(endpoint, p)))
         .then((files) => {

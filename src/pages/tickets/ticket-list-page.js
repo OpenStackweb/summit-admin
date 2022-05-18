@@ -144,7 +144,13 @@ class TicketListPage extends React.Component {
     }
 
     handleExportTickets() {
-        this.props.exportTicketsCSV();
+        const {order, orderDir, page, perPage, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter, showOnlyPrintable, term} = this.props;
+        this.props.exportTicketsCSV(
+            500,
+            order,
+            orderDir,
+            { term , showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter, showOnlyPrintable}
+        );
     }
 
     handleSetHasOwnerFilter(newHasOwnerFilter){
