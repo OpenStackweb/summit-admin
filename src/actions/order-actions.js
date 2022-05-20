@@ -27,6 +27,8 @@ import {
     escapeFilterValue
 } from 'openstack-uicore-foundation/lib/methods';
 
+import URI from 'urijs';
+
 export const REQUEST_ORDER_EXTRA_QUESTIONS = 'REQUEST_ORDER_EXTRA_QUESTIONS';
 export const RECEIVE_ORDER_EXTRA_QUESTIONS = 'RECEIVE_ORDER_EXTRA_QUESTIONS';
 export const RECEIVE_ORDER_EXTRA_QUESTION = 'RECEIVE_ORDER_EXTRA_QUESTION';
@@ -44,6 +46,7 @@ export const RECEIVE_ORDER_EXTRA_QUESTION_VALUE = 'RECEIVE_ORDER_EXTRA_QUESTION_
 export const RESET_ORDER_EXTRA_QUESTION_VALUE_FORM = 'RESET_ORDER_EXTRA_QUESTION_VALUE_FORM';
 export const UPDATE_ORDER_EXTRA_QUESTION_VALUE = 'UPDATE_ORDER_EXTRA_QUESTION_VALUE';
 export const ORDER_EXTRA_QUESTION_ORDER_UPDATED = 'ORDER_EXTRA_QUESTION_ORDER_UPDATED';
+export const RECEIVE_MAIN_ORDER_EXTRA_QUESTIONS = 'RECEIVE_MAIN_ORDER_EXTRA_QUESTIONS';
 
 export const REQUEST_PURCHASE_ORDERS = 'REQUEST_PURCHASE_ORDERS';
 export const RECEIVE_PURCHASE_ORDERS = 'RECEIVE_PURCHASE_ORDERS';
@@ -115,6 +118,36 @@ export const getOrderExtraQuestions = () => (dispatch, getState) => {
             dispatch(stopLoading());
         }
     );
+};
+
+export const getMainOrderExtraQuestions = () => (dispatch, getState) => {
+
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken } = loggedUserState;
+    const { currentSummit } = currentSummitState;
+
+    dispatch(startLoading());
+    
+    let apiUrl = URI(`${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/order-extra-questions`);
+    apiUrl.addQuery('filter[]', 'class==MainQuestion');
+    apiUrl.addQuery('filter[]', 'usage==Ticket');
+    apiUrl.addQuery('expand', '*sub_question_rules,*sub_question,*values')
+    apiUrl.addQuery('access_token', accessToken);
+    apiUrl.addQuery('order', 'order');
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_MAIN_ORDER_EXTRA_QUESTIONS),
+        `${apiUrl}`,
+        authErrorHandler
+    )({})(dispatch).then(() => {
+        dispatch(stopLoading());
+    }).catch(e => {
+        console.log('ERROR: ', e);
+        clearAccessToken();
+        dispatch(stopLoading());
+        return Promise.reject(e);
+    });
 };
 
 export const getOrderExtraQuestion = (orderExtraQuestionId) => (dispatch, getState) => {

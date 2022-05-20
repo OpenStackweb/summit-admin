@@ -29,7 +29,7 @@ import {
 } from "../../actions/user-chat-roles-actions.js";
 
 import { RECEIVE_REFUND_POLICIES } from "../../actions/ticket-actions";
-import {RECEIVE_ORDER_EXTRA_QUESTIONS} from "../../actions/order-actions";
+import {RECEIVE_ORDER_EXTRA_QUESTIONS, RECEIVE_MAIN_ORDER_EXTRA_QUESTIONS} from "../../actions/order-actions";
 
 export const DEFAULT_ENTITY = {
     id: 0,
@@ -98,6 +98,7 @@ export const DEFAULT_ENTITY = {
     order_extra_questions: null,
     order_only_extra_questions: null,
     attendee_extra_questions: null,
+    attendee_main_extra_questions: null,
     begin_allow_booking_date: 0,
     end_allow_booking_date: 0,
     external_summit_id: null,
@@ -346,6 +347,11 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
             let helpUsers = payload.response;
             return {...state, currentSummit: {...state.currentSummit, help_users: helpUsers} }
         }
+        case RECEIVE_MAIN_ORDER_EXTRA_QUESTIONS: {
+            const mainExtraQuestions = payload.response.data;
+            return {...state, currentSummit: {...state.currentSummit, attendee_main_extra_questions: mainExtraQuestions } };
+        }
+        break;
         default:
             return state;
     }

@@ -14,15 +14,12 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { MemberInput, Input, Panel } from 'openstack-uicore-foundation/lib/components'
+import { MemberInput, Input, Panel, ExtraQuestionsForm } from 'openstack-uicore-foundation/lib/components'
 import TicketComponent from './ticket-component'
 import OrderComponent from './order-component'
 import RsvpComponent from './rsvp-component'
 import { AffiliationsTable } from '../../tables/affiliationstable'
-import QuestionAnswersInput from '../../inputs/question-answers-input'
 import {isEmpty, scrollToError, shallowEqual} from "../../../utils/methods";
-
-
 
 class AttendeeForm extends React.Component {
     constructor(props) {
@@ -34,8 +31,11 @@ class AttendeeForm extends React.Component {
             showSection: 'main',
         };
 
+        this.formRef = React.createRef();
+
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.triggerFormSubmit = this.triggerFormSubmit.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -86,11 +86,25 @@ class AttendeeForm extends React.Component {
         this.setState({entity: entity, errors: errors});
     }
 
-    handleSubmit(ev) {
-        let entity = {...this.state.entity};
-        ev.preventDefault();
+    triggerFormSubmit() {
+        this.formRef.current.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
+    }
 
-        this.props.onSubmit(this.state.entity);
+    handleSubmit(formValues) {
+        let entity = {...this.state.entity};
+        const {currentSummit} = this.props;
+        
+        const formattedAnswers = [];
+        Object.keys(formValues).map(a => {
+            let question = currentSummit.order_extra_questions.find(q => q.name === a);
+            const newQuestion = { question_id: question.id, answer: `${formValues[a]}` }
+            formattedAnswers.push(newQuestion);
+        });
+
+        this.setState({...this.state, entity: {...this.state.entity, extra_questions: formattedAnswers}}, () => {
+            this.props.onSubmit(this.state.entity);
+        });
+
     }
 
     handlePresentationLink(event_id, ev) {
@@ -266,24 +280,23 @@ class AttendeeForm extends React.Component {
                     <RsvpComponent member={entity.member} onDelete={this.props.onDeleteRsvp} />
                     }
 
-                    {entity.id !== 0 && currentSummit.attendee_extra_questions && currentSummit.attendee_extra_questions.length > 0 &&
+                    {entity.id !== 0 && currentSummit.attendee_main_extra_questions && currentSummit.attendee_main_extra_questions.length > 0 &&
                     <Panel show={showSection === 'extra_questions'} title={T.translate("edit_attendee.extra_questions")}
                            handleClick={this.toggleSection.bind(this, 'extra_questions')}>
-                        <QuestionAnswersInput
-                            id="extra_questions"
-                            answers={entity.extra_questions}
-                            questions={currentSummit.attendee_extra_questions}
-                            onChange={this.handleChange}
+                        <ExtraQuestionsForm 
+                            extraQuestions={currentSummit.attendee_main_extra_questions}
+                            userAnswers={entity.extra_questions}
+                            onAnswerChanges={this.handleSubmit}
+                            formRef={this.formRef}
+                            className="extra-questions"
                         />
                     </Panel>
                     }
 
                 </div>
-
-
                 <div className="row">
                     <div className="col-md-12 submit-buttons">
-                        <input type="button" onClick={this.handleSubmit}
+                        <input type="button" onClick={() => this.triggerFormSubmit()}
                                className="btn btn-primary pull-right" value={T.translate("general.save")}/>
                     </div>
                 </div>

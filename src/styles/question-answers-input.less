@@ -8,4 +8,20 @@
   label span p:first-child {
     display: inline;
   }
+  form {
+    >div {
+      margin-bottom: 25px;
+      width: 100%;
+      span {
+        font-weight: bold;
+        &.eq-checkbox-label {
+          margin-left: 5px;
+          font-weight: normal;
+        }
+      }
+      .extra-question-error {
+        color: red;
+      }
+    }
+  }
 }

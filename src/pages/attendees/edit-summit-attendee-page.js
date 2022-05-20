@@ -17,7 +17,7 @@ import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import AttendeeForm from '../../components/forms/attendee-form/attendee-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getOrderExtraQuestions } from '../../actions/order-actions';
+import { getMainOrderExtraQuestions } from '../../actions/order-actions';
 import { getAttendee, resetAttendeeForm, saveAttendee, reassignTicket, saveTicket, deleteTicket, deleteRsvp } from "../../actions/attendee-actions";
 import '../../styles/edit-summit-attendee-page.less';
 
@@ -33,8 +33,8 @@ class EditSummitAttendeePage extends React.Component {
             this.props.getAttendee(new_attendee_id);
         }
 
-        if (!currentSummit.attendee_extra_questions) {
-            this.props.getOrderExtraQuestions();
+        if (!currentSummit.attendee_main_extra_questions || !currentSummit.attendee_main_extra_questions.length) {
+            this.props.getMainOrderExtraQuestions();
         }
     }
 
@@ -95,6 +95,6 @@ export default connect (
         saveTicket,
         deleteTicket,
         deleteRsvp,
-        getOrderExtraQuestions
+        getMainOrderExtraQuestions
     }
 )(EditSummitAttendeePage);
