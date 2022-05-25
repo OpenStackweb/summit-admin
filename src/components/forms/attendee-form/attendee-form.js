@@ -93,6 +93,9 @@ class AttendeeForm extends React.Component {
             return;
         }
         // do regular submit
+        if (this.state.entity) {
+            this.state.entity.extra_questions = entity.extra_questions.map(q => ({question_id: q.question_id, answer: q.value}))
+        }
         this.props.onSubmit( {...this.state.entity});
     }
 
