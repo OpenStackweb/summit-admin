@@ -60,7 +60,7 @@ const BadgeCheckinPage = ({match, currentSummit, checkInBadge}) => {
             <hr/>
             <div className={qrReaderContainer}>
                 <QrReader
-                    delay={300}
+                    delay={2000}
                     onError={handleError}
                     onScan={handleCheckIn}
                     style={{ width: '100%' }}
