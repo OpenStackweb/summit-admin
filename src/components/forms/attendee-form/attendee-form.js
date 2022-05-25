@@ -87,11 +87,17 @@ class AttendeeForm extends React.Component {
     }
 
     triggerFormSubmit() {
-        this.formRef.current.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
+        // check current ( could not be rendered)
+        if(this.formRef.current) {
+            this.formRef.current.dispatchEvent(new Event("submit", {cancelable: true, bubbles: true}));
+            return;
+        }
+        // do regular submit
+        this.props.onSubmit( {...this.state.entity});
     }
 
     handleSubmit(formValues) {
-        let entity = {...this.state.entity};
+
         const {currentSummit} = this.props;
         
         const formattedAnswers = [];
@@ -104,7 +110,6 @@ class AttendeeForm extends React.Component {
         this.setState({...this.state, entity: {...this.state.entity, extra_questions: formattedAnswers}}, () => {
             this.props.onSubmit(this.state.entity);
         });
-
     }
 
     handlePresentationLink(event_id, ev) {
@@ -281,13 +286,14 @@ class AttendeeForm extends React.Component {
                     }
 
                     {entity.id !== 0 && currentSummit.attendee_main_extra_questions && currentSummit.attendee_main_extra_questions.length > 0 &&
-                    <Panel show={showSection === 'extra_questions'} title={T.translate("edit_attendee.extra_questions")}
+                    <Panel show={showSection === 'extra_questions'}
+                           title={T.translate("edit_attendee.extra_questions")}
                            handleClick={this.toggleSection.bind(this, 'extra_questions')}>
                         <ExtraQuestionsForm 
                             extraQuestions={currentSummit.attendee_main_extra_questions}
                             userAnswers={entity.extra_questions}
                             onAnswerChanges={this.handleSubmit}
-                            formRef={this.formRef}
+                            ref={this.formRef}
                             className="extra-questions"
                         />
                     </Panel>
