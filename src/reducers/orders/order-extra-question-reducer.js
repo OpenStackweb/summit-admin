@@ -23,6 +23,7 @@ import
     QUESTION_VALUE_ORDER_UPDATED,
     ORDER_EXTRA_QUESTION_VALUE_ADDED,
     ORDER_EXTRA_QUESTION_VALUE_UPDATED,
+    ORDER_EXTRA_QUESTION_SUB_QUESTION_ADDED,
     ORDER_EXTRA_QUESTION_SUB_QUESTION_DELETED,
 } from '../../actions/order-actions';
 
@@ -119,6 +120,11 @@ const orderExtraQuestionReducer = (state = DEFAULT_STATE, action) => {
             let {orderExtraQuestionValueId} = payload;
             return {...state, entity: {...state.entity, values: state.entity.values.filter(v => v.id !== orderExtraQuestionValueId)}};
         }
+        break;
+        case ORDER_EXTRA_QUESTION_SUB_QUESTION_ADDED:{
+            const newSubQuestion = payload.response;
+            return {...state, entity: {...state.entity, sub_question_rules: [...state.entity.sub_question_rules, newSubQuestion]}};
+        }  
         break;
         case ORDER_EXTRA_QUESTION_SUB_QUESTION_DELETED: {
             let {ruleId} = payload;
