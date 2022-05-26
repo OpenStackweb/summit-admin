@@ -144,6 +144,8 @@ class AttendeeForm extends React.Component {
         const { currentSummit } = this.props;
 
         return (
+            <>
+            {/* First Form ( Main Attendee Form )*/}
             <form className="summit-attendee-form">
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
@@ -289,28 +291,29 @@ class AttendeeForm extends React.Component {
                     <RsvpComponent member={entity.member} onDelete={this.props.onDeleteRsvp} />
                     }
 
-                    {entity.id !== 0 && currentSummit.attendee_main_extra_questions && currentSummit.attendee_main_extra_questions.length > 0 &&
-                    <Panel show={showSection === 'extra_questions'}
-                           title={T.translate("edit_attendee.extra_questions")}
-                           handleClick={this.toggleSection.bind(this, 'extra_questions')}>
-                        <ExtraQuestionsForm 
-                            extraQuestions={currentSummit.attendee_main_extra_questions}
-                            userAnswers={entity.extra_questions}
-                            onAnswerChanges={this.handleSubmit}
-                            ref={this.formRef}
-                            className="extra-questions"
-                        />
-                    </Panel>
-                    }
-
-                </div>
-                <div className="row">
-                    <div className="col-md-12 submit-buttons">
-                        <input type="button" onClick={() => this.triggerFormSubmit()}
-                               className="btn btn-primary pull-right" value={T.translate("general.save")}/>
-                    </div>
                 </div>
             </form>
+            {/* Second Form ( Extra Questions )*/}
+            { entity.id !== 0 && currentSummit.attendee_main_extra_questions && currentSummit.attendee_main_extra_questions.length > 0 &&
+                <Panel show={showSection === 'extra_questions'}
+                       title={T.translate("edit_attendee.extra_questions")}
+                       handleClick={this.toggleSection.bind(this, 'extra_questions')}>
+                    <ExtraQuestionsForm
+                        extraQuestions={currentSummit.attendee_main_extra_questions}
+                        userAnswers={entity.extra_questions}
+                        onAnswerChanges={this.handleSubmit}
+                        ref={this.formRef}
+                        className="extra-questions"
+                    />
+                </Panel>
+            }
+            <div className="row">
+                <div className="col-md-12 submit-buttons">
+                    <input type="button" onClick={() => this.triggerFormSubmit()}
+                    className="btn btn-primary pull-right" value={T.translate("general.save")}/>
+                </div>
+            </div>
+            </>
         );
     }
 }
