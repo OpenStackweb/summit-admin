@@ -40,6 +40,9 @@ class SelectionPlanForm extends React.Component {
         this.handleNewExtraQuestion = this.handleNewExtraQuestion.bind(this);
         this.handleDeleteEventType = this.handleDeleteEventType.bind(this);
         this.handleAddEventType = this.handleAddEventType.bind(this);
+        this.handleAddRatingType = this.handleAddRatingType.bind(this);
+        this.handleDeleteRatingType = this.handleDeleteRatingType.bind(this);
+        this.handleEditRatingType = this.handleEditRatingType.bind(this);
         this.toggleSection = this.toggleSection.bind(this);
         this.handleNotificationEmailTemplateChange = this.handleNotificationEmailTemplateChange.bind(this);
     }
@@ -132,9 +135,22 @@ class SelectionPlanForm extends React.Component {
         const {entity} = this.state;
         this.props.onAddEventType(entity.id, value)
     }
+    
     handleDeleteEventType(valueId) {
         const {entity} = this.state;
         this.props.onDeleteEventType(entity.id, valueId)
+    }
+
+    handleAddRatingType() {
+        this.props.onAddRatingType();
+    }
+
+    handleEditRatingType(ratingTypeId) {
+        this.props.onEditRatingType(ratingTypeId)
+    }
+
+    handleDeleteRatingType(ratingTypeId) {
+        this.props.onDeleteRatingType(ratingTypeId)
     }
 
     toggleSection(section) {
@@ -192,6 +208,18 @@ class SelectionPlanForm extends React.Component {
                 delete: { onClick: this.handleDeleteExtraQuestion }
             }
         }
+
+        const ratingTypesColumns = [
+            { columnKey: 'name', value: T.translate("rating_type_list.name")},
+            { columnKey: 'weight', value: T.translate("rating_type_list.weight") }
+        ];
+
+        let ratingTypesOptions = {
+            actions: {
+                edit: { onClick: this.handleEditRatingType },
+                delete: { onClick: this.handleDeleteRatingType }
+            }
+        };
 
         return (
             <form className="selection-plan-form">
@@ -413,6 +441,26 @@ class SelectionPlanForm extends React.Component {
                                     />
                                 </div>
                             </div>
+                        </Panel>
+                        <Panel
+                            show={showSection === 'rating_types'}
+                            title={T.translate("edit_rating_type.title")}
+                            handleClick={() => {this.toggleSection('rating_types')}}
+                        >
+                             <div className={'row'}>
+                                <div className="col-md-6 text-right col-md-offset-6">
+                                    <button className="btn btn-primary right-space" onClick={this.handleAddRatingType}>
+                                        {T.translate("edit_rating_type.add_rating_type")}
+                                    </button>
+                                </div>
+                            </div>
+                            <SortableTable
+                                options={ratingTypesOptions}
+                                data={entity.track_chair_rating_types}
+                                columns={ratingTypesColumns}
+                                dropCallback={this.props.onUpdateRatingTypeOrder}
+                                orderField="order"
+                            />
                         </Panel>
                     </>
                 }

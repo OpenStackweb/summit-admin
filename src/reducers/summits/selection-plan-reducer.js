@@ -13,7 +13,11 @@ import {
     SELECTION_PLAN_EXTRA_QUESTION_ADDED,
     SELECTION_PLAN_EXTRA_QUESTION_DELETED,
     SELECTION_PLAN_EXTRA_QUESTION_UPDATED,
-    SELECTION_PLAN_EXTRA_QUESTION_ORDER_UPDATED
+    SELECTION_PLAN_EXTRA_QUESTION_ORDER_UPDATED,
+    SELECTION_PLAN_RATING_TYPE_ADDED,
+    SELECTION_PLAN_RATING_TYPE_REMOVED,
+    SELECTION_PLAN_RATING_TYPE_UPDATED,
+    SELECTION_PLAN_RATING_TYPE_ORDER_UPDATED
 } from '../../actions/selection-plan-actions';
 
 export const DEFAULT_ENTITY = {
@@ -37,6 +41,7 @@ export const DEFAULT_ENTITY = {
     presentation_creator_notification_email_template: '',
     presentation_moderator_notification_email_template: '',
     presentation_speaker_notification_email_template: '',
+    track_chair_rating_types: [],
 }
 
 const DEFAULT_STATE = {
@@ -142,6 +147,31 @@ const selectionPlanReducer = (state = DEFAULT_STATE, action) => {
             })
 
             return {...state, entity: {...state.entity, extra_questions : extra_questions}}
+        }
+        case SELECTION_PLAN_RATING_TYPE_REMOVED: {
+            let {ratingTypeId} = payload;
+            let ratingTypes = state.entity.track_chair_rating_types.filter(t => t.id !== ratingTypeId);
+            return {...state, entity: {...state.entity, track_chair_rating_types: ratingTypes} };
+        }
+        case SELECTION_PLAN_RATING_TYPE_ADDED: {
+            let ratingType = {...payload.response};
+            return {...state, entity: {...state.entity, track_chair_rating_types: [...state.entity.track_chair_rating_types, ratingType]} };
+        }
+        case SELECTION_PLAN_RATING_TYPE_UPDATED: {
+            let ratingType = {...payload.response};
+            let ratingTypes = state.entity.track_chair_rating_types.filter(t => t.id !== ratingType.id);
+            return {...state, entity: {...state.entity, track_chair_rating_types: [...ratingTypes, ratingType]} };
+        }
+        case SELECTION_PLAN_RATING_TYPE_ORDER_UPDATED: {
+            let track_chair_rating_types = payload.map(r => {
+                return {
+                    id: r.id,
+                    name: r.name,
+                    weight: parseFloat(r.weight),
+                    order: parseInt(r.order)
+                };
+            })
+            return {...state, entity: {...state.entity, track_chair_rating_types : track_chair_rating_types}}
         }
         case VALIDATE: {
             return {...state,  errors: payload.errors };

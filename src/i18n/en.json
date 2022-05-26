@@ -327,6 +327,7 @@
     "creator_notification_email_template": "Creator emails",
     "moderator_notification_email_template": "Moderator emails",
     "speaker_notification_email_template": "Speaker emails",
+    "rating_type_remove_warning": "Are you sure you want to remove rating type",
     "placeholders": {
       "creator_notification_email_select_template": "Select a creator notification email template...",
       "moderator_notification_email_select_template": "Select a moderator notification email template...",
@@ -609,7 +610,6 @@
     "has_pending_questions": "Has Pending Questions?",
     "promo_code": "Promo Code",
     "disclaimer_accepted": "Disclaimer Accepted?",
-    "orders": "Orders",
     "inactive_ticket": "Inactive Ticket",
     "placeholders": {
       "start_date": "Start Date",
@@ -1950,5 +1950,37 @@
     "checked_in": "Checked In",
     "wrong_qr_title": "QR Code Error",
     "wrong_qr_text": "Wrong format on QR code."
+  },
+  "rating_type_list": {
+    "name": "Name",
+    "weight": "Weight"
+  },
+  "edit_rating_type": {
+    "title": "Track Chairs Ratings",
+    "rating_type": "Rating Type",
+    "rating_types": "Rating Types",
+    "name": "Name",
+    "weight": "Weight",
+    "add_rating_type": "Add New Rating",
+    "no_rating_types": "No Rating Types found.",
+    "rating_type_saved": "Rating Type saved successfully.",
+    "rating_type_created": "Rating Type created successfully.",
+    "remove_warning": "Are you sure you want to remove the rating type",
+    "score_types": "Score Types",
+    "add_score_type": "Add New Score type",
+    "remove_score_type_warning": "Are you sure you want to remove the score type"
+  },
+  "score_type_list": {
+    "name": "Name",
+    "score": "Score",
+    "description": "Description"
+  },
+  "edit_score_type": {
+    "score_type": "Score Type",
+    "name": "Name",
+    "score": "Score",
+    "description": "Description",
+    "score_type_saved": "Score Type saved successfully.",
+    "score_type_created": "Score Type created successfully."
   }
 }

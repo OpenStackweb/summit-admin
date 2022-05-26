@@ -45,7 +45,7 @@ export const getSelectionPlan = (selectionPlanId) => (dispatch, getState) => {
 
     const params = {
         access_token: accessToken,
-        expand: 'track_groups,extra_questions,extra_questions.values,event_types'
+        expand: 'track_groups,extra_questions,extra_questions.values,event_types,track_chair_rating_types'
     };
 
     return getRequest(
@@ -53,7 +53,7 @@ export const getSelectionPlan = (selectionPlanId) => (dispatch, getState) => {
         createAction(RECEIVE_SELECTION_PLAN),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}`,
         authErrorHandler
-    )(params)(dispatch).then(() => {
+    )(params)(dispatch).then((data) => {
             dispatch(stopLoading());
         }
     );
@@ -517,3 +517,56 @@ export const deleteEventTypeSelectionPlan = (selectionPlanId, eventTypeId) => (d
         }
     );
 }
+
+/***********************  RATING TYPES  *******************************************/
+
+export const SELECTION_PLAN_RATING_TYPE_ADDED = 'SELECTION_PLAN_RATING_TYPE_ADDED';
+export const SELECTION_PLAN_RATING_TYPE_REMOVED = 'SELECTION_PLAN_RATING_TYPE_REMOVED';
+export const SELECTION_PLAN_RATING_TYPE_UPDATED = 'SELECTION_PLAN_RATING_TYPE_UPDATED';
+export const SELECTION_PLAN_RATING_TYPE_ORDER_UPDATED = 'SELECTION_PLAN_RATING_TYPE_ORDER_UPDATED';
+
+export const updateRatingTypeOrder = (selectionPlanId, ratingTypes, ratingTypeId, newOrder) => (dispatch, getState) => {
+
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
+
+    const params = {
+        access_token: accessToken
+    };
+
+    const ratingType = ratingTypes.find(r => r.id === ratingTypeId);
+
+    return putRequest(
+        null,
+        createAction(SELECTION_PLAN_RATING_TYPE_ORDER_UPDATED)(ratingTypes),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}/track-chair-rating-types/${ratingTypeId}`,
+        ratingType,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+}
+
+export const deleteRatingType = (selectionPlanId, ratingTypeId) => (dispatch, getState) => {
+
+    const {loggedUserState, currentSummitState} = getState();
+    const {accessToken} = loggedUserState;
+    const {currentSummit} = currentSummitState;
+
+    const params = {
+        access_token: accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(SELECTION_PLAN_RATING_TYPE_REMOVED)({ratingTypeId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}/track-chair-rating-types/${ratingTypeId}`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
