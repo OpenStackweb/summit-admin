@@ -44,10 +44,8 @@ const wrapReport = (ReportComponent, specs) => {
             let {exclude_attendance, only_media, published_in, ...otherFilters} = filters;
 
             if (exclude_attendance) {
-                let queryFilters = exclude_attendance.split(',').forEach(val => {
-                    let filterQS = val + 'ForSummit';
-                    otherFilters[filterQS] = `${summitId},false`;
-                });
+                let filterQS = exclude_attendance + 'ForSummit';
+                otherFilters[filterQS] = `${summitId},true`;
             }
 
             if (only_media) {

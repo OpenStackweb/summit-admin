@@ -12,7 +12,7 @@
  **/
 
 import React from 'react'
-import {ButtonToolbar, ToggleButtonGroup, ToggleButton} from 'react-bootstrap'
+import { SegmentedControl } from 'segmented-control'
 
 export default class AttendanceFilter extends React.Component {
     constructor(props) {
@@ -20,31 +20,36 @@ export default class AttendanceFilter extends React.Component {
 
         this.handleFilterChange = this.handleFilterChange.bind(this);
 
+        this.state = {
+            filterValue: this.props.value
+        }
+
     }
 
     handleFilterChange(value) {
-        let excluded = ["confirmed", "checkedin", "registered"].filter(f => !value.includes(f))
-        this.props.onChange(excluded.join(','));
+        const { filterValue } = this.state;
+        if (value !== filterValue) {
+            this.setState({ filterValue: value }, () => this.props.onChange(value))
+        }
     }
 
     render() {
-        let {value, onChange, ...rest} = this.props;
-        let included = ["confirmed", "checkedin", "registered"];
-        if (value) {
-            let theValue = value.split(',');
-            included = included.filter(f => !theValue.includes(f))
-        }
+        let { onChange, ...rest } = this.props;
+        let { filterValue } = this.state;
 
         return (
             <div className="attendance-filter">
                 <label>Filter by Attendance (pressed = show)</label>
-                <ButtonToolbar>
-                    <ToggleButtonGroup type="checkbox" value={included} onChange={this.handleFilterChange}>
-                        <ToggleButton value="registered">Registered</ToggleButton>
-                        <ToggleButton value="confirmed">Confirmed</ToggleButton>
-                        <ToggleButton value="checkedin">Checked In</ToggleButton>
-                    </ToggleButtonGroup>
-                </ButtonToolbar>
+                <SegmentedControl
+                    name="memberFilter"
+                    options={[
+                        { label: "All", value: null, default: filterValue === null },
+                        { label: "Registered", value: "registered", default: filterValue === "registered" },
+                        { label: "Confirmed", value: "confirmed", default: filterValue === "confirmed" },
+                    ]}
+                    setValue={newValue => this.handleFilterChange(newValue)}
+                    style={{ width: "100%", height: 40, color: '#337ab7', fontSize: '10px' }}
+                />
             </div>
         );
     }
