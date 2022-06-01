@@ -143,10 +143,10 @@ class RegistrationCompaniesListPage extends React.Component {
                         />
                     </div>
                     <div className="col-md-2 text-right">
-                        <button className="btn btn-default right-space" onClick={() => this.setState({showImportModal:true})}>
+                        <button className="btn btn-default right-space" onClick={() => this.handleAddCompany(dropdownCompany)}>Add</button>
+                        <button className="btn btn-default" onClick={() => this.setState({showImportModal:true})}>
                             {T.translate("registration_companies.import")}
                         </button>
-                        <button onClick={() => this.handleAddCompany(dropdownCompany)} className="btn btn-default">Add</button>
                     </div>
                 </div>
 
