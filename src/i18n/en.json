@@ -1307,6 +1307,9 @@
     "remove_warning": "Are you sure you want to delete company",
     "registration_company_saved": "Company saved successfully.",
     "name": "Name",
+    "import": "Import",
+    "import_companies": "Import Companies Data",
+    "ingest": "Ingest Data",
     "placeholders": {
       "search_companies": "Search by Company Name"
     }

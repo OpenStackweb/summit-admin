@@ -15,10 +15,13 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import Swal from "sweetalert2";
-import { Pagination } from 'react-bootstrap';
-import { FreeTextSearch, Table, CompanyInput } from 'openstack-uicore-foundation/lib/components';
+import { Modal, Pagination } from 'react-bootstrap';
+import { FreeTextSearch, Table, CompanyInput, UploadInput } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById } from '../../actions/summit-actions';
-import { getRegistrationCompanies, addRegistrationCompany, deleteRegistrationCompany } from '../../actions/registration-companies-actions';
+import { getRegistrationCompanies, 
+    addRegistrationCompany, 
+    deleteRegistrationCompany, 
+    importRegistrationCompaniesCSV } from '../../actions/registration-companies-actions';
 
 class RegistrationCompaniesListPage extends React.Component {
 
@@ -26,6 +29,7 @@ class RegistrationCompaniesListPage extends React.Component {
         super(props);
 
         this.handleAddCompany = this.handleAddCompany.bind(this);
+        this.handleImportCompanies = this.handleImportCompanies.bind(this);
         this.handleDeleteCompany = this.handleDeleteCompany.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -34,7 +38,9 @@ class RegistrationCompaniesListPage extends React.Component {
 
         this.state = {
             searchTerm: '',
-            dropdownCompany: null
+            dropdownCompany: null,
+            importFile: null,
+            showImportModal: false,
         }
 
     }
@@ -53,6 +59,15 @@ class RegistrationCompaniesListPage extends React.Component {
     handleAddCompany(company) {
         this.props.addRegistrationCompany(company);
         this.setState({ dropdownCompany: null });
+    }
+
+    handleImportCompanies() {
+        this.setState({showImportModal: false});
+        let formData = new FormData();
+        if (this.state.importFile) {
+            formData.append('file', this.state.importFile);
+            this.props.importRegistrationCompaniesCSV(formData);
+        }
     }
 
     handleDeleteCompany(companyId) {
@@ -91,7 +106,7 @@ class RegistrationCompaniesListPage extends React.Component {
 
         let { currentSummit, companies, order, orderDir, lastPage, currentPage, totalCompanies } = this.props;
 
-        let { searchTerm, dropdownCompany } = this.state;
+        let { searchTerm, dropdownCompany, showImportModal, importFile } = this.state;
 
         const columns = [
             { columnKey: 'name', value: T.translate("registration_companies.name"), sortable: true },
@@ -119,7 +134,7 @@ class RegistrationCompaniesListPage extends React.Component {
                             onSearch={this.handleSearch}
                         />
                     </div>
-                    <div className="col-md-4 text-right col-md-offset-3">
+                    <div className="col-md-4 text-right col-md-offset-2">
                         <CompanyInput
                             id="registration-company"
                             value={dropdownCompany}
@@ -127,7 +142,10 @@ class RegistrationCompaniesListPage extends React.Component {
                             summitId={currentSummit.id}
                         />
                     </div>
-                    <div className="col-md-1 text-right">
+                    <div className="col-md-2 text-right">
+                        <button className="btn btn-default right-space" onClick={() => this.setState({showImportModal:true})}>
+                            {T.translate("registration_companies.import")}
+                        </button>
                         <button onClick={() => this.handleAddCompany(dropdownCompany)} className="btn btn-default">Add</button>
                     </div>
                 </div>
@@ -159,7 +177,35 @@ class RegistrationCompaniesListPage extends React.Component {
                         />
                     </>
                 }
+                 <Modal show={showImportModal} onHide={() => this.setState({showImportModal:false})} >
+                    <Modal.Header closeButton>
+                        <Modal.Title>{T.translate("registration_companies.import_companies")}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="row">
+                            <div className="col-md-12">
+                                Format must be the following:<br />
+                                <b>name</b>: company name<br />
+                            </div>
+                            <div className="col-md-12 invitation-import-upload-wrapper">
+                                <UploadInput
+                                    value={importFile && importFile.name}
+                                    handleUpload={(file) => this.setState({importFile: file})}
+                                    handleRemove={() => this.setState({importFile: null})}
+                                    className="dropzone col-md-6"
+                                    multiple={false}
+                                    accept=".csv"
+                                />
+                            </div>
 
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <button disabled={!this.state.importFile} className="btn btn-primary" onClick={this.handleImportCompanies}>
+                            {T.translate("registration_companies.ingest")}
+                        </button>
+                    </Modal.Footer>
+                </Modal>
             </div>
         )
     }
@@ -177,5 +223,6 @@ export default connect(
         getRegistrationCompanies,
         addRegistrationCompany,
         deleteRegistrationCompany,
+        importRegistrationCompaniesCSV
     }
 )(RegistrationCompaniesListPage);

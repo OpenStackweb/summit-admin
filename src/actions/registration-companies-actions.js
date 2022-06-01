@@ -14,6 +14,7 @@
 import T from "i18n-react/dist/i18n-react";
 import {
     getRequest,
+    postRequest,
     createAction,
     stopLoading,
     startLoading,
@@ -29,6 +30,7 @@ export const RECEIVE_REGISTRATION_COMPANIES = 'RECEIVE_REGISTRATION_COMPANIES';
 export const ADD_REGISTRATION_COMPANY = 'ADD_REGISTRATION_COMPANY';
 export const REGISTRATION_COMPANY_ADDED = 'REGISTRATION_COMPANY_ADDED';
 export const REGISTRATION_COMPANY_DELETED = 'REGISTRATION_COMPANY_DELETED';
+export const REGISTRATION_COMPANIES_IMPORTED = 'REGISTRATION_COMPANIES_IMPORTED';
 
 /**************************   REGISTRATION COMPANIES   ******************************************/
 
@@ -112,6 +114,30 @@ export const deleteRegistrationCompany = (companyId) => (dispatch, getState) => 
         dispatch(stopLoading());
     }
     );
+};
+
+export const importRegistrationCompaniesCSV = (file) => (dispatch, getState) => {
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token : accessToken
+    };
+
+    postRequest(
+        null,
+        createAction(REGISTRATION_COMPANIES_IMPORTED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/registration-companies/csv`,
+        file,
+        authErrorHandler,
+    )(params)(dispatch)
+        .then(() => {
+            dispatch(stopLoading());
+            window.location.reload();
+        });
 };
 
 const normalizeEntity = (entity) => {
