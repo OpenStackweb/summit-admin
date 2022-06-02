@@ -17,6 +17,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
 import ExtraQuestionSubQuestionForm from '../../components/forms/extra-question-sub-question-form';
 import {
+    getOrderExtraQuestions,
     resetOrderExtraQuestionSubQuestionForm,
     getOrderExtraQuestionsSubQuestionsRule,
     saveOrderExtraQuestionsSubQuestionsRule,
@@ -36,6 +37,7 @@ class EditOrderExtraQuestionSubRulesPage extends React.Component {
         if (!subRuleId) {
             props.resetOrderExtraQuestionSubQuestionForm();
         } else {
+            if (props.extraQuestions.length === 0) props.getOrderExtraQuestions();
             props.getOrderExtraQuestionsSubQuestionsRule(orderExtraQuestionId, subRuleId);
         }
 
@@ -92,6 +94,7 @@ const mapStateToProps = ({ currentSummitState, currentOrderExtraQuestionListStat
 export default connect(
     mapStateToProps,
     {
+        getOrderExtraQuestions,
         getOrderExtraQuestionsSubQuestionsRule,
         resetOrderExtraQuestionSubQuestionForm,
         saveOrderExtraQuestionsSubQuestionsRule,

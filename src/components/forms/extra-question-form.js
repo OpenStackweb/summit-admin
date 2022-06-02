@@ -107,7 +107,7 @@ class ExtraQuestionForm extends React.Component {
         const { entity } = this.state;
         if (!entity.type) return false;
         const entity_type = this.props.questionClasses.find(c => c.type == entity.type);
-        return (entity_type.hasOwnProperty(field) && entity_type[field]);
+        return (entity_type?.hasOwnProperty(field) && entity_type[field]);
     }
 
     allowsSubQuestionRules(question) {
