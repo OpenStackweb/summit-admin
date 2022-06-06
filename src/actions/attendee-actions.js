@@ -68,23 +68,87 @@ export const setSelectedAll = (value) => (dispatch) => {
     dispatch(createAction(SET_SELECTED_ALL_ATTENDEES)(value));
 };
 
-export const getAttendees = ( term = null, page = 1, perPage = 10,
-                              order = 'id', orderDir = 1,
-                              statusFilter= null, memberFilter= null, ticketsFilter = null,
-                              virtualCheckInFilter = null, checkedInFilter = null, ticketTypeFilter = null
+const parseFilters = (filters) => {
+    const filter = [];
+
+    if (filters.hasOwnProperty('term') && filters.term) {
+        const escapedTerm = escapeFilterValue(filters.term);
+        filter.push(`first_name=@${escapedTerm},last_name=@${escapedTerm},email=@${escapedTerm},company=@${escapedTerm},ticket_type=@${escapedTerm},badge_type=@${escapedTerm}`);
+    }
+
+    if(filters.hasOwnProperty('statusFilter') && filters.statusFilter){
+        filter.push(`status==${filters.statusFilter}`)
+    }
+
+    if(filters.hasOwnProperty('memberFilter') && filters.memberFilter){
+        if(filters.memberFilter === 'HAS_MEMBER')
+            filter.push(`has_member==true`);
+        if(filters.memberFilter === 'HAS_NO_MEMBER')
+            filter.push(`has_member==false`)
+    }
+
+    if(filters.hasOwnProperty('ticketsFilter') && filters.ticketsFilter){
+        if(filters.ticketsFilter === 'HAS_TICKETS')
+            filter.push(`has_tickets==true`);
+        if(filters.ticketsFilter === 'HAS_NO_TICKETS')
+            filter.push(`has_tickets==false`)
+    }
+
+    if(filters.hasOwnProperty('virtualCheckInFilter') && filters.virtualCheckInFilter){
+        if(filters.virtualCheckInFilter === 'HAS_VIRTUAL_CHECKIN')
+            filter.push(`has_virtual_checkin==true`);
+        if(filters.virtualCheckInFilter === 'HAS_NO_VIRTUAL_CHECKIN')
+            filter.push(`has_virtual_checkin==false`)
+    }
+
+    if(filters.hasOwnProperty('checkedInFilter') && filters.checkedInFilter){
+        if(filters.checkedInFilter === 'CHECKED_IN')
+            filter.push(`has_checkin==true`);
+        if(filters.checkedInFilter === 'NO_CHECKED_IN')
+            filter.push(`has_checkin==false`)
+    }
+
+    if(filters.hasOwnProperty('ticketTypeFilter') && Array.isArray(filters.ticketTypeFilter)
+        && filters.ticketTypeFilter.length > 0){
+        filter.push(filters.ticketTypeFilter.reduce(
+            (accumulator, tt) => accumulator +(accumulator !== '' ? ',':'') +`ticket_type==${tt}`,
+            ''
+        ));
+    }
+
+    if(filters.hasOwnProperty('featuresFilter') && Array.isArray(filters.featuresFilter)
+        && filters.featuresFilter.length > 0){
+        filter.push(filters.featuresFilter.reduce(
+            (accumulator, f) => accumulator +(accumulator !== '' ? ',':'') +`features==${f}`,
+            ''
+        ));
+    }
+
+    if(filters.hasOwnProperty('badgeTypeFilter') && Array.isArray(filters.badgeTypeFilter)
+        && filters.badgeTypeFilter.length > 0){
+        filter.push(filters.badgeTypeFilter.reduce(
+            (accumulator, bt) => accumulator +(accumulator !== '' ? ',':'') +`badge_type==${bt}`,
+            ''
+        ));
+    }
+
+
+
+    return filter;
+}
+
+export const getAttendees = ( page = 1,
+                              perPage = 10,
+                              order = 'id',
+                              orderDir = 1,
+                              filters = {}
+
 ) => (dispatch, getState) => {
 
     const { loggedUserState, currentSummitState } = getState();
     const { accessToken }     = loggedUserState;
     const { currentSummit }   = currentSummitState;
-    const filter = [];
-
     dispatch(startLoading());
-
-    if(term){
-        const escapedTerm = escapeFilterValue(term);
-        filter.push(`first_name=@${escapedTerm},last_name=@${escapedTerm},email=@${escapedTerm},company=@${escapedTerm},ticket_type=@${escapedTerm},badge_type=@${escapedTerm}`);
-    }
 
     const params = {
         expand       : '',
@@ -93,50 +157,16 @@ export const getAttendees = ( term = null, page = 1, perPage = 10,
         access_token : accessToken,
     };
 
-    if(statusFilter){
-        filter.push(`status==${statusFilter}`)
-    }
+    const filter = parseFilters(filters);
 
-    if(memberFilter){
-        if(memberFilter === 'HAS_MEMBER')
-            filter.push(`has_member==true`);
-        if(memberFilter === 'HAS_NO_MEMBER')
-            filter.push(`has_member==false`)
-    }
-
-    if(ticketsFilter){
-        if(ticketsFilter === 'HAS_TICKETS')
-            filter.push(`has_tickets==true`);
-        if(ticketsFilter === 'HAS_NO_TICKETS')
-            filter.push(`has_tickets==false`)
-    }
-
-    if(virtualCheckInFilter){
-        if(virtualCheckInFilter === 'HAS_VIRTUAL_CHECKIN')
-            filter.push(`has_virtual_checkin==true`);
-        if(virtualCheckInFilter === 'HAS_NO_VIRTUAL_CHECKIN')
-            filter.push(`has_virtual_checkin==false`)
-    }
-
-    if(checkedInFilter){
-        if(checkedInFilter === 'CHECKED_IN')
-            filter.push(`has_checkin==true`);
-        if(checkedInFilter === 'NO_CHECKED_IN')
-            filter.push(`has_checkin==false`)
-    }
-
-    if(ticketTypeFilter){
-        filter.push(`ticket_type==${ticketTypeFilter}`)
-    }
-
-    if(filter.length > 0){
-        params['filter[]']= filter;
+    if (filter.length > 0) {
+        params['filter[]'] = filter;
     }
 
     // order
-    if(order != null && orderDir != null){
+    if (order != null && orderDir != null) {
         const orderDirSign = (orderDir === 1) ? '+' : '-';
-        params['order']= `${orderDirSign}${order}`;
+        params['order'] = `${orderDirSign}${order}`;
     }
 
     return getRequest(
@@ -144,78 +174,35 @@ export const getAttendees = ( term = null, page = 1, perPage = 10,
         createAction(RECEIVE_ATTENDEES),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/attendees`,
         authErrorHandler,
-        {page, perPage, order, orderDir, term, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter}
+        {page, perPage, order, orderDir, ...filters}
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
     );
 };
 
-
-export const exportAttendees = ( term = null,
-                              order = 'id', orderDir = 1,
-                              statusFilter= null, memberFilter= null, ticketsFilter = null, virtualCheckInFilter = null, checkedInFilter = null, ticketTypeFilter = null
-) => (dispatch, getState) => {
+export const exportAttendees = (order = 'id', orderDir = 1, filters = {}) => (dispatch, getState) => {
 
     const { loggedUserState, currentSummitState } = getState();
     const { accessToken }     = loggedUserState;
     const { currentSummit }   = currentSummitState;
-    const filter = [];
     const filename = currentSummit.name + '-Attendees.csv';
-    if(term){
-        const escapedTerm = escapeFilterValue(term);
-        filter.push(`first_name=@${escapedTerm},last_name=@${escapedTerm},email=@${escapedTerm},company=@${escapedTerm},ticket_type=@${escapedTerm},badge_type=@${escapedTerm}`);
-    }
 
     const params = {
         expand       : '',
         access_token : accessToken,
     };
 
-    if(statusFilter){
-        filter.push(`status==${statusFilter}`)
-    }
+    const filter = parseFilters(filters);
 
-    if(memberFilter){
-        if(memberFilter === 'HAS_MEMBER')
-            filter.push(`has_member==true`);
-        if(memberFilter === 'HAS_NO_MEMBER')
-            filter.push(`has_member==false`);
-    }
-
-    if(ticketsFilter){
-        if(ticketsFilter === 'HAS_TICKETS')
-            filter.push(`has_tickets==true`);
-        if(ticketsFilter === 'HAS_NO_TICKETS')
-            filter.push(`has_tickets==false`);
-    }
-
-    if(virtualCheckInFilter){
-        if(virtualCheckInFilter === 'HAS_VIRTUAL_CHECKIN')
-            filter.push(`has_virtual_checkin==true`);
-        if(virtualCheckInFilter === 'HAS_NO_VIRTUAL_CHECKIN')
-            filter.push(`has_virtual_checkin==false`)
-    }
-
-    if(checkedInFilter){
-        if(checkedInFilter === 'CHECKED_IN')
-            filter.push(`has_checkin==true`);
-        if(checkedInFilter === 'NO_CHECKED_IN')
-            filter.push(`has_checkin==false`)
-    }
-
-    if(ticketTypeFilter){
-        filter.push(`ticket_type==${ticketTypeFilter}`)
-    }
-
-    if(filter.length > 0){
-        params['filter[]']= filter;
+    if (filter.length > 0) {
+        params['filter[]'] = filter;
     }
 
     // order
-    if(order != null && orderDir != null){
+    if (order != null && orderDir != null) {
         const orderDirSign = (orderDir === 1) ? '+' : '-';
-        params['order']= `${orderDirSign}${order}`;
+        params['order'] = `${orderDirSign}${order}`;
     }
 
     dispatch(getCSV(`${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/attendees/csv`, params, filename));
@@ -442,23 +429,10 @@ export const deleteRsvp = (memberId, rsvpId) => (dispatch, getState) => {
     );
 };
 
-const normalizeEntity = (entity) => {
-    const normalizedEntity = {...entity};
-
-    normalizedEntity.member_id = (normalizedEntity.member != null) ? normalizedEntity.member.id : 0;
-
-    delete normalizedEntity['summit_hall_checked_in_date'];
-    delete normalizedEntity['member'];
-    delete normalizedEntity['tickets'];
-    delete normalizedEntity['id'];
-    delete normalizedEntity['created'];
-    delete normalizedEntity['last_edited'];
-    delete normalizedEntity['last_edited'];
-    return normalizedEntity;
-};
-
-export const sendEmails = (currentFlowEvent, selectedAll = false , selectedIds = [],
-                           term = null, statusFilter= null, memberFilter= null, ticketsFilter = null, virtualCheckInFilter = null, checkedInFilter = null, ticketTypeFilter = null
+export const sendEmails = (currentFlowEvent,
+                           selectedAll = false ,
+                           selectedIds = [],
+                           filters = {}
                            ) => (dispatch, getState) => {
 
 
@@ -466,55 +440,14 @@ export const sendEmails = (currentFlowEvent, selectedAll = false , selectedIds =
     const { accessToken }     = loggedUserState;
     const { currentSummit }   = currentSummitState;
 
-    const filter = [];
-
     const params = {
         access_token : accessToken,
     };
 
-    if(term){
-        const escapedTerm = escapeFilterValue(term);
-        filter.push(`first_name=@${escapedTerm},last_name=@${escapedTerm},email=@${escapedTerm},company=@${escapedTerm},ticket_type=@${escapedTerm},badge_type=@${escapedTerm}`);
-    }
+    const filter = parseFilters(filters);
 
-    if(statusFilter){
-        filter.push(`status==${statusFilter}`)
-    }
-
-    if(memberFilter){
-        if(memberFilter === 'HAS_MEMBER')
-            filter.push(`has_member==true`);
-        if(memberFilter === 'HAS_NO_MEMBER')
-            filter.push(`has_member==false`);
-    }
-
-    if(ticketsFilter){
-        if(ticketsFilter === 'HAS_TICKETS')
-            filter.push(`has_tickets==true`);
-        if(ticketsFilter === 'HAS_NO_TICKETS')
-            filter.push(`has_tickets==false`);
-    }
-
-    if(virtualCheckInFilter){
-        if(virtualCheckInFilter === 'HAS_VIRTUAL_CHECKIN')
-            filter.push(`has_virtual_checkin==true`);
-        if(virtualCheckInFilter === 'HAS_NO_VIRTUAL_CHECKIN')
-            filter.push(`has_virtual_checkin==false`)
-    }
-
-    if(checkedInFilter){
-        if(checkedInFilter === 'CHECKED_IN')
-            filter.push(`has_checkin==true`);
-        if(checkedInFilter === 'NO_CHECKED_IN')
-            filter.push(`has_checkin==false`)
-    }
-
-    if(ticketTypeFilter){
-        filter.push(`ticket_type==${ticketTypeFilter}`)
-    }
-
-    if(filter.length > 0){
-        params['filter[]']= filter;
+    if (filter.length > 0) {
+        params['filter[]'] = filter;
     }
 
     const payload =  {
@@ -549,3 +482,17 @@ export const sendEmails = (currentFlowEvent, selectedAll = false , selectedIds =
         });
 };
 
+const normalizeEntity = (entity) => {
+    const normalizedEntity = {...entity};
+
+    normalizedEntity.member_id = (normalizedEntity.member != null) ? normalizedEntity.member.id : 0;
+
+    delete normalizedEntity['summit_hall_checked_in_date'];
+    delete normalizedEntity['member'];
+    delete normalizedEntity['tickets'];
+    delete normalizedEntity['id'];
+    delete normalizedEntity['created'];
+    delete normalizedEntity['last_edited'];
+    delete normalizedEntity['last_edited'];
+    return normalizedEntity;
+};

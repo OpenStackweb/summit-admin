@@ -217,7 +217,6 @@ export const getTickets =
         const {accessToken} = loggedUserState;
         const {currentSummit} = currentSummitState;
 
-
         dispatch(startLoading());
 
         const params = {

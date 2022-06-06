@@ -31,6 +31,8 @@ import {
     exportAttendees
 } from "../../actions/attendee-actions";
 
+import {getBadgeFeatures, getBadgeTypes} from "../../actions/badge-actions";
+
 class SummitAttendeeListPage extends React.Component {
 
     constructor(props) {
@@ -56,6 +58,8 @@ class SummitAttendeeListPage extends React.Component {
         this.handleSetVirtualCheckInFilter = this.handleSetVirtualCheckInFilter.bind(this);
         this.handleSetCheckedInFilter = this.handleSetCheckedInFilter.bind(this);
         this.handleExport = this.handleExport.bind(this);
+        this.handleChangeFeaturesFilter = this.handleChangeFeaturesFilter.bind(this);
+        this.handleChangeBadgeTypeFilter = this.handleChangeBadgeTypeFilter.bind(this);
         this.state = {
             showModal: false,
             modalTitle: '',
@@ -64,40 +68,146 @@ class SummitAttendeeListPage extends React.Component {
     }
 
     handleExport(ev) {
-        const {term, order, orderDir, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter} = this.props;
+        const {badgeTypeFilter, featuresFilter, order, orderDir, term, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter} = this.props;
         ev.preventDefault();
-        this.props.exportAttendees(term, order, orderDir, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter);
+        this.props.exportAttendees(order, orderDir, {
+            term,
+            statusFilter,
+            memberFilter,
+            ticketsFilter,
+            virtualCheckInFilter,
+            checkedInFilter,
+            ticketTypeFilter,
+            featuresFilter,
+            badgeTypeFilter,
+        });
     }
 
     handleSetMemberFilter(newMemberFilter){
-        const {term, order, page, orderDir, perPage, statusFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter} = this.props;
-        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, newMemberFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter);
+        const {badgeTypeFilter, featuresFilter, term, order, page, orderDir, perPage, statusFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter} = this.props;
+        this.props.getAttendees(page, perPage, order, orderDir, {
+            term,
+            statusFilter,
+            memberFilter: newMemberFilter,
+            ticketsFilter,
+            virtualCheckInFilter,
+            checkedInFilter,
+            ticketTypeFilter,
+            featuresFilter,
+            badgeTypeFilter,
+        });
     }
 
     handleSetTicketsFilter(newTicketsFilter){
-        const {term, order, page, orderDir, perPage, statusFilter, memberFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter} = this.props;
-        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, newTicketsFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter);
+        const {badgeTypeFilter, featuresFilter, term, order, page, orderDir, perPage, statusFilter, memberFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter} = this.props;
+        this.props.getAttendees(page, perPage, order, orderDir,
+            {
+                term,
+                statusFilter,
+                memberFilter,
+                ticketsFilter: newTicketsFilter,
+                virtualCheckInFilter,
+                checkedInFilter,
+                ticketTypeFilter,
+                featuresFilter,
+                badgeTypeFilter,
+            });
     }
 
     handleSetStatusFilter(newStatusFilter){
-        const {term, order, page, orderDir, perPage, memberFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter} = this.props;
-        this.props.getAttendees(term, page, perPage, order, orderDir, newStatusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter);
+        const {badgeTypeFilter, featuresFilter, term, order, page, orderDir, perPage, memberFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter} = this.props;
+        this.props.getAttendees(page, perPage, order, orderDir,
+            {
+                term,
+                statusFilter: newStatusFilter,
+                memberFilter,
+                ticketsFilter,
+                virtualCheckInFilter,
+                checkedInFilter,
+                ticketTypeFilter,
+                featuresFilter,
+                badgeTypeFilter,
+            });
     }
 
     handleSetVirtualCheckInFilter(newVirtualCheckInFilter){
-        const {term, order, page, orderDir, perPage, statusFilter, memberFilter, ticketsFilter, checkedInFilter, ticketTypeFilter} = this.props;
-        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter, newVirtualCheckInFilter, checkedInFilter, ticketTypeFilter);
+        const {badgeTypeFilter, featuresFilter, term, order, page, orderDir, perPage, statusFilter, memberFilter, ticketsFilter, checkedInFilter, ticketTypeFilter} = this.props;
+        this.props.getAttendees(page, perPage, order, orderDir,
+            {
+                term,
+                statusFilter,
+                memberFilter,
+                ticketsFilter,
+                virtualCheckInFilter: newVirtualCheckInFilter,
+                checkedInFilter,
+                ticketTypeFilter,
+                featuresFilter,
+                badgeTypeFilter,
+            })
+        ;
     }
 
     handleChangeTicketTypeFilter(ev){
-        const {value} = ev.target;
-        const {term, order, page, orderDir, perPage, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter} = this.props;
-        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter, value);
+        const {value: newTicketTypeFilter } = ev.target;
+        const {badgeTypeFilter, featuresFilter, term, order, page, orderDir, perPage, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter} = this.props;
+        this.props.getAttendees(page, perPage, order, orderDir, {
+            term,
+            statusFilter,
+            memberFilter,
+            ticketsFilter,
+            virtualCheckInFilter,
+            checkedInFilter,
+            ticketTypeFilter: newTicketTypeFilter,
+            featuresFilter,
+            badgeTypeFilter,
+        });
+    }
+
+    handleChangeFeaturesFilter(ev){
+        const {value: newFeaturesFilter } = ev.target;
+        const {badgeTypeFilter, term, order, page, orderDir, perPage, statusFilter, memberFilter, ticketsFilter, ticketTypeFilter, virtualCheckInFilter, checkedInFilter} = this.props;
+        this.props.getAttendees(page, perPage, order, orderDir, {
+            term,
+            statusFilter,
+            memberFilter,
+            ticketsFilter,
+            virtualCheckInFilter,
+            checkedInFilter,
+            ticketTypeFilter,
+            featuresFilter: newFeaturesFilter,
+            badgeTypeFilter,
+        });
+    }
+
+    handleChangeBadgeTypeFilter(ev) {
+        const {value: newBadgeTypeFilter } = ev.target;
+        const { featuresFilter, term, order, page, orderDir, perPage, statusFilter, memberFilter, ticketsFilter, ticketTypeFilter, virtualCheckInFilter, checkedInFilter} = this.props;
+        this.props.getAttendees(page, perPage, order, orderDir, {
+            term,
+            statusFilter,
+            memberFilter,
+            ticketsFilter,
+            virtualCheckInFilter,
+            checkedInFilter,
+            ticketTypeFilter,
+            featuresFilter,
+            badgeTypeFilter: newBadgeTypeFilter,
+        });
     }
 
     handleSetCheckedInFilter(newCheckedInFilter){
-        const {term, order, page, orderDir, perPage, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, ticketTypeFilter} = this.props;
-        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, newCheckedInFilter, ticketTypeFilter);
+        const {badgeTypeFilter, featuresFilter, term, order, page, orderDir, perPage, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, ticketTypeFilter} = this.props;
+        this.props.getAttendees(page, perPage, order, orderDir, {
+            term,
+            statusFilter,
+            memberFilter,
+            ticketsFilter,
+            virtualCheckInFilter,
+            checkedInFilter: newCheckedInFilter,
+            ticketTypeFilter,
+            featuresFilter,
+            badgeTypeFilter,
+        });
     }
 
     handleChangeFlowEvent(ev){
@@ -120,7 +230,9 @@ class SummitAttendeeListPage extends React.Component {
             ticketTypeFilter,
             selectedIds,
             currentFlowEvent,
-            sendEmails
+            sendEmails,
+            featuresFilter,
+            badgeTypeFilter,
         } = this.props;
 
         if(!currentFlowEvent){
@@ -133,7 +245,17 @@ class SummitAttendeeListPage extends React.Component {
             return false;
         }
 
-        sendEmails(currentFlowEvent, selectedAll , selectedIds, term, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter);
+        sendEmails(currentFlowEvent, selectedAll , selectedIds, {
+            term,
+            statusFilter,
+            memberFilter,
+            ticketsFilter,
+            virtualCheckInFilter,
+            checkedInFilter,
+            ticketTypeFilter,
+            featuresFilter,
+            badgeTypeFilter,
+        });
     }
 
     handleSelected(attendee_id, isSelected){
@@ -156,8 +278,22 @@ class SummitAttendeeListPage extends React.Component {
     componentDidMount() {
         const {currentSummit} = this.props;
         if(currentSummit) {
-            const {term, order, page, orderDir, perPage, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter} = this.props;
-            this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter);
+            const {featuresFilter, badgeTypeFilter, term, order, page, orderDir, perPage, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter} = this.props;
+            this.props.getBadgeFeatures();
+            this.props.getBadgeTypes();
+            this.props.getAttendees(page, perPage, order, orderDir,
+                {
+                    term,
+                    statusFilter,
+                    memberFilter,
+                    ticketsFilter,
+                    virtualCheckInFilter,
+                    checkedInFilter,
+                    ticketTypeFilter,
+                    badgeTypeFilter,
+                    featuresFilter,
+                });
+
         }
     }
 
@@ -178,10 +314,8 @@ class SummitAttendeeListPage extends React.Component {
     }
 
     hasSchedule(attendee_id) {
-
         const {attendees} = this.props;
         let attendee = attendees.find(a => a.id === attendee_id);
-
         return attendee.schedule_count > 0;
     }
 
@@ -190,19 +324,50 @@ class SummitAttendeeListPage extends React.Component {
     }
 
     handlePageChange(page) {
-        const {term, order, orderDir, perPage,  statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter} = this.props;
-        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter);
+        const {badgeTypeFilter, featuresFilter, term, order, orderDir, perPage,  statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter} = this.props;
+        this.props.getAttendees(page, perPage, order, orderDir,
+            {
+                term,
+                statusFilter,
+                memberFilter,
+                ticketsFilter,
+                virtualCheckInFilter,
+                checkedInFilter,
+                ticketTypeFilter,
+                featuresFilter,
+                badgeTypeFilter,
+            });
     }
 
     handleSort(index, key, dir, func) {
-        const {term, page, perPage,  statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter} = this.props;
+        const {badgeTypeFilter, featuresFilter, term, page, perPage,  statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter} = this.props;
         key = (key === 'name') ? 'full_name' : key;
-        this.props.getAttendees(term, page, perPage, key, dir, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter);
+        this.props.getAttendees(page, perPage, key, dir, {
+            term,
+            statusFilter,
+            memberFilter,
+            ticketsFilter,
+            virtualCheckInFilter,
+            checkedInFilter,
+            ticketTypeFilter,
+            featuresFilter,
+            badgeTypeFilter,
+        });
     }
 
-    handleSearch(term) {
-        const {order, orderDir, page, perPage, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter} = this.props;
-        this.props.getAttendees(term, page, perPage, order, orderDir, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter);
+    handleSearch(newTerm) {
+        const {badgeTypeFilter, featuresFilter, order, orderDir, page, perPage, statusFilter, memberFilter, ticketsFilter, virtualCheckInFilter, checkedInFilter, ticketTypeFilter} = this.props;
+        this.props.getAttendees(page, perPage, order, orderDir, {
+            term: newTerm,
+            statusFilter,
+            memberFilter,
+            ticketsFilter,
+            virtualCheckInFilter,
+            checkedInFilter,
+            ticketTypeFilter,
+            featuresFilter,
+            badgeTypeFilter,
+        });
     }
 
     handleNewAttendee(ev) {
@@ -211,6 +376,7 @@ class SummitAttendeeListPage extends React.Component {
     }
 
     handleDeleteAttendee(attendeeId) {
+
         const {deleteAttendee, attendees} = this.props;
         let attendee = attendees.find(a => a.id === attendeeId);
 
@@ -229,7 +395,9 @@ class SummitAttendeeListPage extends React.Component {
     }
 
     render(){
-        const {currentSummit, attendees,
+        const {
+            currentSummit,
+            attendees,
             lastPage, currentPage,
             term, order, orderDir, totalAttendees,
             selectedIds,
@@ -241,8 +409,15 @@ class SummitAttendeeListPage extends React.Component {
             virtualCheckInFilter,
             checkedInFilter,
             ticketTypeFilter,
+            featuresFilter,
+            badgeFeatures,
+            badgeTypes,
+            badgeTypeFilter,
         } = this.props;
+
         const {showModal, modalSchedule, modalTitle} = this.state;
+        if(!badgeFeatures.length) return null;
+        if(!badgeTypes.length) return null;
 
         const columns = [
             { columnKey: 'member_id', value: T.translate("attendee_list.member_id"), sortable: true},
@@ -287,9 +462,16 @@ class SummitAttendeeListPage extends React.Component {
             {label: 'SUMMIT_REGISTRATION_INCOMPLETE_ATTENDEE_REMINDER', value: 'SUMMIT_REGISTRATION_INCOMPLETE_ATTENDEE_REMINDER'},
         ];
 
-        let ticketTypesDDL = [
-            {label: '-- SELECT A TICKET TYPE --', value: ''},
+        const  ticketTypesDDL = [
             ...currentSummit.ticket_types.map(t => ({label: t.name, value: t.name}))
+        ];
+
+        const featuresTypesDDL = [
+            ...badgeFeatures.map(bf => ({label: bf.name, value: bf.name}))
+        ];
+
+        const badgeTypesDDL = [
+            ...badgeTypes.map(bt => ({label: bt.name, value: bt.name}))
         ];
 
         return(
@@ -376,9 +558,36 @@ class SummitAttendeeListPage extends React.Component {
                     <div className="col-md-4" style={{ height: "61px", paddingTop: "8px" }}>
                         <Dropdown
                             id="ticketTypeFilter"
-                            value={ticketTypeFilter ?? ''}
+                            value={ticketTypeFilter}
                             onChange={this.handleChangeTicketTypeFilter}
                             options={ticketTypesDDL}
+                            isClearable={true}
+                            placeholder={"FILTER BY TICKET TYPE"}
+                            isMulti
+                        />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-6" style={{ height: "61px", paddingTop: "8px" }}>
+                        <Dropdown
+                            id="badgeTypeFilter"
+                            value={badgeTypeFilter}
+                            onChange={this.handleChangeBadgeTypeFilter}
+                            options={badgeTypesDDL}
+                            isClearable={true}
+                            placeholder={"FILTER BY BADGE TYPE"}
+                            isMulti
+                        />
+                    </div>
+                    <div className="col-md-6" style={{ height: "61px", paddingTop: "8px" }}>
+                        <Dropdown
+                            id="featuresFilter"
+                            value={featuresFilter}
+                            onChange={this.handleChangeFeaturesFilter}
+                            options={featuresTypesDDL}
+                            isClearable={true}
+                            placeholder={"FILTER BY BADGE FEATURE"}
+                            isMulti
                         />
                     </div>
                 </div>
@@ -437,9 +646,11 @@ class SummitAttendeeListPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentAttendeeListState }) => ({
+const mapStateToProps = ({ currentSummitState, currentAttendeeListState, currentBadgeFeatureListState, currentBadgeTypeListState }) => ({
     currentSummit   : currentSummitState.currentSummit,
-    ...currentAttendeeListState
+    ...currentAttendeeListState,
+    badgeFeatures: currentBadgeFeatureListState.badgeFeatures,
+    badgeTypes: currentBadgeTypeListState.badgeTypes,
 })
 
 export default connect (
@@ -454,5 +665,7 @@ export default connect (
         setSelectedAll,
         sendEmails,
         exportAttendees,
+        getBadgeFeatures,
+        getBadgeTypes,
     }
 )(SummitAttendeeListPage);
