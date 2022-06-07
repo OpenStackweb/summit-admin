@@ -639,6 +639,7 @@ class EventForm extends React.Component {
                             value={entity.moderator}
                             onChange={this.handleChange}
                             history={history}
+                            isClearable={true}
                             getOptionLabel={(speaker) => `${speaker.first_name} ${speaker.last_name} (${speaker.email})`}
                         />
                     </div>
@@ -653,6 +654,7 @@ class EventForm extends React.Component {
                             value={entity.moderator}
                             onChange={this.handleChange}
                             history={history}
+                            isClearable={true}
                         />
                     </div>
                 </div>
