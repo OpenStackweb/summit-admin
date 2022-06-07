@@ -416,8 +416,6 @@ class SummitAttendeeListPage extends React.Component {
         } = this.props;
 
         const {showModal, modalSchedule, modalTitle} = this.state;
-        if(!badgeFeatures.length) return null;
-        if(!badgeTypes.length) return null;
 
         const columns = [
             { columnKey: 'member_id', value: T.translate("attendee_list.member_id"), sortable: true},
