@@ -73,7 +73,7 @@ const parseFilters = (filters) => {
 
     if (filters.hasOwnProperty('term') && filters.term) {
         const escapedTerm = escapeFilterValue(filters.term);
-        filter.push(`first_name=@${escapedTerm},last_name=@${escapedTerm},email=@${escapedTerm},company=@${escapedTerm},ticket_type=@${escapedTerm},badge_type=@${escapedTerm}`);
+        filter.push(`first_name=@${escapedTerm},last_name=@${escapedTerm},email=@${escapedTerm},company=@${escapedTerm},ticket_type=@${escapedTerm},badge_type=@${escapedTerm},full_name=@${escapedTerm}`);
     }
 
     if(filters.hasOwnProperty('statusFilter') && filters.statusFilter){
