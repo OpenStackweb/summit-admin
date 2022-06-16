@@ -41,6 +41,7 @@ export const DEFAULT_ENTITY = {
     printable           : false,
     placeholder         : '',
     usage               : 'Ticket',
+    max_selected_values : 0,
     values              : [],
     sub_question_rules  : [],
 }

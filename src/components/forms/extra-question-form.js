@@ -197,6 +197,17 @@ class ExtraQuestionForm extends React.Component {
                             </>
                         }
                     </div>
+                    {entity.type === 'CheckBoxList' &&
+                        <div className="col-md-3">
+                            <label>{T.translate("question_form.max_selected_values")}</label>
+                            <Input
+                                type="number"
+                                id="max_selected_values"
+                                value={entity.max_selected_values}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                    }
                 </div>
                 <div className="row form-group">
                     <div className="col-md-12">

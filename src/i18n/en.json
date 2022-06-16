@@ -1029,6 +1029,7 @@
     "printable": "Printable",
     "value": "Hidden Value",
     "visible_option": "Visible Option (as appears on site)",
+    "max_selected_values": "Max Selected Values",
     "values": "Values",
     "add_value": "Add Value",
     "sub_questions_rules": "Conditional Subquestions",

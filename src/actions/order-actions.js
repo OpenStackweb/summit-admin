@@ -344,6 +344,9 @@ export const deleteOrderExtraQuestionValue = (orderExtraQuestionId, orderExtraQu
 
 const normalizeQuestion = (entity) => {
     const normalizedEntity = {...entity};
+    if (normalizedEntity.max_selected_values) {
+        normalizedEntity.max_selected_values = parseInt(normalizedEntity.max_selected_values);
+    }
     return normalizedEntity;
 }
 
