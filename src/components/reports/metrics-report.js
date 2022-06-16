@@ -207,7 +207,7 @@ class MetricsReport extends React.Component {
                 const page = d.eventName || d.sponsorName || d.location;
                 return {
                     type: d.type,
-                    date: moment(d.ingressDate, 'YYYY-MM-DDTHH:mm:ss+00:00').format('dddd Do h:mm a'),
+                    date: moment.tz(d.ingressDate, 'UTC').format('dddd, MMMM Do YYYY, h:mm a (z)'),
                     page: page,
                     member: d.memberName
                 }
