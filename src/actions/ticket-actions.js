@@ -28,6 +28,7 @@ import {
     startLoading,
     stopLoading
 } from 'openstack-uicore-foundation/lib/methods';
+
 import URI from "urijs";
 
 export const REQUEST_TICKETS = 'REQUEST_TICKETS';
@@ -921,6 +922,7 @@ export const getPaymentProfiles = (page = 1, perPage = 10, order = 'id', orderDi
 };
 
 export const savePaymentProfile = (entity) => (dispatch, getState) => {
+
     const {loggedUserState, currentSummitState} = getState();
     const {accessToken} = loggedUserState;
     const {currentSummit} = currentSummitState;

@@ -90,6 +90,11 @@ class PaymentProfileForm extends React.Component {
             {label: 'Bookable Rooms', value: 'BookableRooms'},
         ];
 
+        let provider_ddl = [
+            {label: 'Stripe', value: 'Stripe'},
+            {label: 'LawPay', value: 'LawPay'},
+        ];
+
         return (
             <form className="payment-profile-form">
                 <input type="hidden" id="id" value={entity.id} />
@@ -105,11 +110,11 @@ class PaymentProfileForm extends React.Component {
                     </div>
                     <div className="col-md-4">
                         <label> {T.translate("edit_payment_profile.provider")}</label>
-                        <Input
-                            className="form-control"
+                        <Dropdown
                             id="provider"
                             value={entity.provider}
-                            readOnly={true}
+                            onChange={this.handleChange}
+                            options={provider_ddl}
                         />
                     </div>
                 </div>
@@ -133,16 +138,31 @@ class PaymentProfileForm extends React.Component {
                             &nbsp;<i className="fa fa-info-circle pointable" aria-hidden="true" title={T.translate("edit_payment_profile.info_stripe_test_mode")}/>
                         </div>
                     </div>
+                    {entity.provider === 'Stripe' &&
                     <div className="col-md-4 checkboxes-div">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="send_email_receipt" checked={entity.send_email_receipt}
-                                   onChange={this.handleChange} className="form-check-input" />
+                                   onChange={this.handleChange} className="form-check-input"/>
                             <label className="form-check-label" htmlFor="send_email_receipt">
                                 {T.translate("edit_payment_profile.send_email_receipt")}
                             </label>
-                            &nbsp;<i className="fa fa-info-circle pointable" aria-hidden="true" title={T.translate("edit_payment_profile.info_send_email_receipt")}/>
+                            &nbsp;<i className="fa fa-info-circle pointable" aria-hidden="true"
+                                     title={T.translate("edit_payment_profile.info_send_email_receipt")}/>
                         </div>
                     </div>
+                    }
+
+                    {entity.provider === 'LawPay' &&
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_payment_profile.merchant_account_id")}</label>
+                            <Input
+                                className="form-control"
+                                id="merchant_account_id"
+                                onChange={this.handleChange}
+                                value={entity.merchant_account_id}
+                            />
+                        </div>
+                    }
                 </div>
                 <div className="row form-group">
                     <div className="col-md-6">

@@ -43,20 +43,20 @@ const paymentProfileListReducer = (state = DEFAULT_STATE, action) => {
         break;
         case RECEIVE_PAYMENT_PROFILES: {
             let { total } = payload.response;
-            let paymentProfiles = payload.response.data;
+            let paymentProfiles = payload.response.data.map( p => ({...p, active_nice: p.active ? 'Yes' : 'No'}));
 
             return {...state, paymentProfiles: paymentProfiles, totalPaymentProfiles: total };
         }
         break;
         case PAYMENT_PROFILE_ADDED: {
             let { response } = payload;
-            return {...state, paymentProfiles: [...state.paymentProfiles, response]};
+            return {...state, paymentProfiles: [...state.paymentProfiles, {...response, active_nice: response.active ? 'Yes' : 'No'} ]};
         }
         break;
         case PAYMENT_PROFILE_UPDATED: {
             let updatedEntity = {...payload.response};
             let paymentProfiles = state.paymentProfiles.map( pp => {
-                if (pp.id === updatedEntity.id) return updatedEntity;
+                if (pp.id === updatedEntity.id) return {...updatedEntity, active_nice: updatedEntity.active ? 'Yes' : 'No'};
                 return pp;
             });
 

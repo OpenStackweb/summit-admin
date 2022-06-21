@@ -76,7 +76,7 @@ class PaymentProfileListPage extends React.Component {
             { columnKey: 'id', value: T.translate("payment_profiles.id"), sortable: true },
             { columnKey: 'application_type', value: T.translate("payment_profiles.application_type") },
             { columnKey: 'provider', value: T.translate("payment_profiles.provider") },
-            { columnKey: 'active', value: T.translate("payment_profiles.active") }
+            { columnKey: 'active_nice', value: T.translate("payment_profiles.active") }
         ];
 
         const table_options = {

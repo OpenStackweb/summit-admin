@@ -34,6 +34,7 @@ export const DEFAULT_ENTITY = {
     test_secret_key         : '',
     test_publishable_key    : '',
     send_email_receipt      : false,
+    merchant_account_id     : '',
 }
 
 const DEFAULT_STATE = {

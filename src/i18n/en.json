@@ -1275,7 +1275,8 @@
     "info_send_email_receipt": "Email Customer about successful payments.",
     "payment_profile_saved": "Payment Profile saved successfully.",
     "payment_profile_created": "Payment Profile created successfully.",
-    "send_email_receipt": "Send Stripe Email receipt?"
+    "send_email_receipt": "Send Stripe Email receipt?",
+    "merchant_account_id": "Merchant Account Id"
   },
   "registration_invitations": {
     "registration_invitations_list": "InvitationsList",
