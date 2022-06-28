@@ -58,6 +58,14 @@ export const FEATURED_SPEAKER_DELETED       = 'FEATURED_SPEAKER_DELETED';
 export const FEATURED_SPEAKER_ADDED         = 'FEATURED_SPEAKER_ADDED';
 export const FEATURED_SPEAKER_ORDER_UPDATED = 'FEATURED_SPEAKER_ORDER_UPDATED';
 
+export const REQUEST_SPEAKERS_BY_SUMMIT     = 'REQUEST_SPEAKERS_BY_SUMMIT';
+export const RECEIVE_SPEAKERS_BY_SUMMIT     = 'RECEIVE_SPEAKERS_BY_SUMMIT';
+export const SELECT_SUMMIT_SPEAKER          = 'SELECT_SUMMIT_SPEAKER';
+export const UNSELECT_SUMMIT_SPEAKER        = 'UNSELECT_SUMMIT_SPEAKER';
+export const SELECT_ALL_SUMMIT_SPEAKERS     = 'SELECT_ALL_SUMMIT_SPEAKERS';
+export const UNSELECT_ALL_SUMMIT_SPEAKERS   = 'UNSELECT_ALL_SUMMIT_SPEAKERS';
+export const SEND_SPEAKERS_EMAILS           = 'SEND_SPEAKERS_EMAILS';
+export const SET_SPEAKERS_CURRENT_FLOW_EVENT= 'SET_SPEAKERS_CURRENT_FLOW_EVENT';
 
 export const getSpeakers = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
 
@@ -676,3 +684,272 @@ export const removeFeaturedSpeaker = (speakerId) => (dispatch, getState) => {
         }
     );
 };
+
+/****************************************************************************************************/
+/* SPEAKERS BY SUMMIT */
+/****************************************************************************************************/
+
+export const getSpeakersBySummit = (term = null, page = 1, perPage = 10, order = 'full_name', orderDir = 1, filters = {}) => (dispatch, getState) => {
+
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    
+    const filter = parseFilters(filters);
+
+    dispatch(startLoading());
+
+    if(term) {
+        const escapedTerm = escapeFilterValue(term);
+        filter.push(
+            [
+                `full_name@@${escapedTerm}`,
+                `email=@${escapedTerm}`,
+                `presentations_title=@${escapedTerm}`,
+                `presentations_abstract=@${escapedTerm}`,
+                `presentations_submitter_full_name@@${escapedTerm}`,
+                `presentations_submitter_email=@${escapedTerm}`
+            ].join(',')
+        );
+    }
+
+    const params = {
+        page         : page,
+        per_page     : perPage,
+        access_token : accessToken,
+        expand       : 'accepted_presentations,alternate_presentations,rejected_presentations',
+        relations : 'accepted_presentations,alternate_presentations,rejected_presentations',
+    };
+
+    if(filter.length > 0){
+        params['filter[]']= filter;
+    }
+
+    // order
+    if(order != null && orderDir != null){
+        if(order == '') order = 'full_name';
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
+        params['order']= `${orderDirSign}${order}`;
+    }
+
+    return getRequest(
+        createAction(REQUEST_SPEAKERS_BY_SUMMIT),
+        createAction(RECEIVE_SPEAKERS_BY_SUMMIT),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/speakers`,
+        authErrorHandler,
+        {order, orderDir, page, perPage, term, ...filters, currentSummitId: currentSummit.id}
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+}
+
+export const exportSummitSpeakers = (term = null, order = 'id', orderDir = 1, filters = {}) => (dispatch, getState) => {
+
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+    const filename = currentSummit.name + '-Speakers.csv';
+    const params = {
+        access_token : accessToken
+    };
+    
+    const filter = parseFilters(filters);
+
+    if(term) {
+        const escapedTerm = escapeFilterValue(term);
+        filter.push(
+            [
+                `full_name@@${escapedTerm}`,
+                `email=@${escapedTerm}`,
+                `presentations_title=@${escapedTerm}`,
+                `presentations_abstract=@${escapedTerm}`,
+                `presentations_submitter_full_name@@${escapedTerm}`,
+                `presentations_submitter_email=@${escapedTerm}`
+            ].join(',')
+        );
+    }
+
+    if(filter.length > 0){
+        params['filter[]']= filter;
+    }
+
+    // order
+    if(order != null && orderDir != null){
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
+        params['order']= `${orderDirSign}${order}`;
+    }
+
+    dispatch(getCSV(`${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/speakers/csv`, params, filename));
+}
+
+export const sendSpeakerEmails = (currentFlowEvent,
+                           selectedAll = false ,
+                           selectedIds = [],
+                           testRecipient = '',
+                           excerptRecipient= '',
+                           term = '',
+                           filters = {}
+                           ) => (dispatch, getState) => {
+
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+
+    const params = {
+        access_token : accessToken,
+    };
+
+    const filter = parseFilters(filters);
+
+    if(term) {
+        const escapedTerm = escapeFilterValue(term);
+        filter.push(
+            [
+                `full_name@@${escapedTerm}`,
+                `email=@${escapedTerm}`,
+                `presentations_title=@${escapedTerm}`,
+                `presentations_abstract=@${escapedTerm}`,
+                `presentations_submitter_full_name@@${escapedTerm}`,
+                `presentations_submitter_email=@${escapedTerm}`
+            ].join(',')
+        );
+    }
+
+    if (filter.length > 0) {
+        params['filter[]'] = filter;
+    }
+
+    const payload =  {
+        email_flow_event : currentFlowEvent
+    };
+
+    if(!selectedAll && selectedIds.length > 0){
+        payload['speaker_ids'] = selectedIds;
+    }
+
+    if(testRecipient) {
+        payload['test_email_recipient'] = testRecipient;
+    }
+
+    if(excerptRecipient){
+        payload['outcome_email_recipient'] = excerptRecipient
+    }
+
+    dispatch(startLoading());
+
+    const success_message = {
+        title: T.translate("general.done"),
+        html: T.translate("summit_speakers_list.resend_done"),
+        type: 'success'
+    };
+
+    return putRequest(
+        null,
+        createAction(SEND_SPEAKERS_EMAILS),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/speakers/all/send`,
+        payload,
+        authErrorHandler
+    )(params)(dispatch)
+        .then((payload) => {
+            dispatch(showMessage(
+                success_message,
+            ));
+            dispatch(stopLoading());
+            return payload;
+        });
+};
+
+export const selectSummitSpeaker = (speakerId) => (dispatch, getState) => {
+    dispatch(createAction(SELECT_SUMMIT_SPEAKER)(speakerId));
+};
+
+export const unselectSummitSpeaker = (speakerId) => (dispatch, getState) => {
+    dispatch(createAction(UNSELECT_SUMMIT_SPEAKER)(speakerId));
+};
+
+export const selectAllSummitSpeakers = () => (dispatch, getState) => {
+    dispatch(createAction(SELECT_ALL_SUMMIT_SPEAKERS)());
+}
+
+export const unselectAllSummitSpeakers = () => (dispatch, getState) => {
+    dispatch(createAction(UNSELECT_ALL_SUMMIT_SPEAKERS)());
+}
+
+export const setCurrentFlowEvent = (value) => (dispatch) => {
+    dispatch(createAction(SET_SPEAKERS_CURRENT_FLOW_EVENT)(value));
+};
+
+const parseFilters = (filters) => {
+
+    const filter = [];
+
+    if(filters.hasOwnProperty('selectionPlanFilter') && Array.isArray(filters.selectionPlanFilter)
+        && filters.selectionPlanFilter.length > 0){
+        filter.push(filters.selectionPlanFilter.reduce(
+            (accumulator, sp) => accumulator +(accumulator !== '' ? ',':'') +`presentations_selection_plan_id==${sp}`,
+            ''
+        ));
+    }
+
+    if(filters.hasOwnProperty('trackFilter') && Array.isArray(filters.trackFilter)
+        && filters.trackFilter.length > 0){
+        filter.push(filters.trackFilter.reduce(
+            (accumulator, t) => accumulator +(accumulator !== '' ? ',':'') +`presentations_track_id==${t}`,
+            ''
+        ));
+    }
+
+    if(filters.hasOwnProperty('activityTypeFilter') && Array.isArray(filters.activityTypeFilter)
+        && filters.activityTypeFilter.length > 0){
+        filter.push(filters.activityTypeFilter.reduce(
+            (accumulator, at) => accumulator +(accumulator !== '' ? ',':'') +`presentations_type_id==${at}`,
+            ''
+        ));
+    }
+
+    if(filters.hasOwnProperty('selectionStatusFilter')
+        && Array.isArray(filters.selectionStatusFilter)
+        && filters.selectionStatusFilter.length > 0 ) {
+
+        // exclusive filters
+        if(filters.selectionStatusFilter.includes('only_rejected')){
+            filter.push('has_rejected_presentations==true');
+            filter.push('has_accepted_presentations==false');
+            filter.push('has_alternate_presentations==false');
+        }
+        else if(filters.selectionStatusFilter.includes('only_accepted')){
+            filter.push('has_rejected_presentations==false');
+            filter.push('has_accepted_presentations==true');
+            filter.push('has_alternate_presentations==false');
+        }
+        else if(filters.selectionStatusFilter.includes('only_alternate')){
+            filter.push('has_rejected_presentations==false');
+            filter.push('has_accepted_presentations==false');
+            filter.push('has_alternate_presentations==true');
+        }
+        else if(filters.selectionStatusFilter.includes('accepted_alternate')){
+            filter.push('has_rejected_presentations==false');
+            filter.push('has_accepted_presentations==true');
+            filter.push('has_alternate_presentations==true');
+        }
+        else if(filters.selectionStatusFilter.includes('accepted_rejected')){
+            filter.push('has_rejected_presentations==true');
+            filter.push('has_accepted_presentations==true');
+            filter.push('has_alternate_presentations==false');
+        }
+        else if(filters.selectionStatusFilter.includes('alternate_rejected')){
+            filter.push('has_rejected_presentations==true');
+            filter.push('has_accepted_presentations==false');
+            filter.push('has_alternate_presentations==true');
+        }
+        else {
+           filter.push(filters.selectionStatusFilter.reduce(
+               (accumulator, at) => accumulator + (accumulator !== '' ? ',' : '') + `has_${at}_presentations==true`,
+               ''
+           ));
+       }
+    }
+
+    return filter;
+}

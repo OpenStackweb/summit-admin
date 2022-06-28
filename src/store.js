@@ -113,6 +113,7 @@ import orderExtraQuestionRuleReducer from './reducers/orders/order-extra-questio
 import presentationVotesReducer from "./reducers/events/summit-presentation-votes-reducer";
 import ratingTypeReducer from "./reducers/ranking/rating-type-reducer";
 import scoreTypeReducer from './reducers/ranking/score-type-reducer';
+import summitSpeakersListReducer from './reducers/summit_speakers/summit-speakers-list-reducer';
 
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
@@ -141,6 +142,7 @@ const reducers = persistCombineReducers(config, {
     currentAttendeeState: attendeeReducer,
     currentPromocodeListState: promocodeListReducer,
     currentPromocodeState: promocodeReducer,
+    currentSummitSpeakersListState: summitSpeakersListReducer,
     currentSpeakerAttendanceListState: speakerAttendanceListReducer,
     currentSpeakerAttendanceState: speakerAttendanceReducer,
     currentEventTypeListState: eventTypeListReducer,

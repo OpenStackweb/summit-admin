@@ -63,6 +63,7 @@ import TrackChairListPage from "../pages/track_chairs/track-chair-list-page";
 import ProgressFlagsPage from "../pages/track_chairs/progress-flags-page";
 import SummitPresentationsVotesPage from "../pages/events/summit-presentations-votes-page";
 import RegistrationCompaniesLayout from './registration-companies-layout';
+import SummitSpeakersLayout from './summit-speakers-layout';
 
 class SummitIdLayout extends React.Component {
 
@@ -113,6 +114,7 @@ class SummitIdLayout extends React.Component {
                     <Route path={`${match.url}/event-category-groups`} component={EventCategoryGroupLayout}/>
                     <Route path={`${match.url}/attendees`} component={AttendeeLayout}/>
                     <Route path={`${match.url}/speaker-attendances`} component={SpeakerAttendanceLayout}/>
+                    <Route path={`${match.url}/speakers`} component={SummitSpeakersLayout}/>
                     <Route path={`${match.url}/featured-speakers`} component={FeaturedSpeakersPage}/>
                     <Route path={`${match.url}/locations`} component={LocationLayout}/>
                     <Route path={`${match.url}/rsvp-templates`} component={RsvpTemplateLayout}/>

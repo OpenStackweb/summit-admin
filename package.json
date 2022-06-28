@@ -77,13 +77,14 @@
     "react-select": "^2.1.2",
     "react-star-ratings": "^2.3.0",
     "react-switch": "^6.0.0",
-    "react-tooltip": "^3.11.6",
+    "react-tooltip": "^4.2.21",
     "redux": "^3.7.2",
     "redux-persist": "^5.10.0",
     "redux-thunk": "^2.3.0",
     "sass-loader": "^6.0.7",
     "segmented-control": "^0.1.12",
     "style-loader": "^0.19.1",
+    "superagent": "^6.1.0",
     "sweetalert2": "^8.15.2",
     "urijs": "^1.19.1",
     "url-loader": "^0.6.2",
@@ -93,7 +94,6 @@
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0",
     "webpack-merge": "^4.2.1",
-    "xlsx": "^0.17.0",
-    "superagent": "^6.1.0"
+    "xlsx": "^0.17.0"
   }
 }
