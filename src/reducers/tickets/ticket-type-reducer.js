@@ -35,6 +35,7 @@ export const DEFAULT_ENTITY = {
     max_quantity_per_order  : 0,
     sales_start_date         : '',
     sales_end_date           : '',
+    audience                 : 'All',
 }
 
 const DEFAULT_STATE = {

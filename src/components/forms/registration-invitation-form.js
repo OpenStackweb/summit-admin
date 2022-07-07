@@ -126,6 +126,8 @@ class RegistrationInvitationForm extends React.Component {
                             summitId={currentSummit.id}
                             onChange={this.handleChange}
                             isMulti={true}
+                            audience='WithInvitation'
+                            version='v2'
                             error={hasErrors('allowed_ticket_types', errors)}
                         />
                     </div>

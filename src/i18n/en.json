@@ -1216,6 +1216,7 @@
     "no_ticket_types": "No ticket types found for current search criteria.",
     "add_ticket_type": "Add Ticket Type",
     "name": "Name",
+    "audience": "Audience",
     "badge_type_name": "Badge Type",
     "external_id": "External Id",
     "seed_tickets": "Seed Tickets from Eventbrite",
@@ -1227,6 +1228,7 @@
     "external_id": "External Id",
     "badge_type_id": "Badge Type",
     "description": "Description",
+    "audience": "Audience",
     "cost": "Cost",
     "currency": "Currency",
     "quantity_to_sell": "Quantity to sell",
@@ -1237,7 +1239,8 @@
     "ticket_type_created": "Ticket Type created successfully",
     "placeholders": {
       "select_currency": "Select currency",
-      "select_ticket_type": "Select Ticket Type"
+      "select_ticket_type": "Select Ticket Type",
+      "select_audience": "Select Audience"
     }
   },
   "tax_type_list": {

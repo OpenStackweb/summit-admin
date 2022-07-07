@@ -15,9 +15,10 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import Swal from "sweetalert2";
-import { Table } from 'openstack-uicore-foundation/lib/components';
+import {Dropdown, Table} from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getTicketTypes, deleteTicketType, seedTicketTypes } from "../../actions/ticket-actions";
+import {Pagination} from "react-bootstrap";
 
 class TicketTypeListPage extends React.Component {
 
@@ -29,16 +30,29 @@ class TicketTypeListPage extends React.Component {
         this.handleSort = this.handleSort.bind(this);
         this.handleNewTicketType = this.handleNewTicketType.bind(this);
         this.handleSeedTickets = this.handleSeedTickets.bind(this);
-
+        this.handleChangeAudienceFilter = this.handleChangeAudienceFilter.bind(this);
+        this.handlePageChange = this.handlePageChange.bind(this);
         this.state = {}
-
     }
 
     componentDidMount() {
-        const {currentSummit} = this.props;
+        const { currentSummit, order , orderDir, currentPage, perPage, audienceFilter } = this.props;
         if(currentSummit) {
-            this.props.getTicketTypes(currentSummit);
+            this.props.getTicketTypes(currentSummit, order, orderDir, currentPage, perPage,
+                {
+                    audienceFilter,
+                });
         }
+    }
+
+    handlePageChange(page){
+        const { currentSummit, order , orderDir, perPage, audienceFilter } = this.props;
+        this.props.getTicketTypes(
+            currentSummit, order, orderDir, page, perPage,
+            {
+                audienceFilter,
+            }
+        );
     }
 
     handleEdit(ticket_type_id) {
@@ -48,8 +62,16 @@ class TicketTypeListPage extends React.Component {
 
     handleSeedTickets(ev) {
         ev.preventDefault();
-
         this.props.seedTicketTypes();
+    }
+
+    handleChangeAudienceFilter(ev){
+        const { value: newAudienceFilter } = ev.target;
+        const { currentSummit, order , orderDir, currentPage, perPage, getTicketTypes } = this.props;
+        getTicketTypes(currentSummit, order, orderDir, currentPage, perPage,
+            {
+                audienceFilter: newAudienceFilter,
+            });
     }
 
     handleDelete(ticketTypeId) {
@@ -71,7 +93,12 @@ class TicketTypeListPage extends React.Component {
     }
 
     handleSort(index, key, dir, func) {
-        this.props.getTicketTypes(this.props.currentSummit,key, dir);
+
+        const { currentSummit, currentPage, perPage, audienceFilter } = this.props;
+        this.props.getTicketTypes(currentSummit, key, dir, currentPage, perPage,
+            {
+                audienceFilter: audienceFilter,
+            });
     }
 
     handleNewTicketType(ev) {
@@ -80,10 +107,11 @@ class TicketTypeListPage extends React.Component {
     }
 
     render(){
-        const {currentSummit, ticketTypes, order, orderDir, totalTicketTypes} = this.props;
+        const { currentSummit, ticketTypes, order, orderDir, totalTicketTypes, audienceFilter, lastPage, currentPage } = this.props;
 
         const columns = [
             { columnKey: 'name', value: T.translate("ticket_type_list.name"), sortable: true },
+            { columnKey: 'audience', value: T.translate("ticket_type_list.audience"), sortable: true },
             { columnKey: 'badge_type_name', value: T.translate("ticket_type_list.badge_type_name") },
             { columnKey: 'external_id', value: T.translate("ticket_type_list.external_id") }
         ];
@@ -96,6 +124,12 @@ class TicketTypeListPage extends React.Component {
                 delete: { onClick: this.handleDelete }
             }
         }
+
+        const audienceDDL = [
+            { label: 'All', value: 'All' },
+            { label: 'With Invitation', value: 'WithInvitation' },
+            { label: 'Without Invitation', value: 'WithoutInvitation' },
+        ];
 
         if(!currentSummit.id) return (<div />);
 
@@ -112,18 +146,46 @@ class TicketTypeListPage extends React.Component {
                         </button>
                     </div>
                 </div>
+                <div className='row'>
+                    <div className="col-md-12" style={{ height: "61px", paddingTop: "8px" }}>
+                            <Dropdown
+                                id="audienceFilter"
+                                value={audienceFilter}
+                                onChange={this.handleChangeAudienceFilter}
+                                options={audienceDDL}
+                                isClearable={true}
+                                placeholder={"Filter By Audience"}
+                                isMulti
+                            />
+                    </div>
+                </div>
 
                 {ticketTypes.length === 0 &&
                 <div>{T.translate("ticket_type_list.no_ticket_types")}</div>
                 }
 
                 {ticketTypes.length > 0 &&
-                    <Table
-                        options={table_options}
-                        data={ticketTypes}
-                        columns={columns}
-                        onSort={this.handleSort}
-                    />
+                    <div>
+                        <Table
+                            options={table_options}
+                            data={ticketTypes}
+                            columns={columns}
+                            onSort={this.handleSort}
+                        />
+                        <Pagination
+                        bsSize="medium"
+                        prev
+                        next
+                        first
+                        last
+                        ellipsis
+                        boundaryLinks
+                        maxButtons={10}
+                        items={lastPage}
+                        activePage={currentPage}
+                        onSelect={this.handlePageChange}
+                        />
+                    </div>
                 }
 
             </div>

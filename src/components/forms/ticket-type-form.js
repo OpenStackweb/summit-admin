@@ -88,6 +88,12 @@ class TicketTypeForm extends React.Component {
         let currency_ddl = currentSummit.supported_currencies.map(i => ({label:i, value:i}));
         let badge_type_ddl = currentSummit.badge_types ? currentSummit.badge_types.map(bt => ({label: bt.name, value: bt.id})) : [];
 
+        let audience_ddl = [
+            {label: 'With Invitation', value: 'WithInvitation'}, 
+            {label: 'Without Invitation', value: 'WithoutInvitation'}, 
+            {label: 'All', value: 'All'}
+        ]
+
         return (
             <form className="ticket-type-form">
                 <input type="hidden" id="id" value={entity.id} />
@@ -130,6 +136,17 @@ class TicketTypeForm extends React.Component {
                             value={entity.description}
                             onChange={this.handleChange}
                             className="form-control"
+                        />
+                    </div>
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_ticket_type.audience")}</label>
+                        <Dropdown
+                            id="audience"
+                            value={entity.audience}
+                            onChange={this.handleChange}
+                            placeholder={T.translate("edit_ticket_type.placeholders.select_audience")}
+                            options={audience_ddl}
+                            error={this.hasErrors('audience')}
                         />
                     </div>
                 </div>

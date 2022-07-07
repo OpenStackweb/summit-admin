@@ -203,6 +203,13 @@ const parseFilters = (filters) => {
         ));
     }
 
+    if(filters.hasOwnProperty('audienceFilter') && Array.isArray(filters.audienceFilter) && filters.audienceFilter.length > 0){
+        filter.push(filters.audienceFilter.reduce(
+            (accumulator, aud) => accumulator +(accumulator !== '' ? ',':'') +`audience==${aud}`,
+            ''
+        ));
+    }
+
     return filter;
 }
 
@@ -619,7 +626,7 @@ const normalizeTicket = (entity) => {
 /**************************   TICKET TYPES   ******************************************/
 
 
-export const getTicketTypes = (summit, order = 'name', orderDir = 1, page = 1, per_page = 100) => (dispatch, getState) => {
+export const getTicketTypes = (summit, order = 'name', orderDir = 1, currentPage = 1, perPage = 10, filters = {}) => (dispatch, getState) => {
 
     const {loggedUserState} = getState();
     const {accessToken} = loggedUserState;
@@ -627,11 +634,17 @@ export const getTicketTypes = (summit, order = 'name', orderDir = 1, page = 1, p
     dispatch(startLoading());
 
     const params = {
-        page: page,
-        per_page: per_page,
+        page: currentPage,
+        per_page: perPage,
         access_token: accessToken,
         expand: 'badge_type',
     };
+
+    const filter = parseFilters(filters);
+
+    if (filter.length > 0) {
+        params['filter[]'] = filter;
+    }
 
     // order
     if (order != null && orderDir != null) {
@@ -639,13 +652,12 @@ export const getTicketTypes = (summit, order = 'name', orderDir = 1, page = 1, p
         params['order'] = `${orderDirSign}${order}`;
     }
 
-
     return getRequest(
         createAction(REQUEST_TICKET_TYPES),
         createAction(RECEIVE_TICKET_TYPES),
-        `${window.API_BASE_URL}/api/v1/summits/${summit.id}/ticket-types`,
+        `${window.API_BASE_URL}/api/v2/summits/${summit.id}/ticket-types`,
         authErrorHandler,
-        {order, orderDir}
+        {order, orderDir, currentPage, perPage, ...filters}
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
