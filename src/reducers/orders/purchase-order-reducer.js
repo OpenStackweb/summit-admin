@@ -132,7 +132,20 @@ const purchaseOrderReducer = (state = DEFAULT_STATE, action) => {
         }
         case PURCHASE_ORDER_UPDATED: {
             let entity = {...payload.response};
-            return {...state,  entity: {...entity, tickets: assembleTicketsState(entity.tickets) }, errors: {} };
+
+            return {
+                ...state,
+                entity: {
+                    owner: {
+                        email: entity.owner_email,
+                        first_name: entity.owner_first_name,
+                        last_name: entity.owner_last_name,
+                    },
+                    ...entity,
+                    tickets: assembleTicketsState(entity.tickets)
+                },
+                errors: {}
+            }
         }
         case VALIDATE: {
             return {...state,  errors: payload.errors };

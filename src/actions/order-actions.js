@@ -605,7 +605,6 @@ const normalizePurchaseOrder = (entity) => {
         delete (normalizedEntity.owner_company_id);
     }
 
-
     delete (normalizedEntity.extra_questions);
 
     return normalizedEntity;

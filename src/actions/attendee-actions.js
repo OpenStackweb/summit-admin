@@ -494,5 +494,10 @@ const normalizeEntity = (entity) => {
     delete normalizedEntity['created'];
     delete normalizedEntity['last_edited'];
     delete normalizedEntity['last_edited'];
+
+    if(!normalizedEntity.company_id){
+        delete (normalizedEntity.company_id);
+    }
+
     return normalizedEntity;
 };

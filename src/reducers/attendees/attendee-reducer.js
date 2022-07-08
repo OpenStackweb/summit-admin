@@ -35,6 +35,7 @@ export const DEFAULT_ENTITY = {
     last_name: '',
     email: '',
     company: '',
+    company_id: 0,
     admin_notes: '',
     shared_contact_info: 0,
     summit_hall_checked_in: 0,
