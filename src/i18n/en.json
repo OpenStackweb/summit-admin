@@ -688,6 +688,7 @@
     "send_email_warning": "Are you sure you want to send emails to the selected speakers",
     "resend_done": "Emails sent successfully.",
     "send_emails_title": "You are about to send an EMAIL BLAST to selected speakers !",
+    "should_send_copy_2_submitter": "Also send to submitter?",
     "placeholders": {
       "search_speakers": "Search by Full Name, Email, Title Or Abstract",
       "test_recipient": "Optional Test Recipient"

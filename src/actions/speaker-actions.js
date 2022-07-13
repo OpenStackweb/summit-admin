@@ -788,6 +788,7 @@ export const sendSpeakerEmails = (currentFlowEvent,
                            selectedIds = [],
                            testRecipient = '',
                            excerptRecipient= '',
+                           shouldSendCopy2Submitter = false,
                            term = '',
                            filters = {}
                            ) => (dispatch, getState) => {
@@ -821,7 +822,8 @@ export const sendSpeakerEmails = (currentFlowEvent,
     }
 
     const payload =  {
-        email_flow_event : currentFlowEvent
+        email_flow_event : currentFlowEvent,
+        should_send_copy_2_submitter : shouldSendCopy2Submitter,
     };
 
     if(!selectedAll && selectedIds.length > 0){

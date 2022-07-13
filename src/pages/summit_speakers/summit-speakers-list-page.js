@@ -161,6 +161,7 @@ class SummitSpeakersListPage extends React.Component {
         ev.preventDefault();
         const { testRecipient } = this.state;
         let excerptRecipient = this.ingestEmailRef.value;
+        let shouldSendCopy2Submitter = this.shouldSendCopy2SubmitterRef.checked
         this.setState({showSendEmailModal: false, excerptRecipient: '', testRecipient: ''});
         // send emails
 
@@ -169,7 +170,7 @@ class SummitSpeakersListPage extends React.Component {
             selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter,
         } = this.props;
 
-        sendSpeakerEmails(currentFlowEvent, selectedAll, selectedSpeakers, testRecipient, excerptRecipient, term,
+        sendSpeakerEmails(currentFlowEvent, selectedAll, selectedSpeakers, testRecipient, excerptRecipient, shouldSendCopy2Submitter, term,
             { selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter })
     }
 
@@ -417,6 +418,19 @@ class SummitSpeakersListPage extends React.Component {
                                             ref={node => this.ingestEmailRef = node}
                                         />
                                     </div>
+                                    <div className="col-md-12 ticket-ingest-email-wrapper">
+                                        <div className="form-check abc-checkbox">
+                                            <input
+                                                id="should_send_copy_2_submitter"
+                                                className="form-check-input"
+                                                type="checkbox"
+                                                ref={node => this.shouldSendCopy2SubmitterRef = node}
+                                            />
+                                            <label className="form-check-label" htmlFor="should_send_copy_2_submitter">
+                                                {T.translate("summit_speakers_list.should_send_copy_2_submitter")}
+                                            </label>
+                                        </div>
+                                    </div>
 
                                 </div>
                             </Modal.Body>
@@ -428,7 +442,6 @@ class SummitSpeakersListPage extends React.Component {
                         </Modal>
                     </div>
                 }
-
             </div>
         )
     }
