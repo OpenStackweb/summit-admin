@@ -25,6 +25,7 @@ import {
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
 import ReactTooltip from "react-tooltip";
+import {REQUEST_SUMMIT, SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     speakers: [],
@@ -48,8 +49,11 @@ const DEFAULT_STATE = {
 const summitSpeakersListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
-        case LOGOUT_USER: {
-            return state;
+        case LOGOUT_USER:
+        case REQUEST_SUMMIT:
+        case SET_CURRENT_SUMMIT:
+        {
+            return DEFAULT_STATE;
         }
             break;
         case REQUEST_SPEAKERS_BY_SUMMIT: {
