@@ -888,24 +888,24 @@ const parseFilters = (filters) => {
 
     if(filters.hasOwnProperty('selectionPlanFilter') && Array.isArray(filters.selectionPlanFilter)
         && filters.selectionPlanFilter.length > 0){
-        filter.push(filters.selectionPlanFilter.reduce(
-            (accumulator, sp) => accumulator +(accumulator !== '' ? ',':'') +`presentations_selection_plan_id==${sp}`,
+        filter.push('presentations_selection_plan_id=='+filters.selectionPlanFilter.reduce(
+            (accumulator, sp) => accumulator +(accumulator !== '' ? '||':'') +`${sp}`,
             ''
         ));
     }
 
     if(filters.hasOwnProperty('trackFilter') && Array.isArray(filters.trackFilter)
         && filters.trackFilter.length > 0){
-        filter.push(filters.trackFilter.reduce(
-            (accumulator, t) => accumulator +(accumulator !== '' ? ',':'') +`presentations_track_id==${t}`,
+        filter.push('presentations_track_id=='+filters.trackFilter.reduce(
+            (accumulator, t) => accumulator +(accumulator !== '' ? '||':'') +`${t}`,
             ''
         ));
     }
 
     if(filters.hasOwnProperty('activityTypeFilter') && Array.isArray(filters.activityTypeFilter)
         && filters.activityTypeFilter.length > 0){
-        filter.push(filters.activityTypeFilter.reduce(
-            (accumulator, at) => accumulator +(accumulator !== '' ? ',':'') +`presentations_type_id==${at}`,
+        filter.push('presentations_type_id=='+filters.activityTypeFilter.reduce(
+            (accumulator, at) => accumulator +(accumulator !== '' ? '||':'') +`presentations_type_id==${at}`,
             ''
         ));
     }
