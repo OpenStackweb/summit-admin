@@ -16,6 +16,8 @@ import
     RECEIVE_SPONSORED_PROJECT,
     RESET_SPONSORED_PROJECT_FORM,
     UPDATE_SPONSORED_PROJECT,
+    SPONSORED_PROJECT_LOGO_ATTACHED,
+    SPONSORED_PROJECT_LOGO_DELETED,
     SPONSORED_PROJECT_UPDATED,
     SPONSORED_PROJECT_ADDED,
     SPONSORED_PROJECT_SPONSORSHIP_TYPE_ADDED,
@@ -32,6 +34,9 @@ export const DEFAULT_ENTITY = {
     description: '',
     slug: '',
     is_active: false,
+    should_show_on_nav_bar: true,
+    site_url: '',
+    logo_url: '',
     sponsorship_types: [],
 };
 
@@ -63,16 +68,22 @@ const sponsoredProjectReducer = (state = DEFAULT_STATE, action) => {
         case SPONSORED_PROJECT_ADDED:
         case RECEIVE_SPONSORED_PROJECT: {
             let entity = {...payload.response};
-
             for(var key in entity) {
                 if(entity.hasOwnProperty(key)) {
                     entity[key] = (entity[key] == null) ? '' : entity[key] ;
                 }
             }
-
+            
             return {...state, entity: {...DEFAULT_ENTITY, ...entity}, errors: {} };
         }
         break;
+        case SPONSORED_PROJECT_LOGO_ATTACHED: {
+            let logo_url = state.entity.logo_url + '?' + new Date().getTime();
+            return {...state, entity: {...state.entity, logo_url: logo_url} };
+        }
+        case SPONSORED_PROJECT_LOGO_DELETED: {
+            return {...state, entity: {...state.entity, logo_url: ''} };
+        }
         case SPONSORED_PROJECT_UPDATED: {
             return state;
         }

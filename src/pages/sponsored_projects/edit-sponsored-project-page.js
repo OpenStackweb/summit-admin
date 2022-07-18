@@ -18,7 +18,9 @@ import SponsoredProjectForm from '../../components/forms/sponsored-project-form'
 import {
     saveSponsoredProject,
     deleteSponsorshipType,
-    updateSponsorShipTypeOrder
+    updateSponsorShipTypeOrder,
+    attachLogo,
+    removeLogo
 } from "../../actions/sponsored-project-actions";
 import '../../styles/edit-company-page.less';
 import Swal from "sweetalert2";
@@ -72,7 +74,7 @@ class EditSponsoredProjectPage extends React.Component {
     }
 
     render(){
-        const {entity, errors, summits, history, saveSponsoredProject} = this.props;
+        const {entity, errors, summits, history, saveSponsoredProject, attachLogo, removeLogo} = this.props;
         const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
 
         return(
@@ -87,6 +89,8 @@ class EditSponsoredProjectPage extends React.Component {
                     onSponsorshipTypeReorder={this.handleReorderSponsorshipType}
                     onSponsorshipTypeDelete={this.handleDeleteSponsorshipType}
                     onSubmit={saveSponsoredProject}
+                    onAttachLogo={attachLogo}
+                    onRemoveLogo={removeLogo}
                 />
             </div>
         )
@@ -102,6 +106,8 @@ export default connect (
     {
         saveSponsoredProject,
         deleteSponsorshipType,
-        updateSponsorShipTypeOrder
+        updateSponsorShipTypeOrder,
+        attachLogo,
+        removeLogo
     }
 )(EditSponsoredProjectPage);

@@ -14,7 +14,7 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import {TextEditor, Input, SortableTable} from 'openstack-uicore-foundation/lib/components';
+import {TextEditor, Input, UploadInput, SortableTable} from 'openstack-uicore-foundation/lib/components';
 import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 
 class SponsoredProjectForm extends React.Component {
@@ -28,6 +28,8 @@ class SponsoredProjectForm extends React.Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
+        this.handleUploadLogo = this.handleUploadLogo.bind(this);
+        this.handleRemoveLogo = this.handleRemoveLogo.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleEditSponsorshipType = this.handleEditSponsorshipType.bind(this);
         this.handleAddSponsorshipType = this.handleAddSponsorshipType.bind(this);
@@ -63,6 +65,16 @@ class SponsoredProjectForm extends React.Component {
         errors[id] = '';
         entity[id] = value;
         this.setState({entity: entity, errors: errors});
+    }
+
+    handleUploadLogo(file) {
+        const formData = new FormData();
+        formData.append('file', file);
+        this.props.onAttachLogo(this.state.entity, formData, 'logo_url')
+    }
+
+    handleRemoveLogo() {
+        this.props.onRemoveLogo(this.state.entity.id)
     }
 
     handleSubmit(publish, ev) {
@@ -122,6 +134,22 @@ class SponsoredProjectForm extends React.Component {
                     </div>
                 </div>
                 <div className="row form-group">
+                    <div className="col-md-6">
+                        <label> {T.translate("edit_sponsored_project.site_url")} </label>
+                        <Input className="form-control" id="site_url" value={entity.site_url} onChange={this.handleChange} />
+                    </div>
+                    <div className="col-md-6 checkboxes-div">
+                        <div className="form-check abc-checkbox">
+                            <input type="checkbox" id="should_show_on_nav_bar"
+                                   checked={entity.should_show_on_nav_bar}
+                                   onChange={this.handleChange} className="form-check-input" />
+                            <label className="form-check-label" htmlFor="should_show_on_nav_bar">
+                                {T.translate("edit_sponsored_project.should_show_on_nav_bar")}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_sponsored_project.description")} </label>
                         <TextEditor id="description" value={entity.description} onChange={this.handleChange} />
@@ -143,6 +171,19 @@ class SponsoredProjectForm extends React.Component {
                     </div>
                 </div>
                 }
+                 <div className="row form-group">
+                    <div className="col-md-6">
+                        <label> {T.translate("edit_sponsored_project.logo")} </label>
+                        <UploadInput
+                            value={entity.logo_url}
+                            handleUpload={this.handleUploadLogo}
+                            handleRemove={this.handleRemoveLogo}
+                            className="dropzone col-md-6"
+                            multiple={false}
+                            accept="image/*"
+                        />
+                    </div>
+                </div>
                 <div className="row">
                     <div className="col-md-12 submit-buttons">
                         <input type="button" onClick={this.handleSubmit.bind(this, false)}

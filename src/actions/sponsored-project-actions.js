@@ -35,6 +35,8 @@ export const SPONSORED_PROJECT_DELETED = 'SPONSORED_PROJECT_DELETED';
 export const UPDATE_SPONSORED_PROJECT = 'UPDATE_SPONSORED_PROJECT';
 export const SPONSORED_PROJECT_UPDATED = 'SPONSORED_PROJECT_UPDATED';
 export const SPONSORED_PROJECT_ADDED = 'SPONSORED_PROJECT_ADDED';
+export const SPONSORED_PROJECT_LOGO_ATTACHED = 'SPONSORED_PROJECT_LOGO_ATTACHED';
+export const SPONSORED_PROJECT_LOGO_DELETED = 'SPONSORED_PROJECT_LOGO_DELETED';
 
 export const getSponsoredProjects = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1) => (dispatch, getState) => {
 
@@ -124,6 +126,59 @@ export const deleteSponsoredProject = (sponsoredProjectId) => (dispatch, getStat
     );
 };
 
+export const attachLogo = (entity, file, picAttr) => (dispatch, getState) => {
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token : accessToken,
+    };
+
+    const normalizedEntity = normalizeEntity(entity);
+
+    if (entity.id) {
+        dispatch(uploadLogo(entity, file));
+    } else {
+        return postRequest(
+            createAction(UPDATE_COMPANY),
+            createAction(COMPANY_ADDED),
+            `${window.API_BASE_URL}/api/v1/sponsored-projects`,
+            normalizedEntity,
+            authErrorHandler,
+            entity
+        )(params)(dispatch)
+            .then((payload) => {
+                dispatch(uploadLogo(payload.response, file));
+            }
+        );
+    }
+};
+
+export const removeLogo = (sponsoredProjectId) => (dispatch, getState) => {
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token : accessToken,
+    };
+
+    return deleteRequest(
+        null,
+        createAction(SPONSORED_PROJECT_LOGO_DELETED)({sponsoredProjectId}),
+        `${window.API_BASE_URL}/api/v1/sponsored-projects/${sponsoredProjectId}/logo`,
+        null,
+        authErrorHandler
+    )(params)(dispatch)
+        .then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
 export const resetSponsoredProjectForm = () => (dispatch) => {
     dispatch(createAction(RESET_SPONSORED_PROJECT_FORM)({}));
 };
@@ -182,7 +237,30 @@ export const saveSponsoredProject = (entity) => (dispatch, getState) => {
 
 const normalizeEntity = (entity) => {
     const normalizedEntity = {...entity};
+    delete(normalizedEntity['logo_url']);
     return normalizedEntity;
+};
+
+const uploadLogo = (entity, file) => (dispatch, getState) => {
+    const { loggedUserState } = getState();
+    const { accessToken }     = loggedUserState;
+
+    const params = {
+        access_token : accessToken,
+    };
+
+    postRequest(
+        null,
+        createAction(SPONSORED_PROJECT_LOGO_ATTACHED),
+        `${window.API_BASE_URL}/api/v1/sponsored-projects/${entity.id}/logo`,
+        file,
+        authErrorHandler,
+        {pic: entity.pic}
+    )(params)(dispatch)
+        .then(() => {
+            dispatch(stopLoading());
+            history.push(`/app/sponsored-projects/${entity.id}`)
+        });
 };
 
 /*********************************** Sponsorship types Actions **********************************/
