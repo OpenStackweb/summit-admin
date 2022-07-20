@@ -134,13 +134,7 @@ export const printTickets = (filters, order, orderDir, doAttendeeCheckinOnPrint 
     if (filter.length > 0) {
         params['filter[]'] = filter;
     }
-    // extra params
-    if(filters.hasOwnProperty("selectedIds") && Array.isArray(filters.selectedIds) && filters.selectedIds.length > 0){
-        params['ids'] = filters.selectedIds.reduce(
-            (accumulator, id) => accumulator +(accumulator !== '' ? ',':'') +`${id}`,
-            ''
-        );
-    }
+
     params['check_in'] = doAttendeeCheckinOnPrint;
 
     // order
@@ -208,6 +202,15 @@ const parseFilters = (filters) => {
             (accumulator, aud) => accumulator +(accumulator !== '' ? ',':'') +`audience==${aud}`,
             ''
         ));
+    }
+
+    // tickets ids
+
+    if(filters.hasOwnProperty("selectedIds") && Array.isArray(filters.selectedIds) && filters.selectedIds.length > 0){
+        filter.push('id=='+filters.selectedIds.reduce(
+            (accumulator, id) => accumulator +(accumulator !== '' ? '||':'') +`${id}`,
+            ''
+        ))
     }
 
     return filter;
