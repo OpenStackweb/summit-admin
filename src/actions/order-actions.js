@@ -68,6 +68,7 @@ export const UPDATE_ORDER_EXTRA_QUESTION_SUB_QUESTION = 'UPDATE_ORDER_EXTRA_QUES
 export const ORDER_EXTRA_QUESTION_SUB_QUESTION_UPDATED = 'ORDER_EXTRA_QUESTION_SUB_QUESTION_UPDATED';
 export const ORDER_EXTRA_QUESTION_SUB_QUESTION_ADDED = 'ORDER_EXTRA_QUESTION_SUB_QUESTION_ADDED';
 export const ORDER_EXTRA_QUESTION_SUB_QUESTION_DELETED = 'ORDER_EXTRA_QUESTION_SUB_QUESTION_DELETED';
+export const ORDER_EXTRA_QUESTION_SUB_QUESTION_ORDER_UPDATED = 'ORDER_EXTRA_QUESTION_SUB_QUESTION_ORDER_UPDATED';
 
 /***********************  ORDER EXTRA QUESTIONS  *******************************************/
 
@@ -91,7 +92,6 @@ export const getOrderExtraQuestionMeta = () => (dispatch, getState) => {
         }
     );
 };
-
 
 export const getOrderExtraQuestions = () => (dispatch, getState) => {
 
@@ -275,9 +275,7 @@ export const updateOrderExtraQuestionOrder = (questions, questionId, newOrder) =
             dispatch(stopLoading());
         }
     );
-
 }
-
 
 export const saveOrderExtraQuestionValue = (orderExtraQuestionId, entity) => (dispatch, getState) => {
     const {loggedUserState, currentSummitState} = getState();
@@ -700,6 +698,30 @@ export const saveOrderExtraQuestionsSubQuestionsRule = (entity) => (dispatch, ge
             ));
         });    
 };
+
+export const updateOrderExtraQuestionsSubQuestionsRuleOrder = (rules, ruleId, newOrder) =>
+
+    (dispatch, getState) => {
+
+    const {loggedUserState, currentOrderExtraQuestionState} = getState();
+    const {accessToken} = loggedUserState;
+    const {entity: {summit_id, id}} = currentOrderExtraQuestionState;
+
+    const params = {
+        access_token: accessToken
+    };
+
+    putRequest(
+        null,
+        createAction(ORDER_EXTRA_QUESTION_SUB_QUESTION_ORDER_UPDATED)(rules),
+        `${window.API_BASE_URL}/api/v1/summits/${summit_id}/order-extra-questions/${id}/sub-question-rules/${ruleId}`,
+        { order : newOrder },
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+}
 
 export const deleteOrderExtraQuestionsSubQuestionsRule = (orderExtraQuestionId, ruleId) => (dispatch, getState) => {
 

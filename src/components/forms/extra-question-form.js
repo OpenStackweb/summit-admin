@@ -15,7 +15,14 @@ import React from 'react'
 import history from "../../history";
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { Dropdown, Input, EditableTable, Table, TextEditor } from 'openstack-uicore-foundation/lib/components'
+import {
+    Dropdown,
+    Input,
+    EditableTable,
+    Table,
+    TextEditor,
+    SortableTable
+} from 'openstack-uicore-foundation/lib/components'
 import { isEmpty, scrollToError, shallowEqual, hasErrors } from "../../utils/methods";
 import { ExtraQuestionsTypeAllowSubQuestion } from '../../utils/constants';
 
@@ -116,7 +123,7 @@ class ExtraQuestionForm extends React.Component {
 
     render() {
         const { entity, errors } = this.state;
-        const { onValueDelete, onValueSave, questionClasses } = this.props;
+        const { onValueDelete, onValueSave, questionClasses, updateSubQuestionRuleOrder } = this.props;
         const question_class_ddl = questionClasses.map(c => ({ label: c.type, value: c.type }));
 
         const question_usage_ddl = [
@@ -283,10 +290,13 @@ class ExtraQuestionForm extends React.Component {
                                     <div>{T.translate("question_form.no_sub_questions_rules")}</div>
                                 }
                                 {entity.sub_question_rules.length > 0 &&
-                                    <Table
+
+                                    <SortableTable
                                         options={sub_questions_options}
                                         data={entity.sub_question_rules}
                                         columns={sub_questions_columns}
+                                        dropCallback={updateSubQuestionRuleOrder}
+                                        orderField="order"
                                     />
                                 }
                             </div>

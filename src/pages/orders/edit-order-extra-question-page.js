@@ -13,7 +13,6 @@
 
 import React from 'react'
 import { connect } from 'react-redux';
-import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
 import ExtraQuestionForm from '../../components/forms/extra-question-form';
 import { getSummitById } from '../../actions/summit-actions';
@@ -24,7 +23,8 @@ import {
     saveOrderExtraQuestion,
     deleteOrderExtraQuestionValue,
     saveOrderExtraQuestionValue,
-    deleteOrderExtraQuestionsSubQuestionsRule
+    deleteOrderExtraQuestionsSubQuestionsRule,
+    updateOrderExtraQuestionsSubQuestionsRuleOrder,
 } from "../../actions/order-actions";
 import Swal from "sweetalert2";
 
@@ -82,7 +82,7 @@ class EditOrderExtraQuestionPage extends React.Component {
     }
 
     render() {
-        const { currentSummit, entity, errors, allClasses } = this.props;
+        const { currentSummit, entity, errors, allClasses, updateOrderExtraQuestionsSubQuestionsRuleOrder } = this.props;
         const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
 
         return (
@@ -101,6 +101,7 @@ class EditOrderExtraQuestionPage extends React.Component {
                         onValueSave={this.handleValueSave}
                         onRuleDelete={this.handleRuleDelete}
                         onSubmit={this.props.saveOrderExtraQuestion}
+                        updateSubQuestionRuleOrder={updateOrderExtraQuestionsSubQuestionsRuleOrder}
                     />
                 }
             </div>
@@ -123,6 +124,7 @@ export default connect(
         deleteOrderExtraQuestionValue,
         saveOrderExtraQuestionValue,
         saveOrderExtraQuestion,
-        deleteOrderExtraQuestionsSubQuestionsRule
+        deleteOrderExtraQuestionsSubQuestionsRule,
+        updateOrderExtraQuestionsSubQuestionsRuleOrder,
     }
 )(EditOrderExtraQuestionPage);

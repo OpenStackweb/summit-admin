@@ -26,6 +26,7 @@ import
     ORDER_EXTRA_QUESTION_SUB_QUESTION_ADDED,
     ORDER_EXTRA_QUESTION_SUB_QUESTION_UPDATED,
     ORDER_EXTRA_QUESTION_SUB_QUESTION_DELETED,
+    ORDER_EXTRA_QUESTION_SUB_QUESTION_ORDER_UPDATED,
 } from '../../actions/order-actions';
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
@@ -139,9 +140,20 @@ const orderExtraQuestionReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case VALIDATE: {
-            return {...state,  errors: payload.errors };
+            const newRules = payload.map(r => {
+
+                return {
+                    ...r,
+                    order: parseInt(r.order)
+                };
+            });
+
+            return {...state, sub_question_rules: newRules };
         }
         break;
+        case ORDER_EXTRA_QUESTION_SUB_QUESTION_ORDER_UPDATED: {
+            return {...state, };
+        }
         default:
             return state;
     }
