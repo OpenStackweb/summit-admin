@@ -217,7 +217,7 @@ class RegistrationInvitationsListPage extends React.Component {
             { columnKey: 'email', value: T.translate("registration_invitation_list.email") },
             { columnKey: 'first_name', value: T.translate("registration_invitation_list.first_name") },
             { columnKey: 'last_name', value: T.translate("registration_invitation_list.last_name") },
-            { columnKey: 'is_accepted', value: T.translate("registration_invitation_list.accepted") },
+            { columnKey: 'is_accepted', value: T.translate("registration_invitation_list.completed") },
             { columnKey: 'is_sent', value: T.translate("registration_invitation_list.sent") },
         ];
 
