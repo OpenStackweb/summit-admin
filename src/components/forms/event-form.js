@@ -565,6 +565,7 @@ class EventForm extends React.Component {
                             value={entity.selection_plan_id}
                             onChange={this.handleChange}
                             placeholder={T.translate("edit_event.placeholders.select_selection_plan")}
+                            isClearable={true}
                             options={selection_plans_ddl}
                         />
                     </div>

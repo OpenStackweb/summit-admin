@@ -555,9 +555,10 @@ const normalizeEntity = (entity, eventTypeConfig) => {
         normalizedEntity.created_by_id = normalizedEntity.created_by?.id;
     }
 
-    // if selection plan is null remove it
+    // if selection plan is null set is as 0 and remove the current selection plan
     if (normalizedEntity.hasOwnProperty("selection_plan_id") && normalizedEntity.selection_plan_id == null) {
-        delete (normalizedEntity.selection_plan_id)
+        normalizedEntity.selection_plan_id = 0;
+        delete (normalizedEntity.selection_plan)
     }
 
     if (eventTypeConfig) {
