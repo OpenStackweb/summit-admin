@@ -76,7 +76,7 @@ class SummitEvent {
     }
 
     isValidEndDate(endDate){
-        if(endDate == null) return false;
+        if(endDate == null) return true;
         let startDate       = moment.tz(this._event.start_date * 1000, this._summit.time_zone.name);
         endDate             = moment.tz(endDate * 1000, this._summit.time_zone.name);
         let summitEndDate   = moment.tz(this._summit.end_date * 1000, this._summit.time_zone.name);
@@ -84,7 +84,7 @@ class SummitEvent {
     }
 
     isValidStartDate(startDate){
-        if(startDate == null) return false;
+        if(startDate == null) return true;
         startDate           = moment.tz(startDate* 1000, this._summit.time_zone.name);
         let endDate         = moment.tz(this._event.end_date * 1000, this._summit.time_zone.name);
         let summitStartDate = moment.tz(this._summit.start_date * 1000, this._summit.time_zone.name);

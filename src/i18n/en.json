@@ -149,7 +149,7 @@
       "search_published": "Search for Published Activities ...",
       "select_order_by": "Select Order By ...",
       "select_day": "Select an Activity Day ...",
-      "select_venue": "Select an Activity Venue ...",
+      "select_venue": "Select a Venue ...",
       "select_event_type": "Select an Activity Type ...",
       "select_track": "Select an Activity Category ..."
     }
@@ -157,9 +157,10 @@
   "bulk_actions_page": {
     "bulk_actions": "Bulk Actions",
     "title": "Activity Bulk Actions",
-    "event_id_label": "Activity Id",
-    "event_name_label": "Activity Title",
-    "event_location_label": "Activity Location",
+    "event_id_label": "Id",
+    "event_name_label": "Title",
+    "event_selection_plan_label": "Selection Plan",
+    "event_location_label": "Location",
     "event_start_date_label": "Start Date",
     "event_end_date_label": "End Date",
     "btn_apply_changes": "Apply Changes",

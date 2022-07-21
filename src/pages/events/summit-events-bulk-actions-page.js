@@ -27,6 +27,8 @@ import {
     updateEventsTypeLocal,
     updateEventsStartDateLocal,
     updateEventsEndDateLocal,
+    updateEventSelectionPlanLocal,
+    updateEventsSelectionPlanLocal
 } from '../../actions/summit-event-bulk-actions';
 import {getSummitById} from "../../actions/summit-actions";
 import T from 'i18n-react/dist/i18n-react'
@@ -73,6 +75,8 @@ class SummitEventsBulkActionsPage extends React.Component {
             updateEventsLocationLocal,
             updateEventsStartDateLocal,
             updateEventsEndDateLocal,
+            updateEventSelectionPlanLocal,
+            updateEventsSelectionPlanLocal,
         } = this.props;
 
         if(!currentSummit.id) return(<div />);
@@ -96,6 +100,8 @@ class SummitEventsBulkActionsPage extends React.Component {
                         updateEventsLocationLocal={updateEventsLocationLocal}
                         updateEventsStartDateLocal={updateEventsStartDateLocal}
                         updateEventsEndDateLocal={updateEventsEndDateLocal}
+                        updateEventSelectionPlanLocal={updateEventSelectionPlanLocal}
+                        updateEventsSelectionPlanLocal={updateEventsSelectionPlanLocal}
                         history={this.props.history}
                     />
                 </div>
@@ -127,5 +133,7 @@ export default connect (
         updateEventsTypeLocal,
         updateEventsStartDateLocal,
         updateEventsEndDateLocal,
+        updateEventSelectionPlanLocal,
+        updateEventsSelectionPlanLocal,
     }
 )(SummitEventsBulkActionsPage);

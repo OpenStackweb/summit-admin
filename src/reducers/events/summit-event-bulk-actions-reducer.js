@@ -18,6 +18,7 @@ import { RECEIVE_SELECTED_EVENTS,
     UPDATE_EVENT_SELECTED_STATE_BULK,
     UPDATE_VALIDATION_STATE,
     UPDATE_LOCATION_BULK,
+    UPDATE_SELECTION_PLAN_BULK,
     UPDATE_TYPE_BULK,
     UPDATE_START_DATE_BULK,
     UPDATE_END_DATE_BULK,
@@ -141,6 +142,14 @@ const summitEventBulkActionReducer = (state = DEFAULT_STATE, action) => {
             return { ... state, eventOnBulkEdition}
         }
         break;
+        case UPDATE_SELECTION_PLAN_BULK:{
+            let { selectionPlan }      = payload;
+            let { eventOnBulkEdition } = state;
+            eventOnBulkEdition = eventOnBulkEdition.map(event => {
+                return {...event, selection_plan_id : selectionPlan.id}
+            });
+            return { ... state, eventOnBulkEdition}
+        }
         case UPDATE_TYPE_BULK:{
             let { eventType }      = payload;
             let { eventOnBulkEdition } = state;

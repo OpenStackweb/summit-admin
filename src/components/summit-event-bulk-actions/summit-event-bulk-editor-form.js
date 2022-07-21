@@ -19,6 +19,7 @@ import ScheduleAdminVenueSelector from '../schedule-builder/schedule-admin-venue
 import ScheduleAdminEventTypeSelector from '../schedule-builder/schedule-admin-event-type-selector';
 import moment from "moment-timezone";
 import {TBALocation} from "../../utils/constants";
+import Select from "react-select";
 
 class SummitEventBulkEditorForm extends React.Component
 {
@@ -32,11 +33,14 @@ class SummitEventBulkEditorForm extends React.Component
         this.onEndDateChanged          = this.onEndDateChanged.bind(this);
         this.onSelectedEvent           = this.onSelectedEvent.bind(this);
         this.onBulkLocationChange      = this.onBulkLocationChange.bind(this);
+        this.onBulkSelectionPlanChange = this.onBulkSelectionPlanChange.bind(this);
         this.onBulkTypeChange          = this.onBulkTypeChange.bind(this);
         this.handleChangeBulkStartDate = this.handleChangeBulkStartDate.bind(this);
         this.handleChangeBulkEndDate   = this.handleChangeBulkEndDate.bind(this);
+        this.onSelectionPlanChanged     = this.onSelectionPlanChanged.bind(this);
         this.state = {
-            currentBulkLocation : null
+            currentBulkLocation : null,
+            currentBulkSelectionPlan: null,
         }
     }
 
@@ -78,6 +82,12 @@ class SummitEventBulkEditorForm extends React.Component
         this.props.updateEventLocationLocal(events[idx], location, isValid);
     }
 
+    onSelectionPlanChanged(idx, selectionPlan, isValid){
+        let { events } = this.props;
+        if(selectionPlan == null) return;
+        this.props.updateEventSelectionPlanLocal(events[idx], selectionPlan, isValid);
+    }
+
     onTitleChanged(idx, title, isValid){
         let { events } = this.props;
         this.props.updateEventTitleLocal(events[idx], title, isValid)
@@ -105,6 +115,12 @@ class SummitEventBulkEditorForm extends React.Component
         this.props.updateEventsLocationLocal(location)
     }
 
+    onBulkSelectionPlanChange(option){
+        let selectionPlan = option.value;
+        this.setState({ ...this.state, currentBulkSelectionPlan: selectionPlan});
+        this.props.updateEventsSelectionPlanLocal(selectionPlan)
+    }
+
     onBulkTypeChange(eventType){
         this.props.updateEventsTypeLocal(eventType)
     }
@@ -130,6 +146,7 @@ class SummitEventBulkEditorForm extends React.Component
             { value: TBALocation, label: TBALocation.name }
         ];
 
+        let selectionPlanOptions = [];
 
         for(let i = 0; i < currentSummit.locations.length; i++) {
             let location = currentSummit.locations[i];
@@ -143,7 +160,14 @@ class SummitEventBulkEditorForm extends React.Component
             }
         }
 
+        for(let i = 0; i < currentSummit.selection_plans.length; i++) {
+            let selection_plan = currentSummit.selection_plans[i];
+            let option = { value : selection_plan, label: selection_plan.name };
+            selectionPlanOptions.push(option);
+        }
+
         let currentBulkLocation = venuesOptions.filter((option) =>  this.state.currentBulkLocation != null && option.value.id === this.state.currentBulkLocation.id).shift();
+        let currentBulkSelectionPlan = selectionPlanOptions.filter((option) =>  this.state.currentBulkSelectionPlan != null && option.value.id === this.state.currentBulkSelectionPlan.id).shift();
         let typesOptions = [];
         let currentBulkType = null;
 
@@ -164,24 +188,27 @@ class SummitEventBulkEditorForm extends React.Component
         return (
             <form>
                 <div className="row">
-                    {canEditEventType &&
                     <div className="col-md-3">
-                        <ScheduleAdminEventTypeSelector
-                            currentValue={currentBulkType}
-                            onEventTypeChanged={this.onBulkTypeChange}
-                            eventTypes={typesOptions}
-                            clearable={false}
+                        &nbsp;
+                    </div>
+                    <div className="col-md-2">
+                        <Select
+                            placeholder={T.translate("schedule.placeholders.select_presentation_selection_plan")}
+                            className="selection_plan_selector_bulk"
+                            name="form-field-name"
+                            value={currentBulkSelectionPlan}
+                            onChange={this.onBulkSelectionPlanChange}
+                            options={selectionPlanOptions}
                         />
                     </div>
-                    }
-                    <div className="col-md-3">
+                    <div className="col-md-2">
                         <ScheduleAdminVenueSelector
                             currentValue={currentBulkLocation}
                             onVenueChanged={this.onBulkLocationChange}
                             venues={venuesOptions}
                         />
                     </div>
-                    <div className="col-md-3">
+                    <div className="col-md-2">
                         <DateTimePicker
                             id="start_date"
                             format={{date:"YYYY-MM-DD", time: "HH:mm"}}
@@ -192,7 +219,7 @@ class SummitEventBulkEditorForm extends React.Component
                             onChange={this.handleChangeBulkStartDate}
                          />
                     </div>
-                    <div className="col-md-3">
+                    <div className="col-md-2">
                         <DateTimePicker
                             id="end_date"
                             format={{date:"YYYY-MM-DD", time: "HH:mm"}}
@@ -206,7 +233,8 @@ class SummitEventBulkEditorForm extends React.Component
                 </div>
                 <div className="row">
                     <div className="col-md-1 col-title">{T.translate("bulk_actions_page.event_id_label")}</div>
-                    <div className="col-md-4 col-title">{T.translate("bulk_actions_page.event_name_label")}</div>
+                    <div className="col-md-2 col-title">{T.translate("bulk_actions_page.event_name_label")}</div>
+                    <div className="col-md-2 col-title">{T.translate("bulk_actions_page.event_selection_plan_label")}</div>
                     <div className="col-md-2 col-title">{T.translate("bulk_actions_page.event_location_label")}</div>
                     <div className="col-md-2 col-title">{T.translate("bulk_actions_page.event_start_date_label")}</div>
                     <div className="col-md-2 col-title">{T.translate("bulk_actions_page.event_end_date_label")}</div>
@@ -217,6 +245,7 @@ class SummitEventBulkEditorForm extends React.Component
                             key={idx}
                             index={idx}
                             venuesOptions={venuesOptions}
+                            selectionPlanOptions={selectionPlanOptions}
                             event={event}
                             currentSummit={currentSummit}
                             onLocationChanged={this.onLocationChanged}
@@ -224,6 +253,7 @@ class SummitEventBulkEditorForm extends React.Component
                             onStartDateChanged={this.onStartDateChanged}
                             onEndDateChanged={this.onEndDateChanged}
                             onSelectedEvent={this.onSelectedEvent}
+                            onSelectionPlanChanged={this.onSelectionPlanChanged}
                         />
                     ))
                 }

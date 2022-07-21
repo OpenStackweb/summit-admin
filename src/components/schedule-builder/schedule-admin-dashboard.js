@@ -624,6 +624,7 @@ class ScheduleAdminDashBoard extends React.Component {
         let presentationSelectionStatusOptions = [
             { value : 'selected',            label: 'Selected'            },
             { value : 'accepted',            label: 'Accepted'            },
+            { value : 'rejected',            label: 'Rejected'            },
             { value : 'alternate',           label: 'Alternate'           }
         ];
 
@@ -631,7 +632,7 @@ class ScheduleAdminDashBoard extends React.Component {
 
         let presentationSelectionPlanOptions = currentSummit.selection_plans.map(sp => ({value: sp.id, label: sp.name}));
 
-            // sort options
+        // sort options
 
         let orderByOptions = [
             { value : 'title', label: 'Title' },

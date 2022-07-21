@@ -37,6 +37,7 @@ export const UPDATE_LOCATION_BULK             = 'UPDATE_LOCATION_BULK';
 export const UPDATE_TYPE_BULK                 = 'UPDATE_TYPE_BULK';
 export const UPDATE_START_DATE_BULK           = 'UPDATE_START_DATE_BULK';
 export const UPDATE_END_DATE_BULK             = 'UPDATE_END_DATE_BULK';
+export const UPDATE_SELECTION_PLAN_BULK       = 'UPDATE_SELECTION_PLAN_BULK';
 
 export const getSummitEventsById = (summitId, eventIds ) => (dispatch, getState) => {
 
@@ -76,6 +77,13 @@ export const updateEventLocationLocal = (event, location, isValid) => (dispatch)
     dispatch(createAction(UPDATE_LOCAL_EVENT)({ eventId: event.id, mutator: mutator(location, isValid) }))
 };
 
+export const updateEventSelectionPlanLocal = (event, selectionPlan, isValid) => (dispatch) => {
+
+    let mutator = (selectionPlan, isValid) => event => ({...event, selection_plan_id :selectionPlan.id, is_valid : isValid});
+
+    dispatch(createAction(UPDATE_LOCAL_EVENT)({ eventId: event.id, mutator: mutator(selectionPlan, isValid) }))
+}
+
 export const updateEventStartDateLocal = (event, startDate, isValid) => (dispatch) => {
 
     let mutator = (startDate, isValid) => event => ({...event, start_date : startDate, is_valid : isValid});
@@ -114,6 +122,7 @@ export const updateEvents = (summitId, events) =>  (dispatch, getState) => {
                 type_id:event.type_id,
                 start_date:event.start_date,
                 end_date:event.end_date,
+                selection_plan_id: event.selection_plan_id,
             }))
         },
         authErrorHandler
@@ -134,14 +143,17 @@ export const updateAndPublishEvents = (summitId, events) =>  (dispatch, getState
     const { accessToken }     = loggedUserState;
     dispatch(startLoading());
 
-    events = events.map((event) => ({
-        id:event.id,
-        title:event.title,
-        location_id:event.location_id,
-        type_id:event.type_id,
-        start_date:event.start_date,
-        end_date:event.end_date,
-    }))
+    events = events.map((event) => (
+            {
+            id:event.id,
+            title:event.title,
+            location_id:event.location_id,
+            type_id:event.type_id,
+            start_date:event.start_date,
+            end_date:event.end_date,
+            selection_plan_id: event.selection_plan_id,
+            }
+    ))
     putRequest(
         null,
         createAction(UPDATED_REMOTE_EVENTS)({}),
@@ -225,6 +237,10 @@ export const performBulkAction = (eventsIds, bulkAction, published) => (dispatch
 
 export const updateEventsLocationLocal = (location) => (dispatch) => {
     dispatch(createAction(UPDATE_LOCATION_BULK)({location}));
+}
+
+export const updateEventsSelectionPlanLocal =  (selectionPlan) => (dispatch) => {
+    dispatch(createAction(UPDATE_SELECTION_PLAN_BULK)({selectionPlan}));
 }
 
 export const updateEventsTypeLocal = (eventType) => (dispatch) => {

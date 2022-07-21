@@ -17,6 +17,7 @@ import moment from "moment-timezone";
 import ScheduleAdminVenueSelector from '../schedule-builder/schedule-admin-venue-selector';
 import T from 'i18n-react/dist/i18n-react'
 import SummitEvent from '../../models/summit-event';
+import Select from "react-select";
 
 class SummitEventBulkEditorItem extends React.Component
 {
@@ -27,6 +28,7 @@ class SummitEventBulkEditorItem extends React.Component
         this.onTitleChanged       = this.onTitleChanged.bind(this);
         this.onLocationChanged    = this.onLocationChanged.bind(this);
         this.onSelectedEvent      = this.onSelectedEvent.bind(this);
+        this.onSelectionPlanChanged = this.onSelectionPlanChanged.bind(this);
     }
 
     onSelectedEvent(evt){
@@ -47,6 +49,10 @@ class SummitEventBulkEditorItem extends React.Component
         let eventModel = new SummitEvent(event, currentSummit)
         let isValid    = eventModel.isValidTitle(event.title);
         return isValid ? 'success':'warning';
+    }
+
+    getValidationEventSelectionPlan(){
+        return null;
     }
 
     getValidationStateVenue(){
@@ -95,18 +101,25 @@ class SummitEventBulkEditorItem extends React.Component
         this.props.onLocationChanged(this.props.index, location, isValid);
     }
 
+    onSelectionPlanChanged(option){
+        let selectionPlan = option.value;
+        let isValid = selectionPlan == null ? false:true;
+        this.props.onSelectionPlanChanged(this.props.index, selectionPlan, isValid);
+    }
+
     render(){
-        let { event, currentSummit, venuesOptions } = this.props;
+        let { event, currentSummit, venuesOptions, selectionPlanOptions } = this.props;
         let currentLocation        = venuesOptions.filter((option) => option.value.id === event.location_id).shift()
         let currentSummitStartDate = moment.tz(currentSummit.start_date * 1000, currentSummit.time_zone.name).hour(0).minute(0).second(0);
         let currentSummitEndDate   = moment.tz(currentSummit.end_date * 1000, currentSummit.time_zone.name).hour(23).minute(59).second(59);
+        let currentSelectionPlan   = selectionPlanOptions.filter((option) => option.value.id === event.selection_plan_id).shift();
 
         return (
             <div className="row event-bulk-editor-item">
                 <div className="col-md-1">
                     <a className="event-edit" title={T.translate("bulk_actions_page.titles.view_event")} onClick={this.onSelectedEvent} href="#">{event.id}</a>
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-2">
                     <FormGroup validationState={this.getValidationEventTitle()}>
                         <FormControl
                             type="text"
@@ -116,6 +129,19 @@ class SummitEventBulkEditorItem extends React.Component
                         />
                         <FormControl.Feedback />
                     </FormGroup>
+                </div>
+                <div className="col-md-2">
+                        <FormGroup validationState={this.getValidationEventSelectionPlan()}>
+                            <Select
+                                placeholder={T.translate("schedule.placeholders.select_presentation_selection_plan")}
+                                className="selection_plan_selector"
+                                name="form-field-name"
+                                value={currentSelectionPlan}
+                                onChange={this.onSelectionPlanChanged}
+                                options={selectionPlanOptions}
+                            />
+                            <FormControl.Feedback/>
+                        </FormGroup>
                 </div>
                 <div className="col-md-2">
                     <FormGroup validationState={this.getValidationStateVenue()}>
