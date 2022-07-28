@@ -110,7 +110,6 @@ class SummitDocForm extends React.Component {
         const { currentSummit } = this.props;
 
         let event_types_ddl = currentSummit.event_types
-            .filter( t => t.should_be_available_on_cfp )
             .map(et => ({value: et.id, label: et.name}));
 
         let selection_plans_ddl = currentSummit.selection_plans
