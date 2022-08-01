@@ -204,6 +204,7 @@ class NavMenu extends React.Component {
                 childs: [
                     {name:'badge_feature_list', linkUrl:`summits/${summit_id}/badge-features`},
                     {name:'access_level_list', linkUrl:`summits/${summit_id}/access-levels`},
+                    {name:'view_type_list', linkUrl:`summits/${summit_id}/view-types`},
                     {name:'badge_type_list', linkUrl:`summits/${summit_id}/badge-types`},
                     {name:'badge_checkin', linkUrl:`summits/${summit_id}/badge-checkin`}
                 ]

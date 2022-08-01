@@ -23,7 +23,8 @@ import {
     startLoading,
     showMessage,
     showSuccessMessage,
-    authErrorHandler
+    authErrorHandler,
+    escapeFilterValue
 } from 'openstack-uicore-foundation/lib/methods';
 
 export const BADGE_DELETED              = 'BADGE_DELETED';
@@ -65,6 +66,17 @@ export const BADGE_ACCESS_LEVEL_ADDED       = 'BADGE_ACCESS_LEVEL_ADDED';
 export const BADGE_ACCESS_LEVEL_REMOVED     = 'BADGE_ACCESS_LEVEL_REMOVED';
 export const FEATURE_ADDED_TO_TYPE          = 'FEATURE_ADDED_TO_TYPE';
 export const FEATURE_REMOVED_FROM_TYPE      = 'FEATURE_REMOVED_FROM_TYPE';
+export const BADGE_VIEW_TYPE_ADDED          = 'BADGE_VIEW_TYPE_ADDED';
+export const BADGE_VIEW_TYPE_REMOVED        = 'BADGE_VIEW_TYPE_REMOVED';
+
+export const REQUEST_VIEW_TYPES         = 'REQUEST_VIEW_TYPES';
+export const RECEIVE_VIEW_TYPES         = 'RECEIVE_VIEW_TYPES';
+export const RECEIVE_VIEW_TYPE          = 'RECEIVE_VIEW_TYPE';
+export const RESET_VIEW_TYPE_FORM       = 'RESET_VIEW_TYPE_FORM';
+export const UPDATE_VIEW_TYPE           = 'UPDATE_VIEW_TYPE';
+export const VIEW_TYPE_UPDATED          = 'VIEW_TYPE_UPDATED';
+export const VIEW_TYPE_ADDED            = 'VIEW_TYPE_ADDED';
+export const VIEW_TYPE_DELETED          = 'VIEW_TYPE_DELETED';
 
 
 /***********************  BADGE  ************************************************/
@@ -204,6 +216,158 @@ export const checkInBadge = (code) => (dispatch, getState) => {
     );
 };
 
+/***********************  VIEW TYPES  ************************************************/
+
+export const getViewTypes = (term = null, order = 'name', orderDir = 1) => (dispatch, getState) => {
+
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken } = loggedUserState;
+    const { currentSummit } = currentSummitState;
+    const filter = [];
+
+    dispatch(startLoading());
+
+    const params = {
+        page: 1,
+        per_page: 100,
+        access_token: accessToken,
+    };
+
+    if (term) {
+        const escapedTerm = escapeFilterValue(term);
+        filter.push(`name=@${escapedTerm}`);
+        params['filter[]']= filter;
+    }    
+
+    // order
+    if (order != null && orderDir != null) {
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
+        params['order'] = `${orderDirSign}${order}`;
+    }
+
+    return getRequest(
+        createAction(REQUEST_VIEW_TYPES),
+        createAction(RECEIVE_VIEW_TYPES),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-view-types`,
+        authErrorHandler,
+        { order, orderDir }
+    )(params)(dispatch).then(() => {
+        dispatch(stopLoading());
+    }
+    );
+};
+
+export const getViewType = (viewTypeId) => (dispatch, getState) => {
+
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken } = loggedUserState;
+    const { currentSummit } = currentSummitState;
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token: accessToken,
+    };
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_VIEW_TYPE),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-view-types/${viewTypeId}`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+        dispatch(stopLoading());
+    }
+    );
+};
+
+export const resetViewTypeForm = () => (dispatch, getState) => {
+    dispatch(createAction(RESET_VIEW_TYPE_FORM)({}));
+};
+
+export const saveViewType = (entity) => (dispatch, getState) => {
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken } = loggedUserState;
+    const { currentSummit } = currentSummitState;
+
+    const params = {
+        access_token: accessToken,
+    };
+
+    dispatch(startLoading());
+
+    const normalizedEntity = normalizeViewType(entity);
+
+    if (entity.id) {
+
+        putRequest(
+            createAction(UPDATE_VIEW_TYPE),
+            createAction(VIEW_TYPE_UPDATED),
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-view-types/${entity.id}`,
+            normalizedEntity,
+            authErrorHandler,
+            entity
+        )(params)(dispatch)
+            .then((payload) => {
+                dispatch(showSuccessMessage(T.translate("edit_view_type.view_type_saved")));
+            });
+
+    } else {
+        const success_message = {
+            title: T.translate("general.done"),
+            html: T.translate("edit_view_type.view_type_created"),
+            type: 'success'
+        };
+
+        postRequest(
+            createAction(UPDATE_VIEW_TYPE),
+            createAction(VIEW_TYPE_ADDED),
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-view-types`,
+            normalizedEntity,
+            authErrorHandler,
+            entity
+        )(params)(dispatch)
+            .then((payload) => {
+                dispatch(showMessage(
+                    success_message,
+                    () => { history.push(`/app/summits/${currentSummit.id}/view-types/${payload.response.id}`) }
+                ));
+            });
+    }
+}
+
+export const deleteViewType = (viewTypeId) => (dispatch, getState) => {
+
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken } = loggedUserState;
+    const { currentSummit } = currentSummitState;
+
+    const params = {
+        access_token: accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(VIEW_TYPE_DELETED)({ viewTypeId }),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-view-types/${viewTypeId}`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+        dispatch(stopLoading());
+    }
+    );
+};
+
+const normalizeViewType = (entity) => {
+    const normalizedEntity = {...entity};
+    delete(normalizedEntity.id);
+    if(!normalizedEntity.is_default) {
+        normalizedEntity['is_default'] = false;
+    }
+
+    return normalizedEntity;
+
+}
+
 
 /***********************  BADGE TYPE  ************************************************/
 
@@ -220,7 +384,7 @@ export const getBadgeTypes = ( order = 'name', orderDir = 1 ) => (dispatch, getS
         page         : 1,
         per_page     : 100,
         access_token : accessToken,
-        expand       : 'access_levels'
+        expand       : 'access_levels,allowed_view_types'
     };
 
     // order
@@ -252,7 +416,7 @@ export const getBadgeType = (badgeTypeId) => (dispatch, getState) => {
 
     const params = {
         access_token : accessToken,
-        expand: 'access_levels,badge_features'
+        expand: 'access_levels,badge_features,allowed_view_types'
     };
 
     return getRequest(
@@ -434,6 +598,54 @@ export const removeFeatureFromBadgeType = (badgeTypeId, featureId) => (dispatch,
         null,
         createAction(FEATURE_REMOVED_FROM_TYPE)({featureId}),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-types/${badgeTypeId}/features/${featureId}`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const addViewTypeToBadgeType = (badgeTypeId, viewType) => (dispatch, getState) => {
+
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token : accessToken
+    };
+
+    return putRequest(
+        null,
+        createAction(BADGE_VIEW_TYPE_ADDED)({viewType}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-types/${badgeTypeId}/view-types/${viewType.id}`,
+        {},
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const removeViewTypeFromBadgeType = (badgeTypeId, viewTypeId) => (dispatch, getState) => {
+
+    const { loggedUserState, currentSummitState } = getState();
+    const { accessToken }     = loggedUserState;
+    const { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(BADGE_VIEW_TYPE_REMOVED)({viewTypeId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-types/${badgeTypeId}/view-types/${viewTypeId}`,
         null,
         authErrorHandler
     )(params)(dispatch).then(() => {

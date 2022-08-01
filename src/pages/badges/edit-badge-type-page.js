@@ -21,12 +21,15 @@ import {
     getAccessLevels,
     getBadgeFeatures,
     getBadgeType,
+    getViewTypes,
     resetBadgeTypeForm,
     saveBadgeType,
     addAccessLevelToBadgeType,
     removeAccessLevelFromBadgeType,
     addFeatureToBadgeType,
-    removeFeatureFromBadgeType
+    removeFeatureFromBadgeType,
+    addViewTypeToBadgeType,
+    removeViewTypeFromBadgeType,
 } from "../../actions/badge-actions";
 
 class EditBadgeTypePage extends React.Component {
@@ -44,6 +47,7 @@ class EditBadgeTypePage extends React.Component {
 
         if (!currentSummit.badge_features) props.getBadgeFeatures();
         if (!currentSummit.access_level_types) props.getAccessLevels();
+        if (!currentSummit.view_types) props.getViewTypes();
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -78,6 +82,8 @@ class EditBadgeTypePage extends React.Component {
                     onAccessLevelUnLink={this.props.removeAccessLevelFromBadgeType}
                     onFeatureLink={this.props.addFeatureToBadgeType}
                     onFeatureUnLink={this.props.removeFeatureFromBadgeType}
+                    onViewTypeLink={this.props.addViewTypeToBadgeType}
+                    onViewTypeUnLink={this.props.removeViewTypeFromBadgeType}
                     onSubmit={this.props.saveBadgeType}
                 />
                 }
@@ -97,6 +103,7 @@ export default connect (
     {
         getSummitById,
         getAccessLevels,
+        getViewTypes,
         getBadgeFeatures,
         getBadgeType,
         resetBadgeTypeForm,
@@ -104,6 +111,8 @@ export default connect (
         addAccessLevelToBadgeType,
         removeAccessLevelFromBadgeType,
         addFeatureToBadgeType,
-        removeFeatureFromBadgeType
+        removeFeatureFromBadgeType,
+        addViewTypeToBadgeType,
+        removeViewTypeFromBadgeType,
     }
 )(EditBadgeTypePage);

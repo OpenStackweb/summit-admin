@@ -64,6 +64,7 @@ import ProgressFlagsPage from "../pages/track_chairs/progress-flags-page";
 import SummitPresentationsVotesPage from "../pages/events/summit-presentations-votes-page";
 import RegistrationCompaniesLayout from './registration-companies-layout';
 import SummitSpeakersLayout from './summit-speakers-layout';
+import ViewTypeLayout from './view-type-layout'
 
 class SummitIdLayout extends React.Component {
 
@@ -132,6 +133,7 @@ class SummitIdLayout extends React.Component {
                     <Route path={`${match.url}/badge-features`} component={BadgeFeatureLayout}/>
                     <Route path={`${match.url}/badge-types`} component={BadgeTypeLayout}/>
                     <Route path={`${match.url}/access-levels`} component={AccessLevelLayout}/>
+                    <Route path={`${match.url}/view-types`} component={ViewTypeLayout}/>
                     <Route path={`${match.url}/purchase-orders`} component={PurchaseOrderLayout}/>
                     <Route path={`${match.url}/tickets`} component={TicketListPage}/>
                     <Route path={`${match.url}/registration-invitations`} component={RegistrationInvitationLayout}/>

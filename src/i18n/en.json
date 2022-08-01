@@ -102,6 +102,7 @@
     "badges": "Badges",
     "badge_feature_list": "Badge Features",
     "access_level_list": "Access Levels",
+    "view_type_list": "View Types",
     "badge_type_list": "Badge Types",
     "taxes": "Taxes",
     "tax_type_list": "Tax Types",
@@ -1433,9 +1434,32 @@
     "template_content": "Template Content",
     "default": "Is Default ?",
     "access_levels": "Access Levels",
+    "view_types": "View Types",
     "badge_features": "Badge Features",
     "badge_type_saved": "Badge Type saved successfully",
     "badge_type_created": "Badge Type created successfully"
+  },
+  "view_type_list": {
+    "view_types": "View Types",
+    "view_type_list": "View Type List",
+    "no_view_type": "No badge found for current search criteria.",
+    "add_view_type": "Add Badge",
+    "name": "Name",
+    "is_default": "Is Default ?",
+    "description": "Description",
+    "tag_name": "Tag Name",
+    "remove_warning": "Are you sure you want to delete view type ",
+    "placeholders": {
+      "search_view_type": "Search by View Type Name"
+    }
+  },
+  "edit_view_type": {
+    "view_type": "View Type",
+    "name": "Name",
+    "description": "Description",
+    "is_default": "Is Default ?",
+    "view_type_saved": "View Type saved successfully",
+    "view_type_created": "View Type created successfully"
   },
   "badge_feature_list": {
     "badge_features": "Badge Feature",

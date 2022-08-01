@@ -61,6 +61,8 @@ import roomBookingListReducer from "./reducers/room_bookings/room-booking-list-r
 import roomBookingAttributeTypeReducer from "./reducers/room_bookings/room-booking-attribute-type-reducer";
 import badgeTypeListReducer from './reducers/badges/badge-type-list-reducer';
 import badgeTypeReducer from './reducers/badges/badge-type-reducer';
+import viewTypeListReducer from './reducers/badges/view-type-list-reducer';
+import viewTypeReducer from './reducers/badges/view-type-reducer';
 import badgeFeatureListReducer from './reducers/badges/badge-feature-list-reducer';
 import badgeFeatureReducer from './reducers/badges/badge-feature-reducer';
 import accessLevelListReducer from './reducers/badges/access-level-list-reducer';
@@ -181,6 +183,8 @@ const reducers = persistCombineReducers(config, {
     currentBadgeFeatureState: badgeFeatureReducer,
     currentAccessLevelListState: accessLevelListReducer,
     currentAccessLevelState: accessLevelReducer,
+    currentViewTypeListState: viewTypeListReducer,
+    currentViewTypeState: viewTypeReducer,
     currentOrderExtraQuestionListState: orderExtraQuestionListReducer,
     currentOrderExtraQuestionState: orderExtraQuestionReducer,
     currentOrderExtraQuestionRuleState: orderExtraQuestionRuleReducer,

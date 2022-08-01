@@ -33,6 +33,9 @@ class BadgeTypeForm extends React.Component {
         this.handleFeatureLink = this.handleFeatureLink.bind(this);
         this.handleFeatureUnLink = this.handleFeatureUnLink.bind(this);
         this.queryFeatures = this.queryFeatures.bind(this);
+        this.handleViewTypeLink = this.handleViewTypeLink.bind(this);
+        this.handleViewTypeUnLink = this.handleViewTypeUnLink.bind(this);
+        this.queryViewTypes = this.queryViewTypes.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -106,6 +109,22 @@ class BadgeTypeForm extends React.Component {
         callback(features);
     }
 
+    handleViewTypeLink(viewType) {
+        const {entity} = this.state;
+        this.props.onViewTypeLink(entity.id, viewType);
+    }
+
+    handleViewTypeUnLink(viewType) {
+        const {entity} = this.state;        
+        this.props.onViewTypeUnLink(entity.id, viewType);
+    }
+
+    queryViewTypes(input, callback) {
+        const {currentSummit} = this.props;
+        const ViewTypes = currentSummit.badge_view_types.filter(f => f.name.toLowerCase().indexOf(input.toLowerCase()) !== -1);
+        callback(ViewTypes);
+    }
+
 
     render() {
         const {entity, errors} = this.state;
@@ -138,6 +157,22 @@ class BadgeTypeForm extends React.Component {
                 search: this.queryFeatures,
                 delete: { onClick: this.handleFeatureUnLink },
                 add: { onClick: this.handleFeatureLink }
+            }
+        };
+
+        const viewTypesColumns = [
+            { columnKey: 'name', value: T.translate("edit_badge_type.name") },
+        ];
+
+        const viewTypesOptions = {
+            title: T.translate("edit_badge_type.view_types"),
+            valueKey: "name",
+            labelKey: "name",
+            defaultOptions: true,
+            actions: {
+                search: this.queryViewTypes,
+                delete: { onClick: this.handleViewTypeUnLink },
+                add: { onClick: this.handleViewTypeLink }
             }
         };
 
@@ -193,6 +228,15 @@ class BadgeTypeForm extends React.Component {
                     values={entity.badge_features}
                     columns={featuresColumns}
                     options={featuresOptions}
+                />
+                }
+
+                <hr />
+                {entity.id !== 0 &&
+                <SimpleLinkList
+                    values={entity.allowed_view_types}
+                    columns={viewTypesColumns}
+                    options={viewTypesOptions}
                 />
                 }
 

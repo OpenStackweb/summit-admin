@@ -21,7 +21,8 @@ import {
 import {
     RECEIVE_BADGE_TYPES,
     RECEIVE_ACCESS_LEVELS,
-    RECEIVE_BADGE_FEATURES
+    RECEIVE_BADGE_FEATURES,
+    RECEIVE_VIEW_TYPES
 } from "../../actions/badge-actions";
 
 import {
@@ -95,6 +96,7 @@ export const DEFAULT_ENTITY = {
     access_level_types: null,
     badge_types: null,
     badge_features: null,
+    badge_view_types: null,
     order_extra_questions: null,
     order_only_extra_questions: null,
     attendee_extra_questions: null,
@@ -328,6 +330,11 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
             let badgeFeatures = payload.response.data;
 
             return {...state, currentSummit: {...state.currentSummit, badge_features: badgeFeatures} };
+        }
+        case RECEIVE_VIEW_TYPES: {
+            let viewTypes = payload.response.data;
+
+            return {...state, currentSummit: {...state.currentSummit, badge_view_types: viewTypes} };
         }
         break;
         case RECEIVE_ORDER_EXTRA_QUESTIONS: {
