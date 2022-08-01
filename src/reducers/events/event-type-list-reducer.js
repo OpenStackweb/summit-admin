@@ -20,6 +20,7 @@ import
 } from '../../actions/event-type-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     eventTypes      : []
@@ -28,26 +29,23 @@ const DEFAULT_STATE = {
 const eventTypeListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
             return DEFAULT_STATE;
         }
-        break;
         case REQUEST_EVENT_TYPES: {
 
             return {...state }
         }
-        break;
         case RECEIVE_EVENT_TYPES: {
             let eventTypes = [...payload.response.data];
 
             return {...state, eventTypes };
         }
-        break;
         case EVENT_TYPE_DELETED: {
             let {eventTypeId} = payload;
             return {...state, eventTypes: state.eventTypes.filter(e => e.id !== eventTypeId)};
         }
-        break;
         case EVENT_TYPES_SEEDED: {
             let eventTypesAdded = payload.response.data;
             if (eventTypesAdded.length > 0) {
@@ -56,7 +54,6 @@ const eventTypeListReducer = (state = DEFAULT_STATE, action) => {
                 return state;
             }
         }
-        break;
         default:
             return state;
     }

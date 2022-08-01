@@ -19,6 +19,7 @@ import
 } from '../../actions/media-upload-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     media_uploads  : [],
@@ -33,16 +34,15 @@ const DEFAULT_STATE = {
 const mediaUploadListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action;
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
-            return state;
+            return DEFAULT_STATE;
         }
-        break;
         case REQUEST_MEDIA_UPLOADS: {
             let {order, orderDir, term} = payload;
 
             return {...state, order, orderDir, term }
         }
-        break;
         case RECEIVE_MEDIA_UPLOADS: {
             let {total, last_page, current_page} = payload.response;
             let media_uploads = payload.response.data.map(mft => {
@@ -56,12 +56,10 @@ const mediaUploadListReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, media_uploads: media_uploads, currentPage: current_page, lastPage: last_page };
         }
-        break;
         case MEDIA_UPLOAD_DELETED: {
             let {mediaUploadId} = payload;
             return {...state, media_uploads: state.media_uploads.filter(mu => mu.id !== mediaUploadId)};
         }
-        break;
         default:
             return state;
     }

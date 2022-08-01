@@ -19,6 +19,7 @@ import
 } from '../../actions/summitdoc-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     summitDocs      : [],
@@ -34,16 +35,15 @@ const DEFAULT_STATE = {
 const summitDocListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
-            return state;
+            return DEFAULT_STATE;
         }
-        break;
         case REQUEST_SUMMITDOCS: {
             let {order, orderDir, term} = payload;
 
             return {...state, order, orderDir, term }
         }
-        break;
         case RECEIVE_SUMMITDOCS: {
             let {total, last_page, current_page} = payload.response;
             let summitDocs = payload.response.data.map(s => {
@@ -58,12 +58,10 @@ const summitDocListReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, summitDocs: summitDocs, currentPage: current_page, totalSummitDocs: total, lastPage: last_page };
         }
-        break;
         case SUMMITDOC_DELETED: {
             let {summitDocId} = payload;
             return {...state, summitDocs: state.summitDocs.filter(s => s.id !== summitDocId)};
         }
-        break;
         default:
             return state;
     }

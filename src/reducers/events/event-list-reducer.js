@@ -20,6 +20,7 @@ import
 } from '../../actions/event-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     events          : {},
@@ -36,16 +37,15 @@ const DEFAULT_STATE = {
 const eventListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
-            return state;
+            return DEFAULT_STATE;
         }
-        break;
         case REQUEST_EVENTS: {
             let {order, orderDir, term, summitTZ} = payload;
 
             return {...state, order, orderDir, term, summitTZ }
         }
-        break;
         case RECEIVE_EVENTS: {
             let {current_page, total, last_page} = payload.response;
             let events = payload.response.data.map(e => {
@@ -64,12 +64,10 @@ const eventListReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, events: events, currentPage: current_page, totalEvents: total, lastPage: last_page };
         }
-        break;
         case EVENT_DELETED: {
             let {eventId} = payload;
             return {...state, events: state.events.filter(e => e.id !== eventId)};
         }
-        break;
         default:
             return state;
     }

@@ -25,6 +25,7 @@ import
 } from '../../actions/attendee-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     attendees       : {},
@@ -51,15 +52,14 @@ const DEFAULT_STATE = {
 const attendeeListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
-            return state;
+            return DEFAULT_STATE;
         }
-        break;
         case REQUEST_ATTENDEES: {
             let {order, orderDir, page, perPage, ...rest} = payload;
             return {...state, order, orderDir, currentPage: page, perPage, ...rest}
         }
-        break;
         case RECEIVE_ATTENDEES: {
             let {current_page, total, last_page} = payload.response;
             let attendees = payload.response.data.map(a => {
@@ -88,16 +88,13 @@ const attendeeListReducer = (state = DEFAULT_STATE, action) => {
             return {...state, attendees: attendees, currentPage: current_page,
                     totalAttendees: total, lastPage: last_page};
         }
-        break;
         case ATTENDEE_DELETED: {
             let {attendeeId} = payload;
             return {...state, attendees: state.attendees.filter(a => a.id !== attendeeId)};
         }
-        break;
         case SELECT_ATTENDEE:{
             return {...state, selectedIds: [...state.selectedIds, payload]};
         }
-            break;
         case UNSELECT_ATTENDEE:{
             return {...state, selectedIds: state.selectedIds.filter(element => element !== payload), selectedAll: false};
         }
@@ -108,11 +105,9 @@ const attendeeListReducer = (state = DEFAULT_STATE, action) => {
         case SET_ATTENDEES_CURRENT_FLOW_EVENT:{
             return {...state, currentFlowEvent : payload};
         }
-            break;
         case SET_SELECTED_ALL_ATTENDEES:{
             return {...state, selectedAll : payload, selectedIds: []};
         }
-        break;
         case SEND_ATTENDEES_EMAILS:{
             return {...state,
                 selectedIds: [],

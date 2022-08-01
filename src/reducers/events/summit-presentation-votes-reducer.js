@@ -18,6 +18,7 @@ import {
     REQUEST_PRESENTATION_VOTES,
     CLEAR_VOTES
 } from "../../actions/presentation-votes-actions";
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     items   : {},
@@ -33,6 +34,7 @@ const DEFAULT_STATE = {
 const presentationVotesReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
             return DEFAULT_STATE;
         }

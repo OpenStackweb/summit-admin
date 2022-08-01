@@ -18,6 +18,7 @@ import
 } from '../../actions/email-flows-events-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     emailFlowEvents      : [],
@@ -33,22 +34,19 @@ const DEFAULT_STATE = {
 const emailFlowEventsListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action;
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
             return DEFAULT_STATE;
         }
-            break;
         case REQUEST_EMAIL_FLOW_EVENTS: {
             let {order, orderDir, term} = payload;
             return {...state, order, orderDir, term }
         }
-            break;
         case RECEIVE_EMAIL_FLOW_EVENTS: {
             let {current_page, total, last_page} = payload.response;
             let emailFlowEvents = payload.response.data;
-        return {...state, emailFlowEvents: emailFlowEvents, totalEmailFlowEvents: total,  currentPage: current_page, lastPage: last_page };
+            return {...state, emailFlowEvents: emailFlowEvents, totalEmailFlowEvents: total,  currentPage: current_page, lastPage: last_page };
         }
-            break;
-
         default:
             return state;
     }

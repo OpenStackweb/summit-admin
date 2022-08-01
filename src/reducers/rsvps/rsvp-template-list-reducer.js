@@ -19,6 +19,7 @@ import
 } from '../../actions/rsvp-template-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     rsvpTemplates       : [],
@@ -34,16 +35,15 @@ const DEFAULT_STATE = {
 const rsvpTemplateListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
             return DEFAULT_STATE;
         }
-        break;
         case REQUEST_RSVP_TEMPLATES: {
             let {order, orderDir, term} = payload;
 
             return {...state, order, orderDir, term }
         }
-        break;
         case RECEIVE_RSVP_TEMPLATES: {
             let {current_page, total, last_page} = payload.response;
             let rsvpTemplates = payload.response.data.map(r => {
@@ -55,12 +55,10 @@ const rsvpTemplateListReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, rsvpTemplates: rsvpTemplates, currentPage: current_page, totalRsvpTemplates: total, lastPage: last_page };
         }
-        break;
         case RSVP_TEMPLATE_DELETED: {
             let {rsvpTemplateId} = payload;
             return {...state, rsvpTemplates: state.rsvpTemplates.filter(r => r.id !== rsvpTemplateId)};
         }
-        break;
         default:
             return state;
     }

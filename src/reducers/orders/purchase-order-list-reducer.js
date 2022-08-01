@@ -19,6 +19,7 @@ import
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
 import {epochToMoment} from "openstack-uicore-foundation/lib/methods";
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     purchaseOrders          : {},
@@ -34,16 +35,15 @@ const DEFAULT_STATE = {
 const purchaseOrderListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
-            return state;
+            return DEFAULT_STATE;
         }
-        break;
         case REQUEST_PURCHASE_ORDERS: {
             let {order, orderDir, term} = payload;
 
             return {...state, order, orderDir, term }
         }
-        break;
         case RECEIVE_PURCHASE_ORDERS: {
             let {current_page, total, last_page} = payload.response;
             let purchaseOrders = payload.response.data.map(a => {
@@ -65,7 +65,6 @@ const purchaseOrderListReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, purchaseOrders: purchaseOrders, currentPage: current_page, totalPurchaseOrders: total, lastPage: last_page };
         }
-        break;
         default:
             return state;
     }

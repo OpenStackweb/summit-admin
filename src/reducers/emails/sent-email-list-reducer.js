@@ -35,15 +35,13 @@ const sentEmailListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
         case LOGOUT_USER: {
-            return state;
+            return DEFAULT_STATE;
         }
-        break;
         case REQUEST_EMAILS: {
             let {order, orderDir, term} = payload;
 
             return {...state, order, orderDir, term }
         }
-        break;
         case RECEIVE_EMAILS: {
             let {total, last_page, current_page, data} = payload.response;
 
@@ -53,7 +51,6 @@ const sentEmailListReducer = (state = DEFAULT_STATE, action) => {
             });
             return {...state, emails: data, currentPage: current_page, totalEmails: total, lastPage: last_page };
         }
-        break;
         default:
             return state;
     }

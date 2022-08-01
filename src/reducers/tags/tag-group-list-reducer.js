@@ -21,6 +21,7 @@ import
 } from '../../actions/tag-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     tagGroups      : []
@@ -29,31 +30,27 @@ const DEFAULT_STATE = {
 const tagGroupListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
             return DEFAULT_STATE;
         }
-        break;
         case REQUEST_TAG_GROUPS: {
 
             return {...state }
         }
-        break;
         case RECEIVE_TAG_GROUPS: {
             let tagGroups = [...payload.response.data];
 
             return {...state, tagGroups };
         }
-        break;
         case TAG_GROUP_ORDER_UPDATED: {
             let tagGroups = [...payload];
             return {...state, tagGroups: tagGroups}
         }
-        break;
         case TAG_GROUP_DELETED: {
             let {tagGroupId} = payload;
             return {...state, tagGroups: state.tagGroups.filter(tg => tg.id !== tagGroupId)};
         }
-        break;
         case TAG_GROUPS_SEEDED: {
             let tagGroupsAdded = payload.response.data;
             if (tagGroupsAdded.length > 0) {
@@ -62,7 +59,6 @@ const tagGroupListReducer = (state = DEFAULT_STATE, action) => {
                 return state;
             }
         }
-        break;
         default:
             return state;
     }

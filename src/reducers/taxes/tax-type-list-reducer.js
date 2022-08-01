@@ -19,6 +19,7 @@ import
 } from '../../actions/tax-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     taxTypes            : [],
@@ -30,28 +31,25 @@ const DEFAULT_STATE = {
 const taxTypeListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
             return DEFAULT_STATE;
         }
-        break;
         case REQUEST_TAX_TYPES: {
             let {order, orderDir} = payload;
 
             return {...state, order, orderDir }
         }
-        break;
         case RECEIVE_TAX_TYPES: {
             let { total } = payload.response;
             let taxTypes = payload.response.data;
 
             return {...state, taxTypes: taxTypes, totalTaxTypes: total };
         }
-        break;
         case TAX_TYPE_DELETED: {
             let {taxTypeId} = payload;
             return {...state, taxTypes: state.taxTypes.filter(t => t.id !== taxTypeId)};
         }
-        break;
         default:
             return state;
     }

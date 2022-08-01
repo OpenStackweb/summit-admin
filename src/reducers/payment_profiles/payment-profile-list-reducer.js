@@ -21,6 +21,7 @@ import
 } from '../../actions/ticket-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     paymentProfiles         : [],
@@ -32,27 +33,24 @@ const DEFAULT_STATE = {
 const paymentProfileListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
             return DEFAULT_STATE;
         }
-        break;
         case REQUEST_PAYMENT_PROFILES: {
             let {order, orderDir} = payload;
             return {...state, order, orderDir }
         }
-        break;
         case RECEIVE_PAYMENT_PROFILES: {
             let { total } = payload.response;
             let paymentProfiles = payload.response.data.map( p => ({...p, active_nice: p.active ? 'Yes' : 'No'}));
 
             return {...state, paymentProfiles: paymentProfiles, totalPaymentProfiles: total };
         }
-        break;
         case PAYMENT_PROFILE_ADDED: {
             let { response } = payload;
             return {...state, paymentProfiles: [...state.paymentProfiles, {...response, active_nice: response.active ? 'Yes' : 'No'} ]};
         }
-        break;
         case PAYMENT_PROFILE_UPDATED: {
             let updatedEntity = {...payload.response};
             let paymentProfiles = state.paymentProfiles.map( pp => {
@@ -62,12 +60,10 @@ const paymentProfileListReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, paymentProfiles: paymentProfiles};
         }
-        break;
         case PAYMENT_PROFILE_DELETED: {
             let {paymentProfileId} = payload;
             return {...state, paymentProfiles: state.paymentProfiles.filter(pp => pp.id !== paymentProfileId)};
         }
-        break;
         default:
             return state;
     }

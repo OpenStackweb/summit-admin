@@ -21,6 +21,7 @@ import
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
 import {epochToMoment} from "openstack-uicore-foundation/lib/methods";
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     roomBookings        : [],
@@ -36,16 +37,15 @@ const DEFAULT_STATE = {
 const roomBookingListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
             return DEFAULT_STATE;
         }
-        break;
         case REQUEST_ROOM_BOOKINGS: {
             let {order, orderDir, term} = payload;
 
             return {...state, order, orderDir, term }
         }
-        break;
         case RECEIVE_ROOM_BOOKINGS: {
             let { current_page, total, last_page } = payload.response;
             let room_bookings = payload.response.data.map(rb => {
@@ -64,12 +64,10 @@ const roomBookingListReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, roomBookings: room_bookings, currentPage: current_page, totalRoomBookings: total, lastPage: last_page };
         }
-        break;
         case ROOM_BOOKING_DELETED: {
             let {roomBookingId} = payload;
             return {...state, roomBookings: state.roomBookings.filter(rb => rb.id !== roomBookingId)};
         }
-        break;
         case ROOM_BOOKING_REFUNDED: {
             let roomBooking = payload.response;
             let roomBookings = [...state.roomBookings];
@@ -82,7 +80,6 @@ const roomBookingListReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, roomBookings: roomBookings};
         }
-        break;
         default:
             return state;
     }

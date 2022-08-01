@@ -20,6 +20,7 @@ import
 } from '../../actions/sponsor-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     badgeScans      : [],
@@ -36,16 +37,15 @@ const DEFAULT_STATE = {
 const badgeScansListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
             return DEFAULT_STATE;
         }
-        break;
         case REQUEST_BADGE_SCANS: {
             let {order, orderDir, sponsorId} = payload;
 
             return {...state, order, orderDir, sponsorId }
         }
-        break;
         case RECEIVE_BADGE_SCANS: {
             let {current_page, total, last_page} = payload.response;
             let badgeScans = payload.response.data.map(s => {
@@ -81,11 +81,9 @@ const badgeScansListReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, badgeScans: badgeScans, currentPage: current_page, totalBadgeScans: total, lastPage: last_page };
         }
-        break;
         case RECEIVE_SPONSORS: {
             return {...state, allSponsors: payload.response.data }
         }
-        break;
         default:
             return state;
     }

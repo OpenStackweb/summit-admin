@@ -21,6 +21,7 @@ import
 } from '../../actions/event-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     events          : [],
@@ -40,22 +41,20 @@ const DEFAULT_STATE = {
 const roomOccupancyReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
             return DEFAULT_STATE;
         }
-        break;
         case REQUEST_EVENTS_FOR_OCCUPANCY: {
             let {order, orderDir, term, roomId, currentEvents, summitTZ} = payload;
 
             return {...state, order, orderDir, term, roomId, currentEvents, summitTZ }
         }
-        break;
         case REQUEST_CURRENT_EVENT_FOR_OCCUPANCY: {
             let {summitTZ} = payload;
 
             return {...state, summitTZ }
         }
-        break;
         case RECEIVE_EVENTS_FOR_OCCUPANCY: {
             let {current_page, total, last_page} = payload.response;
             let events = payload.response.data.map(e => {
@@ -72,7 +71,6 @@ const roomOccupancyReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, events: events, currentPage: current_page, totalEvents: total, lastPage: last_page };
         }
-        break;
         case RECEIVE_CURRENT_EVENT_FOR_OCCUPANCY: {
             let currentEvent = {};
             let payloadEvent = null;
@@ -97,7 +95,6 @@ const roomOccupancyReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, currentEvent: currentEvent };
         }
-        break;
         case UPDATE_EVENT: {
             let updatedEvent = payload;
             let currentEvent = state.currentEvent;
@@ -114,7 +111,6 @@ const roomOccupancyReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state,  events: [...events], currentEvent: currentEvent};
         }
-        break;
         default:
             return state;
     }

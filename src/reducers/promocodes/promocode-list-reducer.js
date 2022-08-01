@@ -20,6 +20,7 @@ import
 } from '../../actions/promocode-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     promocodes       : [],
@@ -38,16 +39,15 @@ const DEFAULT_STATE = {
 const promocodeListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
             return DEFAULT_STATE;
         }
-        break;
         case REQUEST_PROMOCODES: {
             let {order, orderDir, type, term} = payload;
 
             return {...state, order, orderDir, type, term }
         }
-        break;
         case RECEIVE_PROMOCODE_META: {
             let types = [...DEFAULT_STATE.allTypes];
             let allClasses = [...DEFAULT_STATE.allClasses, ...payload.response];
@@ -60,7 +60,6 @@ const promocodeListReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, allTypes: unique_types, allClasses: allClasses }
         }
-        break;
         case RECEIVE_PROMOCODES: {
             let {current_page, total, last_page} = payload.response;
             let promocodes = payload.response.data.map(p => {
@@ -113,12 +112,10 @@ const promocodeListReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, promocodes: promocodes, currentPage: current_page, totalPromocodes: total, lastPage: last_page };
         }
-        break;
         case PROMOCODE_DELETED: {
             let {promocodeId} = payload;
             return {...state, promocodes: state.promocodes.filter(p => p.id !== promocodeId)};
         }
-        break;
         default:
             return state;
     }

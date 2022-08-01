@@ -20,6 +20,7 @@ import
 } from '../../actions/event-category-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     eventCategories : []
@@ -28,15 +29,14 @@ const DEFAULT_STATE = {
 const eventCategoryListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
             return DEFAULT_STATE;
         }
-        break;
         case REQUEST_EVENT_CATEGORIES: {
 
             return {...state }
         }
-        break;
         case RECEIVE_EVENT_CATEGORIES: {
             return {...state, eventCategories: payload.response.data.map(e => {
                     return {
@@ -61,7 +61,6 @@ const eventCategoryListReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, eventCategories: tracks };
         }
-        break;
         case EVENT_CATEGORIES_SEEDED: {
             let eventCategoriesAdded = payload.response.data.map(e => {
                 return {
@@ -76,12 +75,10 @@ const eventCategoryListReducer = (state = DEFAULT_STATE, action) => {
                 return state;
             }
         }
-        break;
         case EVENT_CATEGORY_DELETED: {
             let {categoryId} = payload;
             return {...state, eventCategories: state.eventCategories.filter(c => c.id !== categoryId)};
         }
-        break;
         default:
             return state;
     }

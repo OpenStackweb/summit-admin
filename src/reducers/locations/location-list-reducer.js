@@ -20,6 +20,7 @@ import
 } from '../../actions/location-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     locations       : [],
@@ -30,14 +31,13 @@ const DEFAULT_STATE = {
 const locationListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
             return DEFAULT_STATE;
         }
-        break;
         case REQUEST_LOCATIONS: {
             return {...state }
         }
-        break;
         case RECEIVE_LOCATIONS: {
             let {total} = payload.response;
             let locations = payload.response.data.map(l => {
@@ -52,7 +52,6 @@ const locationListReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, locations: locations, totalLocations: total };
         }
-        break;
         case LOCATION_ORDER_UPDATED: {
             let locations = payload.map(l => {
 
@@ -66,12 +65,10 @@ const locationListReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, locations: locations };
         }
-        break;
         case LOCATION_DELETED: {
             let {locationId} = payload;
             return {...state, locations: state.locations.filter(l => l.id !== locationId)};
         }
-        break;
         default:
             return state;
     }

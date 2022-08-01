@@ -19,6 +19,7 @@ import
 } from '../../actions/sponsored-project-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     sponsoredProjects : [],
@@ -34,15 +35,14 @@ const DEFAULT_STATE = {
 const sponsoredProjectListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
-            return state;
+            return DEFAULT_STATE;
         }
-        break;
         case REQUEST_SPONSORED_PROJECTS: {
             let {order, orderDir, term, page} = payload;
             return {...state, order, orderDir, term, currentPage: page};
         }
-        break;
         case RECEIVE_SPONSORED_PROJECTS: {
             let {current_page, total, last_page} = payload.response;
             let sponsoredProjects = payload.response.data.map(c => ({
@@ -54,12 +54,10 @@ const sponsoredProjectListReducer = (state = DEFAULT_STATE, action) => {
                 currentPage: current_page,
                 totalSponsoredProjects: total, lastPage: last_page };
         }
-        break;
         case SPONSORED_PROJECT_DELETED: {
             let {sponsoredProjectId} = payload;
             return {...state, sponsoredProjects: state.sponsoredProjects.filter(s => s.id !== sponsoredProjectId)};
         }
-        break;
         default:
             return state;
     }

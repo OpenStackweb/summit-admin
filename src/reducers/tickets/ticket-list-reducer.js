@@ -22,6 +22,7 @@ import {
 
 import {LOGOUT_USER} from 'openstack-uicore-foundation/lib/actions';
 import {epochToMoment} from "openstack-uicore-foundation/lib/methods";
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     tickets: [],
@@ -47,15 +48,14 @@ const DEFAULT_STATE = {
 const ticketListReducer = (state = DEFAULT_STATE, action) => {
     const {type, payload} = action
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
             return DEFAULT_STATE;
         }
-            break;
         case REQUEST_TICKETS: {
             let {order, orderDir, page, perPage, ...rest} = payload;
             return {...state, order, orderDir, currentPage: page, perPage, ...rest}
         }
-            break;
         case RECEIVE_TICKETS: {
             let {total, last_page, data} = payload.response;
             let tickets = data.map(t => {
@@ -84,23 +84,18 @@ const ticketListReducer = (state = DEFAULT_STATE, action) => {
             })
             return {...state, tickets: tickets, lastPage: last_page, totalTickets: total};
         }
-            break;
         case SELECT_TICKET:
             return {...state, selectedIds: [...state.selectedIds, payload]};
-            break;
         case UNSELECT_TICKET:
             return {
                 ...state,
                 selectedIds: state.selectedIds.filter(element => element !== payload),
                 selectedAll: false
             };
-            break;
         case SET_SELECTED_ALL_TICKETS:
             return {...state, selectedAll: payload, selectedIds: []};
-            break;
         case CLEAR_ALL_SELECTED_TICKETS:
             return {...state, selectedIds: [], selectedAll: false};
-            break;
         default:
             return state;
     }

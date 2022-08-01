@@ -35,15 +35,13 @@ const emailTemplateListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
         case LOGOUT_USER: {
-            return state;
+            return DEFAULT_STATE;
         }
-        break;
         case REQUEST_TEMPLATES: {
             let {order, orderDir, term} = payload;
 
             return {...state, order, orderDir, term }
         }
-        break;
         case RECEIVE_TEMPLATES: {
             let {total, last_page, current_page} = payload.response;
             let templates = payload.response.data.map(s => {
@@ -57,12 +55,10 @@ const emailTemplateListReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, templates: templates, currentPage: current_page, totalTemplates: total, lastPage: last_page };
         }
-        break;
         case TEMPLATE_DELETED: {
             let {templateId} = payload;
             return {...state, templates: state.templates.filter(s => s.id !== templateId)};
         }
-        break;
         default:
             return state;
     }

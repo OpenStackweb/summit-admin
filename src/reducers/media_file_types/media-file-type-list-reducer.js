@@ -34,15 +34,13 @@ const mediaFileTypeListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action;
     switch (type) {
         case LOGOUT_USER: {
-            return state;
+            return DEFAULT_STATE;
         }
-        break;
         case REQUEST_MEDIA_FILE_TYPES: {
             let {order, orderDir, term} = payload;
 
             return {...state, order, orderDir, term }
         }
-        break;
         case RECEIVE_MEDIA_FILE_TYPES: {
             let {total, last_page, current_page} = payload.response;
             let media_file_types = payload.response.data.map(mft => {
@@ -56,12 +54,10 @@ const mediaFileTypeListReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, media_file_types: media_file_types, currentPage: current_page, lastPage: last_page };
         }
-        break;
         case MEDIA_FILE_TYPE_DELETED: {
             let {mediaFileTypeId} = payload;
             return {...state, media_file_types: state.media_file_types.filter(mft => mft.id !== mediaFileTypeId)};
         }
-        break;
         default:
             return state;
     }

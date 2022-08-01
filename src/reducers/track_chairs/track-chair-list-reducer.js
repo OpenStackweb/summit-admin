@@ -21,6 +21,7 @@ import
 } from '../../actions/track-chair-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     trackChairs         : [],
@@ -37,8 +38,9 @@ const DEFAULT_STATE = {
 const trackChairListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action;
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
-            return state;
+            return DEFAULT_STATE;
         }
         case REQUEST_TRACK_CHAIRS: {
             const {order, orderDir, term, trackId} = payload;

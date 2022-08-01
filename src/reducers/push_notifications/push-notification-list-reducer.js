@@ -22,6 +22,7 @@ import
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
 import moment from 'moment-timezone';
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 
 const DEFAULT_STATE = {
@@ -39,16 +40,15 @@ const DEFAULT_STATE = {
 const pushNotificationListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
             return DEFAULT_STATE;
         }
-        break;
         case REQUEST_PUSH_NOTIFICATIONS: {
             let {order, orderDir} = payload;
 
             return {...state, order, orderDir }
         }
-        break;
         case RECEIVE_PUSH_NOTIFICATIONS: {
             let { current_page, total, last_page } = payload.response;
             let pushNotifications = payload.response.data.map(n => {
@@ -79,12 +79,10 @@ const pushNotificationListReducer = (state = DEFAULT_STATE, action) => {
                 lastPage: last_page,
             };
         }
-        break;
         case PUSH_NOTIFICATION_DELETED: {
             let {pushNotificationId} = payload;
             return {...state, pushNotifications: state.pushNotifications.filter(t => t.id !== pushNotificationId)};
         }
-        break;
         case PUSH_NOTIFICATION_APPROVED: {
             let {pushNotificationId} = payload;
             let check = '<i class="fa fa-check" aria-hidden="true"/>';
@@ -98,7 +96,6 @@ const pushNotificationListReducer = (state = DEFAULT_STATE, action) => {
             });
             return {...state, pushNotifications: pushNotifications};
         }
-        break;
         case PUSH_NOTIFICATION_REJECTED: {
             let {pushNotificationId} = payload;
             let cross = '<i class="fa fa-times" aria-hidden="true"/>';
@@ -112,7 +109,6 @@ const pushNotificationListReducer = (state = DEFAULT_STATE, action) => {
             });
             return {...state, pushNotifications: pushNotifications};
         }
-        break;
         default:
             return state;
     }

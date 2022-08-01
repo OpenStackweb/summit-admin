@@ -26,6 +26,7 @@ import
 } from '../../actions/registration-invitation-actions';
 
 import {LOGOUT_USER} from 'openstack-uicore-foundation/lib/actions';
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     invitations: [],
@@ -46,16 +47,15 @@ const DEFAULT_STATE = {
 const RegistrationInvitationListReducer = (state = DEFAULT_STATE, action) => {
     const {type, payload} = action;
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
             return DEFAULT_STATE;
         }
-            break;
         case REQUEST_INVITATIONS: {
             let {order, orderDir, page, perPage, term, showNonAccepted, showNotSent} = payload;
 
             return {...state, order, orderDir, currentPage: page, perPage, term, showNonAccepted, showNotSent};
         }
-            break;
         case RECEIVE_INVITATIONS: {
             let {total, last_page, data} = payload.response;
             data = data.map(i => {
@@ -63,11 +63,9 @@ const RegistrationInvitationListReducer = (state = DEFAULT_STATE, action) => {
             });
             return {...state, invitations: data, lastPage: last_page, totalInvitations: total};
         }
-            break;
         case SELECT_INVITATION:{
             return {...state, selectedInvitationsIds: [...state.selectedInvitationsIds, payload]};
         }
-        break;
         case UNSELECT_INVITATION:{
             return {...state, selectedInvitationsIds: state.selectedInvitationsIds.filter(element => element !== payload), selectedAll: false};
         }
@@ -75,27 +73,21 @@ const RegistrationInvitationListReducer = (state = DEFAULT_STATE, action) => {
         {
             return {...state, selectedInvitationsIds: [], selectedAll: false};
         }
-        break;
         case SEND_INVITATIONS_EMAILS:
         {
             return {...state, selectedInvitationsIds: [], selectedAll: false, currentFlowEvent: ''};
         }
-        break;
         case REGISTRATION_INVITATION_DELETED: {
             return {...state, invitations: state.invitations.filter(i => i.id !== payload)};
         }
-            break;
         case REGISTRATION_INVITATION_ALL_DELETED: {
             return {...state, invitations:[]};
         }
-            break;
         case SET_CURRENT_FLOW_EVENT:{
             return {...state, currentFlowEvent : payload};
         }
-        break;
         case SET_SELECTED_ALL:{
             return {...state, selectedAll : payload, selectedInvitationsIds: []};
-            break;
         }
         default:
             return state;

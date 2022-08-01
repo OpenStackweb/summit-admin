@@ -19,6 +19,7 @@ import
 } from '../../actions/marketing-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     settings        : [],
@@ -34,16 +35,15 @@ const DEFAULT_STATE = {
 const marketingSettingListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
-            return state;
+            return DEFAULT_STATE;
         }
-        break;
         case REQUEST_SETTINGS: {
             let {order, orderDir, term} = payload;
 
             return {...state, order, orderDir, term }
         }
-        break;
         case RECEIVE_SETTINGS: {
             let {total, last_page, current_page} = payload.response;
             let settings = payload.response.data.map(s => {
@@ -57,12 +57,10 @@ const marketingSettingListReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, settings: settings, currentPage: current_page, totalSettings: total, lastPage: last_page };
         }
-        break;
         case SETTING_DELETED: {
             let {settingId} = payload;
             return {...state, settings: state.settings.filter(s => s.id !== settingId)};
         }
-        break;
         default:
             return state;
     }

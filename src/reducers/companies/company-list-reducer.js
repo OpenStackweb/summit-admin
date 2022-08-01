@@ -35,14 +35,12 @@ const companyListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
         case LOGOUT_USER: {
-            return state;
+            return DEFAULT_STATE;
         }
-        break;
         case REQUEST_COMPANIES: {
             let {order, orderDir, term, page} = payload;
             return {...state, order, orderDir, term, currentPage: page};
         }
-        break;
         case RECEIVE_COMPANIES: {
             let {current_page, total, last_page} = payload.response;
             let companies = payload.response.data.map(c => ({
@@ -51,12 +49,10 @@ const companyListReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, companies: companies, currentPage: current_page, totalCompanies: total, lastPage: last_page };
         }
-        break;
         case COMPANY_DELETED: {
             let {companyId} = payload;
             return {...state, companies: state.companies.filter(s => s.id !== companyId)};
         }
-        break;
         default:
             return state;
     }

@@ -34,15 +34,13 @@ const adminAccessListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action;
     switch (type) {
         case LOGOUT_USER: {
-            return state;
+            return DEFAULT_STATE;
         }
-        break;
         case REQUEST_ADMIN_ACCESSES: {
             let {order, orderDir, term} = payload;
 
             return {...state, order, orderDir, term }
         }
-        break;
         case RECEIVE_ADMIN_ACCESSES: {
             let {total, last_page, current_page} = payload.response;
             let admin_accesses = payload.response.data.map(aa => {
@@ -56,12 +54,10 @@ const adminAccessListReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, admin_accesses: admin_accesses, currentPage: current_page, lastPage: last_page };
         }
-        break;
         case ADMIN_ACCESS_DELETED: {
             let {adminAccessId} = payload;
             return {...state, admin_accesses: state.admin_accesses.filter(aa => aa.id !== adminAccessId)};
         }
-        break;
         default:
             return state;
     }

@@ -21,6 +21,7 @@ import
 } from '../../actions/ticket-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     refundPolicies          : [],
@@ -32,28 +33,25 @@ const DEFAULT_STATE = {
 const refundPolicyListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
             return DEFAULT_STATE;
         }
-        break;
         case REQUEST_REFUND_POLICIES: {
             let {order, orderDir} = payload;
 
             return {...state, order, orderDir }
         }
-        break;
         case RECEIVE_REFUND_POLICIES: {
             let { total } = payload.response;
             let refundPolicies = payload.response.data;
 
             return {...state, refundPolicies: refundPolicies, totalRefundPolicies: total };
         }
-        break;
         case REFUND_POLICY_ADDED: {
             let { response } = payload;
             return {...state, refundPolicies: [...state.refundPolicies, response]};
         }
-        break;
         case REFUND_POLICY_UPDATED: {
             let updatedEntity = {...payload.response};
             let refundPolicies = state.refundPolicies.map( rp => {
@@ -63,12 +61,10 @@ const refundPolicyListReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, refundPolicies: refundPolicies};
         }
-        break;
         case REFUND_POLICY_DELETED: {
             let {refundPolicyId} = payload;
             return {...state, refundPolicies: state.refundPolicies.filter(t => t.id !== refundPolicyId)};
         }
-        break;
         default:
             return state;
     }

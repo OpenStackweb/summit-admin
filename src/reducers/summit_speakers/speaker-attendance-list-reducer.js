@@ -20,6 +20,7 @@ import
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
 import {formatEpoch} from 'openstack-uicore-foundation/lib/methods'
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     attendances         : [],
@@ -35,15 +36,14 @@ const DEFAULT_STATE = {
 const speakerAttendanceListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
-            return state;
+            return DEFAULT_STATE;
         }
-        break;
         case REQUEST_ATTENDANCES: {
             let {order, orderDir, term} = payload;
             return {...state, order, orderDir, term};
         }
-        break;
         case RECEIVE_ATTENDANCES: {
             let {current_page, total, last_page} = payload.response;
             let attendances = payload.response.data.map(a => ({
@@ -65,12 +65,10 @@ const speakerAttendanceListReducer = (state = DEFAULT_STATE, action) => {
                 lastPage: last_page,
             };
         }
-        break;
         case ATTENDANCE_DELETED: {
             let {attendanceId} = payload;
             return {...state, attendances: state.attendances.filter(a => a.id !== attendanceId)};
         }
-        break;
         default:
             return state;
     }

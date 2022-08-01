@@ -22,6 +22,7 @@ import
 } from '../../actions/order-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     orderExtraQuestions         : [],
@@ -33,22 +34,20 @@ const DEFAULT_STATE = {
 const orderExtraQuestionListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
             return DEFAULT_STATE;
         }
-        break;
         case REQUEST_ORDER_EXTRA_QUESTIONS: {
             const {order, orderDir} = payload;
 
             return {...state, order, orderDir }
         }
-        break;
         case RECEIVE_ORDER_EXTRA_QUESTIONS: {
             const { total } = payload.response;
 
             return {...state, orderExtraQuestions: payload.response.data, totalOrderExtraQuestions: total };
         }
-        break;
         case ORDER_EXTRA_QUESTION_ORDER_UPDATED: {
             const questions = payload.map(q => {
 
@@ -63,12 +62,10 @@ const orderExtraQuestionListReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, orderExtraQuestions: questions };
         }
-        break;
         case ORDER_EXTRA_QUESTION_DELETED: {
             const {orderExtraQuestionId} = payload;
             return {...state, orderExtraQuestions: state.orderExtraQuestions.filter(t => t.id !== orderExtraQuestionId)};
         }
-        break;
         default:
             return state;
     }

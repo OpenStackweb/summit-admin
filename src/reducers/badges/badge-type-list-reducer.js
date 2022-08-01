@@ -19,6 +19,7 @@ import
 } from '../../actions/badge-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     badgeTypes            : [],
@@ -30,16 +31,15 @@ const DEFAULT_STATE = {
 const badgeTypeListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
             return DEFAULT_STATE;
         }
-        break;
         case REQUEST_BADGE_TYPES: {
             let {order, orderDir} = payload;
 
             return {...state, order, orderDir }
         }
-        break;
         case RECEIVE_BADGE_TYPES: {
             let { total } = payload.response;
             let badgeTypes = payload.response.data;
@@ -51,12 +51,10 @@ const badgeTypeListReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, badgeTypes: badgeTypes, totalBadgeTypes: total };
         }
-        break;
         case BADGE_TYPE_DELETED: {
             let {badgeTypeId} = payload;
             return {...state, badgeTypes: state.badgeTypes.filter(t => t.id !== badgeTypeId), totalBadgeTypes: (state.totalBadgeTypes - 1)};
         }
-        break;
         default:
             return state;
     }

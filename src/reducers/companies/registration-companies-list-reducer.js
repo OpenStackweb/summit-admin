@@ -19,6 +19,7 @@ import {
 } from '../../actions/registration-companies-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 const DEFAULT_STATE = {
     companies: [],
@@ -34,15 +35,14 @@ const DEFAULT_STATE = {
 const registrationCompanyListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
+        case SET_CURRENT_SUMMIT:
         case LOGOUT_USER: {
-            return state;
+            return DEFAULT_STATE;
         }
-            break;
         case REQUEST_REGISTRATION_COMPANIES: {
             let { order, orderDir, term, page } = payload;
             return { ...state, order, orderDir, term, currentPage: page };
         }
-            break;
         case RECEIVE_REGISTRATION_COMPANIES: {
             let { current_page, total, last_page } = payload.response;
             let companies = payload.response.data.map(c => ({
@@ -51,16 +51,13 @@ const registrationCompanyListReducer = (state = DEFAULT_STATE, action) => {
 
             return { ...state, companies: companies, currentPage: current_page, totalCompanies: total, lastPage: last_page };
         }
-            break;
         case REGISTRATION_COMPANY_ADDED: {
             return { ...state, companies: [...state.companies, payload.entity] }
         }
-            break;
         case REGISTRATION_COMPANY_DELETED: {
             let { companyId } = payload;
             return { ...state, companies: state.companies.filter(s => s.id !== companyId) };
         }
-            break;
         default:
             return state;
     }
