@@ -46,6 +46,7 @@ class EditTicketPage extends React.Component {
         if (!currentSummit.badge_features) props.getBadgeFeatures();
         if (!currentSummit.badge_types) props.getBadgeTypes();
 
+        this.handleSelectPrintType = this.handleSelectPrintType.bind(this);
         this.handlePrintBadge = this.handlePrintBadge.bind(this);
         this.handleAddBadgeToTicket = this.handleAddBadgeToTicket.bind(this);
         this.handleDeleteBadge = this.handleDeleteBadge.bind(this);
@@ -61,7 +62,8 @@ class EditTicketPage extends React.Component {
             refundNotes: '',
             showRefundModal: false,
             showRefundRejectModal:false,
-            refundRejectNotes: ''
+            refundRejectNotes: '',
+            printType: null
         };
     }
 
@@ -91,10 +93,14 @@ class EditTicketPage extends React.Component {
         }
     }
 
+    handleSelectPrintType(view_type) {
+        this.setState({...this.state, printType: view_type});
+    }
+
     handlePrintBadge(ev) {
         const {entity} = this.props;
         ev.preventDefault();
-        this.props.printBadge(entity.id);
+        this.props.printBadge(entity.id, this.state.printType);
     }
 
     handleResendEmail(ticket, ev){
@@ -303,7 +309,9 @@ class EditTicketPage extends React.Component {
                             currentSummit={currentSummit}
                             entity={entity.badge}
                             canPrint={entity.owner && entity.badge}
-                            onPrintBadge={this.handlePrintBadge}
+                            selectedPrintType={this.state.printType}
+                            onSelectPrintType={this.handleSelectPrintType}
+                            onPrintBadge={this.handlePrintBadge}                            
                             onTypeChange={this.props.changeBadgeType}
                             onFeatureLink={this.props.addFeatureToBadge}
                             onFeatureUnLink={this.props.removeFeatureFromBadge}
