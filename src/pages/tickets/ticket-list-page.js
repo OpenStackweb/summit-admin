@@ -194,6 +194,11 @@ class TicketListPage extends React.Component {
             selectedAll,
         } = this.props;
 
+        if(this.state.selectedViewType == null){
+            Swal.fire("Validation error", T.translate("ticket_list.select_view_2_print"), "warning");
+            return false;
+        }
+
         if(!selectedAll && selectedIds.length === 0){
             Swal.fire("Validation error", T.translate("ticket_list.select_items"), "warning");
             return false;
@@ -202,6 +207,7 @@ class TicketListPage extends React.Component {
             Swal.fire("Validation error", `You can not select more than ${BatchSize} Tickets To print.`, "warning");
             return false;
         }
+
 
         this.setState({...this.state, showPrintModal: true});
     }
@@ -333,6 +339,7 @@ class TicketListPage extends React.Component {
                                 <div className="col-md-8">
                                     <Dropdown
                                         id="view_type_id"
+                                        placeholder={T.translate('ticket_list.placeholders.view_type')}
                                         value={selectedViewType}
                                         onChange={(ev) => this.setState({...this.state, selectedViewType: ev.target.value})}
                                         options={badge_view_type_ddl}

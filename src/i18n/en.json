@@ -1144,11 +1144,13 @@
     "print_modal_body": "You are about to send all selected tickets to print",
     "show_printable": "Show Printable Tickets",
     "items_qty": "Selected {qty} Tickets",
+    "select_view_2_print": "Select a View Type to Print",
     "placeholders": {
       "search_tickets": "Search by Ticket #, Buyer, Assignee ",
       "ticket_types": "Filter By Ticket Types ...",
       "owner_first_name": "First name starts with ...",
-      "view_types": "Filter by View Types ..."
+      "view_types": "Filter by View Types ...",
+      "view_type": "Select a View Type ..."
     }
   },
   "edit_ticket": {
