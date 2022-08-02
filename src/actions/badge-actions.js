@@ -218,7 +218,7 @@ export const checkInBadge = (code) => (dispatch, getState) => {
 
 /***********************  VIEW TYPES  ************************************************/
 
-export const getViewTypes = (term = null, order = 'name', orderDir = 1) => (dispatch, getState) => {
+export const getViewTypes = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1) => (dispatch, getState) => {
 
     const { loggedUserState, currentSummitState } = getState();
     const { accessToken } = loggedUserState;
@@ -228,8 +228,8 @@ export const getViewTypes = (term = null, order = 'name', orderDir = 1) => (disp
     dispatch(startLoading());
 
     const params = {
-        page: 1,
-        per_page: 100,
+        page: page,
+        per_page: perPage,
         access_token: accessToken,
     };
 
@@ -250,7 +250,7 @@ export const getViewTypes = (term = null, order = 'name', orderDir = 1) => (disp
         createAction(RECEIVE_VIEW_TYPES),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-view-types`,
         authErrorHandler,
-        { order, orderDir }
+        {order, orderDir, term}
     )(params)(dispatch).then(() => {
         dispatch(stopLoading());
     }

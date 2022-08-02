@@ -1444,8 +1444,8 @@
   "view_type_list": {
     "view_types": "View Types",
     "view_type_list": "View Type List",
-    "no_view_type": "No badge found for current search criteria.",
-    "add_view_type": "Add Badge",
+    "no_view_type": "No view type found for current search criteria.",
+    "add_view_type": "Add View Type",
     "name": "Name",
     "is_default": "Is Default ?",
     "description": "Description",

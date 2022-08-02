@@ -42,16 +42,16 @@ const viewTypeListReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case REQUEST_VIEW_TYPES: {
-            let {term, order, orderDir} = payload;
+            let {order, orderDir, term} = payload;
 
-            return {...state, term, order, orderDir }
+            return {...state, order, orderDir, term }
         }
         break;
         case RECEIVE_VIEW_TYPES: {
-            let { total } = payload.response;
+            let { total, current_page, last_page } = payload.response;
             let viewTypes = payload.response.data;
 
-            return {...state, viewTypes, totalViewTypes: total };
+            return {...state, viewTypes, totalViewTypes: total, currentPage: current_page, lastPage: last_page };
         }
         break;
         case VIEW_TYPE_DELETED: {

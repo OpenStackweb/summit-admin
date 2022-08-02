@@ -15,6 +15,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import Swal from "sweetalert2";
+import { Pagination } from 'react-bootstrap';
 import { Table, FreeTextSearch } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById } from '../../actions/summit-actions';
 import { getViewTypes, deleteViewType } from "../../actions/badge-actions";
@@ -28,6 +29,7 @@ class ViewTypeListPage extends React.Component {
         this.handleDelete = this.handleDelete.bind(this);
         this.handleSort = this.handleSort.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
+        this.handlePageChange = this.handlePageChange.bind(this);
         this.handleNewViewType = this.handleNewViewType.bind(this);
 
         this.state = {}
@@ -65,11 +67,18 @@ class ViewTypeListPage extends React.Component {
     }
 
     handleSort(index, key, dir, func) {
-        this.props.getViewTypes(key, dir);
+        const {term, page, perPage} = this.props;
+        this.props.getViewTypes(term, page, perPage, key, dir);
     }
 
-    handleSearch(newTerm) {
-        this.props.getViewTypes(newTerm);
+    handlePageChange(page) {
+        const {term, order, orderDir, perPage} = this.props;
+        this.props.getViewTypes(term, page, perPage, order, orderDir);
+    }
+
+    handleSearch(term) {
+        const {order, orderDir, page, perPage} = this.props;
+        this.props.getViewTypes(term, page, perPage, order, orderDir);
     }
 
     handleNewViewType(ev) {
@@ -78,7 +87,7 @@ class ViewTypeListPage extends React.Component {
     }
 
     render() {
-        const { currentSummit, viewTypes, term = '', order, orderDir, totalViewTypes } = this.props;
+        const { currentSummit, viewTypes, term = '', lastPage, currentPage, order, orderDir, totalViewTypes } = this.props;
 
         const columns = [
             { columnKey: 'name', value: T.translate("view_type_list.name"), sortable: true },
@@ -119,12 +128,27 @@ class ViewTypeListPage extends React.Component {
                 }
 
                 {viewTypes.length > 0 &&
-                    <Table
-                        options={table_options}
-                        data={viewTypes}
-                        columns={columns}
-                        onSort={this.handleSort}
-                    />
+                    <>
+                        <Table
+                            options={table_options}
+                            data={viewTypes}
+                            columns={columns}
+                            onSort={this.handleSort}
+                        />
+                        <Pagination
+                            bsSize="medium"
+                            prev
+                            next
+                            first
+                            last
+                            ellipsis
+                            boundaryLinks
+                            maxButtons={10}
+                            items={lastPage}
+                            activePage={currentPage}
+                            onSelect={this.handlePageChange}
+                        />
+                    </>
                 }
 
             </div>
