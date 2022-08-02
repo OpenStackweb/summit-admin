@@ -1147,7 +1147,8 @@
     "placeholders": {
       "search_tickets": "Search by Ticket #, Buyer, Assignee ",
       "ticket_types": "Filter By Ticket Types ...",
-      "owner_first_name": "First name starts with ..."
+      "owner_first_name": "First name starts with ...",
+      "view_types": "Filter by View Types ..."
     }
   },
   "edit_ticket": {

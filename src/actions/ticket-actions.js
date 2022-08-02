@@ -117,7 +117,7 @@ export const reSendTicketEmail = (orderId, ticketId) => (dispatch, getState) => 
     );
 };
 
-export const printTickets = (filters, order, orderDir, doAttendeeCheckinOnPrint = true) => (dispatch, getState) => {
+export const printTickets = (filters, order, orderDir, doAttendeeCheckinOnPrint = true, selectedViewType = null) => (dispatch, getState) => {
 
     const { loggedUserState, currentSummitState } = getState();
     const { accessToken }     = loggedUserState;
@@ -142,6 +142,11 @@ export const printTickets = (filters, order, orderDir, doAttendeeCheckinOnPrint 
         const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order'] = `${orderDirSign}${order}`;
     }
+
+    if(selectedViewType) {
+        params['view_type'] = selectedViewType;
+    }
+
 
     let url = URI(`${process.env['PRINT_APP_URL']}/check-in/${currentSummit.slug}/tickets`);
 
@@ -185,6 +190,13 @@ const parseFilters = (filters) => {
             ''
         ));
     }
+
+    if(filters.hasOwnProperty('viewTypesFilter') && Array.isArray(filters.viewTypesFilter) && filters.viewTypesFilter.length > 0){
+        filter.push(filters.viewTypesFilter.reduce(
+            (accumulator, tt) => accumulator +(accumulator !== '' ? ',':'') +`view_type_id==${tt.value}`,
+            ''
+        ));
+    }    
 
     if(filters.hasOwnProperty('completedFilter') && filters.completedFilter){
         filter.push(`owner_status==${filters.completedFilter}`);

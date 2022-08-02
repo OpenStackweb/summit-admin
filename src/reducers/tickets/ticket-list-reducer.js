@@ -39,6 +39,7 @@ const DEFAULT_STATE = {
     showOnlyPendingRefundRequests: false,
     ticketTypesFilter : [],
     ownerFullNameStartWithFilter:[],
+    viewTypesFilter: [],
     hasOwnerFilter : null,
     completedFilter : null,
     hasBadgeFilter : null,
