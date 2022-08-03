@@ -111,8 +111,6 @@ class CompanyForm extends React.Component {
         const {sponsoredProjects} = this.props;
         let {value} = ev.target;
 
-        console.log(`handleSelectedSponsoredProject ${value}`);
-
         let project = sponsoredProjects.find(e => e.id == value);
 
         this.setState({...this.state,

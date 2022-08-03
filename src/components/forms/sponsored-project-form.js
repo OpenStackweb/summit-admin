@@ -14,13 +14,17 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import {TextEditor, Input, UploadInput, SortableTable} from 'openstack-uicore-foundation/lib/components';
-import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
+import {Dropdown, SponsoredProjectInput, TextEditor, Input, UploadInput, SortableTable, Table} from 'openstack-uicore-foundation/lib/components';
+import {isEmpty, scrollToError, shallowEqual, hasErrors} from "../../utils/methods";
 
 class SponsoredProjectForm extends React.Component {
 
     constructor(props) {
         super(props);
+
+        if (props.parentProjectId) {
+            props.getParentProject(props.parentProjectId);
+        }
 
         this.state = {
             entity: {...props.entity},
@@ -33,6 +37,9 @@ class SponsoredProjectForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleEditSponsorshipType = this.handleEditSponsorshipType.bind(this);
         this.handleAddSponsorshipType = this.handleAddSponsorshipType.bind(this);
+        this.handleAddSubproject = this.handleAddSubproject.bind(this);
+        this.handleEditSubproject = this.handleEditSubproject.bind(this);
+        this.handleSearch = this.handleSearch.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -60,6 +67,10 @@ class SponsoredProjectForm extends React.Component {
 
         if (ev.target.type === 'checkbox') {
             value = ev.target.checked;
+        }
+
+        if (ev.target.type === 'sponsoredprojectinput') {
+            entity['parent_project_id'] = value;
         }
 
         errors[id] = '';
@@ -91,16 +102,39 @@ class SponsoredProjectForm extends React.Component {
         const {history, entity} = this.props;
         history.push(`/app/sponsored-projects/${entity.id}/sponsorship-types/new`);
     }
+
+    handleAddSubproject(ev) {
+        const {history, entity} = this.props;
+        history.push(`/app/sponsored-projects/new#parent_project_id=${entity.id}`);
+    }
+
+    handleSearch(term) {
+        const {order, orderDir, page, perPage} = this.props;
+        this.props.getSponsoredProjects(term, page, perPage, order, orderDir);
+    }
+
+    handleEditSubproject(subprojectId) {
+        const {history, getSponsoredProject} = this.props;
+        getSponsoredProject(subprojectId);
+        history.push(`/app/sponsored-projects/${subprojectId}`);
+    }
     
     render() {
-        const {entity} = this.state;
+        const {entity, errors} = this.state;
 
-        const { onSponsorshipTypeDelete, onSponsorshipTypeReorder } = this.props;
+        const { onSponsorshipTypeDelete, onSponsorshipTypeReorder, onSubprojectDelete, term } = this.props;
 
-        let table_options = {
+        let sponsorship_types_table_options = {
             actions: {
                 edit: { onClick: this.handleEditSponsorshipType },
                 delete: { onClick: onSponsorshipTypeDelete }
+            }
+        };
+
+        let subprojects_table_options = {
+            actions: {
+                edit: { onClick: this.handleEditSubproject },
+                delete: { onClick: onSubprojectDelete }
             }
         };
 
@@ -122,7 +156,7 @@ class SponsoredProjectForm extends React.Component {
                         <label> {T.translate("edit_sponsored_project.name")} </label>
                         <Input className="form-control" id="name" value={entity.name} onChange={this.handleChange} />
                     </div>
-                    <div className="col-md-6 checkboxes-div">
+                    <div className="col-md-3 checkboxes-div">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="is_active"
                                    checked={entity.is_active}
@@ -132,13 +166,7 @@ class SponsoredProjectForm extends React.Component {
                             </label>
                         </div>
                     </div>
-                </div>
-                <div className="row form-group">
-                    <div className="col-md-6">
-                        <label> {T.translate("edit_sponsored_project.site_url")} </label>
-                        <Input className="form-control" id="site_url" value={entity.site_url} onChange={this.handleChange} />
-                    </div>
-                    <div className="col-md-6 checkboxes-div">
+                    <div className="col-md-3 checkboxes-div">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="should_show_on_nav_bar"
                                    checked={entity.should_show_on_nav_bar}
@@ -150,28 +178,59 @@ class SponsoredProjectForm extends React.Component {
                     </div>
                 </div>
                 <div className="row form-group">
+                    <div className="col-md-8">
+                        <label> {T.translate("edit_sponsored_project.site_url")} </label>
+                        <Input className="form-control" id="site_url" value={entity.site_url} onChange={this.handleChange} />
+                    </div>
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_sponsored_project.parent_project")}</label>
+                        <SponsoredProjectInput
+                            id="parent_project"
+                            value={entity.parent_project}
+                            onChange={this.handleChange}
+                            error={hasErrors('parent_project', errors)}
+                            isClearable={true}
+                            placeholder={T.translate("edit_sponsored_project.placeholders.search_parent_project")}
+                        />
+                    </div>
+                </div>
+                <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_sponsored_project.description")} </label>
                         <TextEditor id="description" value={entity.description} onChange={this.handleChange} />
                     </div>
                 </div>
                 {entity.id !== 0 &&
-                <div className="row form-group">
-                    <div className="col-md-12">
-                        <button className="btn btn-primary pull-right" onClick={this.handleAddSponsorshipType}>
-                            {T.translate("edit_sponsored_project.add_sponsorship_type")}
-                        </button>
-                        <SortableTable
-                            options={table_options}
-                            data={sortedTypes}
-                            columns={columns}
-                            dropCallback={onSponsorshipTypeReorder}
-                            orderField="order"
-                        />
+                <>
+                    <div className="row form-group">
+                        <div className="col-md-12">
+                            <button className="btn btn-primary pull-right" onClick={this.handleAddSponsorshipType}>
+                                {T.translate("edit_sponsored_project.add_sponsorship_type")}
+                            </button>
+                            <SortableTable
+                                options={sponsorship_types_table_options}
+                                data={sortedTypes}
+                                columns={columns}
+                                dropCallback={onSponsorshipTypeReorder}
+                                orderField="order"
+                            />
+                        </div>
                     </div>
-                </div>
+                    <div className="row form-group">
+                        <div className="col-md-12">
+                            <button className="btn btn-primary pull-right" onClick={this.handleAddSubproject}>
+                                {T.translate("edit_sponsored_project.add_subproject")}
+                            </button>
+                            <Table
+                                options={subprojects_table_options}
+                                data={entity.sub_projects}
+                                columns={columns}
+                            />
+                        </div>
+                    </div>
+                </>
                 }
-                 <div className="row form-group">
+                <div className="row form-group">
                     <div className="col-md-6">
                         <label> {T.translate("edit_sponsored_project.logo")} </label>
                         <UploadInput

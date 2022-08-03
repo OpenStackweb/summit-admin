@@ -24,6 +24,9 @@ import
     SPONSORED_PROJECT_SPONSORSHIP_TYPE_UPDATED,
     SPONSORED_PROJECT_SPONSORSHIP_TYPE_DELETED,
     SPONSORED_PROJECT_SPONSORSHIP_TYPE_ORDER_UPDATED,
+    RECEIVE_SPONSORED_PROJECT_SUBPROJECTS,
+    RECEIVE_PARENT_PROJECT,
+    SPONSORED_PROJECT_SUBPROJECT_DELETED
 } from '../../actions/sponsored-project-actions';
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
@@ -38,6 +41,8 @@ export const DEFAULT_ENTITY = {
     site_url: '',
     logo_url: '',
     sponsorship_types: [],
+    parent_project: null,
+    sub_projects: [],
 };
 
 const DEFAULT_STATE = {
@@ -68,6 +73,7 @@ const sponsoredProjectReducer = (state = DEFAULT_STATE, action) => {
         case SPONSORED_PROJECT_ADDED:
         case RECEIVE_SPONSORED_PROJECT: {
             let entity = {...payload.response};
+
             for(var key in entity) {
                 if(entity.hasOwnProperty(key)) {
                     entity[key] = (entity[key] == null) ? '' : entity[key] ;
@@ -126,6 +132,24 @@ const sponsoredProjectReducer = (state = DEFAULT_STATE, action) => {
             return {...state, entity: {...state.entity, sponsorship_types: state.entity.sponsorship_types.filter(q => q.id !== sponsorshipTypeId)}};
         }
             break;
+        case RECEIVE_SPONSORED_PROJECT_SUBPROJECTS: {
+            let entity = {...payload.response};
+            const subprojects = entity.data.map(q => {
+                return {
+                    id: q.id,
+                    name: q.name
+                };
+            });
+            return {...state, entity: { ...state.entity, sub_projects: subprojects}};
+        }
+        case RECEIVE_PARENT_PROJECT: {
+            let entity = {...payload.response};
+            return {...state, entity: { ...state.entity, parent_project: entity}};
+        }
+        case SPONSORED_PROJECT_SUBPROJECT_DELETED: {
+            let {subProjectId} = payload;
+            return {...state, entity: {...state.entity, sub_projects: state.entity.sub_projects.filter(q => q.id !== subProjectId)}};
+        }
         default:
             return state;
     }

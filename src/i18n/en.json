@@ -1924,6 +1924,7 @@
     "delete_warning": "Are you sure you want to delete this Sponsored Project",
     "saved": "Sponsored Project saved successfully.",
     "created": "Sponsored Project created successfully.",
+    "parent_project": "Parent Project",
     "placeholders": {
       "search": "Search by Sponsored Project Name"
     }
@@ -1942,7 +1943,13 @@
     "created": "Sponsored Project created successfully.",
     "sponsorship_types": "Sponsorship Types",
     "remove_sponsorship_type_warning": "Are you sure you want to delete this Sponsorship Type",
-    "placeholders": {}
+    "subprojects": "Subprojects",
+    "parent_project": "Parent Project",
+    "add_subproject": "Add Sub Project",
+    "remove_subproject_warning": "Are you sure you want to delete this Sub Project",
+    "placeholders": {
+      "search_parent_project": "Search Parent Project"
+    }
   },
   "edit_sponsored_project_sponsorship_type": {
     "supporting_companies": "Supporting Companies",

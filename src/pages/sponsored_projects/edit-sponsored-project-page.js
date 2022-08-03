@@ -16,7 +16,10 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import SponsoredProjectForm from '../../components/forms/sponsored-project-form';
 import {
+    getAsParentProject,
+    getSponsoredProject,
     saveSponsoredProject,
+    deleteSubProject,
     deleteSponsorshipType,
     updateSponsorShipTypeOrder,
     attachLogo,
@@ -24,6 +27,7 @@ import {
 } from "../../actions/sponsored-project-actions";
 import '../../styles/edit-company-page.less';
 import Swal from "sweetalert2";
+import FragmentParser from '../../utils/fragmen-parser';
 
 class EditSponsoredProjectPage extends React.Component {
 
@@ -31,6 +35,14 @@ class EditSponsoredProjectPage extends React.Component {
         super(props);
         this.handleDeleteSponsorshipType = this.handleDeleteSponsorshipType.bind(this);
         this.handleReorderSponsorshipType = this.handleReorderSponsorshipType.bind(this);
+        this.handleDeleteSubproject = this.handleDeleteSubproject.bind(this);
+
+        this.fragmentParser = new FragmentParser();
+        let parentProjectId = this.fragmentParser.getParam('parent_project_id');
+
+        this.state = {
+            parentProjectId: parentProjectId,
+        };
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -73,8 +85,25 @@ class EditSponsoredProjectPage extends React.Component {
         updateSponsorShipTypeOrder(sponsorshipTypes, entity.id, id, newOrder);
     }
 
+    handleDeleteSubproject(subprojectId) {
+        const {entity, deleteSubProject} = this.props;
+        
+        Swal.fire({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("edit_sponsored_project.remove_subproject_warning"),
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: T.translate("general.yes_delete")
+        }).then(function(result){
+            if (result.value) {
+                deleteSubProject(subprojectId);
+            }
+        });
+    }
+
     render(){
-        const {entity, errors, summits, history, saveSponsoredProject, attachLogo, removeLogo} = this.props;
+        const {entity, errors, summits, history, getAsParentProject, getSponsoredProject, saveSponsoredProject, attachLogo, removeLogo, match} = this.props;
         const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
 
         return(
@@ -91,6 +120,10 @@ class EditSponsoredProjectPage extends React.Component {
                     onSubmit={saveSponsoredProject}
                     onAttachLogo={attachLogo}
                     onRemoveLogo={removeLogo}
+                    parentProjectId={this.state.parentProjectId}
+                    getParentProject={getAsParentProject}
+                    getSponsoredProject={getSponsoredProject}
+                    onSubprojectDelete={this.handleDeleteSubproject}
                 />
             </div>
         )
@@ -104,7 +137,10 @@ const mapStateToProps = ({ sponsoredProjectState }) => ({
 export default connect (
     mapStateToProps,
     {
+        getAsParentProject,
+        getSponsoredProject,
         saveSponsoredProject,
+        deleteSubProject,
         deleteSponsorshipType,
         updateSponsorShipTypeOrder,
         attachLogo,

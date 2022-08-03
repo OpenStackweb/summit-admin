@@ -81,10 +81,20 @@ class SponsoredProjectListPage extends React.Component {
     render(){
         const {sponsoredProjects, lastPage, currentPage, term, order, orderDir, totalSponsoredProjects } = this.props;
 
+        const projects = sponsoredProjects.map(p => {
+            return {
+                id: p.id,
+                name: p.name,
+                slug: p.slug,
+                parent_project: p.parent_project?.name
+            }
+        });
+
         const columns = [
             { columnKey: 'id', value: 'Id', sortable: true },
             { columnKey: 'name', value: T.translate("sponsored_project_list.name"), sortable: true },
             { columnKey: 'slug', value: T.translate("sponsored_project_list.slug"), sortable: true },
+            { columnKey: 'parent_project', value: T.translate("sponsored_project_list.parent_project"), sortable: false },
         ];
 
         const table_options = {
@@ -114,11 +124,11 @@ class SponsoredProjectListPage extends React.Component {
                     </div>
                 </div>
 
-                {sponsoredProjects.length > 0 &&
+                {projects.length > 0 &&
                 <div>
                     <Table
                         options={table_options}
-                        data={sponsoredProjects}
+                        data={projects}
                         columns={columns}
                         onSort={this.handleSort}
                     />
