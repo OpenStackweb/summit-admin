@@ -30,6 +30,7 @@ export const DEFAULT_ENTITY = {
     selection_end_date: 0,
     submission_begin_date: 0,
     submission_end_date: 0,
+    submission_lock_down_presentation_status_date: 0,
     voting_begin_date: 0,
     voting_end_date: 0,
     track_groups: [],

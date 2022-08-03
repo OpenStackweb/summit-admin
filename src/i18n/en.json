@@ -309,6 +309,8 @@
     "enabled": "Enabled",
     "submission_begin_date": "Submissions Start",
     "submission_end_date": "Submissions End",
+    "submission_lock_down_presentation_status_date": "Submissions Status Lock Down Date",
+    "submission_lock_down_presentation_status_date_info": "Date till presentation status will be show as in review at CFP",
     "voting_begin_date": "Voting Start",
     "voting_end_date": "Voting End",
     "selection_begin_date": "TC Selections Start",

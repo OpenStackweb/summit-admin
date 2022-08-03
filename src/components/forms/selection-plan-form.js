@@ -291,6 +291,21 @@ class SelectionPlanForm extends React.Component {
                 </div>
                 <div className="row form-group">
                     <div className="col-md-6">
+                        <label> 
+                            {T.translate("edit_selection_plan.submission_lock_down_presentation_status_date")} &nbsp;
+                            <i className="fa fa-info-circle" aria-hidden="true" title={T.translate("edit_selection_plan.submission_lock_down_presentation_status_date_info")} />
+                        </label>
+                        <DateTimePicker
+                            id="submission_lock_down_presentation_status_date"
+                            onChange={this.handleChange}
+                            format={{date:"YYYY-MM-DD", time: "HH:mm"}}
+                            timezone={currentSummit.time_zone_id}
+                            value={epochToMomentTimeZone(entity.submission_lock_down_presentation_status_date, currentSummit.time_zone_id)}
+                        />
+                    </div>                    
+                </div>                
+                <div className="row form-group">
+                    <div className="col-md-6">
                         <label> {T.translate("edit_selection_plan.voting_begin_date")} </label>
                         <DateTimePicker
                             id="voting_begin_date"
