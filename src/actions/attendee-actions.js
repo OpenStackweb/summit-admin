@@ -110,30 +110,27 @@ const parseFilters = (filters) => {
 
     if(filters.hasOwnProperty('ticketTypeFilter') && Array.isArray(filters.ticketTypeFilter)
         && filters.ticketTypeFilter.length > 0){
-        filter.push(filters.ticketTypeFilter.reduce(
-            (accumulator, tt) => accumulator +(accumulator !== '' ? ',':'') +`ticket_type==${tt}`,
+        filter.push('ticket_type_id=='+filters.ticketTypeFilter.reduce(
+            (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt,
             ''
         ));
     }
 
     if(filters.hasOwnProperty('featuresFilter') && Array.isArray(filters.featuresFilter)
         && filters.featuresFilter.length > 0){
-        filter.push(filters.featuresFilter.reduce(
-            (accumulator, f) => accumulator +(accumulator !== '' ? ',':'') +`features==${f}`,
+        filter.push('features_id=='+filters.featuresFilter.reduce(
+            (accumulator, f) => accumulator +(accumulator !== '' ? '||':'') +`${f}`,
             ''
         ));
     }
 
     if(filters.hasOwnProperty('badgeTypeFilter') && Array.isArray(filters.badgeTypeFilter)
         && filters.badgeTypeFilter.length > 0){
-        filter.push(filters.badgeTypeFilter.reduce(
-            (accumulator, bt) => accumulator +(accumulator !== '' ? ',':'') +`badge_type==${bt}`,
+        filter.push('badge_type_id=='+filters.badgeTypeFilter.reduce(
+            (accumulator, bt) => accumulator +(accumulator !== '' ? '||':'') +`${bt}`,
             ''
         ));
     }
-
-
-
     return filter;
 }
 

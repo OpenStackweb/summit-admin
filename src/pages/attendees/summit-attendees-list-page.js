@@ -461,15 +461,15 @@ class SummitAttendeeListPage extends React.Component {
         ];
 
         const  ticketTypesDDL = [
-            ...currentSummit.ticket_types.map(t => ({label: t.name, value: t.name}))
+            ...currentSummit.ticket_types.map(t => ({label: t.name, value: t.id}))
         ];
 
         const featuresTypesDDL = [
-            ...badgeFeatures.map(bf => ({label: bf.name, value: bf.name}))
+            ...badgeFeatures.map(bf => ({label: bf.name, value: bf.id}))
         ];
 
         const badgeTypesDDL = [
-            ...badgeTypes.map(bt => ({label: bt.name, value: bt.name}))
+            ...badgeTypes.map(bt => ({label: bt.name, value: bt.id}))
         ];
 
         return(
