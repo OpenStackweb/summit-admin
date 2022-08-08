@@ -1,4 +1,5 @@
 import {findElementPos} from "openstack-uicore-foundation/lib/methods";
+import moment from "moment-timezone";
 
 /**
  * Copyright 2017 OpenStack Foundation
@@ -106,4 +107,9 @@ export const validateBadgeQR = (code, summit) => {
     }
 
     return false;
+}
+
+export const parseAndFormat = (dateString, inputFormat, outputFormat = 'MM/DD/YYYY h:mma', inputTZ = 'UTC', outputTZ = 'UTC') => {
+    const parsedDate = moment.tz(dateString, inputFormat, inputTZ).tz(outputTZ);
+    return parsedDate.format(outputFormat);
 }

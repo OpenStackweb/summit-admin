@@ -18,6 +18,7 @@ import Select from 'react-select';
 const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
 import {flattenData} from "../../actions/report-actions";
+import {parseAndFormat} from "../../utils/methods";
 
 
 const fieldNames = [
@@ -45,6 +46,7 @@ const fieldNames = [
     {label: 'Stream URL', key: 'streamingUrl', simple: true},
     {label: 'Meeting URL', key: 'meetingUrl', simple: true},
     {label: 'Etherpad URL', key: 'etherpadLink', simple: true},
+    {label: 'Creation date', key: 'created', simple: true},
 ];
 
 class SmartPresentationReport extends React.Component {
@@ -128,8 +130,15 @@ class SmartPresentationReport extends React.Component {
 
     preProcessData(data, extraData, forExport=false) {
         let {showFields} = this.state;
+        const {currentSummit} = this.props;
 
         let flatData = flattenData(data);
+
+       flatData.forEach(d => {
+            if (d.startDate) d.startDate = parseAndFormat(d.startDate, 'YYYY-MM-DDTHH:mm:ss+00:00', 'MM/DD/YYYY h:mma', 'UTC', currentSummit.time_zone_id);
+            if (d.endDate) d.endDate = parseAndFormat(d.endDate, 'YYYY-MM-DDTHH:mm:ss+00:00', 'MM/DD/YYYY h:mma', currentSummit.time_zone_id);
+            if (d.created) d.created = parseAndFormat(d.created, 'YYYY-MM-DDTHH:mm:ss+00:00');
+        });
 
         let columns = [
             { columnKey: 'id', value: 'Id' },
