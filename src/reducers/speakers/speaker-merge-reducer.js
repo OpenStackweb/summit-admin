@@ -20,7 +20,7 @@ import
     SPEAKER_MERGED
 } from '../../actions/speaker-actions';
 
-import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/utils/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 const DEFAULT_STATE = {

@@ -20,7 +20,7 @@ import
     FILTER_TYPES
 } from '../../actions/schedule-settings-actions';
 
-import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
+import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/utils/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 const DEFAULT_FILTERS = [

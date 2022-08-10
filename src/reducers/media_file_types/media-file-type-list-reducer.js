@@ -18,7 +18,7 @@ import
     MEDIA_FILE_TYPE_DELETED,
 } from '../../actions/media-file-type-actions';
 
-import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/utils/actions';
 
 const DEFAULT_STATE = {
     media_file_types  : [],

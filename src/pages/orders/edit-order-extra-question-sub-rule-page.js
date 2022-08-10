@@ -23,7 +23,6 @@ import {
     saveOrderExtraQuestionsSubQuestionsRule,
     deleteOrderExtraQuestionsSubQuestionsRule
 } from "../../actions/order-actions";
-import Swal from "sweetalert2";
 
 import '../../styles/edit-order-extra-questions-rule.less'
 

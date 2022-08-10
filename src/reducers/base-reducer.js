@@ -11,7 +11,7 @@
  * limitations under the License.
  **/
 
-import { START_LOADING, STOP_LOADING, RESET_LOADING, RECEIVE_COUNTRIES, LOGOUT_USER } from "openstack-uicore-foundation/lib/actions";
+import { START_LOADING, STOP_LOADING, RESET_LOADING, RECEIVE_COUNTRIES, LOGOUT_USER } from "openstack-uicore-foundation/lib/utils/actions";
 import {RECEIVE_TIMEZONES} from '../actions/base-actions';
 
 const DEFAULT_STATE = {

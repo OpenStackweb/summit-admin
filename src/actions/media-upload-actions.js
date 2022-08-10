@@ -25,8 +25,9 @@ import {
     authErrorHandler,
     escapeFilterValue,
     fetchResponseHandler,
-    fetchErrorHandler,
-} from 'openstack-uicore-foundation/lib/methods';
+    fetchErrorHandler
+} from 'openstack-uicore-foundation/lib/utils/actions';
+import {getAccessTokenSafely} from '../utils/methods';
 
 export const REQUEST_MEDIA_UPLOADS      = 'REQUEST_MEDIA_UPLOADS';
 export const RECEIVE_MEDIA_UPLOADS      = 'RECEIVE_MEDIA_UPLOADS';
@@ -41,9 +42,9 @@ export const MEDIA_UPLOAD_LINKED         = 'MEDIA_UPLOAD_LINKED';
 export const MEDIA_UPLOAD_UNLINKED       = 'MEDIA_UPLOAD_UNLINKED';
 
 
-export const getMediaUploads = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const getMediaUploads = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
     const filter = [];
 
@@ -82,9 +83,9 @@ export const getMediaUploads = (term = null, page = 1, perPage = 10, order = 'id
     );
 };
 
-export const getMediaUpload = (mediaUploadId) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const getMediaUpload = (mediaUploadId) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -104,9 +105,9 @@ export const getMediaUpload = (mediaUploadId) => (dispatch, getState) => {
     );
 };
 
-export const queryMediaUploads = _.debounce((summitId, input, callback) => {
+export const queryMediaUploads = _.debounce(async (summitId, input, callback) => {
 
-    const accessToken = window.accessToken;
+    const accessToken = await getAccessTokenSafely();
     input = escapeFilterValue(input);
     const filter = encodeURIComponent(`name=@${input}`);
 
@@ -124,9 +125,9 @@ export const resetMediaUploadForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_MEDIA_UPLOAD_FORM)({}));
 };
 
-export const saveMediaUpload = (entity, noAlert = false) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const saveMediaUpload = (entity, noAlert = false) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -176,9 +177,9 @@ export const saveMediaUpload = (entity, noAlert = false) => (dispatch, getState)
     }
 };
 
-export const linkToPresentationType = (mediaUpload, presentationTypeId) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const linkToPresentationType = (mediaUpload, presentationTypeId) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = { access_token : accessToken };
@@ -197,9 +198,9 @@ export const linkToPresentationType = (mediaUpload, presentationTypeId) => (disp
         });
 };
 
-export const unlinkFromPresentationType = (mediaUploadId, presentationTypeId) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const unlinkFromPresentationType = (mediaUploadId, presentationTypeId) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = { access_token : accessToken };
@@ -218,9 +219,9 @@ export const unlinkFromPresentationType = (mediaUploadId, presentationTypeId) =>
         });
 };
 
-export const deleteMediaUpload = (mediaUploadId) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const deleteMediaUpload = (mediaUploadId) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -239,9 +240,9 @@ export const deleteMediaUpload = (mediaUploadId) => (dispatch, getState) => {
     );
 };
 
-export const copyMediaUploads = (summitId) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const copyMediaUploads = (summitId) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());

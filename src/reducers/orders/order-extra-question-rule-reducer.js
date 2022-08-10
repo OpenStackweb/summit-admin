@@ -18,7 +18,7 @@ import {
     ORDER_EXTRA_QUESTION_SUB_QUESTION_ADDED
 } from '../../actions/order-actions';
 
-import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
+import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/utils/actions';
 
 export const DEFAULT_ENTITY = {
     id: 0,
@@ -45,15 +45,12 @@ const orderExtraQuestionRuleReducer = (state = DEFAULT_STATE, action) => {
                 return { ...state, entity: { ...DEFAULT_ENTITY }, errors: {} };
             }
         }
-            break;
         case RESET_ORDER_EXTRA_QUESTION_SUB_QUESTION_FORM: {
             return { ...state, entity: { ...DEFAULT_ENTITY }, errors: {} };
         }
-            break;
         case UPDATE_ORDER_EXTRA_QUESTION_SUB_QUESTION: {
             return { ...state, entity: { ...payload }, errors: {} };
         }
-            break;
         case RECEIVE_ORDER_EXTRA_QUESTION_SUB_QUESTION: {
             let entity = { ...payload.response };
 
@@ -68,11 +65,9 @@ const orderExtraQuestionRuleReducer = (state = DEFAULT_STATE, action) => {
         case ORDER_EXTRA_QUESTION_SUB_QUESTION_ADDED: {
             return { ...state, entity: { ...DEFAULT_ENTITY }, errors: {} };
         }
-            break;
         case VALIDATE: {
             return { ...state, errors: payload.errors };
         }
-            break;
         default:
             return state;
     }

@@ -19,8 +19,11 @@ import {
     stopLoading,
     startLoading,
     showSuccessMessage,
-    authErrorHandler, escapeFilterValue
-} from 'openstack-uicore-foundation/lib/methods';
+    authErrorHandler,
+    escapeFilterValue
+} from 'openstack-uicore-foundation/lib/utils/actions';
+import {getAccessTokenSafely} from '../utils/methods';
+
 
 export const REQUEST_EMAIL_FLOW_EVENTS       = 'REQUEST_EMAIL_FLOW_EVENTS';
 export const RECEIVE_EMAIL_FLOW_EVENTS       = 'RECEIVE_EMAIL_FLOW_EVENTS';
@@ -30,10 +33,10 @@ export const UPDATE_EMAIL_FLOW_EVENT         = 'UPDATE_EMAIL_FLOW_EVENT';
 export const EMAIL_FLOW_EVENT_UPDATED        = 'EMAIL_FLOW_EVENT_UPDATED';
 export const EMAIL_FLOW_EVENT_DELETED        = 'EMAIL_FLOW_EVENT_DELETED';
 
-export const getEmailFlowEvents = ( term = null, page = 1, perPage = 10, order = 'email_template_identifier', orderDir = 1 ) => (dispatch, getState) => {
+export const getEmailFlowEvents = ( term = null, page = 1, perPage = 10, order = 'email_template_identifier', orderDir = 1 ) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -72,10 +75,10 @@ export const getEmailFlowEvents = ( term = null, page = 1, perPage = 10, order =
     );
 };
 
-export const getEmailFlowEvent = (eventId) => (dispatch, getState) => {
+export const getEmailFlowEvent = (eventId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -99,9 +102,9 @@ export const resetEmailFlowEventForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_EMAIL_FLOW_EVENT_FORM)({}));
 };
 
-export const saveEmailFlowEvent = (entity) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const saveEmailFlowEvent = (entity) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {

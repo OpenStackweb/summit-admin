@@ -17,9 +17,9 @@ import
     REQUEST_PURCHASE_ORDERS,
 } from '../../actions/order-actions';
 
-import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
-import {epochToMoment} from "openstack-uicore-foundation/lib/methods";
 import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/utils/actions';
+import {epochToMoment} from "openstack-uicore-foundation/lib/utils/methods";
 
 const DEFAULT_STATE = {
     purchaseOrders          : {},

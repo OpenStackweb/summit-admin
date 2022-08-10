@@ -18,7 +18,7 @@ import T from "i18n-react/dist/i18n-react";
 import { checkInBadge } from "../../actions/badge-actions";
 import QrReader from "react-qr-reader";
 import Swal from "sweetalert2";
-import {qrReaderContainer} from '../../styles/badge-checkin-page.module.less';
+import styles from '../../styles/badge-checkin-page.module.less';
 import {validateBadgeQR} from "../../utils/methods";
 
 const BadgeCheckinPage = ({match, currentSummit, checkInBadge}) => {
@@ -58,7 +58,7 @@ const BadgeCheckinPage = ({match, currentSummit, checkInBadge}) => {
             <Breadcrumb data={{ title: T.translate("badge_checkin.checkin"), pathname: match.url }} />
             <h3>Scan badge to check in:</h3>
             <hr/>
-            <div className={qrReaderContainer}>
+            <div className={styles.qrReaderContainer}>
                 <QrReader
                     delay={2000}
                     onError={handleError}

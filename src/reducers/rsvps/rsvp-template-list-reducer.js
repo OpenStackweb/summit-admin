@@ -18,8 +18,8 @@ import
     RSVP_TEMPLATE_DELETED
 } from '../../actions/rsvp-template-actions';
 
-import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
 import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/utils/actions';
 
 const DEFAULT_STATE = {
     rsvpTemplates       : [],

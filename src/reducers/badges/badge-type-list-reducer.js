@@ -18,8 +18,8 @@ import
     BADGE_TYPE_DELETED,
 } from '../../actions/badge-actions';
 
-import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
 import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/utils/actions';
 
 const DEFAULT_STATE = {
     badgeTypes            : [],

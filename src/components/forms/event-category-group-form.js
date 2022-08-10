@@ -14,7 +14,8 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { epochToMomentTimeZone, queryTracks, queryGroups } from 'openstack-uicore-foundation/lib/methods'
+import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/utils/methods'
+import { queryTracks, queryGroups } from 'openstack-uicore-foundation/lib/utils/query-actions'
 import {
     Input,
     TextEditor,

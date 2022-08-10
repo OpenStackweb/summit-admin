@@ -14,7 +14,7 @@
 import React from 'react';
 import T from 'i18n-react/dist/i18n-react';
 import Swal from "sweetalert2";
-import { epochToMoment } from 'openstack-uicore-foundation/lib/methods'
+import { epochToMoment } from 'openstack-uicore-foundation/lib/utils/methods'
 
 
 export default class RsvpComponent extends React.Component {

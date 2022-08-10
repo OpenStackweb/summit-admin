@@ -12,7 +12,7 @@
  **/
 import React from 'react';
 import moment from 'moment-timezone'
-import { DropTarget } from 'react-dnd';
+import { useDrop } from 'react-dnd'
 import { DraggableItemTypes } from './draggable-items-types';
 import ScheduleEvent from './schedule-event';
 import ReactDOM  from 'react-dom';
@@ -28,36 +28,27 @@ const TimeSlot = ({timeLabel, id}) => {
     )
 }
 
-const timeSlotContainerTarget = {
-    canDrop(props, monitor) {
-        let {timeSlot, events, currentDay, currentSummit} = props;
-        let eventModel = new SummitEvent(monitor.getItem(), currentSummit);
-        return eventModel.canMove(events, currentDay, timeSlot);
-    },
-    drop(props, monitor, component) {
-        props.onDroppedEvent(monitor.getItem(), props.timeSlot);
-    }
-};
+const TimeSlotContainer = ({ currentDay, currentSummit, events, timeSlot, pixelsPerMinute, interval, onDroppedEvent }) => {
+    const divId = `time_slot_container_${timeSlot.format('HH_mm')}`;
+    const [collectedProps, drop] = useDrop(() => ({
+        accept: [ DraggableItemTypes.UNSCHEDULEEVENT, DraggableItemTypes.SCHEDULEEVENT ],
+        collect: ( monitor) => ({
+            isOver: monitor.isOver(),
+            canDrop: monitor.canDrop()
+        }),
+        canDrop: (item, monitor) => {
+            const eventModel = new SummitEvent(item, currentSummit);
+            return eventModel.canMove(events, currentDay, timeSlot);
+        },
+        drop: (item, monitor, component) => {
+            onDroppedEvent(item, timeSlot);
+        }
+    }));
+    const {isOver, canDrop} = collectedProps;
 
-function collect(connect, monitor) {
-    return {
-        connectDropTarget: connect.dropTarget(),
-        isOver: monitor.isOver(),
-        canDrop: monitor.canDrop()
-    };
-}
+    const renderOverlay = (color) => <div style={{ backgroundColor: color }} className="time-slot-overlay" />;
 
-class TimeSlotContainer extends React.Component {
-
-    renderOverlay(color) {
-        return (
-            <div style={{
-                backgroundColor: color,
-            }} className="time-slot-overlay"/>
-        );
-    }
-
-    renderMinutesContainer(interval, pixelsPerMinute) {
+    const renderMinutesContainer = (interval, pixelsPerMinute) => {
         let minutesContainers = [];
         let container_count = interval / 5;
         let container_height = pixelsPerMinute * 5;
@@ -72,37 +63,26 @@ class TimeSlotContainer extends React.Component {
         }
 
         return minutesContainers;
-    }
+    };
 
 
-    render(){
-        const { connectDropTarget, isOver, canDrop, timeSlot, pixelsPerMinute, interval } = this.props;
-        return connectDropTarget(
-            <div
-                id={"time_slot_container_"+timeSlot.format('HH_mm')}
-                style={{
-                    position: 'relative',
-                    width: '100%',
-                    height: '100%'
-                }}
-                className="row time-slot-container">
-                <div className="col-md-12">
-                    {this.renderMinutesContainer(interval, pixelsPerMinute)}
-                </div>
-                {isOver && !canDrop && this.renderOverlay('red')}
-                {!isOver && canDrop && this.renderOverlay('yellow')}
-                {isOver && canDrop && this.renderOverlay('green')}
+    return (
+        <div id={divId} ref={drop} className="row time-slot-container">
+            <div className="col-md-12">
+                {renderMinutesContainer(interval, pixelsPerMinute)}
             </div>
-        );
-    }
-}
+            {isOver && !canDrop && renderOverlay('red')}
+            {!isOver && canDrop && renderOverlay('yellow')}
+            {isOver && canDrop && renderOverlay('green')}
+        </div>
+    );
+};
 
-TimeSlotContainer = DropTarget([
-        DraggableItemTypes.UNSCHEDULEEVENT,
-        DraggableItemTypes.SCHEDULEEVENT ],
-    timeSlotContainerTarget,
-    collect
-)(TimeSlotContainer);
+
+
+
+
+
 
 class ScheduleEventList extends React.Component
 {
@@ -116,9 +96,6 @@ class ScheduleEventList extends React.Component
         this.state = {
             resizing: false,
         };
-    }
-
-    componentDidMount() {
     }
 
     onDroppedEvent(event, startTime){
@@ -254,7 +231,7 @@ class ScheduleEventList extends React.Component
                                 <ScheduleEvent
                                     event={event}
                                     selectedPublishedEvents={selectedPublishedEvents}
-                                    key={event.id}
+                                    key={`event-${event.id}-${event.start_date}-${event.end_date}`}
                                     type={"MAIN"}
                                     step={pixelsPerMinute * 5}
                                     minHeight={(pixelsPerMinute * interval)}

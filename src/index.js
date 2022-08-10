@@ -21,7 +21,7 @@ import 'font-awesome/css/font-awesome.css';
 import './styles/menu.less';
 import './styles/landing.css';
 import './styles/general.less';
-import 'openstack-uicore-foundation/lib/css/components.css';
+import 'openstack-uicore-foundation/lib/css/components/index.css';
 
 const onBeforeLift = () => {
    console.log("reading state ...")

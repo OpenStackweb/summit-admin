@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-import {LOGOUT_USER} from "openstack-uicore-foundation/lib/actions";
+import {LOGOUT_USER} from "openstack-uicore-foundation/lib/utils/actions";
 import {
     RECEIVE_ATTENDEES_VOTES,
     RECEIVE_PRESENTATION_VOTES,

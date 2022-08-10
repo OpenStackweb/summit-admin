@@ -19,7 +19,7 @@ import { Modal } from 'react-bootstrap';
 import { Pagination } from 'react-bootstrap';
 import { Table, FreeTextSearch } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
-import {epochToMomentTimeZone} from 'openstack-uicore-foundation/lib/methods'
+import {epochToMomentTimeZone} from 'openstack-uicore-foundation/lib/utils/methods'
 import { getRoomBookings, exportRoomBookings, deleteRoomBooking, refundRoomBooking } from "../../actions/room-booking-actions";
 
 class RoomBookingListPage extends React.Component {

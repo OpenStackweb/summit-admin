@@ -18,9 +18,9 @@ import
     ATTENDANCE_DELETED
 } from '../../actions/speaker-actions';
 
-import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
-import {formatEpoch} from 'openstack-uicore-foundation/lib/methods'
 import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/utils/actions';
+import {formatEpoch} from 'openstack-uicore-foundation/lib/utils/methods'
 
 const DEFAULT_STATE = {
     attendances         : [],

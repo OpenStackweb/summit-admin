@@ -58,9 +58,9 @@ class EditSelectionPlanPage extends React.Component {
         });
     }
 
-    onUpdateExtraQuestionOrder(questions, questionId){
+    onUpdateExtraQuestionOrder(questions, questionId, newOrder){
         const {entity} = this.props;
-        this.props.updateSelectionPlanExtraQuestionOrder(entity.id, questions, questionId);
+        this.props.updateSelectionPlanExtraQuestionOrder(entity.id, questions, questionId, newOrder);
     }
 
     onEditExtraQuestion(questionId){

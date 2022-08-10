@@ -19,8 +19,8 @@ import
     PROMOCODE_DELETED
 } from '../../actions/promocode-actions';
 
-import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
 import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/utils/actions';
 
 const DEFAULT_STATE = {
     promocodes       : [],

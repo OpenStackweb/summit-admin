@@ -17,8 +17,8 @@ import
     REQUEST_EMAILS
 } from '../../actions/email-actions';
 
-import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
-import {epochToMoment} from "openstack-uicore-foundation/lib/methods";
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/utils/actions';
+import {epochToMoment} from "openstack-uicore-foundation/lib/utils/methods";
 
 const DEFAULT_STATE = {
     emails          : [],

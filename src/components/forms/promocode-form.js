@@ -14,7 +14,7 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import {epochToMomentTimeZone} from 'openstack-uicore-foundation/lib/methods'
+import {epochToMomentTimeZone} from 'openstack-uicore-foundation/lib/utils/methods'
 import { Dropdown, DateTimePicker, SpeakerInput, CompanyInput, Input } from 'openstack-uicore-foundation/lib/components'
 import { DiscountTicketTable } from '../tables/dicount-ticket-table';
 import OwnerInput from "../inputs/owner-input";

@@ -22,8 +22,10 @@ import {
     startLoading,
     showMessage,
     showSuccessMessage,
-    authErrorHandler, escapeFilterValue,
-} from 'openstack-uicore-foundation/lib/methods';
+    authErrorHandler,
+    escapeFilterValue
+} from 'openstack-uicore-foundation/lib/utils/actions';
+import {getAccessTokenSafely} from '../utils/methods';
 
 export const REQUEST_MEDIA_FILE_TYPES       = 'REQUEST_MEDIA_FILE_TYPES';
 export const RECEIVE_MEDIA_FILE_TYPES       = 'RECEIVE_MEDIA_FILE_TYPES';
@@ -37,9 +39,9 @@ export const MEDIA_FILE_TYPE_ADDED          = 'MEDIA_FILE_TYPE_ADDED';
 export const MEDIA_FILE_TYPE_DELETED        = 'MEDIA_FILE_TYPE_DELETED';
 
 
-export const getMediaFileTypes = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
-    const { loggedUserState } = getState();
-    const { accessToken }     = loggedUserState;
+export const getMediaFileTypes = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => async (dispatch, getState) => {
+
+    const accessToken = await getAccessTokenSafely();
     const filter = [];
 
     dispatch(startLoading());
@@ -77,9 +79,8 @@ export const getMediaFileTypes = (term = null, page = 1, perPage = 10, order = '
     );
 };
 
-export const getAllMediaFileTypes = () => (dispatch, getState) => {
-    const { loggedUserState } = getState();
-    const { accessToken }     = loggedUserState;
+export const getAllMediaFileTypes = () => async (dispatch, getState) => {
+    const accessToken = await getAccessTokenSafely();
 
     dispatch(startLoading());
 
@@ -101,9 +102,8 @@ export const getAllMediaFileTypes = () => (dispatch, getState) => {
     );
 };
 
-export const getMediaFileType = (mediaFileTypeId) => (dispatch, getState) => {
-    const { loggedUserState } = getState();
-    const { accessToken }     = loggedUserState;
+export const getMediaFileType = (mediaFileTypeId) => async (dispatch, getState) => {
+    const accessToken = await getAccessTokenSafely();
 
     dispatch(startLoading());
 
@@ -126,9 +126,9 @@ export const resetMediaFileTypeForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_MEDIA_FILE_TYPE_FORM)({}));
 };
 
-export const saveMediaFileType = (entity, noAlert = false) => (dispatch, getState) => {
-    const { loggedUserState } = getState();
-    const { accessToken }     = loggedUserState;
+export const saveMediaFileType = (entity, noAlert = false) => async (dispatch, getState) => {
+
+    const accessToken = await getAccessTokenSafely();
 
     dispatch(startLoading());
 
@@ -177,10 +177,9 @@ export const saveMediaFileType = (entity, noAlert = false) => (dispatch, getStat
     }
 }
 
-export const deleteMediaFileType = (mediaFileTypeId) => (dispatch, getState) => {
+export const deleteMediaFileType = (mediaFileTypeId) => async (dispatch, getState) => {
 
-    const { loggedUserState } = getState();
-    const { accessToken }     = loggedUserState;
+    const accessToken = await getAccessTokenSafely();
 
     const params = {
         access_token : accessToken

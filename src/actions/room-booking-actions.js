@@ -26,7 +26,8 @@ import {
     getCSV,
     authErrorHandler,
     escapeFilterValue
-} from 'openstack-uicore-foundation/lib/methods';
+} from 'openstack-uicore-foundation/lib/utils/actions';
+import {getAccessTokenSafely} from '../utils/methods';
 
 export const REQUEST_ROOM_BOOKINGS              = 'REQUEST_ROOM_BOOKINGS';
 export const RECEIVE_ROOM_BOOKINGS              = 'RECEIVE_ROOM_BOOKINGS';
@@ -49,10 +50,10 @@ export const ROOM_BOOKING_ATTRIBUTE_DELETED     = 'ROOM_BOOKING_ATTRIBUTE_DELETE
 export const ROOM_BOOKING_REFUNDED     = 'ROOM_BOOKING_REFUNDED';
 
 
-export const getRoomBookings = ( term = null, page = 1, perPage = 10, order = 'start_datetime', orderDir = 1 ) => (dispatch, getState) => {
+export const getRoomBookings = ( term = null, page = 1, perPage = 10, order = 'start_datetime', orderDir = 1 ) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
     const filter = [];
 
@@ -92,10 +93,10 @@ export const getRoomBookings = ( term = null, page = 1, perPage = 10, order = 's
     );
 };
 
-export const exportRoomBookings = ( term = null, order = 'start_datetime', orderDir = 1 ) => (dispatch, getState) => {
+export const exportRoomBookings = ( term = null, order = 'start_datetime', orderDir = 1 ) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
     const filename = currentSummit.name + '-Room-Bookings.csv';
     const filter = [];
@@ -122,10 +123,10 @@ export const exportRoomBookings = ( term = null, order = 'start_datetime', order
 
 };
 
-export const getRoomBooking = (roomBookingId) => (dispatch, getState) => {
+export const getRoomBooking = (roomBookingId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -150,9 +151,9 @@ export const resetRoomBookingForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_ROOM_BOOKING_FORM)({}));
 };
 
-export const saveRoomBooking = (entity) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const saveRoomBooking = (entity) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -201,10 +202,10 @@ export const saveRoomBooking = (entity) => (dispatch, getState) => {
     }
 }
 
-export const deleteRoomBooking = (roomBookingId) => (dispatch, getState) => {
+export const deleteRoomBooking = (roomBookingId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -223,10 +224,10 @@ export const deleteRoomBooking = (roomBookingId) => (dispatch, getState) => {
     );
 };
 
-export const refundRoomBooking = (roomId, roomBookingId, amount) => (dispatch, getState) => {
+export const refundRoomBooking = (roomId, roomBookingId, amount) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -248,9 +249,7 @@ export const refundRoomBooking = (roomId, roomBookingId, amount) => (dispatch, g
 
 const normalizeEntity = (entity) => {
     const normalizedEntity = {...entity};
-
     return normalizedEntity;
-
 }
 
 
@@ -258,10 +257,10 @@ const normalizeEntity = (entity) => {
 
 /**********************  ATTRIBUTE TYPE  *****************************************************************/
 
-export const getRoomBookingAttributeType = (attributeId) => (dispatch, getState) => {
+export const getRoomBookingAttributeType = (attributeId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -286,9 +285,9 @@ export const resetRoomBookingAttributeForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_ROOM_BOOKING_ATTRIBUTE_TYPE_FORM)({}));
 };
 
-export const saveRoomBookingAttributeType = (entity) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const saveRoomBookingAttributeType = (entity) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -337,10 +336,10 @@ export const saveRoomBookingAttributeType = (entity) => (dispatch, getState) => 
     }
 }
 
-export const deleteRoomBookingAttributeType = (attributeTypeId) => (dispatch, getState) => {
+export const deleteRoomBookingAttributeType = (attributeTypeId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -363,9 +362,9 @@ export const deleteRoomBookingAttributeType = (attributeTypeId) => (dispatch, ge
 /**********************  ATTRIBUTE  *****************************************************************/
 
 
-export const saveRoomBookingAttribute = (attributeTypeId, entity) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const saveRoomBookingAttribute = (attributeTypeId, entity) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -405,10 +404,10 @@ export const saveRoomBookingAttribute = (attributeTypeId, entity) => (dispatch, 
     }
 }
 
-export const deleteRoomBookingAttribute = (attributeTypeId, attributeValueId) => (dispatch, getState) => {
+export const deleteRoomBookingAttribute = (attributeTypeId, attributeValueId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {

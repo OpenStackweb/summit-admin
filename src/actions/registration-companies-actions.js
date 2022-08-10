@@ -23,7 +23,8 @@ import {
     putRequest,
     deleteRequest,
     showSuccessMessage
-} from 'openstack-uicore-foundation/lib/methods';
+} from 'openstack-uicore-foundation/lib/utils/actions';
+import {getAccessTokenSafely} from "../utils/methods";
 
 export const REQUEST_REGISTRATION_COMPANIES = 'REQUEST_REGISTRATION_COMPANIES';
 export const RECEIVE_REGISTRATION_COMPANIES = 'RECEIVE_REGISTRATION_COMPANIES';
@@ -34,10 +35,10 @@ export const REGISTRATION_COMPANIES_IMPORTED = 'REGISTRATION_COMPANIES_IMPORTED'
 
 /**************************   REGISTRATION COMPANIES   ******************************************/
 
-export const getRegistrationCompanies = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1) => (dispatch, getState) => {
+export const getRegistrationCompanies = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken } = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit } = currentSummitState;
     const filter = [];
 
@@ -70,9 +71,9 @@ export const getRegistrationCompanies = (term = null, page = 1, perPage = 10, or
     );
 };
 
-export const addRegistrationCompany = (entity) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken } = loggedUserState;
+export const addRegistrationCompany = (entity) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit } = currentSummitState;
 
     const params = {
@@ -94,10 +95,10 @@ export const addRegistrationCompany = (entity) => (dispatch, getState) => {
 
 };
 
-export const deleteRegistrationCompany = (companyId) => (dispatch, getState) => {
+export const deleteRegistrationCompany = (companyId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken } = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit } = currentSummitState;
 
     const params = {
@@ -116,10 +117,10 @@ export const deleteRegistrationCompany = (companyId) => (dispatch, getState) => 
     );
 };
 
-export const importRegistrationCompaniesCSV = (file) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
-    const { currentSummit }   = currentSummitState;
+export const importRegistrationCompaniesCSV = (file) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit } = currentSummitState;
 
     dispatch(startLoading());
 

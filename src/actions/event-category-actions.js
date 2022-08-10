@@ -23,7 +23,8 @@ import {
     showMessage,
     showSuccessMessage,
     authErrorHandler
-} from "openstack-uicore-foundation/lib/methods";
+} from "openstack-uicore-foundation/lib/utils/actions";
+import {getAccessTokenSafely} from '../utils/methods';
 
 export const REQUEST_EVENT_CATEGORIES      = 'REQUEST_EVENT_CATEGORIES';
 export const RECEIVE_EVENT_CATEGORIES      = 'RECEIVE_EVENT_CATEGORIES';
@@ -52,10 +53,10 @@ export const GROUP_ADDED_TO_GROUP                = 'GROUP_ADDED_TO_GROUP';
 export const GROUP_REMOVED_FROM_GROUP            = 'GROUP_REMOVED_FROM_GROUP';
 export const EVENT_CATEGORY_ORDER_UPDATED        = 'EVENT_CATEGORY_ORDER_UPDATED';
 
-export const getEventCategories = ( ) => (dispatch, getState) => {
+export const getEventCategories = ( ) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -79,10 +80,10 @@ export const getEventCategories = ( ) => (dispatch, getState) => {
     );
 };
 
-export const getEventCategory = (eventCategoryId) => (dispatch, getState) => {
+export const getEventCategory = (eventCategoryId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -107,10 +108,10 @@ export const resetEventCategoryForm = () => (dispatch) => {
     dispatch(createAction(RESET_EVENT_CATEGORY_FORM)({}));
 };
 
-export const updateEventCategoryOrder = (tracks, trackId, newOrder) => (dispatch, getState) => {
+export const updateEventCategoryOrder = (tracks, trackId, newOrder) => async (dispatch, getState) => {
 
-    const {loggedUserState, currentSummitState} = getState();
-    const {accessToken} = loggedUserState;
+    const {currentSummitState} = getState();
+    const accessToken = await getAccessTokenSafely();
     const {currentSummit} = currentSummitState;
 
     const params = {
@@ -118,6 +119,8 @@ export const updateEventCategoryOrder = (tracks, trackId, newOrder) => (dispatch
     };
 
     const track = tracks.find(q => q.id === trackId);
+
+    dispatch(startLoading());
 
     putRequest(
         null,
@@ -132,9 +135,9 @@ export const updateEventCategoryOrder = (tracks, trackId, newOrder) => (dispatch
 
 }
 
-export const saveEventCategory = (entity) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const saveEventCategory = (entity) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -181,9 +184,9 @@ export const saveEventCategory = (entity) => (dispatch, getState) => {
     }
 };
 
-export const copyEventCategories = (fromSummitId) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const copyEventCategories = (fromSummitId) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -202,10 +205,10 @@ export const copyEventCategories = (fromSummitId) => (dispatch, getState) => {
         });
 };
 
-export const deleteEventCategory = (categoryId) => (dispatch, getState) => {
+export const deleteEventCategory = (categoryId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -224,9 +227,9 @@ export const deleteEventCategory = (categoryId) => (dispatch, getState) => {
     );
 };
 
-export const uploadImage = (entity, file) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const uploadImage = (entity, file) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -245,9 +248,9 @@ export const uploadImage = (entity, file) => (dispatch, getState) => {
         });
 };
 
-export const removeImage = (eventId) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const removeImage = (eventId) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -286,11 +289,10 @@ const normalizeEntity = (entity) => {
 
 /***********************************  CATEGORY GROUPS ***************************************************/
 
+export const getEventCategoryGroups = () => async (dispatch, getState) => {
 
-export const getEventCategoryGroups = ( ) => (dispatch, getState) => {
-
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -313,10 +315,10 @@ export const getEventCategoryGroups = ( ) => (dispatch, getState) => {
     );
 };
 
-export const getEventCategoryGroup = (groupId) => (dispatch, getState) => {
+export const getEventCategoryGroup = (groupId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -337,10 +339,10 @@ export const getEventCategoryGroup = (groupId) => (dispatch, getState) => {
     );
 };
 
-export const getEventCategoryGroupMeta = () => (dispatch, getState) => {
+export const getEventCategoryGroupMeta = () => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -362,9 +364,9 @@ export const resetEventCategoryGroupForm = () => (dispatch) => {
     dispatch(createAction(RESET_EVENT_CATEGORY_GROUP_FORM)({}));
 };
 
-export const saveEventCategoryGroup = (entity) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const saveEventCategoryGroup = (entity) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -411,10 +413,10 @@ export const saveEventCategoryGroup = (entity) => (dispatch, getState) => {
     }
 };
 
-export const deleteEventCategoryGroup = (groupId) => (dispatch, getState) => {
+export const deleteEventCategoryGroup = (groupId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -433,10 +435,10 @@ export const deleteEventCategoryGroup = (groupId) => (dispatch, getState) => {
     );
 };
 
-export const addCategoryToGroup = (groupId, category) => (dispatch, getState) => {
+export const addCategoryToGroup = (groupId, category) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -457,10 +459,10 @@ export const addCategoryToGroup = (groupId, category) => (dispatch, getState) =>
     );
 };
 
-export const removeCategoryFromGroup = (groupId, categoryId) => (dispatch, getState) => {
+export const removeCategoryFromGroup = (groupId, categoryId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -481,10 +483,10 @@ export const removeCategoryFromGroup = (groupId, categoryId) => (dispatch, getSt
     );
 };
 
-export const addAllowedGroupToGroup = (groupId, allowedGroup) => (dispatch, getState) => {
+export const addAllowedGroupToGroup = (groupId, allowedGroup) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -505,10 +507,10 @@ export const addAllowedGroupToGroup = (groupId, allowedGroup) => (dispatch, getS
     );
 };
 
-export const removeAllowedGroupFromGroup = (groupId, allowedGroupId) => (dispatch, getState) => {
+export const removeAllowedGroupFromGroup = (groupId, allowedGroupId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());

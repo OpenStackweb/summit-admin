@@ -24,7 +24,8 @@ import {
     showMessage,
     showSuccessMessage,
     authErrorHandler
-} from 'openstack-uicore-foundation/lib/methods';
+} from 'openstack-uicore-foundation/lib/utils/actions';
+import {getAccessTokenSafely} from '../utils/methods';
 
 export const REQUEST_PUSH_NOTIFICATIONS       = 'REQUEST_PUSH_NOTIFICATIONS';
 export const RECEIVE_PUSH_NOTIFICATIONS       = 'RECEIVE_PUSH_NOTIFICATIONS';
@@ -38,10 +39,10 @@ export const PUSH_NOTIFICATION_APPROVED       = 'PUSH_NOTIFICATION_APPROVED';
 export const PUSH_NOTIFICATION_REJECTED       = 'PUSH_NOTIFICATION_REJECTED';
 
 
-export const getPushNotifications = ( page = 1, perPage = 10, order = 'created', orderDir = -1, filters ) => (dispatch, getState) => {
+export const getPushNotifications = ( page = 1, perPage = 10, order = 'created', orderDir = -1, filters ) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
     const filter = [];
 
@@ -90,10 +91,10 @@ export const getPushNotifications = ( page = 1, perPage = 10, order = 'created',
     );
 };
 
-export const getPushNotification = (pushNotificationId) => (dispatch, getState) => {
+export const getPushNotification = (pushNotificationId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -117,9 +118,9 @@ export const resetPushNotificationForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_PUSH_NOTIFICATION_FORM)({}));
 };
 
-export const savePushNotification = (entity) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const savePushNotification = (entity) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -169,10 +170,10 @@ export const savePushNotification = (entity) => (dispatch, getState) => {
     }
 };
 
-export const deletePushNotification = (pushNotificationId) => (dispatch, getState) => {
+export const deletePushNotification = (pushNotificationId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -192,9 +193,9 @@ export const deletePushNotification = (pushNotificationId) => (dispatch, getStat
 };
 
 
-export const approvePushNotification = (pushNotificationId) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const approvePushNotification = (pushNotificationId) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -216,10 +217,10 @@ export const approvePushNotification = (pushNotificationId) => (dispatch, getSta
 };
 
 
-export const rejectPushNotification = (pushNotificationId) => (dispatch, getState) => {
+export const rejectPushNotification = (pushNotificationId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {

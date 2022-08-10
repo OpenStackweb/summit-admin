@@ -13,7 +13,7 @@
 
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
-import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/methods'
+import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/utils/methods'
 import { Input, DateTimePicker, Dropdown } from 'openstack-uicore-foundation/lib/components';
 import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 

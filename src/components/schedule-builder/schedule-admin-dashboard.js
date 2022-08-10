@@ -11,8 +11,8 @@
  * limitations under the License.
  **/
 import React from 'react';
-import { DragDropContext } from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
+import { HTML5Backend } from 'react-dnd-html5-backend'
+import { DndProvider } from 'react-dnd'
 import { Modal } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import {
@@ -61,7 +61,7 @@ import Swal from "sweetalert2";
 import ScheduleAdminEmptySpotsModal from './schedule-admin-empty-spots-modal';
 import ScheduleAdminEmptySpotsList from './schedule-admin-empty-spots-list';
 import ScheduleAdminsBulkActionsSelector from './bulk-actions/schedule-admin-bulk-actions-selector';
-import {epochToMomentTimeZone} from 'openstack-uicore-foundation/lib/methods';
+import {epochToMomentTimeZone} from 'openstack-uicore-foundation/lib/utils/methods';
 
 
 class ScheduleAdminDashBoard extends React.Component {
@@ -141,7 +141,7 @@ class ScheduleAdminDashBoard extends React.Component {
     }
 
     componentDidMount(){
-        const { currentSummit, currentEventType, currentTrack, currentPresentationSelectionStatus, currentPresentationSelectionPlan, currentDay, currentLocation, scheduleEventsCurrentSearchTerm, currentUnScheduleOrderBy } = this.props;
+        const { currentSummit, currentEventType, currentTrack, currentPresentationSelectionStatus, currentPresentationSelectionPlan, currentDay, currentLocation, currentUnScheduleOrderBy } = this.props;
         const eventTypeId = currentEventType === null ? null : currentEventType.id;
         const trackId     = currentTrack === null ? null : currentTrack.id;
 
@@ -653,7 +653,7 @@ class ScheduleAdminDashBoard extends React.Component {
         ];
 
         return(
-
+            <DndProvider backend={HTML5Backend}>
             <div className="row schedule-app-container no-margin">
                 <ScheduleAdminEmptySpotsModal
                     currentSummit={currentSummit}
@@ -808,12 +808,11 @@ class ScheduleAdminDashBoard extends React.Component {
                    />
                 </div>
             </div>
+            </DndProvider>
         );
     }
 
 }
-
-ScheduleAdminDashBoard = DragDropContext(HTML5Backend)(ScheduleAdminDashBoard);
 
 function mapStateToProps({ currentScheduleBuilderState, currentSummitState, summitEventsBulkActionsState  }) {
     return {

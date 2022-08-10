@@ -1,6 +1,3 @@
-import {findElementPos} from "openstack-uicore-foundation/lib/methods";
-import moment from "moment-timezone";
-
 /**
  * Copyright 2017 OpenStack Foundation
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,6 +10,11 @@ import moment from "moment-timezone";
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
+
+import moment from "moment-timezone";
+import {findElementPos} from "openstack-uicore-foundation/lib/utils/methods";
+import {getAccessToken} from 'openstack-uicore-foundation/lib/security/methods'
+import { initLogOut} from 'openstack-uicore-foundation/lib/security/methods';
 
 export const trim = (string, length) => {
     return string.length > length ?
@@ -113,3 +115,13 @@ export const parseAndFormat = (dateString, inputFormat, outputFormat = 'MM/DD/YY
     const parsedDate = moment.tz(dateString, inputFormat, inputTZ).tz(outputTZ);
     return parsedDate.format(outputFormat);
 }
+
+export const getAccessTokenSafely = async () => {
+    try {
+        return await getAccessToken();
+    }
+    catch (e) {
+        console.log('log out: ', e);
+        initLogOut();
+    }
+};

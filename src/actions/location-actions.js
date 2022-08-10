@@ -30,8 +30,8 @@ import {
     geoCodeAddress,
     geoCodeLatLng,
     authErrorHandler
-} from 'openstack-uicore-foundation/lib/methods';
-
+} from 'openstack-uicore-foundation/lib/utils/actions';
+import {getAccessTokenSafely} from '../utils/methods';
 
 export const REQUEST_LOCATIONS          = 'REQUEST_LOCATIONS';
 export const RECEIVE_LOCATIONS          = 'RECEIVE_LOCATIONS';
@@ -84,10 +84,10 @@ export const LOCATION_MAP_ATTACHED       = 'LOCATION_MAP_ATTACHED';
 
 
 
-export const getLocationMeta = () => (dispatch, getState) => {
+export const getLocationMeta = () => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -105,10 +105,10 @@ export const getLocationMeta = () => (dispatch, getState) => {
     );
 };
 
-export const getLocations = ( ) => (dispatch, getState) => {
+export const getLocations = ( ) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -131,10 +131,10 @@ export const getLocations = ( ) => (dispatch, getState) => {
     );
 };
 
-export const getLocation = (locationId) => (dispatch, getState) => {
+export const getLocation = (locationId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -159,9 +159,9 @@ export const resetLocationForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_LOCATION_FORM)({}));
 };
 
-export const saveLocation = (entity, allClasses) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const saveLocation = (entity, allClasses) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -212,10 +212,10 @@ export const saveLocation = (entity, allClasses) => (dispatch, getState) => {
     }
 }
 
-export const deleteLocation = (locationId) => (dispatch, getState) => {
+export const deleteLocation = (locationId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -234,10 +234,10 @@ export const deleteLocation = (locationId) => (dispatch, getState) => {
     );
 };
 
-export const exportLocations = ( ) => (dispatch, getState) => {
+export const exportLocations = ( ) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
     const filename = currentSummit.name + '-Locations.csv';
     const params = {
@@ -248,10 +248,10 @@ export const exportLocations = ( ) => (dispatch, getState) => {
 
 };
 
-export const updateLocationOrder = (locations, locationId, newOrder) => (dispatch, getState) => {
+export const updateLocationOrder = (locations, locationId, newOrder) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -319,10 +319,10 @@ const normalizeEntity = (entity, allClasses) => {
 /**************************************** FLOORS *********************************************/
 
 
-export const getFloor = (locationId, floorId) => (dispatch, getState) => {
+export const getFloor = (locationId, floorId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -347,9 +347,9 @@ export const resetFloorForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_FLOOR_FORM)({}));
 };
 
-export const saveFloor = (locationId, entity, continueAdding) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const saveFloor = (locationId, entity, continueAdding) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -405,10 +405,10 @@ export const saveFloor = (locationId, entity, continueAdding) => (dispatch, getS
     }
 };
 
-export const deleteFloor = (locationId, floorId) => (dispatch, getState) => {
+export const deleteFloor = (locationId, floorId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -428,9 +428,9 @@ export const deleteFloor = (locationId, floorId) => (dispatch, getState) => {
 };
 
 
-export const attachFloorImage = (locationId, entity, file) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const attachFloorImage = (locationId, entity, file) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -457,9 +457,9 @@ export const attachFloorImage = (locationId, entity, file) => (dispatch, getStat
     }
 };
 
-const uploadFloorFile = (locationId, entity, file) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+const uploadFloorFile = (locationId, entity, file) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     postRequest(
@@ -476,10 +476,10 @@ const uploadFloorFile = (locationId, entity, file) => (dispatch, getState) => {
         });
 };
 
-export const deleteFloorImage = (locationId, floorId) => (dispatch, getState) => {
+export const deleteFloorImage = (locationId, floorId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -500,20 +500,17 @@ export const deleteFloorImage = (locationId, floorId) => (dispatch, getState) =>
 
 const normalizeFloorEntity = (entity) => {
     const normalizedEntity = {...entity};
-
-
     return normalizedEntity;
-
 }
 
 
 /**************************************** ROOMS *********************************************/
 
 
-export const getRoom = (locationId, roomId) => (dispatch, getState) => {
+export const getRoom = (locationId, roomId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -537,9 +534,9 @@ export const resetRoomForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_ROOM_FORM)({}));
 };
 
-export const saveRoom = (locationId, entity, continueAdding) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const saveRoom = (locationId, entity, continueAdding) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -600,10 +597,10 @@ export const saveRoom = (locationId, entity, continueAdding) => (dispatch, getSt
     }
 }
 
-export const deleteRoom = (locationId, roomId) => (dispatch, getState) => {
+export const deleteRoom = (locationId, roomId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -622,9 +619,9 @@ export const deleteRoom = (locationId, roomId) => (dispatch, getState) => {
     );
 };
 
-export const attachRoomImage = (locationId, entity, file) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const attachRoomImage = (locationId, entity, file) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -652,9 +649,9 @@ export const attachRoomImage = (locationId, entity, file) => (dispatch, getState
     }
 };
 
-const uploadRoomFile = (locationId, entity, file) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+const uploadRoomFile = (locationId, entity, file) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     postRequest(
@@ -671,10 +668,10 @@ const uploadRoomFile = (locationId, entity, file) => (dispatch, getState) => {
         });
 };
 
-export const deleteRoomImage = (locationId, roomId) => (dispatch, getState) => {
+export const deleteRoomImage = (locationId, roomId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -705,19 +702,17 @@ const normalizeRoomEntity = (entity) => {
         delete(normalizedEntity.floor);
     }
 
-
     return normalizedEntity;
-
 }
 
 
 /**********************  BOOKABLE ROOMS    ***************************************************/
 
 
-export const addAttributeToRoom = (locationId, roomId, attribute) => (dispatch, getState) => {
+export const addAttributeToRoom = (locationId, roomId, attribute) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -739,10 +734,10 @@ export const addAttributeToRoom = (locationId, roomId, attribute) => (dispatch, 
 };
 
 
-export const removeAttributeFromRoom = (locationId, roomId, attributeId) => (dispatch, getState) => {
+export const removeAttributeFromRoom = (locationId, roomId, attributeId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -769,10 +764,10 @@ export const removeAttributeFromRoom = (locationId, roomId, attributeId) => (dis
 /**************************************** IMAGES *********************************************/
 
 
-export const getLocationImage = (locationId, imageId) => (dispatch, getState) => {
+export const getLocationImage = (locationId, imageId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -796,9 +791,9 @@ export const resetLocationImageForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_LOCATION_IMAGE_FORM)({}));
 };
 
-export const saveLocationImage = (locationId, entity, file) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const saveLocationImage = (locationId, entity, file) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -850,10 +845,10 @@ export const saveLocationImage = (locationId, entity, file) => (dispatch, getSta
     }
 }
 
-export const deleteLocationImage = (locationId, imageId) => (dispatch, getState) => {
+export const deleteLocationImage = (locationId, imageId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -891,10 +886,10 @@ const normalizeImageEntity = (entity) => {
 /**************************************** MAPS *********************************************/
 
 
-export const getLocationMap = (locationId, mapId) => (dispatch, getState) => {
+export const getLocationMap = (locationId, mapId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -918,9 +913,9 @@ export const resetLocationMapForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_LOCATION_MAP_FORM)({}));
 };
 
-export const saveLocationMap = (locationId, entity, file) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const saveLocationMap = (locationId, entity, file) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -972,10 +967,10 @@ export const saveLocationMap = (locationId, entity, file) => (dispatch, getState
     }
 }
 
-export const deleteLocationMap = (locationId, mapId) => (dispatch, getState) => {
+export const deleteLocationMap = (locationId, mapId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {

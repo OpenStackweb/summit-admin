@@ -21,7 +21,8 @@ import {
     authErrorHandler,
     escapeFilterValue,
     getCSV
-} from 'openstack-uicore-foundation/lib/methods';
+} from 'openstack-uicore-foundation/lib/utils/actions';
+import {getAccessTokenSafely} from '../utils/methods';
 
 export const REQUEST_TRACK_CHAIRS       = 'REQUEST_TRACK_CHAIRS';
 export const RECEIVE_TRACK_CHAIRS       = 'RECEIVE_TRACK_CHAIRS';
@@ -35,10 +36,10 @@ export const PROGRESS_FLAG_ADDED          = 'PROGRESS_FLAG_ADDED';
 export const PROGRESS_FLAG_DELETED        = 'PROGRESS_FLAG_DELETED';
 export const PROGRESS_FLAG_REORDERED      = 'PROGRESS_FLAG_REORDERED';
 
-export const getTrackChairs = (trackId = null, term = '', page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
+export const getTrackChairs = (trackId = null, term = '', page = 1, perPage = 10, order = 'id', orderDir = 1 ) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
     const filter = [];
 
@@ -95,9 +96,9 @@ export const getTrackChairs = (trackId = null, term = '', page = 1, perPage = 10
     );
 };
 
-export const addTrackChair = (member, trackIds) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const addTrackChair = (member, trackIds) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -119,9 +120,9 @@ export const addTrackChair = (member, trackIds) => (dispatch, getState) => {
         });
 };
 
-export const saveTrackChair = (trackChairId, trackIds) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const saveTrackChair = (trackChairId, trackIds) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -143,10 +144,10 @@ export const saveTrackChair = (trackChairId, trackIds) => (dispatch, getState) =
         });
 };
 
-export const deleteTrackChair = (trackChairId) => (dispatch, getState) => {
+export const deleteTrackChair = (trackChairId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -165,10 +166,10 @@ export const deleteTrackChair = (trackChairId) => (dispatch, getState) => {
     );
 };
 
-export const exportTrackChairs = ( ) => (dispatch, getState) => {
+export const exportTrackChairs = ( ) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState, trackChairListState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState, trackChairListState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
     const {trackId, term, order, orderDir} = trackChairListState;
 
@@ -223,9 +224,9 @@ export const exportTrackChairs = ( ) => (dispatch, getState) => {
 /************************************************************************************************************/
 
 
-export const getProgressFlags = () => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const getProgressFlags = () => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -245,9 +246,9 @@ export const getProgressFlags = () => (dispatch, getState) => {
     );
 };
 
-export const addProgressFlag = (flagName) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const addProgressFlag = (flagName) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -268,9 +269,9 @@ export const addProgressFlag = (flagName) => (dispatch, getState) => {
         });
 };
 
-export const saveProgressFlag = (progressFlagId, flag) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const saveProgressFlag = (progressFlagId, flag) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -291,10 +292,10 @@ export const saveProgressFlag = (progressFlagId, flag) => (dispatch, getState) =
         });
 };
 
-export const deleteProgressFlag = (progressFlagId) => (dispatch, getState) => {
+export const deleteProgressFlag = (progressFlagId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -313,9 +314,9 @@ export const deleteProgressFlag = (progressFlagId) => (dispatch, getState) => {
     );
 };
 
-export const reorderProgressFlags = (flags, progressFlagId, newOrder) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const reorderProgressFlags = (flags, progressFlagId, newOrder) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());

@@ -20,7 +20,7 @@ import
     PUSH_NOTIFICATION_REJECTED
 } from '../../actions/push-notification-actions';
 
-import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/utils/actions';
 import moment from 'moment-timezone';
 import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 

@@ -19,8 +19,8 @@ import
     EVENT_TYPES_SEEDED
 } from '../../actions/event-type-actions';
 
-import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
 import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/utils/actions';
 
 const DEFAULT_STATE = {
     eventTypes      : []

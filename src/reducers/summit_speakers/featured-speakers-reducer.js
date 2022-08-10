@@ -20,7 +20,7 @@ import
     FEATURED_SPEAKER_ORDER_UPDATED
 } from '../../actions/speaker-actions';
 
-import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/utils/actions';
 
 const DEFAULT_STATE = {
     speakers         : [],

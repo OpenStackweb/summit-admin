@@ -21,8 +21,12 @@ import {
     startLoading,
     showMessage,
     showSuccessMessage,
-    authErrorHandler, putFile, postFile
-} from 'openstack-uicore-foundation/lib/methods';
+    authErrorHandler,
+    putFile,
+    postFile
+} from 'openstack-uicore-foundation/lib/utils/actions';
+import {getAccessTokenSafely} from '../utils/methods';
+
 
 export const RECEIVE_EVENT_MATERIAL        = 'RECEIVE_EVENT_MATERIAL';
 export const RESET_EVENT_MATERIAL_FORM     = 'RESET_EVENT_MATERIAL_FORM';
@@ -34,8 +38,7 @@ export const EVENT_MATERIAL_DELETED        = 'EVENT_MATERIAL_DELETED';
 
 export const getEventMaterial = (eventMaterialId) => (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState, currentSummitEventState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState, currentSummitEventState } = getState();
     const { currentSummit }   = currentSummitState;
     const event               = currentSummitEventState.entity;
 
@@ -58,7 +61,6 @@ export const getEventMaterial = (eventMaterialId) => (dispatch, getState) => {
         ));
     }
 
-
     dispatch(stopLoading());
 
 };
@@ -67,10 +69,10 @@ export const resetEventMaterialForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_EVENT_MATERIAL_FORM)({}));
 };
 
-export const saveEventMaterial = (entity) => (dispatch, getState) => {
+export const saveEventMaterial = (entity) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState, currentSummitEventState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState, currentSummitEventState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
     const eventId             = currentSummitEventState.entity.id;
 
@@ -131,9 +133,9 @@ export const saveEventMaterial = (entity) => (dispatch, getState) => {
     }
 }
 
-export const saveEventMaterialWithFile = (entity, file, slug) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState, currentSummitEventState } = getState();
-    const { accessToken }     = loggedUserState;
+export const saveEventMaterialWithFile = (entity, file, slug) => async (dispatch, getState) => {
+    const { currentSummitState, currentSummitEventState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
     const eventId             = currentSummitEventState.entity.id;
 
@@ -187,10 +189,10 @@ export const saveEventMaterialWithFile = (entity, file, slug) => (dispatch, getS
     }
 }
 
-export const deleteEventMaterial = (eventMaterialId) => (dispatch, getState) => {
+export const deleteEventMaterial = (eventMaterialId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState, currentSummitEventState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState, currentSummitEventState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
     const event               = currentSummitEventState.entity;
     const material            = event.materials.find(m => m.id === eventMaterialId);
@@ -255,9 +257,5 @@ const normalizeEntity = (entity) => {
     delete(normalizedEntity['file']);
     delete(normalizedEntity['file_link']);
     delete(normalizedEntity['has_file']);
-
-
-
     return normalizedEntity;
-
 }

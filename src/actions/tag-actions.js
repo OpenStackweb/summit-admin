@@ -24,7 +24,8 @@ import {
     showMessage,
     showSuccessMessage,
     authErrorHandler
-} from 'openstack-uicore-foundation/lib/methods';
+} from 'openstack-uicore-foundation/lib/utils/actions';
+import {getAccessTokenSafely} from '../utils/methods';
 
 export const REQUEST_TAG_GROUPS       = 'REQUEST_TAG_GROUPS';
 export const RECEIVE_TAG_GROUPS       = 'RECEIVE_TAG_GROUPS';
@@ -42,10 +43,10 @@ export const TAG_CREATED              = 'TAG_CREATED';
 export const TAG_ADDED_TO_GROUP       = 'TAG_ADDED_TO_GROUP';
 export const TAG_REMOVED_FROM_GROUP   = 'TAG_REMOVED_FROM_GROUP';
 
-export const getTagGroups = ( ) => (dispatch, getState) => {
+export const getTagGroups = ( ) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -67,10 +68,10 @@ export const getTagGroups = ( ) => (dispatch, getState) => {
     );
 };
 
-export const updateTagGroupsOrder = (tagGroups, tagGroupId, newOrder) => (dispatch, getState) => {
+export const updateTagGroupsOrder = (tagGroups, tagGroupId, newOrder) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -94,10 +95,10 @@ export const updateTagGroupsOrder = (tagGroups, tagGroupId, newOrder) => (dispat
 }
 
 
-export const getTagGroup = (tagGroupId) => (dispatch, getState) => {
+export const getTagGroup = (tagGroupId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -122,9 +123,9 @@ export const resetTagGroupForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_TAG_GROUP_FORM)({}));
 };
 
-export const saveTagGroup = (entity) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const saveTagGroup = (entity) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -170,10 +171,10 @@ export const saveTagGroup = (entity) => (dispatch, getState) => {
     }
 }
 
-export const deleteTagGroup = (tagGroupId) => (dispatch, getState) => {
+export const deleteTagGroup = (tagGroupId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -192,10 +193,10 @@ export const deleteTagGroup = (tagGroupId) => (dispatch, getState) => {
     );
 };
 
-export const seedTagGroups = () => (dispatch, getState) => {
+export const seedTagGroups = () => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -214,9 +215,9 @@ export const seedTagGroups = () => (dispatch, getState) => {
     );
 };
 
-export const copyTagToAllCategories = (tagId) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const copyTagToAllCategories = (tagId) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -235,9 +236,9 @@ export const copyTagToAllCategories = (tagId) => (dispatch, getState) => {
     );
 }
 
-export const copyAllTagsToCategory = (tagGroupId, categoryId) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const copyAllTagsToCategory = (tagGroupId, categoryId) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -256,9 +257,9 @@ export const copyAllTagsToCategory = (tagGroupId, categoryId) => (dispatch, getS
     );
 }
 
-export const createTag = (tag, callback) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const createTag = (tag, callback) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {

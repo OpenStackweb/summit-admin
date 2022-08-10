@@ -24,11 +24,13 @@ import {
     startLoading,
     showMessage,
     showSuccessMessage,
-    epochToMomentTimeZone,
     authErrorHandler,
     getCSV,
-    escapeFilterValue, postFile
-} from "openstack-uicore-foundation/lib/methods";
+    escapeFilterValue,
+    postFile
+} from "openstack-uicore-foundation/lib/utils/actions";
+import {epochToMomentTimeZone} from "openstack-uicore-foundation/lib/utils/methods";
+import {getAccessTokenSafely} from '../utils/methods';
 import {getQAUsersBySummitEvent} from "../actions/user-chat-roles-actions"
 
 export const REQUEST_EVENTS = 'REQUEST_EVENTS';
@@ -52,11 +54,11 @@ export const EVENTS_IMPORTED = 'EVENTS_IMPORTED';
 export const IMPORT_FROM_MUX = 'IMPORT_FROM_MUX';
 
 
-export const getEvents = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1, extraFilters = null) => (dispatch, getState) => {
+export const getEvents = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1, extraFilters = null) => async (dispatch, getState) => {
 
-    const {loggedUserState, currentSummitState} = getState();
-    const {accessToken} = loggedUserState;
-    const {currentSummit} = currentSummitState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
     const filter = [];
     const summitTZ = currentSummit.time_zone.name;
 
@@ -115,11 +117,11 @@ export const getEvents = (term = null, page = 1, perPage = 10, order = 'id', ord
     );
 };
 
-export const getEventsForOccupancy = (term = null, roomId = null, currentEvents = false, page = 1, perPage = 10, order = 'start_date', orderDir = 1) => (dispatch, getState) => {
+export const getEventsForOccupancy = (term = null, roomId = null, currentEvents = false, page = 1, perPage = 10, order = 'start_date', orderDir = 1) => async (dispatch, getState) => {
 
-    const {loggedUserState, currentSummitState} = getState();
-    const {accessToken} = loggedUserState;
-    const {currentSummit} = currentSummitState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
     const filter = [];
     const summitTZ = currentSummit.time_zone.name;
     let endPoint = 'events/published';
@@ -176,11 +178,11 @@ export const getEventsForOccupancy = (term = null, roomId = null, currentEvents 
     );
 };
 
-export const getCurrentEventForOccupancy = (roomId, eventId = null) => (dispatch, getState) => {
+export const getCurrentEventForOccupancy = (roomId, eventId = null) => async (dispatch, getState) => {
 
-    const {loggedUserState, currentSummitState} = getState();
-    const {accessToken} = loggedUserState;
-    const {currentSummit} = currentSummitState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
     const filter = [];
     const summitTZ = currentSummit.time_zone.name;
     let endPoint = `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}`;
@@ -218,10 +220,10 @@ export const getCurrentEventForOccupancy = (roomId, eventId = null) => (dispatch
     );
 };
 
-export const getEvent = (eventId) => (dispatch, getState) => {
-    const {loggedUserState, currentSummitState} = getState();
-    const {accessToken} = loggedUserState;
-    const {currentSummit} = currentSummitState;
+export const getEvent = (eventId) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
 
     if (!currentSummit.id) return;
 
@@ -247,10 +249,10 @@ export const resetEventForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_EVENT_FORM)({}));
 };
 
-export const saveEvent = (entity, publish) => (dispatch, getState) => {
-    const {loggedUserState, currentSummitState} = getState();
-    const {accessToken} = loggedUserState;
-    const {currentSummit} = currentSummitState;
+export const saveEvent = (entity, publish) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
     const { type_id } = entity;
     const type = currentSummit.event_types.find((e) => e.id == type_id);
     const eventTypeConfig = {
@@ -315,10 +317,10 @@ export const saveEvent = (entity, publish) => (dispatch, getState) => {
 
 }
 
-export const saveOccupancy = (entity) => (dispatch, getState) => {
-    const {loggedUserState, currentSummitState} = getState();
-    const {accessToken} = loggedUserState;
-    const {currentSummit} = currentSummitState;
+export const saveOccupancy = (entity) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
 
     const params = {
         access_token: accessToken
@@ -335,12 +337,13 @@ export const saveOccupancy = (entity) => (dispatch, getState) => {
 
 }
 
-const publishEvent = (entity, cb = null) => (dispatch, getState) => {
-    const {loggedUserState, currentSummitState} = getState();
-    const {accessToken} = loggedUserState;
-    const {currentSummit} = currentSummitState;
+const publishEvent = (entity, cb = null) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
     const { type_id } = entity;
     const type = currentSummit.event_types.find((e) => e.id == type_id);
+
     const params = {
         access_token: accessToken
     };
@@ -371,10 +374,11 @@ const publishEvent = (entity, cb = null) => (dispatch, getState) => {
         });
 }
 
-export const checkProximityEvents = (event, cb = null) => (dispatch, getState) => {
-    const {loggedUserState, currentSummitState} = getState();
-    const {accessToken} = loggedUserState;
-    const {currentSummit} = currentSummitState;
+export const checkProximityEvents = (event, cb = null) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
+
     const success_message = {
         title: T.translate("general.done"),
         html: T.translate("edit_event.saved_and_published"),
@@ -435,10 +439,10 @@ export const checkProximityEvents = (event, cb = null) => (dispatch, getState) =
         );
 }
 
-export const attachFile = (entity, file, attr) => (dispatch, getState) => {
-    const {loggedUserState, currentSummitState} = getState();
-    const {accessToken} = loggedUserState;
-    const {currentSummit} = currentSummitState;
+export const attachFile = (entity, file, attr) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
 
     const normalizedEntity = normalizeEntity(entity);
 
@@ -465,10 +469,10 @@ export const attachFile = (entity, file, attr) => (dispatch, getState) => {
     }
 }
 
-const uploadFile = (entity, file) => (dispatch, getState) => {
-    const {loggedUserState, currentSummitState} = getState();
-    const {accessToken} = loggedUserState;
-    const {currentSummit} = currentSummitState;
+const uploadFile = (entity, file) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
 
     const params = {
         access_token: accessToken
@@ -487,10 +491,10 @@ const uploadFile = (entity, file) => (dispatch, getState) => {
         });
 }
 
-const uploadImage = (entity, file) => (dispatch, getState) => {
-    const {loggedUserState, currentSummitState} = getState();
-    const {accessToken} = loggedUserState;
-    const {currentSummit} = currentSummitState;
+const uploadImage = (entity, file) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
 
     const params = {
         access_token: accessToken
@@ -509,10 +513,10 @@ const uploadImage = (entity, file) => (dispatch, getState) => {
         });
 };
 
-export const removeImage = (eventId) => (dispatch, getState) => {
-    const {loggedUserState, currentSummitState} = getState();
-    const {accessToken} = loggedUserState;
-    const {currentSummit} = currentSummitState;
+export const removeImage = (eventId) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
 
     const params = {
         access_token: accessToken
@@ -580,11 +584,11 @@ const normalizeEntity = (entity, eventTypeConfig) => {
     return normalizedEntity;
 }
 
-export const deleteEvent = (eventId) => (dispatch, getState) => {
+export const deleteEvent = (eventId) => async (dispatch, getState) => {
 
-    const {loggedUserState, currentSummitState} = getState();
-    const {accessToken} = loggedUserState;
-    const {currentSummit} = currentSummitState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
 
     const params = {
         access_token: accessToken
@@ -602,11 +606,11 @@ export const deleteEvent = (eventId) => (dispatch, getState) => {
     );
 };
 
-export const exportEvents = (term = null, order = 'id', orderDir = 1) => (dispatch, getState) => {
+export const exportEvents = (term = null, order = 'id', orderDir = 1) => async (dispatch, getState) => {
 
-    const {loggedUserState, currentSummitState} = getState();
-    const {accessToken} = loggedUserState;
-    const {currentSummit} = currentSummitState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
     const filter = [];
     const filename = currentSummit.name + '-Activities.csv';
     const params = {
@@ -638,11 +642,11 @@ export const exportEvents = (term = null, order = 'id', orderDir = 1) => (dispat
 
 };
 
-export const importMP4AssetsFromMUX = (MUXTokenId, MUXTokenSecret, emailTo) => (dispatch, getState) => {
+export const importMP4AssetsFromMUX = (MUXTokenId, MUXTokenSecret, emailTo) => async (dispatch, getState) => {
 
-    const {loggedUserState, currentSummitState} = getState();
-    const {accessToken} = loggedUserState;
-    const {currentSummit} = currentSummitState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
     const params = {
         access_token: accessToken
     };
@@ -676,10 +680,10 @@ export const importMP4AssetsFromMUX = (MUXTokenId, MUXTokenSecret, emailTo) => (
         });
 }
 
-export const importEventsCSV = (file, send_speaker_email) => (dispatch, getState) => {
-    const {loggedUserState, currentSummitState} = getState();
-    const {accessToken} = loggedUserState;
-    const {currentSummit} = currentSummitState;
+export const importEventsCSV = (file, send_speaker_email) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
 
     const params = {
         access_token: accessToken

@@ -13,108 +13,60 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { DraggableItemTypes } from './draggable-items-types';
-import { DragSource } from 'react-dnd';
+import { useDrag } from 'react-dnd';
 import {Popover, OverlayTrigger} from 'react-bootstrap';
 import { RawHTML } from 'openstack-uicore-foundation/lib/components';
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 
 
-const UnScheduleEventSource = {
-    beginDrag(props) {
-        let { event } = props;
-        return event;
-    },
-    endDrag(props, monitor, component) {
-        if (!monitor.didDrop()) {
-            return;
-        }
-        // When dropped on a compatible target, do something
-        const item = monitor.getItem();
-        const dropResult = monitor.getDropResult();
+const UnScheduleEvent = ({event, onEditEvent, onClickSelected, selectedUnPublishedEvents}) => {
+    const [collected, drag] = useDrag(() => ({
+        type: DraggableItemTypes.UNSCHEDULEEVENT,
+        item: { ...event }
+    }));
+    const isSelected = selectedUnPublishedEvents.includes(event.id);
+    const title = event.title.slice(0, 75) + (event.title.length > 75 ? '...' : '');
+    const rank = event.rank ? <span className={`rank-status ${event.selection_status}`}> #{event.rank} - {event.selection_status}</span> : <span />;
+    const opacity = collected.isDragging ? 0.5 : 1;
+    const cursor = collected.isDragging ? 'move' : '-webkit-grab';
 
-        //CardActions.moveCardToList(item.id, dropResult.listId);
-    }
-};
-
-function collect(connect, monitor) {
-    return {
-        connectDragSource: connect.dragSource(),
-        isDragging: monitor.isDragging()
-    }
-}
-
-class UnScheduleEvent extends React.Component {
-
-    popoverHoverFocus(){
-        const { event } = this.props;
+    const popoverHoverFocus = () => {
         return(
             <Popover id="popover-trigger-focus" title={event.title}>
                 <RawHTML>{event.description}</RawHTML>
             </Popover>
         )
-    }
+    };
 
-    onClickEdit(){
-        let { event, onEditEvent } = this.props;
-        onEditEvent(event);
-    }
-
-    onClickSelected(){
-        let { event, onClickSelected } = this.props;
-        onClickSelected(event);
-    }
-
-    onChanged(){
-
-    }
-
-    render() {
-        const { connectDragSource, isDragging, event, selectedUnPublishedEvents } = this.props;
-        let isSelected = selectedUnPublishedEvents.includes(event.id);
-        let title = event.title.slice(0, 75) + (event.title.length > 75 ? '...' : '');
-        let rank = event.rank ? <span className={`rank-status ${event.selection_status}`}> #{event.rank} - {event.selection_status}</span> : <span />;
-
-
-        return connectDragSource(
-
-                <div className='row unschedule-event'
-                     style={{
-                         opacity: isDragging ? 0.5 : 1,
-                         cursor: isDragging ? 'move' : '-webkit-grab'
-                     }}>
-                        <div className="row">
-                            <div className="col-md-12">
-                                <div className="event-select-wrapper">
-                                    <input className="select-event-btn"
-                                       id={`selected_event_${event.id}`}
-                                       type="checkbox"
-                                       checked={isSelected}
-                                       onChange={this.onChanged.bind(this)}
-                                       onClick={this.onClickSelected.bind(this)}/>
-                                </div>
-                                <div className="event-container">
-                                    <div className="event-content">
-                                        <OverlayTrigger trigger={['hover']} placement="bottom" overlay={this.popoverHoverFocus()}>
-                                            <span className="event-title">
-                                                { title }
-                                                { rank }
-                                            </span>
-                                        </OverlayTrigger>
-                                    </div>
-                                </div>
-                                <div className="event-actions">
-                                    <i className="fa fa-pencil-square-o edit-unpublished-event-btn" title="edit event" aria-hidden="true" onClick={this.onClickEdit.bind(this)}/>
-                                </div>
-                            </div>
+    return (
+        <div className='row unschedule-event' style={{ opacity, cursor }} ref={drag}>
+            <div className="row">
+                <div className="col-md-12">
+                    <div className="event-select-wrapper">
+                        <input
+                            className="select-event-btn"
+                            id={`selected_event_${event.id}`}
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => onClickSelected(event)}/>
+                    </div>
+                    <div className="event-container">
+                        <div className="event-content">
+                            <OverlayTrigger trigger={['hover']} placement="bottom" overlay={popoverHoverFocus()}>
+                                <span className="event-title">
+                                    { title }
+                                    { rank }
+                                </span>
+                            </OverlayTrigger>
                         </div>
+                    </div>
+                    <div className="event-actions">
+                        <i className="fa fa-pencil-square-o edit-unpublished-event-btn" title="edit event" aria-hidden="true" onClick={() => onEditEvent(event)}/>
+                    </div>
                 </div>
-        );
-    }
-}
-
-UnScheduleEvent.propTypes = {
-    connectDragSource: PropTypes.func.isRequired,
-    isDragging: PropTypes.bool.isRequired
+            </div>
+        </div>
+    );
 };
 
-export default DragSource(DraggableItemTypes.UNSCHEDULEEVENT, UnScheduleEventSource, collect)(UnScheduleEvent);
+export default UnScheduleEvent;

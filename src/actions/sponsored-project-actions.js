@@ -25,7 +25,8 @@ import {
     showSuccessMessage,
     authErrorHandler,
     escapeFilterValue
-} from 'openstack-uicore-foundation/lib/methods';
+} from 'openstack-uicore-foundation/lib/utils/actions';
+import {getAccessTokenSafely} from '../utils/methods';
 
 export const REQUEST_SPONSORED_PROJECTS = 'REQUEST_SPONSORED_PROJECTS';
 export const RECEIVE_SPONSORED_PROJECTS = 'RECEIVE_SPONSORED_PROJECTS';
@@ -41,10 +42,9 @@ export const RECEIVE_SPONSORED_PROJECT_SUBPROJECTS = 'RECEIVE_SPONSORED_PROJECT_
 export const RECEIVE_PARENT_PROJECT = 'RECEIVE_PARENT_PROJECT';
 export const SPONSORED_PROJECT_SUBPROJECT_DELETED = 'SPONSORED_PROJECT_SUBPROJECT_DELETED';
 
-export const getSponsoredProjects = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1) => (dispatch, getState) => {
+export const getSponsoredProjects = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1) => async (dispatch) => {
 
-    const {loggedUserState} = getState();
-    const {accessToken} = loggedUserState;
+    const accessToken = await getAccessTokenSafely();
     const filter = [];
 
     dispatch(startLoading());
@@ -83,10 +83,9 @@ export const getSponsoredProjects = (term = null, page = 1, perPage = 10, order 
     );
 };
 
-export const getSponsoredProject = (projectId) => (dispatch, getState) => {
+export const getSponsoredProject = (projectId) => async (dispatch) => {
 
-    const {loggedUserState} = getState();
-    const {accessToken} = loggedUserState;
+    const accessToken = await getAccessTokenSafely();
 
     dispatch(startLoading());
 
@@ -106,10 +105,9 @@ export const getSponsoredProject = (projectId) => (dispatch, getState) => {
     );
 };
 
-export const deleteSponsoredProject = (sponsoredProjectId) => (dispatch, getState) => {
+export const deleteSponsoredProject = (sponsoredProjectId) => async (dispatch) => {
 
-    const {loggedUserState} = getState();
-    const {accessToken} = loggedUserState;
+    const accessToken = await getAccessTokenSafely();
 
     dispatch(startLoading());
 
@@ -129,9 +127,8 @@ export const deleteSponsoredProject = (sponsoredProjectId) => (dispatch, getStat
     );
 };
 
-export const attachLogo = (entity, file, picAttr) => (dispatch, getState) => {
-    const { loggedUserState } = getState();
-    const { accessToken }     = loggedUserState;
+export const attachLogo = (entity, file, picAttr) => async (dispatch) => {
+    const accessToken = await getAccessTokenSafely();
 
     dispatch(startLoading());
 
@@ -159,9 +156,8 @@ export const attachLogo = (entity, file, picAttr) => (dispatch, getState) => {
     }
 };
 
-export const removeLogo = (sponsoredProjectId) => (dispatch, getState) => {
-    const { loggedUserState } = getState();
-    const { accessToken }     = loggedUserState;
+export const removeLogo = (sponsoredProjectId) => async (dispatch) => {
+    const accessToken = await getAccessTokenSafely();
 
     dispatch(startLoading());
 
@@ -186,9 +182,8 @@ export const resetSponsoredProjectForm = () => (dispatch) => {
     dispatch(createAction(RESET_SPONSORED_PROJECT_FORM)({}));
 };
 
-export const saveSponsoredProject = (entity) => (dispatch, getState) => {
-    const {loggedUserState} = getState();
-    const {accessToken} = loggedUserState;
+export const saveSponsoredProject = (entity) => async (dispatch) => {
+    const accessToken = await getAccessTokenSafely();
 
     dispatch(startLoading());
 
@@ -254,9 +249,8 @@ const normalizeEntity = (entity) => {
     return normalizedEntity;
 };
 
-const uploadLogo = (entity, file) => (dispatch, getState) => {
-    const { loggedUserState } = getState();
-    const { accessToken }     = loggedUserState;
+const uploadLogo = (entity, file) => async (dispatch) => {
+    const accessToken = await getAccessTokenSafely();
 
     const params = {
         access_token : accessToken,
@@ -278,10 +272,9 @@ const uploadLogo = (entity, file) => (dispatch, getState) => {
 
 /***************************************** Subprojects ******************************************/
 
-export const getSubProjects = (projectId) => (dispatch, getState) => {
+export const getSubProjects = (projectId) => async (dispatch) => {
 
-    const {loggedUserState} = getState();
-    const {accessToken} = loggedUserState;
+    const accessToken = await getAccessTokenSafely();
 
     dispatch(startLoading());
 
@@ -302,10 +295,9 @@ export const getSubProjects = (projectId) => (dispatch, getState) => {
     );
 };
 
-export const getAsParentProject = (projectId) => (dispatch, getState) => {
+export const getAsParentProject = (projectId) => async (dispatch) => {
 
-    const {loggedUserState} = getState();
-    const {accessToken} = loggedUserState;
+    const accessToken = await getAccessTokenSafely();
 
     dispatch(startLoading());
 
@@ -324,10 +316,9 @@ export const getAsParentProject = (projectId) => (dispatch, getState) => {
     );
 };
 
-export const deleteSubProject = (subProjectId) => (dispatch, getState) => {
+export const deleteSubProject = (subProjectId) => async (dispatch) => {
 
-    const {loggedUserState} = getState();
-    const {accessToken} = loggedUserState;
+    const accessToken = await getAccessTokenSafely();
 
     dispatch(startLoading());
 
@@ -357,10 +348,9 @@ export const SPONSORED_PROJECT_SPONSORSHIP_TYPE_ORDER_UPDATED = 'SPONSORED_PROJE
 export const RESET_SPONSORED_PROJECT_SPONSORSHIP_TYPE_FORM = 'RESET_SPONSORED_PROJECT_SPONSORSHIP_TYPE_FORM';
 export const RECEIVED_SPONSORED_PROJECT_SPONSORSHIP_TYPE = 'RECEIVED_SPONSORED_PROJECT_SPONSORSHIP_TYPE';
 
-export const getSponsorshipType = (projectId, sponsorshipTypeId) => (dispatch, getState) => {
+export const getSponsorshipType = (projectId, sponsorshipTypeId) => async (dispatch) => {
 
-    const {loggedUserState} = getState();
-    const {accessToken} = loggedUserState;
+    const accessToken = await getAccessTokenSafely();
 
     dispatch(startLoading());
 
@@ -384,10 +374,9 @@ export const resetSponsorshipTypeForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_SPONSORED_PROJECT_SPONSORSHIP_TYPE_FORM)({}));
 }
 
-export const deleteSponsorshipType = (projectId, sponsorshipTypeId) => (dispatch, getState) => {
+export const deleteSponsorshipType = (projectId, sponsorshipTypeId) => async (dispatch) => {
 
-    const {loggedUserState} = getState();
-    const {accessToken} = loggedUserState;
+    const accessToken = await getAccessTokenSafely();
 
     const params = {
         access_token: accessToken
@@ -405,10 +394,9 @@ export const deleteSponsorshipType = (projectId, sponsorshipTypeId) => (dispatch
     );
 };
 
-export const updateSponsorShipTypeOrder = (sponsorshipTypes, projectId, sponsorshipTypeId, newOrder) => (dispatch, getState) => {
+export const updateSponsorShipTypeOrder = (sponsorshipTypes, projectId, sponsorshipTypeId, newOrder) => async (dispatch) => {
 
-    const {loggedUserState} = getState();
-    const {accessToken} = loggedUserState;
+    const accessToken = await getAccessTokenSafely();
 
     const params = {
         access_token: accessToken
@@ -429,9 +417,8 @@ export const updateSponsorShipTypeOrder = (sponsorshipTypes, projectId, sponsors
 
 }
 
-export const saveSponsorshipType = (projectId, entity) => (dispatch, getState) => {
-    const {loggedUserState} = getState();
-    const {accessToken} = loggedUserState;
+export const saveSponsorshipType = (projectId, entity) => async (dispatch) => {
+    const accessToken = await getAccessTokenSafely();
 
     dispatch(startLoading());
 
@@ -491,10 +478,9 @@ export const SPONSORED_PROJECT_SPONSORSHIP_TYPE_SUPPORTING_COMPANY_ORDER_UPDATED
 export const RESET_SPONSORED_PROJECT_SPONSORSHIP_TYPE_SUPPORTING_COMPANY_FORM = 'RESET_SPONSORED_PROJECT_SPONSORSHIP_TYPE_SUPPORTING_COMPANY_FORM';
 export const RECEIVED_SPONSORED_PROJECT_SPONSORSHIP_TYPE_SUPPORTING_COMPANY = 'RECEIVED_SPONSORED_PROJECT_SPONSORSHIP_TYPE_SUPPORTING_COMPANY';
 
-export const getSupportingCompany = (projectId, sponsorshipTypeId, supportingCompanyId) => (dispatch, getState) => {
+export const getSupportingCompany = (projectId, sponsorshipTypeId, supportingCompanyId) => async (dispatch) => {
 
-    const {loggedUserState} = getState();
-    const {accessToken} = loggedUserState;
+    const accessToken = await getAccessTokenSafely();
 
     dispatch(startLoading());
 
@@ -518,10 +504,9 @@ export const resetSupportingCompanyForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_SPONSORED_PROJECT_SPONSORSHIP_TYPE_SUPPORTING_COMPANY_FORM)({}));
 }
 
-export const deleteSupportingCompany = (projectId, sponsorshipTypeId, supportingCompanyId) => (dispatch, getState) => {
+export const deleteSupportingCompany = (projectId, sponsorshipTypeId, supportingCompanyId) => async (dispatch) => {
 
-    const {loggedUserState} = getState();
-    const {accessToken} = loggedUserState;
+    const accessToken = await getAccessTokenSafely();
 
     const params = {
         access_token: accessToken
@@ -539,10 +524,9 @@ export const deleteSupportingCompany = (projectId, sponsorshipTypeId, supporting
     );
 };
 
-export const updateSupportingCompanyOrder = (supportingCompanies, projectId, sponsorshipTypeId, supportingCompanyId, newOrder) => (dispatch, getState) => {
+export const updateSupportingCompanyOrder = (supportingCompanies, projectId, sponsorshipTypeId, supportingCompanyId, newOrder) => async (dispatch) => {
 
-    const {loggedUserState} = getState();
-    const {accessToken} = loggedUserState;
+    const accessToken = await getAccessTokenSafely();
 
     const params = {
         access_token: accessToken
@@ -572,10 +556,9 @@ const normalizeCompany = (entity) => {
     return normalizedEntity;
 };
 
-export const saveSupportingCompany = (projectId, sponsorshipTypeId, entity) => (dispatch, getState) => {
+export const saveSupportingCompany = (projectId, sponsorshipTypeId, entity) => async (dispatch) => {
 
-    const {loggedUserState} = getState();
-    const {accessToken} = loggedUserState;
+    const accessToken = await getAccessTokenSafely();
 
     dispatch(startLoading());
 

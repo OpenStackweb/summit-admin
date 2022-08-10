@@ -14,7 +14,7 @@ import {
     getRequest,
     createAction,
     authErrorHandler
-} from 'openstack-uicore-foundation/lib/methods';
+} from 'openstack-uicore-foundation/lib/utils/actions';
 
 export const REQUEST_TIMEZONES       = 'REQUEST_TIMEZONES';
 export const RECEIVE_TIMEZONES       = 'RECEIVE_TIMEZONES';

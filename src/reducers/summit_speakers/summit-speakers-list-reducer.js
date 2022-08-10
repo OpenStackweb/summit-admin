@@ -23,7 +23,7 @@ import {
     SET_SPEAKERS_CURRENT_FLOW_EVENT
 } from '../../actions/speaker-actions';
 
-import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/utils/actions';
 import ReactTooltip from "react-tooltip";
 import {REQUEST_SUMMIT, SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 

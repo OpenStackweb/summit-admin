@@ -290,7 +290,6 @@ class ExtraQuestionForm extends React.Component {
                                     <div>{T.translate("question_form.no_sub_questions_rules")}</div>
                                 }
                                 {entity.sub_question_rules.length > 0 &&
-
                                     <SortableTable
                                         options={sub_questions_options}
                                         data={entity.sub_question_rules}

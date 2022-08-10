@@ -29,7 +29,7 @@ import
     ORDER_EXTRA_QUESTION_SUB_QUESTION_ORDER_UPDATED,
 } from '../../actions/order-actions';
 
-import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
+import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/utils/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 export const DEFAULT_ENTITY = {
@@ -64,22 +64,18 @@ const orderExtraQuestionReducer = (state = DEFAULT_STATE, action) => {
                 return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
             }
         }
-        break;
         case SET_CURRENT_SUMMIT:
         case RESET_ORDER_EXTRA_QUESTION_FORM: {
             return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
         }
-        break;
         case RECEIVE_ORDER_EXTRA_QUESTION_META: {
             let allClasses = payload.response;
 
             return {...state, allClasses: allClasses }
         }
-        break;
         case UPDATE_ORDER_EXTRA_QUESTION: {
             return {...state,  entity: {...payload}, errors: {} };
         }
-        break;
         case ORDER_EXTRA_QUESTION_ADDED:
         case RECEIVE_ORDER_EXTRA_QUESTION: {
             let entity = {...payload.response};
@@ -92,23 +88,19 @@ const orderExtraQuestionReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
         }
-        break;
         case ORDER_EXTRA_QUESTION_UPDATED: {
             return state;
         }
-        break;
         case QUESTION_VALUE_ORDER_UPDATED: {
             let values = [...payload];
             return {...state, entity: {...state.entity, values: values}}
             }
-        break;
         case ORDER_EXTRA_QUESTION_VALUE_ADDED: {
             let entity = {...payload.response};
             let values = [...state.entity.values, entity];
 
             return {...state, entity: { ...state.entity, values: values}};
         }
-        break;
         case ORDER_EXTRA_QUESTION_VALUE_UPDATED: {
             let entity = {...payload.response};
             let values_tmp = state.entity.values.filter(v => v.id !== entity.id);
@@ -118,17 +110,14 @@ const orderExtraQuestionReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, entity: { ...state.entity, values: values}};
         }
-        break;
         case ORDER_EXTRA_QUESTION_VALUE_DELETED: {
             let {orderExtraQuestionValueId} = payload;
             return {...state, entity: {...state.entity, values: state.entity.values.filter(v => v.id !== orderExtraQuestionValueId)}};
         }
-        break;
         case ORDER_EXTRA_QUESTION_SUB_QUESTION_ADDED:{
             const newSubQuestion = payload.response;
             return {...state, entity: {...state.entity, sub_question_rules: [...state.entity.sub_question_rules, newSubQuestion]}};
         }  
-        break;
         case ORDER_EXTRA_QUESTION_SUB_QUESTION_UPDATED:{
             const entity = {...payload.response};
             const subQuestionRules = state.entity.sub_question_rules.filter(v => v.id !== entity.id);
@@ -138,7 +127,6 @@ const orderExtraQuestionReducer = (state = DEFAULT_STATE, action) => {
             let {ruleId} = payload;
             return {...state, entity: {...state.entity, sub_question_rules: state.entity.sub_question_rules.filter(v => v.id !== ruleId)}};
         }
-        break;
         case VALIDATE: {
             const newRules = payload.map(r => {
 
@@ -150,7 +138,6 @@ const orderExtraQuestionReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, sub_question_rules: newRules };
         }
-        break;
         case ORDER_EXTRA_QUESTION_SUB_QUESTION_ORDER_UPDATED: {
             return {...state, };
         }

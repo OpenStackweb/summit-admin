@@ -25,7 +25,8 @@ import {
     startLoading,
     showSuccessMessage,
     authErrorHandler
-} from 'openstack-uicore-foundation/lib/methods';
+} from 'openstack-uicore-foundation/lib/utils/actions';
+import {getAccessTokenSafely} from '../utils/methods';
 
 export const UPDATE_LOCAL_EVENT               = 'UPDATE_LOCAL_EVENT';
 export const RECEIVE_SELECTED_EVENTS          = 'REQUEST_SELECTED_EVENTS';
@@ -39,10 +40,10 @@ export const UPDATE_START_DATE_BULK           = 'UPDATE_START_DATE_BULK';
 export const UPDATE_END_DATE_BULK             = 'UPDATE_END_DATE_BULK';
 export const UPDATE_SELECTION_PLAN_BULK       = 'UPDATE_SELECTION_PLAN_BULK';
 
-export const getSummitEventsById = (summitId, eventIds ) => (dispatch, getState) => {
+export const getSummitEventsById = (summitId, eventIds ) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
     dispatch(startLoading());
     let filter = '';
@@ -105,9 +106,9 @@ export const updateEventTitleLocal = (event, title, isValid) => (dispatch) => {
     dispatch(createAction(UPDATE_LOCAL_EVENT)({ eventId: event.id, mutator: mutator(title, isValid) }))
 };
 
-export const updateEvents = (summitId, events) =>  (dispatch, getState) => {
-    const { loggedUserState } = getState();
-    const { accessToken }     = loggedUserState;
+export const updateEvents = (summitId, events) =>  async (dispatch, getState) => {
+
+    const accessToken = await getAccessTokenSafely();
     dispatch(startLoading());
 
     putRequest(
@@ -138,9 +139,9 @@ export const updateEvents = (summitId, events) =>  (dispatch, getState) => {
         });
 }
 
-export const updateAndPublishEvents = (summitId, events) =>  (dispatch, getState) => {
-    const { loggedUserState } = getState();
-    const { accessToken }     = loggedUserState;
+export const updateAndPublishEvents = (summitId, events) =>  async (dispatch, getState) => {
+
+    const accessToken = await getAccessTokenSafely();
     dispatch(startLoading());
 
     events = events.map((event) => (
@@ -198,9 +199,9 @@ export const setBulkEventSelectedState = (events, selectedState, published) => (
     dispatch(createAction(UPDATE_EVENT_SELECTED_STATE_BULK)({events, selectedState, published} ));
 }
 
-export const performBulkAction = (eventsIds, bulkAction, published) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState,  currentScheduleBuilderState } = getState();
-    const { accessToken }                         = loggedUserState;
+export const performBulkAction = (eventsIds, bulkAction, published) => async (dispatch, getState) => {
+    const { currentSummitState,  currentScheduleBuilderState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }                       = currentSummitState;
     const { currentDay,  currentLocation }        = currentScheduleBuilderState;
 

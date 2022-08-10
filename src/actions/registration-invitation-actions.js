@@ -23,9 +23,11 @@ import {
     escapeFilterValue,
     putRequest,
     deleteRequest,
-    showMessage, showSuccessMessage
-} from 'openstack-uicore-foundation/lib/methods';
+    showMessage,
+    showSuccessMessage
+} from 'openstack-uicore-foundation/lib/utils/actions';
 import history from "../history";
+import {getAccessTokenSafely} from '../utils/methods';
 
 export const REQUEST_INVITATIONS = 'REQUEST_INVITATIONS';
 export const RECEIVE_INVITATIONS = 'RECEIVE_INVITATIONS';
@@ -47,10 +49,10 @@ export const SET_SELECTED_ALL = 'SET_SELECTED_ALL';
 /**************************   INVITATIONS   ******************************************/
 
 export const getInvitations = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1,
-                                showNonAccepted = false , showNotSent = false) => (dispatch, getState) => {
+                                showNonAccepted = false , showNotSent = false) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
     const filter = [];
 
@@ -97,9 +99,9 @@ export const getInvitations = ( term = null, page = 1, perPage = 10, order = 'id
     );
 };
 
-export const importInvitationsCSV = (file) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const importInvitationsCSV = (file) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -119,10 +121,10 @@ export const importInvitationsCSV = (file) => (dispatch, getState) => {
         });
 };
 
-export const exportInvitationsCSV = (term, order, orderDir, showNonAccepted) => (dispatch, getState) => {
+export const exportInvitationsCSV = (term, order, orderDir, showNonAccepted) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
     const filename = currentSummit.name + '-invitations.csv';
     const filter = [];
@@ -166,9 +168,9 @@ export const clearAllSelectedInvitations = () => (dispatch, getState) => {
     dispatch(createAction(CLEAR_ALL_SELECTED_INVITATIONS)());
 }
 
-export const getRegistrationInvitation = (invitationId) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const getRegistrationInvitation = (invitationId) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -190,10 +192,10 @@ export const getRegistrationInvitation = (invitationId) => (dispatch, getState) 
     );
 };
 
-export const deleteRegistrationInvitation= (invitationId) => (dispatch, getState) => {
+export const deleteRegistrationInvitation= (invitationId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -212,10 +214,10 @@ export const deleteRegistrationInvitation= (invitationId) => (dispatch, getState
     );
 };
 
-export const deleteAllRegistrationInvitation= () => (dispatch, getState) => {
+export const deleteAllRegistrationInvitation= () => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -246,9 +248,9 @@ export const setSelectedAll = (value) => (dispatch, getState) => {
     dispatch(createAction(SET_SELECTED_ALL)(value));
 };
 
-export const saveRegistrationInvitation = (entity) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const saveRegistrationInvitation = (entity) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -299,11 +301,10 @@ const normalizeEntity = (entity) => {
 };
 
 export const sendEmails = (currentFlowEvent, selectedAll = false , selectedInvitationsIds = [],
-                          term = null, showNonAccepted = false , showNotSent = false) => (dispatch, getState) => {
+                          term = null, showNonAccepted = false , showNotSent = false) => async (dispatch, getState) => {
 
-
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const filter = [];

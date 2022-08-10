@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import Swal from "sweetalert2";
 import { loadSummits, setCurrentSummit, deleteSummit } from '../../actions/summit-actions';
-import { formatEpoch } from 'openstack-uicore-foundation/lib/methods';
+import { formatEpoch } from 'openstack-uicore-foundation/lib/utils/methods';
 import Member from '../../models/member'
 import {Pagination} from "react-bootstrap";
 

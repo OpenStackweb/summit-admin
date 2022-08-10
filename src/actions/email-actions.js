@@ -13,8 +13,8 @@
 import T from "i18n-react/dist/i18n-react";
 import history from '../history'
 import Swal from "sweetalert2";
-import { VALIDATE } from 'openstack-uicore-foundation/lib/actions';
 import {
+    VALIDATE,
     getRequest,
     putRequest,
     postRequest,
@@ -28,7 +28,9 @@ import {
     fetchResponseHandler,
     fetchErrorHandler,
     escapeFilterValue
-} from 'openstack-uicore-foundation/lib/methods';
+} from 'openstack-uicore-foundation/lib/utils/actions';
+import {getAccessTokenSafely} from '../utils/methods';
+
 
 export const REQUEST_TEMPLATES       = 'REQUEST_TEMPLATES';
 export const RECEIVE_TEMPLATES       = 'RECEIVE_TEMPLATES';
@@ -51,9 +53,9 @@ export const TEMPLATE_RENDER_RECEIVED   = 'TEMPLATE_RENDER_RECEIVED';
 export const VALIDATE_RENDER            = 'VALIDATE_RENDER';
 
 
-export const getEmailTemplates = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
-    const { loggedUserState } = getState();
-    const { accessToken }     = loggedUserState;
+export const getEmailTemplates = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => async (dispatch, getState) => {
+
+    const accessToken = await getAccessTokenSafely();
 
     dispatch(startLoading());
 
@@ -85,9 +87,9 @@ export const getEmailTemplates = (term = null, page = 1, perPage = 10, order = '
     );
 };
 
-export const getEmailTemplate = (templateId) => (dispatch, getState) => {
-    const { loggedUserState } = getState();
-    const { accessToken }     = loggedUserState;
+export const getEmailTemplate = (templateId) => async (dispatch, getState) => {
+
+    const accessToken = await getAccessTokenSafely();
 
     dispatch(startLoading());
 
@@ -108,9 +110,9 @@ export const resetTemplateForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_TEMPLATE_FORM)({}));
 };
 
-export const saveEmailTemplate = (entity, noAlert = false) => (dispatch, getState) => {
-    const { loggedUserState } = getState();
-    const { accessToken }     = loggedUserState;
+export const saveEmailTemplate = (entity, noAlert = false) => async (dispatch, getState) => {
+
+    const accessToken = await getAccessTokenSafely();
 
     dispatch(startLoading());
 
@@ -159,10 +161,9 @@ export const saveEmailTemplate = (entity, noAlert = false) => (dispatch, getStat
     }
 }
 
-export const deleteEmailTemplate = (templateId) => (dispatch, getState) => {
+export const deleteEmailTemplate = (templateId) => async (dispatch, getState) => {
 
-    const { loggedUserState } = getState();
-    const { accessToken }     = loggedUserState;
+    const accessToken = await getAccessTokenSafely();
 
     const params = {
         access_token : accessToken
@@ -181,10 +182,9 @@ export const deleteEmailTemplate = (templateId) => (dispatch, getState) => {
 };
 
 
-export const previewEmailTemplate = (templateId, json) => (dispatch, getState) => {
+export const previewEmailTemplate = (templateId, json) => async (dispatch, getState) => {
 
-    const { loggedUserState } = getState();
-    const { accessToken }     = loggedUserState;
+    const accessToken = await getAccessTokenSafely();
 
     const params = {
         access_token : accessToken,
@@ -226,9 +226,10 @@ const normalizeEntity = (entity) => {
 };
 
 
-export const queryTemplates = _.debounce((input, callback) => {
+export const queryTemplates = _.debounce(async (input, callback) => {
 
-    const accessToken = window.accessToken;
+    const accessToken = await getAccessTokenSafely();
+
     input = escapeFilterValue(input);
 
     fetch(`${window.EMAIL_API_BASE_URL}/api/v1/mail-templates?identifier__contains=${input}&access_token=${accessToken}`)
@@ -248,12 +249,11 @@ export const queryTemplates = _.debounce((input, callback) => {
 /************************************************************************************************************/
 
 
-export const getSentEmailsByTemplatesAndEmail = (templates = [], toEmail , page = 1, perPage = 10) => (dispatch, getState) => {
-    const { loggedUserState } = getState();
-    const { accessToken }     = loggedUserState;
+export const getSentEmailsByTemplatesAndEmail = (templates = [], toEmail , page = 1, perPage = 10) => async (dispatch, getState) => {
+
+    const accessToken = await getAccessTokenSafely();
 
     dispatch(startLoading());
-
 
     const params = {
         page         : page,
@@ -278,10 +278,9 @@ export const getSentEmailsByTemplatesAndEmail = (templates = [], toEmail , page 
     );
 };
 
-export const getSentEmails = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
+export const getSentEmails = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => async (dispatch, getState) => {
 
-    const { loggedUserState } = getState();
-    const { accessToken }     = loggedUserState;
+    const accessToken = await getAccessTokenSafely();
 
     dispatch(startLoading());
 
@@ -321,10 +320,9 @@ export const getSentEmails = (term = null, page = 1, perPage = 10, order = 'id',
 /************************************************************************************************************/
 
 
-export const getAllClients = () => (dispatch, getState) => {
+export const getAllClients = () => async (dispatch, getState) => {
 
-    const { loggedUserState } = getState();
-    const { accessToken }     = loggedUserState;
+    const accessToken = await getAccessTokenSafely();
 
     dispatch(startLoading());
 

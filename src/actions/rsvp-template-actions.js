@@ -25,7 +25,8 @@ import {
     showSuccessMessage,
     authErrorHandler,
     escapeFilterValue
-} from 'openstack-uicore-foundation/lib/methods';
+} from 'openstack-uicore-foundation/lib/utils/actions';
+import {getAccessTokenSafely} from '../utils/methods';
 
 export const REQUEST_RSVP_TEMPLATES         = 'REQUEST_RSVP_TEMPLATES';
 export const RECEIVE_RSVP_TEMPLATES         = 'RECEIVE_RSVP_TEMPLATES';
@@ -53,10 +54,10 @@ export const RSVP_QUESTION_VALUE_UPDATED    = 'RSVP_QUESTION_VALUE_UPDATED';
 
 
 
-export const getRsvpTemplates = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
+export const getRsvpTemplates = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
     const filter = [];
 
@@ -96,10 +97,10 @@ export const getRsvpTemplates = ( term = null, page = 1, perPage = 10, order = '
     );
 };
 
-export const getRsvpTemplate = (rsvpTemplateId) => (dispatch, getState) => {
+export const getRsvpTemplate = (rsvpTemplateId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -123,9 +124,9 @@ export const resetRsvpTemplateForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_RSVP_TEMPLATE_FORM)({}));
 };
 
-export const saveRsvpTemplate = (entity) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const saveRsvpTemplate = (entity) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -174,10 +175,10 @@ export const saveRsvpTemplate = (entity) => (dispatch, getState) => {
     }
 }
 
-export const deleteRsvpTemplate = (rsvpTemplateId) => (dispatch, getState) => {
+export const deleteRsvpTemplate = (rsvpTemplateId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -199,21 +200,17 @@ export const deleteRsvpTemplate = (rsvpTemplateId) => (dispatch, getState) => {
 
 const normalizeEntity = (entity) => {
     const normalizedEntity = {...entity};
-
-
-
     return normalizedEntity;
-
 }
 
 
 /************************************* QUESTIONS ******************************************/
 
 
-export const updateQuestionsOrder = (questions, templateId, questionId, newOrder) => (dispatch, getState) => {
+export const updateQuestionsOrder = (questions, templateId, questionId, newOrder) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -235,10 +232,10 @@ export const updateQuestionsOrder = (questions, templateId, questionId, newOrder
 
 }
 
-export const getRsvpQuestionMeta = () => (dispatch, getState) => {
+export const getRsvpQuestionMeta = () => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -256,10 +253,10 @@ export const getRsvpQuestionMeta = () => (dispatch, getState) => {
     );
 };
 
-export const getRsvpQuestion = (rsvpTemplateId, rsvpQuestionId) => (dispatch, getState) => {
+export const getRsvpQuestion = (rsvpTemplateId, rsvpQuestionId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -283,9 +280,9 @@ export const resetRsvpQuestionForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_RSVP_QUESTION_FORM)({}));
 };
 
-export const saveRsvpQuestion = (rsvpTemplateId, entity) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const saveRsvpQuestion = (rsvpTemplateId, entity) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -332,10 +329,10 @@ export const saveRsvpQuestion = (rsvpTemplateId, entity) => (dispatch, getState)
     }
 }
 
-export const deleteRsvpQuestion = (rsvpTemplateId, rsvpQuestionId) => (dispatch, getState) => {
+export const deleteRsvpQuestion = (rsvpTemplateId, rsvpQuestionId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -358,10 +355,10 @@ export const deleteRsvpQuestion = (rsvpTemplateId, rsvpQuestionId) => (dispatch,
 /************************************* QUESTIONS ******************************************/
 
 
-export const updateQuestionValuesOrder = (values, templateId, questionId, valueId, newOrder) => (dispatch, getState) => {
+export const updateQuestionValuesOrder = (values, templateId, questionId, valueId, newOrder) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -383,10 +380,10 @@ export const updateQuestionValuesOrder = (values, templateId, questionId, valueI
 
 }
 
-export const getRsvpQuestionValue = (rsvpTemplateId, rsvpQuestionId, rsvpQuestionValueId) => (dispatch, getState) => {
+export const getRsvpQuestionValue = (rsvpTemplateId, rsvpQuestionId, rsvpQuestionValueId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -410,9 +407,9 @@ export const resetRsvpQuestionValueForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_RSVP_QUESTION_VALUE_FORM)({}));
 };
 
-export const saveRsvpQuestionValue = (rsvpTemplateId, rsvpQuestionId, entity) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const saveRsvpQuestionValue = (rsvpTemplateId, rsvpQuestionId, entity) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -469,10 +466,10 @@ export const saveRsvpQuestionValue = (rsvpTemplateId, rsvpQuestionId, entity) =>
     }
 }
 
-export const deleteRsvpQuestionValue = (rsvpTemplateId, rsvpQuestionId, rsvpQuestionValueId) => (dispatch, getState) => {
+export const deleteRsvpQuestionValue = (rsvpTemplateId, rsvpQuestionId, rsvpQuestionValueId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {

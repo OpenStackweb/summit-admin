@@ -24,7 +24,7 @@ import
 
 import { AFFILIATION_ADDED, AFFILIATION_DELETED } from '../../actions/member-actions'
 
-import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
+import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/utils/actions';
 
 export const DEFAULT_ENTITY = {
     id: 0,

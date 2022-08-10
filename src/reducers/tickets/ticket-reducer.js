@@ -24,8 +24,8 @@ import {
     FEATURE_BADGE_ADDED,
     FEATURE_BADGE_REMOVED
 } from '../../actions/badge-actions'
-import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
-import {epochToMoment} from "openstack-uicore-foundation/lib/methods";
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/utils/actions';
+import {epochToMoment} from "openstack-uicore-foundation/lib/utils/methods";
 import moment from "moment-timezone";
 
 export const DEFAULT_ENTITY = {

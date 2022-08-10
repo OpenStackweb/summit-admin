@@ -21,7 +21,7 @@ import
 
 import {RECEIVE_ALL_MEDIA_FILE_TYPES} from "../../actions/media-file-type-actions";
 
-import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
+import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/utils/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 export const DEFAULT_ENTITY = {

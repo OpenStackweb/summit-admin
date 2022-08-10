@@ -23,11 +23,12 @@ import {
     startLoading,
     showMessage,
     authErrorHandler
-} from 'openstack-uicore-foundation/lib/methods';
+} from 'openstack-uicore-foundation/lib/utils/actions';
 import { 
     SELECTION_PLAN_RATING_TYPE_ADDED, 
     SELECTION_PLAN_RATING_TYPE_UPDATED 
 } from './selection-plan-actions';
+import {getAccessTokenSafely} from "../utils/methods";
 
 //Rating Types
 
@@ -37,10 +38,10 @@ export const RATING_TYPE_SCORE_TYPE_REMOVED = 'RATING_TYPE_SCORE_TYPE_REMOVED';
 export const RATING_TYPE_SCORE_TYPE_ADDED = 'RATING_TYPE_SCORE_TYPE_ADDED';
 export const RATING_TYPE_SCORE_TYPE_ORDER_UPDATED = 'RATING_TYPE_SCORE_TYPE_ORDER_UPDATED';
 
-export const getRatingType = (ratingTypeId) => (dispatch, getState) => {
+export const getRatingType = (ratingTypeId) => async (dispatch, getState) => {
 
-    const {loggedUserState, currentSummitState, currentSelectionPlanState} = getState();
-    const {accessToken} = loggedUserState;
+    const {currentSummitState, currentSelectionPlanState} = getState();
+    const accessToken = await getAccessTokenSafely();
     const {currentSummit} = currentSummitState;
     const {entity: currentSelectionPlan} = currentSelectionPlanState;
 
@@ -67,10 +68,10 @@ export const resetRatingTypeForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_RATING_TYPE_FORM)({}));
 };
 
-export const saveRatingType = (entity) => (dispatch, getState) => {
+export const saveRatingType = (entity) => async (dispatch, getState) => {
 
-    const {loggedUserState, currentSummitState, currentSelectionPlanState} = getState();
-    const {accessToken} = loggedUserState;
+    const {currentSummitState, currentSelectionPlanState} = getState();
+    const accessToken = await getAccessTokenSafely();
     const {currentSummit} = currentSummitState;
     const {entity: currentSelectionPlan} = currentSelectionPlanState;
 
@@ -136,10 +137,10 @@ export const RECEIVE_SCORE_TYPES = 'RECEIVE_SCORE_TYPES';
 export const RESET_SCORE_TYPE_FORM = 'RESET_SCORE_TYPE_FORM';
 export const SCORE_TYPE_UPDATED = 'SCORE_TYPE_UPDATED';
 
-export const getScoreType = (ratingTypeId, scoreTypeId) => (dispatch, getState) => {
+export const getScoreType = (ratingTypeId, scoreTypeId) => async (dispatch, getState) => {
 
-    const {loggedUserState, currentSummitState, currentSelectionPlanState} = getState();
-    const {accessToken} = loggedUserState;
+    const {currentSummitState, currentSelectionPlanState} = getState();
+    const accessToken = await getAccessTokenSafely();
     const {currentSummit} = currentSummitState;
     const currentSelectionPlan = currentSelectionPlanState.entity;
 
@@ -160,10 +161,10 @@ export const getScoreType = (ratingTypeId, scoreTypeId) => (dispatch, getState) 
     );
 };
 
-export const getScoreTypes = (ratingTypeId) => (dispatch, getState) => {
+export const getScoreTypes = (ratingTypeId) => async (dispatch, getState) => {
 
-    const {loggedUserState, currentSummitState, currentSelectionPlanState} = getState();
-    const {accessToken} = loggedUserState;
+    const {currentSummitState, currentSelectionPlanState} = getState();
+    const accessToken = await getAccessTokenSafely();
     const {currentSummit} = currentSummitState;
     const currentSelectionPlan = currentSelectionPlanState.entity;
 
@@ -191,10 +192,10 @@ export const resetScoreTypeForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_SCORE_TYPE_FORM)({}));
 };
 
-export const saveScoreType = (entity, ratingTypeId) => (dispatch, getState) => {
+export const saveScoreType = (entity, ratingTypeId) => async (dispatch, getState) => {
 
-    const {loggedUserState, currentSummitState, currentSelectionPlanState} = getState();
-    const {accessToken} = loggedUserState;
+    const {currentSummitState, currentSelectionPlanState} = getState();
+    const accessToken = await getAccessTokenSafely();
     const {currentSummit} = currentSummitState;
     const currentSelectionPlan = currentSelectionPlanState.entity;
 
@@ -252,10 +253,10 @@ export const saveScoreType = (entity, ratingTypeId) => (dispatch, getState) => {
         });
 }
 
-export const updateScoreTypeOrder = (ratingTypeId, scoreTypes, scoreTypeId, newOrder) => (dispatch, getState) => {
+export const updateScoreTypeOrder = (ratingTypeId, scoreTypes, scoreTypeId, newOrder) => async (dispatch, getState) => {
 
-    const {loggedUserState, currentSummitState, currentSelectionPlanState} = getState();
-    const {accessToken} = loggedUserState;
+    const {currentSummitState, currentSelectionPlanState} = getState();
+    const accessToken = await getAccessTokenSafely();
     const {currentSummit} = currentSummitState;
     const currentSelectionPlan = currentSelectionPlanState.entity;
 
@@ -278,10 +279,10 @@ export const updateScoreTypeOrder = (ratingTypeId, scoreTypes, scoreTypeId, newO
     );
 }
 
-export const deleteScoreType = (ratingTypeId, scoreTypeId) => (dispatch, getState) => {
+export const deleteScoreType = (ratingTypeId, scoreTypeId) => async (dispatch, getState) => {
 
-    const {loggedUserState, currentSummitState, currentSelectionPlanState} = getState();
-    const {accessToken} = loggedUserState;
+    const {currentSummitState, currentSelectionPlanState} = getState();
+    const accessToken = await getAccessTokenSafely();
     const {currentSummit} = currentSummitState;
     const currentSelectionPlan = currentSelectionPlanState.entity;
 

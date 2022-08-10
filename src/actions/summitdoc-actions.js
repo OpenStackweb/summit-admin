@@ -20,8 +20,12 @@ import {
     startLoading,
     showMessage,
     showSuccessMessage,
-    authErrorHandler, putFile, postFile, escapeFilterValue
-} from 'openstack-uicore-foundation/lib/methods';
+    authErrorHandler,
+    putFile,
+    postFile,
+    escapeFilterValue
+} from 'openstack-uicore-foundation/lib/utils/actions';
+import {getAccessTokenSafely} from '../utils/methods';
 
 export const REQUEST_SUMMITDOCS       = 'REQUEST_SUMMITDOCS';
 export const RECEIVE_SUMMITDOCS       = 'RECEIVE_SUMMITDOCS';
@@ -32,10 +36,10 @@ export const SUMMITDOC_UPDATED        = 'SUMMITDOC_UPDATED';
 export const SUMMITDOC_ADDED          = 'SUMMITDOC_ADDED';
 export const SUMMITDOC_DELETED        = 'SUMMITDOC_DELETED';
 
-export const getSummitDocs = (term = '', page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
+export const getSummitDocs = (term = '', page = 1, perPage = 10, order = 'id', orderDir = 1 ) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
     const filter = [];
 
@@ -75,9 +79,9 @@ export const getSummitDocs = (term = '', page = 1, perPage = 10, order = 'id', o
     );
 };
 
-export const getSummitDoc = (summitDocId) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const getSummitDoc = (summitDocId) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -101,9 +105,9 @@ export const resetSummitDocForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_SUMMITDOC_FORM)({}));
 };
 
-export const saveSummitDoc = (entity, file) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const saveSummitDoc = (entity, file) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -153,10 +157,10 @@ export const saveSummitDoc = (entity, file) => (dispatch, getState) => {
     }
 }
 
-export const deleteSummitDoc = (summitDocId) => (dispatch, getState) => {
+export const deleteSummitDoc = (summitDocId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {

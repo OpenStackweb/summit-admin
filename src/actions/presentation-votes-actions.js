@@ -1,10 +1,11 @@
 import {
     authErrorHandler,
     createAction,
-    getCSV,
     getRequest,
-    startLoading, stopLoading
-} from "openstack-uicore-foundation/lib/methods";
+    startLoading,
+    stopLoading
+} from "openstack-uicore-foundation/lib/utils/actions";
+import {getAccessTokenSafely} from '../utils/methods';
 
 export const REQUEST_PRESENTATION_VOTES = 'REQUEST_PRESENTATION_VOTES';
 export const RECEIVE_PRESENTATION_VOTES = 'RECEIVE_PRESENTATION_VOTES';
@@ -19,10 +20,10 @@ export const getPresentationsVotes =
         order = 'votes_count',
         orderDir = 0,
         extraFilters = []
-    ) => (dispatch, getState) => {
+    ) => async (dispatch, getState) => {
 
-    const {loggedUserState, currentSummitState} = getState();
-    const {accessToken} = loggedUserState;
+    const {currentSummitState} = getState();
+    const accessToken = await getAccessTokenSafely();
     const {currentSummit} = currentSummitState;
     let filter = ['published==1','votes_count>0'];
 
@@ -69,10 +70,10 @@ export const getAttendeeVotes =
         order = 'presentation_votes_count',
         orderDir = 0,
         extraFilters = []
-    ) => (dispatch, getState) => {
+    ) => async (dispatch, getState) => {
 
-        const {loggedUserState, currentSummitState} = getState();
-        const {accessToken} = loggedUserState;
+        const {currentSummitState} = getState();
+        const accessToken = await getAccessTokenSafely();
         const {currentSummit} = currentSummitState;
         let filter = ['presentation_votes_count>0'];
 

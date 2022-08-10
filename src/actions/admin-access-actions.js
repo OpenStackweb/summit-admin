@@ -22,8 +22,10 @@ import {
     startLoading,
     showMessage,
     showSuccessMessage,
-    authErrorHandler, escapeFilterValue,
-} from 'openstack-uicore-foundation/lib/methods';
+    authErrorHandler,
+    escapeFilterValue
+} from 'openstack-uicore-foundation/lib/utils/actions';
+import {getAccessTokenSafely} from '../utils/methods';
 
 export const REQUEST_ADMIN_ACCESSES      = 'REQUEST_ADMIN_ACCESSES';
 export const RECEIVE_ADMIN_ACCESSES      = 'RECEIVE_ADMIN_ACCESSES';
@@ -35,9 +37,9 @@ export const ADMIN_ACCESS_ADDED          = 'ADMIN_ACCESS_ADDED';
 export const ADMIN_ACCESS_DELETED        = 'ADMIN_ACCESS_DELETED';
 
 
-export const getAdminAccesses = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
-    const { loggedUserState } = getState();
-    const { accessToken }     = loggedUserState;
+export const getAdminAccesses = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => async (dispatch, getState) => {
+
+    const accessToken = await getAccessTokenSafely();
     const filter = [];
 
     dispatch(startLoading());
@@ -76,9 +78,9 @@ export const getAdminAccesses = (term = null, page = 1, perPage = 10, order = 'i
     );
 };
 
-export const getAdminAccess = (adminAccessId) => (dispatch, getState) => {
-    const { loggedUserState } = getState();
-    const { accessToken }     = loggedUserState;
+export const getAdminAccess = (adminAccessId) => async (dispatch, getState) => {
+
+    const accessToken = await getAccessTokenSafely();
 
     dispatch(startLoading());
 
@@ -102,9 +104,9 @@ export const resetAdminAccessForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_ADMIN_ACCESS_FORM)({}));
 };
 
-export const saveAdminAccess = (entity, noAlert = false) => (dispatch, getState) => {
-    const { loggedUserState } = getState();
-    const { accessToken }     = loggedUserState;
+export const saveAdminAccess = (entity, noAlert = false) => async (dispatch, getState) => {
+
+    const accessToken = await getAccessTokenSafely();
 
     dispatch(startLoading());
 
@@ -153,10 +155,9 @@ export const saveAdminAccess = (entity, noAlert = false) => (dispatch, getState)
     }
 }
 
-export const deleteAdminAccess = (adminAccessId) => (dispatch, getState) => {
+export const deleteAdminAccess = (adminAccessId) => async (dispatch, getState) => {
 
-    const { loggedUserState } = getState();
-    const { accessToken }     = loggedUserState;
+    const accessToken = await getAccessTokenSafely();
 
     const params = {
         access_token : accessToken

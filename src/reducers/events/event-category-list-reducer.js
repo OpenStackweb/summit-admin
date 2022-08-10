@@ -19,8 +19,8 @@ import
     EVENT_CATEGORIES_SEEDED, EVENT_CATEGORY_ORDER_UPDATED
 } from '../../actions/event-category-actions';
 
-import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
 import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/utils/actions';
 
 const DEFAULT_STATE = {
     eventCategories : []

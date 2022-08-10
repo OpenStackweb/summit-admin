@@ -11,7 +11,7 @@
  * limitations under the License.
  **/
 
-import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
+import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/utils/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 import {
     EMAIL_FLOW_EVENT_UPDATED,

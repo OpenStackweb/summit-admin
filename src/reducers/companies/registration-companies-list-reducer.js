@@ -18,8 +18,8 @@ import {
     REGISTRATION_COMPANY_DELETED
 } from '../../actions/registration-companies-actions';
 
-import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
 import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/utils/actions';
 
 const DEFAULT_STATE = {
     companies: [],

@@ -55,7 +55,7 @@ import roomOccupancyReducer from "./reducers/events/room-occupancy-reducer";
 import tagGroupListReducer from "./reducers/tags/tag-group-list-reducer";
 import tagGroupReducer from "./reducers/tags/tag-group-reducer";
 import reportReducer from "./reducers/reports/report-reducer";
-import { loggedUserReducer } from "openstack-uicore-foundation/lib/reducers";
+import { loggedUserReducer } from "openstack-uicore-foundation/lib/security/reducers";
 import roomBookingReducer from "./reducers/room_bookings/room-booking-reducer";
 import roomBookingListReducer from "./reducers/room_bookings/room-booking-list-reducer";
 import roomBookingAttributeTypeReducer from "./reducers/room_bookings/room-booking-attribute-type-reducer";
@@ -241,8 +241,6 @@ const store = createStore(reducers, composeEnhancers(applyMiddleware(thunk)));
 
 const onRehydrateComplete = () => {
     // repopulate access token on global access variable
-    window.accessToken = store.getState().loggedUserState.accessToken;
-    window.idToken = store.getState().loggedUserState.idToken;
     window.sessionState = store.getState().loggedUserState.sessionState;
 }
 

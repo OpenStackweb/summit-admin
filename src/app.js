@@ -20,15 +20,17 @@ import LogOutCallbackRoute from './routes/logout-callback-route'
 import AuthButton from './components/auth-button'
 import DefaultRoute from './routes/default-route'
 import { connect } from 'react-redux'
-import { AjaxLoader, OPSessionChecker } from "openstack-uicore-foundation/lib/components";
-import { getBackURL,onUserAuth, doLoginBasicLogin, doLogout, initLogOut, getUserInfo, resetLoading } from "openstack-uicore-foundation/lib/methods";
+import { AjaxLoader } from "openstack-uicore-foundation/lib/components";
+import { getBackURL } from "openstack-uicore-foundation/lib/utils/methods";
+import { resetLoading } from "openstack-uicore-foundation/lib/utils/actions";
+import { doLogout, onUserAuth, getUserInfo} from 'openstack-uicore-foundation/lib/security/actions';
+import { initLogOut, doLoginBasicLogin, getIdToken} from 'openstack-uicore-foundation/lib/security/methods';
 import T from 'i18n-react';
 import CustomErrorPage from "./pages/custom-error-page";
 import history from './history'
 import exclusiveSections from 'js-yaml-loader!./exclusive-sections.yml';
 import IdTokenVerifier from 'idtoken-verifier';
 import {getTimezones} from './actions/base-actions';
-
 
 // here is set by default user lang as en
 let language = (navigator.languages && navigator.languages[0]) || navigator.language || navigator.userLanguage;
@@ -60,6 +62,7 @@ window.EXCLUSIVE_SECTIONS       = [];
 window.PUBLIC_STORAGES          = process.env['PUBLIC_STORAGES'] || "S3";
 window.CHAT_API_BASE_URL        = process.env['CHAT_API_BASE_URL'];
 window.APP_CLIENT_NAME          = process.env['APP_CLIENT_NAME'];
+window.OAUTH2_FLOW              = process.env['OAUTH2_FLOW'] || "token id_token";
 
 if (exclusiveSections.hasOwnProperty(process.env['APP_CLIENT_NAME'])) {
     window.EXCLUSIVE_SECTIONS = exclusiveSections[process.env['APP_CLIENT_NAME']];
@@ -81,7 +84,10 @@ class App extends React.PureComponent {
     }
 
     render() {
-        const { isLoggedUser, onUserAuth, doLogout, getUserInfo, idToken, backUrl, loading} = this.props;
+
+        const { isLoggedUser, onUserAuth, doLogout, getUserInfo, backUrl, loading} = this.props;
+
+        const idToken = getIdToken();
 
         // get user pic from idtoken claims (IDP)
         let profile_pic = '';
@@ -124,7 +130,6 @@ const mapStateToProps = ({ loggedUserState, baseState }) => ({
     isLoggedUser: loggedUserState.isLoggedUser,
     backUrl: loggedUserState.backUrl,
     member: loggedUserState.member,
-    idToken:  loggedUserState.idToken,
     loading : baseState.loading,
 });
 

@@ -15,7 +15,7 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import Swal from "sweetalert2";
-import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/methods'
+import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/utils/methods'
 import {
     TextEditor,
     Dropdown,

@@ -17,7 +17,8 @@ import {
     stopLoading,
     startLoading,
     authErrorHandler
-} from 'openstack-uicore-foundation/lib/methods';
+} from 'openstack-uicore-foundation/lib/utils/actions';
+import {getAccessTokenSafely} from '../utils/methods';
 
 
 export const REQUEST_REPORT         = 'REQUEST_REPORT';
@@ -27,10 +28,10 @@ export const RECEIVE_EXPORT_REPORT  = 'RECEIVE_EXPORT_REPORT';
 export const RESET_EXPORT_REPORT    = 'RESET_EXPORT_REPORT';
 const TIMEOUT = 300 ;//secs
 
-export const getReport = (query, reportName, page) => (dispatch, getState) => {
+export const getReport = (query, reportName, page) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const {  currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
 
     dispatch(startLoading());
 
@@ -63,10 +64,9 @@ const jsonToCsv = (items) => {
     return csv;
 }
 
-export const exportReport = ( query, reportName, grouped, preProcessData=null ) => (dispatch, getState) => {
+export const exportReport = ( query, reportName, grouped, preProcessData=null ) => async (dispatch) => {
 
-    const { loggedUserState } = getState();
-    const { accessToken }     = loggedUserState;
+    const accessToken = await getAccessTokenSafely();
 
     dispatch(startLoading());
 
@@ -156,9 +156,7 @@ export const exportReport = ( query, reportName, grouped, preProcessData=null ) 
 
 const normalizeEntity = (entity) => {
     const normalizedEntity = {...entity};
-
     return normalizedEntity;
-
 }
 
 export const flattenData = (data) => {

@@ -1,5 +1,5 @@
 import {RECEIVE_ALL_SUMMITS, RECEIVE_SUMMITS, SUMMIT_ADDED, SUMMIT_DELETED} from '../../actions/summit-actions';
-import{ LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import{ LOGOUT_USER } from 'openstack-uicore-foundation/lib/utils/actions';
 
 const DEFAULT_STATE = {
     summits      : [],

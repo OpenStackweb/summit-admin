@@ -19,7 +19,7 @@ import
     RESET_EXPORT_REPORT,
 } from '../../actions/report-actions';
 
-import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/actions';
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/utils/actions';
 
 const DEFAULT_STATE = {
     name            : '',

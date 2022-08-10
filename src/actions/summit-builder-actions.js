@@ -24,7 +24,8 @@ import {
     deleteRequest,
     authErrorHandler,
     escapeFilterValue
-} from "openstack-uicore-foundation/lib/methods";
+} from "openstack-uicore-foundation/lib/utils/actions";
+import {getAccessTokenSafely} from '../utils/methods';
 
 export const REQUEST_UNSCHEDULE_EVENTS_PAGE               = 'REQUEST_UNSCHEDULE_EVENTS_PAGE';
 export const RECEIVE_UNSCHEDULE_EVENTS_PAGE               = 'RECEIVE_UNSCHEDULE_EVENTS_PAGE';
@@ -59,9 +60,9 @@ export const getUnScheduleEventsPage =
         term             = null,
         order            = null
     ) =>
-    (dispatch, getState) => {
-        const { loggedUserState } = getState();
-        const { accessToken }     = loggedUserState;
+    async (dispatch, getState) => {
+
+        const accessToken = await getAccessTokenSafely();
         dispatch(startLoading());
         // filters
         const filter = [];
@@ -121,9 +122,9 @@ export const getUnScheduleEventsPage =
     };
 
 export const publishEvent = (event, day, startTime, minutes) =>
-    (dispatch, getState) => {
-        const { loggedUserState, currentSummitState, currentScheduleBuilderState } = getState();
-        const { accessToken }     = loggedUserState;
+    async (dispatch, getState) => {
+        const { currentSummitState, currentScheduleBuilderState } = getState();
+        const accessToken = await getAccessTokenSafely();
         const { currentSummit }   = currentSummitState;
         const { currentLocation } = currentScheduleBuilderState;
 
@@ -181,9 +182,8 @@ export const changeCurrentSelectedLocation = (currentSelectedLocation) => (dispa
     ));
 }
 
-export const getPublishedEventsBySummitDayLocation = (currentSummit, currentDay, currentLocation) => (dispatch, getState) => {
-    const { loggedUserState } = getState();
-    const { accessToken }     = loggedUserState;
+export const getPublishedEventsBySummitDayLocation = (currentSummit, currentDay, currentLocation) => async (dispatch, getState) => {
+    const accessToken = await getAccessTokenSafely();
     //currentDay            = moment(currentDay, 'YYYY-MM-DD').tz(currentSummit.time_zone.name);
     currentDay              = moment.tz(currentDay, currentSummit.time_zone.name);
     const startDate           = ( currentDay.clone().hours(0).minutes(0).seconds(0).valueOf()) / 1000;
@@ -267,9 +267,9 @@ export const changeCurrentScheduleSearchTerm = (term) => (dispatch, getState) =>
     ));
 }
 
-export const unPublishEvent = (event) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const unPublishEvent = (event) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -292,9 +292,9 @@ export const unPublishEvent = (event) => (dispatch, getState) => {
 
 }
 
-export const searchScheduleEvents = (term) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const searchScheduleEvents = (term) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState
     const filter = [];
 
@@ -333,9 +333,9 @@ export const searchScheduleEvents = (term) => (dispatch, getState) => {
         );
 }
 
-export const getEmptySpots = (location, fromDate, toDate, gapSize) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const getEmptySpots = (location, fromDate, toDate, gapSize) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());

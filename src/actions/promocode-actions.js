@@ -25,8 +25,10 @@ import {
     showSuccessMessage,
     getCSV,
     authErrorHandler,
-    escapeFilterValue, postFile
-} from 'openstack-uicore-foundation/lib/methods';
+    escapeFilterValue,
+    postFile
+} from 'openstack-uicore-foundation/lib/utils/actions';
+import {getAccessTokenSafely} from '../utils/methods';
 
 export const REQUEST_PROMOCODES       = 'REQUEST_PROMOCODES';
 export const RECEIVE_PROMOCODES       = 'RECEIVE_PROMOCODES';
@@ -39,22 +41,16 @@ export const PROMOCODE_ADDED          = 'PROMOCODE_ADDED';
 export const PROMOCODE_DELETED        = 'PROMOCODE_DELETED';
 export const EMAIL_SENT               = 'EMAIL_SENT';
 export const PROMO_CODES_IMPORTED     = 'PROMO_CODES_IMPORTED';
-
 export const DISCOUNT_TICKET_ADDED    = 'DISCOUNT_TICKET_ADDED';
 export const DISCOUNT_TICKET_DELETED  = 'DISCOUNT_TICKET_DELETED';
-
-
-
 export const BADGE_FEATURE_ADDED    = 'BADGE_FEATURE_ADDED';
 export const BADGE_FEATURE_REMOVED  = 'BADGE_FEATURE_REMOVED';
 
 
+export const getPromocodeMeta = () => async (dispatch, getState) => {
 
-
-export const getPromocodeMeta = () => (dispatch, getState) => {
-
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -72,10 +68,10 @@ export const getPromocodeMeta = () => (dispatch, getState) => {
     );
 };
 
-export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'code', orderDir = 1, type = 'ALL' ) => (dispatch, getState) => {
+export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'code', orderDir = 1, type = 'ALL' ) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
     const filter = [];
 
@@ -120,10 +116,10 @@ export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'cod
     );
 };
 
-export const getPromocode = (promocodeId) => (dispatch, getState) => {
+export const getPromocode = (promocodeId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -148,9 +144,9 @@ export const resetPromocodeForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_PROMOCODE_FORM)({}));
 };
 
-export const savePromocode = (entity) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const savePromocode = (entity) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -195,10 +191,10 @@ export const savePromocode = (entity) => (dispatch, getState) => {
     }
 }
 
-export const deletePromocode = (promocodeId) => (dispatch, getState) => {
+export const deletePromocode = (promocodeId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -217,10 +213,10 @@ export const deletePromocode = (promocodeId) => (dispatch, getState) => {
     );
 };
 
-export const sendEmail = (promocodeId) => (dispatch, getState) => {
+export const sendEmail = (promocodeId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -240,10 +236,10 @@ export const sendEmail = (promocodeId) => (dispatch, getState) => {
         });
 };
 
-export const exportPromocodes = ( term = null, order = 'code', orderDir = 1, type = 'ALL' ) => (dispatch, getState) => {
+export const exportPromocodes = ( term = null, order = 'code', orderDir = 1, type = 'ALL' ) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
     const filter = [];
     const filename = currentSummit.name + '-Promocodes.csv';
@@ -323,10 +319,10 @@ const normalizeEntity = (entity) => {
 
 /************************  BADGE FEATURES **********************************/
 
-export const addBadgeFeatureToPromocode = (promocodeId, badgeFeature) => (dispatch, getState) => {
+export const addBadgeFeatureToPromocode = (promocodeId, badgeFeature) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -347,10 +343,10 @@ export const addBadgeFeatureToPromocode = (promocodeId, badgeFeature) => (dispat
     );
 };
 
-export const removeBadgeFeatureFromPromocode = (promocodeId, badgeFeatureId) => (dispatch, getState) => {
+export const removeBadgeFeatureFromPromocode = (promocodeId, badgeFeatureId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely()
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -376,9 +372,9 @@ export const removeBadgeFeatureFromPromocode = (promocodeId, badgeFeatureId) => 
 /************************  DICOUNT PROMOCODES **********************************/
 
 
-export const addDiscountTicket = (ticket) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const addDiscountTicket = (ticket) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely()
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -400,10 +396,10 @@ export const addDiscountTicket = (ticket) => (dispatch, getState) => {
 }
 
 
-export const deleteDiscountTicket = (promocodeId, ticketId, ticketTypeId) => (dispatch, getState) => {
+export const deleteDiscountTicket = (promocodeId, ticketId, ticketTypeId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely()
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -422,9 +418,9 @@ export const deleteDiscountTicket = (promocodeId, ticketId, ticketTypeId) => (di
     );
 };
 
-export const importPromoCodesCSV = (file) => (dispatch, getState) => {
-    const {loggedUserState, currentSummitState} = getState();
-    const {accessToken} = loggedUserState;
+export const importPromoCodesCSV = (file) => async (dispatch, getState) => {
+    const {currentSummitState} = getState();
+    const accessToken = await getAccessTokenSafely();
     const {currentSummit} = currentSummitState;
 
     const params = {

@@ -14,7 +14,7 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import {queryTags} from 'openstack-uicore-foundation/lib/methods'
+import {queryTags} from 'openstack-uicore-foundation/lib/utils/query-actions'
 import { Input, SimpleLinkList } from 'openstack-uicore-foundation/lib/components'
 import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 

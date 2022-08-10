@@ -24,9 +24,9 @@ import {
     RECEIVE_EMAILS_BY_USER
 } from '../../actions/email-actions';
 
-import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
+import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/utils/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
-import {epochToMoment} from "openstack-uicore-foundation/lib/methods";
+import {epochToMoment} from "openstack-uicore-foundation/lib/utils/methods";
 
 export const DEFAULT_ENTITY = {
     id: 0,

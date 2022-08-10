@@ -2,10 +2,17 @@ const HtmlWebpackPlugin         = require('html-webpack-plugin');
 const { CleanWebpackPlugin }    = require('clean-webpack-plugin');
 const Dotenv                    = require('dotenv-webpack');
 const MiniCssExtractPlugin      = require("mini-css-extract-plugin");
+const webpack = require('webpack');
 
 module.exports = {
     entry: "./src/index.js",
     plugins: [
+        // Work around for Buffer is undefined:
+        // https://github.com/webpack/changelog-v5/issues/10
+        new webpack.ProvidePlugin({
+            Buffer: ['buffer', 'Buffer'],
+            process: 'process/browser',
+        }),
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
             title: 'Show Admin',
@@ -15,7 +22,17 @@ module.exports = {
             expand: true
         })
     ],
-    node: {fs: 'empty'},
+    resolve: {
+        mainFields: ['browser', 'module', 'main'],
+        fallback: {
+            path: require.resolve('path-browserify'),
+            crypto: require.resolve('crypto-browserify'),
+            stream: require.resolve('stream-browserify'),
+            buffer: require.resolve("buffer"),
+            fs: require.resolve('fs'),
+            process: require.resolve("process"),
+        }
+    },
     module: {
         rules: [
             {
@@ -73,12 +90,8 @@ module.exports = {
                 use: [MiniCssExtractPlugin.loader, "css-loader", 'sass-loader']
             },
             {
-                test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                use: "url-loader?limit=10000&minetype=application/font-woff&name=fonts/[name].[ext]"
-            },
-            {
-                test: /\.(ttf|eot)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                use: "file-loader?name=fonts/[name].[ext]"
+                test: /\.(woff|woff2|eot|ttf|otf)$/i,
+                type: 'asset/resource',
             },
             {
                 test: /\.jpg|\.png|\.gif$/,
@@ -91,6 +104,13 @@ module.exports = {
             {
                 test: /\.yaml$/,
                 use: 'js-yaml-loader',
+            },
+            // word around for react dnd
+            {
+                test: /\.m?js/,
+                resolve: {
+                    fullySpecified: false
+                }
             }
         ]
     },

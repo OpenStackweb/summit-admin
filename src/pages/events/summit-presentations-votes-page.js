@@ -18,7 +18,8 @@ import {DateTimePicker, Dropdown, FreeTextSearch, Table} from "openstack-uicore-
 import {Pagination} from "react-bootstrap";
 import {clearVotesReport, getPresentationsVotes, getAttendeeVotes} from "../../actions/presentation-votes-actions";
 import {Breadcrumb} from "react-breadcrumbs";
-import {epochToMomentTimeZone, escapeFilterValue} from "openstack-uicore-foundation/lib/methods";
+import {epochToMomentTimeZone} from "openstack-uicore-foundation/lib/utils/methods";
+import {escapeFilterValue} from "openstack-uicore-foundation/lib/utils/actions";
 
 
 class SummitPresentationsVotesPage extends React.Component {

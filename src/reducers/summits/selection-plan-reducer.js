@@ -1,4 +1,4 @@
-import{ LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
+import{ LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/utils/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 import {
     RECEIVE_SELECTION_PLAN,
@@ -137,13 +137,13 @@ const selectionPlanReducer = (state = DEFAULT_STATE, action) => {
         break;
 
         case SELECTION_PLAN_EXTRA_QUESTION_ORDER_UPDATED: {
-            let extra_questions = payload.map(q => {
+            let extra_questions = payload.map((q, i) => {
                 return {
                     id: q.id,
                     name: q.name,
                     label: q.label,
                     type: q.type,
-                    order: parseInt(q.order)
+                    order: i + 1
                 };
             })
 

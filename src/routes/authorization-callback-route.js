@@ -15,8 +15,8 @@ import history from '../history'
 import React from 'react'
 import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { AbstractAuthorizationCallbackRoute } from "openstack-uicore-foundation/lib/components";
-import { getUserInfo } from "openstack-uicore-foundation/lib/methods";
+import AbstractAuthorizationCallbackRoute from "openstack-uicore-foundation/lib/security/abstract-auth-callback-route";
+import { getUserInfo } from "openstack-uicore-foundation/lib/security/actions";
 
 class AuthorizationCallbackRoute extends AbstractAuthorizationCallbackRoute {
 
@@ -39,9 +39,6 @@ class AuthorizationCallbackRoute extends AbstractAuthorizationCallbackRoute {
 }
 
 const mapStateToProps = ({ loggedUserState }) => ({
-    accessToken: loggedUserState.accessToken,
-    idToken:  loggedUserState.idToken,
-    sessionState: loggedUserState.sessionState,
 })
 
 export default connect(mapStateToProps,{

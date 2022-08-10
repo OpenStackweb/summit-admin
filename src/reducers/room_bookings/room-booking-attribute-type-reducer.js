@@ -22,7 +22,7 @@ import
     ROOM_BOOKING_ATTRIBUTE_DELETED
 } from '../../actions/room-booking-actions';
 
-import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/actions';
+import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/utils/actions';
 
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 

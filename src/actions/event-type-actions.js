@@ -23,7 +23,9 @@ import {
     showMessage,
     showSuccessMessage,
     authErrorHandler
-} from 'openstack-uicore-foundation/lib/methods';
+} from 'openstack-uicore-foundation/lib/utils/actions';
+import {getAccessTokenSafely} from '../utils/methods';
+
 
 export const REQUEST_EVENT_TYPES       = 'REQUEST_EVENT_TYPES';
 export const RECEIVE_EVENT_TYPES       = 'RECEIVE_EVENT_TYPES';
@@ -35,10 +37,10 @@ export const EVENT_TYPE_ADDED          = 'EVENT_TYPE_ADDED';
 export const EVENT_TYPE_DELETED        = 'EVENT_TYPE_DELETED';
 export const EVENT_TYPES_SEEDED        = 'EVENT_TYPES_SEEDED';
 
-export const getEventTypes = ( ) => (dispatch, getState) => {
+export const getEventTypes = ( ) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -60,10 +62,10 @@ export const getEventTypes = ( ) => (dispatch, getState) => {
     );
 };
 
-export const getEventType = (eventTypeId) => (dispatch, getState) => {
+export const getEventType = (eventTypeId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -88,9 +90,9 @@ export const resetEventTypeForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_EVENT_TYPE_FORM)({}));
 };
 
-export const saveEventType = (entity) => (dispatch, getState) => {
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+export const saveEventType = (entity) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     dispatch(startLoading());
@@ -136,10 +138,10 @@ export const saveEventType = (entity) => (dispatch, getState) => {
     }
 }
 
-export const deleteEventType = (eventTypeId) => (dispatch, getState) => {
+export const deleteEventType = (eventTypeId) => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
@@ -158,10 +160,10 @@ export const deleteEventType = (eventTypeId) => (dispatch, getState) => {
     );
 };
 
-export const seedEventTypes = () => (dispatch, getState) => {
+export const seedEventTypes = () => async (dispatch, getState) => {
 
-    const { loggedUserState, currentSummitState } = getState();
-    const { accessToken }     = loggedUserState;
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
     const params = {
