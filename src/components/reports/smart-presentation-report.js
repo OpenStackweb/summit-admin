@@ -46,7 +46,7 @@ const fieldNames = [
     {label: 'Stream URL', key: 'streamingUrl', simple: true},
     {label: 'Meeting URL', key: 'meetingUrl', simple: true},
     {label: 'Etherpad URL', key: 'etherpadLink', simple: true},
-    {label: 'Creation date', key: 'created', simple: true},
+    {label: 'Creation date', key: 'created', simple: true, sortable: true},
 ];
 
 class SmartPresentationReport extends React.Component {
