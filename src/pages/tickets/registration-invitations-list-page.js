@@ -296,7 +296,7 @@ class RegistrationInvitationsListPage extends React.Component {
                             </div>
                             <div className="col-md-6 text-right">
                                 <div className={'row'}>
-                                    <div className={'col-md-5'}>
+                                    <div className={'col-md-10'}>
                                         <Dropdown
                                             id="flow_event"
                                             value={currentFlowEvent}
@@ -304,7 +304,7 @@ class RegistrationInvitationsListPage extends React.Component {
                                             options={flowEventsDDL}
                                         />
                                     </div>
-                                    <div className={'col-md-1'}>
+                                    <div className={'col-md-2'}>
                                         <button className="btn btn-primary right-space" onClick={this.handleSendEmails}>
                                             {T.translate("registration_invitation_list.send_emails")}
                                         </button>
