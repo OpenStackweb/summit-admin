@@ -241,8 +241,8 @@ class RegistrationInvitationsListPage extends React.Component {
 
         let flowEventsDDL = [
             {label: '-- SELECT EMAIL EVENT --', value: ''},
-            {label: 'Initial Invite', value: 'SUMMIT_REGISTRATION_INVITE_REGISTRATION'},
-            {label: 'Reminder', value: 'SUMMIT_REGISTRATION_REINVITE_REGISTRATION'},
+            {label: 'SUMMIT_REGISTRATION_INVITE_REGISTRATION', value: 'SUMMIT_REGISTRATION_INVITE_REGISTRATION'},
+            {label: 'SUMMIT_REGISTRATION_REINVITE_REGISTRATION', value: 'SUMMIT_REGISTRATION_REINVITE_REGISTRATION'},
         ];
 
         return(
