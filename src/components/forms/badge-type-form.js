@@ -202,7 +202,7 @@ class BadgeTypeForm extends React.Component {
                 </div>
                 <div className="row form-group">
                     <div className="col-md-8">
-                        <label> {T.translate("edit_badge_type.description")}</label>
+                        <label> {T.translate("edit_badge_type.description")} *</label>
                         <textarea
                             id="description"
                             value={entity.description}
@@ -213,31 +213,37 @@ class BadgeTypeForm extends React.Component {
                 </div>
 
 
-                <hr />
                 {entity.id !== 0 &&
-                <SimpleLinkList
-                    values={entity.access_levels}
-                    columns={accessLevelColumns}
-                    options={accessLevelOptions}
-                />
+                    <>
+                        <hr />
+                        <SimpleLinkList
+                            values={entity.access_levels}
+                            columns={accessLevelColumns}
+                            options={accessLevelOptions}
+                        />
+                    </>
                 }
 
-                <hr />
                 {entity.id !== 0 &&
-                <SimpleLinkList
-                    values={entity.badge_features}
-                    columns={featuresColumns}
-                    options={featuresOptions}
-                />
+                    <>
+                        <hr />
+                        <SimpleLinkList
+                            values={entity.badge_features}
+                            columns={featuresColumns}
+                            options={featuresOptions}
+                        />
+                    </>
                 }
 
-                <hr />
                 {entity.id !== 0 &&
-                <SimpleLinkList
-                    values={entity.allowed_view_types}
-                    columns={viewTypesColumns}
-                    options={viewTypesOptions}
-                />
+                    <>
+                        <hr />
+                        <SimpleLinkList
+                            values={entity.allowed_view_types}
+                            columns={viewTypesColumns}
+                            options={viewTypesOptions}
+                        />
+                    </>
                 }
 
                 <hr />
