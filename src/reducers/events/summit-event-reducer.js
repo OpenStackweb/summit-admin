@@ -42,6 +42,7 @@ export const DEFAULT_ENTITY = {
     location_id: 0,
     start_date: '',
     end_date: '',
+    duration: 0,
     level: 'N/A',
     allow_feedback: false,
     to_record: false,

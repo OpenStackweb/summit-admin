@@ -46,6 +46,8 @@ class EventForm extends React.Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
+        this.handleQAuserChange = this.handleQAuserChange.bind(this);
+        this.handleTimeChange = this.handleTimeChange.bind(this);
         this.handleUploadFile = this.handleUploadFile.bind(this);
         this.handleRemoveFile = this.handleRemoveFile.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -85,61 +87,8 @@ class EventForm extends React.Component {
 
     handleChange(ev) {
         const entity = {...this.state.entity};
-        let {onAddQAMember, onDeleteQAMember, currentSummit, extraQuestions} = this.props;
         const {errors} = this.state;
         let {value, id} = ev.target;
-        let currentError = '';
-        // logic for summit help users ( chat roles )
-        if (ev.target.type === 'memberinput' && id == 'qa_users') {
-            let oldHelpUsers =  entity[id];
-            let currentOldOnes = [];
-            try {
-                // remap to chat api payload format
-                let newHelpUsers = value.map((member) => {
-                    if (member.hasOwnProperty("email")) {
-                        // if has email property then its cames from main api
-                        // we need to remap but first only users with idp id set
-                        // are valid
-                        if (!member.user_external_id) {
-                            throw "Invalid user";
-                        }
-                        let newMember = {
-                            member_id: member.id,
-                            idp_user_id: member.user_external_id,
-                            full_name: `${member.first_name} ${member.last_name}`,
-                            summit_event_id: entity.id,
-                            summit_id: currentSummit.id,
-                        };
-                        onAddQAMember(newMember, entity.id);
-                        return newMember;
-                    }
-                    currentOldOnes.push(member)
-                    return member;
-                });
-
-                // check if we delete something
-                if (oldHelpUsers.length != currentOldOnes.length) {
-                    // get missing one
-                    let missingOne = oldHelpUsers.filter((oldOne) => {
-                        let matches = currentOldOnes.filter(newOne => {
-                            return newOne.member_id == oldOne.member_id;
-                        });
-                        return matches.length == 0;
-                    })
-                    if (missingOne.length > 0) {
-                        // remove it
-                        onDeleteQAMember(missingOne[0], entity.id);
-                    }
-                }
-
-                value = newHelpUsers;
-            }
-            catch (e){
-                console.log(e);
-                value = oldHelpUsers;
-                currentError = e;
-            }
-        }
 
         if (ev.target.type === 'radio') {
             id = ev.target.name;
@@ -154,7 +103,103 @@ class EventForm extends React.Component {
             value = value.valueOf() / 1000;
         }
 
+        errors[id] = '';
+        entity[id] = value;
+        this.setState({entity: entity});
+    }
+
+    handleQAuserChange() {
+        const entity = {...this.state.entity};
+        let {onAddQAMember, onDeleteQAMember, currentSummit} = this.props;
+        const {errors} = this.state;
+        let {value, id} = ev.target;
+        let currentError = '';
+        let oldHelpUsers =  entity[id];
+        let currentOldOnes = [];
+        try {
+            // remap to chat api payload format
+            let newHelpUsers = value.map((member) => {
+                if (member.hasOwnProperty("email")) {
+                    // if has email property then its cames from main api
+                    // we need to remap but first only users with idp id set
+                    // are valid
+                    if (!member.user_external_id) {
+                        throw "Invalid user";
+                    }
+                    let newMember = {
+                        member_id: member.id,
+                        idp_user_id: member.user_external_id,
+                        full_name: `${member.first_name} ${member.last_name}`,
+                        summit_event_id: entity.id,
+                        summit_id: currentSummit.id,
+                    };
+                    onAddQAMember(newMember, entity.id);
+                    return newMember;
+                }
+                currentOldOnes.push(member)
+                return member;
+            });
+
+            // check if we delete something
+            if (oldHelpUsers.length !== currentOldOnes.length) {
+                // get missing one
+                let missingOne = oldHelpUsers.filter((oldOne) => {
+                    let matches = currentOldOnes.filter(newOne => {
+                        return newOne.member_id === oldOne.member_id;
+                    });
+                    return matches.length === 0;
+                })
+                if (missingOne.length > 0) {
+                    // remove it
+                    onDeleteQAMember(missingOne[0], entity.id);
+                }
+            }
+
+            value = newHelpUsers;
+        }
+        catch (e){
+            console.log(e);
+            value = oldHelpUsers;
+            currentError = e;
+        }
+
         errors[id] = currentError;
+        entity[id] = value;
+        this.setState({entity: entity});
+    }
+
+    handleTimeChange(ev) {
+        const entity = {...this.state.entity};
+        const {errors} = this.state;
+        let {value, id} = ev.target;
+
+        if (value) {
+            if (ev.target.type === 'datetime') {
+                value = value.valueOf() / 1000;
+                // if we have both dates, update duration
+                if (id === 'start_date' && entity.end_date) {
+                    entity.duration = entity.end_date > value ? entity.end_date - value : 0;
+                } else if (id === 'end_date' && entity.start_date) {
+                    entity.duration = entity.start_date < value ? value - entity.start_date : 0;
+                } else if (entity.duration) {
+                    // if one of the dates is missing but we have duration, update missing date
+                    if (id === 'start_date') {
+                        entity.end_date = value + duration;
+                    } else {
+                        entity.start_date = value - duration;
+                    }
+                }
+            } else { // updating duration unless is empty
+                value = value * 60; // transform to seconds
+                if (entity.start_date) { // if we have start date, update end date
+                    entity.end_date = entity.start_date + value;
+                } else if (entity.end_date) { // if we only have end date, update start date
+                    entity.start_date = entity.end_date - value;
+                }
+            }
+        }
+
+        errors[id] = '';
         entity[id] = value;
         this.setState({entity: entity});
     }
@@ -431,25 +476,13 @@ class EventForm extends React.Component {
                 </div>
                 }
                 <div className="row form-group">
-                    {this.shouldShowField('allows_location') &&
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_event.location")} </label>
-                        <GroupedDropdown
-                            id="location_id"
-                            value={entity.location_id}
-                            options={locations_ddl}
-                            placeholder={T.translate("edit_event.placeholders.select_venue")}
-                            onChange={this.handleChange}
-                            error={hasErrors('location_id', errors)}
-                        />
-                    </div>
-                    }
                     {this.shouldShowField('allows_publishing_dates') &&
                     <>
-                        <div className="col-md-4" style={{paddingTop: '24px'}}>
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_event.start_date")} </label>
                             <DateTimePicker
                                 id="start_date"
-                                onChange={this.handleChange}
+                                onChange={this.handleTimeChange}
                                 validation={{after: currentSummit.start_date, before: currentSummit.end_date}}
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                                 value={epochToMomentTimeZone(entity.start_date, currentSummit.time_zone_id)}
@@ -459,10 +492,11 @@ class EventForm extends React.Component {
                                 viewDate={epochToMomentTimeZone(currentSummit.start_date, currentSummit.time_zone_id)}
                             />
                         </div>
-                        <div className="col-md-4" style={{paddingTop: '24px'}}>
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_event.end_date")} </label>
                             <DateTimePicker
                                 id="end_date"
-                                onChange={this.handleChange}
+                                onChange={this.handleTimeChange}
                                 validation={{after: currentSummit.start_date, before: currentSummit.end_date}}
                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                                 value={epochToMomentTimeZone(entity.end_date, currentSummit.time_zone_id)}
@@ -472,6 +506,17 @@ class EventForm extends React.Component {
                                 viewDate={epochToMomentTimeZone(currentSummit.start_date, currentSummit.time_zone_id)}
                             />
                         </div>
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_event.duration")} (minutes) </label>
+                            <input
+                              className="form-control"
+                              id="duration" value={entity.duration !== '' ? entity.duration / 60 : null}
+                              onChange={this.handleTimeChange}
+                              type="number"
+                              min="0"
+                              step="5"
+                            />
+                        </div>
                     </>
                     }
                 </div>
@@ -479,14 +524,54 @@ class EventForm extends React.Component {
                     <div className="col-md-4">
                         <label> {T.translate("edit_event.event_type")} *</label>
                         <Dropdown
-                            id="type_id"
-                            value={entity.type_id}
-                            onChange={this.handleChange}
-                            placeholder={T.translate("edit_event.placeholders.select_event_type")}
-                            options={event_types_ddl}
-                            error={hasErrors('type_id', errors)}
+                          id="type_id"
+                          value={entity.type_id}
+                          onChange={this.handleChange}
+                          placeholder={T.translate("edit_event.placeholders.select_event_type")}
+                          options={event_types_ddl}
+                          error={hasErrors('type_id', errors)}
                         />
                     </div>
+                    {this.shouldShowField('allows_location') &&
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_event.location")} </label>
+                        <GroupedDropdown
+                          id="location_id"
+                          value={entity.location_id}
+                          options={locations_ddl}
+                          placeholder={T.translate("edit_event.placeholders.select_venue")}
+                          onChange={this.handleChange}
+                          error={hasErrors('location_id', errors)}
+                        />
+                    </div>
+                    }
+                    {this.isEventTypeAllowsLevel() &&
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_event.level")} </label>
+                        <Dropdown
+                          id="level"
+                          value={entity.level}
+                          onChange={this.handleChange}
+                          placeholder={T.translate("edit_event.placeholders.select_level")}
+                          options={levels_ddl}
+                        />
+                    </div>
+                    }
+                </div>
+                <div className="row form-group">
+                    {this.isEventType('PresentationType') &&
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_event.selection_plan")} </label>
+                        <Dropdown
+                          id="selection_plan_id"
+                          value={entity.selection_plan_id}
+                          onChange={this.handleChange}
+                          placeholder={T.translate("edit_event.placeholders.select_selection_plan")}
+                          isClearable={true}
+                          options={selection_plans_ddl}
+                        />
+                    </div>
+                    }
                     <div className="col-md-4">
                         <label> {T.translate("edit_event.track")} *</label>
                         <Dropdown
@@ -502,28 +587,17 @@ class EventForm extends React.Component {
                     <div className="col-md-4">
                         <label> {T.translate("edit_event.custom_order")} </label>
                         <Input
-                            id="custom_order"
-                            type="number"
-                            className="form-control"
-                            error={hasErrors('custom_order ', errors)}
-                            value={entity.custom_order}
-                            onChange={this.handleChange}
-                        />
-                    </div>
-                    }
-                    {this.isEventTypeAllowsLevel() &&
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_event.level")} </label>
-                        <Dropdown
-                            id="level"
-                            value={entity.level}
-                            onChange={this.handleChange}
-                            placeholder={T.translate("edit_event.placeholders.select_level")}
-                            options={levels_ddl}
+                          id="custom_order"
+                          type="number"
+                          className="form-control"
+                          error={hasErrors('custom_order ', errors)}
+                          value={entity.custom_order}
+                          onChange={this.handleChange}
                         />
                     </div>
                     }
                 </div>
+                <hr />
                 <div className="row form-group">
                     <div className="col-md-3">
                         <div className="form-check abc-checkbox">
@@ -556,46 +630,34 @@ class EventForm extends React.Component {
                     </div>
                     }
                 </div>
-                {this.isEventType('PresentationType') &&
-                <div className="row form-group">
-                    <div className="col-md-6">
-                        <label> {T.translate("edit_event.selection_plan")} </label>
-                        <Dropdown
-                            id="selection_plan_id"
-                            value={entity.selection_plan_id}
-                            onChange={this.handleChange}
-                            placeholder={T.translate("edit_event.placeholders.select_selection_plan")}
-                            isClearable={true}
-                            options={selection_plans_ddl}
-                        />
-                    </div>
-                    { entity.id > 0 &&
-                    <div className="col-md-6">
-                        <label> {T.translate("edit_event.qa_users")}  <i title={T.translate("edit_event.qa_users_info")} className="fa fa-info-circle"/></label>
-                        <MemberInput
-                            id="qa_users"
-                            value={entity.qa_users}
-                            onChange={this.handleChange}
-                            error={hasErrors('qa_users', errors)}
-                            getOptionLabel={this.getQAUsersOptionLabel}
-                            multi={true}
-                        />
-                    </div>
-                    }
-                </div>
-                }
+                <hr />
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_event.tags")} </label>
                         <TagInput
-                            id="tags"
-                            value={entity.tags}
-                            summitId={currentSummit.id}
-                            onChange={this.handleChange}
-                            error={hasErrors('tags', errors)}
+                          id="tags"
+                          value={entity.tags}
+                          summitId={currentSummit.id}
+                          onChange={this.handleChange}
+                          error={hasErrors('tags', errors)}
                         />
                     </div>
                 </div>
+                {this.isEventType('PresentationType') && entity.id > 0 &&
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <label> {T.translate("edit_event.qa_users")}  <i title={T.translate("edit_event.qa_users_info")} className="fa fa-info-circle"/></label>
+                        <MemberInput
+                          id="qa_users"
+                          value={entity.qa_users}
+                          onChange={this.handleQAuserChange}
+                          error={hasErrors('qa_users', errors)}
+                          getOptionLabel={this.getQAUsersOptionLabel}
+                          multi={true}
+                        />
+                    </div>
+                </div>
+                }
                 {this.shouldShowField('use_sponsors') &&
                 <div className="row form-group">
                     <div className="col-md-8">
