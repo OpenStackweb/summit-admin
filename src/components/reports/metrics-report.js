@@ -195,6 +195,7 @@ class MetricsReport extends React.Component {
     }
 
     preProcessData(data, extraData, forExport=false) {
+        const {currentSummit} = this.props;
         let {eventType, showAnswers} = this.state;
         let processedData = [];
         let columns = [];
@@ -207,7 +208,7 @@ class MetricsReport extends React.Component {
                 const page = d.eventName || d.sponsorName || d.location;
                 return {
                     type: d.type,
-                    date: moment.tz(d.ingressDate, 'UTC').format('dddd, MMMM Do YYYY, h:mm a (z)'),
+                    date: moment.tz(d.ingressDate, currentSummit.time_zone_id).format('dddd, MMMM Do YYYY, h:mm a (z)'),
                     page: page,
                     member: d.memberName
                 }
