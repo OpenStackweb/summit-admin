@@ -61,6 +61,7 @@ window.ALLOWED_USER_GROUPS      = process.env['ALLOWED_USER_GROUPS'];
 window.EXCLUSIVE_SECTIONS       = [];
 window.PUBLIC_STORAGES          = process.env['PUBLIC_STORAGES'] || "S3";
 window.CHAT_API_BASE_URL        = process.env['CHAT_API_BASE_URL'];
+window.PUB_API_BASE_URL         = process.env['PUB_API_BASE_URL'];
 window.APP_CLIENT_NAME          = process.env['APP_CLIENT_NAME'];
 window.OAUTH2_FLOW              = process.env['OAUTH2_FLOW'] || "token id_token";
 

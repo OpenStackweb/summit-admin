@@ -19,6 +19,7 @@ import { saveEvent, attachFile, getEvents, removeImage } from '../../actions/eve
 import { unPublishEvent } from '../../actions/summit-builder-actions';
 import { deleteEventMaterial } from '../../actions/event-material-actions';
 
+
 import '../../styles/edit-summit-event-page.less';
 import '../../components/form-validation/validate.less';
 import {addQAMember, removeQAMember} from "../../actions/user-chat-roles-actions"
