@@ -37,6 +37,7 @@ class SummitEvent {
     }
 
     getMinutesDuration(){
+
         if(this._event.hasOwnProperty('start_date') && this._event.hasOwnProperty('end_date')  && this._event.start_date != null && this._event.end_date != null ) {
             let eventStartDateTime = moment(this._event.start_date * 1000).tz(this._summit.time_zone.name);
             let eventEndDateTime   = moment(this._event.end_date * 1000).tz(this._summit.time_zone.name);
@@ -44,11 +45,12 @@ class SummitEvent {
         }
         // default
 
-        return DefaultEventMinutesDuration;
+        return this._event.hasOwnProperty('duration') && this._event.duration > 0 ?  parseInt( this._event.duration / 60 ) : DefaultEventMinutesDuration;
     }
 
     canMove(siblings, day, startTime){
-        let duration       = DefaultEventMinutesDuration;
+
+        let duration       = this._event.hasOwnProperty('duration') && this._event.duration > 0 ?  parseInt( this._event.duration / 60 ) : DefaultEventMinutesDuration;
         // check if published to get real duration ...
         if(this.isPublished())
             duration = this.getMinutesDuration();
@@ -70,6 +72,10 @@ class SummitEvent {
     }
 
     calculateNewDates(day, startTime, minutes){
+
+        minutes = this._event.hasOwnProperty('duration') && this._event.duration > 0 ?
+            parseInt( this._event.duration / 60 ) : minutes;
+
         let newStarDateTime = moment.tz(day+' '+startTime.format('HH:mm'), 'YYYY-MM-DD HH:mm', this._summit.time_zone.name);
         let newEndDateTime  = moment.tz(day+' '+startTime.format('HH:mm'), 'YYYY-MM-DD HH:mm', this._summit.time_zone.name).add(minutes, 'minutes');
         return [newStarDateTime, newEndDateTime];
