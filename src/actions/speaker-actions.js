@@ -77,16 +77,23 @@ export const getSpeakers = ( term = null, page = 1, perPage = 10, order = 'id', 
 
     if(term){
         const escapedTerm = escapeFilterValue(term);
+
+        let termFilter =  [
+            `full_name=@${escapedTerm}`,
+            `first_name=@${escapedTerm}`,
+            `last_name=@${escapedTerm}`,
+            `email=@${escapedTerm}`,
+        ]
+
+        if (parseInt(escapedTerm)) {
+            const filterTermId = parseInt(escapedTerm)
+            termFilter = [...termFilter, ...[`id==${filterTermId}`,
+                `member_id==${filterTermId}`,
+                `member_user_external_id==${filterTermId}`]];
+        }
+
         filter.push(
-            [
-                `full_name=@${escapedTerm}`,
-                `first_name=@${escapedTerm}`,
-                `last_name=@${escapedTerm}`,
-                `email=@${escapedTerm}`,
-                `id==${escapedTerm}`,
-                `member_id==${escapedTerm}`,
-                `member_user_external_id==${escapedTerm}`,
-            ].join(',')
+           termFilter.join(',')
         );
     }
 
@@ -716,18 +723,25 @@ export const getSpeakersBySummit = (term = null, page = 1, perPage = 10, order =
 
     if(term) {
         const escapedTerm = escapeFilterValue(term);
+
+        let filterTerm =  [
+            `full_name@@${escapedTerm}`,
+            `email=@${escapedTerm}`,
+            `presentations_title=@${escapedTerm}`,
+            `presentations_abstract=@${escapedTerm}`,
+            `presentations_submitter_full_name@@${escapedTerm}`,
+            `presentations_submitter_email=@${escapedTerm}`
+        ];
+
+        if(parseInt(escapedTerm)){
+            const filterTermId = parseInt(escapedTerm);
+            filterTerm = [...filterTerm, ...[`id==${filterTermId}`,
+                `member_id==${filterTermId}`,
+                `member_user_external_id==${filterTermId}`]]
+        }
+
         filter.push(
-            [
-                `full_name@@${escapedTerm}`,
-                `email=@${escapedTerm}`,
-                `presentations_title=@${escapedTerm}`,
-                `presentations_abstract=@${escapedTerm}`,
-                `presentations_submitter_full_name@@${escapedTerm}`,
-                `presentations_submitter_email=@${escapedTerm}`,
-                `id==${escapedTerm}`,
-                `member_id==${escapedTerm}`,
-                `member_user_external_id==${escapedTerm}`
-            ].join(',')
+            filterTerm.join(',')
         );
     }
 
