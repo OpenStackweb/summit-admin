@@ -45,10 +45,11 @@ class MetricsReport extends React.Component {
         const {currentSummit} = this.props;
         const {fromDate, toDate, eventType, sponsor, showAnswers} = this.state;
         const overallFilter = {};
-        const metricsFields = ["name", "email", "company"];
+        const metricsFields = ["name", "email", "company", "subType"];
         const sponsorsMessage = ["sponsors"];
         const roomsMessage = ["rooms"];
         const eventsMessage = ["events"];
+        const venueRoomMessage = ["venueroom"]
 
         if (showAnswers) {
             metricsFields.push("answers");
@@ -83,7 +84,8 @@ class MetricsReport extends React.Component {
         const events = new Query(...eventsMessage);
         events.find(["id", "title", {"metrics": metrics}]);
         const rooms = new Query(...roomsMessage);
-        rooms.find(["id", "name", {"events": events}]);
+        const venueRoom = new Query(...venueRoomMessage);
+        venueRoom.find([{"metrics": metrics}]);
         const extraQuestions = new Query("orderExtraQuestions");
         extraQuestions.find(["id", "name"]);
 
@@ -95,6 +97,10 @@ class MetricsReport extends React.Component {
         const findQueries = ["id", "title", {"extraQuestions": extraQuestions}];
 
         if (eventType === 'EVENT') {
+            rooms.find(["id", "name", {"events": events}]);
+            findQueries.push({"rooms": rooms});
+        } else if (eventType === 'ROOM') {
+            rooms.find(["id", "name", {"venueroom": venueRoom}]);
             findQueries.push({"rooms": rooms});
         } else if (eventType === 'SPONSOR') {
             findQueries.push({"sponsors": sponsors});
@@ -131,7 +137,9 @@ class MetricsReport extends React.Component {
 
         let query = new Query("metrics", listFilters);
         let results = new Query("results", filters);
-        results.find(["type", "ingressDate", "outgressDate", "memberName", "eventName", "sponsorName", "location"]);
+        let eventmetric = new Query("eventmetric");
+        eventmetric.find(["subType"]);
+        results.find(["type", "ingressDate", "outgressDate", "memberName", "eventName", "sponsorName", "locationName", {"eventmetric": eventmetric} ]);
 
         query.find([{"results": results}, "totalCount"]);
 
@@ -187,11 +195,16 @@ class MetricsReport extends React.Component {
             }, {}) || {};
             result = {metric: metric.name, email: metric.email, company: metric.company, ...answers}
         }
+
+        if (metric.subType) {
+            result.subType = metric.subType;
+        }
+
         return result;
     }
 
     getSearchPlaceholder() {
-        return 'Search by User Email or User Last Name';
+        return 'Search by Member Email, Attendee Email or Room Name';
     }
 
     preProcessData(data, extraData, forExport=false) {
@@ -200,17 +213,18 @@ class MetricsReport extends React.Component {
         let processedData = [];
         let columns = [];
 
-        if (!data || ( Array.isArray(data) && !data.length ))
+        if (!data || (this.memberReport && !data?.length))
             return {reportData: processedData, tableColumns: columns};
 
         if (this.memberReport) {
             const newData = data.map(d => {
-                const page = d.eventName || d.sponsorName || d.location;
+                const origin = d.eventName || d.sponsorName || d.locationName;
                 return {
                     type: d.type,
                     date: moment.tz(d.ingressDate, currentSummit.time_zone_id).format('dddd, MMMM Do YYYY, h:mm a (z)'),
-                    page: page,
-                    member: d.memberName
+                    origin: origin,
+                    member: d.memberName,
+                    subType: d.eventmetric?.subType
                 }
 
             });
@@ -219,7 +233,8 @@ class MetricsReport extends React.Component {
 
             columns = [
                 { columnKey: 'type', value: 'Type' },
-                { columnKey: 'page', value: 'Page' },
+                { columnKey: 'origin', value: 'Origin' },
+                { columnKey: 'subType', value: 'SubType' },
                 { columnKey: 'date', value: 'Date' }
             ];
         } else {
@@ -234,7 +249,9 @@ class MetricsReport extends React.Component {
             }
 
             if (eventType === 'EVENT') {
-                if (!data.rooms)
+                columns.push({ columnKey: 'subType', value: 'SubType' });
+
+                if (!data.rooms?.some(r => r.events))
                     return {reportData: processedData, tableColumns: columns};
 
                 processedData = data.rooms
@@ -260,6 +277,35 @@ class MetricsReport extends React.Component {
                     columns = [
                         { columnKey: 'id', value: 'Event Id' },
                         { columnKey: 'title', value: 'Event' },
+                        { columnKey: 'metrics_subType', value: 'Subtype' },
+                        { columnKey: 'metrics_metric', value: 'Metric' },
+                        { columnKey: 'metrics_email', value: 'Email' },
+                        { columnKey: 'metrics_company', value: 'Company' }
+                    ];
+
+                    if (showAnswers && data.extraQuestions) {
+                        columns = [...columns, ...data.extraQuestions.map(q => ({ columnKey: `metrics_${q.id}`, value: q.name}))]
+                    }
+                }
+            } else if (eventType === 'ROOM') {
+                columns.push({ columnKey: 'subType', value: 'SubType' });
+
+                if (!data.rooms)
+                    return {reportData: processedData, tableColumns: columns};
+
+                processedData = data.rooms.filter(r => r?.venueroom?.metrics?.length)
+                  .map(rm => {
+                      const metrics = rm.venueroom.metrics.map(this.parseMetricData);
+                      return ({...rm, metrics})
+                  });
+
+                if (forExport) {
+                    processedData = flattenData(processedData);
+
+                    columns = [
+                        { columnKey: 'id', value: 'Room Id' },
+                        { columnKey: 'name', value: 'Room Name' },
+                        { columnKey: 'metrics_subType', value: 'Subtype' },
                         { columnKey: 'metrics_metric', value: 'Metric' },
                         { columnKey: 'metrics_email', value: 'Email' },
                         { columnKey: 'metrics_company', value: 'Company' }
@@ -441,6 +487,27 @@ class MetricsReport extends React.Component {
                     </div>
                 );
             });
+        } else if (eventType === 'ROOM') {
+            tables = data.map(room => {
+                const name = room.name;
+                const id = room.id;
+
+                const sectionId = `section_${id}`;
+
+                return (
+                  <Panel show={showSection === sectionId} title={`${name} (${room.metrics.length})`}
+                         handleClick={() => toggleSection(sectionId)} key={sectionId}>
+                      <div className="table-responsive">
+                          <Table
+                            options={options}
+                            data={room.metrics}
+                            columns={tableCols}
+                            onSort={this.props.onSort}
+                          />
+                      </div>
+                  </Panel>
+                );
+            });
         } else {
             tables = (
                 <div className="panel panel-default">
@@ -475,6 +542,7 @@ class MetricsReport extends React.Component {
         let event_types_ddl = [
             {label: 'Lobby', value: 'LOBBY'},
             {label: 'Event', value: 'EVENT'},
+            {label: 'Room', value: 'ROOM'},
             {label: 'Poster', value: 'POSTER'},
             {label: 'Sponsor', value: 'SPONSOR'},
             {label: 'General', value: 'GENERAL'},
