@@ -116,6 +116,7 @@ import presentationVotesReducer from "./reducers/events/summit-presentation-vote
 import ratingTypeReducer from "./reducers/ranking/rating-type-reducer";
 import scoreTypeReducer from './reducers/ranking/score-type-reducer';
 import summitSpeakersListReducer from './reducers/summit_speakers/summit-speakers-list-reducer';
+import summitStatsReducer from './reducers/summits/summit-stats-reducer';
 
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
@@ -233,6 +234,7 @@ const reducers = persistCombineReducers(config, {
     currentRegistrationCompanyListState: registrationCompanyListReducer,
     ratingTypeState: ratingTypeReducer,
     scoreTypeState: scoreTypeReducer,
+    summitStatsState: summitStatsReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

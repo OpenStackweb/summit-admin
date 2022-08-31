@@ -137,7 +137,8 @@
     "progress_flags": "Progress Flags",
     "sponsored_projects": "Sponsored Projects",
     "settings": "Settings",
-    "schedule_settings": "Schedule"
+    "schedule_settings": "Schedule",
+    "registration_stats": "Registration Stats"
   },
   "schedule": {
     "schedule": "Schedule",

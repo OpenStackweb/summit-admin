@@ -187,6 +187,7 @@ class NavMenu extends React.Component {
                     {name:'purchase_order_list', linkUrl:`summits/${summit_id}/purchase-orders`},
                     {name:'ticket_list', linkUrl:`summits/${summit_id}/tickets`},
                     {name:'order_extra_questions', linkUrl:`summits/${summit_id}/order-extra-questions`},
+                    {name:'registration_stats', linkUrl:`summits/${summit_id}/registration-stats`},
                 ]
             },
             {name: 'tickets', iconClass: 'fa-ticket', accessRoute: 'tickets',

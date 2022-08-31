@@ -17,11 +17,7 @@ import { getSummitById }  from '../../actions/summit-actions'
 import T from "i18n-react/dist/i18n-react"
 import { Breadcrumb } from 'react-breadcrumbs';
 import Member from '../../models/member';
-import { Pie } from 'react-chartjs-2';
-import {Chart} from 'chart.js';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
 import '../../styles/summit-dashboard-page.less'
-import { trim } from '../../utils/methods';
 
 class SummitDashboardPage extends React.Component {
 
@@ -32,16 +28,7 @@ class SummitDashboardPage extends React.Component {
 
         this.state = {
             localtime: moment(),
-            dataTickets:null,
-            dataTicketTypes:null,
-            totalTicketTypes:0,
-            dataBadgeTypes: null,
-            totalBadgeTypes:0,
-            dataAttendees: null,
-            dataTicketsPerBadgeFeatures: null,
-            dataCheckinsPerBadgeFeatures: null,
             collapseState: {
-                'registration': true,
                 'emails': true,
                 'events': true,
                 'voting': true,
@@ -62,160 +49,8 @@ class SummitDashboardPage extends React.Component {
 
         if(currentSummit){
             let localtime = moment().tz(currentSummit.time_zone.name);
-            this.setState({...this.state,
-                localtime: localtime,
-                dataTickets : {
-                    labels: [
-                        `Actives : ${this.props.currentSummit.total_active_tickets}`,
-                        `Inactives : ${this.props.currentSummit.total_inactive_tickets}`,
-                    ],
-                    datasets: [
-                        {
-                            label: '# of Tickets',
-                            data: [
-                                this.props.currentSummit.total_active_tickets,
-                                this.props.currentSummit.total_inactive_tickets
-                            ],
-                            backgroundColor: [
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(255, 99, 132, 1)',
-                            ],
-                            borderColor: [
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(255, 99, 132, 1)',
-                            ],
-                            borderWidth: 1,
-                        },
-                    ],
-                },
-                dataTicketTypes : {
-                    labels: this.props.currentSummit.total_tickets_per_type.map(tt => `${trim(tt.type , 75)} : ${parseInt(tt.qty)}`),
-                    datasets: [
-                        {
-                            label: 'Ticket Types',
-                            data: this.props.currentSummit.total_tickets_per_type.map(tt => parseInt(tt.qty)),
-                            borderWidth: 1,
-                            backgroundColor: this.props.currentSummit.total_tickets_per_type.map(tt => {
-                                let r = Math.floor(Math.random() * 200);
-                                let g = Math.floor(Math.random() * 200);
-                                let b = Math.floor(Math.random() * 200);
-                                return 'rgb(' + r + ', ' + g + ', ' + b + ')';
-                            })
-                        },
-                    ],
-                },
-                totalTicketTypes: this.props.currentSummit.total_tickets_per_type.reduce(function(accumulator, currentValue) {
-                    return accumulator + parseInt(currentValue.qty);
-                }, 0),
-
-                dataBadgeTypes : {
-                    labels: this.props.currentSummit.total_badges_per_type.map(tt => `${trim(tt.type, 75)} : ${parseInt(tt.qty)}`),
-                    datasets: [
-                        {
-                            label: 'Badge Types',
-                            data: this.props.currentSummit.total_badges_per_type.map(tt => parseInt(tt.qty)),
-                            borderWidth: 1,
-                            backgroundColor: this.props.currentSummit.total_badges_per_type.map(tt => {
-                                let r = Math.floor(Math.random() * 200);
-                                let g = Math.floor(Math.random() * 200);
-                                let b = Math.floor(Math.random() * 200);
-                                return 'rgb(' + r + ', ' + g + ', ' + b + ')';
-                            })
-                        },
-                    ],
-                },
-                totalBadgeTypes: this.props.currentSummit.total_badges_per_type.reduce(function(accumulator, currentValue) {
-                    return accumulator + parseInt(currentValue.qty);
-                }, 0),
-                dataAttendees:{
-                    labels: [`Checked In : ${this.props.currentSummit.total_checked_in_attendees}`,
-                             `Non Checked In: ${this.props.currentSummit.total_non_checked_in_attendees}`,
-                            // `Virtual Check In ${this.props.currentSummit.total_virtual_attendees}`
-                    ],
-                    datasets: [
-                        {
-                            label: 'Attendees',
-                            data: [
-                                this.props.currentSummit.total_checked_in_attendees,
-                                this.props.currentSummit.total_non_checked_in_attendees,
-                                //this.props.currentSummit.total_virtual_attendees
-                            ],
-                            backgroundColor: [
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(255, 99, 132, 1)',
-                                //'rgba(255, 159, 64, 1)',
-                            ],
-                            borderColor: [
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(255, 99, 132, 1)',
-                               // 'rgba(255, 159, 64, 1)',
-                            ],
-                            borderWidth: 1,
-                        },
-                    ],
-                },
-                dataVirtualAttendees:{
-                    labels: [
-                        `Virtual Check In ${this.props.currentSummit.total_virtual_attendees}`,
-                        `Non Virtual Checked In: ${(this.props.currentSummit.total_checked_in_attendees + this.props.currentSummit.total_non_checked_in_attendees) - this.props.currentSummit.total_virtual_attendees}`,
-                    ],
-                    datasets: [
-                        {
-                            label: 'Attendees',
-                            data: [
-                                this.props.currentSummit.total_virtual_attendees,
-                                (this.props.currentSummit.total_checked_in_attendees + this.props.currentSummit.total_non_checked_in_attendees) - this.props.currentSummit.total_virtual_attendees,
-                            ],
-                            backgroundColor: [
-                                'rgba(255, 159, 64, 1)',
-                                'rgba(255, 99, 132, 1)',
-                            ],
-                            borderColor: [
-                                'rgba(255, 159, 64, 1)',
-                                'rgba(255, 99, 132, 1)',
-                            ],
-                            borderWidth: 1,
-                        },
-                    ],
-                },
-                dataTicketsPerBadgeFeatures:{
-                    labels: this.props.currentSummit.total_tickets_per_badge_feature.map(tt => `${tt.type} : ${parseInt(tt.tickets_qty)}`),
-                    datasets: [
-                        {
-                            label: 'Badge Features1',
-                            data: this.props.currentSummit.total_tickets_per_badge_feature.map(tt => parseInt(tt.tickets_qty)),
-                            borderWidth: 1,
-                            backgroundColor: this.props.currentSummit.total_tickets_per_badge_feature.map(tt => {
-                                let r = Math.floor(Math.random() * 200);
-                                let g = Math.floor(Math.random() * 200);
-                                let b = Math.floor(Math.random() * 200);
-                                return 'rgb(' + r + ', ' + g + ', ' + b + ')';
-                            })
-                        },
-                    ],
-                },
-                dataCheckinsPerBadgeFeatures:{
-                    labels: this.props.currentSummit.total_tickets_per_badge_feature.map(tt => `${tt.type} : ${parseInt(tt.checkin_qty)}`),
-                    datasets: [
-                        {
-                            label: 'Badge Features1',
-                            data: this.props.currentSummit.total_tickets_per_badge_feature.map(tt => parseInt(tt.checkin_qty)),
-                            borderWidth: 1,
-                            backgroundColor: this.props.currentSummit.total_tickets_per_badge_feature.map(tt => {
-                                let r = Math.floor(Math.random() * 200);
-                                let g = Math.floor(Math.random() * 200);
-                                let b = Math.floor(Math.random() * 200);
-                                return 'rgb(' + r + ', ' + g + ', ' + b + ')';
-                            })
-                        },
-                    ],
-                }
-            });
+            this.setState({...this.state, localtime: localtime });
         }
-    }
-
-    componentWillMount() {
-        Chart.register(ChartDataLabels);
     }
 
     componentWillUnmount() {
@@ -240,40 +75,8 @@ class SummitDashboardPage extends React.Component {
     }
 
     render() {
-        const chartOptions = {
-            maintainAspectRatio: false,
-                plugins: {
-                    tooltip:{
-                        callbacks: {
-                            label: (context) => {
-                                return context.label || '';
-                            }
-                        }
-                    },
-                    legend: {
-                        display: true,
-                        position: 'bottom',
-                        maxWidth: 100,
-                        align: 'start',
-                    },
-                    datalabels: {
-                        formatter: (value, ctx) => {
-                            let datasets = ctx.chart.data.datasets;
-                            if (datasets.indexOf(ctx.dataset) === datasets.length - 1) {
-                                let sum = datasets[0].data.reduce((a, b) => a + b, 0);
-                                if(!sum) return '0%';
-                                return Math.round((value / sum) * 100) + '%';
-                            }
-                            return '';
-                        },
-                        color: '#FFFFFF',
-                    }
-                },
-        };
-
         const { currentSummit, match, member } = this.props;
         let memberObj = new Member(member);
-        let currentSummitTime = (new Date).getTime();
         let canEditSummit = memberObj.canEditSummit();
 
         if(!currentSummit.id) return(<div />);
@@ -329,122 +132,6 @@ class SummitDashboardPage extends React.Component {
 
                     {canEditSummit &&
                     <div>
-                        <hr/>
-                        <h4>{T.translate("dashboard.registration_stats")}&nbsp;
-                            {this.state.collapseState['registration'] && <i title={T.translate("dashboard.expand")} onClick={() => this.onCollapseChange('registration')} className="fa fa-plus-square clickable" aria-hidden="true"></i>}
-                            {!this.state.collapseState['registration'] && <i title={T.translate("dashboard.collapse")} onClick={() => this.onCollapseChange('registration')} className="fa fa-minus-square clickable" aria-hidden="true"></i>}
-                        </h4>
-                        {! this.state.collapseState['registration'] &&
-                            <div>
-                                <div className="row">
-                                    <div className="col-md-6">
-                                        <i className="fa fa-money"/>&nbsp;{T.translate("dashboard.payment_amount_collected")}&nbsp;
-                                        <strong>$&nbsp;{parseFloat(currentSummit.total_payment_amount_collected).toFixed(2)}</strong>
-                                    </div>
-                                    <div className="col-md-6">
-                                        {T.translate("dashboard.refund_amount_emitted")}&nbsp;
-                                        <strong>$&nbsp;{parseFloat(currentSummit.total_refund_amount_emitted).toFixed(2)}</strong>
-                                    </div>
-                                </div>
-                                {(currentSummit.total_active_tickets + currentSummit.total_inactive_tickets) > 0 &&
-                                <>
-                                    <h5><i
-                                        className="fa fa-ticket"/>&nbsp;{T.translate("dashboard.total_tickets")} ({currentSummit.total_active_tickets + currentSummit.total_inactive_tickets})
-                                        / {T.translate("dashboard.orders")} ({currentSummit.total_orders})</h5>
-                                    <div className="row">
-                                        <div className="col-md-12">
-                                            <Pie data={this.state.dataTickets}
-                                                 width={325}
-                                                 height={325}
-                                                 options={chartOptions}
-                                            />
-                                        </div>
-                                    </div>
-                                </>
-                                }
-                                {this.state.totalTicketTypes > 0 &&
-                                <div className="row">
-                                    <div className="col-md-6">
-                                        <h5>{T.translate("dashboard.ticket_types")} ({this.state.totalTicketTypes})</h5>
-                                        <div className="row">
-                                            <div className="col-md-12">
-                                                <Pie data={this.state.dataTicketTypes}
-                                                     width={325}
-                                                     height={325}
-                                                     options={chartOptions}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="col-md-6">
-                                        <h5>{T.translate("dashboard.badge_types")} ({this.state.totalBadgeTypes})</h5>
-                                        <div className="row">
-                                            <div className="col-md-12">
-                                                <Pie data={this.state.dataBadgeTypes}
-                                                     width={325}
-                                                     height={325}
-                                                     options={chartOptions}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                }
-                                { this.props.currentSummit.total_tickets_per_badge_feature.some(t => t.tickets_qty > 0) &&
-                                <div className="row">
-                                    <div className="col-md-6">
-                                        <h5>{T.translate("dashboard.badge_features_tickets")}</h5>
-                                        <div className="row">
-                                            <div className="col-md-12">
-                                                <Pie data={this.state.dataTicketsPerBadgeFeatures}
-                                                     width={325}
-                                                     height={325}
-                                                     options={chartOptions}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="col-md-6">
-                                        <h5>{T.translate("dashboard.badge_features_checkins")}</h5>
-                                        <div className="row">
-                                            <div className="col-md-12">
-                                                <Pie data={this.state.dataCheckinsPerBadgeFeatures}
-                                                     width={325}
-                                                     height={325}
-                                                     options={chartOptions}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                }
-                                {(this.props.currentSummit.total_checked_in_attendees +
-                                    this.props.currentSummit.total_non_checked_in_attendees +
-                                    this.props.currentSummit.total_virtual_attendees) > 0 &&
-                                <>
-                                    <h5><i
-                                        className="fa fa-users"/>&nbsp;{T.translate("dashboard.attendees")} ({this.props.currentSummit.total_checked_in_attendees +
-                                    this.props.currentSummit.total_non_checked_in_attendees})</h5>
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <Pie data={this.state.dataAttendees}
-                                                 width={325}
-                                                 height={325}
-                                                 options={chartOptions}
-                                            />
-                                        </div>
-                                        <div className="col-md-6">
-                                            <Pie data={this.state.dataVirtualAttendees}
-                                                 width={325}
-                                                 height={325}
-                                                 options={chartOptions}
-                                            />
-                                        </div>
-                                    </div>
-                                </>
-                                }
-                            </div>
-                        }
                         <hr/>
                         <h4>{T.translate("dashboard.events")}&nbsp;
                             {this.state.collapseState['events'] && <i title={T.translate("dashboard.expand")} onClick={() => this.onCollapseChange('events')} className="fa fa-plus-square clickable" aria-hidden="true"></i>}

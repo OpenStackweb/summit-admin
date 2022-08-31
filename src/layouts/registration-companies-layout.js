@@ -17,7 +17,7 @@ import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import Restrict from '../routes/restrict';
 
-import RegistrationCompaniesListPage from '../pages/registration_companies/registration-companies-list-page'
+import RegistrationCompaniesListPage from '../pages/registration/registration-companies-list-page'
 import NoMatchPage from "../pages/no-match-page";
 
 
