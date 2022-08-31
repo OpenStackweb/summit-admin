@@ -148,7 +148,6 @@ export const printTickets = (filters, order, orderDir, doAttendeeCheckinOnPrint 
         params['view_type'] = selectedViewType;
     }
 
-
     let url = URI(`${process.env['PRINT_APP_URL']}/check-in/${currentSummit.slug}/tickets`);
 
     window.open(url.query(params).toString(), '_blank');
@@ -169,6 +168,7 @@ const parseFilters = (filters) => {
 
     if (filters.hasOwnProperty('showOnlyPrintable') && filters.showOnlyPrintable) {
         filter.push('access_level_type_name==IN_PERSON');
+        filter.push('is_active==1');
     }
 
     if (filters.hasOwnProperty('hasOwnerFilter') && filters.hasOwnerFilter) {
