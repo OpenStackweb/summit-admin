@@ -106,6 +106,15 @@ const BasePCForm = (props) => {
             <div className="row form-group">
                 <div className="col-md-12">
                     <label> {T.translate("edit_promocode.badge_features")}</label>
+
+                    <div className="form-check abc-checkbox">
+                        <input type="checkbox" id="badge_features_apply_to_all_tix_retroactively" checked={props.entity.badge_features_apply_to_all_tix_retroactively}
+                               onChange={props.handleChange} className="form-check-input"/>
+                        <label className="form-check-label" htmlFor="badge_features_apply_to_all_tix_retroactively">
+                            {T.translate("edit_promocode.badge_features_apply_to_all_tix_retroactively")}
+                        </label>
+                    </div>
+
                     <Dropdown
                         id="badge_features"
                         value={props.entity.badge_features}
@@ -209,6 +218,9 @@ const DiscountBasePCForm = (props) => (
 
         <div className="row form-group">
             <div className="col-md-4">
+                <label>
+                    {T.translate("edit_promocode.apply_to_all_tix_discounts")}
+                </label>
                 <div className="form-check abc-checkbox">
                     <input type="checkbox" id="apply_to_all_tix" checked={props.entity.apply_to_all_tix}
                            onChange={props.handleChange} className="form-check-input"/>
@@ -421,9 +433,9 @@ class PromocodeForm extends React.Component {
         return '';
     }
 
-    handleBadgeFeatureLink(value) {
+    handleBadgeFeatureLink(valueId) {
         const {entity} = this.state;
-        this.props.onBadgeFeatureLink(entity.id, value);
+        this.props.onBadgeFeatureLink(entity.id, valueId);
     }
 
     handleBadgeFeatureUnLink(valueId) {
@@ -440,7 +452,6 @@ class PromocodeForm extends React.Component {
         callback(badgeFeatures);
     }
 
-
     render() {
         const {entity} = this.state;
         const { currentSummit, allTypes, allClasses } = this.props;
@@ -453,7 +464,6 @@ class PromocodeForm extends React.Component {
                 promocode_types_ddl = classTypes.map(t => ({label: t, value: t}));
             }
         }
-
 
         let badgeFeatureColumns = [
             { columnKey: 'name', value: T.translate("edit_promocode.name") },

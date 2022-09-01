@@ -667,8 +667,10 @@
     "amount": "Amount",
     "rate": "Rate",
     "apply_to_all_tix": "Apply to all Ticket Types",
+    "badge_features_apply_to_all_tix_retroactively": "Apply to Tickets already using this Promo Code ?",
     "promocode_saved": "Promocode saved successfully.",
     "promocode_created": "Promocode created successfully.",
+    "apply_to_all_tix_discounts": "Discounts",
     "placeholders": {
       "select_badge_features": "Select one or more Badge Features",
       "select_badge_type": "Select a Badge Type",

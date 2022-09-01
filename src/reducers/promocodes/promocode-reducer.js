@@ -48,6 +48,7 @@ export const DEFAULT_ENTITY = {
     allowed_ticket_types    : [],
     ticket_types_rules      : [],
     apply_to_all_tix        : true,
+    badge_features_apply_to_all_tix_retroactively: false,
     amount                  : '',
     rate                    : ''
 }
@@ -115,18 +116,18 @@ const promocodeReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case PROMOCODE_UPDATED: {
-            return state;
+            return {...state, entity: {...state.entity, badge_features_apply_to_all_tix_retroactively: false}};
         }
         break;
         case DISCOUNT_TICKET_ADDED: {
             let ticket = {...payload.response};
-            return {...state, entity: {...state.entity, ticket_types_rules: ticket.ticket_types_rules, apply_to_all_tix: false} };
+            return {...state, entity: {...state.entity, ticket_types_rules: ticket.ticket_types_rules, apply_to_all_tix: false, badge_features_apply_to_all_tix_retroactively: false} };
         }
         break;
         case DISCOUNT_TICKET_DELETED: {
             let {ticketId} = payload;
             let ticket_types_rules = state.entity.ticket_types_rules.filter(tr => tr.id !== ticketId);
-            return {...state, entity: {...state.entity, ticket_types_rules, apply_to_all_tix: false } };
+            return {...state, entity: {...state.entity, ticket_types_rules, apply_to_all_tix: false, badge_features_apply_to_all_tix_retroactively: false } };
         }
         break;
         case EMAIL_SENT: {
