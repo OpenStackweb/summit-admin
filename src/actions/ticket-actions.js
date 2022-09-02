@@ -197,7 +197,14 @@ const parseFilters = (filters) => {
             (accumulator, tt) => accumulator +(accumulator !== '' ? ',':'') +`view_type_id==${tt.value}`,
             ''
         ));
-    }    
+    }
+
+    if(filters.promocodesFilter?.length > 0){
+        filter.push(filters.promocodesFilter.reduce(
+          (accumulator, tt) => accumulator +(accumulator !== '' ? ',':'') +`promo_code_id==${tt.id}`,
+          ''
+        ));
+    }
 
     if(filters.hasOwnProperty('completedFilter') && filters.completedFilter){
         filter.push(`owner_status==${filters.completedFilter}`);

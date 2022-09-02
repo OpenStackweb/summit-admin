@@ -1158,7 +1158,8 @@
       "ticket_types": "Filter By Ticket Types ...",
       "owner_first_name": "First name starts with ...",
       "view_types": "Filter by View Types ...",
-      "view_type": "Select a View Type ..."
+      "view_type": "Select a View Type ...",
+      "promocodes": "Select a Promocodes ..."
     }
   },
   "edit_ticket": {

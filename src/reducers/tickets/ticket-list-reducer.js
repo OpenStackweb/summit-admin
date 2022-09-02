@@ -26,7 +26,7 @@ import {epochToMoment} from "openstack-uicore-foundation/lib/utils/methods";
 
 const DEFAULT_STATE = {
     tickets: [],
-    term: null,
+    term: '',
     order: 'id',
     orderDir: 1,
     currentPage: 1,
@@ -44,6 +44,7 @@ const DEFAULT_STATE = {
     completedFilter : null,
     hasBadgeFilter : null,
     showOnlyPrintable: false,
+    promocodesFilter: [],
 };
 
 const ticketListReducer = (state = DEFAULT_STATE, action) => {
