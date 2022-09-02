@@ -12,11 +12,15 @@
  **/
 
 import moment from 'moment-timezone';
+import momentDurationFormatSetup from 'moment-duration-format';
+
+momentDurationFormatSetup(moment);
+
 import
 {
     RECEIVE_EVENTS,
     REQUEST_EVENTS,
-    EVENT_DELETED,
+    EVENT_DELETED
 } from '../../actions/event-actions';
 
 import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
@@ -31,8 +35,15 @@ const DEFAULT_STATE = {
     lastPage        : 1,
     perPage         : 10,
     totalEvents     : 0,
-    summitTZ        : ''
+    summitTZ        : '',
+    filters         : {},
+    extraColumns    : []
 };
+
+const formatDuration = (duration) => {
+    let d = moment.duration(duration, 'seconds');
+    return d.format('mm:ss');
+}
 
 const eventListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
@@ -42,9 +53,9 @@ const eventListReducer = (state = DEFAULT_STATE, action) => {
             return DEFAULT_STATE;
         }
         case REQUEST_EVENTS: {
-            let {order, orderDir, term, summitTZ} = payload;
+            let {order, orderDir, term, summitTZ, filters, extraColumns} = payload;
 
-            return {...state, order, orderDir, term, summitTZ }
+            return {...state, order, orderDir, term, summitTZ, filters, extraColumns}
         }
         case RECEIVE_EVENTS: {
             let {current_page, total, last_page} = payload.response;
@@ -56,9 +67,13 @@ const eventListReducer = (state = DEFAULT_STATE, action) => {
                     type: e.type.name,
                     title: e.title,
                     status: e.status,
+                    selection_status: e.selection_status,
                     published_date: published_date,
                     created_by_fullname: e.hasOwnProperty('created_by') ? `${e.created_by.first_name} ${e.created_by.last_name}`:'TBD',
-                    speakers: (e.speakers) ? e.speakers.map(s => s.first_name + ' ' + s.last_name).join(',') : ''
+                    speakers: (e.speakers) ? e.speakers.map(s => s.first_name + ' ' + s.last_name).join(',') : '',
+                    duration: e.type.allows_publishing_dates ?
+                        formatDuration(e.duration) : 'N/A',
+                    speaker_count: (e.speakers) ? e.speakers.length : '',                    
                 };
             });
 

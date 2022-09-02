@@ -55,37 +55,40 @@ export const EVENTS_IMPORTED = 'EVENTS_IMPORTED';
 export const IMPORT_FROM_MUX = 'IMPORT_FROM_MUX';
 
 
-export const getEvents = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1, extraFilters = null) => async (dispatch, getState) => {
+export const getEvents = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1, filters = {}, extraColumns = []) => async (dispatch, getState) => {
 
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
-    const filter = [];
     const summitTZ = currentSummit.time_zone.name;
 
     dispatch(startLoading());
 
+    const filter = parseFilters(filters);
+
     if (term) {
         const escapedTerm = escapeFilterValue(term);
-        let searchString = `title=@${escapedTerm},abstract=@${escapedTerm},tags=@${escapedTerm},speaker=@${escapedTerm},speaker_email=@${escapedTerm},speaker_title=@${escapedTerm},speaker_company=@${escapedTerm},created_by_fullname=@${escapedTerm},created_by_email=@${escapedTerm}`;
+        let searchString = `
+            title=@${escapedTerm},
+            abstract=@${escapedTerm},
+            tags=@${escapedTerm},
+            speaker=@${escapedTerm},
+            speaker_email=@${escapedTerm},
+            speaker_title=@${escapedTerm},
+            speaker_company=@${escapedTerm},
+            created_by_fullname=@${escapedTerm},
+            created_by_email=@${escapedTerm},
+            created_by_company=@${escapedTerm},
+            speaker_company=@${escapedTerm},
+            streaming_url=@${escapedTerm},
+            meeting_url=@${escapedTerm},
+            etherpad_link=@${escapedTerm}`;
 
         if (parseInt(term)) {
             searchString += `,id==${parseInt(term)}`;
         }
 
         filter.push(searchString);
-    }
-
-    if (extraFilters) {
-        if (extraFilters.allows_attendee_vote_filter) {
-            filter.push('type_allows_attendee_vote==1');
-        }
-        if (extraFilters.allows_location_filter) {
-            filter.push('type_allows_location==1');
-        }
-        if (extraFilters.allows_publishing_dates_filter) {
-            filter.push('type_allows_publishing_dates==1');
-        }
     }
 
     const params = {
@@ -110,7 +113,7 @@ export const getEvents = (term = null, page = 1, perPage = 10, order = 'id', ord
         createAction(RECEIVE_EVENTS),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events`,
         authErrorHandler,
-        {order, orderDir, term, summitTZ}
+        {order, orderDir, term, summitTZ, filters, extraColumns}
     )(params)(dispatch).then((data) => {
             dispatch(stopLoading());
             return data.response;
@@ -611,16 +614,17 @@ export const deleteEvent = (eventId) => async (dispatch, getState) => {
     );
 };
 
-export const exportEvents = (term = null, order = 'id', orderDir = 1) => async (dispatch, getState) => {
+export const exportEvents = (term = null, order = 'id', orderDir = 1, extraFilters = {}, extraColumns = []) => async (dispatch, getState) => {
 
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
-    const filter = [];
     const filename = currentSummit.name + '-Activities.csv';
     const params = {
         access_token: accessToken
     };
+    
+    const filter = parseFilters(extraFilters);
 
     if (term) {
         const escapedTerm = escapeFilterValue(term);
@@ -707,3 +711,122 @@ export const importEventsCSV = (file, send_speaker_email) => async (dispatch, ge
             window.location.reload();
         });
 };
+
+const parseFilters = (filters) => {
+    const filter = [];
+
+    if(filters.hasOwnProperty('event_type_capacity_filter') && Array.isArray(filters.event_type_capacity_filter)
+        && filters.event_type_capacity_filter.length > 0) {            
+            if (filters.event_type_capacity_filter.includes('allows_attendee_vote_filter')) {
+                filter.push('type_allows_attendee_vote==1');
+            }
+            if (filters.event_type_capacity_filter.includes('allows_location_filter')) {
+                filter.push('type_allows_location==1');
+            }
+            if (filters.event_type_capacity_filter.includes('allows_publishing_dates_filter')) {
+                filter.push('type_allows_publishing_dates==1');
+            }
+    }
+
+    if(filters.hasOwnProperty('selection_plan_id_filter') && Array.isArray(filters.selection_plan_id_filter)
+         && filters.selection_plan_id_filter.length > 0){
+            filter.push('selection_plan_id=='+filters.selection_plan_id_filter.reduce(
+            (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt,
+            ''
+        ));
+    }
+
+    if(filters.hasOwnProperty('location_id_filter') && Array.isArray(filters.location_id_filter)
+         && filters.location_id_filter.length > 0){
+            filter.push('location_id=='+filters.location_id_filter.reduce(
+            (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt,
+            ''
+        ));
+    }
+
+    if(filters.hasOwnProperty('selection_status_filter') && Array.isArray(filters.selection_status_filter)
+         && filters.selection_status_filter.length > 0){
+            filter.push('selection_status=='+filters.selection_status_filter.reduce(
+            (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt,
+            ''
+        ));
+    }
+    
+    if(filters.hasOwnProperty('track_id_filter') && Array.isArray(filters.track_id_filter)
+         && filters.track_id_filter.length > 0){
+            filter.push('track_id=='+filters.track_id_filter.reduce(
+            (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt,
+            ''
+        ));
+    }
+
+    if(filters.hasOwnProperty('event_type_id_filter') && Array.isArray(filters.event_type_id_filter)
+         && filters.event_type_id_filter.length > 0){
+            filter.push('event_type_id=='+filters.event_type_id_filter.reduce(
+            (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt,
+            ''
+        ));
+    }
+    
+    if(filters.hasOwnProperty('speaker_id_filter') && Array.isArray(filters.speaker_id_filter)
+         && filters.speaker_id_filter.length > 0){
+            filter.push('speaker_id=='+filters.speaker_id_filter.reduce(
+            (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt.id,
+            ''
+        ));
+    }
+
+    if(filters.hasOwnProperty('level_filter') && Array.isArray(filters.level_filter)
+        && filters.level_filter.length > 0){
+            filter.push('level=='+filters.level_filter.reduce(
+            (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt,
+            ''
+        ));
+    }
+    
+    if(filters.hasOwnProperty('tags_filter') && Array.isArray(filters.tags_filter)
+        && filters.tags_filter.length > 0){
+            filter.push('tags=='+filters.tags_filter.reduce(
+            (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt.id,
+            ''
+        ));
+    }
+
+    if(filters.published_filter) {
+        filter.push(`published==${filters.published_filter === 'published' ? '1' : '0'}`);
+    }            
+    
+    if(filters.start_date_filter) {
+        filter.push(`start_date==${filters.start_date_filter}`);
+    }
+
+    if(filters.end_date_filter) {
+        filter.push(`end_date==${filters.end_date_filter}`);
+    }
+
+    if(filters.duration_filter) {
+
+        // multiply values to send the minutes in seconds
+
+        if(Array.isArray(filters.duration_filter)){
+            filter.push(`duration>=${filters.duration_filter[0]*60}`);
+            filter.push(`duration<=${filters.duration_filter[1]*60}`);
+        }
+        else{
+            filter.push(`duration${filters.duration_filter.replace(/\d/g, '')}${filters.duration_filter.replace(/\D/g, '')*60}`);
+        }
+    }
+
+    if(filters.speaker_count_filter) {
+        if(Array.isArray(filters.speaker_count_filter) ){
+            filter.push(`speakers_count>=${filters.speaker_count_filter[0]}`);
+            filter.push(`speakers_count<=${filters.speaker_count_filter[1]}`);
+        }
+        else{
+            filter.push(`speakers_count${filters.speaker_count_filter}`)
+        }
+
+    }
+
+    return filter;
+}
