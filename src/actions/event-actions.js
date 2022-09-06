@@ -68,21 +68,20 @@ export const getEvents = (term = null, page = 1, perPage = 10, order = 'id', ord
 
     if (term) {
         const escapedTerm = escapeFilterValue(term);
-        let searchString = `
-            title=@${escapedTerm},
-            abstract=@${escapedTerm},
-            tags=@${escapedTerm},
-            speaker=@${escapedTerm},
-            speaker_email=@${escapedTerm},
-            speaker_title=@${escapedTerm},
-            speaker_company=@${escapedTerm},
-            created_by_fullname=@${escapedTerm},
-            created_by_email=@${escapedTerm},
-            created_by_company=@${escapedTerm},
-            speaker_company=@${escapedTerm},
-            streaming_url=@${escapedTerm},
-            meeting_url=@${escapedTerm},
-            etherpad_link=@${escapedTerm}`;
+        let searchString = `title=@${escapedTerm},` +
+            `abstract=@${escapedTerm},`+
+            `tags=@${escapedTerm},`+
+            `speaker=@${escapedTerm},`+
+            `speaker_email=@${escapedTerm},`+
+            `speaker_title=@${escapedTerm},`+
+            `speaker_company=@${escapedTerm},`+
+            `created_by_fullname=@${escapedTerm},`+
+            `created_by_email=@${escapedTerm},`+
+            `created_by_company=@${escapedTerm},`+
+            `speaker_company=@${escapedTerm},`+
+            `streaming_url=@${escapedTerm},`+
+            `meeting_url=@${escapedTerm},`+
+            `etherpad_link=@${escapedTerm}`;
 
         if (parseInt(term)) {
             searchString += `,id==${parseInt(term)}`;
