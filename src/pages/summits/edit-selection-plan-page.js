@@ -83,9 +83,9 @@ class EditSelectionPlanPage extends React.Component {
         history.push(`/app/summits/${currentSummit.id}/selection-plans/${entity.id}/rating-types/${ratingTypeId}`);
     }
 
-    onUpdateRatingTypeOrder(ratingTypes, ratingTypeId){
+    onUpdateRatingTypeOrder(ratingTypes, ratingTypeId, newOrder){
         const {entity} = this.props;
-        this.props.updateRatingTypeOrder(entity.id, ratingTypes, ratingTypeId);
+        this.props.updateRatingTypeOrder(entity.id, ratingTypes, ratingTypeId, newOrder);
     }
 
     onDeleteRatingType(ratingTypeId){

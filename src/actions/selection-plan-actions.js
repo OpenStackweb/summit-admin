@@ -536,7 +536,8 @@ export const updateRatingTypeOrder = (selectionPlanId, ratingTypes, ratingTypeId
         access_token: accessToken
     };
 
-    const ratingType = ratingTypes.find(r => r.id === ratingTypeId);
+    let ratingType = ratingTypes.find(r => r.id === ratingTypeId);
+    ratingType.order = newOrder;
 
     return putRequest(
         null,
