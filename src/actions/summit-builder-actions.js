@@ -129,6 +129,7 @@ export const publishEvent = (event, day, startTime, minutes) =>
         const { currentLocation } = currentScheduleBuilderState;
 
         const eventModel          = new SummitEvent(event, currentSummit);
+        eventModel._event.duration = minutes * 60;
         const [eventStarDateTime, eventEndDateTime ] = eventModel.calculateNewDates(day, startTime, minutes);
 
         dispatch(startLoading());
@@ -149,6 +150,7 @@ export const publishEvent = (event, day, startTime, minutes) =>
                 location_id : currentLocation.id,
                 start_date  : eventStarDateTime.valueOf()/1000,
                 end_date    : eventEndDateTime.valueOf()/1000,
+                duration    : eventModel._event.duration
             },
             authErrorHandler
         )({})(dispatch)

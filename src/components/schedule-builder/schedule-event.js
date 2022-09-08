@@ -23,7 +23,7 @@ const ScheduleEvent = ({event, step, initialTop, initialHeight, minHeight, maxHe
     const [collected, drag] = useDrag(() => ({
         type: DraggableItemTypes.SCHEDULEEVENT,
         item: { ...event }
-    }));
+    }), [event.id]);
     const [resizeInfo, setResizeInfo] = useState({resizing: false, type: null, lastYPos: null});
     const [size, setSize] = useState({top: initialTop, height: initialHeight});
     const isSelected = selectedPublishedEvents.includes(event.id);
