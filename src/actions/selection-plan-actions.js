@@ -532,6 +532,8 @@ export const updateRatingTypeOrder = (selectionPlanId, ratingTypes, ratingTypeId
     const accessToken = await getAccessTokenSafely();
     const {currentSummit} = currentSummitState;
 
+    dispatch(startLoading());
+
     const params = {
         access_token: accessToken
     };

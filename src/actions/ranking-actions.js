@@ -263,7 +263,7 @@ export const updateScoreTypeOrder = (ratingTypeId, scoreTypes, scoreTypeId, newO
     const params = {
         access_token: accessToken
     };
-
+    dispatch(startLoading());
     const scoreType = scoreTypes.find(r => r.id === scoreTypeId);
     scoreType.score = newOrder;
 
@@ -274,6 +274,7 @@ export const updateScoreTypeOrder = (ratingTypeId, scoreTypes, scoreTypeId, newO
         scoreType,
         authErrorHandler
     )(params)(dispatch).then(() => {
+            dispatch(stopLoading())
             dispatch(getScoreTypes(ratingTypeId));
         }
     );
