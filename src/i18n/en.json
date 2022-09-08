@@ -2042,7 +2042,8 @@
     "checkin": "Check In",
     "checked_in": "Checked In",
     "wrong_qr_title": "QR Code Error",
-    "wrong_qr_text": "Wrong format on QR code."
+    "wrong_qr_text": "Wrong format on QR code.",
+    "switch_camera": "Switch Camera"
   },
   "rating_type_list": {
     "name": "Name",

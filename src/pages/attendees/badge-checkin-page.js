@@ -17,12 +17,14 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
 import { checkInBadge } from "../../actions/badge-actions";
 import QrReader from "react-qr-reader";
+import {isMobile} from 'react-device-detect';
 import Swal from "sweetalert2";
 import styles from '../../styles/badge-checkin-page.module.less';
 import {validateBadgeQR} from "../../utils/methods";
 
 const BadgeCheckinPage = ({match, currentSummit, checkInBadge}) => {
     const [scanning, setScanning] = useState(false);
+    const [camera, setCamera] = useState('environment');
 
     const handleCheckIn = (data) => {
         if (data && !scanning) {
@@ -63,9 +65,17 @@ const BadgeCheckinPage = ({match, currentSummit, checkInBadge}) => {
                     delay={2000}
                     onError={handleError}
                     onScan={handleCheckIn}
-                    style={{ width: '100%' }}
+                    facingMode={camera}
+                    containerStyle={{ width: '100vw' }}
+                    videoStyle={{width: '100vw'}}
                 />
             </div>
+            <br/>
+            {isMobile && 
+            <button className="btn btn-primary" onClick={() => setCamera(camera === 'environment' ? 'user' : 'environment')}>
+                <i className="fa fa-camera" aria-hidden="true" title={T.translate("badge_checkin.switch_camera")}/>
+                &nbsp;{T.translate("badge_checkin.switch_camera")}
+            </button>}
 
         </div>
     )
