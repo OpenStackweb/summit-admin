@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { Pagination } from 'react-bootstrap';
 import { FreeTextSearch } from 'openstack-uicore-foundation/lib/components'
-import {exportReport, getReport} from "../../actions/report-actions";
+import {exportReport, getReport, getMetricRaw} from "../../actions/report-actions";
 import T from "i18n-react/dist/i18n-react";
 import FragmentParser from "../../utils/fragmen-parser";
 import { getMembersForEventCSV } from '../../actions/member-actions'
@@ -310,7 +310,7 @@ const mapStateToProps = ({ currentSummitState, currentReportState }) => ({
 });
 
 const composedReportWrapper = compose(
-    connect(mapStateToProps, {getReport, exportReport, getMembersForEventCSV}),
+    connect(mapStateToProps, {getReport, exportReport, getMembersForEventCSV, getMetricRaw}),
     wrapReport
 )
 

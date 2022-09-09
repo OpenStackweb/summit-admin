@@ -16,7 +16,7 @@ import {
     createAction,
     stopLoading,
     startLoading,
-    authErrorHandler
+    authErrorHandler, fetchResponseHandler, fetchErrorHandler
 } from 'openstack-uicore-foundation/lib/utils/actions';
 import {getAccessTokenSafely} from '../utils/methods';
 
@@ -28,9 +28,7 @@ export const RECEIVE_EXPORT_REPORT  = 'RECEIVE_EXPORT_REPORT';
 export const RESET_EXPORT_REPORT    = 'RESET_EXPORT_REPORT';
 const TIMEOUT = 300 ;//secs
 
-export const getReport = (query, reportName, page) => async (dispatch, getState) => {
-
-    const {  currentSummitState } = getState();
+export const getReport = (query, reportName, page) => async (dispatch) => {
     const accessToken = await getAccessTokenSafely();
 
     dispatch(startLoading());
@@ -52,6 +50,20 @@ export const getReport = (query, reportName, page) => async (dispatch, getState)
             dispatch(stopLoading());
         }
     );
+};
+
+export const getMetricRaw = (query) => async (dispatch) => {
+    const accessToken = await getAccessTokenSafely();
+
+    dispatch(startLoading());
+
+    return fetch(`${window.REPORT_API_BASE_URL}/reports?access_token=${accessToken}&query=${query}`)
+      .then(fetchResponseHandler)
+      .then(response => {
+          dispatch(stopLoading());
+          return response?.data?.reportData?.results || [];
+      })
+      .catch(fetchErrorHandler);
 };
 
 const jsonToCsv = (items) => {

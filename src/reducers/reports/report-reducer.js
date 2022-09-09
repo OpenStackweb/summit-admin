@@ -44,13 +44,10 @@ const reportReducer = (state = DEFAULT_STATE, action) => {
                 return DEFAULT_STATE;
             }
         }
-        break;
         case REQUEST_REPORT: {
-            let {name, page} = payload;
-
+            const {name, page} = payload;
             return {...DEFAULT_STATE, name: name, currentPage: page, exportData: null}
         }
-        break;
         case RECEIVE_REPORT: {
             let responseData = {...payload.response.data};
             let data = (responseData.hasOwnProperty("reportData")) ? responseData.reportData : [];
@@ -59,15 +56,12 @@ const reportReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, data: data?.results || data, extraData: extraData, totalCount: data?.totalCount || 0, extraStat: extraStat };
         }
-        break;
         case RECEIVE_EXPORT_REPORT: {
             return {...state, exportData: payload.reportData };
         }
-        break;
         case RESET_EXPORT_REPORT: {
             return {...state, exportData: null };
         }
-        break;
         default:
             return state;
     }
