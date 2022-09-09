@@ -861,6 +861,8 @@ export const getEventFeedback =
         }
 
         const params = {
+            page: page,
+            per_page: perPage,
             access_token: accessToken,
             expand: 'owner',
         };
@@ -914,8 +916,6 @@ export const getEventFeedbackCSV =
         }
 
         const params = {
-            page: page,
-            per_page: perPage,
             access_token: accessToken,
             expand: 'owner',
         };
