@@ -71,7 +71,7 @@ export const DEFAULT_ENTITY = {
 const DEFAULT_STATE_FEEDBACK_STATE = {
     items          : [],
     term            : null,
-    order           : 'created_date',
+    order           : 'created',
     orderDir        : 1,
     currentPage     : 1,
     lastPage        : 1,

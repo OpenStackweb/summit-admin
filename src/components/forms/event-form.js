@@ -354,7 +354,7 @@ class EventForm extends React.Component {
         ev.preventDefault();
         const {entity} = this.state;
         const {feedbackState} = this.props;
-        this.props.getEventFeedbackCSV(entity.id, feedbackState.term, feedbackState.page, feedbackState.perPage, feedbackState.order, feedbackState.orderDir)
+        this.props.getEventFeedbackCSV(entity.id, feedbackState.term, feedbackState.order, feedbackState.orderDir)
     }
 
     handleFeedbackSearch(term) {
@@ -372,7 +372,6 @@ class EventForm extends React.Component {
     handleFeedbackSort(index, key, dir) {
         const {feedbackState} = this.props;
         const {entity} = this.state;
-        if(key === 'created_date') key = 'created';
         this.props.getEventFeedback(entity.id, feedbackState.term, feedbackState.page, feedbackState.perPage, key, dir);
     }
 
