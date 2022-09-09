@@ -14,7 +14,8 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { MemberInput, Input, Panel, ExtraQuestionsForm } from 'openstack-uicore-foundation/lib/components'
+import { MemberInput, Input, Panel } from 'openstack-uicore-foundation/lib/components'
+import ExtraQuestionsForm from 'openstack-uicore-foundation/lib/components/extra-questions';
 import TicketComponent from './ticket-component'
 import OrderComponent from './order-component'
 import RsvpComponent from './rsvp-component'
