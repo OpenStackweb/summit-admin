@@ -32,7 +32,12 @@ import {
 import {epochToMomentTimeZone} from "openstack-uicore-foundation/lib/utils/methods";
 import {getAccessTokenSafely} from '../utils/methods';
 import {getQAUsersBySummitEvent} from "../actions/user-chat-roles-actions"
-import { publishEntityUpdate, PUB_ENTITY_UPDATE_OPERATOR_INSERT, PUB_ENTITY_PRESENTATION_TYPE, PUB_ENTITY_UPDATE_OPERATOR_UPDATE } from './entity-updates-actions';
+import {
+    publishEntityUpdate,
+    PUB_ENTITY_UPDATE_OPERATOR_INSERT,
+    PUB_ENTITY_PRESENTATION_TYPE,
+    PUB_ENTITY_UPDATE_OPERATOR_UPDATE
+} from './entity-updates-actions';
 
 export const REQUEST_EVENTS = 'REQUEST_EVENTS';
 export const RECEIVE_EVENTS = 'RECEIVE_EVENTS';
@@ -53,13 +58,15 @@ export const IMAGE_DELETED = 'IMAGE_DELETED';
 export const RECEIVE_PROXIMITY_EVENTS = 'RECEIVE_PROXIMITY_EVENTS';
 export const EVENTS_IMPORTED = 'EVENTS_IMPORTED';
 export const IMPORT_FROM_MUX = 'IMPORT_FROM_MUX';
-
+export const REQUEST_EVENT_FEEDBACK = 'REQUEST_EVENT_FEEDBACK';
+export const RECEIVE_EVENT_FEEDBACK = 'RECEIVE_EVENT_FEEDBACK';
+export const EVENT_FEEDBACK_DELETED = 'EVENT_FEEDBACK_DELETED';
 
 export const getEvents = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1, filters = {}, extraColumns = []) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
     const summitTZ = currentSummit.time_zone.name;
 
     dispatch(startLoading());
@@ -69,18 +76,18 @@ export const getEvents = (term = null, page = 1, perPage = 10, order = 'id', ord
     if (term) {
         const escapedTerm = escapeFilterValue(term);
         let searchString = `title=@${escapedTerm},` +
-            `abstract=@${escapedTerm},`+
-            `tags=@${escapedTerm},`+
-            `speaker=@${escapedTerm},`+
-            `speaker_email=@${escapedTerm},`+
-            `speaker_title=@${escapedTerm},`+
-            `speaker_company=@${escapedTerm},`+
-            `created_by_fullname=@${escapedTerm},`+
-            `created_by_email=@${escapedTerm},`+
-            `created_by_company=@${escapedTerm},`+
-            `speaker_company=@${escapedTerm},`+
-            `streaming_url=@${escapedTerm},`+
-            `meeting_url=@${escapedTerm},`+
+            `abstract=@${escapedTerm},` +
+            `tags=@${escapedTerm},` +
+            `speaker=@${escapedTerm},` +
+            `speaker_email=@${escapedTerm},` +
+            `speaker_title=@${escapedTerm},` +
+            `speaker_company=@${escapedTerm},` +
+            `created_by_fullname=@${escapedTerm},` +
+            `created_by_email=@${escapedTerm},` +
+            `created_by_company=@${escapedTerm},` +
+            `speaker_company=@${escapedTerm},` +
+            `streaming_url=@${escapedTerm},` +
+            `meeting_url=@${escapedTerm},` +
             `etherpad_link=@${escapedTerm}`;
 
         if (parseInt(term)) {
@@ -122,9 +129,9 @@ export const getEvents = (term = null, page = 1, perPage = 10, order = 'id', ord
 
 export const getEventsForOccupancy = (term = null, roomId = null, currentEvents = false, page = 1, perPage = 10, order = 'start_date', orderDir = 1) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
     const filter = [];
     const summitTZ = currentSummit.time_zone.name;
     let endPoint = 'events/published';
@@ -183,9 +190,9 @@ export const getEventsForOccupancy = (term = null, roomId = null, currentEvents 
 
 export const getCurrentEventForOccupancy = (roomId, eventId = null) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
     const filter = [];
     const summitTZ = currentSummit.time_zone.name;
     let endPoint = `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}`;
@@ -224,9 +231,9 @@ export const getCurrentEventForOccupancy = (roomId, eventId = null) => async (di
 };
 
 export const getEvent = (eventId) => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     if (!currentSummit.id) return;
 
@@ -253,10 +260,10 @@ export const resetEventForm = () => (dispatch, getState) => {
 };
 
 export const saveEvent = (entity, publish) => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
-    const { type_id } = entity;
+    const {currentSummit} = currentSummitState;
+    const {type_id} = entity;
     const type = currentSummit.event_types.find((e) => e.id == type_id);
     const eventTypeConfig = {
         allow_custom_ordering: type.allow_custom_ordering,
@@ -285,8 +292,7 @@ export const saveEvent = (entity, publish) => async (dispatch, getState) => {
                 if (publish) {
                     dispatch(publishEntityUpdate(entity.id, PUB_ENTITY_PRESENTATION_TYPE, PUB_ENTITY_UPDATE_OPERATOR_UPDATE));
                     dispatch(publishEvent(normalizedEntity));
-                }
-                else
+                } else
                     dispatch(showSuccessMessage(T.translate("edit_event.event_saved")));
             });
 
@@ -309,7 +315,7 @@ export const saveEvent = (entity, publish) => async (dispatch, getState) => {
         .then((payload) => {
             if (publish) {
                 normalizedEntity.id = payload.response.id;
-                dispatch(publishEntityUpdate(normalizedEntity.id,  PUB_ENTITY_PRESENTATION_TYPE, PUB_ENTITY_UPDATE_OPERATOR_INSERT));
+                dispatch(publishEntityUpdate(normalizedEntity.id, PUB_ENTITY_PRESENTATION_TYPE, PUB_ENTITY_UPDATE_OPERATOR_INSERT));
                 dispatch(publishEvent(normalizedEntity, () => {
                     history.push(`/app/summits/${currentSummit.id}/events/${payload.response.id}`)
                 }));
@@ -325,9 +331,9 @@ export const saveEvent = (entity, publish) => async (dispatch, getState) => {
 }
 
 export const saveOccupancy = (entity) => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
         access_token: accessToken
@@ -345,10 +351,10 @@ export const saveOccupancy = (entity) => async (dispatch, getState) => {
 }
 
 const publishEvent = (entity, cb = null) => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
-    const { type_id } = entity;
+    const {currentSummit} = currentSummitState;
+    const {type_id} = entity;
     const type = currentSummit.event_types.find((e) => e.id == type_id);
 
     const params = {
@@ -382,9 +388,9 @@ const publishEvent = (entity, cb = null) => async (dispatch, getState) => {
 }
 
 export const checkProximityEvents = (event, cb = null) => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     const success_message = {
         title: T.translate("general.done"),
@@ -447,9 +453,9 @@ export const checkProximityEvents = (event, cb = null) => async (dispatch, getSt
 }
 
 export const attachFile = (entity, file, attr) => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     const normalizedEntity = normalizeEntity(entity);
 
@@ -477,9 +483,9 @@ export const attachFile = (entity, file, attr) => async (dispatch, getState) => 
 }
 
 const uploadFile = (entity, file) => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
         access_token: accessToken
@@ -499,9 +505,9 @@ const uploadFile = (entity, file) => async (dispatch, getState) => {
 }
 
 const uploadImage = (entity, file) => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
         access_token: accessToken
@@ -521,9 +527,9 @@ const uploadImage = (entity, file) => async (dispatch, getState) => {
 };
 
 export const removeImage = (eventId) => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
         access_token: accessToken
@@ -562,7 +568,7 @@ const normalizeEntity = (entity, eventTypeConfig) => {
     else
         delete (normalizedEntity.moderator);
 
-    if(normalizedEntity.hasOwnProperty("created_by")){
+    if (normalizedEntity.hasOwnProperty("created_by")) {
         normalizedEntity.created_by_id = normalizedEntity.created_by?.id;
     }
 
@@ -593,9 +599,9 @@ const normalizeEntity = (entity, eventTypeConfig) => {
 
 export const deleteEvent = (eventId) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
         access_token: accessToken
@@ -615,14 +621,14 @@ export const deleteEvent = (eventId) => async (dispatch, getState) => {
 
 export const exportEvents = (term = null, order = 'id', orderDir = 1, extraFilters = {}, extraColumns = []) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
     const filename = currentSummit.name + '-Activities.csv';
     const params = {
         access_token: accessToken
     };
-    
+
     const filter = parseFilters(extraFilters);
 
     if (term) {
@@ -652,9 +658,9 @@ export const exportEvents = (term = null, order = 'id', orderDir = 1, extraFilte
 
 export const importMP4AssetsFromMUX = (MUXTokenId, MUXTokenSecret, emailTo) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
     const params = {
         access_token: accessToken
     };
@@ -689,9 +695,9 @@ export const importMP4AssetsFromMUX = (MUXTokenId, MUXTokenSecret, emailTo) => a
 }
 
 export const importEventsCSV = (file, send_speaker_email) => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
         access_token: accessToken
@@ -714,118 +720,244 @@ export const importEventsCSV = (file, send_speaker_email) => async (dispatch, ge
 const parseFilters = (filters) => {
     const filter = [];
 
-    if(filters.hasOwnProperty('event_type_capacity_filter') && Array.isArray(filters.event_type_capacity_filter)
-        && filters.event_type_capacity_filter.length > 0) {            
-            if (filters.event_type_capacity_filter.includes('allows_attendee_vote_filter')) {
-                filter.push('type_allows_attendee_vote==1');
-            }
-            if (filters.event_type_capacity_filter.includes('allows_location_filter')) {
-                filter.push('type_allows_location==1');
-            }
-            if (filters.event_type_capacity_filter.includes('allows_publishing_dates_filter')) {
-                filter.push('type_allows_publishing_dates==1');
-            }
+    if (filters.hasOwnProperty('event_type_capacity_filter') && Array.isArray(filters.event_type_capacity_filter)
+        && filters.event_type_capacity_filter.length > 0) {
+        if (filters.event_type_capacity_filter.includes('allows_attendee_vote_filter')) {
+            filter.push('type_allows_attendee_vote==1');
+        }
+        if (filters.event_type_capacity_filter.includes('allows_location_filter')) {
+            filter.push('type_allows_location==1');
+        }
+        if (filters.event_type_capacity_filter.includes('allows_publishing_dates_filter')) {
+            filter.push('type_allows_publishing_dates==1');
+        }
     }
 
-    if(filters.hasOwnProperty('selection_plan_id_filter') && Array.isArray(filters.selection_plan_id_filter)
-         && filters.selection_plan_id_filter.length > 0){
-            filter.push('selection_plan_id=='+filters.selection_plan_id_filter.reduce(
-            (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt,
-            ''
-        ));
-    }
-
-    if(filters.hasOwnProperty('location_id_filter') && Array.isArray(filters.location_id_filter)
-         && filters.location_id_filter.length > 0){
-            filter.push('location_id=='+filters.location_id_filter.reduce(
-            (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt,
+    if (filters.hasOwnProperty('selection_plan_id_filter') && Array.isArray(filters.selection_plan_id_filter)
+        && filters.selection_plan_id_filter.length > 0) {
+        filter.push('selection_plan_id==' + filters.selection_plan_id_filter.reduce(
+            (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + tt,
             ''
         ));
     }
 
-    if(filters.hasOwnProperty('selection_status_filter') && Array.isArray(filters.selection_status_filter)
-         && filters.selection_status_filter.length > 0){
-            filter.push('selection_status=='+filters.selection_status_filter.reduce(
-            (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt,
-            ''
-        ));
-    }
-    
-    if(filters.hasOwnProperty('track_id_filter') && Array.isArray(filters.track_id_filter)
-         && filters.track_id_filter.length > 0){
-            filter.push('track_id=='+filters.track_id_filter.reduce(
-            (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt,
+    if (filters.hasOwnProperty('location_id_filter') && Array.isArray(filters.location_id_filter)
+        && filters.location_id_filter.length > 0) {
+        filter.push('location_id==' + filters.location_id_filter.reduce(
+            (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + tt,
             ''
         ));
     }
 
-    if(filters.hasOwnProperty('event_type_id_filter') && Array.isArray(filters.event_type_id_filter)
-         && filters.event_type_id_filter.length > 0){
-            filter.push('event_type_id=='+filters.event_type_id_filter.reduce(
-            (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt,
-            ''
-        ));
-    }
-    
-    if(filters.hasOwnProperty('speaker_id_filter') && Array.isArray(filters.speaker_id_filter)
-         && filters.speaker_id_filter.length > 0){
-            filter.push('speaker_id=='+filters.speaker_id_filter.reduce(
-            (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt.id,
+    if (filters.hasOwnProperty('selection_status_filter') && Array.isArray(filters.selection_status_filter)
+        && filters.selection_status_filter.length > 0) {
+        filter.push('selection_status==' + filters.selection_status_filter.reduce(
+            (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + tt,
             ''
         ));
     }
 
-    if(filters.hasOwnProperty('level_filter') && Array.isArray(filters.level_filter)
-        && filters.level_filter.length > 0){
-            filter.push('level=='+filters.level_filter.reduce(
-            (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt,
-            ''
-        ));
-    }
-    
-    if(filters.hasOwnProperty('tags_filter') && Array.isArray(filters.tags_filter)
-        && filters.tags_filter.length > 0){
-            filter.push('tags=='+filters.tags_filter.reduce(
-            (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt.id,
+    if (filters.hasOwnProperty('track_id_filter') && Array.isArray(filters.track_id_filter)
+        && filters.track_id_filter.length > 0) {
+        filter.push('track_id==' + filters.track_id_filter.reduce(
+            (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + tt,
             ''
         ));
     }
 
-    if(filters.published_filter) {
+    if (filters.hasOwnProperty('event_type_id_filter') && Array.isArray(filters.event_type_id_filter)
+        && filters.event_type_id_filter.length > 0) {
+        filter.push('event_type_id==' + filters.event_type_id_filter.reduce(
+            (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + tt,
+            ''
+        ));
+    }
+
+    if (filters.hasOwnProperty('speaker_id_filter') && Array.isArray(filters.speaker_id_filter)
+        && filters.speaker_id_filter.length > 0) {
+        filter.push('speaker_id==' + filters.speaker_id_filter.reduce(
+            (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + tt.id,
+            ''
+        ));
+    }
+
+    if (filters.hasOwnProperty('level_filter') && Array.isArray(filters.level_filter)
+        && filters.level_filter.length > 0) {
+        filter.push('level==' + filters.level_filter.reduce(
+            (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + tt,
+            ''
+        ));
+    }
+
+    if (filters.hasOwnProperty('tags_filter') && Array.isArray(filters.tags_filter)
+        && filters.tags_filter.length > 0) {
+        filter.push('tags==' + filters.tags_filter.reduce(
+            (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + tt.id,
+            ''
+        ));
+    }
+
+    if (filters.published_filter) {
         filter.push(`published==${filters.published_filter === 'published' ? '1' : '0'}`);
-    }            
-    
-    if(filters.start_date_filter) {
+    }
+
+    if (filters.start_date_filter) {
         filter.push(`start_date==${filters.start_date_filter}`);
     }
 
-    if(filters.end_date_filter) {
+    if (filters.end_date_filter) {
         filter.push(`end_date==${filters.end_date_filter}`);
     }
 
-    if(filters.duration_filter) {
+    if (filters.duration_filter) {
 
         // multiply values to send the minutes in seconds
 
-        if(Array.isArray(filters.duration_filter)){
-            filter.push(`duration>=${filters.duration_filter[0]*60}`);
-            filter.push(`duration<=${filters.duration_filter[1]*60}`);
-        }
-        else{
-            filter.push(`duration${filters.duration_filter.replace(/\d/g, '')}${filters.duration_filter.replace(/\D/g, '')*60}`);
+        if (Array.isArray(filters.duration_filter)) {
+            filter.push(`duration>=${filters.duration_filter[0] * 60}`);
+            filter.push(`duration<=${filters.duration_filter[1] * 60}`);
+        } else {
+            filter.push(`duration${filters.duration_filter.replace(/\d/g, '')}${filters.duration_filter.replace(/\D/g, '') * 60}`);
         }
     }
 
-    if(filters.speaker_count_filter) {
-        if(Array.isArray(filters.speaker_count_filter) ){
+    if (filters.speaker_count_filter) {
+        if (Array.isArray(filters.speaker_count_filter)) {
             filter.push(`speakers_count>=${filters.speaker_count_filter[0]}`);
             filter.push(`speakers_count<=${filters.speaker_count_filter[1]}`);
-        }
-        else{
+        } else {
             filter.push(`speakers_count${filters.speaker_count_filter}`)
         }
 
     }
 
     return filter;
+}
+
+
+export const getEventFeedback =
+    (
+        eventId,
+        term = null,
+        page = 1,
+        perPage = 10,
+        order = 'created_date',
+        orderDir = 1) => async (dispatch, getState) => {
+        const {currentSummitState} = getState();
+        const accessToken = await getAccessTokenSafely();
+        const {currentSummit} = currentSummitState;
+
+        dispatch(startLoading());
+
+        const filter = [];
+
+        if (term) {
+            const escapedTerm = escapeFilterValue(term);
+            let searchString =
+                `note=@${escapedTerm},` +
+                `owner_full_name=@${escapedTerm},`;
+
+            filter.push(searchString);
+        }
+
+        const params = {
+            page: page,
+            per_page: perPage,
+            access_token: accessToken,
+            expand: 'owner',
+        };
+
+        if (filter.length > 0) {
+            params['filter[]'] = filter;
+        }
+
+        // order
+        if (order != null && orderDir != null) {
+            const orderDirSign = (orderDir === 1) ? '+' : '-';
+            params['order'] = `${orderDirSign}${order}`;
+        }
+
+        return getRequest(
+            createAction(REQUEST_EVENT_FEEDBACK),
+            createAction(RECEIVE_EVENT_FEEDBACK),
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/${eventId}/feedback`,
+            authErrorHandler,
+            {order, orderDir, term}
+        )(params)(dispatch).then((data) => {
+                dispatch(stopLoading());
+                return data.response;
+            }
+        );
+    }
+
+export const getEventFeedbackCSV =
+    (
+        eventId,
+        term = null,
+        page = 1,
+        perPage = 10,
+        order = 'created_date',
+        orderDir = 1) => async (dispatch, getState) => {
+
+        const {currentSummitState} = getState();
+        const accessToken = await getAccessTokenSafely();
+        const {currentSummit} = currentSummitState;
+
+        dispatch(startLoading());
+
+        const filter = [];
+
+        if (term) {
+            const escapedTerm = escapeFilterValue(term);
+            let searchString =
+                `note=@${escapedTerm},` +
+                `owner_full_name=@${escapedTerm},`;
+
+            filter.push(searchString);
+        }
+
+        const params = {
+            page: page,
+            per_page: perPage,
+            access_token: accessToken,
+            expand: 'owner',
+        };
+
+        if (filter.length > 0) {
+            params['filter[]'] = filter;
+        }
+
+        // order
+        if (order != null && orderDir != null) {
+            const orderDirSign = (orderDir === 1) ? '+' : '-';
+            params['order'] = `${orderDirSign}${order}`;
+        }
+
+        const filename = currentSummit.name + '-event-feedback.csv';
+
+        dispatch(getCSV(`${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/${eventId}/feedback/csv`, params, filename));
+}
+
+export const deleteEventFeedback = (eventId, feedbackId) => async (dispatch, getState) => {
+    const {currentSummitState} = getState();
+    const accessToken = await getAccessTokenSafely();
+    const {currentSummit} = currentSummitState;
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token: accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(EVENT_FEEDBACK_DELETED)({feedbackId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/${eventId}/feedback/${feedbackId}`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+
 }

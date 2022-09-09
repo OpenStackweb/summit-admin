@@ -15,7 +15,15 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import EventForm from '../../components/forms/event-form';
-import { saveEvent, attachFile, getEvents, removeImage } from '../../actions/event-actions';
+import {
+    saveEvent,
+    attachFile,
+    getEvents,
+    removeImage,
+    getEventFeedback,
+    deleteEventFeedback,
+    getEventFeedbackCSV
+} from '../../actions/event-actions';
 import { unPublishEvent } from '../../actions/summit-builder-actions';
 import { deleteEventMaterial } from '../../actions/event-material-actions';
 
@@ -102,7 +110,7 @@ class EditSummitEventPage extends React.Component {
     };
 
     render(){
-        const {currentSummit, entity, errors, levelOptions, rsvpTemplateOptions, extraQuestions} = this.props;
+        const {currentSummit, entity, errors, levelOptions, rsvpTemplateOptions, extraQuestions, feedbackState} = this.props;
         const header = !entity.id ? T.translate("general.summit_event") : `${entity.title} - ID ${entity.id}`;
 
         return(
@@ -143,6 +151,10 @@ class EditSummitEventPage extends React.Component {
                     onRemoveImage={this.props.removeImage}
                     onAddQAMember={this.props.addQAMember}
                     onDeleteQAMember={this.props.removeQAMember}
+                    feedbackState={feedbackState}
+                    getEventFeedback={this.props.getEventFeedback}
+                    deleteEventFeedback={this.props.deleteEventFeedback}
+                    getEventFeedbackCSV={this.props.getEventFeedbackCSV}
                 />
                 }
             </div>
@@ -157,6 +169,7 @@ const mapStateToProps = ({ currentSummitState, currentSummitEventState, currentR
     entity: currentSummitEventState.entity,
     errors: currentSummitEventState.errors,
     extraQuestions: currentSummitEventState.extraQuestions,
+    feedbackState: currentSummitEventState.feedbackState,
     allEventsData: currentEventListState
 });
 
@@ -170,6 +183,9 @@ export default connect (
         getEvents,
         removeImage,
         addQAMember,
-        removeQAMember
+        removeQAMember,
+        getEventFeedback,
+        deleteEventFeedback,
+        getEventFeedbackCSV
     }
 )(EditSummitEventPage);

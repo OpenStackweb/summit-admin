@@ -361,7 +361,6 @@
     "track": "Activity Category",
     "custom_order": "Custom Order",
     "level": "Level",
-    "feedback": "Feedback",
     "allow_feedback": "Allow feedback ?",
     "recording": "Recording",
     "to_record": "To record ?",
@@ -396,6 +395,8 @@
     "qa_users": "Q&A Users",
     "qa_users_info": "Users designated as Questions & Answers Users on A2A Widget ( Chat ).",
     "disclaimer_accepted": "Disclaimer Accepted?",
+    "feedback": "Feedback",
+    "delete_feedback_warning": "Are you sure you want to delete this feedback entry?",
     "placeholders": {
       "select_venue": "Select an Activity Venue ...",
       "start_date": "Start Date",
@@ -405,7 +406,8 @@
       "select_level": "Select a Level ...",
       "select_rsvp_template": "Select a Template ...",
       "select_selection_plan": "Select a Selection Plan ...",
-      "select_submitter": "Select Submitter ..."
+      "select_submitter": "Select Submitter ...",
+      "search_feedback": "Search by Author, Note"
     }
   },
   "edit_event_material": {

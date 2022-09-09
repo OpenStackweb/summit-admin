@@ -15,7 +15,7 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import Swal from "sweetalert2";
-import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/utils/methods'
+import {epochToMomentTimeZone} from 'openstack-uicore-foundation/lib/utils/methods'
 import {
     TextEditor,
     Dropdown,
@@ -29,10 +29,12 @@ import {
     Input,
     Panel,
     Table,
-    MemberInput
+    MemberInput, FreeTextSearch
 } from 'openstack-uicore-foundation/lib/components'
 import {isEmpty, scrollToError, shallowEqual, hasErrors} from "../../utils/methods";
 import QuestionAnswersInput from "../inputs/question-answers-input";
+import {Pagination} from "react-bootstrap";
+import {deleteEventFeedback, getEventFeedbackCSV} from "../../actions/event-actions";
 
 
 class EventForm extends React.Component {
@@ -57,13 +59,18 @@ class EventForm extends React.Component {
         this.handleMaterialDownload = this.handleMaterialDownload.bind(this);
         this.handleMaterialDelete = this.handleMaterialDelete.bind(this);
         this.getQAUsersOptionLabel = this.getQAUsersOptionLabel.bind(this);
+        this.handleFeedbackExport = this.handleFeedbackExport.bind(this);
+        this.handleFeedbackPageChange = this.handleFeedbackPageChange.bind(this);
+        this.handleFeedbackSort = this.handleFeedbackSort.bind(this);
+        this.handleFeedbackSearch = this.handleFeedbackSearch.bind(this);
+        this.handleDeleteEventFeedback = this.handleDeleteEventFeedback.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         const state = {};
         scrollToError(this.props.errors);
 
-        if(!shallowEqual(prevProps.entity, this.props.entity)) {
+        if (!shallowEqual(prevProps.entity, this.props.entity)) {
             state.entity = {...this.props.entity};
             state.errors = {};
         }
@@ -77,8 +84,8 @@ class EventForm extends React.Component {
         }
     }
 
-    getQAUsersOptionLabel(member){
-        if(member.hasOwnProperty("full_name")){
+    getQAUsersOptionLabel(member) {
+        if (member.hasOwnProperty("full_name")) {
             return member.full_name;
         }
         //default
@@ -114,7 +121,7 @@ class EventForm extends React.Component {
         const {errors} = this.state;
         let {value, id} = ev.target;
         let currentError = '';
-        let oldHelpUsers =  entity[id];
+        let oldHelpUsers = entity[id];
         let currentOldOnes = [];
         try {
             // remap to chat api payload format
@@ -156,8 +163,7 @@ class EventForm extends React.Component {
             }
 
             value = newHelpUsers;
-        }
-        catch (e){
+        } catch (e) {
             console.log(e);
             value = oldHelpUsers;
             currentError = e;
@@ -208,7 +214,7 @@ class EventForm extends React.Component {
         const entity = {...this.state.entity};
 
         entity.attachment = file.preview;
-        this.setState({entity:entity});
+        this.setState({entity: entity});
 
         const formData = new FormData();
         formData.append('file', file);
@@ -225,7 +231,7 @@ class EventForm extends React.Component {
             this.props.onRemoveImage(entity.id);
         }
 
-        this.setState({entity:entity});
+        this.setState({entity: entity});
     }
 
     handleSubmit(publish, ev) {
@@ -270,18 +276,18 @@ class EventForm extends React.Component {
         if (!entity.type_id) return false;
         const entity_type = this.props.typeOpts.find(t => t.id === entity.type_id);
 
-        types = Array.isArray(types) ? types : [types] ;
-        return ( types.indexOf(entity_type.class_name) !== -1 || types.indexOf(entity_type.name) !== -1 );
+        types = Array.isArray(types) ? types : [types];
+        return (types.indexOf(entity_type.class_name) !== -1 || types.indexOf(entity_type.name) !== -1);
     }
 
-    isEventTypeAllowsLevel(){
+    isEventTypeAllowsLevel() {
         const {entity} = this.state;
         if (!entity.type_id) return false;
         const entity_type = this.props.typeOpts.find(t => t.id === entity.type_id);
         return entity_type.allows_level;
     }
 
-    shouldShowField(flag){
+    shouldShowField(flag) {
         const {entity} = this.state;
         if (!entity.type_id) return false;
         const entity_type = this.props.typeOpts.find(t => t.id === entity.type_id);
@@ -313,7 +319,7 @@ class EventForm extends React.Component {
         const entity = {...this.state.entity};
 
         entity.image = file.preview;
-        this.setState({entity:entity});
+        this.setState({entity: entity});
 
         const formData = new FormData();
         formData.append('file', file);
@@ -337,17 +343,70 @@ class EventForm extends React.Component {
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
             confirmButtonText: T.translate("general.yes_delete")
-        }).then(function(result){
+        }).then(function (result) {
             if (result.value) {
                 onMaterialDelete(materialId);
             }
         });
     }
 
+    handleFeedbackExport(ev) {
+        ev.preventDefault();
+        const {entity} = this.state;
+        const {feedbackState} = this.props;
+        this.props.getEventFeedbackCSV(entity.id, feedbackState.term, feedbackState.page, feedbackState.perPage, feedbackState.order, feedbackState.orderDir)
+    }
+
+    handleFeedbackSearch(term) {
+        const {entity} = this.state;
+        const {feedbackState} = this.props;
+        this.props.getEventFeedback(entity.id, term, feedbackState.page, feedbackState.perPage, feedbackState.order, feedbackState.orderDir);
+    }
+
+    handleFeedbackPageChange(page) {
+        const {entity} = this.state;
+        const {feedbackState} = this.props;
+        this.props.getEventFeedback(entity.id, feedbackState.term, page, feedbackState.perPage, feedbackState.order, feedbackState.orderDir);
+    }
+
+    handleFeedbackSort(index, key, dir) {
+        const {feedbackState} = this.props;
+        const {entity} = this.state;
+        if(key === 'created_date') key = 'created';
+        this.props.getEventFeedback(entity.id, feedbackState.term, feedbackState.page, feedbackState.perPage, key, dir);
+    }
+
+    componentDidMount() {
+        const {entity} = this.state;
+        const {feedbackState} = this.props;
+        if (entity.id > 0 && entity.allow_feedback) {
+            this.props.getEventFeedback(entity.id, feedbackState.term, feedbackState.page, feedbackState.perPage, feedbackState.order, feedbackState.orderDir);
+        }
+    }
+
+    handleDeleteEventFeedback(id) {
+        const { entity } = this.state;
+        const { deleteEventFeedback } = this.props;
+        Swal.fire({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("edit_event.delete_feedback_warning"),
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: T.translate("general.yes_delete")
+        }).then(function(result){
+            if (result.value) {
+                deleteEventFeedback(entity.id, id);
+            }
+        });
+    }
+
     render() {
         const {entity, showSection, errors} = this.state;
-        const { currentSummit, levelOpts, typeOpts, trackOpts,
-            locationOpts, rsvpTemplateOpts, selectionPlansOpts, history, extraQuestions } = this.props;
+        const {
+            currentSummit, levelOpts, typeOpts, trackOpts,
+            locationOpts, rsvpTemplateOpts, selectionPlansOpts, history, extraQuestions, feedbackState
+        } = this.props;
 
         const event_types_ddl = typeOpts.map(
             t => {
@@ -356,12 +415,30 @@ class EventForm extends React.Component {
             }
         );
 
+        let feedback_columns = [
+            {columnKey: 'created_date', value: 'Created Date', sortable: true},
+            {columnKey: 'owner_full_name', value: 'Author', sortable: true},
+            {columnKey: 'rate', value: 'Rate', sortable: true},
+            {columnKey: 'note', value: 'Note'}
+        ];
+
+        const feedback_table_options = {
+            sortCol: feedbackState.order,
+            sortDir: feedbackState.orderDir,
+            actions: {
+                delete: {
+                    onClick: this.handleDeleteEventFeedback
+                },
+
+            },
+        }
+
         const tracks_ddl = trackOpts.map(t => ({label: t.name, value: t.id}));
 
         const venues = locationOpts.filter(v => (v.class_name === 'SummitVenue')).map(l => {
             let options = [];
             if (l.rooms) {
-                options = l.rooms.map(r => ({label: r.name, value: r.id}) );
+                options = l.rooms.map(r => ({label: r.name, value: r.id}));
             }
             return {label: l.name, value: l.id, options: options};
         });
@@ -389,10 +466,10 @@ class EventForm extends React.Component {
         );
 
         const material_columns = [
-            { columnKey: 'class_name', value: T.translate("edit_event.type") },
-            { columnKey: 'name', value: T.translate("general.name") },
-            { columnKey: 'filename', value: T.translate("general.file") },
-            { columnKey: 'display_on_site_label', value: T.translate("edit_event.display_on_site") }
+            {columnKey: 'class_name', value: T.translate("edit_event.type")},
+            {columnKey: 'name', value: T.translate("general.name")},
+            {columnKey: 'filename', value: T.translate("general.file")},
+            {columnKey: 'display_on_site_label', value: T.translate("edit_event.display_on_site")}
         ];
 
         const material_options = {
@@ -402,11 +479,11 @@ class EventForm extends React.Component {
                     {
                         name: 'download',
                         tooltip: 'download',
-                        icon: <i className="fa fa-download" />,
+                        icon: <i className="fa fa-download"/>,
                         onClick: this.handleMaterialDownload,
                     }
                 ],
-                delete: { onClick: this.handleMaterialDelete },
+                delete: {onClick: this.handleMaterialDelete},
             }
         };
 
@@ -414,7 +491,7 @@ class EventForm extends React.Component {
 
         return (
             <form>
-                <input type="hidden" id="id" value={entity.id} />
+                <input type="hidden" id="id" value={entity.id}/>
                 <div className="row form-group">
                     <div className="col-md-8">
                         <label> {T.translate("edit_event.title")} *</label>
@@ -435,7 +512,7 @@ class EventForm extends React.Component {
                                 getOptionLabel={
                                     (member) => {
                                         return member.hasOwnProperty("email") ?
-                                            `${member.first_name} ${member.last_name} (${member.email})`:
+                                            `${member.first_name} ${member.last_name} (${member.email})` :
                                             `${member.first_name} ${member.last_name} (${member.id})`;
                                     }
                                 }
@@ -447,7 +524,7 @@ class EventForm extends React.Component {
                     </div>
                     <div className="col-md-1 published">
                         <label> {T.translate("edit_event.published")} </label>
-                        <div><i className={"fa fa-2x " + (entity.is_published ? 'fa-check' : 'fa-times')} /></div>
+                        <div><i className={"fa fa-2x " + (entity.is_published ? 'fa-check' : 'fa-times')}/></div>
                     </div>
                 </div>
                 <div className="row form-group">
@@ -464,14 +541,16 @@ class EventForm extends React.Component {
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_event.social_summary")} </label>
-                        <textarea className="form-control" id="social_description" value={entity.social_description} onChange={this.handleChange} />
+                        <textarea className="form-control" id="social_description" value={entity.social_description}
+                                  onChange={this.handleChange}/>
                     </div>
                 </div>
                 {this.isEventType('PresentationType') &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_event.expect_to_learn")} </label>
-                        <TextEditor id="attendees_expected_learnt" value={entity.attendees_expected_learnt} onChange={this.handleChange} />
+                        <TextEditor id="attendees_expected_learnt" value={entity.attendees_expected_learnt}
+                                    onChange={this.handleChange}/>
                     </div>
                 </div>
                 }
@@ -484,7 +563,7 @@ class EventForm extends React.Component {
                                 id="start_date"
                                 onChange={this.handleTimeChange}
                                 validation={{after: currentSummit.start_date, before: currentSummit.end_date}}
-                                format={{date:"YYYY-MM-DD", time: "HH:mm"}}
+                                format={{date: "YYYY-MM-DD", time: "HH:mm"}}
                                 value={epochToMomentTimeZone(entity.start_date, currentSummit.time_zone_id)}
                                 inputProps={{placeholder: T.translate("edit_event.placeholders.start_date")}}
                                 timezone={currentSummit.time_zone_id}
@@ -498,7 +577,7 @@ class EventForm extends React.Component {
                                 id="end_date"
                                 onChange={this.handleTimeChange}
                                 validation={{after: currentSummit.start_date, before: currentSummit.end_date}}
-                                format={{date:"YYYY-MM-DD", time: "HH:mm"}}
+                                format={{date: "YYYY-MM-DD", time: "HH:mm"}}
                                 value={epochToMomentTimeZone(entity.end_date, currentSummit.time_zone_id)}
                                 inputProps={{placeholder: T.translate("edit_event.placeholders.end_date")}}
                                 timezone={currentSummit.time_zone_id}
@@ -509,12 +588,12 @@ class EventForm extends React.Component {
                         <div className="col-md-4">
                             <label> {T.translate("edit_event.duration")} (minutes) </label>
                             <input
-                              className="form-control"
-                              id="duration" value={entity.duration !== '' ? entity.duration / 60 : null}
-                              onChange={this.handleTimeChange}
-                              type="number"
-                              min="0"
-                              step="5"
+                                className="form-control"
+                                id="duration" value={entity.duration !== '' ? entity.duration / 60 : null}
+                                onChange={this.handleTimeChange}
+                                type="number"
+                                min="0"
+                                step="5"
                             />
                         </div>
                     </>
@@ -524,24 +603,24 @@ class EventForm extends React.Component {
                     <div className="col-md-4">
                         <label> {T.translate("edit_event.event_type")} *</label>
                         <Dropdown
-                          id="type_id"
-                          value={entity.type_id}
-                          onChange={this.handleChange}
-                          placeholder={T.translate("edit_event.placeholders.select_event_type")}
-                          options={event_types_ddl}
-                          error={hasErrors('type_id', errors)}
+                            id="type_id"
+                            value={entity.type_id}
+                            onChange={this.handleChange}
+                            placeholder={T.translate("edit_event.placeholders.select_event_type")}
+                            options={event_types_ddl}
+                            error={hasErrors('type_id', errors)}
                         />
                     </div>
                     {this.shouldShowField('allows_location') &&
                     <div className="col-md-4">
                         <label> {T.translate("edit_event.location")} </label>
                         <GroupedDropdown
-                          id="location_id"
-                          value={entity.location_id}
-                          options={locations_ddl}
-                          placeholder={T.translate("edit_event.placeholders.select_venue")}
-                          onChange={this.handleChange}
-                          error={hasErrors('location_id', errors)}
+                            id="location_id"
+                            value={entity.location_id}
+                            options={locations_ddl}
+                            placeholder={T.translate("edit_event.placeholders.select_venue")}
+                            onChange={this.handleChange}
+                            error={hasErrors('location_id', errors)}
                         />
                     </div>
                     }
@@ -549,11 +628,11 @@ class EventForm extends React.Component {
                     <div className="col-md-4">
                         <label> {T.translate("edit_event.level")} </label>
                         <Dropdown
-                          id="level"
-                          value={entity.level}
-                          onChange={this.handleChange}
-                          placeholder={T.translate("edit_event.placeholders.select_level")}
-                          options={levels_ddl}
+                            id="level"
+                            value={entity.level}
+                            onChange={this.handleChange}
+                            placeholder={T.translate("edit_event.placeholders.select_level")}
+                            options={levels_ddl}
                         />
                     </div>
                     }
@@ -563,12 +642,12 @@ class EventForm extends React.Component {
                     <div className="col-md-4">
                         <label> {T.translate("edit_event.selection_plan")} </label>
                         <Dropdown
-                          id="selection_plan_id"
-                          value={entity.selection_plan_id}
-                          onChange={this.handleChange}
-                          placeholder={T.translate("edit_event.placeholders.select_selection_plan")}
-                          isClearable={true}
-                          options={selection_plans_ddl}
+                            id="selection_plan_id"
+                            value={entity.selection_plan_id}
+                            onChange={this.handleChange}
+                            placeholder={T.translate("edit_event.placeholders.select_selection_plan")}
+                            isClearable={true}
+                            options={selection_plans_ddl}
                         />
                     </div>
                     }
@@ -587,73 +666,82 @@ class EventForm extends React.Component {
                     <div className="col-md-4">
                         <label> {T.translate("edit_event.custom_order")} </label>
                         <Input
-                          id="custom_order"
-                          type="number"
-                          className="form-control"
-                          error={hasErrors('custom_order ', errors)}
-                          value={entity.custom_order}
-                          onChange={this.handleChange}
+                            id="custom_order"
+                            type="number"
+                            className="form-control"
+                            error={hasErrors('custom_order ', errors)}
+                            value={entity.custom_order}
+                            onChange={this.handleChange}
                         />
                     </div>
                     }
                 </div>
-                <hr />
+                <hr/>
                 <div className="row form-group">
                     <div className="col-md-3">
                         <div className="form-check abc-checkbox">
-                            <input type="checkbox" id="allow_feedback" checked={entity.allow_feedback} onChange={this.handleChange} className="form-check-input" />
-                            <label className="form-check-label" htmlFor="allow_feedback"> {T.translate("edit_event.allow_feedback")} </label>
+                            <input type="checkbox" id="allow_feedback" checked={entity.allow_feedback}
+                                   onChange={this.handleChange} className="form-check-input"/>
+                            <label className="form-check-label"
+                                   htmlFor="allow_feedback"> {T.translate("edit_event.allow_feedback")} </label>
                         </div>
                     </div>
                     {this.isEventType('PresentationType') &&
                     <div className="col-md-3">
                         <div className="form-check abc-checkbox">
-                            <input id="to_record" onChange={this.handleChange} checked={entity.to_record} className="form-check-input" type="checkbox" />
-                            <label className="form-check-label" htmlFor="to_record"> {T.translate("edit_event.to_record")} </label>
-                        </div>
-                    </div>
-                    }
-                    {this.isEventType('PresentationType') &&
-                    <div className="col-md-3">
-                        <div className="form-check abc-checkbox">
-                            <input id="attending_media" onChange={this.handleChange} checked={entity.attending_media} className="form-check-input" type="checkbox" />
-                            <label className="form-check-label" htmlFor="attending_media"> {T.translate("edit_event.attending_media")} </label>
+                            <input id="to_record" onChange={this.handleChange} checked={entity.to_record}
+                                   className="form-check-input" type="checkbox"/>
+                            <label className="form-check-label"
+                                   htmlFor="to_record"> {T.translate("edit_event.to_record")} </label>
                         </div>
                     </div>
                     }
                     {this.isEventType('PresentationType') &&
                     <div className="col-md-3">
                         <div className="form-check abc-checkbox">
-                            <input id="disclaimer_accepted" onChange={this.handleChange} checked={entity.disclaimer_accepted} className="form-check-input" type="checkbox" />
-                            <label className="form-check-label" htmlFor="disclaimer_accepted"> {T.translate("edit_event.disclaimer_accepted")} </label>
+                            <input id="attending_media" onChange={this.handleChange} checked={entity.attending_media}
+                                   className="form-check-input" type="checkbox"/>
+                            <label className="form-check-label"
+                                   htmlFor="attending_media"> {T.translate("edit_event.attending_media")} </label>
+                        </div>
+                    </div>
+                    }
+                    {this.isEventType('PresentationType') &&
+                    <div className="col-md-3">
+                        <div className="form-check abc-checkbox">
+                            <input id="disclaimer_accepted" onChange={this.handleChange}
+                                   checked={entity.disclaimer_accepted} className="form-check-input" type="checkbox"/>
+                            <label className="form-check-label"
+                                   htmlFor="disclaimer_accepted"> {T.translate("edit_event.disclaimer_accepted")} </label>
                         </div>
                     </div>
                     }
                 </div>
-                <hr />
+                <hr/>
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_event.tags")} </label>
                         <TagInput
-                          id="tags"
-                          value={entity.tags}
-                          summitId={currentSummit.id}
-                          onChange={this.handleChange}
-                          error={hasErrors('tags', errors)}
+                            id="tags"
+                            value={entity.tags}
+                            summitId={currentSummit.id}
+                            onChange={this.handleChange}
+                            error={hasErrors('tags', errors)}
                         />
                     </div>
                 </div>
                 {this.isEventType('PresentationType') && entity.id > 0 &&
                 <div className="row form-group">
                     <div className="col-md-12">
-                        <label> {T.translate("edit_event.qa_users")}  <i title={T.translate("edit_event.qa_users_info")} className="fa fa-info-circle"/></label>
+                        <label> {T.translate("edit_event.qa_users")} <i title={T.translate("edit_event.qa_users_info")}
+                                                                        className="fa fa-info-circle"/></label>
                         <MemberInput
-                          id="qa_users"
-                          value={entity.qa_users}
-                          onChange={this.handleQAuserChange}
-                          error={hasErrors('qa_users', errors)}
-                          getOptionLabel={this.getQAUsersOptionLabel}
-                          multi={true}
+                            id="qa_users"
+                            value={entity.qa_users}
+                            onChange={this.handleQAuserChange}
+                            error={hasErrors('qa_users', errors)}
+                            getOptionLabel={this.getQAUsersOptionLabel}
+                            multi={true}
                         />
                     </div>
                 </div>
@@ -672,8 +760,10 @@ class EventForm extends React.Component {
                     </div>
                     <div className="col-md-4">
                         <div className="form-check abc-checkbox" style={{marginTop: 30}}>
-                            <input id="show_sponsors" onChange={this.handleChange} checked={entity.show_sponsors} className="form-check-input" type="checkbox" />
-                            <label className="form-check-label" htmlFor="show_sponsors"> {T.translate("edit_event.show_sponsors")} </label>
+                            <input id="show_sponsors" onChange={this.handleChange} checked={entity.show_sponsors}
+                                   className="form-check-input" type="checkbox"/>
+                            <label className="form-check-label"
+                                   htmlFor="show_sponsors"> {T.translate("edit_event.show_sponsors")} </label>
                         </div>
                     </div>
                 </div>
@@ -772,19 +862,24 @@ class EventForm extends React.Component {
                             <div className="form-group">
                                 <label>
                                     {T.translate("edit_event.streaming_url")}&nbsp;
-                                    <i className="fa fa-info-circle" aria-hidden="true" title={T.translate("edit_event.streaming_url_info")} />
+                                    <i className="fa fa-info-circle" aria-hidden="true"
+                                       title={T.translate("edit_event.streaming_url_info")}/>
                                 </label>
-                                <input className="form-control" id="streaming_url" value={entity.streaming_url} onChange={this.handleChange} />
+                                <input className="form-control" id="streaming_url" value={entity.streaming_url}
+                                       onChange={this.handleChange}/>
                             </div>
                             <div className="form-group">
                                 <label> {T.translate("edit_event.meeting_url")}&nbsp;
-                                    <i className="fa fa-info-circle" aria-hidden="true" title={T.translate("edit_event.meeting_url_info")} />
+                                    <i className="fa fa-info-circle" aria-hidden="true"
+                                       title={T.translate("edit_event.meeting_url_info")}/>
                                 </label>
-                                <input className="form-control" id="meeting_url" value={entity.meeting_url} onChange={this.handleChange} />
+                                <input className="form-control" id="meeting_url" value={entity.meeting_url}
+                                       onChange={this.handleChange}/>
                             </div>
                             <div className="form-group">
                                 <label> {T.translate("edit_event.etherpad_link")} </label>
-                                <input className="form-control" id="etherpad_link" value={entity.etherpad_link} onChange={this.handleChange} />
+                                <input className="form-control" id="etherpad_link" value={entity.etherpad_link}
+                                       onChange={this.handleChange}/>
                             </div>
                         </div>
                         <div className="col-md-6">
@@ -799,28 +894,32 @@ class EventForm extends React.Component {
                                 />
                             </div>
                         </div>
-                     </div>
+                    </div>
                 </Panel>
                 <Panel show={showSection === 'rsvp'} title={T.translate("edit_event.rsvp")}
                        handleClick={this.toggleSection.bind(this, 'rsvp')}>
                     <div className="row form-group">
                         <div className="col-md-4">
                             <label> {T.translate("edit_event.head_count")} </label>
-                            <input className="form-control" type="number" id="head_count" value={entity.head_count} onChange={this.handleChange} />
+                            <input className="form-control" type="number" id="head_count" value={entity.head_count}
+                                   onChange={this.handleChange}/>
                         </div>
                         <div className="col-md-4">
                             <label> {T.translate("edit_event.rsvp_max_user_number")} </label>
-                            <input className="form-control" type="number" id="rsvp_max_user_number" value={entity.rsvp_max_user_number} onChange={this.handleChange} />
+                            <input className="form-control" type="number" id="rsvp_max_user_number"
+                                   value={entity.rsvp_max_user_number} onChange={this.handleChange}/>
                         </div>
                         <div className="col-md-4">
                             <label> {T.translate("edit_event.rsvp_max_user_wait_list_number")} </label>
-                            <input className="form-control" type="number" id="rsvp_max_user_wait_list_number" value={entity.rsvp_max_user_wait_list_number} onChange={this.handleChange} />
+                            <input className="form-control" type="number" id="rsvp_max_user_wait_list_number"
+                                   value={entity.rsvp_max_user_wait_list_number} onChange={this.handleChange}/>
                         </div>
                     </div>
                     <div className="row form-group">
                         <div className="col-md-6">
                             <label> {T.translate("edit_event.rsvp_link")} </label>
-                            <input className="form-control" id="rsvp_link" value={entity.rsvp_link} onChange={this.handleChange} />
+                            <input className="form-control" id="rsvp_link" value={entity.rsvp_link}
+                                   onChange={this.handleChange}/>
                         </div>
                         <div className="col-md-6">
                             <label> {T.translate("edit_event.rsvp_template")} </label>
@@ -850,7 +949,7 @@ class EventForm extends React.Component {
                 }
 
                 {entity.id !== 0 && extraQuestions && extraQuestions.length > 0 &&
-                <Panel show={showSection === 'extra_questions'} title={T.translate("edit_attendee.extra_questions")}
+                <Panel show={showSection === 'extra_questions'} title={T.translate("edit_event.extra_questions")}
                        handleClick={this.toggleSection.bind(this, 'extra_questions')}>
                     <QuestionAnswersInput
                         id="extra_questions"
@@ -861,6 +960,53 @@ class EventForm extends React.Component {
                 </Panel>
                 }
 
+                {entity.id !== 0 && entity.allow_feedback &&
+                <Panel show={showSection === 'feedback'} title={T.translate("edit_event.feedback")}
+                       handleClick={this.toggleSection.bind(this, 'feedback')}>
+                    <div className={'row'}>
+                        <div className={'col-md-6'}>
+                            <FreeTextSearch
+                                value={feedbackState.term ?? ''}
+                                placeholder={T.translate("edit_event.placeholders.search_feedback")}
+                                title={T.translate("edit_event.placeholders.search_feedback")}
+                                onSearch={this.handleFeedbackSearch}
+                                preventEvents={true}
+                            />
+                        </div>
+                        <div className="col-md-6 text-right">
+
+                            <button className="btn btn-default right-space" onClick={this.handleFeedbackExport}>
+                                {T.translate("general.export")}
+                            </button>
+
+                        </div>
+                    </div>
+                    <div className={'row'}>
+                        <div className={'col-md-12'}>
+                            <Table
+                                options={feedback_table_options}
+                                data={feedbackState.items}
+                                columns={feedback_columns}
+                                onSort={this.handleFeedbackSort}
+                            />
+                            <Pagination
+                                bsSize="medium"
+                                prev
+                                next
+                                first
+                                last
+                                ellipsis
+                                boundaryLinks
+                                maxButtons={10}
+                                items={feedbackState.lastPage}
+                                activePage={feedbackState.currentPage}
+                                onSelect={this.handleFeedbackPageChange}
+                            />
+                        </div>
+                    </div>
+                </Panel>
+                }
+
                 <div className="row">
                     <div className="col-md-12 submit-buttons">
                         {!entity.is_published &&
@@ -868,7 +1014,8 @@ class EventForm extends React.Component {
                             <input type="button" onClick={this.handleSubmit.bind(this, false)}
                                    className="btn btn-primary pull-right" value={T.translate("general.save")}/>
                             <input type="button" onClick={this.handleSubmit.bind(this, true)}
-                                className="btn btn-success pull-right" value={T.translate("general.save_and_publish")} />
+                                   className="btn btn-success pull-right"
+                                   value={T.translate("general.save_and_publish")}/>
                         </div>
                         }
 

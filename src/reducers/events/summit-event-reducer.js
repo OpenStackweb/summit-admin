@@ -20,8 +20,11 @@ import
     EVENT_ADDED,
     EVENT_PUBLISHED,
     IMAGE_ATTACHED,
-    IMAGE_DELETED
+    IMAGE_DELETED,
+    REQUEST_EVENT_FEEDBACK,
+    RECEIVE_EVENT_FEEDBACK, EVENT_FEEDBACK_DELETED,
 } from '../../actions/event-actions';
+import moment from 'moment-timezone';
 
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/utils/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
@@ -65,11 +68,23 @@ export const DEFAULT_ENTITY = {
     custom_order: 0,
 }
 
+const DEFAULT_STATE_FEEDBACK_STATE = {
+    items          : [],
+    term            : null,
+    order           : 'created_date',
+    orderDir        : 1,
+    currentPage     : 1,
+    lastPage        : 1,
+    perPage         : 10,
+    total           : 0,
+};
+
 const DEFAULT_STATE = {
     levelOptions: ['N/A', 'Beginner', 'Intermediate', 'Advanced' ],
     extraQuestions: [],
     entity: DEFAULT_ENTITY,
-    errors: {}
+    errors: {},
+    feedbackState: DEFAULT_STATE_FEEDBACK_STATE,
 };
 
 const summitEventReducer = (state = DEFAULT_STATE, action) => {
@@ -193,6 +208,28 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
             return {...state, entity: {...state.entity, qa_users: qaUsers} }
         }
         break;
+        case REQUEST_EVENT_FEEDBACK: {
+            let {order, orderDir, term, } = payload;
+
+            return {...state, feedbackState: {...state.feedbackState, order, orderDir, term}};
+        }
+        case RECEIVE_EVENT_FEEDBACK: {
+            let {current_page, total, last_page} = payload.response;
+            let items = payload.response.data.map(e => {
+
+                return {
+                    ...e,
+                    owner_full_name: `${e.owner.first_name} ${e.owner.last_name}`,
+                    created_date : moment(e.created_date * 1000).format('MMMM Do YYYY, h:mm a'),
+                };
+            });
+
+            return {...state, feedbackState: {...state.feedbackState, items:items , currentPage: current_page, totalEvents: total, lastPage: last_page }};
+        }
+        case EVENT_FEEDBACK_DELETED:{
+            let { feedbackId } = payload;
+            return {...state, feedbackState: {...state.feedbackState, items: state.feedbackState.items.filter(e => e.id !== feedbackId)}};
+        }
         default:
             return state;
     }
