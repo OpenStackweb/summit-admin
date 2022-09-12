@@ -31,7 +31,7 @@ import {
 } from "openstack-uicore-foundation/lib/utils/actions";
 import {epochToMomentTimeZone} from "openstack-uicore-foundation/lib/utils/methods";
 import {getAccessTokenSafely} from '../utils/methods';
-import {getQAUsersBySummitEvent} from "../actions/user-chat-roles-actions"
+import {getQAUsersBySummitEvent} from "./user-chat-roles-actions";
 import {
     publishEntityUpdate,
     PUB_ENTITY_UPDATE_OPERATOR_INSERT,
@@ -802,11 +802,11 @@ const parseFilters = (filters) => {
     }
 
     if (filters.start_date_filter) {
-        filter.push(`start_date==${filters.start_date_filter}`);
+        filter.push(`start_date>=${filters.start_date_filter}`);
     }
 
     if (filters.end_date_filter) {
-        filter.push(`end_date==${filters.end_date_filter}`);
+        filter.push(`end_date<=${filters.end_date_filter}`);
     }
 
     if (filters.duration_filter) {
