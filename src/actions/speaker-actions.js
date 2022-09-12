@@ -940,7 +940,7 @@ const parseFilters = (filters) => {
     if(filters.hasOwnProperty('activityTypeFilter') && Array.isArray(filters.activityTypeFilter)
         && filters.activityTypeFilter.length > 0){
         filter.push('presentations_type_id=='+filters.activityTypeFilter.reduce(
-            (accumulator, at) => accumulator +(accumulator !== '' ? '||':'') +`presentations_type_id==${at}`,
+            (accumulator, at) => accumulator +(accumulator !== '' ? '||':'') +`${at}`,
             ''
         ));
     }
