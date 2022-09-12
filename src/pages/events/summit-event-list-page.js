@@ -259,7 +259,11 @@ class SummitEventListPage extends React.Component {
             } else {
                 const removedFilter = this.state.enabledFilters.filter(e => !value.includes(e))[0];            
                 const defaultValue = removedFilter === 'published_filter' ? null : Array.isArray(this.state.eventFilters[removedFilter]) ? [] : '';
-                this.setState({...this.state, enabledFilters: value, eventFilters: {...this.state.eventFilters, [removedFilter]: defaultValue}});
+                let newEventFilters = {...this.state.eventFilters, [removedFilter]: defaultValue};
+                if(removedFilter === 'date_filter'){
+                    newEventFilters = {...newEventFilters, start_date_filter: '', end_date_filter: ''}
+                }
+                this.setState({...this.state, enabledFilters: value, eventFilters: newEventFilters});
             }
         } else {
             this.setState({...this.state, enabledFilters: value})
@@ -270,7 +274,6 @@ class SummitEventListPage extends React.Component {
         const {value} = ev.target;
         this.setState({...this.state, selectedColumns: value})
     }
-
 
     render(){
         const {currentSummit, events, lastPage, currentPage, term, order, orderDir, totalEvents, extraColumns, filters} = this.props;
