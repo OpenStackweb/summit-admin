@@ -144,6 +144,8 @@
     "schedule": "Schedule",
     "find_empty_spots": "Find empty spots for Day/Location",
     "no_empty_spots": "No empty spots found",
+    "apply_duration": "Apply duration",
+    "duration": "Duration",
     "placeholders": {
       "select_presentation_selection_status": "Select a Selection Status ...",
       "select_presentation_selection_plan": "Select a Selection Plan ...",
@@ -153,7 +155,8 @@
       "select_day": "Select an Activity Day ...",
       "select_venue": "Select a Venue ...",
       "select_event_type": "Select an Activity Type ...",
-      "select_track": "Select an Activity Category ..."
+      "select_track": "Select an Activity Category ...",
+      "selected_filters": "Enabled Filters"
     }
   },
   "bulk_actions_page": {

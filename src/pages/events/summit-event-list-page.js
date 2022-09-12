@@ -275,6 +275,53 @@ class SummitEventListPage extends React.Component {
         this.setState({...this.state, selectedColumns: value})
     }
 
+    handleChangeStartDate(ev) {
+        const {value} = ev.target;
+        this.setState({...this.state, eventFilters: {...this.state.eventFilters, start_date_filter: value.unix()}});    
+    }
+
+    handleChangeEndDate(ev) {
+        const {value} = ev.target;
+        this.setState({...this.state, eventFilters: {...this.state.eventFilters, end_date_filter: value.unix()}});        
+    }
+
+    handleFiltersChange(ev) {
+        const {value} = ev.target;
+        if(value.length < this.state.enabledFilters.length) {
+            if(value.length === 0) {
+                const resetFilters = {
+                    event_type_capacity_filter: [],
+                    selection_plan_id_filter: [],
+                    location_id_filter: [],
+                    selection_status_filter: [],
+                    track_id_filter: [],
+                    event_type_id_filter: [],
+                    speaker_id_filter: [],
+                    level_filter: [],
+                    tags_filter: [],
+                    published_filter: null,
+                    start_date_filter: '',
+                    end_date_filter: '',
+                    duration_filter: '',
+                    speaker_count_filter: '',
+                };
+                this.setState({...this.state, enabledFilters: value, eventFilters: resetFilters});
+            } else {
+                const removedFilter = this.state.enabledFilters.filter(e => !value.includes(e))[0];            
+                const defaultValue = removedFilter === 'published_filter' ? null : Array.isArray(this.state.eventFilters[removedFilter]) ? [] : '';
+                this.setState({...this.state, enabledFilters: value, eventFilters: {...this.state.eventFilters, [removedFilter]: defaultValue}});
+            }
+        } else {
+            this.setState({...this.state, enabledFilters: value})
+        }
+    }
+
+    handleColumnsChange(ev) {
+        const {value} = ev.target;
+        this.setState({...this.state, selectedColumns: value})
+    }
+
+
     render(){
         const {currentSummit, events, lastPage, currentPage, term, order, orderDir, totalEvents, extraColumns, filters} = this.props;
         const {enabledFilters, eventFilters} = this.state;

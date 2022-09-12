@@ -37,6 +37,7 @@ export const CHANGE_CURRENT_DAY                           = 'CHANGE_CURRENT_DAY'
 export const CHANGE_CURRENT_LOCATION                      = 'CHANGE_CURRENT_LOCATION';
 export const CHANGE_CURRENT_EVENT_TYPE                    = 'CHANGE_CURRENT_EVENT_TYPE';
 export const CHANGE_CURRENT_TRACK                         = 'CHANGE_CURRENT_TRACK';
+export const CHANGE_CURRENT_DURATION                      = 'CHANGE_CURRENT_DURATION';
 export const CHANGE_CURRENT_PRESENTATION_SELECTION_STATUS = 'CHANGE_CURRENT_PRESENTATION_SELECTION_STATUS';
 export const CHANGE_CURRENT_PRESENTATION_SELECTION_PLAN   = 'CHANGE_CURRENT_PRESENTATION_SELECTION_PLAN';
 export const CHANGE_CURRENT_UNSCHEDULE_SEARCH_TERM        = 'CHANGE_CURRENT_UNSCHEDULE_SEARCH_TERM';
@@ -47,6 +48,7 @@ export const RECEIVE_SCHEDULE_EVENTS_SEARCH_PAGE          = 'RECEIVE_SCHEDULE_EV
 export const RECEIVE_EMPTY_SPOTS                          = 'RECEIVE_EMPTY_SPOTS';
 export const CLEAR_EMPTY_SPOTS                            = 'CLEAR_EMPTY_SPOTS';
 export const CLEAR_PUBLISHED_EVENTS                       = 'CLEAR_PUBLISHED_EVENTS';
+export const CHANGE_SUMMIT_BUILDER_FILTERS                = 'CHANGE_SUMMIT_BUILDER_FILTERS';
 
 export const getUnScheduleEventsPage =
     (
@@ -58,10 +60,10 @@ export const getUnScheduleEventsPage =
         selection_status = null,
         selection_plan   = null,
         term             = null,
-        order            = null
+        order            = null,
+        duration         = null
     ) =>
     async (dispatch, getState) => {
-
         const accessToken = await getAccessTokenSafely();
         dispatch(startLoading());
         // filters
@@ -81,6 +83,15 @@ export const getUnScheduleEventsPage =
 
         if(selection_plan != null){
             filter.push(`selection_plan_id==${selection_plan}`);
+        }
+
+        if(duration != null){
+            if(Array.isArray(duration)) {
+                filter.push(`duration>=${duration[0] * 60}`);
+                filter.push(`duration<=${duration[1] * 60}`);
+            } else {
+                filter.push(`duration${duration.replace(/\d/g, '')}${duration.replace(/\D/g, '')*60}`)
+            }
         }
 
         if(term){
@@ -220,6 +231,16 @@ export const changeCurrentTrack = (currentTrack) => (dispatch, getState) => {
     dispatch(createAction(CHANGE_CURRENT_TRACK)(
         {
             track: currentTrack
+        }
+    ));
+}
+
+
+export const changeCurrentDuration = (currentDuration) => (dispatch, getState) => {
+
+    dispatch(createAction(CHANGE_CURRENT_DURATION)(
+        {
+            duration: currentDuration
         }
     ));
 }
@@ -369,4 +390,8 @@ export const clearEmptySpots = () => (dispatch, getState) => {
 
 export const clearPublishedEvents = () => (dispatch, getState) => {
     dispatch(createAction(CLEAR_PUBLISHED_EVENTS)());
+}
+
+export const changeSummitBuilderFilters = (filters) => (dispatch, getState) => {
+    dispatch(createAction(CHANGE_SUMMIT_BUILDER_FILTERS)(filters))
 }

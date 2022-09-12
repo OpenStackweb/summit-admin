@@ -20,6 +20,7 @@ import
     RECEIVE_SCHEDULE_EVENTS_PAGE,
     CHANGE_CURRENT_EVENT_TYPE,
     CHANGE_CURRENT_TRACK,
+    CHANGE_CURRENT_DURATION,
     CHANGE_CURRENT_PRESENTATION_SELECTION_STATUS,
     CHANGE_CURRENT_PRESENTATION_SELECTION_PLAN,
     CHANGE_CURRENT_UNSCHEDULE_SEARCH_TERM,
@@ -31,6 +32,7 @@ import
     CLEAR_EMPTY_SPOTS,
     ERROR_PUBLISH_EVENT,
     CLEAR_PUBLISHED_EVENTS,
+    CHANGE_SUMMIT_BUILDER_FILTERS
 } from '../../actions/summit-builder-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/utils/actions';
@@ -49,6 +51,7 @@ const DEFAULT_STATE = {
     currentLocation : null,
     currentEventType : null,
     currentTrack : null,
+    currentDuration : null,
     currentPresentationSelectionStatus: null,
     currentPresentationSelectionPlan: null,
     unScheduleEventsCurrentSearchTerm: null,
@@ -56,7 +59,8 @@ const DEFAULT_STATE = {
     scheduleEventsSearch: [],
     currentUnScheduleOrderBy : null,
     emptySpots: [],
-    searchingEmpty: false
+    searchingEmpty: false,
+    selectedFilters: []
 };
 
 const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
@@ -113,6 +117,11 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
         case CHANGE_CURRENT_TRACK: {
             let {track} = payload;
             return {...state, currentTrack: track};
+        }
+        break;
+        case CHANGE_CURRENT_DURATION: {
+            let {duration} = payload;
+            return {...state, currentDuration: duration};
         }
         break;
         case CHANGE_CURRENT_LOCATION: {
@@ -213,6 +222,10 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
                 scheduleEvents: [...state.scheduleEvents],
             };
             break;
+        case CHANGE_SUMMIT_BUILDER_FILTERS: {
+            return {...state, selectedFilters: payload}
+        }
+        break;
         case LOGOUT_USER:
         case SET_CURRENT_SUMMIT:
             return DEFAULT_STATE;
