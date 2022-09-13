@@ -29,6 +29,7 @@ import {getBadgeFeatures, getBadgeTypes, deleteBadge,
     printBadge} from "../../actions/badge-actions";
 import Swal from "sweetalert2";
 import {Table} from "openstack-uicore-foundation/lib/components";
+import moment from "moment-timezone";
 
 
 class EditTicketPage extends React.Component {
@@ -213,7 +214,8 @@ class EditTicketPage extends React.Component {
             { columnKey: 'id', value: T.translate("edit_ticket.refund_request_id") },
             { columnKey: 'requested_by_fullname', value: T.translate("edit_ticket.refund_request_requested_by") },
             { columnKey: 'action_by_fullname', value: T.translate("edit_ticket.refund_request_action_by") },
-            { columnKey: 'action_date', value: T.translate("edit_ticket.refund_request_action_date") },
+            { columnKey: 'action_date', value: T.translate("edit_ticket.refund_request_action_date"), 
+                render: (c) => c.action_date ? moment(c.action_date * 1000).tz(currentSummit.time_zone_id).format('MMMM Do YYYY, h:mm a (z)') : 'TBD', },
             { columnKey: 'status', value: T.translate("edit_ticket.refund_request_status") },
             { columnKey: 'refunded_amount_formatted', value: T.translate("edit_ticket.refunded_amount") },
             { columnKey: 'notes', value: T.translate("edit_ticket.refund_request_notes") },

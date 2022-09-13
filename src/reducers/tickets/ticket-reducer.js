@@ -104,7 +104,6 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
 
             if(entity.hasOwnProperty("refund_requests")){
                 entity.refund_requests = entity.refund_requests.map( r => ({...r,
-                    action_date : r.action_date ? moment(r.action_date * 1000).tz('UTC').format('MMMM Do YYYY, h:mm a') : 'TBD',
                     requested_by_fullname: r.requested_by ? `${r.requested_by.first_name} ${r.requested_by.last_name}`:'TBD',
                     action_by_fullname: r.action_by ? `${r.action_by.first_name} ${r.action_by.last_name}`:'TBD',
                     refunded_amount_formatted: `$${r.refunded_amount.toFixed(2)}`
@@ -133,7 +132,6 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
             const final_amount_adjusted_formatted = `$${((entity.final_amount - entity.refunded_amount).toFixed(2))}`;
             if(entity.hasOwnProperty("refund_requests")){
                 entity.refund_requests = entity.refund_requests.map( r => ({...r,
-                    action_date : r.action_date ? moment(r.action_date * 1000).tz('UTC').format('MMMM Do YYYY, h:mm a') : 'TBD',
                     requested_by_fullname: r.requested_by ? `${r.requested_by.first_name} ${r.requested_by.last_name}`:'TBD',
                     action_by_fullname: r.action_by ? `${r.action_by.first_name} ${r.action_by.last_name}`:'TBD',
                     refunded_amount_formatted: `$${r.refunded_amount.toFixed(2)}`
