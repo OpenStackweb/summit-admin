@@ -220,7 +220,7 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
                 return {
                     ...e,
                     owner_full_name: `${e.owner.first_name} ${e.owner.last_name}`,
-                    created_date : moment(e.created_date * 1000).format('MMMM Do YYYY, h:mm a'),
+                    created : moment(e.created_date * 1000).format('MMMM Do YYYY, h:mm a'),
                 };
             });
 

@@ -415,7 +415,7 @@ class EventForm extends React.Component {
         );
 
         let feedback_columns = [
-            {columnKey: 'created_date', value: 'Created Date', sortable: true},
+            {columnKey: 'created', value: 'Created Date', sortable: true},
             {columnKey: 'owner_full_name', value: 'Author', sortable: true},
             {columnKey: 'rate', value: 'Rate', sortable: true},
             {columnKey: 'note', value: 'Note'}
