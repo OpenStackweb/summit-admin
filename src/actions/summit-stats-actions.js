@@ -23,12 +23,20 @@ import {getAccessTokenSafely} from '../utils/methods';
 export const REQUEST_REGISTRATION_STATS      = 'REQUEST_REGISTRATION_STATS';
 export const RECEIVE_REGISTRATION_STATS      = 'RECEIVE_REGISTRATION_STATS';
 
-export const getRegistrationStats = (fromDate, toDate) => async (dispatch, getState) => {
+/**
+ * @param fromDate
+ * @param toDate
+ * @param shouldDispatchLoad
+ * @returns {function(*=, *): *}
+ */
+export const getRegistrationStats = (fromDate = null , toDate = null, shouldDispatchLoad = true) => async (dispatch, getState) => {
     const { currentSummitState } = getState();
     const { currentSummit }   = currentSummitState;
     const filter = [];
     const accessToken = await getAccessTokenSafely();
-    dispatch(startLoading());
+
+    if(shouldDispatchLoad)
+        dispatch(startLoading());
 
     if (fromDate) {
         filter.push(`start_date>=${fromDate}`);
@@ -52,7 +60,8 @@ export const getRegistrationStats = (fromDate, toDate) => async (dispatch, getSt
       `${window.API_BASE_URL}/api/v1/summits/all/${currentSummit.id}/registration-stats`,
       authErrorHandler
     )(params)(dispatch).then(() => {
-          dispatch(stopLoading());
+          if(shouldDispatchLoad)
+            dispatch(stopLoading());
       }
     );
 }

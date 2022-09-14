@@ -19,6 +19,7 @@ const DEFAULT_STATE = {
   total_checked_in_attendees: 0,
   total_non_checked_in_attendees: 0,
   total_virtual_attendees: 0,
+  total_virtual_non_checked_in_attendees: 0,
   total_tickets_per_badge_feature: []
 };
 
@@ -30,38 +31,6 @@ const summitStatsReducer = (state = DEFAULT_STATE, action) => {
     }
     case REQUEST_SUMMIT: {
       return DEFAULT_STATE
-    }
-    case RECEIVE_SUMMIT: {
-      const summit = payload.response;
-      const {
-        total_active_tickets,
-        total_inactive_tickets,
-        total_orders,
-        total_active_assigned_tickets,
-        total_payment_amount_collected,
-        total_refund_amount_emitted,
-        total_tickets_per_type,
-        total_badges_per_type,
-        total_checked_in_attendees,
-        total_non_checked_in_attendees,
-        total_virtual_attendees,
-        total_tickets_per_badge_feature
-      } = summit;
-
-      return {
-        ...state,
-        total_active_tickets,
-        total_inactive_tickets,
-        total_orders,
-        total_active_assigned_tickets,
-        total_payment_amount_collected,
-        total_refund_amount_emitted,
-        total_tickets_per_type,
-        total_badges_per_type,
-        total_checked_in_attendees,
-        total_non_checked_in_attendees,
-        total_virtual_attendees,
-        total_tickets_per_badge_feature}
     }
     case RECEIVE_REGISTRATION_STATS: {
       const stats = payload.response;

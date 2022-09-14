@@ -14,7 +14,8 @@
 import React, {useState} from 'react'
 import {DateTimePicker} from "openstack-uicore-foundation/lib/components";
 
-const DateIntervalFilter = ({onFilter, timezone = 'UTC'}) => {
+const DateIntervalFilter = ({ onFilter, timezone = 'UTC'}) => {
+
   const [fromDate, setFromDate] = useState(null);
   const [toDate, setToDate] = useState(null);
 

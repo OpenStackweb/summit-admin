@@ -241,7 +241,9 @@
     "expand": "Expand section",
     "collapse": "Collapse section",
     "badge_features_tickets": "Active Tickets per Badge Features",
-    "badge_features_checkins": "Check Ins per Badge Features"
+    "badge_features_checkins": "Check Ins per Badge Features",
+    "in_person_attendees": "In Person Attendees",
+    "virtual_attendees": "Virtual Attendees"
   },
   "edit_summit": {
     "name": "Name",
