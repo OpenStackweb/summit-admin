@@ -1876,6 +1876,9 @@
     "description": "Description",
     "max_size": "Max Size (KB - multiple of 1024)",
     "max_size_simple": "Max Size (KB)",
+    "min_qty": "Min Media Uploads Quantity",
+    "max_qty": "Max Media Uploads Quantity",
+    "max_qty_hint": "0: Unrestricted",
     "is_mandatory": "Is Mandatory",
     "type": "File Type",
     "public_storage_type": "Public Storage Type",
@@ -1886,7 +1889,7 @@
     "saved": "Media Upload Type saved successfully.",
     "created": "Media Upload Type created successfully.",
     "use_temporary_links_on_public_storage": "Use Temporary Links",
-    "temporary_links_public_storage_ttl_info": "Temporary Link Time To Live (TTL) in minutess",
+    "temporary_links_public_storage_ttl_info": "Temporary Link Time To Live (TTL) in minutes",
     "placeholders": {
       "search": "Search types by name",
       "select_type": "Select File Type",

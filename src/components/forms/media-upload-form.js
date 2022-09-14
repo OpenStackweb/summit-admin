@@ -109,7 +109,7 @@ class MediaUploadForm extends React.Component {
             <form className="media-upload-form">
                 <input type="hidden" id="id" value={entity.id}/>
                 <div className="row form-group">
-                    <div className="col-md-4">
+                    <div className="col-md-12">
                         <label> {T.translate("media_upload.name")} *</label>
                         <Input
                             id="name"
@@ -119,6 +119,8 @@ class MediaUploadForm extends React.Component {
                             value={entity.name}
                         />
                     </div>
+                </div>
+                <div className="row form-group">
                     <div className="col-md-4">
                         <label> {T.translate("media_upload.max_size")} *</label>
                         <Input
@@ -130,14 +132,31 @@ class MediaUploadForm extends React.Component {
                             value={entity.max_size}
                         />
                     </div>
-                    <div className="col-md-4 checkboxes-div">
-                        <div className="form-check abc-checkbox">
-                            <input type="checkbox" id="is_mandatory" checked={entity.is_mandatory}
-                                   onChange={this.handleChange} className="form-check-input"/>
-                            <label className="form-check-label" htmlFor="is_mandatory">
-                                {T.translate("media_upload.is_mandatory")}
-                            </label>
-                        </div>
+                    <div className="col-md-4">
+                        <label> {T.translate("media_upload.min_qty")} *</label>
+                        <Input
+                            type="number"
+                            id="min_uploads_qty"
+                            min="0"
+                            className="form-control"
+                            error={this.hasErrors('min_uploads_qty')}
+                            onChange={this.handleChange}
+                            value={entity.min_uploads_qty}
+                        />
+                    </div>
+                    <div className="col-md-4">
+                        <label>
+                            {T.translate("media_upload.max_qty")} <i class="fa fa-info-circle" aria-hidden="true" title={T.translate("media_upload.max_qty_hint")} />
+                        </label>
+                        <Input
+                            type="number"
+                            id="max_uploads_qty"
+                            min="0"
+                            className="form-control"
+                            error={this.hasErrors('max_uploads_qty')}
+                            onChange={this.handleChange}
+                            value={entity.max_uploads_qty}
+                        />
                     </div>
                 </div>
                 <div className="row form-group">

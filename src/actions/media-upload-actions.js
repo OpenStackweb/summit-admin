@@ -274,6 +274,9 @@ const normalizeEntity = (entity) => {
         normalizedEntity.temporary_links_public_storage_ttl = 0;
     }
 
+    if(normalizedEntity.hasOwnProperty("min_uploads_qty") && normalizedEntity.min_uploads_qty > 0){
+        normalizedEntity.is_mandatory = true;
+    }
 
     return normalizedEntity;
 
