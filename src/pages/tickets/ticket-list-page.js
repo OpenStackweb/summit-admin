@@ -32,15 +32,18 @@ import {
     clearAllSelectedTicket,
     setSelectedAll,
     printTickets,
+    getTicket
 } from "../../actions/ticket-actions";
-
 import {Modal, Pagination} from "react-bootstrap";
 import {Breadcrumb} from "react-breadcrumbs";
-
-import '../../styles/ticket-list-page.less';
 import {SegmentedControl} from "segmented-control";
 import Select from "react-select";
 import Swal from "sweetalert2";
+import QrReaderInput from "../../components/inputs/qr-reader-input";
+
+import '../../styles/ticket-list-page.less';
+import {validateTicketQR} from "../../utils/methods";
+
 const BatchSize = 25;
 
 class TicketListPage extends React.Component {
@@ -61,6 +64,7 @@ class TicketListPage extends React.Component {
         this.handleSelectedAll = this.handleSelectedAll.bind(this);
         this.handleSendTickets2Print = this.handleSendTickets2Print.bind(this);
         this.handleDoPrinting = this.handleDoPrinting.bind(this);
+        this.handleScanQR = this.handleScanQR.bind(this);
 
         this.state = {
             showIngestModal: false,
@@ -192,6 +196,21 @@ class TicketListPage extends React.Component {
         this.props.printTickets(filters, order, orderDir, this.state.doCheckIn, this.state.selectedViewType);
     }
 
+    handleScanQR(qrCode){
+        const {currentSummit, history} = this.props;
+        const qrValid = validateTicketQR(qrCode, currentSummit);
+
+        if (qrValid) {
+            this.props.getTicket(qrValid[1]).then(
+              (data) => {
+                  history.push(`/app/summits/${currentSummit.id}/purchase-orders/${data.order_id}/tickets/${data.id}`);
+              }
+            );
+        } else {
+            Swal.fire(T.translate("purchase_order_list.wrong_qr_title"), T.translate("purchase_order_list.wrong_qr_text"), "warning");
+        }
+    }
+
     render(){
         const {
             currentSummit,
@@ -268,12 +287,13 @@ class TicketListPage extends React.Component {
                 <div className="container">
                     <h3> {T.translate("ticket_list.ticket_list")} ({totalTickets})</h3>
                     <div className={'row'}>
-                        <div className={'col-md-6'}>
+                        <div className="col-md-6 search-section">
                             <FreeTextSearch
                                 value={filters.term}
                                 placeholder={T.translate("ticket_list.placeholders.search_tickets")}
                                 onSearch={this.handleSearch}
                             />
+                            <QrReaderInput onScan={this.handleScanQR} />
                         </div>
                         <div className="col-md-6 text-right" style={{marginBottom: 20}}>
                             <div className="row">
@@ -588,5 +608,6 @@ export default connect (
         clearAllSelectedTicket,
         setSelectedAll,
         printTickets,
+        getTicket
     }
 )(TicketListPage);
