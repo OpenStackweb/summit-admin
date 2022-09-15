@@ -77,6 +77,7 @@ const DEFAULT_STATE_FEEDBACK_STATE = {
     lastPage        : 1,
     perPage         : 10,
     total           : 0,
+    summitTZ        : ''
 };
 
 const DEFAULT_STATE = {
@@ -99,7 +100,7 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
             }
         }
         break;
-        case SET_CURRENT_SUMMIT:
+        case SET_CURRENT_SUMMIT: 
         case RESET_EVENT_FORM: {
             return DEFAULT_STATE;
         }
@@ -209,18 +210,17 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case REQUEST_EVENT_FEEDBACK: {
-            let {order, orderDir, term, } = payload;
-
-            return {...state, feedbackState: {...state.feedbackState, order, orderDir, term}};
+            let {order, orderDir, term, summitTZ} = payload;
+            return {...state, feedbackState: {...state.feedbackState, order, orderDir, term, summitTZ}};
         }
         case RECEIVE_EVENT_FEEDBACK: {
             let {current_page, total, last_page} = payload.response;
-            let items = payload.response.data.map(e => {
 
+            let items = payload.response.data.map(e => {
                 return {
                     ...e,
                     owner_full_name: `${e.owner.first_name} ${e.owner.last_name}`,
-                    created : moment(e.created_date * 1000).format('MMMM Do YYYY, h:mm a'),
+                    created : moment(e.created_date * 1000).tz(state.feedbackState.summitTZ).format('MMMM Do YYYY, h:mm a'),
                 };
             });
 
