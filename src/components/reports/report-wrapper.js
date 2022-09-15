@@ -81,7 +81,7 @@ const wrapReport = (ReportComponent, specs) => {
                 listFilters = {...listFilters, ...queryFilters}
             }
 
-            let query = this.refs.childCmp.buildReportQuery(queryFilters, listFilters);
+            let query = this.refs.childCmp.buildReportQuery(queryFilters, listFilters, sort, sortdir);
 
             return "{ reportData: "+ query + " }";
         }

@@ -63,8 +63,8 @@ class SmartPresentationReport extends React.Component {
 
     }
 
-    buildReportQuery(filters, listFilters) {
-        const {currentSummit, sortKey, sortDir} = this.props;
+    buildReportQuery(filters, listFilters, sortKey, sortDir) {
+        const {currentSummit} = this.props;
         const {showFields} = this.state;
         listFilters.summitId = currentSummit.id;
 

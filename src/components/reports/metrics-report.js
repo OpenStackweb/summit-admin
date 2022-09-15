@@ -13,10 +13,17 @@
 
 import React from 'react'
 import moment from 'moment-timezone'
-import {CompanyInput, DateTimePicker, Dropdown, Panel, Table} from 'openstack-uicore-foundation/lib/components'
+import {
+    CompanyInput,
+    DateTimePicker,
+    Dropdown,
+    EventInput,
+    Panel,
+    Table
+} from 'openstack-uicore-foundation/lib/components'
 const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
-import {groupByDate} from '../../utils/methods'
+import {groupByDate, parseAndFormat} from '../../utils/methods'
 import {flattenData} from "../../actions/report-actions";
 import ReactDOMServer from "react-dom/server";
 
@@ -61,20 +68,25 @@ class MetricsReport extends React.Component {
             fromDate: null,
             toDate: null,
             showAnswers: false,
+            subTypeFilter: null,
+            roomFilter: null,
+            eventFilter: null,
         };
 
         this.memberReport = false;
     }
 
-    buildMetricsQuery = (filters, listFilters) => {
+    buildMetricsQuery = (filters, listFilters, sortKey, sortDir) => {
         const {currentSummit} = this.props;
-        const {fromDate, toDate, eventType, sponsor, showAnswers} = this.state;
+        const {fromDate, toDate, eventType, sponsor, showAnswers, subTypeFilter, roomFilter, eventFilter} = this.state;
         const overallFilter = {};
+        const roomQueryFilter = {};
+        const eventQueryFilter = {};
         const metricsFields = ["name", "email", "company", "subType", "attendeeId", "memberId", "ingress", "outgress"];
         const sponsorsMessage = ["sponsors"];
         const roomsMessage = ["rooms"];
         const eventsMessage = ["events"];
-        const venueRoomMessage = ["venueroom"]
+        const venueRoomMessage = ["venueroom"];
 
         if (showAnswers) {
             metricsFields.push("answers");
@@ -94,11 +106,28 @@ class MetricsReport extends React.Component {
         }
 
         if (fromDate) {
-            overallFilter.fromDate = moment(fromDate).format('YYYY-MM-DDTHH:mm:ss+00:00');
+            overallFilter.fromDate = moment(fromDate).tz('UTC').format('YYYY-MM-DDTHH:mm:ss+00:00');
         }
 
         if (toDate) {
-            overallFilter.toDate = moment(toDate).format('YYYY-MM-DDTHH:mm:ss+00:00');
+            overallFilter.toDate = moment(toDate).tz('UTC').format('YYYY-MM-DDTHH:mm:ss+00:00');
+        }
+
+        if (subTypeFilter) {
+            overallFilter.metricSubType = subTypeFilter;
+        }
+
+        if (roomFilter) {
+            roomQueryFilter.id = roomFilter;
+        }
+
+        if (eventFilter) {
+            eventQueryFilter.id = eventFilter.id;
+        }
+
+        if (sortKey && sortDir) {
+            overallFilter.sortBy = this.translateSortKey(sortKey);
+            overallFilter.sortDir = sortDir === '1' ? 'ASC' : 'DESC';
         }
 
         const query = new Query("summits", listFilters);
@@ -106,9 +135,9 @@ class MetricsReport extends React.Component {
         metrics.find(metricsFields)
         const sponsors = new Query(...sponsorsMessage);
         sponsors.find(["id", "companyName", {"metrics": metrics}]);
-        const events = new Query(...eventsMessage);
+        const events = new Query(...eventsMessage, eventQueryFilter);
         events.find(["id", "title", {"metrics": metrics}]);
-        const rooms = new Query(...roomsMessage);
+        const rooms = new Query(...roomsMessage, roomQueryFilter);
         const venueRoom = new Query(...venueRoomMessage);
         venueRoom.find([{"metrics": metrics}]);
         const extraQuestions = new Query("orderExtraQuestions");
@@ -153,11 +182,11 @@ class MetricsReport extends React.Component {
         }
 
         if (fromDate) {
-            listFilters.fromDate = moment(fromDate).format('YYYY-MM-DDTHH:mm:ss+00:00');
+            listFilters.fromDate = moment(fromDate).tz('UTC').format('YYYY-MM-DDTHH:mm:ss+00:00');
         }
 
         if (toDate) {
-            listFilters.toDate = moment(toDate).format('YYYY-MM-DDTHH:mm:ss+00:00');
+            listFilters.toDate = moment(toDate).tz('UTC').format('YYYY-MM-DDTHH:mm:ss+00:00');
         }
 
         let query = new Query("metrics", listFilters);
@@ -190,11 +219,11 @@ class MetricsReport extends React.Component {
         }
 
         if (fromDate) {
-            listFilters.fromDate = moment(fromDate).format('YYYY-MM-DDTHH:mm:ss+00:00');
+            listFilters.fromDate = moment(fromDate).tz('UTC').format('YYYY-MM-DDTHH:mm:ss+00:00');
         }
 
         if (toDate) {
-            listFilters.toDate = moment(toDate).format('YYYY-MM-DDTHH:mm:ss+00:00');
+            listFilters.toDate = moment(toDate).tz('UTC').format('YYYY-MM-DDTHH:mm:ss+00:00');
         }
 
         let query = new Query("metrics", listFilters);
@@ -219,14 +248,14 @@ class MetricsReport extends React.Component {
         target.nextSibling.innerHTML = ReactDOMServer.renderToString(<RawMetricsTable data={data} timezone={currentSummit.time_zone_id} />);
     }
 
-    buildReportQuery(filters, listFilters) {
+    buildReportQuery(filters, listFilters, sortKey, sortDir) {
         let query = null;
         if (listFilters.search) {
             this.memberReport = true;
             query = this.buildMemberQuery(filters, listFilters);
         } else {
             this.memberReport = false;
-            query = this.buildMetricsQuery(filters, listFilters);
+            query = this.buildMetricsQuery(filters, listFilters, sortKey, sortDir);
         }
 
         return query;
@@ -236,19 +265,22 @@ class MetricsReport extends React.Component {
         let sortKey = key;
         switch(key) {
             case 'ingressdate':
-                sortKey = 'ingress_date';
+                sortKey = 'Ingress';
                 break;
             case 'outgressdate':
-                sortKey = 'outgress_date';
+                sortKey = 'Outgress';
                 break;
-            case 'eventname':
-                sortKey = 'eventmetric__event__title';
+            case 'sub_type':
+                sortKey = 'SubType';
                 break;
-            case 'sponsorname':
-                sortKey = 'sponsormetric__sponsor__company__name';
+            case 'company':
+                sortKey = 'Company';
                 break;
-            case 'membername':
-                sortKey = 'member__first_name';
+            case 'email':
+                sortKey = 'Email';
+                break;
+            case 'metric':
+                sortKey = 'FirstName';
                 break;
         }
         return sortKey;
@@ -328,9 +360,9 @@ class MetricsReport extends React.Component {
             ];
         } else {
             columns = [
-                { columnKey: 'metric', value: 'Metric' },
-                { columnKey: 'email', value: 'Email' },
-                { columnKey: 'company', value: 'Company' }
+                { columnKey: 'metric', value: 'Metric', sortable: true },
+                { columnKey: 'email', value: 'Email', sortable: true },
+                { columnKey: 'company', value: 'Company', sortable: true }
             ];
 
             if (showAnswers && data.extraQuestions) {
@@ -338,9 +370,9 @@ class MetricsReport extends React.Component {
             }
 
             if (eventType === 'EVENT') {
-                columns.push({ columnKey: 'subType', value: 'SubType' });
-                columns.push({ columnKey: 'ingress', value: 'Ingress' });
-                columns.push({ columnKey: 'outgress', value: 'Outgress' });
+                columns.push({ columnKey: 'subType', value: 'SubType', sortable: true });
+                columns.push({ columnKey: 'ingress', value: 'Ingress', sortable: true });
+                columns.push({ columnKey: 'outgress', value: 'Outgress', sortable: true });
 
                 if (!data.rooms?.some(r => r.events))
                     return {reportData: processedData, tableColumns: columns};
@@ -356,7 +388,7 @@ class MetricsReport extends React.Component {
                                         const metric = this.parseMetricData(m);
                                         return ({
                                             ...metric,
-                                            metric: (
+                                            metric: forExport ? metric.metric : (
                                               <div>
                                                   <span className="metricDrilldown" onClick={evt => this.toggleDrillDownData(evt.target, ev.id, metric)}>{metric.metric}</span>
                                                   <div className="raw-metrics-table" />
@@ -377,7 +409,9 @@ class MetricsReport extends React.Component {
                         result = [...result, ...item.events];
                         return result;
                     }, []);
+
                     processedData = flattenData(processedData);
+
                     columns = [
                         { columnKey: 'id', value: 'Event Id' },
                         { columnKey: 'title', value: 'Event' },
@@ -504,6 +538,11 @@ class MetricsReport extends React.Component {
         let {id, value, type, checked} = ev.target;
         const {state} = this;
         state[id] = type === 'checkbox' ? checked : value;
+        if (id === 'eventType') {
+            state.roomFilter = null;
+            state.eventFilter = null;
+            state.subTypeFilter = null;
+        }
         this.setState(state);
     }
 
@@ -651,8 +690,8 @@ class MetricsReport extends React.Component {
     }
 
     render() {
-        const {data, sortKey, sortDir, currentSummit} = this.props;
-        const {eventType, sponsor, showAnswers} = this.state;
+        const {data, currentSummit, sortKey, sortDir} = this.props;
+        const {eventType, sponsor, showAnswers, subTypeFilter, roomFilter, eventFilter} = this.state;
 
         const report_options = {
             sortCol: sortKey,
@@ -670,6 +709,15 @@ class MetricsReport extends React.Component {
             {label: 'Sponsor Page (Virtual only)', value: 'SPONSOR'},
             {label: 'Other', value: 'GENERAL'},
         ];
+
+        const sub_types_ddl = [
+            {label: 'In-Person', value: 'ON_SITE'},
+            {label: 'Virtual', value: 'VIRTUAL'},
+        ];
+
+        const room_ddl = currentSummit.locations.map(l => ({
+            label: l.name, value: l.id
+        }));
 
         return (
             <div>
@@ -695,6 +743,66 @@ class MetricsReport extends React.Component {
                                 clearable
                             />
                         </div>
+                        {eventType === 'ROOM' &&
+                        <div className="col-md-3">
+                            <label>Room</label>
+                            <Dropdown
+                              id="roomFilter"
+                              options={room_ddl}
+                              onChange={this.handleFilterChange}
+                              value={roomFilter}
+                              clearable
+                            />
+                        </div>
+                        }
+                        {eventType === 'EVENT' &&
+                        <div className="col-md-3">
+                            <label>Activity</label>
+                            <EventInput
+                              id="eventFilter"
+                              summit={currentSummit}
+                              value={eventFilter}
+                              onChange={this.handleFilterChange}
+                              onlyPublished={true}
+                              isClearable
+                            />
+                        </div>
+                        }
+                        {['ROOM', 'EVENT'].includes(eventType) &&
+                        <div className="col-md-3">
+                            <label>Sub Type</label>
+                            <Dropdown
+                              id="subTypeFilter"
+                              options={sub_types_ddl}
+                              onChange={this.handleFilterChange}
+                              value={subTypeFilter}
+                              clearable
+                            />
+                        </div>
+                        }
+                    </div>
+                    <div className="row" style={{marginTop: 20}}>
+                        <div className="col-md-4">
+                            <label>Ingress date</label>
+                            <div className="inline">
+                                From: &nbsp;&nbsp;
+                                <DateTimePicker
+                                  id="fromDate"
+                                  onChange={this.handleFilterChange}
+                                  format={{date:"YYYY-MM-DD", time: "HH:mm"}}
+                                  value={this.state.fromDate}
+                                  timezone={currentSummit.time_zone_id}
+                                />
+                                &nbsp;&nbsp;To:&nbsp;&nbsp;
+                                <DateTimePicker
+                                  id="toDate"
+                                  onChange={this.handleFilterChange}
+                                  format={{date:"YYYY-MM-DD", time: "HH:mm"}}
+                                  value={this.state.toDate}
+                                  timezone={currentSummit.time_zone_id}
+                                />
+                            </div>
+                        </div>
                         <div className="col-md-2 checkboxes-div">
                             <div className="form-check abc-checkbox">
                                 <input type="checkbox" id="showAnswers" checked={showAnswers}
@@ -706,27 +814,6 @@ class MetricsReport extends React.Component {
                         </div>
                         <div className="col-md-2" style={{marginTop: 20}}>
                             <button className="btn btn-primary" onClick={this.filterReport}> GO </button>
-                        </div>
-                    </div>
-                    <div className="row" style={{marginTop: 20}}>
-                        <div className="col-md-6">
-                            <label>Ingress date</label>
-                            <div className="inline">
-                                From: &nbsp;&nbsp;
-                                <DateTimePicker
-                                    id="fromDate"
-                                    onChange={this.handleFilterChange}
-                                    format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                                    value={this.state.fromDate}
-                                />
-                                &nbsp;&nbsp;To:&nbsp;&nbsp;
-                                <DateTimePicker
-                                    id="toDate"
-                                    onChange={this.handleFilterChange}
-                                    format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                                    value={this.state.toDate}
-                                />
-                            </div>
                         </div>
                     </div>
                 </div>

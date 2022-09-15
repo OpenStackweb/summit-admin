@@ -55,8 +55,8 @@ class SmartSpeakerReport extends React.Component {
 
     }
 
-    buildReportQuery(filters, listFilters) {
-        const {currentSummit, sortKey, sortDir} = this.props;
+    buildReportQuery(filters, listFilters, sortKey, sortDir) {
+        const {currentSummit} = this.props;
         let {showFields} = this.state;
 
         if (!filters.published_in) {

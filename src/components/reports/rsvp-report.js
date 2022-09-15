@@ -27,7 +27,7 @@ class RsvpReport extends React.Component {
 
     }
 
-    buildReportQuery(filters, listFilters) {
+    buildReportQuery(filters, listFilters, sortKey, sortDir) {
         const {currentSummit} = this.props;
 
         listFilters.isRsvp = true;
