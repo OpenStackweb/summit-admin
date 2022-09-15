@@ -131,16 +131,24 @@ class SummitEventListPage extends React.Component {
     }
 
     componentDidMount() {
-        const {currentSummit, filters, extraColumns} = this.props;
+        const {currentSummit, filters, extraColumns, term, order, orderDir} = this.props;
         const {eventFilters} = this.state;
+        const  enabledFilters = Object.keys(filters).filter(e => filters[e]?.length > 0);
+        // corner case for date_filter
+        let {end_date_filter, start_date_filter} = filters;
+        if((start_date_filter && start_date_filter > 0) || ( end_date_filter && end_date_filter > 0)){
+            enabledFilters.push('date_filter');
+        }
+
         this.setState({
             ...this.state, 
-            selectedColumns: extraColumns, 
-            enabledFilters: Object.keys(filters).filter(e => filters[e]?.length > 0), 
+            selectedColumns: extraColumns,
+            enabledFilters: enabledFilters,
             eventFilters: {...eventFilters, ...filters}
         });
+
         if(currentSummit) {
-            this.props.getEvents(null, 1, 10, null, null, filters, extraColumns)
+            this.props.getEvents(term, 1, 10, order, orderDir, filters, extraColumns)
         }
     }
 
