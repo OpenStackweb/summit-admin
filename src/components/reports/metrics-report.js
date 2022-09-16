@@ -264,13 +264,13 @@ class MetricsReport extends React.Component {
     translateSortKey(key) {
         let sortKey = key;
         switch(key) {
-            case 'ingressdate':
+            case 'ingress':
                 sortKey = 'Ingress';
                 break;
-            case 'outgressdate':
+            case 'outgress':
                 sortKey = 'Outgress';
                 break;
-            case 'sub_type':
+            case 'subtype':
                 sortKey = 'SubType';
                 break;
             case 'company':
@@ -302,7 +302,7 @@ class MetricsReport extends React.Component {
         }
 
         if (metric.subType) {
-            result.subType = metric.subType;
+            result.subtype = metric.subType;
         }
 
         if (metric.attendeeId) {
@@ -345,7 +345,7 @@ class MetricsReport extends React.Component {
                     date: moment.tz(d.ingressDate, currentSummit.time_zone_id).format('dddd, MMMM Do YYYY, h:mm a (z)'),
                     origin: origin,
                     member: d.memberName,
-                    subType: d.eventmetric?.subType
+                    subtype: d.eventmetric?.subType
                 }
 
             });
@@ -355,7 +355,7 @@ class MetricsReport extends React.Component {
             columns = [
                 { columnKey: 'type', value: 'Type' },
                 { columnKey: 'origin', value: 'Origin' },
-                { columnKey: 'subType', value: 'SubType' },
+                { columnKey: 'subtype', value: 'SubType' },
                 { columnKey: 'date', value: 'Date' }
             ];
         } else {
@@ -370,7 +370,7 @@ class MetricsReport extends React.Component {
             }
 
             if (eventType === 'EVENT') {
-                columns.push({ columnKey: 'subType', value: 'SubType', sortable: true });
+                columns.push({ columnKey: 'subtype', value: 'SubType', sortable: true });
                 columns.push({ columnKey: 'ingress', value: 'Ingress', sortable: true });
                 columns.push({ columnKey: 'outgress', value: 'Outgress', sortable: true });
 
@@ -428,9 +428,9 @@ class MetricsReport extends React.Component {
                     }
                 }
             } else if (eventType === 'ROOM') {
-                columns.push({ columnKey: 'subType', value: 'SubType' });
-                columns.push({ columnKey: 'ingress', value: 'Ingress' });
-                columns.push({ columnKey: 'outgress', value: 'Outgress' });
+                columns.push({ columnKey: 'subtype', value: 'SubType', sortable: true });
+                columns.push({ columnKey: 'ingress', value: 'Ingress', sortable: true });
+                columns.push({ columnKey: 'outgress', value: 'Outgress', sortable: true });
 
                 if (!data.rooms)
                     return {reportData: processedData, tableColumns: columns};
@@ -782,7 +782,7 @@ class MetricsReport extends React.Component {
                         }
                     </div>
                     <div className="row" style={{marginTop: 20}}>
-                        <div className="col-md-4">
+                        <div className="col-md-6">
                             <label>Ingress date</label>
                             <div className="inline">
                                 From: &nbsp;&nbsp;
