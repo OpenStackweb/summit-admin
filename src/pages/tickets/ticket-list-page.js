@@ -40,9 +40,9 @@ import {SegmentedControl} from "segmented-control";
 import Select from "react-select";
 import Swal from "sweetalert2";
 import QrReaderInput from "../../components/inputs/qr-reader-input";
+import {getTicketFromQR} from "../../utils/methods";
 
 import '../../styles/ticket-list-page.less';
-import {validateTicketQR} from "../../utils/methods";
 
 const BatchSize = 25;
 
@@ -198,10 +198,10 @@ class TicketListPage extends React.Component {
 
     handleScanQR(qrCode){
         const {currentSummit, history} = this.props;
-        const qrValid = validateTicketQR(qrCode, currentSummit);
+        const ticketNumber = getTicketFromQR(qrCode, currentSummit);
 
-        if (qrValid) {
-            this.props.getTicket(qrValid[1]).then(
+        if (ticketNumber) {
+            this.props.getTicket(ticketNumber).then(
               (data) => {
                   history.push(`/app/summits/${currentSummit.id}/purchase-orders/${data.order_id}/tickets/${data.id}`);
               }

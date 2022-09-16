@@ -91,24 +91,15 @@ export const boolToStr = boolean => {
     return boolean ? 'Yes' : 'No';
 }
 
-export const validateOrderQR = (code, summit) => {
+export const getTicketFromQR = (code, summit) => {
     const qrCodeArray = code.split(summit.qr_registry_field_delimiter);
 
-    if (qrCodeArray.length > 2 && qrCodeArray[0] === summit.ticket_qr_prefix) {
-        return qrCodeArray;
-    }
+    // is badge: QR_PREFIX_BADGE|TICKET_NUMBER|OWNER_EMAIL|FULLNAME
+    const isBadgeQR = qrCodeArray.length === 4 && qrCodeArray[0] === summit.badge_qr_prefix;
+    // is ticket: QR_PREFIX_TICKET|TICKET_NUMBER
+    const isTicketQR = qrCodeArray.length === 2 && qrCodeArray[0] === summit.ticket_qr_prefix;
 
-    return false;
-}
-
-export const validateTicketQR = (code, summit) => {
-    const qrCodeArray = code.split(summit.qr_registry_field_delimiter);
-
-    if (qrCodeArray.length > 1 && qrCodeArray[0] === summit.ticket_qr_prefix) {
-        return qrCodeArray;
-    }
-
-    return false;
+    return (isBadgeQR || isTicketQR) ? qrCodeArray[1] : null;
 }
 
 export const validateBadgeQR = (code, summit) => {

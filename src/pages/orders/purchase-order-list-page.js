@@ -20,7 +20,7 @@ import { getPurchaseOrders } from "../../actions/order-actions";
 import QrReaderInput from '../../components/inputs/qr-reader-input';
 import { getTicket } from '../../actions/ticket-actions'
 import Swal from "sweetalert2";
-import {validateOrderQR} from "../../utils/methods";
+import {getTicketFromQR} from "../../utils/methods";
 
 
 class PurchaseOrderListPage extends React.Component {
@@ -48,10 +48,10 @@ class PurchaseOrderListPage extends React.Component {
 
     handleQRScan(qrCode) {
         const {currentSummit, history} = this.props;
-        const qrValid = validateOrderQR(qrCode, currentSummit);
+        const ticketNumber = getTicketFromQR(qrCode, currentSummit);
 
-        if (qrValid) {
-            this.props.getTicket(qrValid[1]).then(
+        if (ticketNumber) {
+            this.props.getTicket(ticketNumber).then(
                 (data) => {
                     history.push(`/app/summits/${currentSummit.id}/purchase-orders/${data.order_id}/tickets/${data.id}`);
                 }
