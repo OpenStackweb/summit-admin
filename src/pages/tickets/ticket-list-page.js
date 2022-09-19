@@ -198,7 +198,7 @@ class TicketListPage extends React.Component {
 
     handleScanQR(qrCode){
         const {currentSummit, history} = this.props;
-        const ticketNumber = getTicketFromQR(qrCode, currentSummit);
+        const {ticketNumber, qrPrefix} = getTicketFromQR(qrCode, currentSummit);
 
         if (ticketNumber) {
             this.props.getTicket(ticketNumber).then(
@@ -207,7 +207,7 @@ class TicketListPage extends React.Component {
               }
             );
         } else {
-            Swal.fire(T.translate("purchase_order_list.wrong_qr_title"), T.translate("purchase_order_list.wrong_qr_text"), "warning");
+            Swal.fire(T.translate("purchase_order_list.wrong_qr_title"), `Ticket prefix ${qrPrefix} does not match this show.`, "warning");
         }
     }
 

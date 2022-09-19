@@ -26,12 +26,13 @@ import {
     showMessage,
     showSuccessMessage,
     startLoading,
-    stopLoading,
+    stopLoading, VALIDATE,
 } from 'openstack-uicore-foundation/lib/utils/actions';
 
 import {getAccessTokenSafely} from '../utils/methods';
 
 import URI from "urijs";
+import Swal from "sweetalert2";
 
 export const REQUEST_TICKETS = 'REQUEST_TICKETS';
 export const RECEIVE_TICKETS = 'RECEIVE_TICKETS';
@@ -421,7 +422,7 @@ export const getTicket = (ticketId) => async (dispatch, getState) => {
         null,
         createAction(RECEIVE_TICKET),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets/${ticketId}`,
-        authErrorHandler
+        (err, res) => customErrorHandler(ticketId, err, res)
     )(params)(dispatch).then((data) => {
             dispatch(stopLoading());
             return data.response;
@@ -641,6 +642,20 @@ const normalizeTicket = (entity) => {
 
     return normalizedEntity;
 
+}
+
+export const customErrorHandler = (ticketId, err, res) => (dispatch, state) => {
+    const code = err.status;
+
+    dispatch(stopLoading());
+
+    switch (code) {
+        case 412:
+            Swal.fire("Validation error", `Ticket number ${ticketId} not found.`, "warning");
+            break;
+        default:
+            dispatch(authErrorHandler(err, res));
+    }
 }
 
 
