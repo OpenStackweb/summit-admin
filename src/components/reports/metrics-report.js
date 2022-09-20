@@ -36,8 +36,8 @@ const RawMetricsTable = ({data, timezone}) => {
     if (!data) return null;
 
     data.forEach(d => {
-       d.ingressDate = moment.tz(d.ingressDate, timezone).format('dddd, MMMM Do YYYY, h:mm a (z)');
-       d.outgressDate = d.outgressDate ? moment.tz(d.outgressDate, timezone).format('dddd, MMMM Do YYYY, h:mm a (z)') : '-';
+       d.ingressDate = moment.utc(d.ingressDate).tz(timezone).format('dddd, MMMM Do YYYY, h:mm a (z)');
+       d.outgressDate = d.outgressDate ? moment.utc(d.outgressDate).tz(timezone).format('dddd, MMMM Do YYYY, h:mm a (z)') : '-';
     });
 
     return (
@@ -342,7 +342,7 @@ class MetricsReport extends React.Component {
                 const origin = d.eventName || d.sponsorName || d.locationName;
                 return {
                     type: d.type,
-                    date: moment.tz(d.ingressDate, currentSummit.time_zone_id).format('dddd, MMMM Do YYYY, h:mm a (z)'),
+                    date: moment.utc(d.ingressDate).tz(currentSummit.time_zone_id).format('dddd, MMMM Do YYYY, h:mm a (z)'),
                     origin: origin,
                     member: d.memberName,
                     subtype: d.eventmetric?.subType
@@ -394,8 +394,8 @@ class MetricsReport extends React.Component {
                                                   <div className="raw-metrics-table" />
                                               </div>
                                             ),
-                                            ingress: moment.tz(metric.ingress, currentSummit.time_zone_id).format('dddd, MMMM Do YYYY, h:mm a (z)'),
-                                            outgress: metric.outgress ? moment.tz(metric.outgress, currentSummit.time_zone_id).format('dddd, MMMM Do YYYY, h:mm a (z)') : '-',
+                                            ingress: moment.utc(metric.ingress).tz(currentSummit.time_zone_id).format('dddd, MMMM Do YYYY, h:mm a (z)'),
+                                            outgress: metric.outgress ? moment.utc(metric.outgress).tz(currentSummit.time_zone_id).format('dddd, MMMM Do YYYY, h:mm a (z)') : '-',
                                         })
                                     });
                                     return ({...ev, metrics})
@@ -447,8 +447,8 @@ class MetricsReport extends React.Component {
                                   <div className="raw-metrics-table" />
                                 </div>
                               ),
-                              ingress: moment.tz(metric.ingress, currentSummit.time_zone_id).format('dddd, MMMM Do YYYY, h:mm a (z)'),
-                              outgress: metric.outgress ? moment.tz(metric.outgress, currentSummit.time_zone_id).format('dddd, MMMM Do YYYY, h:mm a (z)') : '-',
+                              ingress: moment.utc(metric.ingress).tz(currentSummit.time_zone_id).format('dddd, MMMM Do YYYY, h:mm a (z)'),
+                              outgress: metric.outgress ? moment.utc(metric.outgress).tz(currentSummit.time_zone_id).format('dddd, MMMM Do YYYY, h:mm a (z)') : '-',
                           })
                       });
                       return ({...rm, metrics})
