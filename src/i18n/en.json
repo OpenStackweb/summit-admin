@@ -403,6 +403,7 @@
     "disclaimer_accepted": "Disclaimer Accepted?",
     "feedback": "Feedback",
     "delete_feedback_warning": "Are you sure you want to delete this feedback entry?",
+    "extra_questions": "Extra Questions",
     "placeholders": {
       "select_venue": "Select an Activity Venue ...",
       "start_date": "Start Date",
