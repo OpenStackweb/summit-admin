@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
 import { checkInBadge } from "../../actions/badge-actions";
-import QrReader from "react-qr-reader";
+import QrReader from 'modern-react-qr-reader'
 import {isMobile} from 'react-device-detect';
 import Swal from "sweetalert2";
 import styles from '../../styles/badge-checkin-page.module.less';
@@ -29,9 +29,7 @@ const BadgeCheckinPage = ({match, currentSummit, checkInBadge}) => {
     const handleCheckIn = (data) => {
         if (data && !scanning) {
             setScanning(true);
-
             const qrValid = validateBadgeQR(data, currentSummit);
-
             if (qrValid) {
                 checkInBadge(data)
                     .then(() => {

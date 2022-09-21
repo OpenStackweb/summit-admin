@@ -14,7 +14,7 @@
 import React from 'react';
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import Swal from 'sweetalert2'
-import QrReader from 'react-qr-reader'
+import QrReader from 'modern-react-qr-reader'
 import { Modal } from 'react-bootstrap';
 
 export default class QrReaderInput extends React.Component {
