@@ -724,7 +724,7 @@ class ScheduleAdminDashBoard extends React.Component {
             {label: 'Activity Category', value: 'activity_category_filter'},
             {label: 'Selection Plan', value: 'selection_plan_id_filter'},            
             {label: 'Selection Status', value: 'selection_status_filter'},            
-            {label: 'Duration', value: 'duration_filter'},
+            {label: 'Duration (minutes)', value: 'duration_filter'},
         ]
 
         return(

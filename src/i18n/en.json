@@ -146,7 +146,7 @@
     "find_empty_spots": "Find empty spots for Day/Location",
     "no_empty_spots": "No empty spots found",
     "apply_duration": "Apply duration",
-    "duration": "Duration",
+    "duration": "Duration (minutes)",
     "placeholders": {
       "select_presentation_selection_status": "Select a Selection Status ...",
       "select_presentation_selection_plan": "Select a Selection Plan ...",
