@@ -58,7 +58,7 @@ export const getRegistrationStats = (fromDate = null , toDate = null, shouldDisp
       createAction(REQUEST_REGISTRATION_STATS),
       createAction(RECEIVE_REGISTRATION_STATS),
       `${window.API_BASE_URL}/api/v1/summits/all/${currentSummit.id}/registration-stats`,
-      authErrorHandler
+      authErrorHandler, {}, true // use ETAGS
     )(params)(dispatch).then(() => {
           if(shouldDispatchLoad)
             dispatch(stopLoading());

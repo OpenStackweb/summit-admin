@@ -21,7 +21,7 @@ import {Breadcrumb} from "react-breadcrumbs";
 import DateIntervalFilter from "../../components/filters/date-interval-filter";
 import {getRegistrationStats} from "../../actions/summit-stats-actions";
 
-const DATA_POOLING_INTERVAL = 4000;
+const DATA_POOLING_INTERVAL = 5000;
 
 function createDonnutCanvas(arc, percent) {
   const newCanvas = document.createElement('canvas');
