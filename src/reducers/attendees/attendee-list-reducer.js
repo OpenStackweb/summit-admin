@@ -35,7 +35,7 @@ const DEFAULT_STATE = {
     currentPage     : 1,
     lastPage        : 1,
     perPage         : 10,
-    totalAttendees  : 0,
+    totalRealAttendees  : 0,
     selectedIds: [],
     currentFlowEvent: '',
     selectedAll: false,
@@ -86,7 +86,7 @@ const attendeeListReducer = (state = DEFAULT_STATE, action) => {
             })
 
             return {...state, attendees: attendees, currentPage: current_page,
-                    totalAttendees: total, lastPage: last_page};
+                    totalRealAttendees: total, lastPage: last_page};
         }
         case ATTENDEE_DELETED: {
             let {attendeeId} = payload;

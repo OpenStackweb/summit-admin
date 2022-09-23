@@ -399,7 +399,7 @@ class SummitAttendeeListPage extends React.Component {
             currentSummit,
             attendees,
             lastPage, currentPage,
-            term, order, orderDir, totalAttendees,
+            term, order, orderDir, totalRealAttendees,
             selectedIds,
             currentFlowEvent,
             selectedAll,
@@ -475,7 +475,7 @@ class SummitAttendeeListPage extends React.Component {
 
         return(
             <div className="container">
-                <h3> {T.translate("attendee_list.attendee_list")} ({totalAttendees})</h3>
+                <h3> {T.translate("attendee_list.attendee_list")} ({totalRealAttendees})</h3>
                 <div className={'row'}>
                     <div className={'col-md-8'}>
                         <FreeTextSearch
