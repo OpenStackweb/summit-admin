@@ -66,10 +66,10 @@ const assembleTicketsState = (tickets) => {
         if (t.owner) {
             owner_email = t.owner.email;
 
-            if (t.owner.member) {
-                owner_full_name = `${t.owner.member.first_name} ${t.owner.member.last_name}`;
-            } else if (t.owner.first_name && t.owner.last_name) {
+            if (t.owner.first_name && t.owner.last_name) {
                 owner_full_name = `${t.owner.first_name} ${t.owner.last_name}`;
+            } else if (t.owner.member) {
+                owner_full_name = `${t.owner.member.first_name} ${t.owner.member.last_name}`;
             }
 
             owner_link = <a href="" onClick={ev => { ev.stopPropagation(); history.push(`/app/summits/${entity.summit_id}/attendees/${t.owner.id}`)}}>{owner_full_name}</a>;
