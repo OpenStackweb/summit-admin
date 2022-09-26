@@ -51,6 +51,8 @@ const RegistrationStatsPage = ({currentSummit, summitStats, match, getRegistrati
 
   const totalTicketsAvailable = summitStats.total_tickets_per_type.reduce((res, it) => res + parseInt(it.available_qty), 0);
 
+  const hasInfiniteTicketsAvailable = summitStats.total_tickets_per_type.some(it => it.available_qty === 0);
+
   const totalTicketsSold = summitStats.total_tickets_per_type.reduce((res, it) => res + parseInt(it.sold_qty), 0);
 
   const totalTicketsCheckedIn = summitStats.total_tickets_per_type.reduce((res, it) => res + parseInt(it.checkin_qty), 0);
@@ -112,17 +114,16 @@ const RegistrationStatsPage = ({currentSummit, summitStats, match, getRegistrati
         }
 
         {/* Tickets sold per ticket type, badge type and badge features */}
-        {totalTicketsAvailable > 0 &&
+        {(totalTicketsAvailable > 0 || hasInfiniteTicketsAvailable) &&
         <>
           <Graph
             title="Active tickets sold per ticket type"
-            subtitle={[`Tickets sold: ${totalTicketsSold}`, `Tickets available: ${totalTicketsAvailable}`]}
+            subtitle={[`Tickets sold: ${totalTicketsSold}`, `Tickets available: ${hasInfiniteTicketsAvailable ? '∞' : totalTicketsAvailable}`]}
             legendTitle="Sold / Available per ticket type"
             data={sortedTicketTypes.map(tt => ({
               value: parseInt(tt.sold_qty),
-              divider: parseInt(tt.available_qty),
-              total: totalTicketsSold,
-              label: `${trimString(tt.type)} : ${tt.sold_qty} / ${tt.available_qty}`
+              divider: parseInt(tt.available_qty || tt.sold_qty),
+              label: `${trimString(tt.type)} : ${tt.sold_qty} / ${tt.available_qty || '∞'}`
             }))}
             labels={sortedTicketTypes.map(tt => {
               const percent = Math.round(tt.sold_qty / totalTicketsSold * 100);
@@ -132,16 +133,15 @@ const RegistrationStatsPage = ({currentSummit, summitStats, match, getRegistrati
           />
           <Graph
             title="Active tickets sold per badge type"
-            subtitle={[`Tickets sold: ${totalTicketsSold}`, `Tickets available: ${totalTicketsAvailable}`]}
+            subtitle={[`Tickets sold: ${totalTicketsSold}`, `Tickets available: ${hasInfiniteTicketsAvailable ? '∞' : totalTicketsAvailable}`]}
             legendTitle="Sold / Available per badge type"
             data={sortedTicketTypes.map(tt => ({
               value: parseInt(tt.sold_qty),
-              divider: parseInt(tt.available_qty),
-              total: totalTicketsAvailable,
-              label: `${trimString(tt.badge_type)} : ${tt.sold_qty} / ${tt.available_qty}`
+              divider: parseInt(tt.available_qty || tt.sold_qty),
+              label: `${trimString(tt.badge_type)} : ${tt.sold_qty} / ${tt.available_qty || '∞'}`
             }))}
             labels={sortedTicketTypes.map(tt => {
-              const percent = Math.round(tt.sold_qty / totalTicketsAvailable * 100);
+              const percent = Math.round(tt.sold_qty / totalTicketsSold * 100);
               return `${trimString(tt.badge_type)}: ${percent}%`
             })}
             colorPalette={1}
@@ -153,7 +153,6 @@ const RegistrationStatsPage = ({currentSummit, summitStats, match, getRegistrati
             data={sortedTicketsPerBadgeFeature.map(tt => ({
               value: parseInt(tt.sold_qty),
               divider: parseInt(totalTicketsSoldWBadgeFeature),
-              total: totalTicketsSoldWBadgeFeature,
               label: `${trimString(tt.type)} : ${tt.sold_qty} / ${totalTicketsSoldWBadgeFeature}`
             }))}
             labels={sortedTicketsPerBadgeFeature.map(tt => {
@@ -175,7 +174,6 @@ const RegistrationStatsPage = ({currentSummit, summitStats, match, getRegistrati
             data={sortedTicketTypes.map(tt => ({
               value: parseInt(tt.checkin_qty),
               divider: parseInt(tt.sold_qty),
-              total: totalTicketsCheckedIn,
               label: `${trimString(tt.type)} : ${tt.checkin_qty} / ${tt.sold_qty}`
             }))}
             labels={sortedTicketTypes.map(tt => {
@@ -191,7 +189,6 @@ const RegistrationStatsPage = ({currentSummit, summitStats, match, getRegistrati
             data={sortedTicketTypes.map(tt => ({
               value: parseInt(tt.checkin_qty),
               divider: parseInt(tt.sold_qty),
-              total: totalTicketsCheckedIn,
               label: `${trimString(tt.badge_type)} : ${tt.checkin_qty} / ${tt.sold_qty}`
             }))}
             labels={sortedTicketTypes.map(tt => {
@@ -207,7 +204,6 @@ const RegistrationStatsPage = ({currentSummit, summitStats, match, getRegistrati
             data={sortedTicketsPerBadgeFeature.map(tt => ({
               value: parseInt(tt.checkin_qty),
               divider: parseInt(totalTicketsCheckedInWBadgeFeature),
-              total: totalTicketsCheckedInWBadgeFeature,
               label: `${trimString(tt.type)} : ${tt.checkin_qty} / ${totalTicketsCheckedInWBadgeFeature}`
             }))}
             labels={sortedTicketsPerBadgeFeature.map(tt => {

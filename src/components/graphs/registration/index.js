@@ -119,9 +119,11 @@ const Graph = ({title, subtitle = null, legendTitle= null, data, labels, colors 
               const dataItem = dataset.data[i];
               const color = dataset.backgroundColor[i];
               const arc = chart.getDatasetMeta(0).data[i];
-              let percent = Math.round((dataItem.value / dataItem.total) * 100);
+              let percent = 0;
 
-              if (typeof dataItem.divider !== 'undefined') {
+              if (dataItem.total) {
+                percent = Math.round((dataItem.value / dataItem.total) * 100);
+              } else if (dataItem.divider){
                 percent = Math.round((dataItem.value / dataItem.divider) * 100);
               }
 
