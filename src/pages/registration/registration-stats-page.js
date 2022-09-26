@@ -95,7 +95,7 @@ const RegistrationStatsPage = ({currentSummit, summitStats, match, getRegistrati
         {totalTickets > 0 &&
         <Graph
           title={T.translate("dashboard.orders")}
-          subtitle{[`Total orders: ${summitStats.total_orders}`, `Total tickets: ${totalTickets}`]}
+          subtitle={[`Total orders: ${summitStats.total_orders}`, `Total tickets: ${totalTickets}`]}
           data={[
             {value: summitStats.total_active_tickets, total: totalTickets},
             {value: summitStats.total_inactive_tickets, total: totalTickets}
