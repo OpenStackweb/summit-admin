@@ -94,7 +94,8 @@ const RegistrationStatsPage = ({currentSummit, summitStats, match, getRegistrati
         {/* Tickets sold / unsold */}
         {totalTickets > 0 &&
         <Graph
-          title={`${T.translate("dashboard.orders")} (${summitStats.total_orders})`}
+          title={T.translate("dashboard.orders")}
+          subtitle{[`Total orders: ${summitStats.total_orders}`, `Total tickets: ${totalTickets}`]}
           data={[
             {value: summitStats.total_active_tickets, total: totalTickets},
             {value: summitStats.total_inactive_tickets, total: totalTickets}
@@ -121,7 +122,7 @@ const RegistrationStatsPage = ({currentSummit, summitStats, match, getRegistrati
               value: parseInt(tt.sold_qty),
               divider: parseInt(tt.available_qty),
               total: totalTicketsSold,
-              label: `${trimString(tt.type)} : ${tt.sold_qty}/ ${tt.available_qty}`
+              label: `${trimString(tt.type)} : ${tt.sold_qty} / ${tt.available_qty}`
             }))}
             labels={sortedTicketTypes.map(tt => {
               const percent = Math.round(tt.sold_qty / totalTicketsSold * 100);
@@ -137,7 +138,7 @@ const RegistrationStatsPage = ({currentSummit, summitStats, match, getRegistrati
               value: parseInt(tt.sold_qty),
               divider: parseInt(tt.available_qty),
               total: totalTicketsAvailable,
-              label: `${trimString(tt.badge_type)} : ${tt.sold_qty}/ ${tt.available_qty}`
+              label: `${trimString(tt.badge_type)} : ${tt.sold_qty} / ${tt.available_qty}`
             }))}
             labels={sortedTicketTypes.map(tt => {
               const percent = Math.round(tt.sold_qty / totalTicketsAvailable * 100);
@@ -153,7 +154,7 @@ const RegistrationStatsPage = ({currentSummit, summitStats, match, getRegistrati
               value: parseInt(tt.sold_qty),
               divider: parseInt(totalTicketsSoldWBadgeFeature),
               total: totalTicketsSoldWBadgeFeature,
-              label: `${trimString(tt.type)} : ${tt.sold_qty}/ ${totalTicketsSoldWBadgeFeature}`
+              label: `${trimString(tt.type)} : ${tt.sold_qty} / ${totalTicketsSoldWBadgeFeature}`
             }))}
             labels={sortedTicketsPerBadgeFeature.map(tt => {
               const percent = Math.round(tt.sold_qty / totalTicketsSoldWBadgeFeature * 100);
@@ -175,7 +176,7 @@ const RegistrationStatsPage = ({currentSummit, summitStats, match, getRegistrati
               value: parseInt(tt.checkin_qty),
               divider: parseInt(tt.sold_qty),
               total: totalTicketsCheckedIn,
-              label: `${trimString(tt.type)} : ${tt.checkin_qty}/ ${tt.sold_qty}`
+              label: `${trimString(tt.type)} : ${tt.checkin_qty} / ${tt.sold_qty}`
             }))}
             labels={sortedTicketTypes.map(tt => {
               const percent = Math.round(tt.checkin_qty / totalTicketsCheckedIn * 100);
@@ -191,7 +192,7 @@ const RegistrationStatsPage = ({currentSummit, summitStats, match, getRegistrati
               value: parseInt(tt.checkin_qty),
               divider: parseInt(tt.sold_qty),
               total: totalTicketsCheckedIn,
-              label: `${trimString(tt.badge_type)} : ${tt.checkin_qty}/ ${tt.sold_qty}`
+              label: `${trimString(tt.badge_type)} : ${tt.checkin_qty} / ${tt.sold_qty}`
             }))}
             labels={sortedTicketTypes.map(tt => {
               const percent = Math.round(tt.checkin_qty / totalTicketsCheckedIn * 100);
@@ -207,7 +208,7 @@ const RegistrationStatsPage = ({currentSummit, summitStats, match, getRegistrati
               value: parseInt(tt.checkin_qty),
               divider: parseInt(totalTicketsCheckedInWBadgeFeature),
               total: totalTicketsCheckedInWBadgeFeature,
-              label: `${trimString(tt.type)} : ${tt.checkin_qty}/ ${totalTicketsCheckedInWBadgeFeature}`
+              label: `${trimString(tt.type)} : ${tt.checkin_qty} / ${totalTicketsCheckedInWBadgeFeature}`
             }))}
             labels={sortedTicketsPerBadgeFeature.map(tt => {
               const percent = Math.round(tt.checkin_qty / totalTicketsCheckedInWBadgeFeature * 100);
