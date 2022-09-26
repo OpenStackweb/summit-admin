@@ -21,12 +21,13 @@ import {
     TextEditor,
     Table,
     Panel,
-    GMap
-} from 'openstack-uicore-foundation/lib/components'
+
+} from 'openstack-uicore-foundation/lib/components';
+import { GMap } from 'openstack-uicore-foundation/lib/components/google-map';
 import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 
-
 class LocationForm extends React.Component {
+
     constructor(props) {
         super(props);
 

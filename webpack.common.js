@@ -1,12 +1,15 @@
-const HtmlWebpackPlugin         = require('html-webpack-plugin');
-const { CleanWebpackPlugin }    = require('clean-webpack-plugin');
-const Dotenv                    = require('dotenv-webpack');
-const MiniCssExtractPlugin      = require("mini-css-extract-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const webpack = require('webpack');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
     entry: "./src/index.js",
     plugins: [
+        new Dotenv({
+            expand: true
+        }),
         // Work around for Buffer is undefined:
         // https://github.com/webpack/changelog-v5/issues/10
         new webpack.ProvidePlugin({
@@ -14,13 +17,11 @@ module.exports = {
             process: 'process/browser',
         }),
         new CleanWebpackPlugin(),
+        //new webpack.DefinePlugin(),
         new HtmlWebpackPlugin({
             title: 'Show Admin',
             template: './src/index.ejs'
         }),
-        new Dotenv({
-            expand: true
-        })
     ],
     resolve: {
         mainFields: ['browser', 'module', 'main'],
@@ -44,7 +45,7 @@ module.exports = {
                         presets: [
                             [
                                 "@babel/preset-env",
-                                { "targets": { "node": "current" } }
+                                {"targets": {"node": "current"}}
                             ],
                             '@babel/preset-react',
                             '@babel/preset-flow'
