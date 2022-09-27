@@ -23,9 +23,19 @@ import {
     startLoading,
     showMessage,
     showSuccessMessage,
-    authErrorHandler
+    authErrorHandler,
+    escapeFilterValue
 } from 'openstack-uicore-foundation/lib/utils/actions';
 import {getAccessTokenSafely} from '../utils/methods';
+
+export const REQUEST_TAGS             = 'REQUEST_TAGS';
+export const RECEIVE_TAGS             = 'RECEIVE_TAGS';
+export const RECEIVE_TAG              = 'RECEIVE_TAG';
+export const TAG_DELETED              = 'TAG_DELETED';
+export const RESET_TAG_FORM           = 'RESET_TAG_FORM';
+export const UPDATE_TAG               = 'UPDATE_TAG';
+export const TAG_UPDATED              = 'TAG_UPDATED';
+export const TAG_ADDED                = 'TAG_ADDED';
 
 export const REQUEST_TAG_GROUPS       = 'REQUEST_TAG_GROUPS';
 export const RECEIVE_TAG_GROUPS       = 'RECEIVE_TAG_GROUPS';
@@ -42,6 +52,144 @@ export const TAGS_COPIED_TO_CATEGORY  = 'TAGS_COPIED_TO_CATEGORY';
 export const TAG_CREATED              = 'TAG_CREATED';
 export const TAG_ADDED_TO_GROUP       = 'TAG_ADDED_TO_GROUP';
 export const TAG_REMOVED_FROM_GROUP   = 'TAG_REMOVED_FROM_GROUP';
+
+export const getTags = ( term = null, page = 1, perPage = 10,
+                              order = 'id', orderDir = 1 ) => async (dispatch, getState) => {
+
+    const accessToken = await getAccessTokenSafely();
+    const filter = [];
+
+    dispatch(startLoading());
+
+    if(term){
+        const escapedTerm = escapeFilterValue(term);
+        filter.push(`tag=@${escapedTerm},tag@@${escapedTerm},tag==${escapedTerm}`);
+    }
+
+    const params = {
+        page         : page,
+        per_page     : perPage,
+        access_token : accessToken,
+    };
+
+    if(filter.length > 0){
+        params['filter[]']= filter;
+    }
+
+    // order
+    if(order != null && orderDir != null){
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
+        params['order']= `${orderDirSign}${order}`;
+    }
+
+    return getRequest(
+        createAction(REQUEST_TAGS),
+        createAction(RECEIVE_TAGS),
+        `${window.API_BASE_URL}/api/v1/tags`,
+        authErrorHandler,
+        {order, orderDir, page, term}
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const getTag = (tagId) => async (dispatch, getState) => {
+
+    const accessToken = await getAccessTokenSafely();
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token : accessToken,        
+    };
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_TAG),
+        `${window.API_BASE_URL}/api/v1/tags/${tagId}`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const deleteTag = (tagId) => async (dispatch, getState) => {
+
+    const accessToken = await getAccessTokenSafely();
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token : accessToken,
+    };
+
+    return deleteRequest(
+        null,
+        createAction(TAG_DELETED)({tagId}),
+        `${window.API_BASE_URL}/api/v1/tags/${tagId}`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+
+export const resetTagForm = () => (dispatch) => {
+    dispatch(createAction(RESET_TAG_FORM)({}));
+};
+
+export const saveTag = (entity) => async (dispatch, getState) => {
+
+    const accessToken = await getAccessTokenSafely();
+    dispatch(startLoading());
+
+    const params = {
+        access_token : accessToken,
+    };
+
+    const normalizedEntity = normalizeTag(entity);
+
+    if (entity.id) {
+
+        putRequest(
+            createAction(UPDATE_TAG),
+            createAction(TAG_UPDATED),
+            `${window.API_BASE_URL}/api/v1/tags/${entity.id}`,
+            normalizedEntity,
+            authErrorHandler,
+            entity
+        )(params)(dispatch)
+            .then(() => {
+                dispatch(showSuccessMessage(T.translate("edit_tag.tag_saved")));
+            });
+
+    } else {
+        const success_message = {
+            title: T.translate("general.done"),
+            html: T.translate("edit_tag.tag_created"),
+            type: 'success'
+        };
+
+        postRequest(
+            createAction(UPDATE_TAG),
+            createAction(TAG_ADDED),
+            `${window.API_BASE_URL}/api/v1/tags`,
+            normalizedEntity,
+            authErrorHandler,
+            entity
+        )(params)(dispatch)
+            .then(() => {
+                dispatch(showMessage(
+                    success_message,
+                    () => { history.push(`/app/tags`) }
+                ));
+            });
+    }
+};
 
 export const getTagGroups = ( ) => async (dispatch, getState) => {
 
@@ -288,6 +436,15 @@ export const removeTagFromGroup = (tagId) => (dispatch) => {
     dispatch(createAction(TAG_REMOVED_FROM_GROUP)(tagId))
 }
 
+const normalizeTag = (entity) => {
+    const normalizedEntity = {...entity};
+
+    delete normalizedEntity['created'];
+    delete normalizedEntity['updated'];
+    delete normalizedEntity['last_edited'];
+
+    return normalizedEntity;
+}
 
 const normalizeEntity = (entity) => {
     const normalizedEntity = {...entity};

@@ -100,6 +100,8 @@ import mediaUploadReducer from "./reducers/media_uploads/media-upload-reducer";
 import registrationInvitationReducer from "./reducers/tickets/registration-invitation-reducer";
 import companyListReducer from './reducers/companies/company-list-reducer';
 import companyReducer from './reducers/companies/company-reducer';
+import tagListReducer from './reducers/tags/tag-list-reducer';
+import tagReducer from './reducers/tags/tag-reducer';
 import featuredSpeakersReducer from './reducers/summit_speakers/featured-speakers-reducer';
 import trackChairListReducer from "./reducers/track_chairs/track-chair-list-reducer";
 import progressFlagsReducer from "./reducers/track_chairs/progress-flags-reducer";
@@ -220,6 +222,8 @@ const reducers = persistCombineReducers(config, {
     currentRegistrationInvitationState: registrationInvitationReducer,
     currentCompanyListState: companyListReducer,
     currentCompanyState: companyReducer,
+    currentTagListState: tagListReducer,
+    currentTagState: tagReducer,
     featuredSpeakersState: featuredSpeakersReducer,
     trackChairListState: trackChairListReducer,
     progressFlagsState: progressFlagsReducer,

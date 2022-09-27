@@ -262,7 +262,6 @@ class ScheduleAdminDashBoard extends React.Component {
     }
 
     onTrackChanged(track){
-        console.log('track', track);
         const { currentSummit, currentEventType , currentPresentationSelectionStatus, currentPresentationSelectionPlan, unScheduleEventsCurrentSearchTerm, currentUnScheduleOrderBy, currentDuration} = this.props;
         let eventTypeId = currentEventType == null ? null : currentEventType.id;
         let trackId     = track == null ? null : track.id;
@@ -552,7 +551,6 @@ class ScheduleAdminDashBoard extends React.Component {
             const removedFilter = selectedFilters.filter(e => !value.includes(e))[0];
             switch(removedFilter) {
                 case 'activity_type_filter': {
-                    console.log('asdkjahsdkjask');
                     this.onEventTypeChanged(null);
                     break;
                 }

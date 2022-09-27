@@ -87,6 +87,7 @@
     "featured_speakers": "Featured Speakers",
     "merge_speakers": "Merge",
     "companies": "Companies",
+    "tags": "Tags",
     "attendees": "Attendees",
     "attendee-list": "Attendee List",
     "badge_checkin": "Check In",
@@ -540,6 +541,23 @@
       "sponsored_project": "Select Sponsored Project",
       "sponsorship_type": "Select Sponsorship Type"
     }
+  },
+  "tag_list": {
+    "tag_list": "Tag List",
+    "tags": "Tags",
+    "add_tag": "Add Tag",    
+    "delete_tag_warning": "Are you sure you want to delete tag",
+    "created": "Created",
+    "updated": "Updated",
+    "placeholders": {
+      "search_tags": "Search by Tag Name"
+    }
+  },
+  "edit_tag": {
+    "tag": "Tag",
+    "name": "Name",    
+    "tag_saved": "Tag saved successfully.",
+    "tag_created": "Tag created successfully."    
   },
   "schedule_builder_page": {
     "messages": {

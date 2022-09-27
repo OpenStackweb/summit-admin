@@ -25,6 +25,7 @@ import EmailLayout from "./email-layout";
 import AdminAccessLayout from "./admin-access-layout";
 import MediaFileTypeLayout from "./media-file-type-layout";
 import SponsoredProjectLayout from "./sponsored-project-layout";
+import TagLayout from './tag-layout';
 
 
 class PrimaryLayout extends React.Component {
@@ -50,6 +51,7 @@ class PrimaryLayout extends React.Component {
                         <Route strict exact path="/app/directory" component={SummitDirectoryPage}/>
                         <Route path="/app/speakers" component={SpeakerLayout}/>
                         <Route path="/app/companies" component={CompanyLayout}/>
+                        <Route path="/app/tags" component={TagLayout}/>
                         <Route path="/app/sponsored-projects" component={SponsoredProjectLayout}/>
                         <Route path={"/app/emails"} component={EmailLayout}/>
                         <Route path={"/app/admin-access"} component={AdminAccessLayout}/>
