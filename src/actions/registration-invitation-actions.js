@@ -49,7 +49,7 @@ export const SET_SELECTED_ALL = 'SET_SELECTED_ALL';
 /**************************   INVITATIONS   ******************************************/
 
 export const getInvitations = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1,
-                                showNonAccepted = false , showNotSent = false) => async (dispatch, getState) => {
+                                showNonAccepted = false, showNotSent = false, allowedTicketTypesIds = []) => async (dispatch, getState) => {
 
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
@@ -62,6 +62,7 @@ export const getInvitations = ( term = null, page = 1, perPage = 10, order = 'id
         page         : page,
         per_page     : perPage,
         access_token : accessToken,
+        expand: 'allowed_ticket_types',
     };
 
     if(term){
@@ -77,8 +78,12 @@ export const getInvitations = ( term = null, page = 1, perPage = 10, order = 'id
         filter.push('is_sent==false');
     }
 
+    if(allowedTicketTypesIds.length > 0){
+        filter.push('ticket_types_id==' + allowedTicketTypesIds.join('||'));
+    }
+
     if(filter.length > 0){
-        params['filter[]'] = filter;
+       params['filter[]'] = filter;
     }
 
     // order
@@ -92,7 +97,7 @@ export const getInvitations = ( term = null, page = 1, perPage = 10, order = 'id
         createAction(RECEIVE_INVITATIONS),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/registration-invitations`,
         authErrorHandler,
-        {page, perPage, order, orderDir, term, showNonAccepted, showNotSent}
+        {page, perPage, order, orderDir, term, showNonAccepted, showNotSent, allowedTicketTypesIds}
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
@@ -121,7 +126,7 @@ export const importInvitationsCSV = (file) => async (dispatch, getState) => {
         });
 };
 
-export const exportInvitationsCSV = (term, order, orderDir, showNonAccepted) => async (dispatch, getState) => {
+export const exportInvitationsCSV = (term, order, orderDir, showNonAccepted, allowedTicketTypesIds = []) => async (dispatch, getState) => {
 
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
@@ -140,6 +145,10 @@ export const exportInvitationsCSV = (term, order, orderDir, showNonAccepted) => 
 
     if(showNonAccepted){
         filter.push('is_accepted==false');
+    }
+
+    if(allowedTicketTypesIds.length > 0){
+        filter.push('ticket_types_id==' + allowedTicketTypesIds.join('||'));
     }
 
     if(filter.length > 0){
@@ -301,7 +310,7 @@ const normalizeEntity = (entity) => {
 };
 
 export const sendEmails = (currentFlowEvent, selectedAll = false , selectedInvitationsIds = [],
-                          term = null, showNonAccepted = false , showNotSent = false) => async (dispatch, getState) => {
+                          term = null, showNonAccepted = false , showNotSent = false, allowedTicketTypesIds = []) => async (dispatch, getState) => {
 
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
@@ -324,6 +333,10 @@ export const sendEmails = (currentFlowEvent, selectedAll = false , selectedInvit
 
     if(showNotSent){
         filter.push('is_sent==false');
+    }
+
+    if(allowedTicketTypesIds.length > 0){
+        filter.push('ticket_types_id==' + allowedTicketTypesIds.join('||'));
     }
 
     if(filter.length > 0){

@@ -1840,6 +1840,7 @@
     "last_name": "Last Name",
     "completed": "Completed",
     "sent": "Is Sent?",
+    "allowed_ticket_types": "Allowed Ticket Types",
     "invitation_list": "Invitations",
     "import": "Import",
     "export": "Export",
@@ -1858,7 +1859,8 @@
     "select_template": "Select a Email Template to perform the action.",
     "select_items": "Select at least one invitation to perform the action.",
     "placeholders": {
-      "search": "Search invitations by term"
+      "search": "Search invitations by term",
+      "allowed_ticket_types_filter": "Filter by one or more ticket types"
     }
   },
   "registration_invitation_mail_activity": {
