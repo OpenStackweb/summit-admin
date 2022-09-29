@@ -21,6 +21,7 @@ import {
     SelectableTable,
     UploadInput,
     Dropdown,
+    TagInput
 } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
 import {
@@ -29,7 +30,8 @@ import {
     setSelectedAll, sendEmails
 }
 from "../../actions/registration-invitation-actions";
-import { MaxTextLengthForTicketTypesOnTable } from '../../utils/constants';
+
+import { MaxTextLengthForTicketTypesOnTable, MaxTextLengthForTagsOnTable } from '../../utils/constants';
 
 
 
@@ -54,6 +56,7 @@ class RegistrationInvitationsListPage extends React.Component {
         this.handleChangeFlowEvent = this.handleChangeFlowEvent.bind(this);
         this.handleDeleteAll = this.handleDeleteAll.bind(this);
         this.handleChangeNoSent = this.handleChangeNoSent.bind(this);
+        this.handleTagFilterChange = this.handleTagFilterChange.bind(this);
 
         this.state = {
             showImportModal: false,
@@ -64,14 +67,14 @@ class RegistrationInvitationsListPage extends React.Component {
     componentDidMount() {
         const {currentSummit} = this.props;
         if(currentSummit) {
-            const {term, order, orderDir, currentPage, perPage, showNonAccepted, showNotSent, allowedTicketTypesIds} = this.props;
-            this.props.getInvitations(term, currentPage, perPage, order, orderDir, showNonAccepted, showNotSent, allowedTicketTypesIds);
+            const {term, order, orderDir, currentPage, perPage, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter} = this.props;
+            this.props.getInvitations(term, currentPage, perPage, order, orderDir, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter);
         }
     }
 
     handleSearch(term) {
-        const {order, orderDir, page, perPage, showNonAccepted, showNotSent, allowedTicketTypesIds} = this.props;
-        this.props.getInvitations(term, page, perPage, order, orderDir, showNonAccepted, showNotSent, allowedTicketTypesIds);
+        const {order, orderDir, page, perPage, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter} = this.props;
+        this.props.getInvitations(term, page, perPage, order, orderDir, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter);
     }
 
     handleEdit(invitation_id) {
@@ -138,6 +141,7 @@ class RegistrationInvitationsListPage extends React.Component {
             currentFlowEvent,
             sendEmails,
             allowedTicketTypesIds,
+            tagFilter
         } = this.props;
 
         if(!currentFlowEvent){
@@ -158,7 +162,8 @@ class RegistrationInvitationsListPage extends React.Component {
             term,
             showNonAccepted,
             showNotSent,
-            allowedTicketTypesIds
+            allowedTicketTypesIds,
+            tagFilter
         );
     }
 
@@ -180,20 +185,20 @@ class RegistrationInvitationsListPage extends React.Component {
     }
 
     handleTicketTypeSelected(ev){
-        const {term, page, order, orderDir, perPage, showNonAccepted, showNotSent} = this.props;
+        const {term, page, order, orderDir, perPage, showNonAccepted, showNotSent, tagFilter} = this.props;
         let {value} = ev.target;
         const ticketTypeFilter = [...value];
-        this.props.getInvitations(term, page, perPage, order, orderDir, showNonAccepted, showNotSent, ticketTypeFilter);
+        this.props.getInvitations(term, page, perPage, order, orderDir, showNonAccepted, showNotSent, ticketTypeFilter, tagFilter);
     }
 
     handleSort(index, key, dir, func) {
-        const {term, page, perPage, showNonAccepted, showNotSent, allowedTicketTypesIds} = this.props;
-        this.props.getInvitations(term, page, perPage, key, dir, showNonAccepted, showNotSent, allowedTicketTypesIds);
+        const {term, page, perPage, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter} = this.props;
+        this.props.getInvitations(term, page, perPage, key, dir, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter);
     }
 
     handlePageChange(page) {
-        const {term, order, orderDir, perPage, showNonAccepted, showNotSent, allowedTicketTypesIds} = this.props;
-        this.props.getInvitations(term, page, perPage, order, orderDir, showNonAccepted, showNotSent, allowedTicketTypesIds);
+        const {term, order, orderDir, perPage, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter} = this.props;
+        this.props.getInvitations(term, page, perPage, order, orderDir, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter);
     }
 
     handleImportInvitations() {
@@ -205,19 +210,24 @@ class RegistrationInvitationsListPage extends React.Component {
         }
     }
 
-    handleExportInvitations() {
-        const {term, order, orderDir, showNonAccepted, showNotSent, allowedTicketTypesIds} = this.props;
-        this.props.exportInvitationsCSV(term, order, orderDir, showNonAccepted, showNotSent, allowedTicketTypesIds);
+    handleExportInvitations() {        
+        const {term, order, orderDir, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter} = this.props;
+        this.props.exportInvitationsCSV(term, order, orderDir, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter);
+    }
+
+    handleTagFilterChange(ev) {
+        const {term, order, page, orderDir, perPage, showNonAccepted, showNotSent, allowedTicketTypesIds} = this.props;
+        this.props.getInvitations(term, page, perPage, order, orderDir, showNonAccepted, showNotSent, allowedTicketTypesIds, ev.target.value);        
     }
 
     handleChangeNonAccepted() {
-        const {term, order, page, orderDir, perPage, showNonAccepted, showNotSent, allowedTicketTypesIds} = this.props;
-        this.props.getInvitations(term, page, perPage, order, orderDir, !showNonAccepted, showNotSent, allowedTicketTypesIds);
+        const {term, order, page, orderDir, perPage, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter} = this.props;
+        this.props.getInvitations(term, page, perPage, order, orderDir, !showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter);
     }
 
     handleChangeNoSent() {
-        const {term, order, page, orderDir, perPage, showNonAccepted, showNotSent, allowedTicketTypesIds} = this.props;
-        this.props.getInvitations(term, page, perPage, order, orderDir, showNonAccepted, !showNotSent, allowedTicketTypesIds);
+        const {term, order, page, orderDir, perPage, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter} = this.props;
+        this.props.getInvitations(term, page, perPage, order, orderDir, showNonAccepted, !showNotSent, allowedTicketTypesIds, tagFilter);
     }
 
     render(){
@@ -226,7 +236,7 @@ class RegistrationInvitationsListPage extends React.Component {
             orderDir, totalInvitations,
             lastPage, currentPage, showNonAccepted,
             selectedInvitationsIds, showNotSent,
-            currentFlowEvent, selectedAll, allowedTicketTypesIds
+            currentFlowEvent, selectedAll, allowedTicketTypesIds, tagFilter
         } = this.props;
 
         const {showImportModal, importFile} = this.state;
@@ -244,6 +254,14 @@ class RegistrationInvitationsListPage extends React.Component {
                         {`${t.allowed_ticket_types}...`}&nbsp;<i className="fa fa-info-circle" aria-hidden="true" title={t.allowed_ticket_types_full}/>
                     </>
                     : t.allowed_ticket_types
+            },
+            { columnKey: 'tags', value: T.translate("registration_invitation_list.tags"),render: (t) =>
+                t.tags_full.length > MaxTextLengthForTagsOnTable ?
+                    <>
+                        {`${t.tags}...`}&nbsp;<i className="fa fa-info-circle" aria-hidden="true" title={t.tags_full}/>
+                    </>
+                    :
+                    t.tags
             },
         ];
 
@@ -303,6 +321,16 @@ class RegistrationInvitationsListPage extends React.Component {
                         </div>
                         <div className="row">
                             <div className="col-md-6">
+                                <TagInput
+                                    id="tags"
+                                    clearable
+                                    isMulti
+                                    value={tagFilter}
+                                    onChange={this.handleTagFilterChange}
+                                    placeholder={T.translate("registration_invitation_list.placeholders.tags")}
+                                />        
+                            </div>
+                            <div className='col-md-6'>
                                 <Dropdown
                                     id="allowed_ticket_types_filter"
                                     value={allowedTicketTypesIds}
@@ -311,6 +339,28 @@ class RegistrationInvitationsListPage extends React.Component {
                                     options={ticketTypesFilterDDL}
                                     isMulti={true}
                                 />
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-md-6">
+                                <div className="form-check abc-checkbox col-md-6">
+                                    <input type="checkbox" id="showNonSent" checked={showNotSent}
+                                           className="form-check-input"
+                                           onChange={this.handleChangeNoSent}
+                                    />
+                                    <label className="form-check-label" htmlFor="showNonSent">
+                                        {T.translate("registration_invitation_list.show_non_sent")}
+                                    </label>
+                                </div>
+                                <div className="form-check abc-checkbox col-md-6">
+                                    <input type="checkbox" id="showNonAccepted" checked={showNonAccepted}
+                                           className="form-check-input"
+                                           onChange={this.handleChangeNonAccepted}
+                                    />
+                                    <label className="form-check-label" htmlFor="showNonAccepted">
+                                        {T.translate("registration_invitation_list.show_non_accepted")}
+                                    </label>
+                                </div>
                             </div>
                             <div className="col-md-6 text-right">
                                 <div className={'row'}>
@@ -327,28 +377,6 @@ class RegistrationInvitationsListPage extends React.Component {
                                             {T.translate("registration_invitation_list.send_emails")}
                                         </button>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-md-6">
-                                <div className="form-check abc-checkbox col-md-6">
-                                    <input type="checkbox" id="showNonSent" checked={showNotSent}
-                                        className="form-check-input"
-                                        onChange={this.handleChangeNoSent}
-                                    />
-                                    <label className="form-check-label" htmlFor="showNonSent">
-                                        {T.translate("registration_invitation_list.show_non_sent")}
-                                    </label>
-                                </div>
-                                <div className="form-check abc-checkbox col-md-6">
-                                    <input type="checkbox" id="showNonAccepted" checked={showNonAccepted}
-                                        className="form-check-input"
-                                        onChange={this.handleChangeNonAccepted}
-                                    />
-                                    <label className="form-check-label" htmlFor="showNonAccepted">
-                                        {T.translate("registration_invitation_list.show_non_accepted")}
-                                    </label>
                                 </div>
                             </div>
                         </div>

@@ -49,7 +49,7 @@ export const SET_SELECTED_ALL = 'SET_SELECTED_ALL';
 /**************************   INVITATIONS   ******************************************/
 
 export const getInvitations = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1,
-                                showNonAccepted = false, showNotSent = false, allowedTicketTypesIds = []) => async (dispatch, getState) => {
+                                showNonAccepted = false, showNotSent = false, allowedTicketTypesIds = [], tagFilter = []) => async (dispatch, getState) => {
 
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
@@ -62,8 +62,15 @@ export const getInvitations = ( term = null, page = 1, perPage = 10, order = 'id
         page         : page,
         per_page     : perPage,
         access_token : accessToken,
-        expand: 'allowed_ticket_types',
+        expand: 'allowed_ticket_types,tags',
     };
+
+    if(tagFilter.length > 0) {
+        filter.push('tags_id=='+tagFilter.map(e => e.id).reduce(
+            (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt,
+            ''
+          ));
+    }
 
     if(term){
         const escapedTerm = escapeFilterValue(term);
@@ -97,7 +104,7 @@ export const getInvitations = ( term = null, page = 1, perPage = 10, order = 'id
         createAction(RECEIVE_INVITATIONS),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/registration-invitations`,
         authErrorHandler,
-        {page, perPage, order, orderDir, term, showNonAccepted, showNotSent, allowedTicketTypesIds}
+        {page, perPage, order, orderDir, term, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter}
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
@@ -126,7 +133,7 @@ export const importInvitationsCSV = (file) => async (dispatch, getState) => {
         });
 };
 
-export const exportInvitationsCSV = (term, order, orderDir, showNonAccepted, allowedTicketTypesIds = []) => async (dispatch, getState) => {
+export const exportInvitationsCSV = (term, order, orderDir, showNonAccepted, allowedTicketTypesIds = [], tagFilter = []) => async (dispatch, getState) => {
 
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
@@ -149,6 +156,13 @@ export const exportInvitationsCSV = (term, order, orderDir, showNonAccepted, all
 
     if(allowedTicketTypesIds.length > 0){
         filter.push('ticket_types_id==' + allowedTicketTypesIds.join('||'));
+    }
+
+    if(tagFilter.length > 0) {
+        filter.push('tags_id=='+tagFilter.map(e => e.id).reduce(
+            (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt,
+            ''
+          ));
     }
 
     if(filter.length > 0){
@@ -186,7 +200,7 @@ export const getRegistrationInvitation = (invitationId) => async (dispatch, getS
 
     const params = {
         access_token : accessToken,
-        expand: 'allowed_ticket_types',
+        expand: 'allowed_ticket_types,tags',
     };
 
     return getRequest(
@@ -306,11 +320,12 @@ export const saveRegistrationInvitation = (entity) => async (dispatch, getState)
 const normalizeEntity = (entity) => {
     const normalizedEntity = {...entity};
     normalizedEntity.allowed_ticket_types = entity.allowed_ticket_types.map(tt => tt.id);
+    normalizedEntity.tags = entity.tags.map(t => t.tag);
     return normalizedEntity;
 };
 
 export const sendEmails = (currentFlowEvent, selectedAll = false , selectedInvitationsIds = [],
-                          term = null, showNonAccepted = false , showNotSent = false, allowedTicketTypesIds = []) => async (dispatch, getState) => {
+                          term = null, showNonAccepted = false , showNotSent = false, allowedTicketTypesIds = [], tagFilter = []) => async (dispatch, getState) => {
 
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
@@ -337,6 +352,13 @@ export const sendEmails = (currentFlowEvent, selectedAll = false , selectedInvit
 
     if(allowedTicketTypesIds.length > 0){
         filter.push('ticket_types_id==' + allowedTicketTypesIds.join('||'));
+    }
+
+    if(tagFilter.length > 0) {
+        filter.push('tags_id=='+tagFilter.map(e => e.id).reduce(
+            (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt,
+            ''
+          ));
     }
 
     if(filter.length > 0){

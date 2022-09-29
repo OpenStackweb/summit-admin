@@ -27,8 +27,7 @@ import
 
 import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 import {LOGOUT_USER} from 'openstack-uicore-foundation/lib/utils/actions';
-import { map } from 'lodash';
-import { MaxTextLengthForTicketTypesOnTable } from '../../utils/constants';
+import { MaxTextLengthForTicketTypesOnTable, MaxTextLengthForTagsOnTable } from '../../utils/constants';
 
 const DEFAULT_STATE = {
     invitations: [],
@@ -45,6 +44,7 @@ const DEFAULT_STATE = {
     currentFlowEvent: '',
     selectedAll: false,
     allowedTicketTypesIds: [],
+    tagFilter: [],
 };
 
 const RegistrationInvitationListReducer = (state = DEFAULT_STATE, action) => {
@@ -54,10 +54,10 @@ const RegistrationInvitationListReducer = (state = DEFAULT_STATE, action) => {
         case LOGOUT_USER: {
             return DEFAULT_STATE;
         }
-        case REQUEST_INVITATIONS: {
-            let {order, orderDir, page, perPage, term, showNonAccepted, showNotSent, allowedTicketTypesIds} = payload;
+        case REQUEST_INVITATIONS: {            
+            let {order, orderDir, page, perPage, term, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter} = payload;
 
-            return {...state, order, orderDir, currentPage: page, perPage, term, showNonAccepted, showNotSent, allowedTicketTypesIds};
+            return {...state, order, orderDir, currentPage: page, perPage, term, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter};
         }
         case RECEIVE_INVITATIONS: {
             let {total, last_page, data} = payload.response;
@@ -70,7 +70,9 @@ const RegistrationInvitationListReducer = (state = DEFAULT_STATE, action) => {
                     is_accepted: i.is_accepted ? "Yes" : "No", 
                     is_sent: i.is_sent ? "Yes" : "No", 
                     allowed_ticket_types: allowedTicketTypes.slice(0, MaxTextLengthForTicketTypesOnTable),
-                    allowed_ticket_types_full: allowedTicketTypes
+                    allowed_ticket_types_full: allowedTicketTypes,
+                    tags: i.tags.map(e=> e.tag).join(", ").slice(0, MaxTextLengthForTagsOnTable),
+                    tags_full: i.tags.map(e=> e.tag).join(", ")
                 }
             });
             return {...state, invitations: data, lastPage: last_page, totalInvitations: total};

@@ -1858,9 +1858,11 @@
     "no_invitations": "No items found for this search criteria.",
     "select_template": "Select a Email Template to perform the action.",
     "select_items": "Select at least one invitation to perform the action.",
+    "tags": "Tags",
     "placeholders": {
       "search": "Search invitations by term",
-      "allowed_ticket_types_filter": "Filter by one or more ticket types"
+      "allowed_ticket_types_filter": "Filter by one or more ticket types",
+      "tags": "Filter by Tags"
     }
   },
   "registration_invitation_mail_activity": {
@@ -1932,7 +1934,11 @@
     "registration_invitation_created": "Invitation created successfully.",
     "registration_invitation_saved": "Invitation saved successfully.",
     "allowed_ticket_types": "Allowed Ticket Types",
-    "allowed_ticket_types_info": "Allowed Ticket Types that Attendee is allowed to buy"
+    "allowed_ticket_types_info": "Allowed Ticket Types that Attendee is allowed to buy",
+    "tags": "Tags",
+    "placeholders": {
+      "tags": "Select tags"
+    }
   },
   "featured_speakers": {
     "featured_speakers": "Featured Speakers",
