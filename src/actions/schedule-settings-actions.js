@@ -108,10 +108,11 @@ export const getAllScheduleSettings = ( order = 'key', orderDir = 1 ) => async (
     );
 };
 
-export const getScheduleSetting = (scheduleSettingId) => (dispatch, getState) => {
+export const getScheduleSetting = (scheduleSettingId) => async (dispatch, getState) => {
+
     const {currentSummitState} = getState();
     const {currentSummit} = currentSummitState;
-
+    const accessToken = await getAccessTokenSafely();
     dispatch(startLoading());
 
     const params = {
