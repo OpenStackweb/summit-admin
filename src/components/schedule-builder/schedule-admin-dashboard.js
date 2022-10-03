@@ -107,7 +107,7 @@ class ScheduleAdminDashBoard extends React.Component {
         this.byPassHashRefresh  = false;
         this.state = {
             showModal : false,
-            durationFilter: '',
+            durationFilter: props.currentDuration || '',
         }
     }
 
@@ -885,7 +885,7 @@ class ScheduleAdminDashBoard extends React.Component {
                                     <OperatorInput 
                                         id="duration_filter"
                                         label={T.translate("schedule.duration")}
-                                        value={currentDuration || durationFilter}
+                                        value={durationFilter}
                                         onChange={this.handleDurationFilter}/>
                                 </div>
                                 <div className="col-md-2">

@@ -59,7 +59,7 @@
     "moment-duration-format": "^2.3.2",
     "moment-timezone": "^0.5.33",
     "node-sass": "^7.0.1",
-    "openstack-uicore-foundation": "4.0.64",
+    "openstack-uicore-foundation": "4.0.68",
     "optimize-css-assets-webpack-plugin": "^6.0.1",
     "path-browserify": "^1.0.1",
     "postcss-loader": "^6.2.1",
