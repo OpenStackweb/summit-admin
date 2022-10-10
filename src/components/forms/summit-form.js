@@ -370,18 +370,6 @@ class SummitForm extends React.Component {
                             onChange={this.handleChange}
                         />
                     </div>
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_summit.registration_reminder_email_days_interval")}</label>
-                        <Input
-                            type="number"
-                            min="0"
-                            className="form-control"
-                            error={this.hasErrors('registration_reminder_email_days_interval')}
-                            id="registration_reminder_email_days_interval"
-                            value={entity.registration_reminder_email_days_interval}
-                            onChange={this.handleChange}
-                        />
-                    </div>
                 </div>
                 <div className="row form-group">
                     <div className="col-md-4 checkboxes-div">
@@ -672,6 +660,20 @@ class SummitForm extends React.Component {
                                     {T.translate("edit_summit.registration_send_order_email_automatically")}
                                 </label>
                             </div>
+                        </div>
+                    </div>
+                    <div className="row form-group">
+                        <div className="col-md-6">
+                            <label> {T.translate("edit_summit.registration_reminder_email_days_interval")}</label>
+                            <Input
+                                type="number"
+                                min="0"
+                                className="form-control"
+                                error={this.hasErrors('registration_reminder_email_days_interval')}
+                                id="registration_reminder_email_days_interval"
+                                value={entity.registration_reminder_email_days_interval}
+                                onChange={this.handleChange}
+                            />
                         </div>
                     </div>
                 </Panel>
