@@ -307,7 +307,8 @@ export const saveRegistrationInvitation = (entity) => async (dispatch, getState)
         createAction(REGISTRATION_INVITATION_ADDED),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/registration-invitations`,
         normalizedEntity,
-        authErrorHandler
+        authErrorHandler,
+        entity
     ) (params)(dispatch)
         .then((payload) => {
             dispatch(showMessage(
