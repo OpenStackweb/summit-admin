@@ -122,9 +122,9 @@ const Graph = ({title, subtitle = null, legendTitle= null, data, labels, colors 
               let percent = 0;
 
               if (dataItem.total) {
-                percent = Math.round((dataItem.value / dataItem.total) * 100);
+                percent = dataItem.total > 0 ? Math.round((dataItem.value / dataItem.total) * 100) : 100;
               } else if (dataItem.divider){
-                percent = Math.round((dataItem.value / dataItem.divider) * 100);
+                percent = dataItem.divider > 0 ? Math.round((dataItem.value / dataItem.divider) * 100) : 100;
               }
 
               return {

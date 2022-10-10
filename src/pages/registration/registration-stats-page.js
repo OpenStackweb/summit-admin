@@ -200,11 +200,11 @@ const RegistrationStatsPage = ({currentSummit, summitStats, match, getRegistrati
           <Graph
             title="Checked in per badge feature"
             subtitle={[`Tickets checked in with badge features applied: ${totalTicketsCheckedInWBadgeFeature}`, `Tickets sold: ${totalTicketsSold}`]}
-            legendTitle="Tickets checked in w/ badge features / Tickets checked in"
+            legendTitle="Tickets checked in / Tickets sold, per badge feature"
             data={sortedTicketsPerBadgeFeature.map(tt => ({
               value: parseInt(tt.checkin_qty),
-              divider: parseInt(totalTicketsCheckedInWBadgeFeature),
-              label: `${trimString(tt.type)} : ${tt.checkin_qty} / ${totalTicketsCheckedInWBadgeFeature}`
+              divider: parseInt(tt.sold_qty),
+              label: `${trimString(tt.type)} : ${tt.checkin_qty} / ${tt.sold_qty}`
             }))}
             labels={sortedTicketsPerBadgeFeature.map(tt => {
               const percent = Math.round(tt.checkin_qty / totalTicketsCheckedInWBadgeFeature * 100);
