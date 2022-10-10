@@ -318,6 +318,7 @@ const normalizeEntity = (entity) => {
     delete(normalizedEntity['tracks']);
     delete(normalizedEntity['wifi_connections']);
 
+    if (!normalizedEntity['registration_allowed_refund_request_till_date']) normalizedEntity['registration_allowed_refund_request_till_date'] = null;
     if (!normalizedEntity['registration_begin_date']) normalizedEntity['registration_begin_date'] = null;
     if (!normalizedEntity['registration_end_date']) normalizedEntity['registration_end_date'] = null;
     if (!normalizedEntity['schedule_start_date']) normalizedEntity['schedule_start_date'] = null;

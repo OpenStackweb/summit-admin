@@ -305,6 +305,7 @@
     "registration_allow_automatic_reminder_emails": "Allow Automatic Reminder Emails (Incomplete Order/Tickets)?",
     "registration_send_order_email_automatically": "Send Order Confirmation Email Automatically?",
     "allow_update_attendee_extra_questions": "Allow Attendee to update extra questions?",
+    "registration_allowed_refund_request_till_date": "Allow Refund Request Until",
     "placeholders": {
       "api_feed_type": "Select API feed type...",
       "external_registration_feed_type": "Select Ext. Reg. feed type..."

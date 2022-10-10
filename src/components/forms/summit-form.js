@@ -540,7 +540,7 @@ class SummitForm extends React.Component {
                         </div>
                     </div>
                     <div className="row form-group">
-                        <div className="col-md-4">
+                        <div className="col-md-6">
                             <label> {T.translate("edit_summit.schedule_start_date")} </label>
                             <DateTimePicker
                                 id="schedule_start_date"
@@ -552,7 +552,7 @@ class SummitForm extends React.Component {
                                 error={this.hasErrors('schedule_start_date')}
                             />
                         </div>
-                        <div className="col-md-4">
+                        <div className="col-md-6">
                             <label> {T.translate("edit_summit.start_showing_venues_date")} </label>
                             <DateTimePicker
                                 id="start_showing_venues_date"
@@ -562,18 +562,6 @@ class SummitForm extends React.Component {
                                 timezone={entity.time_zone_id}
                                 value={epochToMomentTimeZone(entity.start_showing_venues_date, entity.time_zone_id)}
                                 error={this.hasErrors('start_showing_venues_date')}
-                            />
-                        </div>
-                        <div className="col-md-4">
-                            <label> {T.translate("edit_summit.reassign_ticket_till_date")} </label>
-                            <DateTimePicker
-                                id="reassign_ticket_till_date"
-                                disabled={!dates_enabled}
-                                onChange={this.handleChange}
-                                format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                                timezone={entity.time_zone_id}
-                                value={epochToMomentTimeZone(entity.reassign_ticket_till_date, entity.time_zone_id)}
-                                error={this.hasErrors('reassign_ticket_till_date')}
                             />
                         </div>
                     </div>
@@ -594,6 +582,32 @@ class SummitForm extends React.Component {
 
                 <Panel show={showSection === 'reg-email-settings'} title={T.translate("edit_summit.reg_email_settings")}
                        handleClick={this.toggleSection.bind(this, 'reg-email-settings')}>
+                    <div className="row form-group">                        
+                        <div className="col-md-6">
+                            <label> {T.translate("edit_summit.reassign_ticket_till_date")} </label>
+                            <DateTimePicker
+                                id="reassign_ticket_till_date"
+                                disabled={!dates_enabled}
+                                onChange={this.handleChange}
+                                format={{date:"YYYY-MM-DD", time: "HH:mm"}}
+                                timezone={entity.time_zone_id}
+                                value={epochToMomentTimeZone(entity.reassign_ticket_till_date, entity.time_zone_id)}
+                                error={this.hasErrors('reassign_ticket_till_date')}
+                            />
+                        </div>
+                        <div className="col-md-6">
+                            <label> {T.translate("edit_summit.registration_allowed_refund_request_till_date")} </label>
+                            <DateTimePicker
+                                id="registration_allowed_refund_request_till_date"
+                                disabled={!dates_enabled}
+                                onChange={this.handleChange}
+                                format={{date:"YYYY-MM-DD", time: "HH:mm"}}
+                                timezone={entity.time_zone_id}
+                                value={epochToMomentTimeZone(entity.registration_allowed_refund_request_till_date, entity.time_zone_id)}
+                                error={this.hasErrors('registration_allowed_refund_request_till_date')}
+                            />
+                        </div>
+                    </div>
                     <div className="row form-group">
                         <div className="col-md-6 checkboxes-div">
                             <div className="form-check abc-checkbox">
