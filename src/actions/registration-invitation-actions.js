@@ -278,7 +278,9 @@ export const saveRegistrationInvitation = (entity) => async (dispatch, getState)
 
     const params = {
         access_token : accessToken,
+        expand: 'allowed_ticket_types,tags',
     };
+
     const normalizedEntity = normalizeEntity(entity);
 
     if (entity.id) {

@@ -24,8 +24,6 @@ import {
     RECEIVE_EMAILS_BY_USER
 } from '../../actions/email-actions';
 
-import { TAG_CREATED } from '../../actions/tag-actions';
-
 import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/utils/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 import {epochToMoment} from "openstack-uicore-foundation/lib/utils/methods";
@@ -98,10 +96,6 @@ const registrationInvitationReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  emailActivity: data };
         }
         break;
-        case TAG_CREATED: {
-            let data = payload.response;            
-            return {...state, entity: {...state.entity, tags: [...state.entity.tags, data]}}
-        }
         default:
             return state;
     }

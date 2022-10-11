@@ -21,7 +21,6 @@ import { getRegistrationInvitation ,
     saveRegistrationInvitation } from "../../actions/registration-invitation-actions";
 import RegistrationInvitationForm from "../../components/forms/registration-invitation-form";
 import {getSentEmailsByTemplatesAndEmail} from '../../actions/email-actions';
-import { createTag } from '../../actions/tag-actions';
 import RegistrationInvitationEmailActivity from "../../components/forms/registration-invitation-email-activity";
 
 class EditRegistrationInvitationPage extends React.Component {
@@ -75,7 +74,6 @@ class EditRegistrationInvitationPage extends React.Component {
                         errors={errors}
                         currentSummit={currentSummit}
                         onSubmit={this.props.saveRegistrationInvitation}
-                        onCreateTag={this.props.createTag}
                     />
                 }
                 <RegistrationInvitationEmailActivity
@@ -99,6 +97,5 @@ export default connect (
         resetRegistrationInvitationForm,
         saveRegistrationInvitation,
         getSentEmailsByTemplatesAndEmail,
-        createTag
     }
 )(EditRegistrationInvitationPage);
