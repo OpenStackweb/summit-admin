@@ -324,6 +324,12 @@ class SpeakerForm extends React.Component {
                             multiple={false}
                             accept="image/*"
                         />
+                        <div>
+                            &nbsp;<br />
+                            <span>{T.translate("edit_speaker.profile_pic_size")}</span>
+                            <br />
+                            <span>{T.translate("edit_speaker.profile_pic_format")}</span>
+                        </div>
                     </div>
                     <div className="col-md-6">
                         <label> {T.translate("edit_speaker.big_pic")} </label>
@@ -335,6 +341,12 @@ class SpeakerForm extends React.Component {
                             multiple={false}
                             accept="image/*"
                         />
+                        <div>
+                            &nbsp;<br />
+                            <span>{T.translate("edit_speaker.big_pic_size")}</span>
+                            <br />
+                            <span>{T.translate("edit_speaker.big_pic_format")}</span>
+                        </div>
                     </div>
                 </div>
                 <br/>
