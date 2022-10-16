@@ -133,7 +133,7 @@ export const importInvitationsCSV = (file) => async (dispatch, getState) => {
         });
 };
 
-export const exportInvitationsCSV = (term, order, orderDir, showNonAccepted, allowedTicketTypesIds = [], tagFilter = []) => async (dispatch, getState) => {
+export const exportInvitationsCSV = (term, order, orderDir, showNonAccepted, showNotSent, allowedTicketTypesIds = [], tagFilter = []) => async (dispatch, getState) => {
 
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
@@ -152,6 +152,10 @@ export const exportInvitationsCSV = (term, order, orderDir, showNonAccepted, all
 
     if(showNonAccepted){
         filter.push('is_accepted==false');
+    }
+
+    if(showNotSent){
+        filter.push('is_sent==false');
     }
 
     if(allowedTicketTypesIds.length > 0){
