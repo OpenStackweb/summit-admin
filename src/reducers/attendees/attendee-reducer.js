@@ -16,7 +16,6 @@ import
     RECEIVE_ATTENDEE,
     CHANGE_MEMBER,
     RESET_ATTENDEE_FORM,
-    UPDATE_ATTENDEE,
     ATTENDEE_UPDATED,
     TICKET_ADDED,
     TICKET_DELETED,
@@ -65,12 +64,9 @@ const attendeeReducer = (state = DEFAULT_STATE, action) => {
         case RESET_ATTENDEE_FORM: {
             return DEFAULT_STATE;
         }
-        case UPDATE_ATTENDEE: {
-            return {...state,  entity: {...payload}, errors: {} };
-        }
+        case ATTENDEE_UPDATED:
         case RECEIVE_ATTENDEE: {
             let entity = {...payload.response};
-
 
             for(var key in entity) {
                 if(entity.hasOwnProperty(key)) {

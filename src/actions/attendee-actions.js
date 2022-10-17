@@ -296,7 +296,8 @@ export const saveAttendee = (entity) => async (dispatch, getState) => {
     const normalizedEntity = normalizeEntity(entity);
 
     const params = {
-        access_token : accessToken,
+        access_token:accessToken,
+        expand: 'member, speaker, tickets, rsvp, schedule_summit_events, all_affiliations, extra_questions, tickets.badge, tickets.badge.type, tickets.promo_code',
     };
 
     if (entity.id) {
