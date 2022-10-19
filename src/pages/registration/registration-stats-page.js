@@ -27,13 +27,8 @@ const trimString = (str, length = 75) => {
 };
 
 const RegistrationStatsPage = ({currentSummit, summitStats, match, getRegistrationStats}) => {
-  const [chartLoaded, setChartLoaded] = useState(false);
   const [fromDate, setFromDate] = useState(null);
   const [toDate, setToDate] = useState(null);
-
-  useEffect(() => {
-    setChartLoaded(true);
-  }, []);
 
   useEffect(() => {
     // initial load
@@ -220,58 +215,48 @@ const RegistrationStatsPage = ({currentSummit, summitStats, match, getRegistrati
         }
 
         {/* Check Ins per Virtual / In Person */}
-        {totalAttendees > 0 &&
-        <>
-          <Graph
-            title={<>
-              <i className="fa fa-users"/>
-              &nbsp;
-              {T.translate("dashboard.in_person_attendees")} ({summitStats.total_checked_in_attendees + summitStats.total_non_checked_in_attendees})
-            </>}
-            data={[
-              {value: summitStats.total_checked_in_attendees, total: totalRealAttendees},
-              {value: summitStats.total_non_checked_in_attendees, total: totalRealAttendees},
-            ]}
-            labels={[
-              `Checked In : ${summitStats.total_checked_in_attendees} / ${totalRealAttendees}`,
-              `Non Checked In: ${summitStats.total_non_checked_in_attendees} / ${totalRealAttendees}`,
-            ]}
-            colors={[
-              'rgba(75, 192, 192, 1)',
-              'rgba(255, 99, 132, 1)',
-            ]}
-          />
-          <Graph
-            title={<>
-              <i className="fa fa-users"/>
-              &nbsp;
-              {T.translate("dashboard.virtual_attendees")} ({summitStats.total_virtual_attendees + summitStats.total_virtual_non_checked_in_attendees})
-            </>}
-            data={[
-              {value: summitStats.total_virtual_attendees, total: totalVirtualAttendees},
-              {value: summitStats.total_virtual_non_checked_in_attendees, total: totalVirtualAttendees},
-            ]}
-            labels={[
-              `Virtual Check In ${summitStats.total_virtual_attendees} / ${totalVirtualAttendees}`,
-              `Non Virtual Checked In: ${summitStats.total_virtual_non_checked_in_attendees} / ${totalVirtualAttendees}`,
-            ]}
-            colors={[
-              'rgba(255, 159, 64, 1)',
-              'rgba(255, 99, 132, 1)',
-            ]}
-          />
-
-        </>
-        }
-
-        {/*{summitStats.total_tickets_per_badge_feature.some(t => t.tickets_qty > 0) &&
+        {totalRealAttendees > 0 &&
         <Graph
-          title={T.translate("dashboard.badge_features_tickets")}
-          data={}
-          labels={}
+          title={<>
+            <i className="fa fa-users"/>
+            &nbsp;
+            {T.translate("dashboard.in_person_attendees")} ({summitStats.total_checked_in_attendees + summitStats.total_non_checked_in_attendees})
+          </>}
+          data={[
+            {value: summitStats.total_checked_in_attendees, total: totalRealAttendees},
+            {value: summitStats.total_non_checked_in_attendees, total: totalRealAttendees},
+          ]}
+          labels={[
+            `Checked In : ${summitStats.total_checked_in_attendees} / ${totalRealAttendees}`,
+            `Non Checked In: ${summitStats.total_non_checked_in_attendees} / ${totalRealAttendees}`,
+          ]}
+          colors={[
+            'rgba(75, 192, 192, 1)',
+            'rgba(255, 99, 132, 1)',
+          ]}
         />
-        }*/}
-
+        }
+        {totalVirtualAttendees > 0 &&
+        <Graph
+          title={<>
+            <i className="fa fa-users"/>
+            &nbsp;
+            {T.translate("dashboard.virtual_attendees")} ({summitStats.total_virtual_attendees + summitStats.total_virtual_non_checked_in_attendees})
+          </>}
+          data={[
+            {value: summitStats.total_virtual_attendees, total: totalVirtualAttendees},
+            {value: summitStats.total_virtual_non_checked_in_attendees, total: totalVirtualAttendees},
+          ]}
+          labels={[
+            `Virtual Check In ${summitStats.total_virtual_attendees} / ${totalVirtualAttendees}`,
+            `Non Virtual Checked In: ${summitStats.total_virtual_non_checked_in_attendees} / ${totalVirtualAttendees}`,
+          ]}
+          colors={[
+            'rgba(255, 159, 64, 1)',
+            'rgba(255, 99, 132, 1)',
+          ]}
+        />
+        }
 
       </div>
     </div>

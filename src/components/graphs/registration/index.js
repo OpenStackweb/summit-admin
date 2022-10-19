@@ -14,7 +14,9 @@
 import React, {useMemo} from 'react'
 import {Pie} from "react-chartjs-2";
 import {Chart} from 'chart.js';
+import {isMobile} from 'react-device-detect';
 import styles from './index.module.less'
+
 
 const starters = [[220,120,20],[120,220,20],[80,20,240],[220,20,120],[20,120,220],[20,210,90]];
 
@@ -49,7 +51,7 @@ function createDonnutCanvas(arc, percent) {
   const ctx = canvas.getContext('2d');
 
   canvas.width = 100;
-  canvas.height = 55;
+  canvas.height = 60;
 
   ctx.font = "10px Arial";
   ctx.textAlign = "center";
@@ -73,6 +75,11 @@ function createDonnutCanvas(arc, percent) {
 
 const Graph = ({title, subtitle = null, legendTitle= null, data, labels, colors = null, colorPalette = null}) => {
   const fillColors = useMemo(() => colors || getRandomColors(data.length, colorPalette), [colors, data.length]);
+  const graphSize = isMobile ? { width: 400, height: (400 + (labels.length * 60)) } : { width: 600, height: 600 };
+  const legendPos = isMobile ? 'bottom' : 'right';
+  const legendAlign = isMobile ? 'start' : 'center';
+  const layoutPadding = isMobile ? { top: 10, left: 10, right: 10, bottom: 30 } : { top: 80, left: 80, right: 80, bottom: 80 };
+  const titlePadding = isMobile ? { top: 10, left: 0, right: 0, bottom: 0 } : 0;
 
   const chartData = {
     labels: labels,
@@ -89,7 +96,7 @@ const Graph = ({title, subtitle = null, legendTitle= null, data, labels, colors 
   const chartOptions = {
     maintainAspectRatio: false,
     layout: {
-      padding: {top: 80, left: 80, right: 80, bottom: 80}
+      padding: layoutPadding
     },
     parsing: {
       key: 'value'
@@ -102,16 +109,16 @@ const Graph = ({title, subtitle = null, legendTitle= null, data, labels, colors 
         }
       },
       legend: {
-        title: {text: legendTitle, display: !!legendTitle},
+        title: {text: legendTitle, display: !!legendTitle, padding: titlePadding},
         display: true,
-        position: 'right',
-        align: 'center',
+        position: legendPos,
+        align: legendAlign,
         maxWidth: 450,
         labels: {
           usePointStyle: true,
           font: {size: 12, lineHeight: 2.5},
           padding: 35,
-          boxHeight: 50,
+          boxHeight: 60,
           generateLabels: (chart) => {
             const dataset = chart.data.datasets[0];
 
@@ -152,7 +159,7 @@ const Graph = ({title, subtitle = null, legendTitle= null, data, labels, colors 
       </div>
       }
       <div>
-        <Pie data={chartData} width={600} height={600} options={chartOptions}/>
+        <Pie data={chartData} {...graphSize} options={chartOptions}/>
       </div>
     </div>
   );
