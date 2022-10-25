@@ -73,7 +73,7 @@ class SmartPresentationReport extends React.Component {
 
         if (sortKey) {
             const querySortKey = this.translateSortKey(sortKey);
-            const order = (sortDir === 1) ? '' : '-';
+            const order = (sortDir == 1) ? '' : '-';
             filters.ordering = order + '' + querySortKey;
         }
 

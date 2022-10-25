@@ -60,7 +60,7 @@ class FeedbackGroupReport extends React.Component {
 
         if (sortKey) {
             let querySortKey = this.translateSortKey(sortKey);
-            let order = (sortDir === 1) ? '' : '-';
+            let order = (sortDir == 1) ? '' : '-';
             filters.ordering = order + '' + querySortKey;
         }
 
