@@ -185,14 +185,14 @@ const RegistrationStatsPage = ({currentSummit, summitStats, match, getRegistrati
             title="Checked in per badge type"
             subtitle={[`Tickets checked in: ${totalTicketsCheckedIn}`, `Tickets sold: ${totalTicketsSold}`]}
             legendTitle="Checked in / Sold per badge type"
-            data={sortedTicketTypes.map(tt => ({
+            data={sortedTicketPerBadgeTypes.map(tt => ({
               value: parseInt(tt.checkin_qty),
-              divider: parseInt(tt.sold_qty),
-              label: `${trimString(tt.badge_type)} : ${tt.checkin_qty} / ${tt.sold_qty}`
+              divider: parseInt(tt.badges_qty),
+              label: `${trimString(tt.type)} : ${tt.checkin_qty} / ${tt.badges_qty}`
             }))}
-            labels={sortedTicketTypes.map(tt => {
+            labels={sortedTicketPerBadgeTypes.map(tt => {
               const percent = Math.round(tt.checkin_qty / totalTicketsCheckedIn * 100);
-              return `${trimString(tt.badge_type)}: ${percent}%`
+              return `${trimString(tt.type)}: ${percent}%`
             })}
             colorPalette={4}
           />
