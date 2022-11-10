@@ -23,7 +23,8 @@ import {
     addEventTypeSelectionPlan,
     deleteEventTypeSelectionPlan,
     updateRatingTypeOrder,
-    deleteRatingType
+    deleteRatingType,
+    assignExtraQuestion2SelectionPlan,
 } from "../../actions/selection-plan-actions";
 import Swal from "sweetalert2";
 
@@ -132,6 +133,7 @@ class EditSelectionPlanPage extends React.Component {
                     onEditRatingType={this.onEditRatingType}
                     onUpdateRatingTypeOrder={this.onUpdateRatingTypeOrder}
                     onDeleteRatingType={this.onDeleteRatingType}
+                    onAssignExtraQuestion2SelectionPlan={this.props.assignExtraQuestion2SelectionPlan}
                 />
             </div>
         )
@@ -154,6 +156,7 @@ export default connect (
         updateSelectionPlanExtraQuestionOrder,
         deleteSelectionPlanExtraQuestion,
         updateRatingTypeOrder,
-        deleteRatingType
+        deleteRatingType,
+        assignExtraQuestion2SelectionPlan,
     }
 )(EditSelectionPlanPage);

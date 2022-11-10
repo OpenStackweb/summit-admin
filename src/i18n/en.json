@@ -333,7 +333,7 @@
     "selection_plan_created": "Selection Plan created successfully.",
     "event_types": "Activity Types",
     "extra_questions": "Extra Questions",
-    "add_extra_questions": "Add Extra Question",
+    "add_extra_questions": "Create New Extra Question",
     "no_extra_questions": "No extra questions found.",
     "extra_question_remove_warning": "Are you sure you want to remove question ",
     "email_templates": "Email Templates",
@@ -344,7 +344,8 @@
     "placeholders": {
       "creator_notification_email_select_template": "Select a creator notification email template...",
       "moderator_notification_email_select_template": "Select a moderator notification email template...",
-      "speaker_notification_email_select_template": "Select a speaker notification email template..."
+      "speaker_notification_email_select_template": "Select a speaker notification email template...",
+      "link_question": "Link an Existent Question..."
     }
   },
   "edit_event": {

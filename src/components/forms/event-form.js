@@ -32,12 +32,12 @@ import {
     MemberInput, FreeTextSearch
 } from 'openstack-uicore-foundation/lib/components'
 import {isEmpty, scrollToError, shallowEqual, hasErrors} from "../../utils/methods";
-import QuestionAnswersInput from "../inputs/question-answers-input";
 import {Pagination} from "react-bootstrap";
-import {deleteEventFeedback, getEventFeedbackCSV} from "../../actions/event-actions";
+import ExtraQuestionsForm from 'openstack-uicore-foundation/lib/components/extra-questions';
 
 
 class EventForm extends React.Component {
+
     constructor(props) {
         super(props);
 
@@ -47,12 +47,13 @@ class EventForm extends React.Component {
             errors: props.errors
         };
 
+        this.formRef = React.createRef();
+
         this.handleChange = this.handleChange.bind(this);
         this.handleQAuserChange = this.handleQAuserChange.bind(this);
         this.handleTimeChange = this.handleTimeChange.bind(this);
         this.handleUploadFile = this.handleUploadFile.bind(this);
         this.handleRemoveFile = this.handleRemoveFile.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
         this.handleMaterialEdit = this.handleMaterialEdit.bind(this);
         this.handleNewMaterial = this.handleNewMaterial.bind(this);
         this.handleUploadPic = this.handleUploadPic.bind(this);
@@ -64,23 +65,25 @@ class EventForm extends React.Component {
         this.handleFeedbackSort = this.handleFeedbackSort.bind(this);
         this.handleFeedbackSearch = this.handleFeedbackSearch.bind(this);
         this.handleDeleteEventFeedback = this.handleDeleteEventFeedback.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.triggerFormSubmit = this.triggerFormSubmit.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const state = {};
+        const newState = {};
         scrollToError(this.props.errors);
 
         if (!shallowEqual(prevProps.entity, this.props.entity)) {
-            state.entity = {...this.props.entity};
-            state.errors = {};
+            newState.entity = {...this.props.entity};
+            newState.errors = {};
         }
 
         if (!shallowEqual(prevProps.errors, this.props.errors)) {
-            state.errors = {...this.props.errors};
+            newState.errors = {...this.props.errors};
         }
 
-        if (!isEmpty(state)) {
-            this.setState({...this.state, ...state})
+        if (!isEmpty(newState)) {
+            this.setState({...this.state, ...newState})
         }
     }
 
@@ -234,12 +237,42 @@ class EventForm extends React.Component {
         this.setState({entity: entity});
     }
 
-    handleSubmit(publish, ev) {
-        const entity = {...this.state.entity};
-        ev.preventDefault();
 
-        this.props.onSubmit(entity, publish);
+    triggerFormSubmit(publish, ev) {
+        ev.preventDefault();
+        // do regular submit
+        const entity = { ... this.state.entity };
+        // check current ( could not be rendered)
+        if(this.formRef.current) {
+            this.formRef.current.dispatchEvent(new Event("submit", {cancelable: true, bubbles: true}));
+            return;
+        }
+
+        // if we did not changed the extra questions , then dont send them
+        if (entity.extra_questions) {
+            delete entity.extra_questions;
+        }
+
+        this.props.onSubmit(entity);
     }
+
+    handleSubmit(formValues) {
+
+        const {extraQuestions} = this.props;
+
+        const formattedAnswers = [];
+
+        Object.keys(formValues).map(a => {
+            let question = extraQuestions.find(q => q.name === a);
+            const newQuestion = { question_id: question.id, value: `${formValues[a]}` }
+            formattedAnswers.push(newQuestion);
+        });
+
+        this.setState({...this.state, entity: {...this.state.entity, extra_questions: formattedAnswers}}, () => {
+            this.props.onSubmit(this.state.entity);
+        });
+    }
+
 
     handleUnpublish(ev) {
         ev.preventDefault();
@@ -401,7 +434,9 @@ class EventForm extends React.Component {
     }
 
     render() {
+
         const {entity, showSection, errors} = this.state;
+
         const {
             currentSummit, levelOpts, typeOpts, trackOpts,
             locationOpts, rsvpTemplateOpts, selectionPlansOpts, history, extraQuestions, feedbackState
@@ -489,7 +524,7 @@ class EventForm extends React.Component {
         const streaming_type_ddl = [{label: 'LIVE', value: 'LIVE'}, {label: 'VOD', value: 'VOD'}];
 
         return (
-            <form>
+            <div>
                 <input type="hidden" id="id" value={entity.id}/>
                 <div className="row form-group">
                     <div className="col-md-8">
@@ -950,11 +985,13 @@ class EventForm extends React.Component {
                 {entity.id !== 0 && extraQuestions && extraQuestions.length > 0 &&
                 <Panel show={showSection === 'extra_questions'} title={T.translate("edit_event.extra_questions")}
                        handleClick={this.toggleSection.bind(this, 'extra_questions')}>
-                    <QuestionAnswersInput
-                        id="extra_questions"
-                        answers={entity.extra_questions}
-                        questions={extraQuestions}
-                        onChange={this.handleChange}
+
+                    <ExtraQuestionsForm
+                        extraQuestions={extraQuestions}
+                        userAnswers={entity.extra_questions}
+                        onAnswerChanges={this.handleSubmit}
+                        ref={this.formRef}
+                        className="extra-questions"
                     />
                 </Panel>
                 }
@@ -1010,9 +1047,9 @@ class EventForm extends React.Component {
                     <div className="col-md-12 submit-buttons">
                         {!entity.is_published &&
                         <div>
-                            <input type="button" onClick={this.handleSubmit.bind(this, false)}
+                            <input type="button" onClick={this.triggerFormSubmit.bind(this, false)}
                                    className="btn btn-primary pull-right" value={T.translate("general.save")}/>
-                            <input type="button" onClick={this.handleSubmit.bind(this, true)}
+                            <input type="button" onClick={this.triggerFormSubmit.bind(this, true)}
                                    className="btn btn-success pull-right"
                                    value={T.translate("general.save_and_publish")}/>
                         </div>
@@ -1022,13 +1059,13 @@ class EventForm extends React.Component {
                         <div>
                             <input
                                 type="button"
-                                onClick={this.handleSubmit.bind(this, true)}
+                                onClick={this.triggerFormSubmit.bind(this, true)}
                                 className="btn btn-success pull-right"
                                 value={T.translate("general.save_and_publish")}
                             />
                             <input
                                 type="button"
-                                onClick={this.handleUnpublish.bind(this)}
+                                onClick={this.triggerFormSubmit.bind(this)}
                                 className="btn btn-danger pull-right"
                                 value={T.translate("edit_event.unpublish")}
                             />
@@ -1050,7 +1087,7 @@ class EventForm extends React.Component {
 
                     </div>
                 </div>
-            </form>
+            </div>
         );
     }
 }

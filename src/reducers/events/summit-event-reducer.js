@@ -88,6 +88,37 @@ const DEFAULT_STATE = {
     feedbackState: DEFAULT_STATE_FEEDBACK_STATE,
 };
 
+const normalizeEventResponse = (entity) => {
+    const links = entity.slides || [];
+    const videos = entity.videos || [];
+    const slides = entity.links || [];
+    let media_uploads = entity.media_uploads || [];
+
+    for(var key in entity) {
+        if(entity.hasOwnProperty(key)) {
+            entity[key] = (entity[key] == null) ? '' : entity[key] ;
+        }
+    }
+
+    if (!entity.rsvp_external) entity.rsvp_link = null;
+    media_uploads = media_uploads.map((m) => (
+        {...m,
+            media_upload_type_id: m.media_upload_type.id
+        }
+    ));
+    entity.materials = [...media_uploads, ...links, ...videos, ...slides];
+    entity.type_id = entity.type ? entity.type.id : null;
+
+    entity.materials = [...entity.materials.map((m) => (
+        {
+            ...m,
+            display_on_site_label:m.display_on_site ? 'Yes' : 'No',
+        }
+    ))];
+    entity.selection_plan_id = entity.selection_plan?.id || null;
+    return entity;
+}
+
 const summitEventReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
@@ -104,49 +135,12 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
         case RESET_EVENT_FORM: {
             return DEFAULT_STATE;
         }
-        break;
-        case UPDATE_EVENT: {
-            return {...state,  entity: {...payload}, errors: {} };
-        }
-        break;
+        break;;
         case EVENT_ADDED:
         case RECEIVE_EVENT: {
-            const entity = payload.response;
-            const links = entity.slides || [];
-            const videos = entity.videos || [];
-            const slides = entity.links || [];
-            const extraQuestionAnswers = entity.extra_questions || [];
+            const entity = normalizeEventResponse(payload.response);
+
             const extraQuestions = entity.hasOwnProperty("selection_plan") && entity.selection_plan.extra_questions ? entity.selection_plan.extra_questions : [];
-            let media_uploads = entity.media_uploads || [];
-
-            for(var key in entity) {
-                if(entity.hasOwnProperty(key)) {
-                    entity[key] = (entity[key] == null) ? '' : entity[key] ;
-                }
-            }
-
-            if (!entity.rsvp_external) entity.rsvp_link = null;
-            media_uploads = media_uploads.map((m) => (
-                {...m,
-                 media_upload_type_id: m.media_upload_type.id
-                }
-            ));
-            entity.materials = [...media_uploads, ...links, ...videos, ...slides];
-            entity.type_id = entity.type ? entity.type.id : null;
-
-            entity.materials = [...entity.materials.map((m) => (
-                {
-                ...m,
-                display_on_site_label:m.display_on_site ? 'Yes' : 'No',
-                }
-                ))];
-
-            if (extraQuestionAnswers.length) {
-                entity.extra_questions = extraQuestionAnswers.map
-                (q => ({question_id: q.question_id, answer: q.value}))
-            }
-            entity.selection_plan_id = entity.selection_plan?.id || null;
-
             return {...state, entity: {...DEFAULT_ENTITY, ...entity}, errors: {}, extraQuestions };
         }
         break;
@@ -159,7 +153,9 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case EVENT_UPDATED: {
-            return state;
+            const entity = normalizeEventResponse(payload.response);
+            const extraQuestions = entity.hasOwnProperty("selection_plan") && entity.selection_plan.extra_questions ? entity.selection_plan.extra_questions : [];
+            return {...state,  entity: entity, errors: {}, extraQuestions };
         }
         break;
         case EVENT_MATERIAL_DELETED: {

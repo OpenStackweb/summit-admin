@@ -94,6 +94,7 @@ class EditOrderExtraQuestionPage extends React.Component {
                         questionClasses={allClasses}
                         entity={entity}
                         errors={errors}
+                        shouldAllowSubRules={true}
                         shouldShowUsage={true}
                         shouldShowPrintable={true}
                         summitExtraQuestions={currentSummit.order_extra_questions}

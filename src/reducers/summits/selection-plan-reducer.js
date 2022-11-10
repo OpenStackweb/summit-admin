@@ -17,7 +17,8 @@ import {
     SELECTION_PLAN_RATING_TYPE_ADDED,
     SELECTION_PLAN_RATING_TYPE_REMOVED,
     SELECTION_PLAN_RATING_TYPE_UPDATED,
-    SELECTION_PLAN_RATING_TYPE_ORDER_UPDATED
+    SELECTION_PLAN_RATING_TYPE_ORDER_UPDATED,
+    SELECTION_PLAN_ASSIGNED_EXTRA_QUESTION,
 } from '../../actions/selection-plan-actions';
 
 export const DEFAULT_ENTITY = {
@@ -86,6 +87,11 @@ const selectionPlanReducer = (state = DEFAULT_STATE, action) => {
         break;
         case SELECTION_PLAN_UPDATED: {
             return state;
+        }
+        break;
+        case SELECTION_PLAN_ASSIGNED_EXTRA_QUESTION:{
+            let question = {...payload.response};
+            return {...state, entity: {...state.entity, extra_questions: [...state.entity.extra_questions, question]} };
         }
         break;
         case TRACK_GROUP_REMOVED: {

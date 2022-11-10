@@ -20,7 +20,10 @@ import {Input, DateTimePicker, SimpleLinkList, SortableTable, TextEditor, Panel}
 import {isEmpty, scrollToError, shallowEqual, stripTags} from "../../utils/methods";
 import EmailTemplateInput from "../inputs/email-template-input";
 import { PresentationTypeClassName } from '../../utils/constants';
-
+import Many2ManyDropDown from "../inputs/many-2-many-dropdown";
+import {
+    querySelectionPlanExtraQuestions
+} from '../../actions/selection-plan-actions';
 
 class SelectionPlanForm extends React.Component {
     constructor(props) {
@@ -46,6 +49,22 @@ class SelectionPlanForm extends React.Component {
         this.handleEditRatingType = this.handleEditRatingType.bind(this);
         this.toggleSection = this.toggleSection.bind(this);
         this.handleNotificationEmailTemplateChange = this.handleNotificationEmailTemplateChange.bind(this);
+        this.fetchSummitSelectionPlanExtraQuestions = this.fetchSummitSelectionPlanExtraQuestions.bind(this);
+        this.linkSummitSelectionPlanExtraQuestion = this.linkSummitSelectionPlanExtraQuestion.bind(this);
+    }
+
+    fetchSummitSelectionPlanExtraQuestions(input, callback) {
+        let {currentSummit} = this.props;
+
+        if (!input) {
+            return Promise.resolve({ options: [] });
+        }
+        querySelectionPlanExtraQuestions(currentSummit.id, input, callback);
+    }
+
+    linkSummitSelectionPlanExtraQuestion(question){
+        let {currentSummit} = this.props;
+        this.props.onAssignExtraQuestion2SelectionPlan(currentSummit.id, this.state.entity.id, question.id);
     }
 
     handleEditExtraQuestion(questionId){
@@ -394,6 +413,12 @@ class SelectionPlanForm extends React.Component {
                             handleClick={() => {this.toggleSection('extra_questions')}}
                         >
                             <div className={'row'}>
+                                <Many2ManyDropDown id="addAllowedExtraQuestions"
+                                       isClearable={true}
+                                       placeholder={T.translate("edit_selection_plan.placeholders.link_question")}
+                                       fetchOptions={this.fetchSummitSelectionPlanExtraQuestions}
+                                       onAdd={this.linkSummitSelectionPlanExtraQuestion}
+                                />
                                 <div className="col-md-6 text-right col-md-offset-6">
                                     <button className="btn btn-primary right-space" onClick={this.handleNewExtraQuestion}>
                                         {T.translate("edit_selection_plan.add_extra_questions")}
@@ -461,8 +486,8 @@ class SelectionPlanForm extends React.Component {
                         <Panel
                             show={showSection === 'rating_types'}
                             title={T.translate("edit_rating_type.title")}
-                            handleClick={() => {this.toggleSection('rating_types')}}
-                        >
+                            handleClick={() => {this.toggleSection('rating_types')}}>
+
                              <div className={'row'}>
                                 <div className="col-md-6 text-right col-md-offset-6">
                                     <button className="btn btn-primary right-space" onClick={this.handleAddRatingType}>

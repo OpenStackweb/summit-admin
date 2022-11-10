@@ -19,7 +19,6 @@ import {
     Dropdown,
     Input,
     EditableTable,
-    Table,
     TextEditor,
     SortableTable
 } from 'openstack-uicore-foundation/lib/components'
@@ -118,7 +117,7 @@ class ExtraQuestionForm extends React.Component {
     }
 
     allowsSubQuestionRules(question) {
-        return ExtraQuestionsTypeAllowSubQuestion.includes(question.type)
+        return this.props.shouldAllowSubRules && ExtraQuestionsTypeAllowSubQuestion.includes(question.type)
     }
 
     render() {

@@ -233,7 +233,7 @@ export const getEvent = (eventId) => async (dispatch, getState) => {
 
     const params = {
         access_token: accessToken,
-        expand: 'creator,speakers,moderator,sponsors,groups,type,type.allowed_media_upload_types, type.allowed_media_upload_types.type, slides, links, videos, media_uploads, tags, media_uploads.media_upload_type, media_uploads.media_upload_type.type,extra_questions,selection_plan,selection_plan.extra_questions,selection_plan.extra_questions.values,created_by'
+        expand: 'creator,speakers,moderator,sponsors,groups,type,type.allowed_media_upload_types,type.allowed_media_upload_types.type, slides, links, videos, media_uploads, tags, media_uploads.media_upload_type, media_uploads.media_upload_type.type,extra_questions,selection_plan,selection_plan.extra_questions,selection_plan.extra_questions.values,created_by'
     };
 
     dispatch(startLoading());
@@ -270,7 +270,8 @@ export const saveEvent = (entity, publish) => async (dispatch, getState) => {
     const normalizedEntity = normalizeEntity(entity, eventTypeConfig);
 
     const params = {
-        access_token: accessToken
+        access_token: accessToken,
+        expand: 'creator,speakers,moderator,sponsors,groups,type,type.allowed_media_upload_types,type.allowed_media_upload_types.type, slides, links, videos, media_uploads, tags, media_uploads.media_upload_type, media_uploads.media_upload_type.type,extra_questions,selection_plan,selection_plan.extra_questions,selection_plan.extra_questions.values,created_by'
     };
 
     if (entity.id) {
@@ -584,6 +585,11 @@ const normalizeEntity = (entity, eventTypeConfig) => {
             delete (normalizedEntity.start_date)
             delete (normalizedEntity.end_date)
         }
+    }
+
+    if(normalizedEntity.hasOwnProperty('extra_questions')){
+
+        normalizedEntity.extra_questions =  normalizedEntity.extra_questions.map((q) => ({ question_id : q.question_id, answer : q.value}))
     }
 
     return normalizedEntity;

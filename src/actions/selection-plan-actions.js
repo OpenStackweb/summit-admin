@@ -25,7 +25,8 @@ import {
     showSuccessMessage,
     authErrorHandler
 } from 'openstack-uicore-foundation/lib/utils/actions';
-import {getAccessTokenSafely} from '../utils/methods';
+import { getAccessTokenSafely, escapeFilterValue, fetchResponseHandler, fetchErrorHandler } from '../utils/methods';
+import _ from 'lodash';
 
 export const RECEIVE_SELECTION_PLAN = 'RECEIVE_SELECTION_PLAN';
 export const RESET_SELECTION_PLAN_FORM = 'RESET_SELECTION_PLAN_FORM';
@@ -35,6 +36,8 @@ export const SELECTION_PLAN_ADDED = 'SELECTION_PLAN_ADDED';
 export const SELECTION_PLAN_DELETED = 'SELECTION_PLAN_DELETED';
 export const TRACK_GROUP_REMOVED = 'TRACK_GROUP_REMOVED';
 export const TRACK_GROUP_ADDED = 'TRACK_GROUP_ADDED';
+export const SELECTION_PLAN_ASSIGNED_EXTRA_QUESTION = 'SELECTION_PLAN_ASSIGNED_EXTRA_QUESTION';
+const callDelay = 500; //miliseconds
 
 export const getSelectionPlan = (selectionPlanId) => async (dispatch, getState) => {
 
@@ -574,3 +577,36 @@ export const deleteRatingType = (selectionPlanId, ratingTypeId) => async (dispat
         }
     );
 };
+
+export const querySelectionPlanExtraQuestions = _.debounce(async (summitId, input, callback) => {
+
+    const accessToken = await getAccessTokenSafely();
+    input = escapeFilterValue(input);
+    let filters = encodeURIComponent(`name=@${input}`);
+
+    fetch(`${window.API_BASE_URL}/api/v1/summits/${summitId}/selection-plan-extra-questions?filter=${filters}&&access_token=${accessToken}`)
+        .then(fetchResponseHandler)
+        .then((json) => {
+            let options = [...json.data];
+
+            callback(options);
+        })
+        .catch(fetchErrorHandler);
+
+}, callDelay);
+
+export const assignExtraQuestion2SelectionPlan = (summitId, selectionPlanId, questionId) => async (dispatch, getState) => {
+    const accessToken = await getAccessTokenSafely();
+    dispatch(startLoading());
+    postRequest(
+        null,
+        createAction(SELECTION_PLAN_ASSIGNED_EXTRA_QUESTION),
+        `${window.API_BASE_URL}/api/v1/summits/${summitId}/selection-plans/${selectionPlanId}/extra-questions/${questionId}?access_token=${accessToken}`,
+        {},
+        authErrorHandler
+    )({})(dispatch)
+        .then((payload) => {
+            dispatch(stopLoading());
+            dispatch(showSuccessMessage(T.translate("edit_selection_plan.selection_plan_saved")));
+        });
+}

@@ -15,6 +15,7 @@ import moment from "moment-timezone";
 import {findElementPos} from "openstack-uicore-foundation/lib/utils/methods";
 import {getAccessToken} from 'openstack-uicore-foundation/lib/security/methods'
 import { initLogOut} from 'openstack-uicore-foundation/lib/security/methods';
+import Swal from "sweetalert2";
 
 export const trim = (string, length) => {
     return string.length > length ?
@@ -129,3 +130,35 @@ export const getAccessTokenSafely = async () => {
         initLogOut();
     }
 };
+
+export const escapeFilterValue = (value) => {
+    value = value.replace(/,/g, "\\,");
+    value = value.replace(/;/g, "\\;");
+    return value;
+};
+
+export const fetchResponseHandler = (response) => {
+    if (!response.ok) {
+        throw response;
+    } else {
+        return response.json();
+    }
+}
+
+export const fetchErrorHandler = (response) => {
+    let code = response.status;
+    let msg = response.statusText;
+
+    switch (code) {
+        case 403:
+            Swal.fire("ERROR", T.translate("errors.user_not_authz"), "warning");
+            break;
+        case 401:
+            Swal.fire("ERROR", T.translate("errors.session_expired"), "error");
+            break;
+        case 412:
+            Swal.fire("ERROR", msg, "warning");
+        case 500:
+            Swal.fire("ERROR", T.translate("errors.server_error"), "error");
+    }
+}

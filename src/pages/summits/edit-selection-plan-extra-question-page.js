@@ -104,6 +104,7 @@ class EditSelectionPlanExtraQuestionPage extends React.Component {
                 <hr/>
                 {currentSummit &&
                 <ExtraQuestionForm
+                    shouldAllowSubRules={false}
                     shouldShowUsage={false}
                     shouldShowPrintable={false}
                     questionClasses={allClasses}
