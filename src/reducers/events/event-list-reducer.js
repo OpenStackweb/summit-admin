@@ -73,7 +73,10 @@ const eventListReducer = (state = DEFAULT_STATE, action) => {
                     speakers: (e.speakers) ? e.speakers.map(s => s.first_name + ' ' + s.last_name).join(',') : '',
                     duration: e.type.allows_publishing_dates ?
                         formatDuration(e.duration) : 'N/A',
-                    speaker_count: (e.speakers) ? e.speakers.length : '',                    
+                    speaker_count: (e.speakers) ? e.speakers.length : '',
+                    track: e.track.name,
+                    start_date: e.start_date ? moment(e.start_date * 1000).tz(state.summitTZ).format('MMMM Do YYYY, h:mm a') : 'TBD',
+                    end_date: e.end_date ? moment(e.end_date * 1000).tz(state.summitTZ).format('MMMM Do YYYY, h:mm a') : 'TBD',
                 };
             });
 

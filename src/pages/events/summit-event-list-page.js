@@ -30,6 +30,9 @@ const fieldNames = [
     { columnKey: 'published_date', value: 'published' },
     { columnKey: 'duration', value: 'duration' },
     { columnKey: 'speaker_count', value: 'speaker_count' },
+    { columnKey: 'track', value: 'track' },
+    { columnKey: 'start_date', value: 'start_date' },
+    { columnKey: 'end_date', value: 'end_date' },
 ]
 
 class SummitEventListPage extends React.Component {
@@ -278,11 +281,6 @@ class SummitEventListPage extends React.Component {
         }
     }
 
-    handleColumnsChange(ev) {
-        const {value} = ev.target;
-        this.setState({...this.state, selectedColumns: value})
-    }
-
     handleChangeStartDate(ev) {
         const {value} = ev.target;
         this.setState({...this.state, eventFilters: {...this.state.eventFilters, start_date_filter: value.unix()}});    
@@ -393,9 +391,12 @@ class SummitEventListPage extends React.Component {
             { value: 'published_date', label: T.translate("event_list.published") },
             { value: 'duration', label: T.translate("event_list.duration") },
             { value: 'speaker_count', label: T.translate("event_list.speaker_count") },
+            { value: 'track', label: T.translate("event_list.track") },
+            { value: 'start_date', label: T.translate("event_list.start_date") },
+            { value: 'end_date', label: T.translate("event_list.end_date") },
         ];
 
-        const ddl_filterByEventTypeCapacity = [            
+        const ddl_filterByEventTypeCapacity = [
             {value: 'allows_attendee_vote_filter', label: T.translate("event_list.allows_attendee_vote_filter")},
             {value: 'allows_location_filter', label: T.translate("event_list.allows_location_filter")},
             {value: 'allows_publishing_dates_filter', label: T.translate("event_list.allows_publishing_dates_filter")}
@@ -409,7 +410,7 @@ class SummitEventListPage extends React.Component {
                 sortable: f2.sortable
             }));
 
-        columns = [...columns, ...showColumns];        
+        columns = [...columns, ...showColumns];
 
         if(!currentSummit.id) return(<div />);
 
