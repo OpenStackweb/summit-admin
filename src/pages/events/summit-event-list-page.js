@@ -28,11 +28,11 @@ const fieldNames = [
     { columnKey: 'speakers', value: 'speakers' },
     { columnKey: 'created_by_fullname', value: 'created_by' },
     { columnKey: 'published_date', value: 'published' },
-    { columnKey: 'duration', value: 'duration' },
-    { columnKey: 'speaker_count', value: 'speaker_count' },
+    { columnKey: 'duration', value: 'duration', sortable: true },
+    { columnKey: 'speakers_count', value: 'speakers_count', sortable: true },
     { columnKey: 'track', value: 'track' },
-    { columnKey: 'start_date', value: 'start_date' },
-    { columnKey: 'end_date', value: 'end_date' },
+    { columnKey: 'start_date', value: 'start_date', sortable: true },
+    { columnKey: 'end_date', value: 'end_date', sortable: true },
 ]
 
 class SummitEventListPage extends React.Component {
@@ -86,7 +86,7 @@ class SummitEventListPage extends React.Component {
                 start_date_filter: '',
                 end_date_filter: '',
                 duration_filter: '',
-                speaker_count_filter: '',
+                speakers_count_filter: '',
             },
             selectedColumns: []
         };
@@ -264,7 +264,7 @@ class SummitEventListPage extends React.Component {
                     start_date_filter: '',
                     end_date_filter: '',
                     duration_filter: '',
-                    speaker_count_filter: '',
+                    speakers_count_filter: '',
                 };
                 this.setState({...this.state, enabledFilters: value, eventFilters: resetFilters});
             } else {
@@ -309,7 +309,7 @@ class SummitEventListPage extends React.Component {
                     start_date_filter: '',
                     end_date_filter: '',
                     duration_filter: '',
-                    speaker_count_filter: '',
+                    speakers_count_filter: '',
                 };
                 this.setState({...this.state, enabledFilters: value, eventFilters: resetFilters});
             } else {
@@ -382,7 +382,7 @@ class SummitEventListPage extends React.Component {
             {label: 'Tags', value: 'tags_filter'},
             {label: 'Date', value: 'date_filter'},
             {label: 'Duration', value: 'duration_filter'},
-            {label: 'Speaker Count', value: 'speaker_count_filter'}
+            {label: 'Speaker Count', value: 'speakers_count_filter'}
         ]
 
         const ddl_columns = [
@@ -390,7 +390,7 @@ class SummitEventListPage extends React.Component {
             { value: 'created_by_fullname', label: T.translate("event_list.created_by") },
             { value: 'published_date', label: T.translate("event_list.published") },
             { value: 'duration', label: T.translate("event_list.duration") },
-            { value: 'speaker_count', label: T.translate("event_list.speaker_count") },
+            { value: 'speakers_count', label: T.translate("event_list.speakers_count") },
             { value: 'track', label: T.translate("event_list.track") },
             { value: 'start_date', label: T.translate("event_list.start_date") },
             { value: 'end_date', label: T.translate("event_list.end_date") },
@@ -625,12 +625,12 @@ class SummitEventListPage extends React.Component {
                                 onChange={this.handleExtraFilterChange}/>
                         </div>
                     }
-                    {enabledFilters.includes('speaker_count_filter') &&
+                    {enabledFilters.includes('speakers_count_filter') &&
                         <div className={'col-md-10 col-md-offset-1'}> 
                             <OperatorInput 
-                                id="speaker_count_filter" 
-                                label={T.translate("event_list.speaker_count")}
-                                value={eventFilters.speaker_count_filter}
+                                id="speakers_count_filter" 
+                                label={T.translate("event_list.speakers_count")}
+                                value={eventFilters.speakers_count_filter}
                                 onChange={this.handleExtraFilterChange}/>
                         </div>
                     }

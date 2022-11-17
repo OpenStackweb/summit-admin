@@ -819,12 +819,12 @@ const parseFilters = (filters) => {
         }
     }
 
-    if (filters.speaker_count_filter) {
-        if (Array.isArray(filters.speaker_count_filter)) {
-            filter.push(`speakers_count>=${filters.speaker_count_filter[0]}`);
-            filter.push(`speakers_count<=${filters.speaker_count_filter[1]}`);
+    if (filters.speakers_count_filter) {
+        if (Array.isArray(filters.speakers_count_filter)) {
+            filter.push(`speakers_count>=${filters.speakers_count_filter[0]}`);
+            filter.push(`speakers_count<=${filters.speakers_count_filter[1]}`);
         } else {
-            filter.push(`speakers_count${filters.speaker_count_filter}`)
+            filter.push(`speakers_count${filters.speakers_count_filter}`)
         }
 
     }
