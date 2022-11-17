@@ -42,6 +42,7 @@ const DEFAULT_STATE = {
     viewTypesFilter: [],
     hasOwnerFilter : null,
     completedFilter : null,
+    amountFilter: null,
     hasBadgeFilter : null,
     showOnlyPrintable: false,
     promocodesFilter: [],

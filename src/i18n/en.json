@@ -1200,10 +1200,13 @@
     "select_items": "Select at least one ticket to perform the action.",
     "has_badge": "Has Badge",
     "has_no_badge": "Has no Badge",
+    "paid": "Paid",
+    "free": "Free",
     "print_modal_title": "Print Badges",
     "check_in": "Should Perform Attendee CheckIn on Printing?",
     "print_modal_body": "You are about to send all selected tickets to print",
     "show_printable": "Show Printable Tickets",
+    "show_printable_info": "Must be an active ticket with the access level of IN_PERSON.",
     "items_qty": "Selected {qty} Tickets",
     "select_view_2_print": "Select a View Type to Print",
     "placeholders": {

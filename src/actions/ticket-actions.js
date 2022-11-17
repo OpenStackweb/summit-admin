@@ -211,6 +211,13 @@ const parseFilters = (filters) => {
         filter.push(`owner_status==${filters.completedFilter}`);
     }
 
+    if (filters.hasOwnProperty('amountFilter') && filters.amountFilter) {
+        if (filters.amountFilter === 'Paid')
+            filter.push(`final_amount>0`);
+        if (filters.amountFilter === 'Free')
+            filter.push(`final_amount==0`)
+    }
+
     if(filters.hasOwnProperty('ownerFullNameStartWithFilter') && Array.isArray(filters.ownerFullNameStartWithFilter) && filters.ownerFullNameStartWithFilter.length > 0){
         filter.push(filters.ownerFullNameStartWithFilter.reduce(
             (accumulator, alpha) => accumulator +(accumulator !== '' ? ',':'') +`owner_first_name@@${alpha.value}`,

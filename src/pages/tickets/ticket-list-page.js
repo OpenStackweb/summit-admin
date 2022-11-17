@@ -85,8 +85,8 @@ class TicketListPage extends React.Component {
     }
 
     getFilters() {
-        const {term, showOnlyPendingRefundRequests, ticketTypesFilter, viewTypesFilter, hasOwnerFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter, showOnlyPrintable, promocodesFilter} = this.props;
-        return { term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, viewTypesFilter, completedFilter, ownerFullNameStartWithFilter, hasBadgeFilter, showOnlyPrintable, promocodesFilter};
+        const {term, showOnlyPendingRefundRequests, ticketTypesFilter, viewTypesFilter, hasOwnerFilter, completedFilter, amountFilter, ownerFullNameStartWithFilter, hasBadgeFilter, showOnlyPrintable, promocodesFilter} = this.props;
+        return { term, showOnlyPendingRefundRequests, hasOwnerFilter, ticketTypesFilter, viewTypesFilter, completedFilter, amountFilter, ownerFullNameStartWithFilter, hasBadgeFilter, showOnlyPrintable, promocodesFilter};
     }
 
     handleSelected(attendee_id, isSelected){
@@ -319,6 +319,19 @@ class TicketListPage extends React.Component {
                         </div>
                     </div>
                     <div className="row">
+                        <div className="col-md-12 buttons-wrapper">
+                            <button className="btn btn-primary" onClick={() => this.setState({showIngestModal:true})}>
+                                {T.translate("ticket_list.ingest")}
+                            </button>
+                            <button className="btn btn-default" onClick={() => this.setState({showImportModal:true})}>
+                                {T.translate("ticket_list.import")}
+                            </button>
+                            <button className="btn btn-default" onClick={this.handleExportTickets}>
+                                {T.translate("ticket_list.export")}
+                            </button>
+                        </div>
+                    </div>
+                    <div className="row">
                         <div className="col-md-6">
                             <SegmentedControl
                                 name="hasOwnerFilter"
@@ -331,16 +344,17 @@ class TicketListPage extends React.Component {
                                 style={{ width: "100%", height:40, color: '#337ab7' , fontSize: '10px' }}
                             />
                         </div>
-                        <div className="col-md-6 buttons-wrapper">
-                            <button className="btn btn-primary" onClick={() => this.setState({showIngestModal:true})}>
-                                {T.translate("ticket_list.ingest")}
-                            </button>
-                            <button className="btn btn-default" onClick={() => this.setState({showImportModal:true})}>
-                                {T.translate("ticket_list.import")}
-                            </button>
-                            <button className="btn btn-default" onClick={this.handleExportTickets}>
-                                {T.translate("ticket_list.export")}
-                            </button>
+                        <div className="col-md-6">
+                            <SegmentedControl
+                              name="completedFilter"
+                              options={[
+                                  { label: T.translate("ticket_list.all"), value: null, default: filters.completedFilter === null},
+                                  { label: T.translate("ticket_list.complete"), value: "Complete",default: filters.completedFilter === "Complete" },
+                                  { label: T.translate("ticket_list.incomplete"), value: "Incomplete",default: filters.completedFilter === "Incomplete" },
+                              ]}
+                              setValue={val => this.handleFilterChange('completedFilter', val)}
+                              style={{ width: "100%", height:40, color: '#337ab7' , fontSize: '10px' }}
+                            />
                         </div>
                     </div>
                     <div className="row">
@@ -358,13 +372,13 @@ class TicketListPage extends React.Component {
                         </div>
                         <div className="col-md-6">
                             <SegmentedControl
-                              name="completedFilter"
+                              name="amountFilter"
                               options={[
-                                  { label: T.translate("ticket_list.all"), value: null, default: filters.completedFilter === null},
-                                  { label: T.translate("ticket_list.complete"), value: "Complete",default: filters.completedFilter === "Complete" },
-                                  { label: T.translate("ticket_list.incomplete"), value: "Incomplete",default: filters.completedFilter === "Incomplete" },
+                                  { label: T.translate("ticket_list.all"), value: null, default: filters.amountFilter === null},
+                                  { label: T.translate("ticket_list.paid"), value: "Paid",default: filters.amountFilter === "Paid" },
+                                  { label: T.translate("ticket_list.free"), value: "Free",default: filters.amountFilter === "Free" },
                               ]}
-                              setValue={val => this.handleFilterChange('completedFilter', val)}
+                              setValue={val => this.handleFilterChange('amountFilter', val)}
                               style={{ width: "100%", height:40, color: '#337ab7' , fontSize: '10px' }}
                             />
                         </div>
@@ -446,7 +460,8 @@ class TicketListPage extends React.Component {
                                   className="form-check-input"
                                 />
                                 <label className="form-check-label" htmlFor="show_printable">
-                                    {T.translate("ticket_list.show_printable")}
+                                    {T.translate("ticket_list.show_printable")} &nbsp;
+                                    <i className="fa fa-info-circle" aria-hidden="true" title={T.translate("ticket_list.show_printable_info")} />
                                 </label>
                             </div>
                         </div>
