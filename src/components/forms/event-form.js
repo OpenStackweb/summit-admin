@@ -44,7 +44,8 @@ class EventForm extends React.Component {
         this.state = {
             entity: {...props.entity},
             showSection: 'main',
-            errors: props.errors
+            errors: props.errors,
+            publish: false,
         };
 
         this.formRef = React.createRef();
@@ -67,6 +68,7 @@ class EventForm extends React.Component {
         this.handleDeleteEventFeedback = this.handleDeleteEventFeedback.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.triggerFormSubmit = this.triggerFormSubmit.bind(this);
+        this.handleUnpublish = this.handleUnpublish.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -237,14 +239,15 @@ class EventForm extends React.Component {
         this.setState({entity: entity});
     }
 
-
-    triggerFormSubmit(publish, ev) {
+    triggerFormSubmit(ev, publish = false) {
         ev.preventDefault();
         // do regular submit
         const entity = { ... this.state.entity };
         // check current ( could not be rendered)
         if(this.formRef.current) {
-            this.formRef.current.dispatchEvent(new Event("submit", {cancelable: true, bubbles: true}));
+            this.setState({...this.state, publish}, () => {
+                this.formRef.current.dispatchEvent(new Event("submit", {cancelable: true, bubbles: true}));
+            });
             return;
         }
 
@@ -253,7 +256,7 @@ class EventForm extends React.Component {
             delete entity.extra_questions;
         }
 
-        this.props.onSubmit(entity);
+        this.props.onSubmit(entity, publish);
     }
 
     handleSubmit(formValues) {
@@ -268,11 +271,11 @@ class EventForm extends React.Component {
             formattedAnswers.push(newQuestion);
         });
 
-        this.setState({...this.state, entity: {...this.state.entity, extra_questions: formattedAnswers}}, () => {
-            this.props.onSubmit(this.state.entity);
+        let { publish } = this.state;
+        this.setState({...this.state, entity: {...this.state.entity, extra_questions: formattedAnswers}, publish: false}, () => {
+            this.props.onSubmit(this.state.entity, publish);
         });
     }
-
 
     handleUnpublish(ev) {
         ev.preventDefault();
@@ -1047,9 +1050,9 @@ class EventForm extends React.Component {
                     <div className="col-md-12 submit-buttons">
                         {!entity.is_published &&
                         <div>
-                            <input type="button" onClick={this.triggerFormSubmit.bind(this, false)}
+                            <input type="button" onClick={(ev) => this.triggerFormSubmit(ev, false)}
                                    className="btn btn-primary pull-right" value={T.translate("general.save")}/>
-                            <input type="button" onClick={this.triggerFormSubmit.bind(this, true)}
+                            <input type="button" onClick={(ev) => this.triggerFormSubmit(ev, true)}
                                    className="btn btn-success pull-right"
                                    value={T.translate("general.save_and_publish")}/>
                         </div>
@@ -1059,13 +1062,13 @@ class EventForm extends React.Component {
                         <div>
                             <input
                                 type="button"
-                                onClick={this.triggerFormSubmit.bind(this, true)}
+                                onClick={(ev) => this.triggerFormSubmit(ev, true)}
                                 className="btn btn-success pull-right"
                                 value={T.translate("general.save_and_publish")}
                             />
                             <input
                                 type="button"
-                                onClick={this.triggerFormSubmit.bind(this)}
+                                onClick={(ev) => this.handleUnpublish(ev)}
                                 className="btn btn-danger pull-right"
                                 value={T.translate("edit_event.unpublish")}
                             />
