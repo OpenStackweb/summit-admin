@@ -22,7 +22,7 @@ import {
     escapeFilterValue,
     getCSV
 } from 'openstack-uicore-foundation/lib/utils/actions';
-import {getAccessTokenSafely} from '../utils/methods';
+import {getAccessTokenSafely, fetchResponseHandler, fetchErrorHandler} from '../utils/methods';
 
 export const REQUEST_TRACK_CHAIRS       = 'REQUEST_TRACK_CHAIRS';
 export const RECEIVE_TRACK_CHAIRS       = 'RECEIVE_TRACK_CHAIRS';
@@ -35,6 +35,8 @@ export const PROGRESS_FLAG_UPDATED        = 'PROGRESS_FLAG_UPDATED';
 export const PROGRESS_FLAG_ADDED          = 'PROGRESS_FLAG_ADDED';
 export const PROGRESS_FLAG_DELETED        = 'PROGRESS_FLAG_DELETED';
 export const PROGRESS_FLAG_REORDERED      = 'PROGRESS_FLAG_REORDERED';
+
+const callDelay = 500; //miliseconds
 
 export const getTrackChairs = (trackId = null, term = '', page = 1, perPage = 10, order = 'id', orderDir = 1 ) => async (dispatch, getState) => {
 
@@ -245,6 +247,23 @@ export const getProgressFlags = () => async (dispatch, getState) => {
         }
     );
 };
+
+export const querySummitProgressFlags = _.debounce(async (summitId, input, callback) => {
+
+    const accessToken = await getAccessTokenSafely();
+    input = escapeFilterValue(input);
+    let filters = encodeURIComponent(`label=@${input}`);
+
+    fetch(`${window.API_BASE_URL}/api/v1/summits/${summitId}/presentation-action-types?filter=${filters}&&access_token=${accessToken}`)
+        .then(fetchResponseHandler)
+        .then((json) => {
+            let options = [...json.data.map(d => ({...d, name: d.label}))];
+
+            callback(options);
+        })
+        .catch(fetchErrorHandler);
+
+}, callDelay);
 
 export const addProgressFlag = (flagName) => async (dispatch, getState) => {
     const { currentSummitState } = getState();

@@ -341,11 +341,16 @@
     "moderator_notification_email_template": "Moderator emails",
     "speaker_notification_email_template": "Speaker emails",
     "rating_type_remove_warning": "Are you sure you want to remove rating type",
+    "presentation_action_types": "Progress Flags (Presentation Action Types)",
+    "add_presentation_action_type": "Add Progress Flag",
+    "no_presentation_action_types": "No progress flags found",
+    "presentation_action_type_remove_warning": "Are you sure you want to remove progress flag",
     "placeholders": {
       "creator_notification_email_select_template": "Select a creator notification email template...",
       "moderator_notification_email_select_template": "Select a moderator notification email template...",
       "speaker_notification_email_select_template": "Select a speaker notification email template...",
-      "link_question": "Link an Existent Question..."
+      "link_question": "Link an Existent Question...",
+      "link_presentation_action_type": "Link an Existent Action Type..."
     }
   },
   "edit_event": {

@@ -14,11 +14,12 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
-import Swal from "sweetalert2";
 import {Breadcrumb} from "react-breadcrumbs";
-import {Input, SortableTable} from 'openstack-uicore-foundation/lib/components';
+import Swal from "sweetalert2";
+import {Input, Table} from 'openstack-uicore-foundation/lib/components';
+import FragmentParser from "../../utils/fragmen-parser";
 
-import { getProgressFlags, deleteProgressFlag, saveProgressFlag, addProgressFlag, reorderProgressFlags } from "../../actions/track-chair-actions";
+import { getProgressFlags, deleteProgressFlag, saveProgressFlag, addProgressFlag } from "../../actions/track-chair-actions";
 
 import '../../styles/progress-flags-page.less';
 
@@ -32,6 +33,7 @@ class ProgressFlagsPage extends React.Component {
             flagLabel: '',
             progressFlagId: null
         }
+        this.fragmentParser = new FragmentParser();
     }
 
     componentDidMount() {
@@ -114,6 +116,11 @@ class ProgressFlagsPage extends React.Component {
 
         if(!currentSummit.id) return(<div />);
 
+        if(progressFlags.length > 0 && !showForm) {
+            const progressFlagId = this.fragmentParser.getParam('flag_id');
+            if (progressFlagId) setTimeout(() => this.handleEdit(parseInt(progressFlagId)), 100);
+        }
+
         return(
             <>
                 <Breadcrumb data={{ title: T.translate("progress_flags.progress_flags"), pathname: match.url }} />
@@ -152,12 +159,10 @@ class ProgressFlagsPage extends React.Component {
                                 <div className="no-items">{T.translate("progress_flags.no_items")}</div>
                             ) : (
                                 <div>
-                                    <SortableTable
+                                    <Table
                                         options={table_options}
                                         data={progressFlags}
                                         columns={columns}
-                                        dropCallback={this.props.reorderProgressFlags}
-                                        orderField="order"
                                     />
                                 </div>
                             )
@@ -179,7 +184,6 @@ export default connect (
         getProgressFlags,
         addProgressFlag,
         saveProgressFlag,
-        deleteProgressFlag,
-        reorderProgressFlags
+        deleteProgressFlag
     }
 )(ProgressFlagsPage);

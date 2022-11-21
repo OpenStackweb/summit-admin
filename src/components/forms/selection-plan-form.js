@@ -21,9 +21,8 @@ import {isEmpty, scrollToError, shallowEqual, stripTags} from "../../utils/metho
 import EmailTemplateInput from "../inputs/email-template-input";
 import { PresentationTypeClassName } from '../../utils/constants';
 import Many2ManyDropDown from "../inputs/many-2-many-dropdown";
-import {
-    querySelectionPlanExtraQuestions
-} from '../../actions/selection-plan-actions';
+import { querySelectionPlanExtraQuestions } from '../../actions/selection-plan-actions';
+import { querySummitProgressFlags } from '../../actions/track-chair-actions';
 
 class SelectionPlanForm extends React.Component {
     constructor(props) {
@@ -47,10 +46,15 @@ class SelectionPlanForm extends React.Component {
         this.handleAddRatingType = this.handleAddRatingType.bind(this);
         this.handleDeleteRatingType = this.handleDeleteRatingType.bind(this);
         this.handleEditRatingType = this.handleEditRatingType.bind(this);
+        this.handleAddProgressFlag = this.handleAddProgressFlag.bind(this);
+        this.handleEditProgressFlag = this.handleEditProgressFlag.bind(this);
+        this.handleRemoveProgressFlag = this.handleRemoveProgressFlag.bind(this);
         this.toggleSection = this.toggleSection.bind(this);
         this.handleNotificationEmailTemplateChange = this.handleNotificationEmailTemplateChange.bind(this);
         this.fetchSummitSelectionPlanExtraQuestions = this.fetchSummitSelectionPlanExtraQuestions.bind(this);
         this.linkSummitSelectionPlanExtraQuestion = this.linkSummitSelectionPlanExtraQuestion.bind(this);
+        this.fetchSummitPresentationActionTypes = this.fetchSummitPresentationActionTypes.bind(this);
+        this.linkSummitProgressFlag = this.linkSummitProgressFlag.bind(this);
     }
 
     fetchSummitSelectionPlanExtraQuestions(input, callback) {
@@ -173,6 +177,32 @@ class SelectionPlanForm extends React.Component {
         this.props.onDeleteRatingType(ratingTypeId)
     }
 
+    fetchSummitPresentationActionTypes(input, callback) {
+        let {currentSummit} = this.props;
+
+        if (!input) {
+            return Promise.resolve({ options: [] });
+        }
+        querySummitProgressFlags(currentSummit.id, input, callback);
+    }
+
+    linkSummitProgressFlag(progressFlag){
+        let {currentSummit} = this.props;
+        this.props.onAssignProgressFlag2SelectionPlan(currentSummit.id, this.state.entity.id, progressFlag.id);
+    }
+
+    handleAddProgressFlag() {
+        this.props.onAddProgressFlag();
+    }
+
+    handleEditProgressFlag(progressFlagId) {
+        this.props.onEditProgressFlag(progressFlagId)
+    }
+
+    handleRemoveProgressFlag(progressFlagId) {
+        this.props.onUnassignProgressFlag(progressFlagId)
+    }
+
     toggleSection(section) {
         let {showSection} = this.state;
         let newShowSection = (showSection === section) ? 'main' : section;
@@ -181,7 +211,7 @@ class SelectionPlanForm extends React.Component {
     
     render() {
         const {entity, showSection} = this.state;
-        const { currentSummit, extraQuestionsOrderDir, extraQuestionsOrder } = this.props;
+        const { currentSummit, extraQuestionsOrderDir, extraQuestionsOrder, actionTypesOrderDir, actionTypesOrder } = this.props;
 
         let trackGroupsColumns = [
             { columnKey: 'name', value: T.translate("edit_selection_plan.name") },
@@ -240,6 +270,19 @@ class SelectionPlanForm extends React.Component {
                 delete: { onClick: this.handleDeleteRatingType }
             }
         };
+
+        const actionTypesColumns = [
+            { columnKey: 'label', value: T.translate("progress_flags.label") },
+        ];
+
+        const actionTypesOptions = {
+            sortCol: actionTypesOrder,
+            sortDir: actionTypesOrderDir,
+            actions: {
+                edit: { onClick: this.handleEditProgressFlag },
+                delete: { onClick: this.handleRemoveProgressFlag },
+            }
+        }
 
         return (
             <form className="selection-plan-form">
@@ -502,6 +545,37 @@ class SelectionPlanForm extends React.Component {
                                 dropCallback={this.props.onUpdateRatingTypeOrder}
                                 orderField="order"
                             />
+                        </Panel>
+                        <Panel
+                            show={showSection === 'presentation_action_types'}
+                            title={T.translate("edit_selection_plan.presentation_action_types")}
+                            handleClick={() => {this.toggleSection('presentation_action_types')}}
+                        >
+                            <div className={'row'}>
+                                <Many2ManyDropDown id="addAllowedPresentationActionType"
+                                       isClearable={true}
+                                       placeholder={T.translate("edit_selection_plan.placeholders.link_presentation_action_type")}
+                                       fetchOptions={this.fetchSummitPresentationActionTypes}
+                                       onAdd={this.linkSummitProgressFlag}
+                                />
+                                <div className="col-md-6 text-right col-md-offset-6">
+                                    <button className="btn btn-primary right-space" onClick={this.handleAddProgressFlag}>
+                                        {T.translate("edit_selection_plan.add_presentation_action_type")}
+                                    </button>
+                                </div>
+                            </div>
+                            { entity.allowed_presentation_action_types.length === 0 &&
+                            <div>{T.translate("edit_selection_plan.no_presentation_action_types")}</div>
+                            }
+                            {entity.allowed_presentation_action_types.length > 0 &&
+                                <SortableTable
+                                    options={actionTypesOptions}
+                                    data={entity.allowed_presentation_action_types}
+                                    columns={actionTypesColumns}
+                                    dropCallback={this.props.onUpdateProgressFlagOrder}
+                                    orderField="order"
+                                />
+                            }
                         </Panel>
                     </>
                 }

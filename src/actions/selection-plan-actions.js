@@ -37,6 +37,7 @@ export const SELECTION_PLAN_DELETED = 'SELECTION_PLAN_DELETED';
 export const TRACK_GROUP_REMOVED = 'TRACK_GROUP_REMOVED';
 export const TRACK_GROUP_ADDED = 'TRACK_GROUP_ADDED';
 export const SELECTION_PLAN_ASSIGNED_EXTRA_QUESTION = 'SELECTION_PLAN_ASSIGNED_EXTRA_QUESTION';
+
 const callDelay = 500; //miliseconds
 
 export const getSelectionPlan = (selectionPlanId) => async (dispatch, getState) => {
@@ -57,8 +58,9 @@ export const getSelectionPlan = (selectionPlanId) => async (dispatch, getState) 
         createAction(RECEIVE_SELECTION_PLAN),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}`,
         authErrorHandler
-    )(params)(dispatch).then((data) => {
+    )(params)(dispatch).then(() => {
             dispatch(stopLoading());
+            dispatch(getSelectionPlanProgressFlags(currentSummit.id, selectionPlanId));
         }
     );
 };
@@ -610,3 +612,100 @@ export const assignExtraQuestion2SelectionPlan = (summitId, selectionPlanId, que
             dispatch(showSuccessMessage(T.translate("edit_selection_plan.selection_plan_saved")));
         });
 }
+
+/***********************  PROGRESS FLAGS / PRESENTATION ACTION TYPES  ********************************/
+
+export const RECEIVE_SELECTION_PLAN_PROGRESS_FLAGS = 'RECEIVE_SELECTION_PLAN_PROGRESS_FLAGS';
+export const SELECTION_PLAN_ASSIGNED_PROGRESS_FLAG = 'SELECTION_PLAN_ASSIGNED_PROGRESS_FLAG';
+export const SELECTION_PLAN_PROGRESS_FLAG_REMOVED = 'SELECTION_PLAN_PROGRESS_FLAG_REMOVED';
+export const SELECTION_PLAN_PROGRESS_FLAG_ORDER_UPDATED = 'SELECTION_PLAN_PROGRESS_FLAG_ORDER_UPDATED';
+
+export const getSelectionPlanProgressFlags = (summitId, selectionPlanId) => async (dispatch) => {
+
+    const accessToken = await getAccessTokenSafely();
+
+    dispatch(startLoading());
+
+    const params = {
+        page: 1,
+        per_page: 100,
+        order: '+order',
+        access_token: accessToken
+    };
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_SELECTION_PLAN_PROGRESS_FLAGS),
+        `${window.API_BASE_URL}/api/v1/summits/${summitId}/selection-plans/${selectionPlanId}/allowed-presentation-action-types`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const assignProgressFlag2SelectionPlan = (summitId, selectionPlanId, progressFlagId) => async (dispatch, getState) => {
+    const accessToken = await getAccessTokenSafely();
+    dispatch(startLoading());
+    postRequest(
+        null,
+        createAction(SELECTION_PLAN_ASSIGNED_PROGRESS_FLAG),
+        `${window.API_BASE_URL}/api/v1/summits/${summitId}/selection-plans/${selectionPlanId}/allowed-presentation-action-types/${progressFlagId}?access_token=${accessToken}`,
+        {},
+        authErrorHandler
+    )({})(dispatch)
+        .then((payload) => {
+            dispatch(stopLoading());
+            dispatch(showSuccessMessage(T.translate("edit_selection_plan.selection_plan_saved")));
+        });
+}
+
+export const updateProgressFlagOrder = (selectionPlanId, progressFlags, progressFlagId, newOrder) => async (dispatch, getState) => {
+
+    const {currentSummitState} = getState();
+    const accessToken = await getAccessTokenSafely();
+    const {currentSummit} = currentSummitState;
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token: accessToken
+    };
+
+    let progressFlag = progressFlags.find(r => r.id === progressFlagId);
+
+    progressFlag.order = newOrder;
+
+    return putRequest(
+        null,
+        createAction(SELECTION_PLAN_PROGRESS_FLAG_ORDER_UPDATED)(progressFlags),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}/allowed-presentation-action-types/${progressFlagId}`,
+        progressFlag,
+        authErrorHandler
+    )(params)(dispatch).then((data) => {
+            dispatch(stopLoading());
+        }
+    );
+}
+
+export const unassignProgressFlagFromSelectionPlan = (selectionPlanId, progressFlagId) => async (dispatch, getState) => {
+
+    const {currentSummitState} = getState();
+    const accessToken = await getAccessTokenSafely();
+    const {currentSummit} = currentSummitState;
+
+    const params = {
+        access_token: accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(SELECTION_PLAN_PROGRESS_FLAG_REMOVED)({progressFlagId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}/allowed-presentation-action-types/${progressFlagId}`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};

@@ -25,6 +25,9 @@ import {
     updateRatingTypeOrder,
     deleteRatingType,
     assignExtraQuestion2SelectionPlan,
+    assignProgressFlag2SelectionPlan,
+    updateProgressFlagOrder,
+    unassignProgressFlagFromSelectionPlan,
 } from "../../actions/selection-plan-actions";
 import Swal from "sweetalert2";
 
@@ -40,6 +43,10 @@ class EditSelectionPlanPage extends React.Component {
         this.onEditRatingType = this.onEditRatingType.bind(this);
         this.onDeleteRatingType = this.onDeleteRatingType.bind(this);
         this.onUpdateRatingTypeOrder = this.onUpdateRatingTypeOrder.bind(this);
+        this.onAddProgressFlag = this.onAddProgressFlag.bind(this);
+        this.onEditProgressFlag = this.onEditProgressFlag.bind(this);
+        this.onUnassignProgressFlag = this.onUnassignProgressFlag.bind(this);
+        this.onUpdateProgressFlagOrder = this.onUpdateProgressFlagOrder.bind(this);
     }
 
     onDeleteExtraQuestion(questionId){
@@ -105,6 +112,38 @@ class EditSelectionPlanPage extends React.Component {
             }
         });
     }
+    
+    onAddProgressFlag(){
+        const {currentSummit, history} = this.props;
+        history.push(`/app/summits/${currentSummit.id}/progress-flags`);
+    }
+
+    onEditProgressFlag(progressFlagId){
+        const {currentSummit, history} = this.props;
+        history.push(`/app/summits/${currentSummit.id}/progress-flags#flag_id=${progressFlagId}`);
+    }
+
+    onUpdateProgressFlagOrder(progressFlags, progressFlagId, newOrder){
+        const {entity} = this.props;
+        this.props.updateProgressFlagOrder(entity.id, progressFlags, progressFlagId, newOrder);
+    }
+
+    onUnassignProgressFlag(progressFlagId){
+        const {unassignProgressFlagFromSelectionPlan, entity} = this.props;
+        let ratingType = entity.allowed_presentation_action_types.find(t => t.id === progressFlagId);
+        Swal.fire({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("edit_selection_plan.presentation_action_type_remove_warning") + ' ' + ratingType.label,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: T.translate("general.yes_delete")
+        }).then(function(result){
+            if (result.value) {
+                unassignProgressFlagFromSelectionPlan(entity.id, progressFlagId);
+            }
+        });
+    }
 
     render(){
         const {currentSummit, entity, errors, match, extraQuestionsOrder, extraQuestionsOrderDir} = this.props;
@@ -134,6 +173,11 @@ class EditSelectionPlanPage extends React.Component {
                     onUpdateRatingTypeOrder={this.onUpdateRatingTypeOrder}
                     onDeleteRatingType={this.onDeleteRatingType}
                     onAssignExtraQuestion2SelectionPlan={this.props.assignExtraQuestion2SelectionPlan}
+                    onAddProgressFlag={this.onAddProgressFlag}
+                    onEditProgressFlag={this.onEditProgressFlag}
+                    onAssignProgressFlag2SelectionPlan={this.props.assignProgressFlag2SelectionPlan}
+                    onUnassignProgressFlag={this.onUnassignProgressFlag}
+                    onUpdateProgressFlagOrder={this.onUpdateProgressFlagOrder}
                 />
             </div>
         )
@@ -158,5 +202,8 @@ export default connect (
         updateRatingTypeOrder,
         deleteRatingType,
         assignExtraQuestion2SelectionPlan,
+        assignProgressFlag2SelectionPlan,
+        updateProgressFlagOrder,
+        unassignProgressFlagFromSelectionPlan,
     }
 )(EditSelectionPlanPage);
