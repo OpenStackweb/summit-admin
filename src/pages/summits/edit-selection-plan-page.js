@@ -28,6 +28,9 @@ import {
     assignProgressFlag2SelectionPlan,
     updateProgressFlagOrder,
     unassignProgressFlagFromSelectionPlan,
+    addAllowedMemberToSelectionPlan,
+    removeAllowedMemberFromSelectionPlan,
+    getAllowedMembers,
 } from "../../actions/selection-plan-actions";
 import Swal from "sweetalert2";
 
@@ -146,7 +149,7 @@ class EditSelectionPlanPage extends React.Component {
     }
 
     render(){
-        const {currentSummit, entity, errors, match, extraQuestionsOrder, extraQuestionsOrderDir} = this.props;
+        const {currentSummit, entity, allowedMembers, errors, match, extraQuestionsOrder, extraQuestionsOrderDir} = this.props;
         const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
 
         return(
@@ -155,6 +158,7 @@ class EditSelectionPlanPage extends React.Component {
                 <hr/>
                 <SelectionPlanForm
                     entity={entity}
+                    allowedMembers={allowedMembers}
                     currentSummit={currentSummit}
                     errors={errors}
                     extraQuestionsOrder={extraQuestionsOrder}
@@ -178,6 +182,9 @@ class EditSelectionPlanPage extends React.Component {
                     onAssignProgressFlag2SelectionPlan={this.props.assignProgressFlag2SelectionPlan}
                     onUnassignProgressFlag={this.onUnassignProgressFlag}
                     onUpdateProgressFlagOrder={this.onUpdateProgressFlagOrder}
+                    onAllowedMemberLink={this.props.addAllowedMemberToSelectionPlan}
+                    onAllowedMemberUnLink={this.props.removeAllowedMemberFromSelectionPlan}
+                    onAllowedMembersPageChange={this.props.getAllowedMembers}
                 />
             </div>
         )
@@ -205,5 +212,8 @@ export default connect (
         assignProgressFlag2SelectionPlan,
         updateProgressFlagOrder,
         unassignProgressFlagFromSelectionPlan,
+        addAllowedMemberToSelectionPlan,
+        removeAllowedMemberFromSelectionPlan,
+        getAllowedMembers,
     }
 )(EditSelectionPlanPage);

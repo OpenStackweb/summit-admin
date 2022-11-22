@@ -23,6 +23,9 @@ import {
     SELECTION_PLAN_ASSIGNED_PROGRESS_FLAG,
     SELECTION_PLAN_PROGRESS_FLAG_ORDER_UPDATED,
     SELECTION_PLAN_PROGRESS_FLAG_REMOVED,
+    RECEIVE_ALLOWED_MEMBERS,
+    ALLOWED_MEMBER_REMOVED,
+    ALLOWED_MEMBER_ADDED,
 } from '../../actions/selection-plan-actions';
 
 export const DEFAULT_ENTITY = {
@@ -53,6 +56,7 @@ export const DEFAULT_ENTITY = {
 
 const DEFAULT_STATE = {
     entity: DEFAULT_ENTITY,
+    allowedMembers: {data: [], currentPage: 1, lastPage: 1},
     errors: {}
 }
 
@@ -67,16 +71,13 @@ const selectionPlanReducer = (state = DEFAULT_STATE, action) => {
                 return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
             }
         }
-        break;
         case SET_CURRENT_SUMMIT:
         case RESET_SELECTION_PLAN_FORM: {
             return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
         }
-        break;
         case UPDATE_SELECTION_PLAN: {
             return {...state,  entity: {...payload}, errors: {} };
         }
-        break;
         case SELECTION_PLAN_ADDED:
         case RECEIVE_SELECTION_PLAN: {
             let entity = {...payload.response};
@@ -89,16 +90,18 @@ const selectionPlanReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
         }
-        break;
         case SELECTION_PLAN_UPDATED: {
             return state;
         }
-        break;
+        case RECEIVE_ALLOWED_MEMBERS: {
+            const {data, current_page, last_page} = payload.response;
+            const members = data.map(d => ({...d, name: `${d.first_name} ${d.last_name}`}));
+            return {...state, allowedMembers: {data: members, currentPage: current_page, lastPage: last_page}};
+        }
         case SELECTION_PLAN_ASSIGNED_EXTRA_QUESTION:{
             let question = {...payload.response};
             return {...state, entity: {...state.entity, extra_questions: [...state.entity.extra_questions, question]} };
         }
-        break;
         case RECEIVE_SELECTION_PLAN_PROGRESS_FLAGS: {
             let progressFlags = payload.response.data.map(r => {
                 return {
@@ -133,33 +136,27 @@ const selectionPlanReducer = (state = DEFAULT_STATE, action) => {
             let trackGroups = state.entity.track_groups.filter(t => t.id !== trackGroupId);
             return {...state, entity: {...state.entity, track_groups: trackGroups} };
         }
-        break;
         case TRACK_GROUP_ADDED: {
             let trackGroup = {...payload.trackGroup};
             return {...state, entity: {...state.entity, track_groups: [...state.entity.track_groups, trackGroup]} };
         }
-        break;
         case EVENT_TYPE_REMOVED: {
             let {eventTypeId} = payload;
             let eventTypes = state.entity.event_types.filter(t => t.id !== eventTypeId);
             return {...state, entity: {...state.entity, event_types: eventTypes} };
         }
-        break;
         case EVENT_TYPE_ADDED: {
             let eventType = {...payload.eventType};
             return {...state, entity: {...state.entity, event_types: [...state.entity.event_types, eventType]} };
         }
-        break;
         case SELECTION_PLAN_EXTRA_QUESTION_ADDED:{
             let question = {...payload.response};
             return {...state, entity: {...state.entity, extra_questions:[...state.entity.extra_questions, question]}}
         }
-        break
         case SELECTION_PLAN_EXTRA_QUESTION_DELETED:{
             let {questionId} = payload;
             return {...state, entity: {...state.entity, extra_questions:state.entity.extra_questions.filter(t => t.id !== questionId)}}
         }
-        break
         case SELECTION_PLAN_EXTRA_QUESTION_UPDATED:
         {
             let question = {...payload.response};
@@ -174,7 +171,6 @@ const selectionPlanReducer = (state = DEFAULT_STATE, action) => {
             });
             return {...state, entity: {...state.entity, extra_questions : extra_questions}}
         }
-        break;
 
         case SELECTION_PLAN_EXTRA_QUESTION_ORDER_UPDATED: {
             let extra_questions = payload.map((q, i) => {
@@ -214,10 +210,18 @@ const selectionPlanReducer = (state = DEFAULT_STATE, action) => {
             })
             return {...state, entity: {...state.entity, track_chair_rating_types : track_chair_rating_types}}
         }
+        case ALLOWED_MEMBER_REMOVED: {
+            let {memberId} = payload;
+            let allowedMembers = state.allowedMembers.data.filter(t => t.id !== memberId);
+            return {...state, allowedMembers: {...state.allowedMembers, data: allowedMembers} };
+        }
+        case ALLOWED_MEMBER_ADDED: {
+            let member = {...payload.member, name: `${payload.member.first_name} ${payload.member.last_name}`};
+            return {...state, allowedMembers: {...state.allowedMembers, data: [...state.allowedMembers.data, member]} };
+        }
         case VALIDATE: {
             return {...state,  errors: payload.errors };
         }
-        break;
         default:
             return state;
     }

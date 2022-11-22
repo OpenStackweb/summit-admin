@@ -37,6 +37,14 @@ export const SELECTION_PLAN_DELETED = 'SELECTION_PLAN_DELETED';
 export const TRACK_GROUP_REMOVED = 'TRACK_GROUP_REMOVED';
 export const TRACK_GROUP_ADDED = 'TRACK_GROUP_ADDED';
 export const SELECTION_PLAN_ASSIGNED_EXTRA_QUESTION = 'SELECTION_PLAN_ASSIGNED_EXTRA_QUESTION';
+export const REQUEST_ALLOWED_MEMBERS = 'REQUEST_ALLOWED_MEMBERS';
+export const RECEIVE_ALLOWED_MEMBERS = 'RECEIVE_ALLOWED_MEMBERS';
+export const ALLOWED_MEMBER_REMOVED = 'ALLOWED_MEMBER_REMOVED';
+export const ALLOWED_MEMBER_ADDED = 'ALLOWED_MEMBER_ADDED';
+export const RECEIVE_SELECTION_PLAN_PROGRESS_FLAGS = 'RECEIVE_SELECTION_PLAN_PROGRESS_FLAGS';
+export const SELECTION_PLAN_ASSIGNED_PROGRESS_FLAG = 'SELECTION_PLAN_ASSIGNED_PROGRESS_FLAG';
+export const SELECTION_PLAN_PROGRESS_FLAG_REMOVED = 'SELECTION_PLAN_PROGRESS_FLAG_REMOVED';
+export const SELECTION_PLAN_PROGRESS_FLAG_ORDER_UPDATED = 'SELECTION_PLAN_PROGRESS_FLAG_ORDER_UPDATED';
 
 const callDelay = 500; //miliseconds
 
@@ -58,11 +66,11 @@ export const getSelectionPlan = (selectionPlanId) => async (dispatch, getState) 
         createAction(RECEIVE_SELECTION_PLAN),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}`,
         authErrorHandler
-    )(params)(dispatch).then(() => {
-            dispatch(stopLoading());
-            dispatch(getSelectionPlanProgressFlags(currentSummit.id, selectionPlanId));
-        }
-    );
+    )(params)(dispatch).then(async () => {
+        await dispatch(getAllowedMembers(selectionPlanId))
+        await dispatch(getSelectionPlanProgressFlags(currentSummit.id, selectionPlanId));
+        dispatch(stopLoading());
+    });
 };
 
 export const resetSelectionPlanForm = () => (dispatch, getState) => {
@@ -613,12 +621,88 @@ export const assignExtraQuestion2SelectionPlan = (summitId, selectionPlanId, que
         });
 }
 
+
+/***********************  ALLOWED MEMBERS  *******************************************/
+
+
+export const getAllowedMembers = (selectionPlanId, page = 1) => async (dispatch, getState) => {
+    const {currentSummitState} = getState();
+    const accessToken = await getAccessTokenSafely();
+    const {currentSummit} = currentSummitState;
+
+    if (!currentSummit.id) return;
+
+    dispatch(startLoading());
+
+    const params = {
+        page: page,
+        per_page: 10,
+        access_token: accessToken,
+    };
+
+    return getRequest(
+      createAction(REQUEST_ALLOWED_MEMBERS),
+      createAction(RECEIVE_ALLOWED_MEMBERS),
+      `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}/allowed-members`,
+      authErrorHandler
+    )(params)(dispatch).then(() => {
+          dispatch(stopLoading());
+      }
+    );
+};
+
+
+export const addAllowedMemberToSelectionPlan = (selectionPlanId, member) => async (dispatch, getState) => {
+
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token: accessToken
+    };
+
+    return putRequest(
+      null,
+      createAction(ALLOWED_MEMBER_ADDED)({member}),
+      `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}/allowed-members/${member.id}`,
+      {},
+      authErrorHandler
+    )(params)(dispatch).then(() => {
+          dispatch(stopLoading());
+      }
+    );
+};
+
+export const removeAllowedMemberFromSelectionPlan = (selectionPlanId, memberId) => async (dispatch, getState) => {
+
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token: accessToken
+    };
+
+    return deleteRequest(
+      null,
+      createAction(ALLOWED_MEMBER_REMOVED)({memberId}),
+      `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}/allowed-members/${memberId}`,
+      null,
+      authErrorHandler
+    )(params)(dispatch).then(() => {
+          dispatch(stopLoading());
+      }
+    );
+};
+
+
 /***********************  PROGRESS FLAGS / PRESENTATION ACTION TYPES  ********************************/
 
-export const RECEIVE_SELECTION_PLAN_PROGRESS_FLAGS = 'RECEIVE_SELECTION_PLAN_PROGRESS_FLAGS';
-export const SELECTION_PLAN_ASSIGNED_PROGRESS_FLAG = 'SELECTION_PLAN_ASSIGNED_PROGRESS_FLAG';
-export const SELECTION_PLAN_PROGRESS_FLAG_REMOVED = 'SELECTION_PLAN_PROGRESS_FLAG_REMOVED';
-export const SELECTION_PLAN_PROGRESS_FLAG_ORDER_UPDATED = 'SELECTION_PLAN_PROGRESS_FLAG_ORDER_UPDATED';
 
 export const getSelectionPlanProgressFlags = (summitId, selectionPlanId) => async (dispatch) => {
 
@@ -634,13 +718,13 @@ export const getSelectionPlanProgressFlags = (summitId, selectionPlanId) => asyn
     };
 
     return getRequest(
-        null,
-        createAction(RECEIVE_SELECTION_PLAN_PROGRESS_FLAGS),
-        `${window.API_BASE_URL}/api/v1/summits/${summitId}/selection-plans/${selectionPlanId}/allowed-presentation-action-types`,
-        authErrorHandler
+      null,
+      createAction(RECEIVE_SELECTION_PLAN_PROGRESS_FLAGS),
+      `${window.API_BASE_URL}/api/v1/summits/${summitId}/selection-plans/${selectionPlanId}/allowed-presentation-action-types`,
+      authErrorHandler
     )(params)(dispatch).then(() => {
-            dispatch(stopLoading());
-        }
+          dispatch(stopLoading());
+      }
     );
 };
 
@@ -648,16 +732,16 @@ export const assignProgressFlag2SelectionPlan = (summitId, selectionPlanId, prog
     const accessToken = await getAccessTokenSafely();
     dispatch(startLoading());
     postRequest(
-        null,
-        createAction(SELECTION_PLAN_ASSIGNED_PROGRESS_FLAG),
-        `${window.API_BASE_URL}/api/v1/summits/${summitId}/selection-plans/${selectionPlanId}/allowed-presentation-action-types/${progressFlagId}?access_token=${accessToken}`,
-        {},
-        authErrorHandler
+      null,
+      createAction(SELECTION_PLAN_ASSIGNED_PROGRESS_FLAG),
+      `${window.API_BASE_URL}/api/v1/summits/${summitId}/selection-plans/${selectionPlanId}/allowed-presentation-action-types/${progressFlagId}?access_token=${accessToken}`,
+      {},
+      authErrorHandler
     )({})(dispatch)
-        .then((payload) => {
-            dispatch(stopLoading());
-            dispatch(showSuccessMessage(T.translate("edit_selection_plan.selection_plan_saved")));
-        });
+      .then((payload) => {
+          dispatch(stopLoading());
+          dispatch(showSuccessMessage(T.translate("edit_selection_plan.selection_plan_saved")));
+      });
 }
 
 export const updateProgressFlagOrder = (selectionPlanId, progressFlags, progressFlagId, newOrder) => async (dispatch, getState) => {
@@ -677,14 +761,14 @@ export const updateProgressFlagOrder = (selectionPlanId, progressFlags, progress
     progressFlag.order = newOrder;
 
     return putRequest(
-        null,
-        createAction(SELECTION_PLAN_PROGRESS_FLAG_ORDER_UPDATED)(progressFlags),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}/allowed-presentation-action-types/${progressFlagId}`,
-        progressFlag,
-        authErrorHandler
+      null,
+      createAction(SELECTION_PLAN_PROGRESS_FLAG_ORDER_UPDATED)(progressFlags),
+      `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}/allowed-presentation-action-types/${progressFlagId}`,
+      progressFlag,
+      authErrorHandler
     )(params)(dispatch).then((data) => {
-            dispatch(stopLoading());
-        }
+          dispatch(stopLoading());
+      }
     );
 }
 
@@ -699,13 +783,13 @@ export const unassignProgressFlagFromSelectionPlan = (selectionPlanId, progressF
     };
 
     return deleteRequest(
-        null,
-        createAction(SELECTION_PLAN_PROGRESS_FLAG_REMOVED)({progressFlagId}),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}/allowed-presentation-action-types/${progressFlagId}`,
-        null,
-        authErrorHandler
+      null,
+      createAction(SELECTION_PLAN_PROGRESS_FLAG_REMOVED)({progressFlagId}),
+      `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}/allowed-presentation-action-types/${progressFlagId}`,
+      null,
+      authErrorHandler
     )(params)(dispatch).then(() => {
-            dispatch(stopLoading());
-        }
+          dispatch(stopLoading());
+      }
     );
 };

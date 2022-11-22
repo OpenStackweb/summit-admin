@@ -15,14 +15,15 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import {epochToMomentTimeZone} from 'openstack-uicore-foundation/lib/utils/methods'
-import { queryTrackGroups, queryEventTypes} from 'openstack-uicore-foundation/lib/utils/query-actions'
-import {Input, DateTimePicker, SimpleLinkList, SortableTable, TextEditor, Panel} from 'openstack-uicore-foundation/lib/components';
+import {queryTrackGroups, queryEventTypes, queryMembers} from 'openstack-uicore-foundation/lib/utils/query-actions'
+import {Input, DateTimePicker, SimpleLinkList, SortableTable, TextEditor, Panel, Table} from 'openstack-uicore-foundation/lib/components';
 import {isEmpty, scrollToError, shallowEqual, stripTags} from "../../utils/methods";
 import EmailTemplateInput from "../inputs/email-template-input";
 import { PresentationTypeClassName } from '../../utils/constants';
 import Many2ManyDropDown from "../inputs/many-2-many-dropdown";
 import { querySelectionPlanExtraQuestions } from '../../actions/selection-plan-actions';
 import { querySummitProgressFlags } from '../../actions/track-chair-actions';
+import {Pagination} from "react-bootstrap";
 
 class SelectionPlanForm extends React.Component {
     constructor(props) {
@@ -52,9 +53,13 @@ class SelectionPlanForm extends React.Component {
         this.toggleSection = this.toggleSection.bind(this);
         this.handleNotificationEmailTemplateChange = this.handleNotificationEmailTemplateChange.bind(this);
         this.fetchSummitSelectionPlanExtraQuestions = this.fetchSummitSelectionPlanExtraQuestions.bind(this);
+        this.fetchMembers = this.fetchMembers.bind(this);
         this.linkSummitSelectionPlanExtraQuestion = this.linkSummitSelectionPlanExtraQuestion.bind(this);
         this.fetchSummitPresentationActionTypes = this.fetchSummitPresentationActionTypes.bind(this);
         this.linkSummitProgressFlag = this.linkSummitProgressFlag.bind(this);
+        this.handleAllowedMemberLink = this.handleAllowedMemberLink.bind(this);
+        this.handleAllowedMemberUnLink = this.handleAllowedMemberUnLink.bind(this);
+        this.handleAllowedMembersPageChange = this.handleAllowedMembersPageChange.bind(this);
     }
 
     fetchSummitSelectionPlanExtraQuestions(input, callback) {
@@ -64,6 +69,13 @@ class SelectionPlanForm extends React.Component {
             return Promise.resolve({ options: [] });
         }
         querySelectionPlanExtraQuestions(currentSummit.id, input, callback);
+    }
+
+    fetchMembers(input, callback) {
+        if (!input) {
+            return Promise.resolve({ options: [] });
+        }
+        queryMembers(input, callback);
     }
 
     linkSummitSelectionPlanExtraQuestion(question){
@@ -203,6 +215,21 @@ class SelectionPlanForm extends React.Component {
         this.props.onUnassignProgressFlag(progressFlagId)
     }
 
+    handleAllowedMemberLink(value) {
+        const {entity} = this.state;
+        this.props.onAllowedMemberLink(entity.id, value);
+    }
+
+    handleAllowedMemberUnLink(valueId) {
+        const {entity} = this.state;
+        this.props.onAllowedMemberUnLink(entity.id, valueId);
+    }
+
+    handleAllowedMembersPageChange(page) {
+        const {entity} = this.state;
+        this.props.onAllowedMembersPageChange(entity.id, page);
+    }
+
     toggleSection(section) {
         let {showSection} = this.state;
         let newShowSection = (showSection === section) ? 'main' : section;
@@ -211,7 +238,7 @@ class SelectionPlanForm extends React.Component {
     
     render() {
         const {entity, showSection} = this.state;
-        const { currentSummit, extraQuestionsOrderDir, extraQuestionsOrder, actionTypesOrderDir, actionTypesOrder } = this.props;
+        const { currentSummit, extraQuestionsOrderDir, extraQuestionsOrder, actionTypesOrderDir, actionTypesOrder, allowedMembers } = this.props;
 
         let trackGroupsColumns = [
             { columnKey: 'name', value: T.translate("edit_selection_plan.name") },
@@ -283,6 +310,20 @@ class SelectionPlanForm extends React.Component {
                 delete: { onClick: this.handleRemoveProgressFlag },
             }
         }
+
+        let allowedMembersColumns = [
+            { columnKey: 'id', value: T.translate("edit_selection_plan.id") },
+            { columnKey: 'name', value: T.translate("edit_selection_plan.name") },
+            { columnKey: 'email', value: T.translate("edit_selection_plan.email") }
+        ];
+
+        let allowedMembersOptions = {
+            sortCol: 'name',
+            sortDir: 1,
+            actions: {
+                delete: { onClick: this.handleAllowedMemberUnLink }
+            }
+        };
 
         return (
             <form className="selection-plan-form">
@@ -547,16 +588,16 @@ class SelectionPlanForm extends React.Component {
                             />
                         </Panel>
                         <Panel
-                            show={showSection === 'presentation_action_types'}
-                            title={T.translate("edit_selection_plan.presentation_action_types")}
-                            handleClick={() => {this.toggleSection('presentation_action_types')}}
+                          show={showSection === 'presentation_action_types'}
+                          title={T.translate("edit_selection_plan.presentation_action_types")}
+                          handleClick={() => {this.toggleSection('presentation_action_types')}}
                         >
                             <div className={'row'}>
                                 <Many2ManyDropDown id="addAllowedPresentationActionType"
-                                       isClearable={true}
-                                       placeholder={T.translate("edit_selection_plan.placeholders.link_presentation_action_type")}
-                                       fetchOptions={this.fetchSummitPresentationActionTypes}
-                                       onAdd={this.linkSummitProgressFlag}
+                                                   isClearable={true}
+                                                   placeholder={T.translate("edit_selection_plan.placeholders.link_presentation_action_type")}
+                                                   fetchOptions={this.fetchSummitPresentationActionTypes}
+                                                   onAdd={this.linkSummitProgressFlag}
                                 />
                                 <div className="col-md-6 text-right col-md-offset-6">
                                     <button className="btn btn-primary right-space" onClick={this.handleAddProgressFlag}>
@@ -568,14 +609,46 @@ class SelectionPlanForm extends React.Component {
                             <div>{T.translate("edit_selection_plan.no_presentation_action_types")}</div>
                             }
                             {entity.allowed_presentation_action_types.length > 0 &&
-                                <SortableTable
-                                    options={actionTypesOptions}
-                                    data={entity.allowed_presentation_action_types}
-                                    columns={actionTypesColumns}
-                                    dropCallback={this.props.onUpdateProgressFlagOrder}
-                                    orderField="order"
-                                />
+                            <SortableTable
+                              options={actionTypesOptions}
+                              data={entity.allowed_presentation_action_types}
+                              columns={actionTypesColumns}
+                              dropCallback={this.props.onUpdateProgressFlagOrder}
+                              orderField="order"
+                            />
                             }
+                        </Panel>
+                        <Panel
+                          show={showSection === 'allowed_members'}
+                          title={T.translate("edit_selection_plan.allowed_members")}
+                          handleClick={() => {this.toggleSection('allowed_members')}}
+                        >
+                            <Many2ManyDropDown
+                              id="linkAllowedMembers"
+                              CSSClass="linkAllowedMembersDDL"
+                              isClearable={true}
+                              fetchOptions={this.fetchMembers}
+                              getOptionLabel={e => `${e.first_name} ${e.last_name} (${e.email})`}
+                              onAdd={this.handleAllowedMemberLink}
+                            />
+                            <Table
+                              data={allowedMembers.data}
+                              columns={allowedMembersColumns}
+                              options={allowedMembersOptions}
+                            />
+                            <Pagination
+                              bsSize="medium"
+                              prev
+                              next
+                              first
+                              last
+                              ellipsis
+                              boundaryLinks
+                              maxButtons={10}
+                              items={allowedMembers.lastPage}
+                              activePage={allowedMembers.currentPage}
+                              onSelect={this.handleAllowedMembersPageChange}
+                            />
                         </Panel>
                     </>
                 }
