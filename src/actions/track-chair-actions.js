@@ -234,6 +234,8 @@ export const getProgressFlags = () => async (dispatch, getState) => {
     dispatch(startLoading());
 
     const params = {
+        page         : 1,
+        per_page     : 100,
         access_token : accessToken,
     };
 
