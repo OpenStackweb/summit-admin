@@ -26,7 +26,8 @@ import
 } from '../../actions/event-actions';
 import moment from 'moment-timezone';
 
-import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/utils/actions';
+import { VALIDATE } from 'openstack-uicore-foundation/lib/utils/actions';
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 import { UNPUBLISHED_EVENT } from '../../actions/summit-builder-actions';
 import { EVENT_MATERIAL_ADDED, EVENT_MATERIAL_UPDATED, EVENT_MATERIAL_DELETED} from "../../actions/event-material-actions";

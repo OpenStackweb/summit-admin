@@ -18,7 +18,7 @@ import
     TAG_DELETED
 } from '../../actions/tag-actions';
 
-import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/utils/actions';
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
 
 import {epochToMoment} from "openstack-uicore-foundation/lib/utils/methods";
 

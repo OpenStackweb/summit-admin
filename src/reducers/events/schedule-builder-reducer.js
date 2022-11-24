@@ -35,7 +35,7 @@ import
     CHANGE_SUMMIT_BUILDER_FILTERS
 } from '../../actions/summit-builder-actions';
 
-import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/utils/actions';
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
 
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions'
 

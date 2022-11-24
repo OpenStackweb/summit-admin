@@ -20,7 +20,7 @@ import
     PROGRESS_FLAG_REORDERED
 } from '../../actions/track-chair-actions';
 
-import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/utils/actions';
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
 
 const DEFAULT_STATE = {
     progressFlags : [],

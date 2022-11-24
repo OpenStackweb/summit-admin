@@ -18,7 +18,7 @@ import
     SPEAKER_DELETED
 } from '../../actions/speaker-actions';
 
-import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/utils/actions';
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
 
 const DEFAULT_STATE = {
     speakers        : {},

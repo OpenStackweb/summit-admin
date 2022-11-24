@@ -18,7 +18,7 @@ import
     COMPANY_DELETED
 } from '../../actions/company-actions';
 
-import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/utils/actions';
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
 
 const DEFAULT_STATE = {
     companies        : {},

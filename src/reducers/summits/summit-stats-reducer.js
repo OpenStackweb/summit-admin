@@ -1,10 +1,5 @@
-import {LOGOUT_USER} from 'openstack-uicore-foundation/lib/utils/actions';
-import {
-  REQUEST_SUMMIT,
-  SUMMIT_ADDED,
-  RECEIVE_SUMMIT
-} from '../../actions/summit-actions';
-
+import {LOGOUT_USER} from 'openstack-uicore-foundation/lib/security/actions';
+import { REQUEST_SUMMIT } from '../../actions/summit-actions';
 import {RECEIVE_REGISTRATION_STATS} from '../../actions/summit-stats-actions'
 
 const DEFAULT_STATE = {

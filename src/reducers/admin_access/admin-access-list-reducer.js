@@ -18,7 +18,7 @@ import
     ADMIN_ACCESS_DELETED,
 } from '../../actions/admin-access-actions';
 
-import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/utils/actions';
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
 
 const DEFAULT_STATE = {
     admin_accesses  : [],

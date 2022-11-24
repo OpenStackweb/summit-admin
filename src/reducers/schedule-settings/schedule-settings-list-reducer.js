@@ -19,7 +19,7 @@ import
     DEFAULT_SCHEDULE_SETTINGS_SEEDED
 } from '../../actions/schedule-settings-actions';
 
-import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/utils/actions';
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
 import {boolToStr} from "../../utils/methods";
 import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 

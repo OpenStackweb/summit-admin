@@ -18,7 +18,8 @@ import {
     ORDER_EXTRA_QUESTION_SUB_QUESTION_ADDED
 } from '../../actions/order-actions';
 
-import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/utils/actions';
+import { VALIDATE } from 'openstack-uicore-foundation/lib/utils/actions';
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
 
 export const DEFAULT_ENTITY = {
     id: 0,

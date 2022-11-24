@@ -24,7 +24,8 @@ import
 
 import {AFFILIATION_ADDED, AFFILIATION_DELETED} from "../../actions/member-actions";
 
-import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/utils/actions';
+import { VALIDATE } from 'openstack-uicore-foundation/lib/utils/actions';
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 export const DEFAULT_ENTITY = {

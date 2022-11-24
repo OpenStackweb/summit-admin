@@ -23,7 +23,8 @@ import
     SPONSORED_PROJECT_SPONSORSHIP_TYPE_SUPPORTING_COMPANY_ADDED
 } from '../../actions/sponsored-project-actions';
 
-import { LOGOUT_USER, VALIDATE } from 'openstack-uicore-foundation/lib/utils/actions';
+import { VALIDATE } from 'openstack-uicore-foundation/lib/utils/actions';
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
 
 export const DEFAULT_ENTITY = {
     id: 0,

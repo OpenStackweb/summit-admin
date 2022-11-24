@@ -20,7 +20,7 @@ import
 } from '../../actions/room-booking-actions';
 
 import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
-import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/utils/actions';
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
 import {epochToMoment} from "openstack-uicore-foundation/lib/utils/methods";
 
 const DEFAULT_STATE = {

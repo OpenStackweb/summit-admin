@@ -19,7 +19,7 @@ import
 } from '../../actions/speaker-actions';
 
 import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
-import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/utils/actions';
+import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
 import {formatEpoch} from 'openstack-uicore-foundation/lib/utils/methods'
 
 const DEFAULT_STATE = {

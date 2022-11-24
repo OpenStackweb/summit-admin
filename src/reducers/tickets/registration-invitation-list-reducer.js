@@ -26,7 +26,7 @@ import
 } from '../../actions/registration-invitation-actions';
 
 import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
-import {LOGOUT_USER} from 'openstack-uicore-foundation/lib/utils/actions';
+import {LOGOUT_USER} from 'openstack-uicore-foundation/lib/security/actions';
 import { MaxTextLengthForTicketTypesOnTable, MaxTextLengthForTagsOnTable } from '../../utils/constants';
 
 const DEFAULT_STATE = {
