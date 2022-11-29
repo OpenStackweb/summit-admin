@@ -348,12 +348,14 @@
     "add_presentation_action_type": "Add Progress Flag",
     "no_presentation_action_types": "No progress flags found",
     "presentation_action_type_remove_warning": "Are you sure you want to remove progress flag",
+    "allowed_presentation_questions": "Allowed Questions",
     "placeholders": {
       "creator_notification_email_select_template": "Select a creator notification email template...",
       "moderator_notification_email_select_template": "Select a moderator notification email template...",
       "speaker_notification_email_select_template": "Select a speaker notification email template...",
       "link_question": "Link an Existent Question...",
-      "link_presentation_action_type": "Link an Existent Action Type..."
+      "link_presentation_action_type": "Link an Existent Action Type...",
+      "allowed_presentation_questions": "Select questions to display..."
     }
   },
   "edit_event": {
@@ -845,7 +847,6 @@
     "allows_publishing_dates": "Allows Publishing Dates",
     "available_cfp": "Should be available on CFP ?",
     "allows_attachment": "Allows Attachment?",
-    "allows_level": "Allows Level (of difficulty) choice?",
     "use_speakers": "Should use Speakers?",
     "are_speakers_mandatory": "Are Speakers Mandatory?",
     "allow_custom_ordering": "Allow Custom Ordering",

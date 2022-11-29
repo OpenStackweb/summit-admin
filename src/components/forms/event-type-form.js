@@ -135,15 +135,6 @@ class EventTypeForm extends React.Component {
                         </div>
                     </div>
                     }
-                    <div className="col-md-4 checkboxes-div">
-                        <div className="form-check abc-checkbox">
-                            <input type="checkbox" id="allows_level" checked={entity.allows_level}
-                                   onChange={this.handleChange} className="form-check-input"/>
-                            <label className="form-check-label" htmlFor="allows_level">
-                                {T.translate("edit_event_type.allows_level")}
-                            </label>
-                        </div>
-                    </div>
                 </div>
                 <div className="row form-group">
                     <div className="col-md-4">

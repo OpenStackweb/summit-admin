@@ -29,6 +29,13 @@ import {
     ALLOWED_MEMBER_ADDED,
 } from '../../actions/selection-plan-actions';
 
+export const DEFAULT_ALLOWED_QUESTIONS = [
+  {label: 'What is expected to learn?', value: 'attendees_expected_learnt'},
+  {label: 'Discuss with attending media?', value: 'attending_media'},
+  {label: 'Social Summary', value: 'social_description'},
+  {label: 'Level of difficulty', value: 'level'}
+];
+
 export const DEFAULT_ENTITY = {
     id: 0,
     name: '',
@@ -53,6 +60,7 @@ export const DEFAULT_ENTITY = {
     presentation_speaker_notification_email_template: '',
     track_chair_rating_types: [],
     allowed_presentation_action_types: [],
+    allowed_presentation_questions: DEFAULT_ALLOWED_QUESTIONS.map(q => q.value),
 }
 
 const DEFAULT_STATE = {

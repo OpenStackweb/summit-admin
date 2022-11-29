@@ -16,7 +16,16 @@ import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import {epochToMomentTimeZone} from 'openstack-uicore-foundation/lib/utils/methods'
 import {queryTrackGroups, queryEventTypes, queryMembers} from 'openstack-uicore-foundation/lib/utils/query-actions'
-import {Input, DateTimePicker, SimpleLinkList, SortableTable, TextEditor, Panel, Table} from 'openstack-uicore-foundation/lib/components';
+import {
+    Input,
+    DateTimePicker,
+    SimpleLinkList,
+    SortableTable,
+    TextEditor,
+    Panel,
+    Table,
+    Dropdown
+} from 'openstack-uicore-foundation/lib/components';
 import {isEmpty, scrollToError, shallowEqual, stripTags} from "../../utils/methods";
 import EmailTemplateInput from "../inputs/email-template-input";
 import { PresentationTypeClassName } from '../../utils/constants';
@@ -24,6 +33,7 @@ import Many2ManyDropDown from "../inputs/many-2-many-dropdown";
 import { querySelectionPlanExtraQuestions } from '../../actions/selection-plan-actions';
 import { querySummitProgressFlags } from '../../actions/track-chair-actions';
 import {Pagination} from "react-bootstrap";
+import {DEFAULT_ALLOWED_QUESTIONS} from "../../reducers/summits/selection-plan-reducer";
 
 class SelectionPlanForm extends React.Component {
     constructor(props) {
@@ -461,6 +471,20 @@ class SelectionPlanForm extends React.Component {
                             value={entity.submission_period_disclaimer}
                             onChange={this.handleChange}
                             error={this.hasErrors('submission_period_disclaimer')}
+                        />
+                    </div>
+                </div>
+
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <label> {T.translate("edit_selection_plan.allowed_presentation_questions")} *</label>
+                        <Dropdown
+                          id="allowed_presentation_questions"
+                          value={entity.allowed_presentation_questions}
+                          placeholder={T.translate("edit_selection_plan.placeholders.allowed_presentation_questions")}
+                          onChange={this.handleChange}
+                          options={DEFAULT_ALLOWED_QUESTIONS}
+                          isMulti={true}
                         />
                     </div>
                 </div>

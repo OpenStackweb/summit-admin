@@ -69,6 +69,7 @@ class EventForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.triggerFormSubmit = this.triggerFormSubmit.bind(this);
         this.handleUnpublish = this.handleUnpublish.bind(this);
+        this.isQuestionAllowed = this.isQuestionAllowed.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -316,11 +317,11 @@ class EventForm extends React.Component {
         return (types.indexOf(entity_type.class_name) !== -1 || types.indexOf(entity_type.name) !== -1);
     }
 
-    isEventTypeAllowsLevel() {
+    isQuestionAllowed(question_id) {
         const {entity} = this.state;
-        if (!entity.type_id) return false;
-        const entity_type = this.props.typeOpts.find(t => t.id === entity.type_id);
-        return entity_type.allows_level;
+        if (!entity.selection_plan_id) return false;
+        const selectionPlan = this.props.selectionPlansOpts.find(sp => sp.id === entity.selection_plan_id);
+        return selectionPlan.allowed_presentation_questions.includes(question_id);
     }
 
     shouldShowField(flag) {
@@ -575,6 +576,7 @@ class EventForm extends React.Component {
                         />
                     </div>
                 </div>
+                {this.isQuestionAllowed('social_description') &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_event.social_summary")} </label>
@@ -582,7 +584,8 @@ class EventForm extends React.Component {
                                   onChange={this.handleChange}/>
                     </div>
                 </div>
-                {this.isEventType('PresentationType') &&
+                }
+                {this.isEventType('PresentationType') && this.isQuestionAllowed('attendees_expected_learnt') &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_event.expect_to_learn")} </label>
@@ -661,7 +664,7 @@ class EventForm extends React.Component {
                         />
                     </div>
                     }
-                    {this.isEventTypeAllowsLevel() &&
+                    {this.isQuestionAllowed('level') &&
                     <div className="col-md-4">
                         <label> {T.translate("edit_event.level")} </label>
                         <Dropdown
@@ -733,7 +736,7 @@ class EventForm extends React.Component {
                         </div>
                     </div>
                     }
-                    {this.isEventType('PresentationType') &&
+                    {this.isEventType('PresentationType') && this.isQuestionAllowed('attending_media') &&
                     <div className="col-md-3">
                         <div className="form-check abc-checkbox">
                             <input id="attending_media" onChange={this.handleChange} checked={entity.attending_media}
