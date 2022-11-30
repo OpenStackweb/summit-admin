@@ -27,6 +27,7 @@ import {
     RECEIVE_ALLOWED_MEMBERS,
     ALLOWED_MEMBER_REMOVED,
     ALLOWED_MEMBER_ADDED,
+    ALLOWED_MEMBERS_IMPORTED
 } from '../../actions/selection-plan-actions';
 
 export const DEFAULT_ALLOWED_QUESTIONS = [
@@ -104,8 +105,7 @@ const selectionPlanReducer = (state = DEFAULT_STATE, action) => {
         }
         case RECEIVE_ALLOWED_MEMBERS: {
             const {data, current_page, last_page} = payload.response;
-            const members = data.map(d => ({...d, name: `${d.first_name} ${d.last_name}`}));
-            return {...state, allowedMembers: {data: members, currentPage: current_page, lastPage: last_page}};
+            return {...state, allowedMembers: {data: data, currentPage: current_page, lastPage: last_page}};
         }
         case SELECTION_PLAN_ASSIGNED_EXTRA_QUESTION:{
             let question = {...payload.response};
@@ -220,13 +220,15 @@ const selectionPlanReducer = (state = DEFAULT_STATE, action) => {
             return {...state, entity: {...state.entity, track_chair_rating_types : track_chair_rating_types}}
         }
         case ALLOWED_MEMBER_REMOVED: {
-            let {memberId} = payload;
-            let allowedMembers = state.allowedMembers.data.filter(t => t.id !== memberId);
+            let {emailId} = payload;
+            let allowedMembers = state.allowedMembers.data.filter(t => t.id !== emailId);
             return {...state, allowedMembers: {...state.allowedMembers, data: allowedMembers} };
         }
         case ALLOWED_MEMBER_ADDED: {
-            let member = {...payload.member, name: `${payload.member.first_name} ${payload.member.last_name}`};
-            return {...state, allowedMembers: {...state.allowedMembers, data: [...state.allowedMembers.data, member]} };
+            return {...state, allowedMembers: {...state.allowedMembers, data: [...state.allowedMembers.data, payload.response]} };
+        }
+        case ALLOWED_MEMBERS_IMPORTED: {
+            return state;
         }
         case VALIDATE: {
             return {...state,  errors: payload.errors };

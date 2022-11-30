@@ -31,6 +31,7 @@ import {
     addAllowedMemberToSelectionPlan,
     removeAllowedMemberFromSelectionPlan,
     getAllowedMembers,
+    importAllowedMembersCSV,
 } from "../../actions/selection-plan-actions";
 import Swal from "sweetalert2";
 
@@ -182,9 +183,10 @@ class EditSelectionPlanPage extends React.Component {
                     onAssignProgressFlag2SelectionPlan={this.props.assignProgressFlag2SelectionPlan}
                     onUnassignProgressFlag={this.onUnassignProgressFlag}
                     onUpdateProgressFlagOrder={this.onUpdateProgressFlagOrder}
-                    onAllowedMemberLink={this.props.addAllowedMemberToSelectionPlan}
-                    onAllowedMemberUnLink={this.props.removeAllowedMemberFromSelectionPlan}
+                    onAllowedMemberAdd={this.props.addAllowedMemberToSelectionPlan}
+                    onAllowedMemberDelete={this.props.removeAllowedMemberFromSelectionPlan}
                     onAllowedMembersPageChange={this.props.getAllowedMembers}
+                    onImportAllowedMembers={this.props.importAllowedMembersCSV}
                 />
             </div>
         )
@@ -215,5 +217,6 @@ export default connect (
         addAllowedMemberToSelectionPlan,
         removeAllowedMemberFromSelectionPlan,
         getAllowedMembers,
+        importAllowedMembersCSV
     }
 )(EditSelectionPlanPage);

@@ -45,6 +45,7 @@
     "search": "Search",
     "save": "Save",
     "cancel": "Cancel",
+    "ingest": "Ingest",
     "save_and_publish": "Save & Publish",
     "save_and_add_next": "Save & Add Next",
     "export": "Export",
@@ -349,6 +350,8 @@
     "no_presentation_action_types": "No progress flags found",
     "presentation_action_type_remove_warning": "Are you sure you want to remove progress flag",
     "allowed_presentation_questions": "Allowed Questions",
+    "import": "Import",
+    "import_allowed_members": "Import Allowed Members",
     "placeholders": {
       "creator_notification_email_select_template": "Select a creator notification email template...",
       "moderator_notification_email_select_template": "Select a moderator notification email template...",
