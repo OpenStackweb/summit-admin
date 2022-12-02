@@ -17,7 +17,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
 import SponsorshipForm from '../../components/forms/sponsorship-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getSponsorship, resetSponsorshipForm, saveSponsorship } from "../../actions/sponsor-actions";
+import { getSponsorship, resetSponsorshipForm, saveSponsorship } from "../../actions/sponsorship-actions";
 
 class EditSponsorshipPage extends React.Component {
 
@@ -49,7 +49,6 @@ class EditSponsorshipPage extends React.Component {
         const {currentSummit, entity, errors, match, history} = this.props;
         const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         const breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
-
 
         return(
             <div className="container">

@@ -88,6 +88,7 @@
     "featured_speakers": "Featured Speakers",
     "merge_speakers": "Merge",
     "companies": "Companies",
+    "sponsorship_types": "Sponsorship Types",
     "tags": "Tags",
     "attendees": "Attendees",
     "attendee-list": "Attendee List",
@@ -1694,15 +1695,40 @@
     "company": "Company",
     "is_published": "Is Published ?",
     "sponsorship": "Sponsorship",
+    "sponsorship_type":"Sponsorship Type",
+    "sponsor_page": "Sponsor Page",
+    "intro": "Intro",
+    "marquee": "Marquee",
+    "external_link": "External Link",
+    "video_link": "Video Link",
+    "chat_link": "Chat Link",
+    "header_image": "Header Image",
+    "side_image": "Side Image",
+    "ads" : "Advertisements",
+    "add_advertisement" : "Add Advertisement",
+    "materials" : "Materials",
+    "add_materials" : "Add Material",
+    "social_networks" : "Social Networks",
+    "add_social_networks" : "Add Social Netowrk",
+    "type": "Type",
+    "link": "Link",
+    "icon_css_class": "Icon CSS Class",
+    "text": "Text",
+    "alt": "Alt",
     "sponsor_saved": "Sponsor saved successfully",
     "sponsor_created": "Sponsor created successfully",
     "placeholders": {
-      "select_sponsorship": "Select a Sponsorship"
+      "select_sponsorship": "Select a Sponsorship",
+      "sponsorship_type": "Start Typing to choose a Sponsorship Type"
     }
   },
   "sponsorship_list": {
     "sponsorships": "Sponsorships",
-    "sponsorship_list": "Sponsorship List",
+    "sponsorship_types": "Sponsorship Types",
+    "sponsorship_list": "Sponsorships List",
+    "sponsorship_types_list": "Sponsorship Type List",
+    "sponsorship_type": "Sponsorship Type",
+    "widget_title": "Widget Title",
     "no_sponsorships": "No sponsorships found for current search criteria.",
     "add_sponsorship": "Add Sponsorship",
     "name": "Name",
@@ -1721,6 +1747,38 @@
     "sponsorship_created": "Sponsorship created successfully",
     "placeholders": {
       "select_size": "Select a Size"
+    }
+  },
+  "summit_sponsorship_list": {    
+    "summit_sponsorship_list": "Summit Sponsorship Type List",
+    "add_sponsorship": "Add Summit Sponsorship Type",
+    "no_sponsorships": "No summit sponsorship types found for current search criteria.",
+    "remove_warning": "Are you sure you want to delete summit sponsorship type ",
+    "sponsorship_type": "Summit Sponsorship Type",
+    "label": "Label",
+    "size": "Size"
+  },
+  "edit_summit_sponsorship": {
+    "sponsorship": "Sponsorship",
+    "widget_title": "Widget Title",
+    "sponsorship_type": "Sponsorship Type",
+    "lobby_template": "Lobby Template",
+    "expo_hall_template": "Expo Hall Template",
+    "sponsor_page_template": "Sponsor Page Template",
+    "event_page_template": "Event Page Template",
+    "sponsor_page_use_disqus_widget": "Display Disqus Widget on Sponsor Page",
+    "sponsor_page_use_live_event_widget": "Display Live Event Widget on Sponsor Page",
+    "sponsor_page_use_schedule_widget": "Display Schedule Widget on Sponsor Page",
+    "sponsor_page_use_banner_widget": "Display Banner Widget on Sponsor Page",
+    "should_display_on_expo_hall_page": "Display on Expo Hall Page",
+    "should_display_on_lobby_page": "Display on Lobby Page",
+    "badge_image": "Badge Image",
+    "badge_alt": "Badge Alt Text",
+    "placeholders": {
+      "select_lobby_template": "Select a Lobby Template",
+      "select_expo_hall_template": "Select an Expo Hall Template",
+      "select_sponsor_page_template": "Select a Sponsor Page Template",
+      "select_event_page_template": "Select a Event Page Template"
     }
   },
   "badge_scan_list": {

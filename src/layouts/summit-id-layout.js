@@ -47,7 +47,7 @@ import BadgeTypeLayout from './badge-type-layout'
 import PurchaseOrderLayout from './purchase-order-layout'
 import OrderExtraQuestionLayout from './order-extra-question-layout'
 import SponsorLayout from './sponsor-layout'
-import SponsorshipLayout from './sponsorship-layout'
+import SummitSponsorshipLayout from './summit-sponsorship-layout'
 import BadgeScansListPage from '../pages/sponsors/badge-scans-list-page';
 import NoMatchPage from '../pages/no-match-page';
 import TicketListPage from "../pages/tickets/ticket-list-page";
@@ -140,7 +140,7 @@ class SummitIdLayout extends React.Component {
                     <Route path={`${match.url}/registration-invitations`} component={RegistrationInvitationLayout}/>
                     <Route path={`${match.url}/order-extra-questions`} component={OrderExtraQuestionLayout}/>
                     <Route path={`${match.url}/sponsors`} component={SponsorLayout}/>
-                    <Route path={`${match.url}/sponsorships`} component={SponsorshipLayout}/>
+                    <Route path={`${match.url}/sponsorships`} component={SummitSponsorshipLayout}/>
                     <Route path={`${match.url}/badge-scans`} component={BadgeScansListPage}/>
                     <Route path={`${match.url}/marketing`} component={MarketingLayout}/>
                     <Route path={`${match.url}/summitdocs`} component={SummitDocsLayout}/>

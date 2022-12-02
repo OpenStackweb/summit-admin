@@ -129,6 +129,7 @@ class SponsorshipForm extends React.Component {
                         <Dropdown
                             id="size"
                             value={entity.size}
+                            key={JSON.stringify(entity.size)}
                             onChange={this.handleChange}
                             placeholder={T.translate("edit_sponsorship.placeholders.select_size")}
                             options={size_ddl}

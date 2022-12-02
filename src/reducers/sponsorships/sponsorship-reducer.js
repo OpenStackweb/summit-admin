@@ -18,7 +18,7 @@ import
     UPDATE_SPONSORSHIP,
     SPONSORSHIP_UPDATED,
     SPONSORSHIP_ADDED
-} from '../../actions/sponsor-actions';
+} from '../../actions/sponsorship-actions';
 
 import { VALIDATE } from 'openstack-uicore-foundation/lib/utils/actions';
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';

@@ -29,64 +29,67 @@ import {
 } from 'openstack-uicore-foundation/lib/utils/actions';
 import {getAccessTokenSafely} from '../utils/methods';
 
-export const REQUEST_SPONSORS               = 'REQUEST_SPONSORS';
-export const RECEIVE_SPONSORS               = 'RECEIVE_SPONSORS';
-export const RECEIVE_SPONSOR                = 'RECEIVE_SPONSOR';
-export const RESET_SPONSOR_FORM             = 'RESET_SPONSOR_FORM';
-export const UPDATE_SPONSOR                 = 'UPDATE_SPONSOR';
-export const SPONSOR_UPDATED                = 'SPONSOR_UPDATED';
-export const SPONSOR_ADDED                  = 'SPONSOR_ADDED';
-export const SPONSOR_DELETED                = 'SPONSOR_DELETED';
-export const SPONSOR_ORDER_UPDATED          = 'SPONSOR_ORDER_UPDATED';
-export const MEMBER_ADDED_TO_SPONSOR        = 'MEMBER_ADDED_TO_SPONSOR';
-export const MEMBER_REMOVED_FROM_SPONSOR    = 'MEMBER_REMOVED_FROM_SPONSOR';
-export const COMPANY_ADDED                  = 'COMPANY_ADDED';
+export const REQUEST_SPONSORS = 'REQUEST_SPONSORS';
+export const RECEIVE_SPONSORS = 'RECEIVE_SPONSORS';
+export const RECEIVE_SPONSOR = 'RECEIVE_SPONSOR';
+export const RESET_SPONSOR_FORM = 'RESET_SPONSOR_FORM';
+export const UPDATE_SPONSOR = 'UPDATE_SPONSOR';
+export const SPONSOR_UPDATED = 'SPONSOR_UPDATED';
+export const SPONSOR_ADDED = 'SPONSOR_ADDED';
+export const SPONSOR_DELETED = 'SPONSOR_DELETED';
+export const SPONSOR_ORDER_UPDATED = 'SPONSOR_ORDER_UPDATED';
+export const MEMBER_ADDED_TO_SPONSOR = 'MEMBER_ADDED_TO_SPONSOR';
+export const MEMBER_REMOVED_FROM_SPONSOR = 'MEMBER_REMOVED_FROM_SPONSOR';
+export const COMPANY_ADDED = 'COMPANY_ADDED';
 
-export const REQUEST_SPONSORSHIPS       = 'REQUEST_SPONSORSHIPS';
-export const RECEIVE_SPONSORSHIPS       = 'RECEIVE_SPONSORSHIPS';
-export const RECEIVE_SPONSORSHIP        = 'RECEIVE_SPONSORSHIP';
-export const RESET_SPONSORSHIP_FORM     = 'RESET_SPONSORSHIP_FORM';
-export const UPDATE_SPONSORSHIP         = 'UPDATE_SPONSORSHIP';
-export const SPONSORSHIP_UPDATED        = 'SPONSORSHIP_UPDATED';
-export const SPONSORSHIP_ADDED          = 'SPONSORSHIP_ADDED';
-export const SPONSORSHIP_DELETED        = 'SPONSORSHIP_DELETED';
+export const REQUEST_SUMMIT_SPONSORSHIPS = 'REQUEST_SUMMIT_SPONSORSHIPS';
+export const RECEIVE_SUMMIT_SPONSORSHIPS = 'RECEIVE_SUMMIT_SPONSORSHIPS';
+export const RECEIVE_SUMMIT_SPONSORSHIP = 'RECEIVE_SUMMIT_SPONSORSHIP';
+export const RESET_SUMMIT_SPONSORSHIP_FORM = 'RESET_SUMMIT_SPONSORSHIP_FORM';
+export const UPDATE_SUMMIT_SPONSORSHIP = 'UPDATE_SUMMIT_SPONSORSHIP';
+export const SUMMIT_SPONSORSHIP_UPDATED = 'SUMMIT_SPONSORSHIP_UPDATED';
+export const SUMMIT_SPONSORSHIP_ADDED = 'SUMMIT_SPONSORSHIP_ADDED';
+export const SUMMIT_SPONSORSHIP_DELETED = 'SUMMIT_SPONSORSHIP_DELETED';
+export const BADGE_IMAGE_ATTACHED = 'BADGE_IMAGE_ATTACHED';
+export const BADGE_IMAGE_DELETED = 'BADGE_IMAGE_DELETED';
+export const SUMMIT_SPONSORSHIP_ORDER_UPDATED = 'SUMMIT_SPONSORSHIP_ORDER_UPDATED';
 
-export const REQUEST_BADGE_SCANS       = 'REQUEST_BADGE_SCANS';
-export const RECEIVE_BADGE_SCANS       = 'RECEIVE_BADGE_SCANS';
+export const REQUEST_BADGE_SCANS = 'REQUEST_BADGE_SCANS';
+export const RECEIVE_BADGE_SCANS = 'RECEIVE_BADGE_SCANS';
 
 
 /******************  SPONSORS ****************************************/
 
 
-export const getSponsors = ( term = null, page = 1, perPage = 100, order = 'order', orderDir = 1 ) => async (dispatch, getState) => {
+export const getSponsors = (term = null, page = 1, perPage = 100, order = 'order', orderDir = 1) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
     const filter = [];
 
     dispatch(startLoading());
 
-    if(term){
+    if (term) {
         const escapedTerm = escapeFilterValue(term);
         filter.push(`company_name=@${escapedTerm},sponsorship_name=@${escapedTerm},sponsorship_size=@${escapedTerm}`);
     }
 
     const params = {
-        page         : page,
-        per_page     : perPage,
-        expand       : 'company,sponsorship',
-        access_token : accessToken,
+        page: page,
+        per_page: perPage,
+        expand: 'company,sponsorship',
+        access_token: accessToken,
     };
 
-    if(filter.length > 0){
-        params['filter[]']= filter;
+    if (filter.length > 0) {
+        params['filter[]'] = filter;
     }
 
     // order
-    if(order != null && orderDir != null){
+    if (order != null && orderDir != null) {
         const orderDirSign = (orderDir === 1) ? '+' : '-';
-        params['order']= `${orderDirSign}${order}`;
+        params['order'] = `${orderDirSign}${order}`;
     }
 
 
@@ -104,20 +107,20 @@ export const getSponsors = ( term = null, page = 1, perPage = 100, order = 'orde
 
 export const getSponsorsWithBadgeScans = () => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
     const filter = [];
 
     dispatch(startLoading());
 
     const params = {
-        page         : 1,
-        per_page     : 100,
-        expand       : 'company',
-        access_token : accessToken,
-        'filter[]'   : ['badge_scans_count>0'],
-        order        : '+order'
+        page: 1,
+        per_page: 100,
+        expand: 'company',
+        access_token: accessToken,
+        'filter[]': ['badge_scans_count>0'],
+        order: '+order'
     };
 
     return getRequest(
@@ -133,15 +136,15 @@ export const getSponsorsWithBadgeScans = () => async (dispatch, getState) => {
 
 export const getSponsor = (sponsorId) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const params = {
-        access_token : accessToken,
-        expand       : 'company, members',
+        access_token: accessToken,
+        expand: 'company, members',
     };
 
     return getRequest(
@@ -160,12 +163,12 @@ export const resetSponsorForm = () => (dispatch, getState) => {
 };
 
 export const saveSponsor = (entity) => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken,
+        access_token: accessToken,
     };
 
     dispatch(startLoading());
@@ -204,14 +207,16 @@ export const saveSponsor = (entity) => async (dispatch, getState) => {
             .then((payload) => {
                 dispatch(showMessage(
                     success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/sponsors/${payload.response.id}`) }
+                    () => {
+                        history.push(`/app/summits/${currentSummit.id}/sponsors/${payload.response.id}`)
+                    }
                 ));
             });
     }
 };
 
 export const addMemberToSponsor = (sponsorId, member) => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
     const {currentSummit} = currentSummitState;
 
@@ -235,12 +240,12 @@ export const addMemberToSponsor = (sponsorId, member) => async (dispatch, getSta
 
 export const removeMemberFromSponsor = (sponsorId, memberId) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     dispatch(startLoading());
@@ -259,12 +264,12 @@ export const removeMemberFromSponsor = (sponsorId, memberId) => async (dispatch,
 
 export const deleteSponsor = (sponsorId) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     return deleteRequest(
@@ -281,12 +286,12 @@ export const deleteSponsor = (sponsorId) => async (dispatch, getState) => {
 
 export const updateSponsorOrder = (sponsors, sponsorId, newOrder) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     const sponsor = sponsors.find(s => s.id === sponsorId);
@@ -312,8 +317,8 @@ const normalizeSponsor = (entity) => {
 
     normalizedEntity.company_id = (normalizedEntity.company) ? normalizedEntity.company.id : 0;
 
-    delete(normalizedEntity.company);
-    delete(normalizedEntity.sponsorship);
+    delete (normalizedEntity.company);
+    delete (normalizedEntity.sponsorship);
 
 
     return normalizedEntity;
@@ -325,7 +330,7 @@ export const createCompany = (company, callback) => async (dispatch, getState) =
     const accessToken = await getAccessTokenSafely();
 
     const params = {
-        access_token : accessToken,
+        access_token: accessToken,
     };
 
     dispatch(startLoading());
@@ -344,61 +349,61 @@ export const createCompany = (company, callback) => async (dispatch, getState) =
 }
 
 
-
-
 /******************  SPONSORSHIPS ****************************************/
 
 
 
-export const getSponsorships = ( order = 'name', orderDir = 1 ) => async (dispatch, getState) => {
+export const getSummitSponsorships = (page = 1, perPage = 100, order = 'order', orderDir = 1) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const params = {
-        page         : 1,
-        per_page     : 100,
-        access_token : accessToken,
+        page: page,
+        per_page: perPage,
+        access_token: accessToken,
+        expand: 'type',
     };
 
     // order
-    if(order != null && orderDir != null){
+    if (order != null && orderDir != null) {
         const orderDirSign = (orderDir === 1) ? '+' : '-';
-        params['order']= `${orderDirSign}${order}`;
+        params['order'] = `${orderDirSign}${order}`;
     }
 
 
     return getRequest(
-        createAction(REQUEST_SPONSORSHIPS),
-        createAction(RECEIVE_SPONSORSHIPS),
-        `${window.API_BASE_URL}/api/v1/sponsorship-types`,
+        createAction(REQUEST_SUMMIT_SPONSORSHIPS),
+        createAction(RECEIVE_SUMMIT_SPONSORSHIPS),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsorships-types`,
         authErrorHandler,
-        {order, orderDir}
+        {order, orderDir, page}
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
     );
 };
 
-export const getSponsorship = (sponsorshipId) => async (dispatch, getState) => {
+export const getSummitSponsorship = (sponsorshipId) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const params = {
-        access_token : accessToken,
+        access_token: accessToken,
+        expand: 'type'
     };
 
     return getRequest(
         null,
-        createAction(RECEIVE_SPONSORSHIP),
-        `${window.API_BASE_URL}/api/v1/sponsorship-types/${sponsorshipId}`,
+        createAction(RECEIVE_SUMMIT_SPONSORSHIP),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsorships-types/${sponsorshipId}`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -406,17 +411,18 @@ export const getSponsorship = (sponsorshipId) => async (dispatch, getState) => {
     );
 };
 
-export const resetSponsorshipForm = () => (dispatch, getState) => {
-    dispatch(createAction(RESET_SPONSORSHIP_FORM)({}));
+export const resetSummitSponsorshipForm = () => (dispatch, getState) => {
+    dispatch(createAction(RESET_SUMMIT_SPONSORSHIP_FORM)({}));
 };
 
-export const saveSponsorship = (entity) => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+export const saveSummitSponsorship = (entity) => async (dispatch, getState) => {
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken,
+        access_token: accessToken,
+        expand: 'type'
     };
 
     dispatch(startLoading());
@@ -426,9 +432,9 @@ export const saveSponsorship = (entity) => async (dispatch, getState) => {
     if (entity.id) {
 
         putRequest(
-            createAction(UPDATE_SPONSORSHIP),
-            createAction(SPONSORSHIP_UPDATED),
-            `${window.API_BASE_URL}/api/v1/sponsorship-types/${entity.id}`,
+            createAction(UPDATE_SUMMIT_SPONSORSHIP),
+            createAction(SUMMIT_SPONSORSHIP_UPDATED),
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsorships-types/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -445,9 +451,9 @@ export const saveSponsorship = (entity) => async (dispatch, getState) => {
         };
 
         postRequest(
-            createAction(UPDATE_SPONSORSHIP),
-            createAction(SPONSORSHIP_ADDED),
-            `${window.API_BASE_URL}/api/v1/sponsorship-types`,
+            createAction(UPDATE_SUMMIT_SPONSORSHIP),
+            createAction(SUMMIT_SPONSORSHIP_ADDED),
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsorships-types`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -455,26 +461,104 @@ export const saveSponsorship = (entity) => async (dispatch, getState) => {
             .then((payload) => {
                 dispatch(showMessage(
                     success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/sponsorships/${payload.response.id}`) }
+                    () => {
+                        history.push(`/app/summits/${currentSummit.id}/sponsorships/${payload.response.id}`)
+                    }
                 ));
             });
     }
 }
 
-export const deleteSponsorship = (sponsorshipId) => async (dispatch, getState) => {
+export const uploadSponsorshipBadgeImage = (entity, file) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    if (!entity.id) return Promise.reject();
+
+    const {currentSummitState: {currentSummit}} = getState();
+
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken,
+    };
+
+    return postRequest(
+        null,
+        createAction(BADGE_IMAGE_ATTACHED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsorships-types/${entity.id}/badge-image`,
+        file,
+        authErrorHandler,
+        {pic: entity.pic}
+    )(params)(dispatch)
+        .then((payload) => {
+            dispatch(stopLoading());
+            history.push(`/app/summits/${currentSummit.id}/sponsorships/${entity.id}`)
+        });
+
+};
+
+export const removeSponsorshipBadgeImage = (sponsorshipId) => async (dispatch, getState) => {
+    const {currentSummitState} = getState();
+    const accessToken = await getAccessTokenSafely();
+    const {currentSummit} = currentSummitState;
+
+    const params = {
+        access_token: accessToken
+    };
+
+    dispatch(startLoading());
+
+    return deleteRequest(
+        null,
+        createAction(BADGE_IMAGE_DELETED)({}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsorships-types/${sponsorshipId}/badge-image`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const updateSummitSponsorhipOrder = (sponsorships, sponsorshipId, newOrder) => async (dispatch, getState) => {
+
+    const {currentSummitState} = getState();
+    const accessToken = await getAccessTokenSafely();
+    const {currentSummit} = currentSummitState;
+
+    const params = {
+        access_token: accessToken,
+        per_page: 100,
+    };
+
+    putRequest(
+        null,
+        createAction(SUMMIT_SPONSORSHIP_ORDER_UPDATED)(sponsorships),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsorships-types/${sponsorshipId}`,
+        {order: newOrder},
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+
+}
+
+export const deleteSummitSponsorship = (sponsorshipId) => async (dispatch, getState) => {
+
+    const {currentSummitState} = getState();
+    const accessToken = await getAccessTokenSafely();
+    const {currentSummit} = currentSummitState;
+
+    const params = {
+        access_token: accessToken
     };
 
     return deleteRequest(
         null,
-        createAction(SPONSORSHIP_DELETED)({sponsorshipId}),
-        `${window.API_BASE_URL}/api/v1/sponsorship-types/${sponsorshipId}`,
+        createAction(SUMMIT_SPONSORSHIP_DELETED)({sponsorshipId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsorships-types/${sponsorshipId}`,
         null,
         authErrorHandler
     )(params)(dispatch).then(() => {
@@ -487,6 +571,10 @@ export const deleteSponsorship = (sponsorshipId) => async (dispatch, getState) =
 const normalizeSponsorship = (entity) => {
     const normalizedEntity = {...entity};
 
+    normalizedEntity['type_id'] = (normalizedEntity.type) ? normalizedEntity.type.id : 0;
+
+    delete normalizedEntity['type'];
+
     return normalizedEntity;
 
 }
@@ -495,34 +583,34 @@ const normalizeSponsorship = (entity) => {
 /******************  BADGE SCANS  ****************************************/
 
 
-export const getBadgeScans = ( sponsorId = null, page = 1, perPage = 10, order = 'attendee_last_name', orderDir = 1 ) => async (dispatch, getState) => {
+export const getBadgeScans = (sponsorId = null, page = 1, perPage = 10, order = 'attendee_last_name', orderDir = 1) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
     const filter = [];
 
     dispatch(startLoading());
 
-    if(sponsorId){
+    if (sponsorId) {
         filter.push(`sponsor_id==${sponsorId}`);
     }
 
     const params = {
-        page         : page,
-        per_page     : perPage,
-        expand       : 'badge,badge.ticket,badge.ticket.owner,badge.ticket.owner.member',
-        access_token : accessToken,
+        page: page,
+        per_page: perPage,
+        expand: 'badge,badge.ticket,badge.ticket.owner,badge.ticket.owner.member',
+        access_token: accessToken,
     };
 
-    if(filter.length > 0){
-        params['filter[]']= filter;
+    if (filter.length > 0) {
+        params['filter[]'] = filter;
     }
 
     // order
-    if(order != null && orderDir != null){
+    if (order != null && orderDir != null) {
         const orderDirSign = (orderDir === 1) ? '+' : '-';
-        params['order']= `${orderDirSign}${order}`;
+        params['order'] = `${orderDirSign}${order}`;
     }
 
 
@@ -539,28 +627,28 @@ export const getBadgeScans = ( sponsorId = null, page = 1, perPage = 10, order =
 };
 
 
-export const exportBadgeScans = ( sponsor = null, order = 'attendee_last_name', orderDir = 1 ) => async (dispatch, getState) => {
+export const exportBadgeScans = (sponsor = null, order = 'attendee_last_name', orderDir = 1) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
     const filter = [];
     const filename = sponsor.company.name + '-BadgeScans.csv';
     const params = {
-        access_token : accessToken,
-        columns      : 'scan_date,attendee_first_name,attendee_last_name,attendee_email,attendee_company',
+        access_token: accessToken,
+        columns: 'scan_date,attendee_first_name,attendee_last_name,attendee_email,attendee_company',
     };
 
     filter.push(`sponsor_id==${sponsor.id}`);
 
-    if(filter.length > 0){
-        params['filter[]']= filter;
+    if (filter.length > 0) {
+        params['filter[]'] = filter;
     }
 
     // order
-    if(order != null && orderDir != null){
+    if (order != null && orderDir != null) {
         const orderDirSign = (orderDir === 1) ? '+' : '-';
-        params['order']= `${orderDirSign}${order}`;
+        params['order'] = `${orderDirSign}${order}`;
     }
 
     dispatch(getCSV(`${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-scans/csv`, params, filename));

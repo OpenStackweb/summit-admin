@@ -73,8 +73,10 @@ import purchaseOrderListReducer from './reducers/orders/purchase-order-list-redu
 import purchaseOrderReducer from './reducers/orders/purchase-order-reducer';
 import sponsorListReducer from './reducers/sponsors/sponsor-list-reducer';
 import sponsorReducer from './reducers/sponsors/sponsor-reducer';
-import sponsorshipListReducer from './reducers/sponsors/sponsorship-list-reducer';
-import sponsorshipReducer from './reducers/sponsors/sponsorship-reducer';
+import sponsorshipListReducer from './reducers/sponsorships/sponsorship-list-reducer';
+import sponsorshipReducer from './reducers/sponsorships/sponsorship-reducer';
+import summitSponsorshipListReducer from './reducers/sponsors/summit-sponsorship-list-reducer';
+import summitSponsorshipReducer from './reducers/sponsors/summit-sponsorship-reducer';
 import refundPolicyListReducer from './reducers/refund_policies/refund-policy-list-reducer';
 import paymentProfileListReducer from './reducers/payment_profiles/payment-profile-list-reducer';
 import ticketListReducer from './reducers/tickets/ticket-list-reducer';
@@ -195,6 +197,8 @@ const reducers = persistCombineReducers(config, {
     currentPurchaseOrderState: purchaseOrderReducer,
     currentSponsorListState: sponsorListReducer,
     currentSponsorState: sponsorReducer,
+    currentSummitSponsorshipListState: summitSponsorshipListReducer,
+    currentSummitSponsorshipState: summitSponsorshipReducer,
     currentSponsorshipListState: sponsorshipListReducer,
     currentSponsorshipState: sponsorshipReducer,
     currentRefundPolicyListState: refundPolicyListReducer,

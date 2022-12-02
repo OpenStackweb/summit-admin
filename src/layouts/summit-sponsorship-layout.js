@@ -17,23 +17,23 @@ import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import Restrict from '../routes/restrict';
 
-import SponsorshipListPage from '../pages/sponsorship-types/sponsorship-list-page'
-import EditSponsorshipPage from '../pages/sponsorship-types/edit-sponsorship-page'
+import SummitSponsorshipListPage from '../pages/sponsors/summit-sponsorship-list-page'
+import EditSummitSponsorshipPage from '../pages/sponsors/edit-summit-sponsorship-page'
 import NoMatchPage from "../pages/no-match-page";
 
 
-class SponsorshipLayout extends React.Component {
+class SummitSponsorshipLayout extends React.Component {
 
     render(){
         const { match } = this.props;
         return(
             <div>
-                <Breadcrumb data={{ title: T.translate("sponsorship_list.sponsorship_types"), pathname: match.url }} />
+                <Breadcrumb data={{ title: T.translate("sponsorship_list.sponsorships"), pathname: match.url }} />
 
                 <Switch>
-                    <Route strict exact path={match.url} component={SponsorshipListPage}/>
-                    <Route strict exact path={`${match.url}/new`} component={EditSponsorshipPage}/>
-                    <Route strict exact path={`${match.url}/:sponsorship_id(\\d+)`} component={EditSponsorshipPage}/>
+                    <Route strict exact path={match.url} component={SummitSponsorshipListPage}/>
+                    <Route strict exact path={`${match.url}/new`} component={EditSummitSponsorshipPage}/>
+                    <Route strict exact path={`${match.url}/:sponsorship_type_id(\\d+)`} component={EditSummitSponsorshipPage}/>
                     <Route component={NoMatchPage}/>
                 </Switch>
             </div>
@@ -42,6 +42,6 @@ class SponsorshipLayout extends React.Component {
 
 }
 
-export default Restrict(withRouter(SponsorshipLayout), 'sponsors');
+export default Restrict(withRouter(SummitSponsorshipLayout), 'sponsors');
 
 

@@ -15,9 +15,9 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import Swal from "sweetalert2";
+import { Pagination } from 'react-bootstrap';
 import { Table } from 'openstack-uicore-foundation/lib/components';
-import { getSummitById }  from '../../actions/summit-actions';
-import { getSponsorships, deleteSponsorship } from "../../actions/sponsor-actions";
+import { getSponsorships, deleteSponsorship } from "../../actions/sponsorship-actions";
 
 class SponsorshipListPage extends React.Component {
 
@@ -27,6 +27,7 @@ class SponsorshipListPage extends React.Component {
         this.handleEdit = this.handleEdit.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
         this.handleSort = this.handleSort.bind(this);
+        this.handlePageChange = this.handlePageChange.bind(this);
         this.handleNewSponsorship = this.handleNewSponsorship.bind(this);
 
         this.state = {}
@@ -34,15 +35,18 @@ class SponsorshipListPage extends React.Component {
     }
 
     componentDidMount() {
-        const {currentSummit} = this.props;
-        if(currentSummit) {
-            this.props.getSponsorships();
-        }
+        const {currentPage, perPage, order, orderDir} = this.props;
+        this.props.getSponsorships(currentPage, perPage, order, orderDir);
     }
 
     handleEdit(sponsorship_id) {
-        const {currentSummit, history} = this.props;
-        history.push(`/app/summits/${currentSummit.id}/sponsorships/${sponsorship_id}`);
+        const {history} = this.props;
+        history.push(`/app/sponsorship-types/${sponsorship_id}`);
+    }
+
+    handlePageChange(page) {
+        const {order, orderDir, perPage} = this.props;
+        this.props.getSponsorships(page, perPage, order, orderDir);
     }
 
     handleDelete(sponsorshipId) {
@@ -64,16 +68,17 @@ class SponsorshipListPage extends React.Component {
     }
 
     handleSort(index, key, dir, func) {
-        this.props.getSponsorships(key, dir);
+        const {perPage, page} = this.props;
+        this.props.getSponsorships(page, perPage, key, dir);
     }
 
     handleNewSponsorship(ev) {
-        const {currentSummit, history} = this.props;
-        history.push(`/app/summits/${currentSummit.id}/sponsorships/new`);
+        const {history} = this.props;
+        history.push(`/app/sponsorship-types/new`);
     }
 
     render(){
-        const {currentSummit, sponsorships, order, orderDir, totalSponsorships} = this.props;
+        const {sponsorships, lastPage, currentPage, order, orderDir, totalSponsorships} = this.props;
 
         const columns = [
             { columnKey: 'name', value: T.translate("sponsorship_list.name"), sortable: true },
@@ -88,13 +93,11 @@ class SponsorshipListPage extends React.Component {
                 edit: { onClick: this.handleEdit },
                 delete: { onClick: this.handleDelete }
             }
-        }
-
-        if(!currentSummit.id) return (<div />);
+        }        
 
         return(
             <div className="container">
-                <h3> {T.translate("sponsorship_list.sponsorship_list")} ({totalSponsorships})</h3>
+                <h3> {T.translate("sponsorship_list.sponsorship_types_list")} ({totalSponsorships})</h3>
                 <div className={'row'}>
                     <div className="col-md-6 text-right col-md-offset-6">
                         <button className="btn btn-primary right-space" onClick={this.handleNewSponsorship}>
@@ -108,12 +111,27 @@ class SponsorshipListPage extends React.Component {
                 }
 
                 {sponsorships.length > 0 &&
+                <>
                     <Table
                         options={table_options}
                         data={sponsorships}
                         columns={columns}
                         onSort={this.handleSort}
                     />
+                    <Pagination
+                            bsSize="medium"
+                            prev
+                            next
+                            first
+                            last
+                            ellipsis
+                            boundaryLinks
+                            maxButtons={10}
+                            items={lastPage}
+                            activePage={currentPage}
+                            onSelect={this.handlePageChange}
+                        />
+                </>
                 }
 
             </div>
@@ -121,15 +139,13 @@ class SponsorshipListPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentSponsorshipListState }) => ({
-    currentSummit   : currentSummitState.currentSummit,
+const mapStateToProps = ({ currentSponsorshipListState }) => ({
     ...currentSponsorshipListState
 })
 
 export default connect (
     mapStateToProps,
     {
-        getSummitById,
         getSponsorships,
         deleteSponsorship
     }
