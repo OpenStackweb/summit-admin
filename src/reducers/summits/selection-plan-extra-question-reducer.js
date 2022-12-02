@@ -32,7 +32,6 @@ export const DEFAULT_ENTITY = {
     id                  : 0,
     name                : '',
     label               : '',
-    order               : 0,
     type                : null,
     mandatory           : false,
     placeholder         : '',

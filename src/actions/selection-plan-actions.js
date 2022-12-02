@@ -314,6 +314,8 @@ export const getSelectionPlanExtraQuestion = (selectionPlanId, extraQuestionId) 
 
 const normalizeQuestion = (entity) => {
   const normalizedEntity = {...entity};
+  if(normalizedEntity.hasOwnProperty('order'))
+    delete normalizedEntity.order;
   return normalizedEntity;
 }
 
@@ -401,14 +403,11 @@ export const updateSelectionPlanExtraQuestionOrder = (selectionPlanId, questions
     access_token: accessToken
   };
 
-  const question = questions.find(q => q.id === questionId);
-  question.order = newOrder;
-
   putRequest(
     null,
     createAction(SELECTION_PLAN_EXTRA_QUESTION_ORDER_UPDATED)(questions),
     `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}/extra-questions/${questionId}`,
-    question,
+      { order : newOrder },
     authErrorHandler
   )(params)(dispatch).then(() => {
       dispatch(stopLoading());
