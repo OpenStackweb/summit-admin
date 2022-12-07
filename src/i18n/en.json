@@ -353,6 +353,7 @@
     "allowed_presentation_questions": "Allowed Questions",
     "import": "Import",
     "import_allowed_members": "Import Allowed Members",
+    "import_allowed_members_success": "Emails will be ingested as a background task. Will need to refresh the page to review.",
     "placeholders": {
       "creator_notification_email_select_template": "Select a creator notification email template...",
       "moderator_notification_email_select_template": "Select a moderator notification email template...",

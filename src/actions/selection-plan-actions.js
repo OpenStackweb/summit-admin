@@ -721,7 +721,8 @@ export const importAllowedMembersCSV = (selectionPlanId, file) => async (dispatc
     authErrorHandler,
   )(params)(dispatch)
     .then(() => {
-      dispatch(getAllowedMembers(selectionPlanId));
+      dispatch(stopLoading());
+      dispatch(showSuccessMessage(T.translate("edit_selection_plan.import_allowed_members_success")));
     });
 };
 
