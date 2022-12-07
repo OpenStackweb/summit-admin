@@ -33,13 +33,16 @@ class ProgressFlagsPage extends React.Component {
             flagLabel: '',
             progressFlagId: null
         }
-        this.fragmentParser = new FragmentParser();
+
+        this.progressFlagIdParam =  null;
     }
 
     componentDidMount() {
         const {currentSummit} = this.props;
         if(currentSummit) {
             this.props.getProgressFlags();
+            const fragmentParser = new FragmentParser();
+            this.progressFlagIdParam = fragmentParser.getParam('flag_id');
         }
     }
 
@@ -116,9 +119,11 @@ class ProgressFlagsPage extends React.Component {
 
         if(!currentSummit.id) return(<div />);
 
-        if(progressFlags.length > 0 && !showForm) {
-            const progressFlagId = this.fragmentParser.getParam('flag_id');
-            if (progressFlagId) setTimeout(() => this.handleEdit(parseInt(progressFlagId)), 100);
+        if(progressFlags.length > 0 && this.progressFlagIdParam && !showForm) {
+            setTimeout(() => {
+                this.handleEdit(parseInt(this.progressFlagIdParam))
+                this.progressFlagIdParam = null;
+            }, 100);
         }
 
         return(
