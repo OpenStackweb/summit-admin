@@ -50,9 +50,10 @@
 .schedule-event {
   background-color: @schedule_event_background_color;
   z-index: @event_z_index;
-  min-height: @event_initial_height !important;
   width: 100%;
   position: absolute;
+  overflow: hidden;
+
   .no-margin;
   .unselectable-text;
   .row{
@@ -97,8 +98,7 @@
 }
 
 .is-resizable {
-  overflow-y: hidden;
-  overflow-x: hidden;
+  overflow: hidden;
   /*transition: height 50ms linear;*/
   &:before,
   &:after {

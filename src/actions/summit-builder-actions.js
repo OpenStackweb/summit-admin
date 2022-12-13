@@ -49,6 +49,7 @@ export const RECEIVE_EMPTY_SPOTS                          = 'RECEIVE_EMPTY_SPOTS
 export const CLEAR_EMPTY_SPOTS                            = 'CLEAR_EMPTY_SPOTS';
 export const CLEAR_PUBLISHED_EVENTS                       = 'CLEAR_PUBLISHED_EVENTS';
 export const CHANGE_SUMMIT_BUILDER_FILTERS                = 'CHANGE_SUMMIT_BUILDER_FILTERS';
+export const SET_SLOT_SIZE                                = 'SET_SLOT_SIZE';
 
 export const getUnScheduleEventsPage =
     (
@@ -167,7 +168,7 @@ export const publishEvent = (event, day, startTime, minutes) =>
         )({})(dispatch)
         .then(
             () => {
-                dispatch(checkProximityEvents(event));
+                dispatch(checkProximityEvents(event, false));
             }
         )
         .catch(() => {
@@ -193,6 +194,10 @@ export const changeCurrentSelectedLocation = (currentSelectedLocation) => (dispa
             location: currentSelectedLocation
         }
     ));
+}
+
+export const changeSlotSize = (slotSize) => (dispatch, getState) => {
+    dispatch(createAction(SET_SLOT_SIZE)({slotSize}));
 }
 
 export const getPublishedEventsBySummitDayLocation = (currentSummit, currentDay, currentLocation) => async (dispatch, getState) => {

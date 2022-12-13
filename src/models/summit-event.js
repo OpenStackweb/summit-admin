@@ -36,7 +36,7 @@ class SummitEvent {
         return this._event.hasOwnProperty('is_published') && this._event.is_published;
     }
 
-    getMinutesDuration(){
+    getMinutesDuration(slotSize){
 
         if(this._event.hasOwnProperty('start_date') && this._event.hasOwnProperty('end_date')  && this._event.start_date != null && this._event.end_date != null ) {
             let eventStartDateTime = moment(this._event.start_date * 1000).tz(this._summit.time_zone.name);
@@ -45,12 +45,12 @@ class SummitEvent {
         }
         // default
 
-        return this._event.hasOwnProperty('duration') && this._event.duration > 0 ?  parseInt( this._event.duration / 60 ) : DefaultEventMinutesDuration;
+        return this._event.hasOwnProperty('duration') && this._event.duration > 0 ?  parseInt( this._event.duration / 60 ) : slotSize;
     }
 
-    canMove(siblings, day, startTime){
+    canMove(siblings, day, startTime, interval){
 
-        let duration       = this._event.hasOwnProperty('duration') && this._event.duration > 0 ?  parseInt( this._event.duration / 60 ) : DefaultEventMinutesDuration;
+        let duration       = this._event.hasOwnProperty('duration') && this._event.duration > 0 ?  parseInt( this._event.duration / 60 ) : interval;
         // check if published to get real duration ...
         if(this.isPublished())
             duration = this.getMinutesDuration();
@@ -63,6 +63,7 @@ class SummitEvent {
         for (let auxEvent of siblings.filter(item => item.id !== this.getId())) {
             let auxEventStartDateTime = moment(auxEvent.start_date * 1000).tz(this._summit.time_zone.name);
             let auxEventEndDateTime   = moment(auxEvent.end_date * 1000).tz(this._summit.time_zone.name);
+
             // if time segments overlap
             if(auxEventStartDateTime.isBefore(endDateTime) && auxEventEndDateTime.isAfter(startDateTime))
                 return false;

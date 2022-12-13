@@ -10,72 +10,73 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import moment from 'moment-timezone'
-import { useDrop } from 'react-dnd'
-import { DraggableItemTypes } from './draggable-items-types';
+import {useDrop} from 'react-dnd'
+import {DraggableItemTypes} from './draggable-items-types';
 import ScheduleEvent from './schedule-event';
-import ReactDOM  from 'react-dom';
+import ReactDOM from 'react-dom';
 import SummitEvent from '../../models/summit-event';
 
 const TimeSlot = ({timeLabel, id}) => {
-    return (
-        <div id={id} className="row time-slot">
-            <div className="col-md-12">
-                <span>{timeLabel}</span>
-            </div>
-        </div>
-    )
+  return (
+    <div id={id} className="row time-slot">
+      <div className="col-md-12">
+        <span>{timeLabel}</span>
+      </div>
+    </div>
+  )
 }
 
-const TimeSlotContainer = ({ currentDay, currentSummit, events, timeSlot, pixelsPerMinute, interval, onDroppedEvent }) => {
-    const divId = `time_slot_container_${timeSlot.format('HH_mm')}`;
-    const [collectedProps, drop] = useDrop(() => ({
-        accept: [ DraggableItemTypes.UNSCHEDULEEVENT, DraggableItemTypes.SCHEDULEEVENT ],
-        collect: ( monitor) => ({
-            isOver: monitor.isOver(),
-            canDrop: monitor.canDrop()
-        }),
-        canDrop: (item, monitor) => {
-            const eventModel = new SummitEvent(item, currentSummit);
-            return eventModel.canMove(events, currentDay, timeSlot);
-        },
-        drop: (item, monitor, component) => {
-            onDroppedEvent(item, timeSlot);
-        }
-    }));
-    const {isOver, canDrop} = collectedProps;
+const TimeSlotContainer = ( props ) => {
+  const {currentDay, currentSummit, events, timeSlot, pixelsPerMinute, interval, onDroppedEvent} = props;
+  const divId = `time_slot_container_${timeSlot.format('HH_mm')}`;
+  const [collectedProps, drop] = useDrop(() => ({
+    accept: [DraggableItemTypes.UNSCHEDULEEVENT, DraggableItemTypes.SCHEDULEEVENT],
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop()
+    }),
+    canDrop: (item, monitor) => {
+      const eventModel = new SummitEvent(item, currentSummit);
+      return eventModel.canMove(events, currentDay, timeSlot, interval);
+    },
+    drop: (item, monitor, component) => {
+      onDroppedEvent(item, timeSlot);
+    }
+  }), [interval, timeSlot]);
+  const {isOver, canDrop} = collectedProps;
 
-    const renderOverlay = (color) => <div style={{ backgroundColor: color }} className="time-slot-overlay" />;
+  const renderOverlay = (color) => <div style={{backgroundColor: color}} className="time-slot-overlay"/>;
 
-    const renderMinutesContainer = (interval, pixelsPerMinute) => {
-        let minutesContainers = [];
-        let container_count = interval / 5;
-        let container_height = pixelsPerMinute * 5;
+  const renderMinutesContainer = (interval, pixelsPerMinute) => {
+    let minutesContainers = [];
+    let container_count = 2;
+    let container_height = pixelsPerMinute * 5;
 
-        for(var i=0; i < container_count ; i++){
+    for (var i = 0; i < container_count; i++) {
 
-            minutesContainers[i] = <div key={i} className="minute-container" style={{
-                position: 'relative',
-                width: '100%',
-                height: `${container_height}px`
-            }}/>;
-        }
+      minutesContainers[i] = <div key={i} className="minute-container" style={{
+        position: 'relative',
+        width: '100%',
+        height: `${container_height}px`
+      }}/>;
+    }
 
-        return minutesContainers;
-    };
+    return minutesContainers;
+  };
 
 
-    return (
-        <div id={divId} ref={drop} className="row time-slot-container">
-            <div className="col-md-12">
-                {renderMinutesContainer(interval, pixelsPerMinute)}
-            </div>
-            {isOver && !canDrop && renderOverlay('red')}
-            {!isOver && canDrop && renderOverlay('yellow')}
-            {isOver && canDrop && renderOverlay('green')}
-        </div>
-    );
+  return (
+    <div id={divId} ref={drop} className="row time-slot-container">
+      <div className="col-md-12">
+        {renderMinutesContainer(interval, pixelsPerMinute)}
+      </div>
+      {isOver && !canDrop && renderOverlay('red')}
+      {!isOver && canDrop && renderOverlay('yellow')}
+      {isOver && canDrop && renderOverlay('green')}
+    </div>
+  );
 };
 
 
@@ -83,175 +84,169 @@ const TimeSlotContainer = ({ currentDay, currentSummit, events, timeSlot, pixels
 
 
 
+const ScheduleEventList = (props) => {
+  const [timeSlotsList, setTimeSlotsList] = useState([]);
+  const scheduleEventContainer = useRef(null);
 
-class ScheduleEventList extends React.Component
-{
-    constructor(props){
-        super(props);
-        this.onDroppedEvent    = this.onDroppedEvent.bind(this);
-        this.canResize         = this.canResize.bind(this);
-        this.onDroppedSubEvent = this.onDroppedSubEvent.bind(this);
-        this.onResized         = this.onResized.bind(this);
-        this.getMaxHeight      = this.getMaxHeight.bind(this);
-        this.state = {
-            resizing: false,
-        };
+  useEffect(() => {
+    createSlots();
+  }, [props.interval]);
+
+  const onDroppedEvent = (event, startTime) => {
+    props.onScheduleEvent(event, props.currentDay, startTime);
+  }
+
+  const canResize = (eventId, newTop, newHeight) => {
+    const {events, currentDay, startTime, pixelsPerMinute, currentSummit} = props;
+    const {height} = getBoundingBox();
+
+    if (height < (newTop + newHeight)) {
+      return false;
     }
 
-    onDroppedEvent(event, startTime){
-        this.props.onScheduleEvent(event, this.props.currentDay, startTime);
+    const filteredEvents = events.filter(evt => {
+      return evt.id !== eventId;
+    });
+    // calculate new event start date, end date
+    const minutes = Math.floor(newTop / (pixelsPerMinute * (10 / interval)));
+    const duration = Math.floor(newHeight / (pixelsPerMinute * (10 / interval)));
+
+    let startDateTime = moment.tz(currentDay + ' ' + startTime, 'YYYY-MM-DD HH:mm', currentSummit.time_zone.name);
+    startDateTime = startDateTime.add(minutes, 'minutes');
+    let endDateTime = moment.tz(currentDay + ' ' + startTime, 'YYYY-MM-DD HH:mm', currentSummit.time_zone.name);
+    endDateTime = endDateTime.add(minutes + duration, 'minutes');
+
+    for (const auxEvent of filteredEvents) {
+      const auxEventStartDateTime = moment(auxEvent.start_date * 1000).tz(currentSummit.time_zone.name);
+      const auxEventEndDateTime = moment(auxEvent.end_date * 1000).tz(currentSummit.time_zone.name);
+      // if time segments overlap
+      if (auxEventStartDateTime.isBefore(endDateTime) && auxEventEndDateTime.isAfter(startDateTime))
+        return false;
     }
 
-    onDroppedSubEvent(subEvent, parentEvent, startTime, duration){
-        this.props.onScheduleSubEvent(subEvent, parentEvent, this.props.currentDay, startTime, duration)
-    }
+    return true;
+  }
 
-    canResize(eventId, newTop, newHeight){
-        let{ height } = this.getBoundingBox();
-        if( height < (newTop+newHeight)){
-            return false;
-        }
-        let { events, currentDay, startTime, pixelsPerMinute, currentSummit } = this.props;
-        // try first to find events on main collection
-        let event          = events.filter( evt => { return evt.id === eventId;}).shift();
-        let eventModel     = new SummitEvent(event);
+  const onResized = (eventId, newTop, newHeight) => {
+    const {events, currentDay, startTime, pixelsPerMinute, currentSummit} = props;
+    const event = events.filter(evt => {
+      return evt.id === eventId;
+    }).shift();
+    const minutes = Math.floor(newTop / (pixelsPerMinute * (10 / interval)));
+    const duration = Math.floor(newHeight / (pixelsPerMinute * (10 / interval)));
+    let startDateTime = moment.tz(currentDay + ' ' + startTime, 'YYYY-MM-DD HH:mm', currentSummit.time_zone.name);
+    startDateTime = startDateTime.add(minutes, 'minutes');
 
-        let filteredEvents = events.filter( evt => { return evt.id !== eventId;});
-        // calculate new event start date, end date
-        let minutes        = Math.floor(newTop / pixelsPerMinute);
-        let duration       = Math.floor(newHeight / pixelsPerMinute);
-        let startDateTime  = moment.tz(currentDay+' '+ startTime, 'YYYY-MM-DD HH:mm', currentSummit.time_zone.name);
-        startDateTime      = startDateTime.add(minutes, 'minutes');
-        let endDateTime    = moment.tz(currentDay+' '+ startTime, 'YYYY-MM-DD HH:mm', currentSummit.time_zone.name);
-        endDateTime        = endDateTime.add(minutes+duration, 'minutes');
+    props.onScheduleEventWithDuration(event, currentDay, moment(startDateTime.format('HH:mm'), 'HH:mm'), duration);
+  }
 
-        for (let auxEvent of filteredEvents) {
-            let auxEventStartDateTime = moment(auxEvent.start_date * 1000).tz(currentSummit.time_zone.name);
-            let auxEventEndDateTime   = moment(auxEvent.end_date * 1000).tz(currentSummit.time_zone.name);
-            // if time segments overlap
-            if(auxEventStartDateTime.isBefore(endDateTime) && auxEventEndDateTime.isAfter(startDateTime))
-                return false;
-        }
+  const getMaxHeight = () => {
+    return getBoundingBox().height;
+  }
 
-        return true;
-    }
+  const getBoundingBox = () => {
+    return ReactDOM.findDOMNode(scheduleEventContainer.current).getBoundingClientRect();
+  }
 
-    onResized(eventId, newTop, newHeight){
-        let { events, currentDay, startTime, pixelsPerMinute, currentSummit } = this.props;
+  const calculateInitialTop = (event) => {
+    const {currentDay, startTime, pixelsPerMinute, currentSummit} = props;
+    const eventStartDateTime = moment(event.start_date * 1000).utc().tz(currentSummit.time_zone.name);
+    const dayStartDateTime = moment.tz(currentDay + ' ' + startTime, 'YYYY-MM-DD HH:mm', currentSummit.time_zone.name);
+    const minutes = eventStartDateTime.diff(dayStartDateTime, 'minutes');
+    return minutes * pixelsPerMinute * (10 / interval);
+  }
 
-        let event            = events.filter( evt => { return evt.id === eventId;}).shift();
-        let minutes          = Math.floor(newTop / pixelsPerMinute);
-        let duration         = Math.floor(newHeight / pixelsPerMinute);
-        let startDateTime    = moment.tz(currentDay+' '+ startTime, 'YYYY-MM-DD HH:mm', currentSummit.time_zone.name);
-        startDateTime        = startDateTime.add(minutes, 'minutes');
+  const calculateInitialHeight = (event) => {
+    const {pixelsPerMinute, currentSummit, interval} = props;
+    const eventStartDateTime = moment(event.start_date * 1000).tz(currentSummit.time_zone.name);
+    const eventEndDateTime = moment(event.end_date * 1000).tz(currentSummit.time_zone.name);
+    const minutes = eventEndDateTime.diff(eventStartDateTime, 'minutes');
+    return minutes * pixelsPerMinute * (10 / interval);
+  }
 
-        this.props.onScheduleEventWithDuration(event, currentDay, moment(startDateTime.format('HH:mm'), 'HH:mm'), duration);
-    }
+  const createSlots = () => {
+    const tmpList = [];
+    let done = false;
+    const startTimeTZ = moment.tz(startTime, 'HH:mm', currentSummit.time_zone.name);
+    const endTimeTZ = moment.tz(endTime, 'HH:mm', currentSummit.time_zone.name);
+    // create UI
+    let slot = startTimeTZ;
+    do {
+      tmpList.push(slot);
+      slot = slot.clone();
+      slot.add(interval, 'm');
+      done = slot.isAfter(endTimeTZ);
+    } while (!done);
 
-    getMaxHeight(){
-        return this.getBoundingBox().height;
-    }
+    setTimeSlotsList(tmpList);
+  };
 
-    getBoundingBox() {
-        return ReactDOM.findDOMNode(this.scheduleEventContainer).getBoundingClientRect();
-    }
+  const {
+    events,
+    startTime,
+    endTime,
+    interval,
+    pixelsPerMinute,
+    currentDay,
+    currentSummit,
+    onEditEvent,
+    onUnPublishEvent,
+    onClickSelected,
+    selectedPublishedEvents
+  } = props;
 
-    calculateInitialTop(event){
-        let { currentDay, startTime, pixelsPerMinute, currentSummit} = this.props;
-        let eventStartDateTime = moment(event.start_date * 1000).utc().tz(currentSummit.time_zone.name);
-        let dayStartDateTime   = moment.tz(currentDay+' '+ startTime, 'YYYY-MM-DD HH:mm', currentSummit.time_zone.name);
-        let minutes            = eventStartDateTime.diff(dayStartDateTime, 'minutes');
-        return minutes * pixelsPerMinute;
-    }
-
-    calculateInitialHeight(event){
-        let { pixelsPerMinute, currentSummit } = this.props;
-        let eventStartDateTime  = moment(event.start_date * 1000).tz(currentSummit.time_zone.name);
-        let eventEndDateTime    = moment(event.end_date * 1000).tz(currentSummit.time_zone.name);
-        let minutes             = eventEndDateTime.diff(eventStartDateTime, 'minutes');
-        return minutes * pixelsPerMinute;
-    }
-
-    render(){
-        let { events,
-            startTime,
-            endTime,
-            interval,
-            pixelsPerMinute,
-            currentDay,
-            currentSummit,
-            onEditEvent,
-            onUnPublishEvent,
-            onClickSelected,
-            selectedPublishedEvents } = this.props;
-
-        let timeSlotsList = [];
-        let done          = false;
-        startTime         = moment.tz(startTime, 'HH:mm', currentSummit.time_zone.name);
-        endTime           = moment.tz(endTime, 'HH:mm', currentSummit.time_zone.name);
-        // create UI
-        let slot = startTime;
-        do
+  return (
+    <div className="row outer-schedule-events-container">
+      <div className="col-md-2 no-margin no-padding">
         {
-            timeSlotsList.push(slot);
-            slot = slot.clone();
-            slot.add(interval, 'm');
-            done = slot.isAfter(endTime);
-        } while(!done);
-
-        return (
-            <div className="row outer-schedule-events-container">
-                <div className="col-md-2 no-margin no-padding">
-                    {
-                        timeSlotsList.map((slot, idx) => (
-                            <TimeSlot timeLabel={slot.format("HH:mm")} key={idx} id={slot.format("HH_mm")} />
-                        ))
-                    }
-                </div>
-                <div
-                    className="schedule-events-container col-md-10 no-margin no-padding"
-                    ref={(div) => { this.scheduleEventContainer = div; }} >
-                    {
-                        timeSlotsList.map((slot, idx) => (
-                            <TimeSlotContainer
-                                timeSlot={slot}
-                                onDroppedEvent={this.onDroppedEvent}
-                                key={idx}
-                                events={events}
-                                currentSummit={currentSummit}
-                                interval={interval}
-                                pixelsPerMinute={pixelsPerMinute}
-                                currentDay={currentDay}>
-                            </TimeSlotContainer>
-                        ))
-                    }
-                    {
-                        events.map((event, idx) => {
-                            return (
-                                <ScheduleEvent
-                                    event={event}
-                                    selectedPublishedEvents={selectedPublishedEvents}
-                                    key={`event-${event.id}-${event.start_date}-${event.end_date}`}
-                                    type={"MAIN"}
-                                    step={pixelsPerMinute * 5}
-                                    minHeight={(pixelsPerMinute * interval)}
-                                    initialTop={this.calculateInitialTop(event)}
-                                    initialHeight={this.calculateInitialHeight(event)}
-                                    onDroppedSubEvent={this.onDroppedSubEvent}
-                                    canResize={this.canResize}
-                                    onResized={this.onResized}
-                                    maxHeight={this.getMaxHeight}
-                                    onUnPublishEvent={onUnPublishEvent}
-                                    onEditEvent={onEditEvent}
-                                    onClickSelected={onClickSelected}
-                                    currentDay={currentDay}>
-                                </ScheduleEvent>)
-                        })
-                    }
-                </div>
-            </div>
-        );
-    }
+          timeSlotsList.map((slot, idx) => (
+            <TimeSlot timeLabel={slot.format("HH:mm")} key={idx} id={slot.format("HH_mm")}/>
+          ))
+        }
+      </div>
+      <div
+        className="schedule-events-container col-md-10 no-margin no-padding"
+        ref={scheduleEventContainer}
+      >
+        {
+          timeSlotsList.map((slot, idx) => (
+            <TimeSlotContainer
+              timeSlot={slot}
+              onDroppedEvent={onDroppedEvent}
+              key={`timeslot-${idx}`}
+              events={events}
+              currentSummit={currentSummit}
+              interval={interval}
+              pixelsPerMinute={pixelsPerMinute}
+              currentDay={currentDay}>
+            </TimeSlotContainer>
+          ))
+        }
+        {
+          events.map((event, idx) => {
+            return (
+              <ScheduleEvent
+                event={event}
+                selectedPublishedEvents={selectedPublishedEvents}
+                key={`event-${event.id}-${event.start_date}-${event.end_date}-${interval}`}
+                type={"MAIN"}
+                step={pixelsPerMinute * 5}
+                minHeight={(pixelsPerMinute * 10)}
+                initialTop={calculateInitialTop(event)}
+                initialHeight={calculateInitialHeight(event)}
+                canResize={canResize}
+                onResized={onResized}
+                maxHeight={getMaxHeight}
+                onUnPublishEvent={onUnPublishEvent}
+                onEditEvent={onEditEvent}
+                onClickSelected={onClickSelected}
+                currentDay={currentDay}>
+              </ScheduleEvent>)
+          })
+        }
+      </div>
+    </div>
+  );
 }
 
 export default ScheduleEventList;

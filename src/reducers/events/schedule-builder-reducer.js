@@ -32,7 +32,8 @@ import
     CLEAR_EMPTY_SPOTS,
     ERROR_PUBLISH_EVENT,
     CLEAR_PUBLISHED_EVENTS,
-    CHANGE_SUMMIT_BUILDER_FILTERS
+    CHANGE_SUMMIT_BUILDER_FILTERS,
+    SET_SLOT_SIZE
 } from '../../actions/summit-builder-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
@@ -40,6 +41,7 @@ import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions'
 
 import SummitEvent from '../../models/summit-event';
+import {DefaultEventMinutesDuration} from "../../utils/constants";
 
 const DEFAULT_STATE = {
     scheduleEvents :  [],
@@ -60,7 +62,8 @@ const DEFAULT_STATE = {
     currentUnScheduleOrderBy : null,
     emptySpots: [],
     searchingEmpty: false,
-    selectedFilters: []
+    selectedFilters: [],
+    slotSize: DefaultEventMinutesDuration
 };
 
 const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
@@ -80,7 +83,10 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
             }
             return {...state, currentDay : day};
         }
-        break;
+        case SET_SLOT_SIZE: {
+            const {slotSize} = payload;
+            return {...state, slotSize};
+        }
         case CHANGE_CURRENT_EVENT_TYPE: {
             let {eventType} = payload;
             return {...state, currentEventType : eventType};

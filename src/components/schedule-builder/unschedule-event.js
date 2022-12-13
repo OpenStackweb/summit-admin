@@ -21,7 +21,7 @@ import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 const UnScheduleEvent = ({event, onEditEvent, onClickSelected, selectedUnPublishedEvents}) => {
   const [collected, drag, dragPreview] = useDrag(() => ({
     type: DraggableItemTypes.UNSCHEDULEEVENT,
-    item: {...event},
+    item: {id: event.id, title: event.title, is_published: event.is_published, start_date: event.start_date, end_date: event.end_date, duration: event.duration},
     collect: (monitor, props) => ({isDragging: monitor.isDragging()})
   }), [event.id]);
   const isSelected = selectedUnPublishedEvents.includes(event.id);
