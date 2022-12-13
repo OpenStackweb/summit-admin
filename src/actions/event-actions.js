@@ -27,7 +27,9 @@ import {
     authErrorHandler,
     getCSV,
     escapeFilterValue,
-    postFile
+    postFile,
+    fetchResponseHandler,
+    fetchErrorHandler
 } from "openstack-uicore-foundation/lib/utils/actions";
 import {epochToMomentTimeZone} from "openstack-uicore-foundation/lib/utils/methods";
 import {getAccessTokenSafely} from '../utils/methods';
@@ -957,3 +959,22 @@ export const deleteEventFeedback = (eventId, feedbackId) => async (dispatch, get
     );
 
 }
+
+
+
+export const queryEvents = _.debounce(async (summitId, input, callback) => {
+
+    const accessToken = await getAccessTokenSafely();
+
+    input = escapeFilterValue(input);
+
+    fetch(`${window.API_BASE_URL}/api/v1/summits/${summitId}/events?filter=title=@${input}&access_token=${accessToken}`)
+        .then(fetchResponseHandler)
+        .then((json) => {
+            const options = [...json.data];
+
+            callback(options);
+        })
+        .catch(fetchErrorHandler);
+}, 500);
+

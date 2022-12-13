@@ -76,8 +76,6 @@ const badgeTypeReducer = (state = DEFAULT_STATE, action) => {
                 }
             }
 
-            console.log('entity', entity);
-
             return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
         }
         break;

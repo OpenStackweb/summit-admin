@@ -68,7 +68,7 @@ class SponsorListPage extends React.Component {
     }
 
     render(){
-        const {currentSummit, sponsors, totalSponsors} = this.props;
+        const {currentSummit, sponsors, totalSponsors, allSponsorships} = this.props;
 
         const columns = [
             { columnKey: 'id', value: T.translate("sponsor_list.id") },
@@ -122,8 +122,9 @@ class SponsorListPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentSponsorListState }) => ({
+const mapStateToProps = ({ currentSummitState, currentSponsorListState, currentSummitSponsorshipListState }) => ({
     currentSummit   : currentSummitState.currentSummit,
+    allSponsorships : currentSummitSponsorshipListState.sponsorships,
     ...currentSponsorListState
 })
 

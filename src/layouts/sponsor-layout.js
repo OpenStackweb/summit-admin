@@ -16,25 +16,23 @@ import { Switch, Route, withRouter } from 'react-router-dom';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import Restrict from '../routes/restrict';
-
 import SponsorListPage from '../pages/sponsors/sponsor-list-page'
-import EditSponsorPage from '../pages/sponsors/edit-sponsor-page'
 import NoMatchPage from "../pages/no-match-page";
+import SponsorIdLayout from './sponsor-id-layout';
 
 
 class SponsorLayout extends React.Component {
 
-    render(){
+    render() {
         const { match } = this.props;
-        return(
+        return (
             <div>
                 <Breadcrumb data={{ title: T.translate("sponsor_list.sponsors"), pathname: match.url }} />
-
                 <Switch>
-                    <Route strict exact path={match.url} component={SponsorListPage}/>
-                    <Route strict exact path={`${match.url}/new`} component={EditSponsorPage}/>
-                    <Route strict exact path={`${match.url}/:sponsor_id(\\d+)`} component={EditSponsorPage}/>
-                    <Route component={NoMatchPage}/>
+                    <Route strict exact path={match.url} component={SponsorListPage} />
+                    <Route strict exact path={`${match.url}/new`} component={SponsorIdLayout} />
+                    <Route path={`${match.url}/:sponsor_id(\\d+)`} component={SponsorIdLayout} />
+                    <Route component={NoMatchPage} />
                 </Switch>
             </div>
         );

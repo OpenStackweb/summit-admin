@@ -121,6 +121,9 @@ import ratingTypeReducer from "./reducers/ranking/rating-type-reducer";
 import scoreTypeReducer from './reducers/ranking/score-type-reducer';
 import summitSpeakersListReducer from './reducers/summit_speakers/summit-speakers-list-reducer';
 import summitStatsReducer from './reducers/summits/summit-stats-reducer';
+import sponsorAdvertisementReducer from './reducers/sponsors/sponsor-advertisement-reducer';
+import sponsorMaterialReducer from './reducers/sponsors/sponsor-material-reducer';
+import sponsorSocialNetworkReducer from './reducers/sponsors/sponsor-social-network-reducer';
 
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
@@ -197,6 +200,9 @@ const reducers = persistCombineReducers(config, {
     currentPurchaseOrderState: purchaseOrderReducer,
     currentSponsorListState: sponsorListReducer,
     currentSponsorState: sponsorReducer,
+    currentSponsorAdvertisementState: sponsorAdvertisementReducer,
+    currentSponsorMaterialState: sponsorMaterialReducer,
+    currentSponsorSocialNetworkState: sponsorSocialNetworkReducer,
     currentSummitSponsorshipListState: summitSponsorshipListReducer,
     currentSummitSponsorshipState: summitSponsorshipReducer,
     currentSponsorshipListState: sponsorshipListReducer,

@@ -15,10 +15,10 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import Swal from "sweetalert2";
-import { Pagination } from 'react-bootstrap';
 import { Table, SortableTable } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getSummitSponsorships, deleteSummitSponsorship, updateSummitSponsorhipOrder } from "../../actions/sponsor-actions";
+import { getSponsorships } from '../../actions/sponsorship-actions';
 
 class SummitSponsorshipListPage extends React.Component {
 
@@ -27,6 +27,7 @@ class SummitSponsorshipListPage extends React.Component {
 
         this.handleEdit = this.handleEdit.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
+        this.handleSort = this.handleSort.bind(this);
         this.handleNewSponsorship = this.handleNewSponsorship.bind(this);
 
         this.state = {}
@@ -63,13 +64,17 @@ class SummitSponsorshipListPage extends React.Component {
         });
     }
 
+    handleSort(index, key, dir, func) {
+        this.props.getSummitSponsorships(key, dir);
+    }
+
     handleNewSponsorship(ev) {
         const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/sponsorships/new`);
     }
 
     render(){
-        const {currentSummit, sponsorships, currentPage, lastPage, order, orderDir, totalSponsorships} = this.props;
+        const {currentSummit, sponsorships, totalSponsorships} = this.props;
 
         const sortedSponsorships = sponsorships.sort((a, b) => a.order -b.order);
 
