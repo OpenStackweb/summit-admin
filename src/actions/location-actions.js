@@ -140,7 +140,7 @@ export const getLocation = (locationId) => async (dispatch, getState) => {
     dispatch(startLoading());
 
     const params = {
-        expand       : 'rooms,floors',
+        expand       : 'rooms,floors,images,maps',
         access_token : accessToken,
     };
 
@@ -328,7 +328,7 @@ export const getFloor = (locationId, floorId) => async (dispatch, getState) => {
     dispatch(startLoading());
 
     const params = {
-        expand       : 'rooms',
+        expand       : 'rooms,images,maps',
         access_token : accessToken,
     };
 
