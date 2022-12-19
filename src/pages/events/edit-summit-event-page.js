@@ -11,181 +11,205 @@
  * limitations under the License.
  **/
 
-import React from 'react'
-import { connect } from 'react-redux';
+import React, {useEffect} from 'react'
+import {connect} from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import EventForm from '../../components/forms/event-form';
 import {
-    saveEvent,
-    attachFile,
-    getEvents,
-    removeImage,
-    getEventFeedback,
-    deleteEventFeedback,
-    getEventFeedbackCSV
+  saveEvent,
+  attachFile,
+  getEvents,
+  removeImage,
+  getEventFeedback,
+  deleteEventFeedback,
+  getEventFeedbackCSV,
+  changeFlag,
+  getActionTypes
 } from '../../actions/event-actions';
-import { unPublishEvent } from '../../actions/summit-builder-actions';
-import { deleteEventMaterial } from '../../actions/event-material-actions';
-
+import {unPublishEvent} from '../../actions/summit-builder-actions';
+import {deleteEventMaterial} from '../../actions/event-material-actions';
+import {addQAMember, removeQAMember} from "../../actions/user-chat-roles-actions"
 
 import '../../styles/edit-summit-event-page.less';
 import '../../components/form-validation/validate.less';
-import {addQAMember, removeQAMember} from "../../actions/user-chat-roles-actions"
 
-class EditSummitEventPage extends React.Component {
+const EditSummitEventPage = (props) => {
 
-    goToEvent = async (next = true) => {
-        const {currentSummit, history} = this.props;
-        const {events, currentPage, lastPage} = this.props.allEventsData;
-        let event = null;
-
-        if (events.length === 0) {
-            event = await this.props.getEvents().then(async data => {
-                const {data: allEvents, current_page, last_page} = data;
-                return next ?
-                    await this.getEventNextFromList(allEvents, current_page, last_page) :
-                    await this.getEventPrevFromList(allEvents, current_page, last_page);
-            });
-        } else {
-            event = next ?
-                await this.getEventNextFromList(events, currentPage, lastPage) :
-                await this.getEventPrevFromList(events, currentPage, lastPage);
-        }
-
-        if (event) {
-            history.push(`/app/summits/${currentSummit.id}/events/${event.id}`)
-        }
-    };
-
-    getEventNextFromList = async (data, current_page, last_page) => {
-        const {entity} = this.props;
-        const listLength = data.length;
-        const idx = data.findIndex(ev => ev.id === entity.id);
-
-        if (idx === -1) { // not found , return first
-            return data[0];
-        } else if (idx === -1 || idx === (listLength - 1)) { // last on page
-            if (last_page > current_page) { // there are more pages
-                return await this.props.getEvents(null, current_page + 1).then(async newData => {
-                    return newData.data[0];
-                });
-            } else { // last of last page
-                if (last_page > 1) { // there is more than one page
-                    return await this.props.getEvents(null, 1).then(async newData => {
-                        return newData.data[0]; // return first event of first page
-                    });
-                } else { // only one page, return first
-                    return data[0];
-                }
-
-            }
-        } else {
-            return data[idx+1];
-        }
-    };
-
-    getEventPrevFromList = async (data, current_page, last_page) => {
-        const {entity} = this.props;
-        const idx = data.findIndex(ev => ev.id === entity.id);
-
-        if (idx === -1) { // not found , return first
-            return data[0];
-        } else if (idx === 0) { // first on page
-            if (current_page > 1) { // there are more pages
-                return await this.props.getEvents(null, current_page - 1).then(async newData => {
-                    return newData.data[newData.data.length - 1];
-                });
-            } else { // first of first page
-                if (last_page > 1) { // there is more than one page
-                    return await this.props.getEvents(null, last_page).then(async newData => {
-                        return newData.data[newData.data.length - 1]; // return last event of last page
-                    });
-                } else { // only one page, return last
-                    return data[data.length -1];
-                }
-            }
-        } else {
-            return data[idx-1];
-        }
-    };
-
-    render(){
-        const {currentSummit, entity, errors, levelOptions, rsvpTemplateOptions, extraQuestions, feedbackState} = this.props;
-        const header = !entity.id ? T.translate("general.summit_event") : `${entity.title} - ID ${entity.id}`;
-
-        return(
-            <div className="container">
-                <h3>
-                    <div className="title">
-                        {header}
-                    </div>
-                    {!!entity.id &&
-                    <div className="next">
-                        <button className="btn btn-default prev" onClick={ev => this.goToEvent(false)}>
-                            {`<< Prev Event`}
-                        </button>
-                        <button className="btn btn-default next" onClick={ev => this.goToEvent(true)}>
-                            {`Next Event >>`}
-                        </button>
-                    </div>
-                    }
-                </h3>
-                <hr/>
-                {currentSummit &&
-                <EventForm
-                    history={this.props.history}
-                    extraQuestions={extraQuestions}
-                    currentSummit={currentSummit}
-                    levelOpts={levelOptions}
-                    trackOpts={currentSummit.tracks}
-                    typeOpts={currentSummit.event_types}
-                    locationOpts={currentSummit.locations}
-                    selectionPlansOpts={currentSummit.selection_plans}
-                    rsvpTemplateOpts={rsvpTemplateOptions}
-                    entity={entity}
-                    errors={errors}
-                    onSubmit={this.props.saveEvent}
-                    onAttach={this.props.attachFile}
-                    onUnpublish={this.props.unPublishEvent}
-                    onMaterialDelete={this.props.deleteEventMaterial}
-                    onRemoveImage={this.props.removeImage}
-                    onAddQAMember={this.props.addQAMember}
-                    onDeleteQAMember={this.props.removeQAMember}
-                    feedbackState={feedbackState}
-                    getEventFeedback={this.props.getEventFeedback}
-                    deleteEventFeedback={this.props.deleteEventFeedback}
-                    getEventFeedbackCSV={this.props.getEventFeedbackCSV}
-                />
-                }
-            </div>
-        )
+  useEffect(() => {
+    if (props.entity.id && props.entity.selection_plan_id) {
+      props.getActionTypes(props.entity.selection_plan_id)
     }
+  }, [props.entity.id, props.entity.selection_plan_id])
+
+  const goToEvent = async (next = true) => {
+    const {currentSummit, history} = props;
+    const {events, currentPage, lastPage} = props.allEventsData;
+    let event = null;
+
+    if (events.length === 0) {
+      event = await props.getEvents().then(async data => {
+        const {data: allEvents, current_page, last_page} = data;
+        return next ?
+          await getEventNextFromList(allEvents, current_page, last_page) :
+          await getEventPrevFromList(allEvents, current_page, last_page);
+      });
+    } else {
+      event = next ?
+        await getEventNextFromList(events, currentPage, lastPage) :
+        await getEventPrevFromList(events, currentPage, lastPage);
+    }
+
+    if (event) {
+      history.push(`/app/summits/${currentSummit.id}/events/${event.id}`)
+    }
+  };
+
+  const getEventNextFromList = async (data, current_page, last_page) => {
+    const {entity} = props;
+    const listLength = data.length;
+    const idx = data.findIndex(ev => ev.id === entity.id);
+
+    if (idx === -1) { // not found , return first
+      return data[0];
+    } else if (idx === -1 || idx === (listLength - 1)) { // last on page
+      if (last_page > current_page) { // there are more pages
+        return await props.getEvents(null, current_page + 1).then(async newData => {
+          return newData.data[0];
+        });
+      } else { // last of last page
+        if (last_page > 1) { // there is more than one page
+          return await props.getEvents(null, 1).then(async newData => {
+            return newData.data[0]; // return first event of first page
+          });
+        } else { // only one page, return first
+          return data[0];
+        }
+
+      }
+    } else {
+      return data[idx + 1];
+    }
+  };
+
+  const getEventPrevFromList = async (data, current_page, last_page) => {
+    const {entity} = props;
+    const idx = data.findIndex(ev => ev.id === entity.id);
+
+    if (idx === -1) { // not found , return first
+      return data[0];
+    } else if (idx === 0) { // first on page
+      if (current_page > 1) { // there are more pages
+        return await props.getEvents(null, current_page - 1).then(async newData => {
+          return newData.data[newData.data.length - 1];
+        });
+      } else { // first of first page
+        if (last_page > 1) { // there is more than one page
+          return await props.getEvents(null, last_page).then(async newData => {
+            return newData.data[newData.data.length - 1]; // return last event of last page
+          });
+        } else { // only one page, return last
+          return data[data.length - 1];
+        }
+      }
+    } else {
+      return data[idx - 1];
+    }
+  };
+
+  const {
+    currentSummit,
+    entity,
+    errors,
+    levelOptions,
+    rsvpTemplateOptions,
+    extraQuestions,
+    feedbackState,
+    actionTypes
+  } = props;
+  const header = !entity.id ? T.translate("general.summit_event") : `${entity.title} - ID ${entity.id}`;
+
+  return (
+    <div className="container">
+      <h3>
+        <div className="title">
+          {header}
+        </div>
+        {!!entity.id &&
+        <div className="next">
+          <button className="btn btn-default prev" onClick={ev => goToEvent(false)}>
+            {`<< Prev Event`}
+          </button>
+          <button className="btn btn-default next" onClick={ev => goToEvent(true)}>
+            {`Next Event >>`}
+          </button>
+        </div>
+        }
+      </h3>
+      <hr/>
+      {currentSummit &&
+      <EventForm
+        history={props.history}
+        extraQuestions={extraQuestions}
+        currentSummit={currentSummit}
+        levelOpts={levelOptions}
+        trackOpts={currentSummit.tracks}
+        typeOpts={currentSummit.event_types}
+        locationOpts={currentSummit.locations}
+        selectionPlansOpts={currentSummit.selection_plans}
+        rsvpTemplateOpts={rsvpTemplateOptions}
+        actionTypes={actionTypes}
+        entity={entity}
+        errors={errors}
+        onSubmit={props.saveEvent}
+        onAttach={props.attachFile}
+        onUnpublish={props.unPublishEvent}
+        onMaterialDelete={props.deleteEventMaterial}
+        onRemoveImage={props.removeImage}
+        onAddQAMember={props.addQAMember}
+        onDeleteQAMember={props.removeQAMember}
+        feedbackState={feedbackState}
+        getEventFeedback={props.getEventFeedback}
+        deleteEventFeedback={props.deleteEventFeedback}
+        getEventFeedbackCSV={props.getEventFeedbackCSV}
+        onFlagChange={props.changeFlag}
+      />
+      }
+    </div>
+  )
 }
 
-const mapStateToProps = ({ currentSummitState, currentSummitEventState, currentRsvpTemplateListState, currentEventListState }) => ({
-    currentSummit: currentSummitState.currentSummit,
-    levelOptions: currentSummitEventState.levelOptions,
-    rsvpTemplateOptions: currentRsvpTemplateListState.rsvpTemplates,
-    entity: currentSummitEventState.entity,
-    errors: currentSummitEventState.errors,
-    extraQuestions: currentSummitEventState.extraQuestions,
-    feedbackState: currentSummitEventState.feedbackState,
-    allEventsData: currentEventListState
+const mapStateToProps = ({
+                           currentSummitState,
+                           currentSummitEventState,
+                           currentRsvpTemplateListState,
+                           currentEventListState
+                         }) => ({
+  currentSummit: currentSummitState.currentSummit,
+  levelOptions: currentSummitEventState.levelOptions,
+  rsvpTemplateOptions: currentRsvpTemplateListState.rsvpTemplates,
+  entity: currentSummitEventState.entity,
+  errors: currentSummitEventState.errors,
+  extraQuestions: currentSummitEventState.extraQuestions,
+  feedbackState: currentSummitEventState.feedbackState,
+  actionTypes: currentSummitEventState.actionTypes,
+  allEventsData: currentEventListState
 });
 
-export default connect (
-    mapStateToProps,
-    {
-        saveEvent,
-        attachFile,
-        unPublishEvent,
-        deleteEventMaterial,
-        getEvents,
-        removeImage,
-        addQAMember,
-        removeQAMember,
-        getEventFeedback,
-        deleteEventFeedback,
-        getEventFeedbackCSV
-    }
+export default connect(
+  mapStateToProps,
+  {
+    saveEvent,
+    attachFile,
+    unPublishEvent,
+    deleteEventMaterial,
+    getEvents,
+    removeImage,
+    addQAMember,
+    removeQAMember,
+    getEventFeedback,
+    deleteEventFeedback,
+    getEventFeedbackCSV,
+    changeFlag,
+    getActionTypes
+  }
 )(EditSummitEventPage);

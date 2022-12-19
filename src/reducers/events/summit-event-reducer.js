@@ -22,7 +22,10 @@ import
     IMAGE_ATTACHED,
     IMAGE_DELETED,
     REQUEST_EVENT_FEEDBACK,
-    RECEIVE_EVENT_FEEDBACK, EVENT_FEEDBACK_DELETED,
+    RECEIVE_EVENT_FEEDBACK,
+    EVENT_FEEDBACK_DELETED,
+    RECEIVE_ACTION_TYPES,
+    FLAG_CHANGED,
 } from '../../actions/event-actions';
 import moment from 'moment-timezone';
 
@@ -67,6 +70,7 @@ export const DEFAULT_ENTITY = {
     disclaimer_accepted_date: null,
     created_by: null,
     custom_order: 0,
+    actions: []
 }
 
 const DEFAULT_STATE_FEEDBACK_STATE = {
@@ -87,6 +91,7 @@ const DEFAULT_STATE = {
     entity: DEFAULT_ENTITY,
     errors: {},
     feedbackState: DEFAULT_STATE_FEEDBACK_STATE,
+    actionTypes: []
 };
 
 const normalizeEventResponse = (entity) => {
@@ -226,6 +231,23 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
         case EVENT_FEEDBACK_DELETED:{
             let { feedbackId } = payload;
             return {...state, feedbackState: {...state.feedbackState, items: state.feedbackState.items.filter(e => e.id !== feedbackId)}};
+        }
+        case RECEIVE_ACTION_TYPES: {
+            const {data} = payload.response;
+            return {...state, actionTypes: data};
+        }
+        case FLAG_CHANGED: {
+            const {entity} = state;
+            const action = payload.response;
+
+            // remove action if present
+            const tmpActions = entity.actions.filter(ac => ac.type_id !== action.type_id);
+
+            if (action.is_completed) {
+                tmpActions.push(action);
+            }
+
+            return {...state, entity: {...entity, actions: tmpActions}};
         }
         default:
             return state;

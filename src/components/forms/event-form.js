@@ -29,11 +29,13 @@ import {
     Input,
     Panel,
     Table,
-    MemberInput, FreeTextSearch
+    MemberInput,
+    FreeTextSearch
 } from 'openstack-uicore-foundation/lib/components'
 import {isEmpty, scrollToError, shallowEqual, hasErrors} from "../../utils/methods";
 import {Pagination} from "react-bootstrap";
 import ExtraQuestionsForm from 'openstack-uicore-foundation/lib/components/extra-questions';
+import ProgressFlags from '../inputs/ProgressFlags';
 
 
 class EventForm extends React.Component {
@@ -442,8 +444,8 @@ class EventForm extends React.Component {
         const {entity, showSection, errors} = this.state;
 
         const {
-            currentSummit, levelOpts, typeOpts, trackOpts,
-            locationOpts, rsvpTemplateOpts, selectionPlansOpts, history, extraQuestions, feedbackState
+            currentSummit, levelOpts, typeOpts, trackOpts, locationOpts, rsvpTemplateOpts, selectionPlansOpts,
+            history, extraQuestions, feedbackState, actionTypes
         } = this.props;
 
         const event_types_ddl = typeOpts.map(
@@ -864,6 +866,18 @@ class EventForm extends React.Component {
                             multi={true}
                         />
                     </div>
+                </div>
+                }
+                {actionTypes.length > 0 && entity.id > 0 &&
+                <div>
+                    <label>Status</label>
+                    <ProgressFlags
+                      flags={entity.actions}
+                      actionTypes={actionTypes}
+                      onChange={this.props.onFlagChange}
+                      eventId={entity.id}
+                      selectionPlanId={entity.selection_plan_id}
+                    />
                 </div>
                 }
 

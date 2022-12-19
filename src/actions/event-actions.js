@@ -57,6 +57,8 @@ export const IMPORT_FROM_MUX = 'IMPORT_FROM_MUX';
 export const REQUEST_EVENT_FEEDBACK = 'REQUEST_EVENT_FEEDBACK';
 export const RECEIVE_EVENT_FEEDBACK = 'RECEIVE_EVENT_FEEDBACK';
 export const EVENT_FEEDBACK_DELETED = 'EVENT_FEEDBACK_DELETED';
+export const RECEIVE_ACTION_TYPES = 'RECEIVE_ACTION_TYPES';
+export const FLAG_CHANGED = 'FLAG_CHANGED';
 
 export const getEvents = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1, filters = {}, extraColumns = []) => async (dispatch, getState) => {
 
@@ -226,6 +228,60 @@ export const getCurrentEventForOccupancy = (roomId, eventId = null) => async (di
     );
 };
 
+export const getActionTypes = (selectionPlanId) => async (dispatch, getState) => {
+    const {currentSummitState} = getState();
+    const {currentSummit} = currentSummitState;
+    const accessToken = await getAccessTokenSafely();
+
+    const params = {
+        per_page: 100,
+        page: 1,
+        order: '+order',
+        access_token: accessToken,
+    };
+
+    return getRequest(
+      null,
+      createAction(RECEIVE_ACTION_TYPES),
+      `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}/allowed-presentation-action-types`,
+      authErrorHandler
+    )(params)(dispatch);
+};
+
+export const changeFlag = (isCompleted, eventId, typeId, selectionPlanId) => async (dispatch, getState) => {
+    const {currentSummitState} = getState();
+    const {currentSummit} = currentSummitState;
+    const accessToken = await getAccessTokenSafely();
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token: accessToken,
+    };
+
+    if (isCompleted) {
+        putRequest(
+          null,
+          createAction(FLAG_CHANGED),
+          `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}/presentations/${eventId}/actions/${typeId}/complete`,
+          {},
+          authErrorHandler
+        )(params)(dispatch).then((res) => {
+            dispatch(stopLoading());
+        });
+    } else {
+        deleteRequest(
+          null,
+          createAction(FLAG_CHANGED),
+          `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${selectionPlanId}/presentations/${eventId}/actions/${typeId}/incomplete`,
+          {},
+          authErrorHandler
+        )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        });
+    }
+};
+
 export const getEvent = (eventId) => async (dispatch, getState) => {
     const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
@@ -235,7 +291,7 @@ export const getEvent = (eventId) => async (dispatch, getState) => {
 
     const params = {
         access_token: accessToken,
-        expand: 'creator,speakers,moderator,sponsors,groups,type,type.allowed_media_upload_types,type.allowed_media_upload_types.type, slides, links, videos, media_uploads, tags, media_uploads.media_upload_type, media_uploads.media_upload_type.type,extra_questions,selection_plan,selection_plan.extra_questions,selection_plan.extra_questions.values,created_by'
+        expand: 'creator,speakers,moderator,sponsors,groups,type,type.allowed_media_upload_types,type.allowed_media_upload_types.type, slides, links, videos, media_uploads, tags, media_uploads.media_upload_type, media_uploads.media_upload_type.type,extra_questions,selection_plan,selection_plan.extra_questions,selection_plan.extra_questions.values,created_by, actions'
     };
 
     dispatch(startLoading());

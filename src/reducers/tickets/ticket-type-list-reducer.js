@@ -42,7 +42,6 @@ const ticketTypeListReducer = (state = DEFAULT_STATE, action) => {
     }
     case REQUEST_TICKET_TYPES: {
       let {order, orderDir, currentPage, perPage, audienceFilter} = payload;
-      ;
       return {...state, order, orderDir, currentPage, perPage, audienceFilter}
     }
     case RECEIVE_TICKET_TYPES: {
