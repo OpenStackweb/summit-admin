@@ -23,7 +23,7 @@ const UnScheduleEvent = ({event, onEditEvent, onClickSelected, selectedUnPublish
     type: DraggableItemTypes.UNSCHEDULEEVENT,
     item: {id: event.id, title: event.title, is_published: event.is_published, start_date: event.start_date, end_date: event.end_date, duration: event.duration},
     collect: (monitor, props) => ({isDragging: monitor.isDragging()})
-  }), [event.id]);
+  }), [event.id, event.duration, event.start_date, event.end_date]);
   const isSelected = selectedUnPublishedEvents.includes(event.id);
   const title = event.title.slice(0, 75) + (event.title.length > 75 ? '...' : '');
   const rank = event.rank ?

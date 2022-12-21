@@ -228,8 +228,9 @@ class ScheduleAdminDashBoard extends React.Component {
   }
 
   onScheduleEvent(event, currentDay, startDateTime) {
-    let eventModel = new SummitEvent(event, this.props.currentSummit);
-    this.props.publishEvent(event, currentDay, startDateTime, eventModel.getMinutesDuration(this.props.slotSize));
+    const eventModel = new SummitEvent(event, this.props.currentSummit);
+    const duration = eventModel.getMinutesDuration(this.props.slotSize);
+    this.props.publishEvent(event, currentDay, startDateTime, duration);
   }
 
   onDayChanged(day) {

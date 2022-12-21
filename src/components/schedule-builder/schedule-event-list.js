@@ -47,8 +47,6 @@ const TimeSlotContainer = ( props ) => {
   }), [interval, timeSlot]);
   const {isOver, canDrop} = collectedProps;
 
-  const renderOverlay = (color) => <div style={{backgroundColor: color}} className="time-slot-overlay"/>;
-
   const renderMinutesContainer = (interval, pixelsPerMinute) => {
     let minutesContainers = [];
     let container_count = 2;
@@ -66,21 +64,28 @@ const TimeSlotContainer = ( props ) => {
     return minutesContainers;
   };
 
+  const placeHolderStyle = () => {
+    const style = {};
+
+    if (isOver) {
+      style.backgroundColor = canDrop ? 'green' : 'red';
+      style.opacity = 0.5;
+    } else if (canDrop) {
+      style.backgroundColor = 'yellow';
+      style.opacity = 0.5;
+    }
+
+    return style;
+  }
 
   return (
-    <div id={divId} ref={drop} className="row time-slot-container">
+    <div id={divId} ref={drop} className="row time-slot-container" style={placeHolderStyle()}>
       <div className="col-md-12">
         {renderMinutesContainer(interval, pixelsPerMinute)}
       </div>
-      {isOver && !canDrop && renderOverlay('red')}
-      {!isOver && canDrop && renderOverlay('yellow')}
-      {isOver && canDrop && renderOverlay('green')}
     </div>
   );
 };
-
-
-
 
 
 

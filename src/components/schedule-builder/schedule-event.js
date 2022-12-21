@@ -39,7 +39,7 @@ const ScheduleEvent = ({
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     })
-  }), [event.id]);
+  }), [event.id, event.duration, event.start_date, event.end_date]);
   const [resizeInfo, setResizeInfo] = useState({resizing: false, type: null, lastYPos: null});
   const [size, setSize] = useState({top: initialTop, height: initialHeight});
   const isSelected = selectedPublishedEvents.includes(event.id);
