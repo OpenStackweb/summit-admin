@@ -292,7 +292,7 @@ export const getEvent = (eventId) => async (dispatch, getState) => {
 
     const params = {
         access_token: accessToken,
-        expand: 'creator,speakers,moderator,sponsors,groups,type,type.allowed_media_upload_types,type.allowed_media_upload_types.type, slides, links, videos, media_uploads, tags, media_uploads.media_upload_type, media_uploads.media_upload_type.type,extra_questions,selection_plan,selection_plan.extra_questions,selection_plan.extra_questions.values,created_by, actions'
+        expand: 'creator,speakers,moderator,sponsors,groups,type,type.allowed_media_upload_types,type.allowed_media_upload_types.type, slides, links, videos, media_uploads, tags, media_uploads.media_upload_type, media_uploads.media_upload_type.type,extra_questions,selection_plan,selection_plan.track_chair_rating_types,selection_plan.track_chair_rating_types.score_types,selection_plan.extra_questions,selection_plan.extra_questions.values,created_by,track_chair_scores_avg.ranking_type,actions'
     };
 
     dispatch(startLoading());
@@ -330,7 +330,7 @@ export const saveEvent = (entity, publish) => async (dispatch, getState) => {
 
     const params = {
         access_token: accessToken,
-        expand: 'creator,speakers,moderator,sponsors,groups,type,type.allowed_media_upload_types,type.allowed_media_upload_types.type, slides, links, videos, media_uploads, tags, media_uploads.media_upload_type, media_uploads.media_upload_type.type,extra_questions,selection_plan,selection_plan.extra_questions,selection_plan.extra_questions.values,created_by'
+        expand: 'creator,speakers,moderator,sponsors,groups,type,type.allowed_media_upload_types,type.allowed_media_upload_types.type, slides, links, videos, media_uploads, tags, media_uploads.media_upload_type, media_uploads.media_upload_type.type,extra_questions,selection_plan,selection_plan.track_chair_rating_types,selection_plan.track_chair_rating_types.score_types,selection_plan.extra_questions,selection_plan.extra_questions.values,created_by,track_chair_scores_avg.ranking_type'
     };
 
     if (entity.id) {

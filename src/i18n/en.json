@@ -423,6 +423,13 @@
     "feedback": "Feedback",
     "delete_feedback_warning": "Are you sure you want to delete this feedback entry?",
     "extra_questions": "Extra Questions",
+    "track_chair_statistics": "Track Chairs Statistics",
+    "average_score": "Average Score",
+    "community_vote": "Community Vote",
+    "selections": "Selections",
+    "interested": "Interested",
+    "no_thanks": "No Thanks",
+    "popularity_score": "Popularity Score",
     "placeholders": {
       "select_venue": "Select an Activity Venue ...",
       "start_date": "Start Date",

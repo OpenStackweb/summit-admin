@@ -15,6 +15,7 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import Swal from "sweetalert2";
+import ReactTooltip from "react-tooltip";
 import {epochToMomentTimeZone} from 'openstack-uicore-foundation/lib/utils/methods'
 import {
     TextEditor,
@@ -75,6 +76,7 @@ class EventForm extends React.Component {
         this.triggerFormSubmit = this.triggerFormSubmit.bind(this);
         this.handleUnpublish = this.handleUnpublish.bind(this);
         this.isQuestionAllowed = this.isQuestionAllowed.bind(this);
+        this.getPopupScores = this.getPopupScores.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -462,6 +464,19 @@ class EventForm extends React.Component {
                 deleteEventFeedback(entity.id, id);
             }
         });
+    }
+
+    getPopupScores(score_id) {
+        const {entity} = this.state;
+        let res = ''
+        const rating_type = entity?.selection_plan?.track_chair_rating_types.find((st) => st.id === parseInt(score_id));
+        if (rating_type) {
+            rating_type.score_types.forEach((st) => {
+                if (res !== '') res = res + '<br>';
+                res = res + `${st.score}. <b>${st.name.trim()}</b> <p>${st.description?.trim()}</p>`;
+            })
+        }
+        return res;
     }
 
     render() {
@@ -1141,6 +1156,76 @@ class EventForm extends React.Component {
                     </>
                     }
                 </Panel>
+                {entity.id !== 0 &&
+                <Panel show={showSection === 'track_chair_statistics'} title={T.translate("edit_event.track_chair_statistics")}
+                       handleClick={this.toggleSection.bind(this, 'track_chair_statistics')}>
+                    <div className="row">
+                        <div className="col-md-6">
+                            <p>
+                            <label><i className="fa fa-thumbs-up" /> {T.translate("edit_event.selections")}:</label> 
+                                &nbsp;{entity.selectors_count ? entity.selectors_count : 0}
+                            </p>
+                            <p>
+                            <label><i className="fa fa-eye" /> {T.translate("edit_event.interested")}:</label> 
+                                &nbsp;{entity.likers_count ? entity.likers_count : 0}
+                            </p>
+                            <p>
+                            <label><i className="fa fa-thumbs-down" /> {T.translate("edit_event.no_thanks")}:</label>
+                                 &nbsp;{entity.passers_count ? entity.passers_count : 0}
+                            </p>
+                            <p>
+                            <label><i className="fa fa-star" /> {T.translate("edit_event.popularity_score")}:</label> 
+                                &nbsp;{entity.popularity_score ? entity.popularity_score : 0}
+                            </p>
+                        </div>
+                        <div className="col-md-6">
+                            <p>
+                                <label>
+                                    {T.translate("edit_event.average_score")}:&nbsp;
+                                </label> 
+                                {entity.track_chair_avg_score ? entity.track_chair_avg_score : 0}
+                            </p>
+                            {entity.track_chair_scores_avg.map((score) => {
+                                const rating_type = entity.selection_plan.track_chair_rating_types.find(e => parseInt(score.ranking_type_id) === e.id) 
+
+                                return (
+                                    <p>
+                                        <label>
+                                            {rating_type.score_types.length > 0 && 
+                                            <>
+                                                <a data-tip={this.getPopupScores(score.ranking_type_id)} data-for={'help'}>
+                                                    <ReactTooltip
+                                                        id={'help'}
+                                                        place={'bottom'}
+                                                        type={'light'}
+                                                        effect={'solid'}
+                                                        multiline={true}
+                                                        clickable={true}
+                                                        border={true}
+                                                        getContent={(dataTip) =>
+                                                            <div className="tooltip-popover"
+                                                                dangerouslySetInnerHTML={{__html: dataTip}}
+                                                            />
+                                                        }
+                                                    />
+                                                    <i className="fa fa-question-circle" />
+                                                </a>
+                                                &nbsp;
+                                            </>
+                                            }
+                                            {rating_type?.name}: 
+                                        </label> {parseFloat(score.avg_score).toFixed(2)}
+                                    </p>    
+                                )
+                            })}
+                            <p>
+                            <label><i className="fa fa-trophy" /> {T.translate("edit_event.community_vote")}:</label> 
+                                &nbsp;{entity.vote_average ? entity.vote_average.toFixed(2) : '0.00'}
+                            </p>
+                        </div>                        
+                    </div>
+                </Panel>
+                }                
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">
