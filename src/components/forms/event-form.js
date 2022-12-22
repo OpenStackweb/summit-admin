@@ -68,6 +68,9 @@ class EventForm extends React.Component {
         this.handleFeedbackSort = this.handleFeedbackSort.bind(this);
         this.handleFeedbackSearch = this.handleFeedbackSearch.bind(this);
         this.handleDeleteEventFeedback = this.handleDeleteEventFeedback.bind(this);
+        this.handleAuditLogPageChange = this.handleAuditLogPageChange.bind(this);
+        this.handleAuditLogSearch = this.handleAuditLogSearch.bind(this);
+        this.handleAuditLogSort = this.handleAuditLogSort.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.triggerFormSubmit = this.triggerFormSubmit.bind(this);
         this.handleUnpublish = this.handleUnpublish.bind(this);
@@ -414,11 +417,33 @@ class EventForm extends React.Component {
         this.props.getEventFeedback(entity.id, feedbackState.term, feedbackState.page, feedbackState.perPage, key, dir);
     }
 
+    handleAuditLogPageChange(page) {
+        const {entity} = this.state;
+        const {auditLogState} = this.props;
+        this.props.getSummitEventAuditLog(entity.id, auditLogState.term, page, auditLogState.perPage, auditLogState.order, auditLogState.orderDir);
+    }
+
+    handleAuditLogSearch(newTerm) {
+        const {entity} = this.state;
+        const {auditLogState} = this.props;
+        this.props.getSummitEventAuditLog(entity.id, newTerm, auditLogState.page, auditLogState.perPage, auditLogState.order, auditLogState.orderDir);
+    }
+
+    handleAuditLogSort(index, key, dir, func) {
+        const {entity} = this.state;
+        const {auditLogState} = this.props;
+        this.props.getSummitEventAuditLog(entity.id, auditLogState.term, auditLogState.page, auditLogState.perPage, key, dir);
+    }
+
     componentDidMount() {
         const {entity} = this.state;
-        const {feedbackState} = this.props;
-        if (entity.id > 0 && entity.allow_feedback) {
-            this.props.getEventFeedback(entity.id, feedbackState.term, feedbackState.page, feedbackState.perPage, feedbackState.order, feedbackState.orderDir);
+        const {auditLogState, feedbackState} = this.props;
+        if (entity.id > 0) {
+            if (entity.allow_feedback) {
+                this.props.getEventFeedback(entity.id, feedbackState.term, feedbackState.page, feedbackState.perPage, feedbackState.order, feedbackState.orderDir);
+            }
+            this.props.clearAuditLogParams();
+            this.props.getSummitEventAuditLog(entity.id, auditLogState.term, auditLogState.page, auditLogState.perPage, auditLogState.order, auditLogState.orderDir);
         }
     }
 
@@ -444,8 +469,9 @@ class EventForm extends React.Component {
         const {entity, showSection, errors} = this.state;
 
         const {
-            currentSummit, levelOpts, typeOpts, trackOpts, locationOpts, rsvpTemplateOpts, selectionPlansOpts,
-            history, extraQuestions, feedbackState, actionTypes
+            currentSummit, levelOpts, typeOpts, trackOpts,
+            locationOpts, rsvpTemplateOpts, selectionPlansOpts, history, extraQuestions, 
+            feedbackState, actionTypes, auditLogState
         } = this.props;
 
         const event_types_ddl = typeOpts.map(
@@ -526,6 +552,18 @@ class EventForm extends React.Component {
                 delete: {onClick: this.handleMaterialDelete},
             }
         };
+
+        const audit_log_columns = [
+            { columnKey: 'created', value: T.translate("audit_log.date"), sortable: true },
+            { columnKey: 'action', value: T.translate("audit_log.action"), sortable: false },
+            { columnKey: 'user', value: T.translate("audit_log.user"), sortable: false }
+        ];
+
+        const audit_log_table_options = {
+            sortCol: auditLogState.order,
+            sortDir: auditLogState.orderDir,
+            actions: { }
+        }        
 
         const streaming_type_ddl = [{label: 'LIVE', value: 'LIVE'}, {label: 'VOD', value: 'VOD'}];
 
@@ -868,7 +906,7 @@ class EventForm extends React.Component {
                     </div>
                 </div>
                 }
-                {actionTypes.length > 0 && entity.id > 0 &&
+                {actionTypes?.length > 0 && entity.id > 0 &&
                 <div>
                     <label>Status</label>
                     <ProgressFlags
@@ -1062,6 +1100,47 @@ class EventForm extends React.Component {
                     </div>
                 </Panel>
                 }
+
+                <Panel show={showSection === 'audit_log'} title={T.translate("audit_log.title")}
+                       handleClick={this.toggleSection.bind(this, 'audit_log')}>
+                    <div className={'row'}>
+                        <div className={'col-md-8'}>
+                            <FreeTextSearch
+                                value={auditLogState.term ?? ''}
+                                placeholder={T.translate("audit_log.placeholders.search_log")}
+                                onSearch={this.handleAuditLogSearch}
+                            />
+                        </div>
+                    </div>
+                    
+                    {auditLogState.logEntries.length === 0 &&
+                    <div>{T.translate("audit_log.no_log_entries")}</div>
+                    }
+
+                    {auditLogState.logEntries.length > 0 &&
+                    <>
+                        <Table
+                            options={audit_log_table_options}
+                            data={auditLogState.logEntries}
+                            columns={audit_log_columns}
+                            onSort={this.handleAuditLogSort}
+                        />
+                        <Pagination
+                                bsSize="medium"
+                                prev
+                                next
+                                first
+                                last
+                                ellipsis
+                                boundaryLinks
+                                maxButtons={10}
+                                items={auditLogState.lastPage}
+                                activePage={auditLogState.currentPage}
+                                onSelect={this.handleAuditLogPageChange}
+                            />
+                    </>
+                    }
+                </Panel>
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">

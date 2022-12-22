@@ -124,6 +124,7 @@ import summitStatsReducer from './reducers/summits/summit-stats-reducer';
 import sponsorAdvertisementReducer from './reducers/sponsors/sponsor-advertisement-reducer';
 import sponsorMaterialReducer from './reducers/sponsors/sponsor-material-reducer';
 import sponsorSocialNetworkReducer from './reducers/sponsors/sponsor-social-network-reducer';
+import auditLogReducer from './reducers/audit_log/audit-log-reducer';
 
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
@@ -249,6 +250,7 @@ const reducers = persistCombineReducers(config, {
     ratingTypeState: ratingTypeReducer,
     scoreTypeState: scoreTypeReducer,
     summitStatsState: summitStatsReducer,
+    auditLogState: auditLogReducer
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

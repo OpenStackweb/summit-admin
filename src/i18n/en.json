@@ -142,7 +142,8 @@
     "sponsored_projects": "Sponsored Projects",
     "settings": "Settings",
     "schedule_settings": "Schedule",
-    "registration_stats": "Registration Stats"
+    "registration_stats": "Registration Stats",
+    "audit_log": "Audit Log"
   },
   "schedule": {
     "schedule": "Schedule",
@@ -2219,5 +2220,21 @@
     "description": "Description",
     "score_type_saved": "Score Type saved successfully.",
     "score_type_created": "Score Type created successfully."
+  },
+  "audit_log": {
+    "log_entries": "Log Entries",
+    "sponsorship_types": "Sponsorship Types",
+    "title": "Audit Log",
+    "sponsorship_types_list": "Sponsorship Type List",
+    "sponsorship_type": "Sponsorship Type",
+    "no_log_entries": "No log entries found for current search criteria.",
+    "action": "Action",
+    "date": "Date",
+    "user": "User",
+    "event": "Event",
+    "order": "Order",
+    "placeholders": {
+      "search_log": "Search By Action / User Full Name"
+    }
   }
 }

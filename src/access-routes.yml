@@ -19,10 +19,15 @@ general:
   - summit-registration-administrators
   - track-chairs-admins
 
+audit-log:
+  - super-admins
+  - administrators
+  - summit-front-end-administrators
+
 summit-edit:
-      - super-admins
-      - administrators
-      - summit-front-end-administrators
+  - super-admins
+  - administrators
+  - summit-front-end-administrators
 
 summit-add:
   - super-admins

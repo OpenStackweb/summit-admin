@@ -28,6 +28,7 @@ import {
 } from '../../actions/event-actions';
 import {unPublishEvent} from '../../actions/summit-builder-actions';
 import {deleteEventMaterial} from '../../actions/event-material-actions';
+import { getSummitEventAuditLog, clearAuditLogParams } from '../../actions/audit-log-actions';
 import {addQAMember, removeQAMember} from "../../actions/user-chat-roles-actions"
 
 import '../../styles/edit-summit-event-page.less';
@@ -124,7 +125,8 @@ const EditSummitEventPage = (props) => {
     rsvpTemplateOptions,
     extraQuestions,
     feedbackState,
-    actionTypes
+    actionTypes,
+    auditLogState
   } = props;
   const header = !entity.id ? T.translate("general.summit_event") : `${entity.title} - ID ${entity.id}`;
 
@@ -167,6 +169,9 @@ const EditSummitEventPage = (props) => {
         onRemoveImage={props.removeImage}
         onAddQAMember={props.addQAMember}
         onDeleteQAMember={props.removeQAMember}
+        auditLogState={auditLogState}
+        getSummitEventAuditLog={props.getSummitEventAuditLog}
+        clearAuditLogParams={props.clearAuditLogParams}
         feedbackState={feedbackState}
         getEventFeedback={props.getEventFeedback}
         deleteEventFeedback={props.deleteEventFeedback}
@@ -178,21 +183,16 @@ const EditSummitEventPage = (props) => {
   )
 }
 
-const mapStateToProps = ({
-                           currentSummitState,
-                           currentSummitEventState,
-                           currentRsvpTemplateListState,
-                           currentEventListState
-                         }) => ({
-  currentSummit: currentSummitState.currentSummit,
-  levelOptions: currentSummitEventState.levelOptions,
-  rsvpTemplateOptions: currentRsvpTemplateListState.rsvpTemplates,
-  entity: currentSummitEventState.entity,
-  errors: currentSummitEventState.errors,
-  extraQuestions: currentSummitEventState.extraQuestions,
-  feedbackState: currentSummitEventState.feedbackState,
-  actionTypes: currentSummitEventState.actionTypes,
-  allEventsData: currentEventListState
+const mapStateToProps = ({ currentSummitState, currentSummitEventState, currentRsvpTemplateListState, currentEventListState, auditLogState }) => ({
+    currentSummit: currentSummitState.currentSummit,
+    levelOptions: currentSummitEventState.levelOptions,
+    rsvpTemplateOptions: currentRsvpTemplateListState.rsvpTemplates,
+    entity: currentSummitEventState.entity,
+    errors: currentSummitEventState.errors,
+    extraQuestions: currentSummitEventState.extraQuestions,
+    feedbackState: currentSummitEventState.feedbackState,
+    auditLogState: auditLogState,
+    allEventsData: currentEventListState
 });
 
 export default connect(
@@ -210,6 +210,8 @@ export default connect(
     deleteEventFeedback,
     getEventFeedbackCSV,
     changeFlag,
-    getActionTypes
+    getActionTypes,
+    getSummitEventAuditLog,
+    clearAuditLogParams
   }
 )(EditSummitEventPage);
