@@ -192,6 +192,7 @@ const mapStateToProps = ({ currentSummitState, currentSummitEventState, currentR
     extraQuestions: currentSummitEventState.extraQuestions,
     feedbackState: currentSummitEventState.feedbackState,
     auditLogState: auditLogState,
+    actionTypes: currentSummitEventState.actionTypes,
     allEventsData: currentEventListState
 });
 
