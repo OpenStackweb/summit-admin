@@ -114,7 +114,6 @@ const RegistrationStatsPage = ({currentSummit, summitStats, match, getRegistrati
 
         {/* Tickets sold per ticket type, badge type and badge features */}
         {(totalTicketsAvailable > 0 || hasInfiniteTicketsAvailable) &&
-        <>
           <Graph
             title="Active tickets sold per ticket type"
             subtitle={[`Tickets sold: ${totalTicketsSold}`, `Tickets available: ${hasInfiniteTicketsAvailable ? '∞' : totalTicketsAvailable}`]}
@@ -130,6 +129,8 @@ const RegistrationStatsPage = ({currentSummit, summitStats, match, getRegistrati
             })}
             colorPalette={0}
           />
+          }
+        {totalTicketsSold > 0 &&
           <Graph
             title="Active tickets sold per badge type"
             subtitle={[`Tickets w/ Badge type: ${totalTicketsWBadgeType}`, `Tickets active: ${totalTicketsSold}`]}
@@ -145,6 +146,8 @@ const RegistrationStatsPage = ({currentSummit, summitStats, match, getRegistrati
             })}
             colorPalette={1}
           />
+        }
+        {totalTicketsSold > 0 &&
           <Graph
             title="Active tickets sold per badge feature"
             subtitle={[`Tickets sold with badge features applied: ${totalTicketsSoldWBadgeFeature}`, `Tickets sold: ${totalTicketsSold}`]}
@@ -160,7 +163,6 @@ const RegistrationStatsPage = ({currentSummit, summitStats, match, getRegistrati
             })}
             colorPalette={2}
           />
-        </>
         }
 
         {/* Check Ins per ticket type, badge type and badge feature */}
