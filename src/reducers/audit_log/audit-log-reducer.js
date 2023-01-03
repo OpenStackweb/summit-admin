@@ -27,7 +27,7 @@ const DEFAULT_STATE = {
     currentPage             : 1,
     lastPage                : 1,
     perPage                 : 10,
-    order                   : 'id',
+    order                   : 'created',
     orderDir                : 1,
     totalLogEntries         : 0
 };
