@@ -358,6 +358,24 @@ class MetricsReport extends React.Component {
                 { columnKey: 'subtype', value: 'SubType' },
                 { columnKey: 'date', value: 'Date' }
             ];
+
+            if (forExport) {
+                columns = [
+                    { columnKey: 'member', value: 'Member' },
+                    { columnKey: 'type', value: 'Type' },
+                    { columnKey: 'origin', value: 'Origin' },
+                    { columnKey: 'subtype', value: 'SubType' },
+                    { columnKey: 'date', value: 'Date' }
+                ];
+
+                processedData = Object.entries(processedData).reduce((result, item) => {
+                    const [key, value] = item;
+                    result = [...result, ...value];
+                    return result;
+                }, []);
+
+                processedData = flattenData(processedData);
+            }
         } else {
             columns = [
                 { columnKey: 'metric', value: 'Metric', sortable: true },
