@@ -51,7 +51,8 @@ export const DEFAULT_ENTITY = {
     apply_to_all_tix        : true,
     badge_features_apply_to_all_tix_retroactively: false,
     amount                  : '',
-    rate                    : ''
+    rate                    : '',
+    description             : '',
 }
 
 const DEFAULT_STATE = {

@@ -705,6 +705,7 @@
   "edit_promocode": {
     "promocode": "Promocode",
     "code": "Code",
+    "description": "Description",
     "class_name": "Class",
     "type": "Type",
     "sponsor": "Sponsor",
@@ -1204,6 +1205,7 @@
     "bought_date": "Bought Date",
     "price": "Price",
     "payment_method": "Payment Method",
+    "promo_code": "Promo Code",
     "status": "Status",
     "paid_amount": "Amount Paid",
     "send_email": "Send results to email (optional)",
