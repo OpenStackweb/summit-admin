@@ -125,6 +125,7 @@ import sponsorAdvertisementReducer from './reducers/sponsors/sponsor-advertiseme
 import sponsorMaterialReducer from './reducers/sponsors/sponsor-material-reducer';
 import sponsorSocialNetworkReducer from './reducers/sponsors/sponsor-social-network-reducer';
 import auditLogReducer from './reducers/audit_log/audit-log-reducer';
+import eventCommentReducer from './reducers/events/event-comment-reducer';
 
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
@@ -163,6 +164,7 @@ const reducers = persistCombineReducers(config, {
     currentEventCategoryGroupListState: eventCategoryGroupListReducer,
     currentEventCategoryGroupState: eventCategoryGroupReducer,
     currentEventMaterialState: eventMaterialReducer,
+    currentEventCommentState: eventCommentReducer,
     currentLocationListState: locationListReducer,
     currentLocationState: locationReducer,
     currentFloorState: floorReducer,

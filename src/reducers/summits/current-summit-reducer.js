@@ -1,6 +1,6 @@
 import{ VALIDATE } from 'openstack-uicore-foundation/lib/utils/actions';
 import{ LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
-import { SET_CURRENT_SUMMIT, REQUEST_SUMMIT,RECEIVE_SUMMIT, UPDATE_SUMMIT, SUMMIT_ADDED, RESET_SUMMIT_FORM, SUMMIT_LOGO_ATTACHED, SUMMIT_LOGO_DELETED } from '../../actions/summit-actions';
+import { SET_CURRENT_SUMMIT, REQUEST_SUMMIT,RECEIVE_SUMMIT, UPDATE_SUMMIT, SUMMIT_ADDED, RESET_SUMMIT_FORM, SUMMIT_LOGO_ATTACHED, SUMMIT_LOGO_DELETED, CLEAR_SUMMIT } from '../../actions/summit-actions';
 import { EVENT_CATEGORY_UPDATED, EVENT_CATEGORY_ADDED, EVENT_CATEGORY_DELETED, EVENT_CATEGORIES_SEEDED } from '../../actions/event-category-actions';
 import { EVENT_TYPE_UPDATED, EVENT_TYPE_ADDED, EVENT_TYPE_DELETED, EVENT_TYPES_SEEDED } from '../../actions/event-type-actions';
 import { LOCATION_UPDATED, LOCATION_ADDED, LOCATION_DELETED } from '../../actions/location-actions';
@@ -118,11 +118,12 @@ export const DEFAULT_ENTITY = {
 
 const DEFAULT_STATE = {
     currentSummit: DEFAULT_ENTITY,
-    errors: {}
+    errors: {},
+    loading:  false,
 };
 
 const currentSummitReducer = (state = DEFAULT_STATE, action) => {
-    const { type, payload } = action
+    const { type, payload } = action;
     switch (type) {
         case SET_CURRENT_SUMMIT: {
             return {...state, currentSummit: payload.response};
@@ -137,9 +138,18 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case REQUEST_SUMMIT: {
-            return DEFAULT_STATE
+            const { id } = payload;
+            let { currentSummit} = state;
+            if (id !== currentSummit.id){
+                currentSummit = {...DEFAULT_ENTITY, id: payload.id}
+            }
+            return {...DEFAULT_STATE, loading: true, currentSummit: currentSummit };
         }
         break;
+        case CLEAR_SUMMIT: {
+            return DEFAULT_STATE;
+        }
+        break
         case SUMMIT_ADDED:
         case RECEIVE_SUMMIT: {
             let entity = {...payload.response};
@@ -156,7 +166,7 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
             if (!entity.api_feed_type)
                 entity.api_feed_type = 'none';
 
-            return {...state, currentSummit: {...state.currentSummit, ...entity}, errors: {}};
+            return {...state, currentSummit: {...state.currentSummit, ...entity}, errors: {}, loading: false};
         }
         break;
         case UPDATE_SUMMIT: {

@@ -60,6 +60,9 @@ export const RECEIVE_EVENT_FEEDBACK = 'RECEIVE_EVENT_FEEDBACK';
 export const EVENT_FEEDBACK_DELETED = 'EVENT_FEEDBACK_DELETED';
 export const RECEIVE_ACTION_TYPES = 'RECEIVE_ACTION_TYPES';
 export const FLAG_CHANGED = 'FLAG_CHANGED';
+export const REQUEST_EVENT_COMMENTS = 'REQUEST_EVENT_COMMENTS';
+export const RECEIVE_EVENT_COMMENTS = 'RECEIVE_EVENT_COMMENTS';
+export const EVENT_COMMENT_DELETED = 'EVENT_COMMENT_DELETED';
 
 export const getEvents = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1, filters = {}, extraColumns = []) => async (dispatch, getState) => {
 
@@ -897,6 +900,14 @@ const parseFilters = (filters) => {
 
     }
 
+    if(filters.is_public) {
+        filter.push(`is_public==1`);
+    }
+
+    if(filters.is_activity) {
+        filter.push(`is_activity==1`);
+    }
+
     return filter;
 }
 
@@ -1026,7 +1037,65 @@ export const deleteEventFeedback = (eventId, feedbackId) => async (dispatch, get
 
 }
 
+export const getEventComments = (
+    eventId,
+    term = null,
+    page = 1,
+    perPage = 10,
+    order = 'id',
+    orderDir = 1,
+    filters = {}
+    ) => async (dispatch, getState) => {
+    
+    const accessToken = await getAccessTokenSafely();    
+    const {currentSummitState} = getState();
+    const {currentSummit} = currentSummitState;
+    const summitTZ = currentSummit.time_zone_id;
 
+    dispatch(startLoading());
+
+    const filter = parseFilters(filters);
+
+    if (term) {
+        const escapedTerm = escapeFilterValue(term);
+        let searchString =
+            `body=@${escapedTerm},` +
+            `creator_id==${escapedTerm},`;
+        filter.push(searchString);
+    }
+
+    // `is_public==${escapedTerm},`;
+    // `is_activity==${escapedTerm},`;
+
+    const params = {
+        page: page,
+        per_page: perPage,
+        access_token: accessToken,
+        expand: 'creator',
+    };
+
+    if (filter.length > 0) {
+        params['filter[]'] = filter;
+    }
+
+    // order
+    if (order != null && orderDir != null) {        
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
+        params['order'] = `${orderDirSign}${order === 'owner_full_name' ? 'creator_id' : order}`;
+    }
+
+    return getRequest(
+        createAction(REQUEST_EVENT_COMMENTS),
+        createAction(RECEIVE_EVENT_COMMENTS),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/presentations/${eventId}/comments`,
+        authErrorHandler,
+        {order, orderDir, page, summitTZ}
+    )(params)(dispatch).then((data) => {
+            dispatch(stopLoading());
+            return data.response;
+        }
+    );    
+}
 
 export const queryEvents = _.debounce(async (summitId, input, callback) => {
 

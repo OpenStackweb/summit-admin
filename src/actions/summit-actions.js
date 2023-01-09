@@ -26,6 +26,7 @@ import {
     authErrorHandler
 } from 'openstack-uicore-foundation/lib/utils/actions';
 import {getAccessTokenSafely} from '../utils/methods';
+import Swal from "sweetalert2";
 
 export const REQUEST_SUMMIT           = 'REQUEST_SUMMIT';
 export const RECEIVE_SUMMIT           = 'RECEIVE_SUMMIT';
@@ -41,6 +42,7 @@ export const SUMMIT_ADDED             = 'SUMMIT_ADDED';
 export const SUMMIT_DELETED           = 'SUMMIT_DELETED';
 export const SUMMIT_LOGO_ATTACHED     = 'SUMMIT_LOGO_ATTACHED';
 export const SUMMIT_LOGO_DELETED      = 'SUMMIT_LOGO_DELETED';
+export const CLEAR_SUMMIT             = 'CLEAR_SUMMIT';
 
 export const getSummitById = (summitId) => async (dispatch, getState) => {
 
@@ -52,11 +54,32 @@ export const getSummitById = (summitId) => async (dispatch, getState) => {
         expand: 'event_types,tracks,track_groups,values,locations,locations.rooms'
     };
 
-    return getRequest(
-        createAction(REQUEST_SUMMIT),
+    // set id
+    dispatch(createAction(REQUEST_SUMMIT)({id : summitId}));
+
+    return getRequest
+    (
+        null,
         createAction(RECEIVE_SUMMIT),
         `${window.API_BASE_URL}/api/v2/summits/${summitId}`,
-        authErrorHandler
+        (err, res) => (dispatch, state) => {
+            let code = err.status;
+            let msg = '';
+            dispatch(stopLoading());
+            switch (code) {
+                case 404:
+                    msg = "";
+                    if (err.response.body && err.response.body.message) msg = err.response.body.message;
+                    else if (err.response.error && err.response.error.message) msg = err.response.error.message;
+                    else msg = err.message;
+                    Swal.fire("Not Found", msg, "warning");
+                    // reset id
+                    dispatch(createAction(CLEAR_SUMMIT)({}));
+                    break;
+                default:
+                    authErrorHandler(err, res)(dispatch, state);
+            }
+        }
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }

@@ -83,6 +83,7 @@ class SummitIdLayout extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
+
         const oldId = prevProps.match.params.summit_id;
         const newId = this.props.match.params.summit_id;
 
@@ -96,11 +97,11 @@ class SummitIdLayout extends React.Component {
     }
 
     render(){
-        const { match, currentSummit } = this.props;
+        const { match, currentSummit,loading } = this.props;
         let summitId = this.props.match.params.summit_id;
         let breadcrumb = currentSummit.id ? currentSummit.name : T.translate("general.new_summit");
 
-        if (!currentSummit.id || parseInt(summitId) !== currentSummit.id) return (<div />);
+        if (!currentSummit.id || parseInt(summitId) !== currentSummit.id || loading) return (<div />);
 
         return(
             <div>
@@ -162,7 +163,8 @@ class SummitIdLayout extends React.Component {
 }
 
 const mapStateToProps = ({ currentSummitState }) => ({
-    currentSummit   : currentSummitState.currentSummit
+    currentSummit   : currentSummitState.currentSummit,
+    loading : currentSummitState.loading,
 })
 
 export default connect (

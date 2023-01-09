@@ -424,6 +424,15 @@
     "delete_feedback_warning": "Are you sure you want to delete this feedback entry?",
     "extra_questions": "Extra Questions",
     "track_chair_statistics": "Track Chairs Statistics",
+    "track_chair_comments": "Track Chairs Comments",
+    "comments": "Comments",
+    "body": "Body",
+    "owner_full_name": "Owner",
+    "created": "Created Date",
+    "last_edited": "Last Edited",
+    "is_activity": "Is Activity?",
+    "is_public": "Is Public?",
+    "delete_comment": "Are you sure you want to delete comment ",
     "average_score": "Average Score",
     "community_vote": "Community Vote",
     "selections": "Selections",
@@ -440,7 +449,8 @@
       "select_rsvp_template": "Select a Template ...",
       "select_selection_plan": "Select a Selection Plan ...",
       "select_submitter": "Select Submitter ...",
-      "search_feedback": "Search by Author, Note"
+      "search_feedback": "Search by Author, Note",
+      "search_comment": "Search by Comment, Creator ID"
     }
   },
   "edit_event_material": {
@@ -461,6 +471,15 @@
     "placeholders": {
       "select_type": "Select a Type ..."
     }
+  },
+  "edit_event_comment": {
+    "comment": "Comment",
+    "comments": "Comments",
+    "owner_name" : "Owner Name",
+    "is_activity" : "Is Activity?",
+    "is_public" : "Is Public?",
+    "body" : "Body",
+    "event_comment_saved": "Comment saved successfully."
   },
   "speaker_list": {
     "speaker_list": "Speaker List",

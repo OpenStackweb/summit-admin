@@ -17,6 +17,7 @@ import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import EditSummitEventPage from '../pages/events/edit-summit-event-page';
 import EditEventMaterialPage from '../pages/events/edit-event-material-page';
+import EditEventCommentPage from '../pages/events/edit-event-comment-page';
 import NoMatchPage from "../pages/no-match-page";
 import { getEvent, resetEventForm } from '../actions/event-actions';
 import { getRsvpTemplates } from '../actions/rsvp-template-actions';
@@ -71,6 +72,18 @@ class EventIdLayout extends React.Component {
                                 <Switch>
                                     <Route strict exact path={`${props.match.url}/new`} component={EditEventMaterialPage} />
                                     <Route strict exact path={`${props.match.url}/:material_id`} component={EditEventMaterialPage} />
+                                    <Route strict exact path={`${props.match.url}/:comment_id`} component={EditEventCommentPage} />
+                                    <Route component={NoMatchPage}/>
+                                </Switch>
+                            </div>
+                        )}
+                    />
+                    <Route path={`${match.url}/comments`} render={
+                        props => (
+                            <div>
+                                <Breadcrumb data={{ title: T.translate("edit_event.comments"), pathname: match.url }} />
+                                <Switch>
+                                    <Route strict exact path={`${props.match.url}/:comment_id`} component={EditEventCommentPage} />
                                     <Route component={NoMatchPage}/>
                                 </Switch>
                             </div>

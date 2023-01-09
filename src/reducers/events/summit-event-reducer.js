@@ -24,6 +24,8 @@ import
     REQUEST_EVENT_FEEDBACK,
     RECEIVE_EVENT_FEEDBACK,
     EVENT_FEEDBACK_DELETED,
+    REQUEST_EVENT_COMMENTS,
+    RECEIVE_EVENT_COMMENTS,    
     RECEIVE_ACTION_TYPES,
     FLAG_CHANGED,
 } from '../../actions/event-actions';
@@ -34,6 +36,7 @@ import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 import { UNPUBLISHED_EVENT } from '../../actions/summit-builder-actions';
 import { EVENT_MATERIAL_ADDED, EVENT_MATERIAL_UPDATED, EVENT_MATERIAL_DELETED} from "../../actions/event-material-actions";
+import { EVENT_COMMENT_DELETED } from "../../actions/event-comment-actions";
 import {RECEIVE_QA_USERS_BY_SUMMIT_EVENT} from '../../actions/user-chat-roles-actions';
 
 export const DEFAULT_ENTITY = {
@@ -85,12 +88,25 @@ const DEFAULT_STATE_FEEDBACK_STATE = {
     summitTZ        : ''
 };
 
+const DEFAULT_STATE_COMMENT_STATE = {
+    comments        : [],
+    term            : null,
+    order           : 'id',
+    orderDir        : 1,
+    currentPage     : 1,
+    lastPage        : 1,
+    perPage         : 10,
+    totalComments   : 0,
+    filters         : { is_activity: null, is_public: null }
+};
+
 const DEFAULT_STATE = {
     levelOptions: ['N/A', 'Beginner', 'Intermediate', 'Advanced' ],
     extraQuestions: [],
     entity: DEFAULT_ENTITY,
     errors: {},
     feedbackState: DEFAULT_STATE_FEEDBACK_STATE,
+    commentState: DEFAULT_STATE_COMMENT_STATE,
     actionTypes: []
 };
 
@@ -231,6 +247,30 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
         case EVENT_FEEDBACK_DELETED:{
             let { feedbackId } = payload;
             return {...state, feedbackState: {...state.feedbackState, items: state.feedbackState.items.filter(e => e.id !== feedbackId)}};
+        }
+        case REQUEST_EVENT_COMMENTS: {
+            let {order, orderDir, summitTZ} = payload;
+            return {...state, commentState: {...state.commentState, order, orderDir, summitTZ }};
+        }
+        case RECEIVE_EVENT_COMMENTS: {
+            let {current_page, total, last_page} = payload.response;
+
+            let items = payload.response.data.map(e => {
+                return {
+                    ...e,
+                    owner_full_name: `${e.creator.first_name} ${e.creator.last_name}`,
+                    created : moment(e.created * 1000).tz(state.commentState.summitTZ).format('MMMM Do YYYY, h:mm a'),
+                    last_edited : moment(e.last_edited * 1000).tz(state.commentState.summitTZ).format('MMMM Do YYYY, h:mm a'),
+                    is_activity: e.is_activity === null ? 'N/A' : e.is_activity === true ? 'Yes' : 'No',
+                    is_public: e.is_public === null ? 'N/A' : e.is_public === true ? 'Yes' : 'No',
+                };
+            });
+
+            return {...state, commentState: {...state.commentState, comments:items , currentPage: current_page, totalComments: total, lastPage: last_page }};
+        }
+        case EVENT_COMMENT_DELETED: {
+            let { commentId } = payload;
+            return {...state, commentState: {...state.commentState, comments: state.commentState.comments.filter(e => e.id !== commentId)}};
         }
         case RECEIVE_ACTION_TYPES: {
             const {data} = payload.response;
