@@ -996,7 +996,7 @@ render() {
                     </div>
                 </div>
             }
-            {actionTypes?.length > 0 && entity.id > 0 &&
+            {actionTypes?.length > 0 && entity.id > 0 && entity.selection_plan_id > 0 &&
                 <div>
                     <label>Status</label>
                     <ProgressFlags
