@@ -120,7 +120,7 @@ export const reSendTicketEmail = (orderId, ticketId) => async (dispatch, getStat
     );
 };
 
-export const printTickets = (filters, order, orderDir, doAttendeeCheckinOnPrint = true, selectedViewType = null) => async (dispatch, getState) => {
+export const printTickets = (term, filters, order, orderDir, doAttendeeCheckinOnPrint = true, selectedViewType = null) => async (dispatch, getState) => {
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
@@ -132,6 +132,13 @@ export const printTickets = (filters, order, orderDir, doAttendeeCheckinOnPrint 
     };
 
     const filter = parseFilters(filters);
+
+    if(term) {
+        const escapedTerm = escapeFilterValue(term);
+        let searchString = `number=@${escapedTerm},owner_email=@${escapedTerm},owner_name=@${escapedTerm},owner_company=@${escapedTerm}`;
+        
+        filter.push(searchString);
+    }
 
     if (filter.length > 0) {
         params['filter[]'] = filter;
@@ -157,11 +164,6 @@ export const printTickets = (filters, order, orderDir, doAttendeeCheckinOnPrint 
 
 const parseFilters = (filters) => {
     const filter = [];
-
-    if (filters.hasOwnProperty('term') && filters.term) {
-        const escapedTerm = escapeFilterValue(filters.term);
-        filter.push(`number=@${escapedTerm},owner_email=@${escapedTerm},owner_name=@${escapedTerm},owner_company=@${escapedTerm}`);
-    }
 
     if (filters.hasOwnProperty('showOnlyPendingRefundRequests') && filters.showOnlyPendingRefundRequests) {
         filter.push('has_requested_refund_requests==1');
@@ -246,11 +248,13 @@ const parseFilters = (filters) => {
 
 export const getTickets =
     (
+        term = '',
         page = 1,
         perPage = 10,
         order = 'id',
         orderDir = 1,
-        filters = {}
+        filters = {},
+        extraColumns = []
     ) => async (dispatch, getState) => {
 
         const { currentSummitState } = getState();
@@ -268,6 +272,13 @@ export const getTickets =
 
         const filter = parseFilters(filters);
 
+        if(term) {
+            const escapedTerm = escapeFilterValue(term);
+            let searchString = `number=@${escapedTerm},owner_email=@${escapedTerm},owner_name=@${escapedTerm},promo_code=@${escapedTerm},promo_code_description=@${escapedTerm}`;
+            
+            filter.push(searchString);
+        }
+
         if (filter.length > 0) {
             params['filter[]'] = filter;
         }
@@ -283,7 +294,7 @@ export const getTickets =
             createAction(RECEIVE_TICKETS),
             `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets`,
             authErrorHandler,
-            {page, perPage, order, orderDir, ...filters}
+            {term, page, perPage, order, orderDir, filters, extraColumns}
         )(params)(dispatch).then(() => {
                 dispatch(stopLoading());
             }
@@ -345,9 +356,10 @@ export const importTicketsCSV = (file) => async (dispatch, getState) => {
         });
 };
 
-export const exportTicketsCSV = (pageSize = 500,
+export const exportTicketsCSV = (term = '',
+                                 pageSize = 500,
                                  order = 'id',
-                                 orderDir = 1, filters = {}) => async (dispatch, getState) => {
+                                 orderDir = 1, filters = {}, extraColumns = []) => async (dispatch, getState) => {
     dispatch(startLoading());
     const csvMIME = 'text/csv;charset=utf-8';
     const accessToken = await getAccessTokenSafely();
@@ -365,6 +377,13 @@ export const exportTicketsCSV = (pageSize = 500,
     // create the params for the promises all ( only diff is the page nbr)
 
     const filter = parseFilters(filters);
+
+    if(term) {
+        const escapedTerm = escapeFilterValue(term);
+        let searchString = `number=@${escapedTerm},owner_email=@${escapedTerm},owner_name=@${escapedTerm},owner_company=@${escapedTerm},promo_code=@${escapedTerm},promo_code_description=@${escapedTerm}`;
+        
+        filter.push(searchString);
+    }
 
     let params = Array.from({length: totalPages}, (_, i) => {
 

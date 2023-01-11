@@ -36,16 +36,8 @@ const DEFAULT_STATE = {
     selectedIds: [],
     selectedAll: false,
     // filters
-    showOnlyPendingRefundRequests: false,
-    ticketTypesFilter : [],
-    ownerFullNameStartWithFilter:[],
-    viewTypesFilter: [],
-    hasOwnerFilter : null,
-    completedFilter : null,
-    amountFilter: null,
-    hasBadgeFilter : null,
-    showOnlyPrintable: false,
-    promocodesFilter: [],
+    filters: {},
+    extraColumns: []
 };
 
 const ticketListReducer = (state = DEFAULT_STATE, action) => {
@@ -56,8 +48,8 @@ const ticketListReducer = (state = DEFAULT_STATE, action) => {
             return DEFAULT_STATE;
         }
         case REQUEST_TICKETS: {
-            let {order, orderDir, page, perPage, ...rest} = payload;
-            return {...state, order, orderDir, currentPage: page, perPage, ...rest}
+            let {order, orderDir, page, perPage, filters, extraColumns, ...rest} = payload;
+            return {...state, order, orderDir, currentPage: page, perPage, filters, extraColumns, ...rest}
         }
         case RECEIVE_TICKETS: {
             let {total, last_page, data} = payload.response;
