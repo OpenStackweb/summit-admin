@@ -1262,11 +1262,11 @@ render() {
                             </p>
                             {entity.track_chair_scores_avg.map((score) => {
                                 const rating_type = entity.selection_plan.track_chair_rating_types.find(e => parseInt(score.ranking_type_id) === e.id)
-
+                                if(!rating_type) return null;
                                 return (
                                     <p>
                                         <label>
-                                            {rating_type.score_types.length > 0 &&
+                                            {rating_type?.score_types?.length > 0 &&
                                                 <>
                                                     <a data-tip={this.getPopupScores(score.ranking_type_id)} data-for={'help'}>
                                                         <ReactTooltip
