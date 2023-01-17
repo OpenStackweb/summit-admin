@@ -73,7 +73,8 @@ class EventForm extends React.Component {
         this.handleAuditLogPageChange = this.handleAuditLogPageChange.bind(this);
         this.handleAuditLogSearch = this.handleAuditLogSearch.bind(this);
         this.handleAuditLogSort = this.handleAuditLogSort.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChangeSelectionPlan = this.handleChangeSelectionPlan.bind(this);
+        this.handleChangeExtraQuestion = this.handleChangeExtraQuestion.bind(this);
         this.triggerFormSubmit = this.triggerFormSubmit.bind(this);
         this.handleUnpublish = this.handleUnpublish.bind(this);
         this.isQuestionAllowed = this.isQuestionAllowed.bind(this);
@@ -274,10 +275,34 @@ class EventForm extends React.Component {
         this.props.onSubmit(entity, publish);
     }
 
-    handleSubmit(formValues) {
+    async handleChangeSelectionPlan(ev) {
+        const entity = { ...this.state.entity };
+        const {currentSummit, selectionPlansOpts} = this.props;
+        const { errors } = this.state;
+        let { value, id } = ev.target;
+        let extraQuestions = [];
+        let extraQuestionsAnswers = [];
+        let newSelectionPlan = null;
 
-        const { extraQuestions } = this.props;
+        if (value) {
+            extraQuestions = await this.props.fetchExtraQuestions(currentSummit.id, value);
+            newSelectionPlan = selectionPlansOpts.find(sp => sp.id === value);
+            newSelectionPlan.extra_questions = extraQuestions;
 
+            if (entity?.id) {
+                extraQuestionsAnswers = await this.props.fetchExtraQuestionsAnswers(currentSummit.id, value, entity.id);
+            }
+        }
+
+        errors[id] = '';
+        entity.selection_plan_id = value;
+        entity.selection_plan = newSelectionPlan;
+        entity.extra_questions = extraQuestionsAnswers;
+        this.setState({ entity: entity });
+    }
+
+    handleChangeExtraQuestion(formValues) {
+        const {extra_questions: extraQuestions} = this.state.entity?.selection_plan || {};
         const formattedAnswers = [];
 
         Object.keys(formValues).map(a => {
@@ -287,9 +312,14 @@ class EventForm extends React.Component {
         });
 
         let { publish } = this.state;
-        this.setState({ ...this.state, entity: { ...this.state.entity, extra_questions: formattedAnswers }, publish: false }, () => {
-            this.props.onSubmit(this.state.entity, publish);
-        });
+        this.setState(
+            {
+                ...this.state,
+                entity: { ...this.state.entity, extra_questions: formattedAnswers },
+                publish: false
+            },
+            () => { this.props.onSubmit(this.state.entity, publish); }
+        );
     }
 
     handleUnpublish(ev) {
@@ -537,12 +567,11 @@ class EventForm extends React.Component {
     }
 
 render() {
-
     const { entity, showSection, errors } = this.state;
 
     const {
         currentSummit, levelOpts, typeOpts, trackOpts,
-        locationOpts, rsvpTemplateOpts, selectionPlansOpts, history, extraQuestions,
+        locationOpts, rsvpTemplateOpts, selectionPlansOpts, history,
         feedbackState, commentState, actionTypes, auditLogState
     } = this.props;
 
@@ -814,7 +843,7 @@ render() {
                         <Dropdown
                             id="selection_plan_id"
                             value={entity.selection_plan_id}
-                            onChange={this.handleChange}
+                            onChange={this.handleChangeSelectionPlan}
                             placeholder={T.translate("edit_event.placeholders.select_selection_plan")}
                             isClearable={true}
                             options={selection_plans_ddl}
@@ -1130,14 +1159,14 @@ render() {
                 </Panel>
             }
 
-            {entity.id !== 0 && extraQuestions && extraQuestions.length > 0 &&
+            {entity.id !== 0 && entity.selection_plan?.extra_questions?.length > 0 &&
                 <Panel show={showSection === 'extra_questions'} title={T.translate("edit_event.extra_questions")}
                     handleClick={this.toggleSection.bind(this, 'extra_questions')}>
 
                     <ExtraQuestionsForm
-                        extraQuestions={extraQuestions}
+                        extraQuestions={entity.selection_plan.extra_questions}
                         userAnswers={entity.extra_questions}
-                        onAnswerChanges={this.handleSubmit}
+                        onAnswerChanges={this.handleChangeExtraQuestion}
                         ref={this.formRef}
                         className="extra-questions"
                     />

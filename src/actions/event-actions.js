@@ -59,6 +59,7 @@ export const REQUEST_EVENT_FEEDBACK = 'REQUEST_EVENT_FEEDBACK';
 export const RECEIVE_EVENT_FEEDBACK = 'RECEIVE_EVENT_FEEDBACK';
 export const EVENT_FEEDBACK_DELETED = 'EVENT_FEEDBACK_DELETED';
 export const RECEIVE_ACTION_TYPES = 'RECEIVE_ACTION_TYPES';
+export const RECEIVE_EXTRA_QUESTIONS = 'RECEIVE_EXTRA_QUESTIONS';
 export const FLAG_CHANGED = 'FLAG_CHANGED';
 export const REQUEST_EVENT_COMMENTS = 'REQUEST_EVENT_COMMENTS';
 export const RECEIVE_EVENT_COMMENTS = 'RECEIVE_EVENT_COMMENTS';
@@ -295,7 +296,7 @@ export const getEvent = (eventId) => async (dispatch, getState) => {
 
     const params = {
         access_token: accessToken,
-        expand: 'creator,speakers,moderator,sponsors,groups,type,type.allowed_media_upload_types,type.allowed_media_upload_types.type, slides, links, videos, media_uploads, tags, media_uploads.media_upload_type, media_uploads.media_upload_type.type,extra_questions,selection_plan,selection_plan.track_chair_rating_types,selection_plan.track_chair_rating_types.score_types,selection_plan.extra_questions,selection_plan.extra_questions.values,created_by,track_chair_scores_avg.ranking_type,actions'
+        expand: 'creator,speakers,moderator,sponsors,groups,type,type.allowed_media_upload_types,type.allowed_media_upload_types.type, slides, links, videos, media_uploads, tags, media_uploads.media_upload_type, media_uploads.media_upload_type.type,extra_questions,selection_plan,selection_plan.extra_questions, selection_plan.extra_questions.values,selection_plan.track_chair_rating_types,selection_plan.track_chair_rating_types.score_types,created_by,track_chair_scores_avg.ranking_type,actions'
     };
 
     dispatch(startLoading());
@@ -310,6 +311,25 @@ export const getEvent = (eventId) => async (dispatch, getState) => {
         }
     );
 };
+
+export const fetchExtraQuestions = async (summitId, selectionPlanId) => {
+    const accessToken = await getAccessTokenSafely();
+
+    return fetch(`${window.API_BASE_URL}/api/v1/summits/${summitId}/selection-plans/${selectionPlanId}/extra-questions?access_token=${accessToken}&expand=values`)
+        .then(fetchResponseHandler)
+        .then((json) => json.data)
+        .catch(fetchErrorHandler);
+};
+
+export const fetchExtraQuestionsAnswers = async (summitId, selectionPlanId, eventId) => {
+    const accessToken = await getAccessTokenSafely();
+
+    return fetch(`${window.API_BASE_URL}/api/v1/summits/${summitId}/presentations/${eventId}/extra-questions?access_token=${accessToken}&filter=selection_plan_id==${selectionPlanId}`)
+        .then(fetchResponseHandler)
+        .then((json) => json.data)
+        .catch(fetchErrorHandler);
+};
+
 
 export const resetEventForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_EVENT_FORM)({}));

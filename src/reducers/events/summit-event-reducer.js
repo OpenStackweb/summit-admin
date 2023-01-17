@@ -25,7 +25,7 @@ import
     RECEIVE_EVENT_FEEDBACK,
     EVENT_FEEDBACK_DELETED,
     REQUEST_EVENT_COMMENTS,
-    RECEIVE_EVENT_COMMENTS,    
+    RECEIVE_EVENT_COMMENTS,
     RECEIVE_ACTION_TYPES,
     FLAG_CHANGED,
 } from '../../actions/event-actions';
@@ -102,7 +102,6 @@ const DEFAULT_STATE_COMMENT_STATE = {
 
 const DEFAULT_STATE = {
     levelOptions: ['N/A', 'Beginner', 'Intermediate', 'Advanced' ],
-    extraQuestions: [],
     entity: DEFAULT_ENTITY,
     errors: {},
     feedbackState: DEFAULT_STATE_FEEDBACK_STATE,
@@ -162,8 +161,7 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
         case RECEIVE_EVENT: {
             const entity = normalizeEventResponse(payload.response);
 
-            const extraQuestions = entity.hasOwnProperty("selection_plan") && entity.selection_plan.extra_questions ? entity.selection_plan.extra_questions : [];
-            return {...state, entity: {...DEFAULT_ENTITY, ...entity}, errors: {}, extraQuestions };
+            return {...state, entity: {...DEFAULT_ENTITY, ...entity}, errors: {} };
         }
         break;
         case EVENT_PUBLISHED: {
@@ -176,8 +174,7 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
         break;
         case EVENT_UPDATED: {
             const entity = normalizeEventResponse(payload.response);
-            const extraQuestions = entity.hasOwnProperty("selection_plan") && entity.selection_plan.extra_questions ? entity.selection_plan.extra_questions : [];
-            return {...state,  entity: entity, errors: {}, extraQuestions };
+            return {...state,  entity: entity, errors: {} };
         }
         break;
         case EVENT_MATERIAL_DELETED: {

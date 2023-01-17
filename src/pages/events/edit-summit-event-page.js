@@ -16,16 +16,18 @@ import {connect} from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import EventForm from '../../components/forms/event-form';
 import {
-  saveEvent,
-  attachFile,
-  getEvents,
-  removeImage,
-  getEventFeedback,
-  deleteEventFeedback,
-  getEventFeedbackCSV,
-  changeFlag,
-  getActionTypes,
-  getEventComments,
+    saveEvent,
+    attachFile,
+    getEvents,
+    removeImage,
+    getEventFeedback,
+    deleteEventFeedback,
+    getEventFeedbackCSV,
+    changeFlag,
+    getActionTypes,
+    getEventComments,
+    fetchExtraQuestions,
+    fetchExtraQuestionsAnswers
 } from '../../actions/event-actions';
 import {unPublishEvent} from '../../actions/summit-builder-actions';
 import {deleteEventMaterial} from '../../actions/event-material-actions';
@@ -40,7 +42,7 @@ const EditSummitEventPage = (props) => {
 
   useEffect(() => {
     if (props.entity.id && props.entity.selection_plan_id) {
-      props.getActionTypes(props.entity.selection_plan_id)
+      props.getActionTypes(props.entity.selection_plan_id);
     }
   }, [props.entity.id, props.entity.selection_plan_id])
 
@@ -125,7 +127,6 @@ const EditSummitEventPage = (props) => {
     errors,
     levelOptions,
     rsvpTemplateOptions,
-    extraQuestions,
     feedbackState,
     commentState,
     actionTypes,
@@ -158,7 +159,6 @@ const EditSummitEventPage = (props) => {
       {currentSummit &&
       <EventForm
         history={props.history}
-        extraQuestions={extraQuestions}
         currentSummit={currentSummit}
         levelOpts={levelOptions}
         trackOpts={currentSummit.tracks}
@@ -181,6 +181,8 @@ const EditSummitEventPage = (props) => {
         clearAuditLogParams={props.clearAuditLogParams}
         feedbackState={feedbackState}
         getEventFeedback={props.getEventFeedback}
+        fetchExtraQuestions={fetchExtraQuestions}
+        fetchExtraQuestionsAnswers={fetchExtraQuestionsAnswers}
         commentState={commentState}
         getEventComments={props.getEventComments}
         onCommentDelete={props.deleteEventComment}
@@ -200,7 +202,6 @@ const mapStateToProps = ({ currentSummitState, currentSummitEventState, currentR
     rsvpTemplateOptions: currentRsvpTemplateListState.rsvpTemplates,
     entity: currentSummitEventState.entity,
     errors: currentSummitEventState.errors,
-    extraQuestions: currentSummitEventState.extraQuestions,
     feedbackState: currentSummitEventState.feedbackState,
     commentState: currentSummitEventState.commentState,
     auditLogState: auditLogState,
