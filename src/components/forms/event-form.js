@@ -1164,7 +1164,7 @@ render() {
                     handleClick={this.toggleSection.bind(this, 'extra_questions')}>
 
                     <ExtraQuestionsForm
-                        extraQuestions={entity.selection_plan.extra_questions}
+                        extraQuestions={entity.selection_plan.extra_questions.sort((a,b) => a.order - b.order)}
                         userAnswers={entity.extra_questions}
                         onAnswerChanges={this.handleChangeExtraQuestion}
                         ref={this.formRef}
