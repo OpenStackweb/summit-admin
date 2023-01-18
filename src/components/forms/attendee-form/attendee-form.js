@@ -21,6 +21,7 @@ import OrderComponent from './order-component'
 import RsvpComponent from './rsvp-component'
 import { AffiliationsTable } from '../../tables/affiliationstable'
 import {isEmpty, scrollToError, shallowEqual} from "../../../utils/methods";
+import QuestionsSet  from 'openstack-uicore-foundation/lib/utils/questions-set'
 
 class AttendeeForm extends React.Component {
     constructor(props) {
@@ -88,6 +89,7 @@ class AttendeeForm extends React.Component {
     }
 
     triggerFormSubmit() {
+
         // check current ( could not be rendered)
         if(this.formRef.current) {
             this.formRef.current.dispatchEvent(new Event("submit", {cancelable: true, bubbles: true}));
@@ -104,11 +106,11 @@ class AttendeeForm extends React.Component {
     handleSubmit(formValues) {
 
         const {currentSummit} = this.props;
-        
+        const qs = new QuestionsSet(currentSummit.attendee_main_extra_questions);
         const formattedAnswers = [];
-        Object.keys(formValues).map(a => {
-            let question = currentSummit.order_extra_questions.find(q => q.name === a);
-            const newQuestion = { question_id: question.id, answer: `${formValues[a]}` }
+        Object.keys(formValues).map(name => {
+            let question = qs.getQuestionByName(name);
+            const newQuestion = { question_id: question.id, answer: `${formValues[name]}` }
             formattedAnswers.push(newQuestion);
         });
 
