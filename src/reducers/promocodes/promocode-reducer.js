@@ -53,6 +53,7 @@ export const DEFAULT_ENTITY = {
     amount                  : '',
     rate                    : '',
     description             : '',
+    tags                    : []
 }
 
 const DEFAULT_STATE = {

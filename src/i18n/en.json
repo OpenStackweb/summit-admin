@@ -726,6 +726,7 @@
     "code": "Code",
     "description": "Description",
     "class_name": "Class",
+    "tags": "Tags",
     "type": "Type",
     "sponsor": "Sponsor",
     "company": "Company",
@@ -751,7 +752,8 @@
       "select_badge_features": "Select one or more Badge Features",
       "select_badge_type": "Select a Badge Type",
       "select_ticket_types": "Select Ticket Types",
-      "select_class_name": "Select a Class"
+      "select_class_name": "Select a Class",
+      "select_tags": "Select Tags"
     }
   },
   "discount_ticket": {
@@ -1255,13 +1257,15 @@
     "select_view_2_print": "Select a View Type to Print",
     "select_fields": "Select Data",
     "promocode": "Promo Code",
+    "promo_code_tags": "Promo Code Tags",
     "placeholders": {
       "search_tickets": "Search by Ticket #, Buyer, Assignee, Promo Code, Promo Code Description",
       "ticket_types": "Filter By Ticket Types ...",
       "owner_first_name": "First name starts with ...",
       "view_types": "Filter by View Types ...",
       "view_type": "Select a View Type ...",
-      "promocodes": "Select a Promocodes ...",
+      "promocodes": "Select a Promo Code ...",
+      "promocodes_tags": "Select a Promo Code Tag ...",
       "select_fields": "Select data to display"
     }
   },

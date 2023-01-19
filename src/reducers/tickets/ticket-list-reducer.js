@@ -61,6 +61,7 @@ const ticketListReducer = (state = DEFAULT_STATE, action) => {
                 const final_amount_formatted = `$${t.final_amount.toFixed(2)}`;
                 const refunded_amount_formatted = `$${t.refunded_amount.toFixed(2)}`;
                 const final_amount_adjusted_formatted = `$${((t.final_amount - t.refunded_amount).toFixed(2))}`;
+                const promo_code_tags = t.promo_code?.tags.length > 0 ? t.promo_code.tags.map(t => t.tag) : 'N/A';
 
                 return {
                     id: t.id,
@@ -76,6 +77,7 @@ const ticketListReducer = (state = DEFAULT_STATE, action) => {
                     refunded_amount_formatted,
                     final_amount_adjusted_formatted,
                     refund_requests: [...t.refund_requests],
+                    promo_code_tags
                 };
             })
             return {...state, tickets: tickets, lastPage: last_page, totalTickets: total};

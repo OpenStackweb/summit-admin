@@ -15,7 +15,7 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import {epochToMomentTimeZone} from 'openstack-uicore-foundation/lib/utils/methods'
-import { Dropdown, DateTimePicker, SpeakerInput, CompanyInput, Input } from 'openstack-uicore-foundation/lib/components'
+import { Dropdown, DateTimePicker, SpeakerInput, CompanyInput, Input, TagInput } from 'openstack-uicore-foundation/lib/components'
 import { DiscountTicketTable } from '../tables/dicount-ticket-table';
 import OwnerInput from "../inputs/owner-input";
 import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
@@ -354,6 +354,7 @@ class PromocodeForm extends React.Component {
         this.handleBadgeFeatureUnLink = this.handleBadgeFeatureUnLink.bind(this);
         this.queryBadgeFeatures = this.queryBadgeFeatures.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleNewTag = this.handleNewTag.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -452,6 +453,10 @@ class PromocodeForm extends React.Component {
         callback(badgeFeatures);
     }
 
+    handleNewTag(newTag) {
+        this.setState({...this.state, entity: {...this.state.entity, tags: [...this.state.entity.tags, {tag: newTag}]}})
+    }
+
     render() {
         const {entity} = this.state;
         const { currentSummit, allTypes, allClasses } = this.props;
@@ -517,6 +522,19 @@ class PromocodeForm extends React.Component {
                             onChange={this.handleChange}
                             className="form-control"
                             error={this.hasErrors('code')}
+                        />
+                    </div>
+                    <div className="col-md-3">
+                        <label> {T.translate("edit_promocode.tags")} *</label>
+                        <TagInput
+                            id="tags"
+                            clearable
+                            isMulti
+                            allowCreate
+                            value={entity.tags}
+                            onChange={this.handleChange}
+                            onCreate={this.handleNewTag}
+                            placeholder={T.translate("edit_promocode.placeholders.select_tags")}
                         />
                     </div>
                 </div>

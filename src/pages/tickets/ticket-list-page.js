@@ -20,6 +20,7 @@ import {
     SelectableTable,
     Dropdown,
     PromocodeInput,
+    TagInput
 } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
 import {
@@ -57,6 +58,7 @@ const fieldNames = [
     { columnKey: 'status', value: 'status'},
     { columnKey: 'refunded_amount_formatted', value: 'refunded_amount'},
     { columnKey: 'final_amount_adjusted_formatted', value: 'paid_amount_adjusted'},
+    { columnKey: 'promo_code_tags', value: 'promo_code_tags'},    
 ]
 
 class TicketListPage extends React.Component {
@@ -100,6 +102,7 @@ class TicketListPage extends React.Component {
                 hasBadgeFilter : null,
                 showOnlyPrintable: false,
                 promocodesFilter: [],
+                promocodeTags:[],
             }
         }
     }
@@ -347,6 +350,7 @@ class TicketListPage extends React.Component {
             { value: 'status', label: T.translate("ticket_list.status") },
             { value: 'refunded_amount_formatted', label: T.translate("ticket_list.refunded_amount") },
             { value: 'final_amount_adjusted_formatted', label: T.translate("ticket_list.paid_amount_adjusted") },
+            { value: 'promo_code_tags', label: T.translate("ticket_list.promo_code_tags") },
         ];
 
         const filters_ddl = [
@@ -358,8 +362,9 @@ class TicketListPage extends React.Component {
             {label: 'View Type', value: 'viewTypesFilter'},
             {label: 'Ticket Type', value: 'ticketTypesFilter'},
             {label: 'Promo Code', value: 'promocodesFilter'},
+            {label: 'Promo Code Tags', value: 'promocodeTags'},
             {label: 'Refund Requested', value: 'show_refund_request_pending'},  
-            {label: 'Printable', value: 'show_printable'},            
+            {label: 'Printable', value: 'show_printable'},
         ]
 
         let showColumns = fieldNames
@@ -549,7 +554,20 @@ class TicketListPage extends React.Component {
                               multi
                             />
                         </div>
-                        }                    
+                        }
+                        {enabledFilters.includes('promocodeTags') && 
+                        <div className="col-md-6">
+                            <TagInput
+                              id="promocodeTags"
+                              value={ticketFilters.promocodeTags}
+                              onChange={ev => this.handleFilterChange('promocodeTags', ev.target.value)}
+                              className="promocodes-filter"
+                              placeholder={T.translate('ticket_list.placeholders.promocodes_tags')}
+                              isClearable
+                              multi
+                            />
+                        </div>
+                        }       
                         {enabledFilters.includes('show_refund_request_pending') && 
                         <div className={'col-md-6'}>
                             <div className="form-check abc-checkbox">

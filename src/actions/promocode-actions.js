@@ -87,7 +87,7 @@ export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'cod
     }
 
     const params = {
-        expand       : 'speaker,owner,sponsor,creator',
+        expand       : 'speaker,owner,sponsor,creator,tags',
         page         : page,
         per_page     : perPage,
         access_token : accessToken,
@@ -125,7 +125,7 @@ export const getPromocode = (promocodeId) => async (dispatch, getState) => {
     dispatch(startLoading());
 
     const params = {
-        expand       : 'owner,sponsor,sponsor.company,sponsor.sponsorship,speaker,tickets,ticket_type,ticket_types_rules',
+        expand       : 'owner,sponsor,sponsor.company,sponsor.sponsorship,speaker,tickets,ticket_type,ticket_types_rules,tags',
         access_token : accessToken,
     };
 
@@ -153,16 +153,22 @@ export const savePromocode = (entity) => async (dispatch, getState) => {
 
     const normalizedEntity = normalizeEntity(entity);
 
+    const params = {
+        expand       : 'owner,sponsor,sponsor.company,sponsor.sponsorship,speaker,tickets,ticket_type,ticket_types_rules,tags',
+        access_token : accessToken,
+    };
+
     if (entity.id) {
+
 
         return putRequest(
             createAction(UPDATE_PROMOCODE),
             createAction(PROMOCODE_UPDATED),
-            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes/${entity.id}?access_token=${accessToken}`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
-        )({})(dispatch)
+        )(params)(dispatch)
             .then((payload) => {
                 dispatch(showSuccessMessage(T.translate("edit_promocode.promocode_saved")));
             });
@@ -177,11 +183,11 @@ export const savePromocode = (entity) => async (dispatch, getState) => {
         return postRequest(
             createAction(UPDATE_PROMOCODE),
             createAction(PROMOCODE_ADDED),
-            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes?access_token=${accessToken}`,
+            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes`,
             normalizedEntity,
             authErrorHandler,
             entity
-        )({})(dispatch)
+        )(params)(dispatch)
             .then((payload) => {
                 dispatch(showMessage(
                     success_message,
@@ -306,6 +312,10 @@ const normalizeEntity = (entity) => {
 
     if (entity.valid_until_date === 0) {
         normalizedEntity.valid_until_date = "";
+    }
+
+    if (entity.tags.length > 0) {
+        normalizedEntity.tags = entity.tags.map(e => e.tag)
     }
 
     delete normalizedEntity['owner'];
