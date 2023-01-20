@@ -691,9 +691,14 @@ class SummitEventListPage extends React.Component {
                                 Format must be the following:<br />
                                 (Minimal data required)<br />
                                 * title ( text )<br />
-                                * abstract (text )<br />
+                                * description (text )<br />
                                 * type_id (int) or type (string type name)<br />
                                 * track_id (int) or track ( string track name)<br />
+                                * speaker_emails ( list of email | delimited) [optional]<br />
+                                * speaker_fullnames ( list of full names | delimited) [optional]<br />
+                                * speaker_companies ( list of companies | delimited) [optional]<br />
+                                * speaker_titles ( list of titles | delimited) [optional]<br />
+                                <br />
                             </div>
                             <div className="col-md-12 ticket-import-upload-wrapper">
                                 <UploadInput
