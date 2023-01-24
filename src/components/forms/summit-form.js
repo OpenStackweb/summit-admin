@@ -303,17 +303,6 @@ class SummitForm extends React.Component {
                             onChange={this.handleChange}
                         />
                     </div>
-                    <div className="col-md-4">
-                        <label> {T.translate("edit_summit.max_submission_allowed_per_user")} *</label>
-                        <Input
-                            className="form-control"
-                            type="number"
-                            error={this.hasErrors('max_submission_allowed_per_user')}
-                            id="max_submission_allowed_per_user"
-                            value={entity.max_submission_allowed_per_user}
-                            onChange={this.handleChange}
-                        />
-                    </div>
                 </div>
                 <div className="row form-group">
                     <div className="col-md-4">
@@ -337,6 +326,8 @@ class SummitForm extends React.Component {
                             onChange={this.handleChange}
                         />
                     </div>
+                </div>
+                <div className="row form-group">
                     <div className="col-md-4">
                         <label> {T.translate("edit_summit.registration_link")}</label>
                         <Input
@@ -347,9 +338,6 @@ class SummitForm extends React.Component {
                             onChange={this.handleChange}
                         />
                     </div>
-                </div>
-                <div className="row form-group">
-
                     <div className="col-md-4">
                         <label> {T.translate("edit_summit.secondary_registration_link")}</label>
                         <Input

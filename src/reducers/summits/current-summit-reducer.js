@@ -48,7 +48,6 @@ export const DEFAULT_ENTITY = {
     link: '',
     locations: [],
     logo: null,
-    max_submission_allowed_per_user: 0,
     page_url: '',
     presentation_voters_count: 0,
     presentation_votes_count: 0,
