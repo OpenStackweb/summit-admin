@@ -34,7 +34,9 @@ export const DEFAULT_ALLOWED_QUESTIONS = [
   {label: 'What is expected to learn?', value: 'attendees_expected_learnt'},
   {label: 'Discuss with attending media?', value: 'attending_media'},
   {label: 'Social Summary', value: 'social_description'},
-  {label: 'Level of difficulty', value: 'level'}
+  {label: 'Links', value: 'links'},
+  {label: 'Level of difficulty', value: 'level'},
+  {label: 'Description', value: 'description'}
 ];
 
 export const DEFAULT_ENTITY = {
