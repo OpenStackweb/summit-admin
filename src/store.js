@@ -126,7 +126,8 @@ import sponsorMaterialReducer from './reducers/sponsors/sponsor-material-reducer
 import sponsorSocialNetworkReducer from './reducers/sponsors/sponsor-social-network-reducer';
 import auditLogReducer from './reducers/audit_log/audit-log-reducer';
 import eventCommentReducer from './reducers/events/event-comment-reducer';
-
+import SubmmissionInvitationListReducer from './reducers/speakers/submission-invitation-list-reducer';
+import submissionInvitationReducer from './reducers/speakers/submission-invitation-reducer';
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
 import storage from 'redux-persist/es/storage'
@@ -226,6 +227,8 @@ const reducers = persistCombineReducers(config, {
     emailFlowEventsListState: emailFlowEventsListReducer,
     emailFLowEventState: emailFlowEventReducer,
     RegistrationInvitationListState: RegistrationInvitationListReducer,
+    SubmmissionInvitationListState: SubmmissionInvitationListReducer,
+    currentSubmissionInvitationState: submissionInvitationReducer,
     adminAccessListState: adminAccessListReducer,
     adminAccessState: adminAccessReducer,
     mediaFileTypeListState: mediaFileTypeListReducer,

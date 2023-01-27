@@ -143,7 +143,8 @@
     "settings": "Settings",
     "schedule_settings": "Schedule",
     "registration_stats": "Registration Stats",
-    "audit_log": "Audit Log"
+    "audit_log": "Audit Log",
+    "submission_invitations": "Submission Invitations"
   },
   "schedule": {
     "schedule": "Schedule",
@@ -1427,6 +1428,10 @@
     "registration_invitations_list": "InvitationsList",
     "registration_invitations": "Invitations"
   },
+  "submission_invitations": {
+    "submission_invitations_list": "InvitationsList",
+    "submission_invitations": "Invitations"
+  },
   "push_notification_list": {
     "push_notifications": "Push Notifications",
     "push_notification_list": "Push Notification List",
@@ -2007,8 +2012,39 @@
       "tags": "Filter by Tags"
     }
   },
-  "registration_invitation_mail_activity": {
-    "registration_invitation_mail_activity": "Email Activity",
+  "submission_invitation_list": {
+    "email": "Email",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "completed": "Completed",
+    "sent": "Is Sent?",
+    "invitation_list": "Invitations",
+    "import": "Import",
+    "export": "Export",
+    "import_invitations": "Import Invitations Data",
+    "ingest": "Ingest Data",
+    "resend_non_accepted_invitations": "Resend non Accepted",
+    "show_non_accepted": "Show non accepted",
+    "show_non_sent": "Show not sent",
+    "send_emails": "Send",
+    "resend_done": "Emails sent successfully.",
+    "remove_warning": "Are you sure you want to delete this invitation ",
+    "remove_all_warning": "Are you sure you want to delete all invitations ?.",
+    "add_invitation": "Add",
+    "delete_all_invitations": "Delete All",
+    "no_invitations": "No items found for this search criteria.",
+    "select_template": "Select a Email Template to perform the action.",
+    "select_items": "Select at least one invitation to perform the action.",
+    "tags": "Tags",
+    "placeholders": {
+      "search": "Search invitations by term",
+      "tags": "Filter by Tags",
+      "ddl_flow_event": "-- SELECT EMAIL TEMPLATE FOR INVITE--",
+      "ddl_selection_plan" : "-- SELECT A SELECTION PLAN FOR INVITE--"
+    }
+  },
+  "mail_activity": {
+    "mail_activity": "Email Activity",
     "template_identifier": "Template",
     "subject": "Subject",
     "sent_date": "Sent Date"
@@ -2067,6 +2103,23 @@
   },
   "edit_registration_invitation": {
     "registration_invitation": "Invitation",
+    "first_name": "First Name",
+    "first_name_info": "",
+    "last_name": "Last Name",
+    "last_name_info": "",
+    "email": "Email",
+    "email_info": "",
+    "registration_invitation_created": "Invitation created successfully.",
+    "registration_invitation_saved": "Invitation saved successfully.",
+    "allowed_ticket_types": "Allowed Ticket Types",
+    "allowed_ticket_types_info": "Allowed Ticket Types that Attendee is allowed to buy",
+    "tags": "Tags",
+    "placeholders": {
+      "tags": "Select tags"
+    }
+  },
+  "edit_submission_invitation": {
+    "submission_invitation": "Invitation",
     "first_name": "First Name",
     "first_name_info": "",
     "last_name": "Last Name",

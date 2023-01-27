@@ -67,6 +67,7 @@ import SummitSpeakersLayout from './summit-speakers-layout';
 import ViewTypeLayout from './view-type-layout'
 import RegistrationStatsPage from '../pages/registration/registration-stats-page'
 import AuditLogPage from '../pages/audit-log/audit-log-page'
+import SubmissionInvitationLayout from "./submission-invitation-layout";
 
 class SummitIdLayout extends React.Component {
 
@@ -140,6 +141,7 @@ class SummitIdLayout extends React.Component {
                     <Route path={`${match.url}/purchase-orders`} component={PurchaseOrderLayout}/>
                     <Route path={`${match.url}/tickets`} component={TicketListPage}/>
                     <Route path={`${match.url}/registration-invitations`} component={RegistrationInvitationLayout}/>
+                    <Route path={`${match.url}/submission-invitations`} component={SubmissionInvitationLayout}/>
                     <Route path={`${match.url}/order-extra-questions`} component={OrderExtraQuestionLayout}/>
                     <Route path={`${match.url}/sponsors`} component={SponsorLayout}/>
                     <Route path={`${match.url}/sponsorships`} component={SummitSponsorshipLayout}/>

@@ -16,29 +16,29 @@ import { connect } from 'react-redux';
 import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
 import { getSummitById }  from '../../actions/summit-actions';
-import { getRegistrationInvitation ,
-    resetRegistrationInvitationForm,
-    saveRegistrationInvitation } from "../../actions/registration-invitation-actions";
-import RegistrationInvitationForm from "../../components/forms/registration-invitation-form";
+import { getInvitation ,
+    resetInvitationForm,
+    saveInvitation } from "../../actions/submission-invitation-actions";
+import SubmissionInvitationForm from "../../components/forms/submission-invitation-form";
 import {getSentEmailsByTemplatesAndEmail} from '../../actions/email-actions';
 import EmailActivity from "../../components/forms/email-activity";
 
-class EditRegistrationInvitationPage extends React.Component {
+class EditSubmissionInvitationPage extends React.Component {
 
     componentDidMount () {
         const {getSentEmailsByTemplatesAndEmail} = this.props;
-        let registrationInvitationId = this.props.match.params.registration_invitation_id;
+        let invitationId = this.props.match.params.invitation_id;
 
-        if (!registrationInvitationId) {
-            this.props.resetRegistrationInvitationForm();
+        if (!invitationId) {
+            this.props.resetInvitationForm();
             return;
         }
 
-        this.props.getRegistrationInvitation(registrationInvitationId).then((payload) => {
+        this.props.getInvitation(invitationId).then((payload) => {
             getSentEmailsByTemplatesAndEmail(
                 [
-                    'SUMMIT_REGISTRATION_INVITE_REGISTRATION',
-                    'SUMMIT_REGISTRATION_REINVITE_REGISTRATION'
+                    'SUMMIT_SUBMISSION_INVITE_REGISTRATION',
+                    'SUMMIT_SUBMISSION_REINVITE_REGISTRATION'
                 ],
                 payload.email
             )
@@ -46,14 +46,22 @@ class EditRegistrationInvitationPage extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const oldId = prevProps.match.params.registration_invitation_id;
-        const newId = this.props.match.params.registration_invitation_id;
+        const oldId = prevProps.match.params.invitation_id;
+        const newId = this.props.match.params.invitation_id;
 
         if (newId !== oldId) {
             if (!newId) {
-                this.props.resetRegistrationInvitationForm();
+                this.props.resetInvitationForm();
             } else {
-                this.props.getRegistrationInvitation(newId);
+                this.props.getInvitation(newId).then((payload) => {
+                    getSentEmailsByTemplatesAndEmail(
+                        [
+                            'SUMMIT_SUBMISSION_INVITE_REGISTRATION',
+                            'SUMMIT_SUBMISSION_REINVITE_REGISTRATION'
+                        ],
+                        payload.email
+                    )
+                });
             }
         }
     }
@@ -66,14 +74,14 @@ class EditRegistrationInvitationPage extends React.Component {
         return(
             <div className="container">
                 <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
-                <h3>{title} {T.translate("edit_registration_invitation.registration_invitation")}</h3>
+                <h3>{title} {T.translate("edit_submission_invitation.submission_invitation")}</h3>
                 <hr/>
                 {currentSummit &&
-                    <RegistrationInvitationForm
+                    <SubmissionInvitationForm
                         entity={entity}
                         errors={errors}
                         currentSummit={currentSummit}
-                        onSubmit={this.props.saveRegistrationInvitation}
+                        onSubmit={this.props.saveInvitation}
                     />
                 }
                 <EmailActivity
@@ -84,18 +92,18 @@ class EditRegistrationInvitationPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentRegistrationInvitationState }) => ({
+const mapStateToProps = ({ currentSummitState, currentSubmissionInvitationState }) => ({
     currentSummit : currentSummitState.currentSummit,
-    ...currentRegistrationInvitationState
+    ...currentSubmissionInvitationState
 });
 
 export default connect (
     mapStateToProps,
     {
         getSummitById,
-        getRegistrationInvitation,
-        resetRegistrationInvitationForm,
-        saveRegistrationInvitation,
+        getInvitation,
+        saveInvitation,
+        resetInvitationForm,
         getSentEmailsByTemplatesAndEmail,
     }
-)(EditRegistrationInvitationPage);
+)(EditSubmissionInvitationPage);

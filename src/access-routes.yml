@@ -37,7 +37,6 @@ summit-delete:
   - super-admins
   - administrators
 
-
 speakers:
   - super-admins
   - administrators
@@ -116,6 +115,11 @@ registration-invitations:
   - administrators
   - summit-front-end-administrators
   - summit-registration-administrators
+
+submissions-invitations:
+  - super-admins
+  - administrators
+  - summit-front-end-administrators
 
 room-occupancy:
   - super-admins

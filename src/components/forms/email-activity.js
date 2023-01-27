@@ -14,7 +14,7 @@ import React from 'react'
 import { Table } from 'openstack-uicore-foundation/lib/components';
 import T from 'i18n-react/dist/i18n-react';
 
-class RegistrationInvitationEmailActivity extends React.Component {
+class EmailActivity extends React.Component {
 
     render() {
         let {emailActivity} = this.props;
@@ -22,9 +22,9 @@ class RegistrationInvitationEmailActivity extends React.Component {
         if(emailActivity.length === 0) return null;
 
         let columns = [
-            { columnKey: 'template_identifier', value: T.translate("registration_invitation_mail_activity.template_identifier")},
-            { columnKey: 'subject', value: T.translate("registration_invitation_mail_activity.subject") },
-            { columnKey: 'sent_date', value: T.translate("registration_invitation_mail_activity.sent_date") },
+            { columnKey: 'template_identifier', value: T.translate("mail_activity.template_identifier")},
+            { columnKey: 'subject', value: T.translate("mail_activity.subject") },
+            { columnKey: 'sent_date', value: T.translate("mail_activity.sent_date") },
         ];
 
         let table_options = {
@@ -33,7 +33,7 @@ class RegistrationInvitationEmailActivity extends React.Component {
 
         return (
             <div>
-            <h4>{T.translate("registration_invitation_mail_activity.registration_invitation_mail_activity")}</h4>
+            <h4>{T.translate("mail_activity.mail_activity")}</h4>
             <hr/>
             <Table
                 options={table_options}
@@ -45,4 +45,4 @@ class RegistrationInvitationEmailActivity extends React.Component {
     }
 }
 
-export default RegistrationInvitationEmailActivity;
+export default EmailActivity;
