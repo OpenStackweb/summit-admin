@@ -5,6 +5,7 @@ import EditSelectionPlanPage from "../pages/summits/edit-selection-plan-page";
 import { getSelectionPlan,
     resetSelectionPlanForm,
 } from "../actions/selection-plan-actions";
+import { getMarketingSettingsBySelectionPlan } from "../actions/marketing-actions";
 import SelectionPlanExtraQuestionsLayout from "./selection-plan-extra-questions-layout";
 import SelectionPlanRatingTypesLayout from "./selection-plan-rating-types-layout";
 import NoMatchPage from "../pages/no-match-page";
@@ -19,7 +20,7 @@ class SelectionPlanIdLayout extends React.Component {
         if (!selectionPlanId) {
             this.props.resetSelectionPlanForm();
         } else {
-            this.props.getSelectionPlan(selectionPlanId);
+            this.props.getSelectionPlan(selectionPlanId).then(() => this.props.getMarketingSettingsBySelectionPlan(selectionPlanId));
         }
     }
 
@@ -32,6 +33,7 @@ class SelectionPlanIdLayout extends React.Component {
                 this.props.resetSelectionPlanForm();
             } else {
                 this.props.getSelectionPlan(newId);
+                this.props.getMarketingSettingsBySelectionPlan(newId)
             }
         }
     }
@@ -64,5 +66,6 @@ export default connect (
     {
         getSelectionPlan,
         resetSelectionPlanForm,
+        getMarketingSettingsBySelectionPlan,
     }
 )(SelectionPlanIdLayout);

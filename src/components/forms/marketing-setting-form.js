@@ -134,6 +134,16 @@ class MarketingSettingForm extends React.Component {
                             error={this.hasErrors('key')}
                         />
                     </div>
+                    <div className="col-md-4">
+                        <label> {T.translate("marketing.selection_plan")}</label>
+                        <Input
+                            id="selection_plan_id"
+                            value={entity.selection_plan_id}
+                            onChange={this.handleChange}
+                            className="form-control"
+                            error={this.hasErrors('selection_plan_id')}
+                        />
+                    </div>
                 </div>
                 <div className="row form-group">
                     {entity.type === 'TEXT' &&

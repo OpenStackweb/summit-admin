@@ -141,8 +141,13 @@ class SelectionPlanForm extends React.Component {
       value = value.valueOf() / 1000;
     }
 
-    errors[id] = '';
-    entity[id] = value;
+    if(id.startsWith('cfp_')) {
+      entity['marketing_settings'][id].value = value;
+    } else {
+      errors[id] = '';
+      entity[id] = value;
+    }
+    
     this.setState({entity: entity, errors: errors});
   }
 
@@ -160,7 +165,14 @@ class SelectionPlanForm extends React.Component {
     let entity = {...this.state.entity};
     ev.preventDefault();
 
-    this.props.onSubmit(this.state.entity);
+    const marketing_settings = []
+    
+    Object.keys(entity.marketing_settings).map(m => {
+      const mkt_setting = { id: entity.marketing_settings[m].id, type: 'TEXT', key: m.toUpperCase(), value: entity.marketing_settings[m].value, selection_plan_id: entity.id }
+      marketing_settings.push(this.props.saveMarketingSettings(mkt_setting, null, entity.id))
+    })
+
+    this.props.onSubmit(this.state.entity).then(() => Promise.all(marketing_settings));
   }
 
   hasErrors(field) {
@@ -723,6 +735,126 @@ class SelectionPlanForm extends React.Component {
               activePage={allowedMembers.currentPage}
               onSelect={this.handleAllowedMembersPageChange}
             />
+          </Panel>
+          <Panel
+            show={showSection === 'cfp_settings'}
+            title={T.translate("edit_selection_plan.cfp_settings")}
+            handleClick={() => {
+              this.toggleSection('cfp_settings')
+            }}
+          >
+            <div className="row form-group">
+              <div className="col-md-6">
+                <label> {T.translate("edit_selection_plan.cfp_speakers_singular_label")}&nbsp;
+                  <i className="fa fa-info-circle" aria-hidden="true"
+                    title={T.translate("edit_selection_plan.cfp_speakers_singular_label_info")}/>
+                </label>
+                <Input
+                  id="cfp_speakers_singular_label"
+                  className="form-control"
+                  error={this.hasErrors('cfp_speakers_singular_label')}
+                  onChange={this.handleChange}
+                  value={entity.marketing_settings.cfp_speakers_singular_label?.value}
+                />
+              </div>
+              <div className="col-md-6">
+                <label> {T.translate("edit_selection_plan.cfp_speakers_plural_label")}&nbsp;
+                  <i className="fa fa-info-circle" aria-hidden="true"
+                    title={T.translate("edit_selection_plan.cfp_speakers_plural_label_info")}/>
+                </label>
+                <Input
+                  id="cfp_speakers_plural_label"
+                  className="form-control"
+                  error={this.hasErrors('cfp_speakers_plural_label')}
+                  onChange={this.handleChange}
+                  value={entity.marketing_settings.cfp_speakers_plural_label?.value}
+                />
+              </div>
+            </div>
+            <div className="row form-group">
+              <div className="col-md-6">
+                <label> {T.translate("edit_selection_plan.cfp_presentations_singular_label")}&nbsp;
+                  <i className="fa fa-info-circle" aria-hidden="true"
+                    title={T.translate("edit_selection_plan.cfp_presentations_singular_label_info")}/>
+                </label>
+                <Input
+                  id="cfp_presentations_singular_label"
+                  className="form-control"
+                  error={this.hasErrors('cfp_presentations_singular_label')}
+                  onChange={this.handleChange}
+                  value={entity.marketing_settings.cfp_presentations_singular_label?.value}
+                />
+              </div>
+              <div className="col-md-6">
+                <label> {T.translate("edit_selection_plan.cfp_presentations_plural_label")}&nbsp;
+                  <i className="fa fa-info-circle" aria-hidden="true"
+                    title={T.translate("edit_selection_plan.cfp_presentations_plural_label_info")}/>
+                </label>
+                <Input
+                  id="cfp_presentations_plural_label"
+                  className="form-control"
+                  error={this.hasErrors('cfp_presentations_plural_label')}
+                  onChange={this.handleChange}
+                  value={entity.marketing_settings.cfp_presentations_plural_label?.value}
+                />
+              </div>
+            </div>
+            <div className="row form-group">
+              <div className="col-md-6">
+                <label> {T.translate("edit_selection_plan.cfp_presentation_summary_title_label")}&nbsp;
+                  <i className="fa fa-info-circle" aria-hidden="true"
+                    title={T.translate("edit_selection_plan.cfp_presentation_summary_title_label_info")}/>
+                </label>
+                <Input
+                  id="cfp_presentation_summary_title_label"
+                  className="form-control"
+                  error={this.hasErrors('cfp_presentation_summary_title_label')}
+                  onChange={this.handleChange}
+                  value={entity.marketing_settings.cfp_presentation_summary_title_label?.value}
+                />
+              </div>
+              <div className="col-md-6">
+                <label> {T.translate("edit_selection_plan.cfp_presentation_summary_abstract_label")}&nbsp;
+                  <i className="fa fa-info-circle" aria-hidden="true"
+                    title={T.translate("edit_selection_plan.cfp_presentation_summary_abstract_label_info")}/>
+                </label>
+                <Input
+                  id="cfp_presentation_summary_abstract_label"
+                  className="form-control"
+                  error={this.hasErrors('cfp_presentation_summary_abstract_label')}
+                  onChange={this.handleChange}
+                  value={entity.marketing_settings.cfp_presentation_summary_abstract_label?.value}
+                />
+              </div>
+            </div>
+            <div className="row form-group">
+              <div className="col-md-6">
+                <label> {T.translate("edit_selection_plan.cfp_presentation_summary_social_summary_label")}&nbsp;
+                  <i className="fa fa-info-circle" aria-hidden="true"
+                    title={T.translate("edit_selection_plan.cfp_presentation_summary_social_summary_label_info")}/>
+                </label>
+                <Input
+                  id="cfp_presentation_summary_social_summary_label"
+                  className="form-control"
+                  error={this.hasErrors('cfp_presentation_summary_social_summary_label')}
+                  onChange={this.handleChange}
+                  value={entity.marketing_settings.cfp_presentation_summary_social_summary_label?.value}
+                />
+              </div>
+              <div className="col-md-6">
+                <label> {T.translate("edit_selection_plan.cfp_presentation_summary_links_label")}&nbsp;
+                  <i className="fa fa-info-circle" aria-hidden="true"
+                    title={T.translate("edit_selection_plan.cfp_presentation_summary_links_label_info")}/>
+                </label>
+                <Input
+                  id="cfp_presentation_summary_links_label"
+                  className="form-control"
+                  error={this.hasErrors('cfp_presentation_summary_links_label')}
+                  onChange={this.handleChange}
+                  value={entity.marketing_settings.cfp_presentation_summary_links_label?.value}
+                />
+              </div>
+            </div>
           </Panel>
         </>
         }

@@ -52,6 +52,7 @@ const marketingSettingListReducer = (state = DEFAULT_STATE, action) => {
                     key: s.key,
                     type: s.type,
                     value: s.value,
+                    selection_plan_id: s.selection_plan_id ? s.selection_plan_id : "N/A"
                 };
             });
 

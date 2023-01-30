@@ -36,8 +36,10 @@ export const SETTING_UPDATED        = 'SETTING_UPDATED';
 export const SETTING_ADDED          = 'SETTING_ADDED';
 export const SETTING_DELETED        = 'SETTING_DELETED';
 export const SETTINGS_CLONED        = 'SETTINGS_CLONED';
+export const REQUEST_SELECTION_PLAN_SETTINGS = 'REQUEST_SELECTION_PLAN_SETTINGS';
+export const RECEIVE_SELECTION_PLAN_SETTINGS = 'RECEIVE_SELECTION_PLAN_SETTINGS';
 
-export const getMarketingSettings = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => (dispatch, getState) => {
+export const getMarketingSettings = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1) => (dispatch, getState) => {
 
     const { currentSummitState } = getState();
     const { currentSummit }   = currentSummitState;
@@ -71,6 +73,41 @@ export const getMarketingSettings = (term = null, page = 1, perPage = 10, order 
     );
 };
 
+export const getMarketingSettingsBySelectionPlan = (selectionPlanId, term = null, page = 1, perPage = 10, order = 'id', orderDir = 1) => (dispatch, getState) => {
+
+    const { currentSummitState } = getState();
+    const { currentSummit }   = currentSummitState;    
+
+    dispatch(startLoading());
+
+    const params = {
+        page                : page,
+        per_page            : perPage,
+        selection_plan_id   : selectionPlanId
+    };
+
+    if(term){
+        params.key__contains= term;
+    }
+
+    // order
+    if(order != null && orderDir != null){
+        const orderDirSign = (orderDir === 1) ? '' : '-';
+        params['order']= `${orderDirSign}${order}`;
+    }
+
+    return getRequest(
+        createAction(REQUEST_SELECTION_PLAN_SETTINGS),
+        createAction(RECEIVE_SELECTION_PLAN_SETTINGS),
+        `${window.MARKETING_API_BASE_URL}/api/public/v1/config-values/all/shows/${currentSummit.id}`,
+        authErrorHandler,
+        {order, orderDir, term}
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
 export const getMarketingSetting = (settingId) => (dispatch, getState) => {
 
     dispatch(startLoading());
@@ -92,7 +129,7 @@ export const resetSettingForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_SETTING_FORM)({}));
 };
 
-export const saveMarketingSetting = (entity, file) => async (dispatch, getState) => {
+export const saveMarketingSetting = (entity, file, selectionPlanId) => async (dispatch, getState) => {
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
@@ -102,45 +139,75 @@ export const saveMarketingSetting = (entity, file) => async (dispatch, getState)
     const normalizedEntity = normalizeEntity(entity, currentSummit.id);
     const params = { access_token : accessToken };
 
-    if (entity.id) {
-
-        putFile(
-            createAction(UPDATE_SETTING),
-            createAction(SETTING_UPDATED),
-            `${window.MARKETING_API_BASE_URL}/api/v1/config-values/${entity.id}`,
-            file,
-            normalizedEntity,
-            authErrorHandler,
-            entity
-        )(params)(dispatch)
-            .then((payload) => {
-                dispatch(showSuccessMessage(T.translate("marketing.setting_saved")));
-            });
-
+    if(selectionPlanId) {
+        if (entity.id) {
+            putFile(
+                createAction(UPDATE_SETTING),
+                createAction(SETTING_UPDATED),
+                `${window.MARKETING_API_BASE_URL}/api/v1/config-values/${entity.id}`,
+                file,
+                normalizedEntity,
+                authErrorHandler,
+                entity
+            )(params)(dispatch)
+                .then((payload) => {
+                });
+        } else {
+            postFile(
+                createAction(UPDATE_SETTING),
+                createAction(SETTING_ADDED),
+                `${window.MARKETING_API_BASE_URL}/api/v1/config-values`,
+                file,
+                normalizedEntity,
+                authErrorHandler,
+                entity
+            )(params)(dispatch)
+                .then((payload) => {
+                });
+        }
     } else {
 
-        const success_message = {
-            title: T.translate("general.done"),
-            html: T.translate("marketing.setting_created"),
-            type: 'success'
-        };
-
-        postFile(
-            createAction(UPDATE_SETTING),
-            createAction(SETTING_ADDED),
-            `${window.MARKETING_API_BASE_URL}/api/v1/config-values`,
-            file,
-            normalizedEntity,
-            authErrorHandler,
-            entity
-        )(params)(dispatch)
-            .then((payload) => {
-                dispatch(showMessage(
-                    success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/marketing/${payload.response.id}`) }
-                ));
-            });
+        if (entity.id) {
+    
+            putFile(
+                createAction(UPDATE_SETTING),
+                createAction(SETTING_UPDATED),
+                `${window.MARKETING_API_BASE_URL}/api/v1/config-values/${entity.id}`,
+                file,
+                normalizedEntity,
+                authErrorHandler,
+                entity
+            )(params)(dispatch)
+                .then((payload) => {
+                    dispatch(showSuccessMessage(T.translate("marketing.setting_saved")));
+                });
+    
+        } else {
+    
+            const success_message = {
+                title: T.translate("general.done"),
+                html: T.translate("marketing.setting_created"),
+                type: 'success'
+            };
+    
+            postFile(
+                createAction(UPDATE_SETTING),
+                createAction(SETTING_ADDED),
+                `${window.MARKETING_API_BASE_URL}/api/v1/config-values`,
+                file,
+                normalizedEntity,
+                authErrorHandler,
+                entity
+            )(params)(dispatch)
+                .then((payload) => {
+                    dispatch(showMessage(
+                        success_message,
+                        () => { history.push(`/app/summits/${currentSummit.id}/marketing/${payload.response.id}`) }
+                    ));
+                });
+        }
     }
+
 }
 
 export const deleteSetting = (settingId) => async (dispatch, getState) => {

@@ -29,6 +29,7 @@ import {
     ALLOWED_MEMBER_ADDED,
     ALLOWED_MEMBERS_IMPORTED
 } from '../../actions/selection-plan-actions';
+import { RECEIVE_SELECTION_PLAN_SETTINGS } from '../../actions/marketing-actions';
 
 export const DEFAULT_ALLOWED_QUESTIONS = [
   {label: 'What is expected to learn?', value: 'attendees_expected_learnt'},
@@ -64,6 +65,16 @@ export const DEFAULT_ENTITY = {
     track_chair_rating_types: [],
     allowed_presentation_action_types: [],
     allowed_presentation_questions: DEFAULT_ALLOWED_QUESTIONS.map(q => q.value),
+    marketing_settings: {
+        cfp_speakers_singular_label: '',
+        cfp_speakers_plural_label: '',
+        cfp_presentation_summary_title_label: '',
+        cfp_presentation_summary_abstract_label: '',
+        cfp_presentation_summary_social_summary_label: '',
+        cfp_presentations_singular_label: '',
+        cfp_presentations_plural_label: '',
+        cfp_presentation_summary_links_label: '',
+    }
 }
 
 const DEFAULT_STATE = {
@@ -93,6 +104,7 @@ const selectionPlanReducer = (state = DEFAULT_STATE, action) => {
         case SELECTION_PLAN_ADDED:
         case RECEIVE_SELECTION_PLAN: {
             let entity = {...payload.response};
+            let marketing_setting = state.entity.marketing_settings;
 
             for(var key in entity) {
                 if(entity.hasOwnProperty(key)) {
@@ -100,7 +112,7 @@ const selectionPlanReducer = (state = DEFAULT_STATE, action) => {
                 }
             }
 
-            return {...state, entity: {...DEFAULT_ENTITY, ...entity} };
+            return {...state, entity: {...DEFAULT_ENTITY, ...entity, marketing_setting } };
         }
         case SELECTION_PLAN_UPDATED: {
             return state;
@@ -234,6 +246,14 @@ const selectionPlanReducer = (state = DEFAULT_STATE, action) => {
         }
         case VALIDATE: {
             return {...state,  errors: payload.errors };
+        }
+        case RECEIVE_SELECTION_PLAN_SETTINGS: {
+            let data = payload.response.data;
+            // parse data
+            const settings = data.map(ms => ({[ms.key.toLowerCase()] : {id: ms.id || null, value: ms.value}}));
+            // array to object
+            const marketing_setting = Object.assign(...settings, {});
+            return { ...state, entity: { ...state.entity, marketing_settings: marketing_setting } }
         }
         default:
             return state;
