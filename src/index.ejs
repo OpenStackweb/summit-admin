@@ -1,8 +1,14 @@
 <!DOCTYPE html>
 <html>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
-    <script src="https://maps.googleapis.com/maps/api/js?key=<%= process.env.GOOGLE_API_KEY %>&v=3.exp&libraries=geometry,drawing,places" async defer></script>
+    <!-- added 1/21/2023 to prevent:
+Loading the Google Maps JavaScript API without a callback is not supported: https://developers.google.com/maps/documentation/javascript/url-params#required_parameters
+-->
+    <script>
+        function dummy() {}
+        window.dummy=dummy;
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=<%= process.env.GOOGLE_API_KEY %>&v=3.exp&libraries=geometry,drawing,places&callback=dummy" async defer></script>
     <head>
         <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
         <meta name="viewport" content="width=device-width,initial-scale=1">
