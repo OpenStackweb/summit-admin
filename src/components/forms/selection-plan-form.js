@@ -142,6 +142,9 @@ class SelectionPlanForm extends React.Component {
     }
 
     if(id.startsWith('cfp_')) {
+      if(!entity['marketing_settings'].hasOwnProperty(id)){
+        entity['marketing_settings'][id] = { value: ''};
+      }
       entity['marketing_settings'][id].value = value;
     } else {
       errors[id] = '';
