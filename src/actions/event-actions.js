@@ -675,6 +675,7 @@ const normalizeEntity = (entity, eventTypeConfig) => {
         if (!eventTypeConfig.allows_publishing_dates) {
             delete (normalizedEntity.start_date)
             delete (normalizedEntity.end_date)
+            delete (normalizedEntity.duration)
         }
     }
 
