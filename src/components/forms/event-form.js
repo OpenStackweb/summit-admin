@@ -1289,7 +1289,7 @@ render() {
                                 </label>
                                 {entity.track_chair_avg_score ? entity.track_chair_avg_score : 0}
                             </p>
-                            {entity.track_chair_scores_avg.map((score) => {
+                            {entity.hasOwnProperty('track_chair_scores_avg') && entity.track_chair_scores_avg.map((score) => {
                                 const rating_type = entity.selection_plan.track_chair_rating_types.find(e => parseInt(score.ranking_type_id) === e.id)
                                 if(!rating_type) return null;
                                 return (
