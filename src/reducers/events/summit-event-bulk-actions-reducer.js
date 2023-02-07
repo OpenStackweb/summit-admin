@@ -25,6 +25,7 @@ import { RECEIVE_SELECTED_EVENTS,
 } from '../../actions/summit-event-bulk-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
+import {SummitEvent} from "openstack-uicore-foundation/lib/models";
 
 import
 {
@@ -33,8 +34,6 @@ import
     RECEIVE_SCHEDULE_EVENTS_PAGE
 
 } from '../../actions/summit-builder-actions';
-
-import SummitEvent from "../../models/summit-event";
 
 const DEFAULT_STATE = {
     eventOnBulkEdition: [],

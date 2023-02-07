@@ -12,7 +12,6 @@
  **/
 
 import moment from "moment-timezone";
-import SummitEvent from "../models/summit-event";
 import { ScheduleEventsSearchResultMaxPage } from '../utils/constants';
 import { checkProximityEvents } from './event-actions';
 import {
@@ -25,6 +24,7 @@ import {
     authErrorHandler,
     escapeFilterValue
 } from "openstack-uicore-foundation/lib/utils/actions";
+import {SummitEvent} from "openstack-uicore-foundation/lib/models";
 import {getAccessTokenSafely} from '../utils/methods';
 
 export const REQUEST_UNSCHEDULE_EVENTS_PAGE               = 'REQUEST_UNSCHEDULE_EVENTS_PAGE';

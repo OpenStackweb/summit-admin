@@ -12,8 +12,7 @@
  **/
 import { Modal, Button, FormGroup, FormControl } from 'react-bootstrap';
 import React from 'react';
-import { DateTimePicker } from 'openstack-uicore-foundation/lib/components'
-import ScheduleAdminVenueSelector from './schedule-admin-venue-selector';
+import { DateTimePicker, SummitVenuesSelect } from 'openstack-uicore-foundation/lib/components'
 import moment from "moment-timezone";
 import T from "i18n-react/dist/i18n-react";
 
@@ -146,10 +145,11 @@ class ScheduleAdminEmptySpotsModal extends React.Component {
                         <div className="col-md-12">
                             <label> {T.translate("empty_spots_modal.venue")} </label>
                             <FormGroup validationState={this.getValidationStateVenue()}>
-                                <ScheduleAdminVenueSelector
+                                <SummitVenuesSelect
                                     onVenueChanged={this.onVenueChanged}
                                     currentValue={currentLocation}
                                     venues={venues}
+                                    placeholder={T.translate("schedule.placeholders.select_venue")}
                                 />
                                 <FormControl.Feedback />
                             </FormGroup>

@@ -12,11 +12,10 @@
  **/
 import React from 'react'
 import { FormGroup, FormControl } from 'react-bootstrap';
-import { DateTimePicker } from 'openstack-uicore-foundation/lib/components'
+import { DateTimePicker, SummitVenuesSelect } from 'openstack-uicore-foundation/lib/components'
+import {SummitEvent} from "openstack-uicore-foundation/lib/models";
 import moment from "moment-timezone";
-import ScheduleAdminVenueSelector from '../schedule-builder/schedule-admin-venue-selector';
 import T from 'i18n-react/dist/i18n-react'
-import SummitEvent from '../../models/summit-event';
 import Select from "react-select";
 
 class SummitEventBulkEditorItem extends React.Component
@@ -145,10 +144,11 @@ class SummitEventBulkEditorItem extends React.Component
                 </div>
                 <div className="col-md-2">
                     <FormGroup validationState={this.getValidationStateVenue()}>
-                        <ScheduleAdminVenueSelector
+                        <SummitVenuesSelect
                             onVenueChanged={this.onLocationChanged}
                             currentValue={currentLocation}
                             venues={venuesOptions}
+                            placeholder={T.translate("schedule.placeholders.select_venue")}
                         />
                         <FormControl.Feedback />
                     </FormGroup>

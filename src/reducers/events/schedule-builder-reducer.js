@@ -37,10 +37,10 @@ import
 } from '../../actions/summit-builder-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
+import {SummitEvent} from "openstack-uicore-foundation/lib/models";
 
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions'
 
-import SummitEvent from '../../models/summit-event';
 import {DefaultEventMinutesDuration} from "../../utils/constants";
 
 const DEFAULT_STATE = {
@@ -48,7 +48,6 @@ const DEFAULT_STATE = {
     unScheduleEvents : [],
     unScheduleEventsCurrentPage : null,
     unScheduleEventsLasPage : null,
-    childScheduleEvents : [],
     currentDay : null,
     currentLocation : null,
     currentEventType : null,

@@ -14,9 +14,7 @@ import React from 'react'
 import SummitEventBulkEditorItem from './summit-event-bulk-editor-item'
 import T from 'i18n-react/dist/i18n-react'
 import Swal from "sweetalert2";
-import { DateTimePicker } from 'openstack-uicore-foundation/lib/components'
-import ScheduleAdminVenueSelector from '../schedule-builder/schedule-admin-venue-selector';
-import ScheduleAdminEventTypeSelector from '../schedule-builder/schedule-admin-event-type-selector';
+import { DateTimePicker, SummitVenuesSelect } from 'openstack-uicore-foundation/lib/components'
 import moment from "moment-timezone";
 import {TBALocation} from "../../utils/constants";
 import Select from "react-select";
@@ -202,10 +200,11 @@ class SummitEventBulkEditorForm extends React.Component
                         />
                     </div>
                     <div className="col-md-2">
-                        <ScheduleAdminVenueSelector
+                        <SummitVenuesSelect
                             currentValue={currentBulkLocation}
                             onVenueChanged={this.onBulkLocationChange}
                             venues={venuesOptions}
+                            placeholder={T.translate("schedule.placeholders.select_venue")}
                         />
                     </div>
                     <div className="col-md-2">

@@ -44,13 +44,9 @@ import {
   performBulkAction
 } from '../../actions/summit-event-bulk-actions';
 import UnScheduleEventList from './unschedule-event-list';
-import ScheduleEventList from './schedule-event-list';
-import SummitEvent from '../../models/summit-event';
 import {
-  BulkActionEdit, BulkActionUnPublish, DefaultEventMinutesDuration, PixelsPerMinute, TBALocation, SlotSizeOptions
+  BulkActionEdit, BulkActionUnPublish, TBALocation, SlotSizeOptions
 } from '../../utils/constants';
-import ScheduleAdminDaySelector from './schedule-admin-day-selector';
-import ScheduleAdminVenueSelector from './schedule-admin-venue-selector';
 import ScheduleAdminEventTypeSelector from './schedule-admin-event-type-selector';
 import ScheduleAdminTrackSelector from './schedule-admin-track-selector';
 import ScheduleAdminPresentationSelectionStatusSelector from './schedule-admin-presentation-selection-status-selector';
@@ -66,10 +62,9 @@ import * as Scroll from 'react-scroll';
 import Swal from "sweetalert2";
 import ScheduleAdminEmptySpotsModal from './schedule-admin-empty-spots-modal';
 import ScheduleAdminEmptySpotsList from './schedule-admin-empty-spots-list';
-import ScheduleAdminsBulkActionsSelector from './bulk-actions/schedule-admin-bulk-actions-selector';
 import {epochToMomentTimeZone} from 'openstack-uicore-foundation/lib/utils/methods';
-import {Dropdown, OperatorInput} from 'openstack-uicore-foundation/lib/components';
-import SteppedSelect from '../inputs/stepped-select/index.jsx';
+import {Dropdown, OperatorInput, ScheduleBuilderView, BulkActionsSelector} from 'openstack-uicore-foundation/lib/components';
+import {SummitEvent} from "openstack-uicore-foundation/lib/models";
 
 class ScheduleAdminDashBoard extends React.Component {
 
@@ -655,7 +650,6 @@ class ScheduleAdminDashBoard extends React.Component {
     let {
       scheduleEvents,
       unScheduleEvents,
-      childScheduleEvents,
       currentSummit,
       currentDay,
       currentLocation,
@@ -837,57 +831,24 @@ class ScheduleAdminDashBoard extends React.Component {
             }
 
             {isNotSearchOrEmpty &&
-            <ScheduleAdminDaySelector
-              onDayChanged={this.onDayChanged}
-              days={days}
-              currentValue={currentDay}
-            />
-            }
-            {isNotSearchOrEmpty &&
-            <div className="row">
-              <div className="col-md-8">
-                <ScheduleAdminVenueSelector
+              <ScheduleBuilderView
+                  summit={currentSummit}
+                  scheduleEvents={scheduleEvents}
+                  selectedEvents={selectedPublishedEvents}
+                  currentDay={currentDay}
+                  currentVenue={currentLocation}
+                  slotSize={slotSize}
+                  onDayChanged={this.onDayChanged}
                   onVenueChanged={this.onVenueChanged}
-                  venues={venues}
-                  currentValue={currentVenueSelectorItem}
+                  onSlotSizeChange={this.onSlotSizeChange}
+                  onSelectAll={this.onSelectAllPublished}
+                  onSelectedBulkAction={this.onSelectedBulkActionPublished}
+                  onScheduleEvent={this.onScheduleEvent}
+                  onScheduleEventWithDuration={this.onScheduleEventWithDuration}
+                  onUnPublishEvent={this.onUnPublishEvent}
+                  onEditEvent={this.onEditEvent}
+                  onClickSelected={this.onClickSelected}
                 />
-              </div>
-              <div className="col-md-4">
-                <span>Slot size: </span>
-                <SteppedSelect
-                  value={slotSize}
-                  onChange={this.onSlotSizeChange}
-                  options={slotSizeOptions}
-                  style={{display: 'inline-block', marginLeft: 10}}
-                />
-              </div>
-            </div>
-
-            }
-            {isNotSearchOrEmpty && scheduleEvents.length > 0 &&
-            <ScheduleAdminsBulkActionsSelector
-              bulkOptions={bulkOptionsPublished}
-              onSelectAll={this.onSelectAllPublished}
-              onSelectedBulkAction={this.onSelectedBulkActionPublished}
-            />
-            }
-            {isNotSearchOrEmpty && currentDay && currentLocation &&
-            <ScheduleEventList
-              startTime={"00:00"}
-              endTime={"23:50"}
-              currentSummit={currentSummit}
-              interval={slotSize}
-              currentDay={currentDay}
-              pixelsPerMinute={PixelsPerMinute}
-              onScheduleEvent={this.onScheduleEvent}
-              onScheduleEventWithDuration={this.onScheduleEventWithDuration}
-              events={scheduleEvents}
-              childEvents={childScheduleEvents}
-              onUnPublishEvent={this.onUnPublishEvent}
-              onEditEvent={this.onEditEvent}
-              onClickSelected={this.onClickSelected}
-              selectedPublishedEvents={selectedPublishedEvents}
-            />
             }
 
             <ScheduleAdminScheduleEventsSearchResults
@@ -990,7 +951,7 @@ class ScheduleAdminDashBoard extends React.Component {
             <div className="row">
               <div className="col-md-12">
                 {unScheduleEvents.length > 0 &&
-                <ScheduleAdminsBulkActionsSelector
+                <BulkActionsSelector
                   bulkOptions={bulkOptionsUnPublished}
                   onSelectAll={this.onSelectAllUnPublished}
                   onSelectedBulkAction={this.onSelectedBulkActionUnPublished}
@@ -1020,7 +981,6 @@ function mapStateToProps({currentScheduleBuilderState, currentSummitState, summi
   return {
     scheduleEvents: currentScheduleBuilderState.scheduleEvents,
     unScheduleEvents: currentScheduleBuilderState.unScheduleEvents,
-    childScheduleEvents: currentScheduleBuilderState.childScheduleEvents,
     currentSummit: currentSummitState.currentSummit,
     currentDay: currentScheduleBuilderState.currentDay,
     currentLocation: currentScheduleBuilderState.currentLocation,
