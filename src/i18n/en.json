@@ -262,6 +262,8 @@
     "registration_disclaimer_mandatory": "Disclaimer Mandatory",
     "secondary_registration_link": "Sec. Registration Link",
     "registration_reminder_email_days_interval": "Day interval to send reminder reg emails",
+    "speaker_confirmation_default_page_url": "Speaker Confirmation Default Page",
+    "speaker_confirmation_default_page_url_info": "This url will be used for speaker submission emails, and will populate template email variable \"speaker_confirmation_link\". Url should point to a valid SummitConfirmSpeakerPage.",
     "dates_label": "Date Label",
     "secondary_registration_label": "Sec. Registration Label",
     "active": "This is the active event?",

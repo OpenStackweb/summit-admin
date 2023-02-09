@@ -663,6 +663,20 @@ class SummitForm extends React.Component {
                                 onChange={this.handleChange}
                             />
                         </div>
+                        <div className="col-md-6">
+                            <label> 
+                                {T.translate("edit_summit.speaker_confirmation_default_page_url")} &nbsp;
+                                <i className="fa fa-info-circle" aria-hidden="true"
+                                    title={T.translate("edit_summit.speaker_confirmation_default_page_url_info")} />
+                            </label>
+                            <Input
+                                className="form-control"
+                                error={this.hasErrors('speaker_confirmation_default_page_url')}
+                                id="speaker_confirmation_default_page_url"
+                                value={entity.speaker_confirmation_default_page_url}
+                                onChange={this.handleChange}
+                            />
+                        </div>
                     </div>
                 </Panel>
 
