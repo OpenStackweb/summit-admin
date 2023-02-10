@@ -282,7 +282,7 @@ export const getTickets =
         if(term) {
             const escapedTerm = escapeFilterValue(term);
             let searchString = `number=@${escapedTerm},owner_email=@${escapedTerm},owner_name=@${escapedTerm},owner_company=@${escapedTerm},promo_code=@${escapedTerm},promo_code_description=@${escapedTerm},promo_code_tag=@${escapedTerm}`;
-            searchString = isInteger(parseInt(escapedTerm)) && typeof(parseInt(escapedTerm)) === 'number' ? `${searchString},promo_code_tag_id==${escapedTerm}` : searchString;
+            searchString = Number.isInteger(parseInt(escapedTerm)) && typeof(parseInt(escapedTerm)) === 'number' ? `${searchString},promo_code_tag_id==${escapedTerm}` : searchString;
             filter.push(searchString);
         }
 
