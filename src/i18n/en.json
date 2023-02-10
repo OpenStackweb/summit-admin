@@ -337,6 +337,7 @@
     "submission_period_disclaimer": "Disclaimer",
     "max_submissions": "Max Submissions Per User",
     "allow_new_presentations": "Allow New Presentations",
+    "allow_proposed_schedules": "Allow Proposed Schedules",
     "selection_plan_saved": "Selection Plan saved successfully.",
     "selection_plan_created": "Selection Plan created successfully.",
     "event_types": "Activity Types",

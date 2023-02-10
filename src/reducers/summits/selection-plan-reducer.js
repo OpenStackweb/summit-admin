@@ -59,6 +59,7 @@ export const DEFAULT_ENTITY = {
     extraQuestionsOrder: 'order',
     extraQuestionsOrderDir : 1,
     allow_new_presentations: false,
+    allow_proposed_schedules: false,
     presentation_creator_notification_email_template: '',
     presentation_moderator_notification_email_template: '',
     presentation_speaker_notification_email_template: '',
