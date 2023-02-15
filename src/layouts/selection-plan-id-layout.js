@@ -8,7 +8,6 @@ import { getSelectionPlan,
 import { getMarketingSettingsBySelectionPlan } from "../actions/marketing-actions";
 import SelectionPlanExtraQuestionsLayout from "./selection-plan-extra-questions-layout";
 import SelectionPlanRatingTypesLayout from "./selection-plan-rating-types-layout";
-import NoMatchPage from "../pages/no-match-page";
 import {Breadcrumb} from "react-breadcrumbs";
 import T from "i18n-react";
 
@@ -20,7 +19,7 @@ class SelectionPlanIdLayout extends React.Component {
         if (!selectionPlanId) {
             this.props.resetSelectionPlanForm();
         } else {
-            this.props.getSelectionPlan(selectionPlanId).then(() => this.props.getMarketingSettingsBySelectionPlan(selectionPlanId));
+            this.props.getSelectionPlan(selectionPlanId).then(() => this.props.getMarketingSettingsBySelectionPlan(selectionPlanId, null, 1 , 100));
         }
     }
 
@@ -32,8 +31,7 @@ class SelectionPlanIdLayout extends React.Component {
             if (!newId) {
                 this.props.resetSelectionPlanForm();
             } else {
-                this.props.getSelectionPlan(newId);
-                this.props.getMarketingSettingsBySelectionPlan(newId)
+                this.props.getSelectionPlan(newId).then(() => this.props.getMarketingSettingsBySelectionPlan(newId, null, 1, 100))
             }
         }
     }

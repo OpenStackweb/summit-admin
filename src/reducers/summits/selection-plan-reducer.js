@@ -75,6 +75,7 @@ export const DEFAULT_ENTITY = {
         cfp_presentations_singular_label: '',
         cfp_presentations_plural_label: '',
         cfp_presentation_summary_links_label: '',
+        cfp_presentation_edition_custom_message: ''
     }
 }
 

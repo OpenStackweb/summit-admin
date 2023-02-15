@@ -376,6 +376,8 @@
     "cfp_presentations_plural_label_info": "cfp_presentations_plural_label_info",
     "cfp_presentation_summary_links_label": "cfp_presentation_summary_links_label",
     "cfp_presentation_summary_links_label_info": "cfp_presentation_summary_links_label_info",
+    "cfp_presentation_edition_custom_message": "cfp_presentation_edition_custom_message",
+    "cfp_presentation_edition_custom_message_info": "This is a custom message to help inform the user what is expected of them that gets displayed when they add a new presentation or view an existing one. This would pop up as a modal dialogue each time the user entered the presentation UI.",
     "placeholders": {
       "creator_notification_email_select_template": "Select a creator notification email template...",
       "moderator_notification_email_select_template": "Select a moderator notification email template...",
