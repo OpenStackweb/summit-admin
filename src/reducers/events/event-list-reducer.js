@@ -69,7 +69,7 @@ const eventListReducer = (state = DEFAULT_STATE, action) => {
                     status: e.status,
                     selection_status: e.selection_status,
                     published_date: published_date,
-                    created_by_fullname: e.hasOwnProperty('created_by') ? `${e.created_by.first_name} ${e.created_by.last_name}`:'TBD',
+                    created_by_fullname: e.hasOwnProperty('created_by') ? `${e.created_by.first_name} ${e.created_by.last_name} (${e.created_by.email})`:'TBD',
                     speakers: (e.speakers) ? e.speakers.map(s => s.first_name + ' ' + s.last_name).join(',') : '',
                     duration: e.type.allows_publishing_dates ?
                         formatDuration(e.duration) : 'N/A',

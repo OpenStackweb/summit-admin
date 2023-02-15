@@ -37,7 +37,7 @@ import '../../styles/summit-event-list-page.less';
 
 const fieldNames = [
     { columnKey: 'speakers', value: 'speakers' },
-    { columnKey: 'created_by_fullname', value: 'created_by' },
+    { columnKey: 'created_by_fullname', value: 'created_by', sortable: true },
     { columnKey: 'published_date', value: 'published' },
     { columnKey: 'duration', value: 'duration', sortable: true },
     { columnKey: 'speakers_count', value: 'speakers_count', sortable: true },
