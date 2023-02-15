@@ -80,18 +80,7 @@ export const getEvents = (term = null, page = 1, perPage = 10, order = 'id', ord
         const escapedTerm = escapeFilterValue(term);
         let searchString = `title=@${escapedTerm},` +
             `abstract=@${escapedTerm},` +
-            `tags=@${escapedTerm},` +
-            `speaker=@${escapedTerm},` +
-            `speaker_email=@${escapedTerm},` +
-            `speaker_title=@${escapedTerm},` +
-            `speaker_company=@${escapedTerm},` +
-            `created_by_fullname=@${escapedTerm},` +
-            `created_by_email=@${escapedTerm},` +
-            `created_by_company=@${escapedTerm},` +
-            `speaker_company=@${escapedTerm},` +
-            `streaming_url=@${escapedTerm},` +
-            `meeting_url=@${escapedTerm},` +
-            `etherpad_link=@${escapedTerm}`;
+            `speaker_title=@${escapedTerm},`;
 
         if (parseInt(term)) {
             searchString += `,id==${parseInt(term)}`;
@@ -723,7 +712,7 @@ export const exportEvents = (term = null, order = 'id', orderDir = 1, extraFilte
 
     if (term) {
         const escapedTerm = escapeFilterValue(term);
-        let searchString = `title=@${escapedTerm},abstract=@${escapedTerm},tags=@${escapedTerm},speaker=@${escapedTerm},speaker_email=@${escapedTerm},speaker_title=@${escapedTerm},speaker_company=@${escapedTerm}`;
+        let searchString = `title=@${escapedTerm},abstract=@${escapedTerm},speaker_title=@${escapedTerm}`;
 
         if (parseInt(term)) {
             searchString += `,id==${parseInt(term)}`;
@@ -919,6 +908,51 @@ const parseFilters = (filters) => {
             filter.push(`speakers_count${filters.speakers_count_filter}`)
         }
 
+    }
+
+    if (filters.hasOwnProperty('submitters') && Array.isArray(filters.submitters)
+        && filters.submitters.length > 0) {
+        // created by fullname | created_by_email
+        filter.push(filters.submitters.map(
+            (tt) => {
+                const escapedFullName = escapeFilterValue(`${tt.first_name} ${tt.last_name}`);
+                const escapedEmail = escapeFilterValue(tt.email);
+                const fullNameFilter = `created_by_fullname==${escapedFullName}`;
+                const emailFilter = `created_by_email==${escapedEmail}`;
+                return [fullNameFilter, emailFilter];
+            },
+            ''
+        ));
+    }
+
+    if(filters.hasOwnProperty('streaming_url') && filters.streaming_url) {
+        const searchString = escapeFilterValue(filters.streaming_url);
+        filter.push(`streaming_url@@${searchString}` )
+    }
+    if(filters.hasOwnProperty('meeting_url') && filters.meeting_url) {
+        const searchString = escapeFilterValue(filters.meeting_url);
+        filter.push(`meeting_url@@${searchString}` )
+    }
+    if(filters.hasOwnProperty('etherpad_url') && filters.etherpad_url) {
+        const searchString = escapeFilterValue(filters.etherpad_url);
+        filter.push(`etherpad_link@@${searchString}`)
+    }
+
+    if(filters.hasOwnProperty('streaming_type') && filters.streaming_type) {
+        filter.push(`streaming_type==${filters.streaming_type}`)
+    }
+
+    if (filters.hasOwnProperty('company') && Array.isArray(filters.company)
+        && filters.company.length > 0) {
+        // speaker_company | created_by_company
+        filter.push(
+            'speaker_company==' + filters.company.reduce(
+                (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + tt.name,
+            ''),
+            'created_by_company==' + filters.company.reduce(
+                (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + tt.name,
+            ''),
+        );
     }
 
     if(filters.is_public) {

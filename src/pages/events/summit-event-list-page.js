@@ -16,7 +16,18 @@ import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import Swal from "sweetalert2";
 import {Modal, Pagination } from 'react-bootstrap';
-import {FreeTextSearch, Table, UploadInput, Input, TagInput, SpeakerInput, Dropdown, DateTimePicker, OperatorInput} from 'openstack-uicore-foundation/lib/components';
+import { 
+    FreeTextSearch, 
+    Table, 
+    UploadInput, 
+    Input, 
+    TagInput, 
+    SpeakerInput, 
+    Dropdown, 
+    DateTimePicker, 
+    OperatorInput,
+    MemberInput,
+    CompanyInput } from 'openstack-uicore-foundation/lib/components';
 import { SegmentedControl } from 'segmented-control'
 import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/utils/methods'
 import { getSummitById }  from '../../actions/summit-actions';
@@ -33,6 +44,12 @@ const fieldNames = [
     { columnKey: 'track', value: 'track' },
     { columnKey: 'start_date', value: 'start_date', sortable: true },
     { columnKey: 'end_date', value: 'end_date', sortable: true },
+    { columnKey: 'submitters', value: 'submitters' },
+    { columnKey: 'streaming_url', value: 'streaming_url' },
+    { columnKey: 'meeting_url', value: 'meeting_url' },
+    { columnKey: 'etherpad_url', value: 'etherpad_url' },
+    { columnKey: 'streaming_type', value: 'streaming_type' },
+    { columnKey: 'company', value: 'company' }
 ]
 
 class SummitEventListPage extends React.Component {
@@ -87,6 +104,12 @@ class SummitEventListPage extends React.Component {
                 end_date_filter: '',
                 duration_filter: '',
                 speakers_count_filter: '',
+                submitters: [],
+                streaming_url: '',
+                meeting_url: '',
+                etherpad_url: '',
+                streaming_type: '',
+                company: []
             },
             selectedColumns: []
         };
@@ -265,6 +288,12 @@ class SummitEventListPage extends React.Component {
                     end_date_filter: '',
                     duration_filter: '',
                     speakers_count_filter: '',
+                    submitters: [],
+                    streaming_url: '',
+                    meeting_url: '',
+                    etherpad_url: '',
+                    streaming_type: '',
+                    company: []
                 };
                 this.setState({...this.state, enabledFilters: value, eventFilters: resetFilters});
             } else {
@@ -310,6 +339,12 @@ class SummitEventListPage extends React.Component {
                     end_date_filter: '',
                     duration_filter: '',
                     speakers_count_filter: '',
+                    submitters: [],
+                    streaming_url: '',
+                    meeting_url: '',
+                    etherpad_url: '',
+                    streaming_type: '',
+                    company: []
                 };
                 this.setState({...this.state, enabledFilters: value, eventFilters: resetFilters});
             } else {
@@ -369,6 +404,8 @@ class SummitEventListPage extends React.Component {
             {label: 'N/A', value: 'na'},
         ];
 
+        const streaming_type_ddl = [{ label: 'LIVE', value: 'LIVE' }, { label: 'VOD', value: 'VOD' }];
+
         const filters_ddl = [
             {label: 'Event Type Capacity', value: 'event_type_capacity_filter'},
             {label: 'Selection Plan', value: 'selection_plan_id_filter'},
@@ -382,7 +419,13 @@ class SummitEventListPage extends React.Component {
             {label: 'Tags', value: 'tags_filter'},
             {label: 'Date', value: 'date_filter'},
             {label: 'Duration', value: 'duration_filter'},
-            {label: 'Speaker Count', value: 'speakers_count_filter'}
+            {label: 'Speaker Count', value: 'speakers_count_filter'},
+            {label: 'Submitter', value: 'submitters'},
+            {label: 'Stream URL', value: 'streaming_url'},
+            {label: 'Meeting URL', value: 'meeting_url'},
+            {label: 'Etherpad URL', value: 'etherpad_url'},
+            {label: 'Streaming Type', value: 'streaming_type'},
+            {label: 'Company', value: 'company'}
         ]
 
         const ddl_columns = [
@@ -615,6 +658,76 @@ class SummitEventListPage extends React.Component {
                                 />
                             </div>
                         </>
+                    }
+                    {enabledFilters.includes('submitters') && 
+                        <div className={'col-md-6'}> 
+                        <MemberInput
+                            id="submitters"
+                            value={eventFilters.submitters}
+                            onChange={this.handleExtraFilterChange}
+                            multi={true}
+                            placeholder={T.translate("event_list.placeholders.submitters")}
+                            getOptionLabel={
+                                (member) => {
+                                    return member.hasOwnProperty("email") ?
+                                        `${member.first_name} ${member.last_name} (${member.email})`:
+                                        `${member.first_name} ${member.last_name} (${member.id})`;
+                                }
+                            }
+                        />
+                    </div>
+                    }
+                    {enabledFilters.includes('streaming_url') && 
+                        <div className={'col-md-6'}> 
+                        <Input
+                            id='streaming_url'
+                            value={eventFilters.streaming_url}
+                            placeholder={T.translate("event_list.placeholders.streaming_url")}
+                            onChange={this.handleExtraFilterChange}
+                        />
+                    </div>
+                    }
+                    {enabledFilters.includes('meeting_url') && 
+                        <div className={'col-md-6'}> 
+                        <Input
+                            id='meeting_url'
+                            value={eventFilters.meeting_url}
+                            placeholder={T.translate("event_list.placeholders.meeting_url")}
+                            onChange={this.handleExtraFilterChange}
+                        />
+                    </div>
+                    }
+                    {enabledFilters.includes('etherpad_url') && 
+                        <div className={'col-md-6'}> 
+                        <Input
+                            id='etherpad_url'
+                            value={eventFilters.etherpad_url}
+                            placeholder={T.translate("event_list.placeholders.etherpad_url")}
+                            onChange={this.handleExtraFilterChange}
+                        />
+                    </div>
+                    }
+                    {enabledFilters.includes('streaming_type') && 
+                        <div className={'col-md-6'}> 
+                        <Dropdown
+                            id="streaming_type"
+                            value={eventFilters.streaming_type}
+                            onChange={this.handleExtraFilterChange}
+                            placeholder={T.translate("event_list.placeholders.streaming_type")}
+                            options={streaming_type_ddl}
+                        />
+                    </div>
+                    }
+                    {enabledFilters.includes('company') && 
+                        <div className={'col-md-6'}> 
+                        <CompanyInput
+                            id='company'
+                            value={eventFilters.company}
+                            placeholder={T.translate("event_list.placeholders.company")}
+                            onChange={this.handleExtraFilterChange}
+                            multi
+                        />
+                    </div>
                     }
                     {enabledFilters.includes('duration_filter') &&
                         <div className={'col-md-10 col-md-offset-1'}> 

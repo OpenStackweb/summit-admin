@@ -864,7 +864,7 @@
     "apply_filters": "Apply Filters",
     "select_fields": "Select Data",
     "placeholders": {
-      "search_events": "Search by Id, Title, Abstract, Speaker, Speaker Company, Speaker Title, Company, Streaming URL, Meeting URL, Etherpad Link",
+      "search_events": "Search by Id, Title, Abstract, Speaker Title",
       "event_type_capacity": "Filter by Event Type Capacity",
       "selection_plan": "Filter by Selection Plan",
       "location": "Filter by Location",
@@ -876,7 +876,13 @@
       "tags": "Filter by Tags",
       "start_date": "Filter from Date",
       "end_date": "Filter to Date",
-      "select_fields": "Select data to display"
+      "select_fields": "Select data to display",
+      "submitters": "Filter by Submitter",
+      "streaming_url": "Filter by Stream URL",
+      "meeting_url": "Filter by Meeting URL",
+      "etherpad_url": "Filter by Etherpad URL",
+      "streaming_type": "Filter by Streaming Type",
+      "company": "Filter by Company"
     }
   },
   "event_type_list": {
