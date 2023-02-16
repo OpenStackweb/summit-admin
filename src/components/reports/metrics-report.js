@@ -23,7 +23,7 @@ import {
 } from 'openstack-uicore-foundation/lib/components'
 const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
-import {groupByDate, parseAndFormat} from '../../utils/methods'
+import {groupByDate} from '../../utils/methods'
 import {flattenData} from "../../actions/report-actions";
 import ReactDOMServer from "react-dom/server";
 
@@ -31,6 +31,7 @@ const RawMetricsTable = ({data, timezone}) => {
     const columns = [
         { columnKey: 'ingressDate', value: 'Ingress' },
         { columnKey: 'outgressDate', value: 'Outgress' },
+        { columnKey: 'ip', value: 'Ip' },
     ];
 
     if (!data) return null;
@@ -68,6 +69,7 @@ class MetricsReport extends React.Component {
             fromDate: null,
             toDate: null,
             showAnswers: false,
+            onlyFinished: false,
             subTypeFilter: null,
             roomFilter: null,
             eventFilter: null,
@@ -78,11 +80,11 @@ class MetricsReport extends React.Component {
 
     buildMetricsQuery = (filters, listFilters, sortKey, sortDir) => {
         const {currentSummit} = this.props;
-        const {fromDate, toDate, eventType, sponsor, showAnswers, subTypeFilter, roomFilter, eventFilter} = this.state;
+        const {fromDate, toDate, eventType, sponsor, showAnswers, onlyFinished, subTypeFilter, roomFilter, eventFilter} = this.state;
         const overallFilter = {};
         const roomQueryFilter = {};
         const eventQueryFilter = {};
-        const metricsFields = ["name", "email", "company", "subType", "attendeeId", "memberId", "ingress", "outgress"];
+        const metricsFields = ["name", "email", "company", "subType", "attendeeId", "memberId", "ingress", "outgress", "ip"];
         const sponsorsMessage = ["sponsors"];
         const roomsMessage = ["rooms"];
         const eventsMessage = ["events"];
@@ -111,6 +113,10 @@ class MetricsReport extends React.Component {
 
         if (toDate) {
             overallFilter.toDate = moment(toDate).tz('UTC').format('YYYY-MM-DDTHH:mm:ss+00:00');
+        }
+    
+        if (onlyFinished) {
+            overallFilter.onlyFinished = true;
         }
 
         if (subTypeFilter) {
@@ -171,7 +177,7 @@ class MetricsReport extends React.Component {
 
     buildMemberQuery = (filters, listFilters) => {
         const {currentSummit} = this.props;
-        const {fromDate, toDate, eventType} = this.state;
+        const {fromDate, toDate, eventType, onlyFinished} = this.state;
 
         listFilters.summitId = currentSummit.id;
         filters.ordering = 'ingress_date';
@@ -188,12 +194,16 @@ class MetricsReport extends React.Component {
         if (toDate) {
             listFilters.toDate = moment(toDate).tz('UTC').format('YYYY-MM-DDTHH:mm:ss+00:00');
         }
+    
+        if (onlyFinished) {
+            listFilters.onlyFinished = true;
+        }
 
         let query = new Query("metrics", listFilters);
         let results = new Query("results", filters);
         let eventmetric = new Query("eventmetric");
         eventmetric.find(["subType"]);
-        results.find(["type", "ingressDate", "outgressDate", "memberName", "eventName", "sponsorName", "locationName", {"eventmetric": eventmetric} ]);
+        results.find(["type", "ingressDate", "outgressDate", "memberName", "eventName", "sponsorName", "locationName", "ip", {"eventmetric": eventmetric} ]);
 
         query.find([{"results": results}, "totalCount"]);
 
@@ -202,7 +212,7 @@ class MetricsReport extends React.Component {
 
     buildDrillDownQuery = (typeId, memberId, attendeeId) => {
         const {currentSummit} = this.props;
-        const {fromDate, toDate, eventType} = this.state;
+        const {fromDate, toDate, eventType, onlyFinished} = this.state;
         const filters = {ordering: 'ingress_date', limit: 3000};
         const listFilters = {summitId: currentSummit.id, type: eventType};
 
@@ -225,10 +235,14 @@ class MetricsReport extends React.Component {
         if (toDate) {
             listFilters.toDate = moment(toDate).tz('UTC').format('YYYY-MM-DDTHH:mm:ss+00:00');
         }
+    
+        if (onlyFinished) {
+            listFilters.onlyFinished = true;
+        }
 
         let query = new Query("metrics", listFilters);
         let results = new Query("results", filters);
-        results.find(["type", "ingressDate", "outgressDate", "memberName", "attendeeName", "eventName", "sponsorName", "locationName", "subType" ]);
+        results.find(["type", "ingressDate", "outgressDate", "memberName", "attendeeName", "eventName", "sponsorName", "locationName", "subType", "ip" ]);
 
         query.find([{"results": results}, "totalCount"]);
 
@@ -320,6 +334,10 @@ class MetricsReport extends React.Component {
         if (metric.outgress) {
             result.outgress = metric.outgress;
         }
+    
+        if (metric.ip) {
+            result.ip = metric.ip;
+        }
 
         return result;
     }
@@ -345,7 +363,8 @@ class MetricsReport extends React.Component {
                     date: moment.utc(d.ingressDate).tz(currentSummit.time_zone_id).format('dddd, MMMM Do YYYY, h:mm a (z)'),
                     origin: origin,
                     member: d.memberName,
-                    subtype: d.eventmetric?.subType
+                    subtype: d.eventmetric?.subType,
+                    ip: d.ip
                 }
 
             });
@@ -356,7 +375,8 @@ class MetricsReport extends React.Component {
                 { columnKey: 'type', value: 'Type' },
                 { columnKey: 'origin', value: 'Origin' },
                 { columnKey: 'subtype', value: 'SubType' },
-                { columnKey: 'date', value: 'Date' }
+                { columnKey: 'date', value: 'Date' },
+                { columnKey: 'ip', value: 'Ip' }
             ];
 
             if (forExport) {
@@ -365,7 +385,8 @@ class MetricsReport extends React.Component {
                     { columnKey: 'type', value: 'Type' },
                     { columnKey: 'origin', value: 'Origin' },
                     { columnKey: 'subtype', value: 'SubType' },
-                    { columnKey: 'date', value: 'Date' }
+                    { columnKey: 'date', value: 'Date' },
+                    { columnKey: 'ip', value: 'Ip' }
                 ];
 
                 processedData = Object.entries(processedData).reduce((result, item) => {
@@ -380,7 +401,8 @@ class MetricsReport extends React.Component {
             columns = [
                 { columnKey: 'metric', value: 'Metric', sortable: true },
                 { columnKey: 'email', value: 'Email', sortable: true },
-                { columnKey: 'company', value: 'Company', sortable: true }
+                { columnKey: 'company', value: 'Company', sortable: true },
+                { columnKey: 'ip', value: 'Ip' }
             ];
 
             if (showAnswers && data.extraQuestions) {
@@ -439,6 +461,7 @@ class MetricsReport extends React.Component {
                         { columnKey: 'metrics_company', value: 'Company' },
                         { columnKey: 'metrics_ingress', value: 'Ingress' },
                         { columnKey: 'metrics_outgress', value: 'Outgress' },
+                        { columnKey: 'metrics_ip', value: 'Ip' },
                     ];
 
                     if (showAnswers && data.extraQuestions) {
@@ -484,6 +507,7 @@ class MetricsReport extends React.Component {
                         { columnKey: 'metrics_company', value: 'Company' },
                         { columnKey: 'metrics_ingress', value: 'Ingress' },
                         { columnKey: 'metrics_outgress', value: 'Outgress' },
+                        { columnKey: 'metrics_ip', value: 'Ip' },
                     ];
 
                     if (showAnswers && data.extraQuestions) {
@@ -508,7 +532,8 @@ class MetricsReport extends React.Component {
                         { columnKey: 'companyName', value: 'Sponsor' },
                         { columnKey: 'metrics_metric', value: 'Metric' },
                         { columnKey: 'metrics_email', value: 'Email' },
-                        { columnKey: 'metrics_company', value: 'Company' }
+                        { columnKey: 'metrics_company', value: 'Company' },
+                        { columnKey: 'metrics_ip', value: 'Ip' }
                     ];
 
                     if (showAnswers && data.extraQuestions) {
@@ -533,7 +558,8 @@ class MetricsReport extends React.Component {
                         { columnKey: 'title', value: 'Poster' },
                         { columnKey: 'metrics_metric', value: 'Metric' },
                         { columnKey: 'metrics_email', value: 'Email' },
-                        { columnKey: 'metrics_company', value: 'Company' }
+                        { columnKey: 'metrics_company', value: 'Company' },
+                        { columnKey: 'metrics_ip', value: 'Ip' }
                     ];
 
                     if (showAnswers && data.extraQuestions) {
@@ -709,7 +735,7 @@ class MetricsReport extends React.Component {
 
     render() {
         const {data, currentSummit, sortKey, sortDir} = this.props;
-        const {eventType, sponsor, showAnswers, subTypeFilter, roomFilter, eventFilter} = this.state;
+        const {eventType, sponsor, showAnswers, onlyFinished, subTypeFilter, roomFilter, eventFilter} = this.state;
 
         const report_options = {
             sortCol: sortKey,
@@ -738,7 +764,7 @@ class MetricsReport extends React.Component {
         }));
 
         return (
-            <div>
+            <div id="metric-report-wrapper">
                 <div className="report-filters">
                     <div className="row">
                         <div className="col-md-3">
@@ -819,9 +845,11 @@ class MetricsReport extends React.Component {
                                   value={this.state.toDate}
                                   timezone={currentSummit.time_zone_id}
                                 />
+                                &nbsp;&nbsp;&nbsp;
+                                <button onClick={() => this.setState({fromDate:null, toDate: null})}>Clear</button>
                             </div>
                         </div>
-                        <div className="col-md-2 checkboxes-div">
+                        <div className="col-md-3 checkboxes-div">
                             <div className="form-check abc-checkbox">
                                 <input type="checkbox" id="showAnswers" checked={showAnswers}
                                        onChange={this.handleFilterChange} className="form-check-input" />
@@ -829,8 +857,15 @@ class MetricsReport extends React.Component {
                                     Show Answers
                                 </label>
                             </div>
+                            <div className="form-check abc-checkbox">
+                                <input type="checkbox" id="onlyFinished" checked={onlyFinished}
+                                       onChange={this.handleFilterChange} className="form-check-input" />
+                                <label className="form-check-label" htmlFor="onlyFinished">
+                                    Only Finished
+                                </label>
+                            </div>
                         </div>
-                        <div className="col-md-2" style={{marginTop: 20}}>
+                        <div className="col-md-3" style={{marginTop: 20}}>
                             <button className="btn btn-primary" onClick={this.filterReport}> GO </button>
                         </div>
                     </div>

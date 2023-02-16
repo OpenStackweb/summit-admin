@@ -57,7 +57,7 @@ export const getMetricRaw = (query) => async (dispatch) => {
 
     dispatch(startLoading());
 
-    return fetch(`${window.REPORT_API_BASE_URL}/reports?access_token=${accessToken}&query=${query}`)
+    return fetch(`${window.REPORT_API_BASE_URL}/reports?access_token=${accessToken}&query=${encodeURIComponent(query)}`)
       .then(fetchResponseHandler)
       .then(response => {
           dispatch(stopLoading());
