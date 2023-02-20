@@ -171,7 +171,8 @@ class SelectionPlanForm extends React.Component {
     const marketing_settings = []
     
     Object.keys(entity.marketing_settings).map(m => {
-      const mkt_setting = { id: entity.marketing_settings[m].id, type: 'TEXT', key: m.toUpperCase(), value: entity.marketing_settings[m].value, selection_plan_id: entity.id }
+      const setting_type = m === 'cfp_presentation_edition_custom_message' ? 'TEXTAREA' : 'TEXT';
+      const mkt_setting = { id: entity.marketing_settings[m].id, type: setting_type, key: m.toUpperCase(), value: entity.marketing_settings[m].value, selection_plan_id: entity.id }    
       marketing_settings.push(this.props.saveMarketingSettings(mkt_setting, null, entity.id))
     })
 
