@@ -61,6 +61,9 @@ const eventListReducer = (state = DEFAULT_STATE, action) => {
             let {current_page, total, last_page} = payload.response;
             let events = payload.response.data.map(e => {
                 let published_date = (e.is_published ? moment(e.published_date * 1000).tz(state.summitTZ).format('MMMM Do YYYY, h:mm a') : 'No');
+                
+                let speakers_companies = e.speakers.map(e => e.company);
+                speakers_companies = speakers_companies.filter((item,index) => item !== '' && speakers_companies.indexOf(item) === index);
 
                 return {
                     id: e.id,
@@ -70,13 +73,16 @@ const eventListReducer = (state = DEFAULT_STATE, action) => {
                     selection_status: e.selection_status,
                     published_date: published_date,
                     created_by_fullname: e.hasOwnProperty('created_by') ? `${e.created_by.first_name} ${e.created_by.last_name} (${e.created_by.email})`:'TBD',
-                    speakers: (e.speakers) ? e.speakers.map(s => s.first_name + ' ' + s.last_name).join(',') : '',
+                    submitter_company: e.hasOwnProperty('created_by') ? e.created_by.company : 'N/A',
+                    speakers: (e.speakers) ? e.speakers.map(s => s.first_name + ' ' + s.last_name).join(', ') : 'N/A',
+                    speaker_company: (speakers_companies.length > 0) ? speakers_companies.reduce((accumulator, company) => accumulator + (accumulator !== '' ? ', ' : '') + company, '') : 'N/A',
                     duration: e.type.allows_publishing_dates ?
                         formatDuration(e.duration) : 'N/A',
                     speakers_count: e.type.use_speakers ? (e.speakers && e.speakers.length > 0) ? e.speakers.length : '0' : 'N/A',
                     track: e.track.name,
                     start_date: e.start_date ? moment(e.start_date * 1000).tz(state.summitTZ).format('MMMM Do YYYY, h:mm a') : 'TBD',
                     end_date: e.end_date ? moment(e.end_date * 1000).tz(state.summitTZ).format('MMMM Do YYYY, h:mm a') : 'TBD',
+                    sponsor: (e.sponsors) ? e.sponsors.map(s => s.name).join(', ') : 'N/A',
                 };
             });
 

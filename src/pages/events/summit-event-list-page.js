@@ -41,15 +41,17 @@ const fieldNames = [
     { columnKey: 'published_date', value: 'published' },
     { columnKey: 'duration', value: 'duration', sortable: true },
     { columnKey: 'speakers_count', value: 'speakers_count', sortable: true },
+    { columnKey: 'speaker_company', value: 'speaker_company', sortable: true },
     { columnKey: 'track', value: 'track' },
     { columnKey: 'start_date', value: 'start_date', sortable: true },
     { columnKey: 'end_date', value: 'end_date', sortable: true },
     { columnKey: 'submitters', value: 'submitters' },
+    { columnKey: 'submitter_company', value: 'submitter_company', sortable: true },
     { columnKey: 'streaming_url', value: 'streaming_url' },
     { columnKey: 'meeting_url', value: 'meeting_url' },
     { columnKey: 'etherpad_url', value: 'etherpad_url' },
     { columnKey: 'streaming_type', value: 'streaming_type' },
-    { columnKey: 'company', value: 'company' }
+    { columnKey: 'sponsor', value: 'sponsor', sortable: true }
 ]
 
 class SummitEventListPage extends React.Component {
@@ -97,6 +99,7 @@ class SummitEventListPage extends React.Component {
                 track_id_filter: [],
                 event_type_id_filter: [],
                 speaker_id_filter: [],
+                speaker_company: [],
                 level_filter: [],
                 tags_filter: [],
                 published_filter: null,
@@ -105,11 +108,13 @@ class SummitEventListPage extends React.Component {
                 duration_filter: '',
                 speakers_count_filter: '',
                 submitters: [],
+                submitter_company: [],
                 streaming_url: '',
                 meeting_url: '',
                 etherpad_url: '',
                 streaming_type: '',
-                company: []
+                sponsor: [],
+                all_companies: []
             },
             selectedColumns: []
         };
@@ -200,6 +205,7 @@ class SummitEventListPage extends React.Component {
         const {term, page, perPage} = this.props;
         const {eventFilters, selectedColumns} = this.state;
         key = (key === 'name') ? 'last_name' : key;
+        key = (key === 'submitter_company') ? 'created_by_company' : key;
         this.props.getEvents(term, page, perPage, key, dir, eventFilters, selectedColumns);
     }
 
@@ -281,6 +287,7 @@ class SummitEventListPage extends React.Component {
                     track_id_filter: [],
                     event_type_id_filter: [],
                     speaker_id_filter: [],
+                    speaker_company: [],
                     level_filter: [],
                     tags_filter: [],
                     published_filter: null,
@@ -289,11 +296,13 @@ class SummitEventListPage extends React.Component {
                     duration_filter: '',
                     speakers_count_filter: '',
                     submitters: [],
+                    submitter_company: [],
                     streaming_url: '',
                     meeting_url: '',
                     etherpad_url: '',
                     streaming_type: '',
-                    company: []
+                    sponsor: [],
+                    all_companies: []
                 };
                 this.setState({...this.state, enabledFilters: value, eventFilters: resetFilters});
             } else {
@@ -332,6 +341,7 @@ class SummitEventListPage extends React.Component {
                     track_id_filter: [],
                     event_type_id_filter: [],
                     speaker_id_filter: [],
+                    speaker_company: [],
                     level_filter: [],
                     tags_filter: [],
                     published_filter: null,
@@ -340,11 +350,13 @@ class SummitEventListPage extends React.Component {
                     duration_filter: '',
                     speakers_count_filter: '',
                     submitters: [],
+                    submitter_company: [],
                     streaming_url: '',
                     meeting_url: '',
                     etherpad_url: '',
                     streaming_type: '',
-                    company: []
+                    sponsor: [],
+                    all_companies: []
                 };
                 this.setState({...this.state, enabledFilters: value, eventFilters: resetFilters});
             } else {
@@ -359,7 +371,26 @@ class SummitEventListPage extends React.Component {
 
     handleColumnsChange(ev) {
         const {value} = ev.target;
-        this.setState({...this.state, selectedColumns: value})
+        const {selectedColumns} = this.state;
+        let newColumns = value;
+        const all_companies = ['submitter_company', 'speaker_company', 'sponsor'];
+        
+        if(selectedColumns.includes('all_companies') && !newColumns.includes('all_companies')) {
+            newColumns = [...newColumns.filter(e => !all_companies.includes(e))];
+        }      
+        const selectedCompanies = selectedColumns.filter(c => all_companies.includes(c)).length;
+        const newCompanies = newColumns.filter(c => all_companies.includes(c)).length
+        if(newColumns.includes('all_companies')) {
+            if(newColumns.filter(c => all_companies.includes(c)).length === 0) {
+                newColumns = [...this.state.selectedColumns, ...all_companies, 'all_companies'];
+            } else if (selectedCompanies === newCompanies) {
+                newColumns = [...this.state.selectedColumns, ...all_companies, 'all_companies'];
+            } else if (newCompanies < selectedCompanies) {                
+                newColumns = [...newColumns.filter(c => c !== 'all_companies')];
+            } 
+        }          
+
+        this.setState({...this.state, selectedColumns: newColumns})
     }
 
 
@@ -415,28 +446,35 @@ class SummitEventListPage extends React.Component {
             {label: 'Track', value: 'track_id_filter'},
             {label: 'Event Type', value: 'event_type_id_filter'},
             {label: 'Speaker', value: 'speaker_id_filter'},
+            {label: 'Speaker Company', value: 'speaker_company'},
             {label: 'Level', value: 'level_filter'},
             {label: 'Tags', value: 'tags_filter'},
             {label: 'Date', value: 'date_filter'},
             {label: 'Duration', value: 'duration_filter'},
             {label: 'Speaker Count', value: 'speakers_count_filter'},
             {label: 'Submitter', value: 'submitters'},
+            {label: 'Submitter Company', value: 'submitter_company'},
             {label: 'Stream URL', value: 'streaming_url'},
             {label: 'Meeting URL', value: 'meeting_url'},
             {label: 'Etherpad URL', value: 'etherpad_url'},
             {label: 'Streaming Type', value: 'streaming_type'},
-            {label: 'Company', value: 'company'}
+            {label: 'Sponsor', value: 'sponsor'},
+            {label: 'All Companies', value: 'all_companies'},            
         ]
 
         const ddl_columns = [
             { value: 'speakers', label: T.translate("event_list.speakers") },
             { value: 'created_by_fullname', label: T.translate("event_list.created_by") },
+            { value: 'submitter_company', label: T.translate("event_list.submitter_company")},
             { value: 'published_date', label: T.translate("event_list.published") },
             { value: 'duration', label: T.translate("event_list.duration") },
             { value: 'speakers_count', label: T.translate("event_list.speakers_count") },
+            { value: 'speaker_company', label: T.translate("event_list.speaker_company") },
             { value: 'track', label: T.translate("event_list.track") },
             { value: 'start_date', label: T.translate("event_list.start_date") },
             { value: 'end_date', label: T.translate("event_list.end_date") },
+            { value: 'sponsor', label: T.translate("event_list.sponsor") },
+            { value: 'all_companies', label: T.translate("event_list.all_companies") }
         ];
 
         const ddl_filterByEventTypeCapacity = [
@@ -605,10 +643,21 @@ class SummitEventListPage extends React.Component {
                                 onChange={this.handleTagOrSpeakerFilterChange}
                                 summitId={currentSummit.id}
                                 isMulti={true}
-                                isClearable={true}                            
+                                isClearable={true}
                             />
                         </div>
-                    }                
+                    }
+                    {enabledFilters.includes('speaker_company') &&
+                        <div className={'col-md-6'}> 
+                            <CompanyInput
+                                id='speaker_company'
+                                value={eventFilters.speaker_company}
+                                placeholder={T.translate("event_list.placeholders.speaker_company")}
+                                onChange={this.handleExtraFilterChange}
+                                multi
+                            />
+                        </div>
+                    }
                     {enabledFilters.includes('level_filter') &&
                         <div className={'col-md-6'}>
                             <Dropdown
@@ -634,7 +683,29 @@ class SummitEventListPage extends React.Component {
                                 isClearable={true}
                             />
                         </div>
-                    }                
+                    }
+                    {enabledFilters.includes('sponsor') &&
+                        <div className={'col-md-6'}> 
+                            <CompanyInput
+                                id='sponsor'
+                                value={eventFilters.sponsor}
+                                placeholder={T.translate("event_list.placeholders.sponsor")}
+                                onChange={this.handleExtraFilterChange}
+                                multi
+                            />
+                        </div>
+                    }
+                    {enabledFilters.includes('all_companies') &&
+                        <div className={'col-md-6'}> 
+                            <CompanyInput
+                                id='all_companies'
+                                value={eventFilters.all_companies}
+                                placeholder={T.translate("event_list.placeholders.all_companies")}
+                                onChange={this.handleExtraFilterChange}
+                                multi
+                            />
+                        </div>
+                    }
                     {enabledFilters.includes('date_filter') &&
                         <>
                             <div className={'col-md-3'}>
@@ -677,6 +748,17 @@ class SummitEventListPage extends React.Component {
                         />
                     </div>
                     }
+                    {enabledFilters.includes('submitter_company') &&
+                        <div className={'col-md-6'}> 
+                            <CompanyInput
+                                id='submitter_company'
+                                value={eventFilters.submitter_company}
+                                placeholder={T.translate("event_list.placeholders.submitter_company")}
+                                onChange={this.handleExtraFilterChange}
+                                multi
+                            />
+                        </div>
+                    }
                     {enabledFilters.includes('streaming_url') && 
                         <div className={'col-md-6'}> 
                         <Input
@@ -717,18 +799,7 @@ class SummitEventListPage extends React.Component {
                             options={streaming_type_ddl}
                         />
                     </div>
-                    }
-                    {enabledFilters.includes('company') && 
-                        <div className={'col-md-6'}> 
-                        <CompanyInput
-                            id='company'
-                            value={eventFilters.company}
-                            placeholder={T.translate("event_list.placeholders.company")}
-                            onChange={this.handleExtraFilterChange}
-                            multi
-                        />
-                    </div>
-                    }
+                    }                    
                     {enabledFilters.includes('duration_filter') &&
                         <div className={'col-md-10 col-md-offset-1'}> 
                             <OperatorInput 

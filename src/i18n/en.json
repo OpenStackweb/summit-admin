@@ -842,6 +842,10 @@
     "speakers": "Speakers",
     "duration": "Duration",
     "speakers_count": "Speakers Count",
+    "speaker_company": "Speakers Companies",
+    "submitter_company": "Submitter Company",
+    "sponsor": "Sponsors",
+    "all_companies": "All Companies",
     "track": "Track",
     "start_date": "Start Date",
     "end_date": "End Date",
@@ -874,17 +878,20 @@
       "track": "Filter by Track",
       "event_type": "Filter by Event Type",
       "speaker": "Filter by Speaker",
+      "speaker_company": "Filter by Speaker Company",
       "level": "Filter by Level",
       "tags": "Filter by Tags",
       "start_date": "Filter from Date",
       "end_date": "Filter to Date",
       "select_fields": "Select data to display",
       "submitters": "Filter by Submitter",
+      "submitter_company": "Filter by Submitter Company",
       "streaming_url": "Filter by Stream URL",
       "meeting_url": "Filter by Meeting URL",
       "etherpad_url": "Filter by Etherpad URL",
       "streaming_type": "Filter by Streaming Type",
-      "company": "Filter by Company"
+      "sponsor": "Filter by Sponsor",
+      "all_companies": "Filter by All Companies"
     }
   },
   "event_type_list": {
