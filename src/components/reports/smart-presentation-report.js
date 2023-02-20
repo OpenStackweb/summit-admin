@@ -136,8 +136,9 @@ class SmartPresentationReport extends React.Component {
 
        flatData.forEach(d => {
             if (d.startDate) d.startDate = parseAndFormat(d.startDate, 'YYYY-MM-DDTHH:mm:ss+00:00', 'MM/DD/YYYY h:mma', 'UTC', currentSummit.time_zone_id);
-            if (d.endDate) d.endDate = parseAndFormat(d.endDate, 'YYYY-MM-DDTHH:mm:ss+00:00', 'MM/DD/YYYY h:mma', currentSummit.time_zone_id);
-            if (d.created) d.created = parseAndFormat(d.created, 'YYYY-MM-DDTHH:mm:ss+00:00');
+            if (d.endDate) d.endDate = parseAndFormat(d.endDate, 'YYYY-MM-DDTHH:mm:ss+00:00', 'MM/DD/YYYY h:mma','UTC', currentSummit.time_zone_id);
+            // bc legacy SilverStripe
+            if (d.created) d.created = parseAndFormat(d.created, 'YYYY-MM-DDTHH:mm:ss+00:00',  'America/Chicago');
         });
 
         let columns = [
