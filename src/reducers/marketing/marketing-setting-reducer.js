@@ -29,6 +29,7 @@ export const DEFAULT_ENTITY = {
     type        : null,
     value       : '',
     file_preview: '',
+    selection_plan_id: 0,
 }
 
 const DEFAULT_STATE = {

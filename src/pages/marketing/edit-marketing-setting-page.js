@@ -12,13 +12,14 @@
  **/
 
 import React from 'react'
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
-import { Breadcrumb } from 'react-breadcrumbs';
+import {Breadcrumb} from 'react-breadcrumbs';
 import MarketingSettingForm from '../../components/forms/marketing-setting-form';
-import { getSummitById }  from '../../actions/summit-actions';
-import { getMarketingSetting, resetSettingForm, saveMarketingSetting } from "../../actions/marketing-actions";
+import {getSummitById} from '../../actions/summit-actions';
+import {getMarketingSetting, resetSettingForm, saveMarketingSetting} from "../../actions/marketing-actions";
 import '../../styles/edit-marketing-setting-page.less';
+import {showMessage, showSuccessMessage} from "openstack-uicore-foundation/lib/utils/actions";
 
 class EditMarketingSettingPage extends React.Component {
 
@@ -46,14 +47,14 @@ class EditMarketingSettingPage extends React.Component {
         }
     }
 
-    render(){
+    render() {
         const {currentSummit, entity, errors, match} = this.props;
         const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         const breadcrumb = (entity.id) ? entity.key : T.translate("general.new");
 
-        return(
+        return (
             <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
+                <Breadcrumb data={{title: breadcrumb, pathname: match.url}}/>
                 <h3>{title} {T.translate("marketing.marketing_setting")}</h3>
                 <hr/>
                 {currentSummit &&
@@ -62,6 +63,8 @@ class EditMarketingSettingPage extends React.Component {
                     entity={entity}
                     errors={errors}
                     onSubmit={this.props.saveMarketingSetting}
+                    showMessage={this.props.showMessage}
+                    showSuccessMessage={this.props.showSuccessMessage}
                 />
                 }
             </div>
@@ -70,17 +73,19 @@ class EditMarketingSettingPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, marketingSettingState }) => ({
-    currentSummit : currentSummitState.currentSummit,
+const mapStateToProps = ({currentSummitState, marketingSettingState}) => ({
+    currentSummit: currentSummitState.currentSummit,
     ...marketingSettingState
 });
 
-export default connect (
+export default connect(
     mapStateToProps,
     {
         getSummitById,
         getMarketingSetting,
         resetSettingForm,
         saveMarketingSetting,
+        showMessage,
+        showSuccessMessage,
     }
 )(EditMarketingSettingPage);

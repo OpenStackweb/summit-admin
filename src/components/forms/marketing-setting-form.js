@@ -16,9 +16,10 @@ import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import {Dropdown, Input, TextEditor, UploadInput} from 'openstack-uicore-foundation/lib/components'
 import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
-
+import history from "../../history";
 
 class MarketingSettingForm extends React.Component {
+
     constructor(props) {
         super(props);
 
@@ -70,10 +71,30 @@ class MarketingSettingForm extends React.Component {
     }
 
     handleSubmit(ev) {
-        const {entity, file} = this.state;
         ev.preventDefault();
+        const {entity, file} = this.state;
+        const { currentSummit } = this.props;
 
-        this.props.onSubmit(entity, file);
+        this.props.onSubmit(entity, file).then((payload) => {
+            if(entity.id && entity.id > 0){
+                // UPDATE
+                this.props.showSuccessMessage(T.translate("marketing.setting_saved"));
+                return;
+            }
+
+            const success_message = {
+                title: T.translate("general.done"),
+                html: T.translate("marketing.setting_created"),
+                type: 'success'
+            };
+
+            this.props.showMessage(
+                success_message,
+                () => {
+                    history.push(`/app/summits/${currentSummit.id}/marketing/${payload.response.id}`)
+                }
+            );
+        })
     }
 
     hasErrors(field) {

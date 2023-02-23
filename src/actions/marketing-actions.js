@@ -27,38 +27,38 @@ import {
 } from 'openstack-uicore-foundation/lib/utils/actions';
 import {getAccessTokenSafely} from '../utils/methods';
 
-export const REQUEST_SETTINGS       = 'REQUEST_SETTINGS';
-export const RECEIVE_SETTINGS       = 'RECEIVE_SETTINGS';
-export const RECEIVE_SETTING        = 'RECEIVE_SETTING';
-export const RESET_SETTING_FORM     = 'RESET_SETTING_FORM';
-export const UPDATE_SETTING         = 'UPDATE_SETTING';
-export const SETTING_UPDATED        = 'SETTING_UPDATED';
-export const SETTING_ADDED          = 'SETTING_ADDED';
-export const SETTING_DELETED        = 'SETTING_DELETED';
-export const SETTINGS_CLONED        = 'SETTINGS_CLONED';
+export const REQUEST_SETTINGS = 'REQUEST_SETTINGS';
+export const RECEIVE_SETTINGS = 'RECEIVE_SETTINGS';
+export const RECEIVE_SETTING = 'RECEIVE_SETTING';
+export const RESET_SETTING_FORM = 'RESET_SETTING_FORM';
+export const UPDATE_SETTING = 'UPDATE_SETTING';
+export const SETTING_UPDATED = 'SETTING_UPDATED';
+export const SETTING_ADDED = 'SETTING_ADDED';
+export const SETTING_DELETED = 'SETTING_DELETED';
+export const SETTINGS_CLONED = 'SETTINGS_CLONED';
 export const REQUEST_SELECTION_PLAN_SETTINGS = 'REQUEST_SELECTION_PLAN_SETTINGS';
 export const RECEIVE_SELECTION_PLAN_SETTINGS = 'RECEIVE_SELECTION_PLAN_SETTINGS';
 
 export const getMarketingSettings = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1) => (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummitState} = getState();
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const params = {
-        page         : page,
-        per_page     : perPage,
+        page: page,
+        per_page: perPage,
     };
 
-    if(term){
-        params.key__contains= term;
+    if (term) {
+        params.key__contains = term;
     }
 
     // order
-    if(order != null && orderDir != null){
+    if (order != null && orderDir != null) {
         const orderDirSign = (orderDir === 1) ? '' : '-';
-        params['order']= `${orderDirSign}${order}`;
+        params['order'] = `${orderDirSign}${order}`;
     }
 
     return getRequest(
@@ -75,25 +75,25 @@ export const getMarketingSettings = (term = null, page = 1, perPage = 10, order 
 
 export const getMarketingSettingsBySelectionPlan = (selectionPlanId, term = null, page = 1, perPage = 10, order = 'id', orderDir = 1) => (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
-    const { currentSummit }   = currentSummitState;    
+    const {currentSummitState} = getState();
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const params = {
-        page                : page,
-        per_page            : perPage,
-        selection_plan_id   : selectionPlanId
+        page: page,
+        per_page: perPage,
+        selection_plan_id: selectionPlanId
     };
 
-    if(term){
-        params.key__contains= term;
+    if (term) {
+        params.key__contains = term;
     }
 
     // order
-    if(order != null && orderDir != null){
+    if (order != null && orderDir != null) {
         const orderDirSign = (orderDir === 1) ? '' : '-';
-        params['order']= `${orderDirSign}${order}`;
+        params['order'] = `${orderDirSign}${order}`;
     }
 
     return getRequest(
@@ -129,85 +129,49 @@ export const resetSettingForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_SETTING_FORM)({}));
 };
 
-export const saveMarketingSetting = (entity, file, selectionPlanId) => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+/**
+ * @param entity
+ * @param file
+ * @returns {(function(*=, *): Promise<void>)|*}
+ */
+export const saveMarketingSetting = (entity, file = null) => async (dispatch, getState) => {
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const normalizedEntity = normalizeEntity(entity, currentSummit.id);
-    const params = { access_token : accessToken };
+    const params = {access_token: accessToken};
 
-    if(selectionPlanId) {
-        if (entity.id) {
-            putFile(
-                createAction(UPDATE_SETTING),
-                createAction(SETTING_UPDATED),
-                `${window.MARKETING_API_BASE_URL}/api/v1/config-values/${entity.id}`,
-                file,
-                normalizedEntity,
-                authErrorHandler,
-                entity
-            )(params)(dispatch)
-                .then((payload) => {
-                });
-        } else {
-            postFile(
-                createAction(UPDATE_SETTING),
-                createAction(SETTING_ADDED),
-                `${window.MARKETING_API_BASE_URL}/api/v1/config-values`,
-                file,
-                normalizedEntity,
-                authErrorHandler,
-                entity
-            )(params)(dispatch)
-                .then((payload) => {
-                });
-        }
-    } else {
 
-        if (entity.id) {
-    
-            putFile(
-                createAction(UPDATE_SETTING),
-                createAction(SETTING_UPDATED),
-                `${window.MARKETING_API_BASE_URL}/api/v1/config-values/${entity.id}`,
-                file,
-                normalizedEntity,
-                authErrorHandler,
-                entity
-            )(params)(dispatch)
-                .then((payload) => {
-                    dispatch(showSuccessMessage(T.translate("marketing.setting_saved")));
-                });
-    
-        } else {
-    
-            const success_message = {
-                title: T.translate("general.done"),
-                html: T.translate("marketing.setting_created"),
-                type: 'success'
-            };
-    
-            postFile(
-                createAction(UPDATE_SETTING),
-                createAction(SETTING_ADDED),
-                `${window.MARKETING_API_BASE_URL}/api/v1/config-values`,
-                file,
-                normalizedEntity,
-                authErrorHandler,
-                entity
-            )(params)(dispatch)
-                .then((payload) => {
-                    dispatch(showMessage(
-                        success_message,
-                        () => { history.push(`/app/summits/${currentSummit.id}/marketing/${payload.response.id}`) }
-                    ));
-                });
-        }
+    if (entity.id) {
+        return putFile(
+            createAction(UPDATE_SETTING),
+            createAction(SETTING_UPDATED),
+            `${window.MARKETING_API_BASE_URL}/api/v1/config-values/${entity.id}`,
+            file,
+            normalizedEntity,
+            authErrorHandler,
+            entity
+        )(params)(dispatch)
+            .then((payload) => {
+                return payload;
+            });
     }
 
+    return postFile(
+        createAction(UPDATE_SETTING),
+        createAction(SETTING_ADDED),
+        `${window.MARKETING_API_BASE_URL}/api/v1/config-values`,
+        file,
+        normalizedEntity,
+        authErrorHandler,
+        entity
+    )(params)(dispatch)
+        .then((payload) => {
+           return payload
+        });
 }
 
 export const deleteSetting = (settingId) => async (dispatch, getState) => {
@@ -215,7 +179,7 @@ export const deleteSetting = (settingId) => async (dispatch, getState) => {
     const accessToken = await getAccessTokenSafely();
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     return deleteRequest(
@@ -232,12 +196,12 @@ export const deleteSetting = (settingId) => async (dispatch, getState) => {
 
 export const cloneMarketingSettings = (summitId) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     return postRequest(
@@ -257,9 +221,9 @@ export const cloneMarketingSettings = (summitId) => async (dispatch, getState) =
 const normalizeEntity = (entity, summitId) => {
     const normalizedEntity = {...entity};
 
-    delete(normalizedEntity['id']);
-    delete(normalizedEntity['created']);
-    delete(normalizedEntity['modified']);
+    delete (normalizedEntity['id']);
+    delete (normalizedEntity['created']);
+    delete (normalizedEntity['modified']);
     normalizedEntity.show_id = summitId;
 
     return normalizedEntity;

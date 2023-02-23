@@ -53,11 +53,11 @@ export const DEFAULT_ALLOWED_EDITABLE_QUESTIONS = [
 ];
 
 export const DEFAULT_CFP_PRESENTATION_EDITION_TABS = [
-    {label:'Summary', value: 'SUMMARY'},
-    {label:'Tags', value: 'TAGS'},
-    {label:'Uploads', value: 'UPLOADS'},
-    {label:'Speakers', value: 'SPEAKERS'},
-    {label:'Review', value: 'Review'},
+    {label:'Summary', value: 'summary'},
+    {label:'Uploads', value: 'uploads'},
+    {label:'Tags', value: 'tags'},
+    {label:'Speakers', value: 'speakers'},
+    {label:'Review', value: 'review'},
 ];
 
 export const DEFAULT_ENTITY = {
@@ -88,16 +88,16 @@ export const DEFAULT_ENTITY = {
     allowed_presentation_questions: DEFAULT_ALLOWED_QUESTIONS.map(q => q.value),
     allowed_presentation_editable_questions: DEFAULT_ALLOWED_EDITABLE_QUESTIONS.map(q => q.value),
     marketing_settings: {
-        cfp_speakers_singular_label: '',
-        cfp_speakers_plural_label: '',
-        cfp_presentation_summary_title_label: '',
-        cfp_presentation_summary_abstract_label: '',
-        cfp_presentation_summary_social_summary_label: '',
-        cfp_presentations_singular_label: '',
-        cfp_presentations_plural_label: '',
-        cfp_presentation_summary_links_label: '',
-        cfp_presentation_edition_custom_message: '',
-        cfp_presentation_edition_default_tab: '',
+        cfp_speakers_singular_label: {id : 0 , value: ''},
+        cfp_speakers_plural_label: {id : 0 , value: ''},
+        cfp_presentation_summary_title_label: {id : 0 , value: ''},
+        cfp_presentation_summary_abstract_label: {id : 0 , value: ''},
+        cfp_presentation_summary_social_summary_label: {id : 0 , value: ''},
+        cfp_presentations_singular_label: {id : 0 , value: ''},
+        cfp_presentations_plural_label: {id : 0 , value: ''},
+        cfp_presentation_summary_links_label: {id : 0 , value: ''},
+        cfp_presentation_edition_custom_message: {id : 0 , value: ''},
+        cfp_presentation_edition_default_tab: {id : 0 , value: ''},
     }
 }
 
@@ -276,8 +276,8 @@ const selectionPlanReducer = (state = DEFAULT_STATE, action) => {
             // parse data
             const settings = data.map(ms => ({[ms.key.toLowerCase()] : {id: ms.id || null, value: ms.value}}));
             // array to object
-            const marketing_setting = Object.assign(...settings, {});
-            return { ...state, entity: { ...state.entity, marketing_settings: marketing_setting } }
+            const marketing_settings = Object.assign(...settings, {});
+            return { ...state, entity: { ...state.entity, marketing_settings: {...state.entity.marketing_settings, ...marketing_settings} } }
         }
         default:
             return state;
