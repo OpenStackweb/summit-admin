@@ -52,6 +52,14 @@ export const DEFAULT_ALLOWED_EDITABLE_QUESTIONS = [
     {label: 'Links', value: 'links'},
 ];
 
+export const DEFAULT_CFP_PRESENTATION_EDITION_TABS = [
+    {label:'Summary', value: 'SUMMARY'},
+    {label:'Tags', value: 'TAGS'},
+    {label:'Uploads', value: 'UPLOADS'},
+    {label:'Speakers', value: 'SPEAKERS'},
+    {label:'Review', value: 'Review'},
+];
+
 export const DEFAULT_ENTITY = {
     id: 0,
     name: '',
@@ -88,7 +96,8 @@ export const DEFAULT_ENTITY = {
         cfp_presentations_singular_label: '',
         cfp_presentations_plural_label: '',
         cfp_presentation_summary_links_label: '',
-        cfp_presentation_edition_custom_message: ''
+        cfp_presentation_edition_custom_message: '',
+        cfp_presentation_edition_default_tab: '',
     }
 }
 

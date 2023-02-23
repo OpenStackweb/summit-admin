@@ -36,7 +36,8 @@ import {querySummitProgressFlags} from '../../actions/track-chair-actions';
 import {Pagination} from "react-bootstrap";
 import {
   DEFAULT_ALLOWED_EDITABLE_QUESTIONS,
-  DEFAULT_ALLOWED_QUESTIONS
+  DEFAULT_ALLOWED_QUESTIONS,
+  DEFAULT_CFP_PRESENTATION_EDITION_TABS,
 } from "../../reducers/summits/selection-plan-reducer";
 
 class SelectionPlanForm extends React.Component {
@@ -132,6 +133,7 @@ class SelectionPlanForm extends React.Component {
   }
 
   handleChange(ev) {
+
     let entity = {...this.state.entity};
     let errors = {...this.state.errors};
     let {value, id} = ev.target;
@@ -526,33 +528,6 @@ class SelectionPlanForm extends React.Component {
           </div>
         </div>
 
-        <div className="row form-group">
-          <div className="col-md-12">
-            <label> {T.translate("edit_selection_plan.allowed_presentation_questions")} *</label>
-            <Dropdown
-              id="allowed_presentation_questions"
-              value={entity.allowed_presentation_questions}
-              placeholder={T.translate("edit_selection_plan.placeholders.allowed_presentation_questions")}
-              onChange={this.handleChange}
-              options={DEFAULT_ALLOWED_QUESTIONS}
-              isMulti={true}
-            />
-          </div>
-        </div>
-
-        <div className="row form-group">
-          <div className="col-md-12">
-            <label> {T.translate("edit_selection_plan.allowed_presentation_editable_questions")} *</label>
-            <Dropdown
-                id="allowed_presentation_editable_questions"
-                value={entity.allowed_presentation_editable_questions}
-                placeholder={T.translate("edit_selection_plan.placeholders.allowed_presentation_editable_questions")}
-                onChange={this.handleChange}
-                options={DEFAULT_ALLOWED_EDITABLE_QUESTIONS}
-                isMulti={true}
-            />
-          </div>
-        </div>
         <hr/>
 
         {entity.id !== 0 &&
@@ -783,6 +758,45 @@ class SelectionPlanForm extends React.Component {
                   error={this.hasErrors('cfp_presentation_edition_custom_message')}
                   onChange={this.handleChange}
                   value={entity.marketing_settings.cfp_presentation_edition_custom_message?.value || ''}
+                />
+              </div>
+            </div>
+            <div className="row form-group">
+              <div className="col-md-12">
+                <label> {T.translate("edit_selection_plan.allowed_presentation_questions")} *</label>
+                <Dropdown
+                    id="allowed_presentation_questions"
+                    value={entity.allowed_presentation_questions}
+                    placeholder={T.translate("edit_selection_plan.placeholders.allowed_presentation_questions")}
+                    onChange={this.handleChange}
+                    options={DEFAULT_ALLOWED_QUESTIONS}
+                    isMulti={true}
+                />
+              </div>
+            </div>
+            <div className="row form-group">
+              <div className="col-md-12">
+                <label> {T.translate("edit_selection_plan.allowed_presentation_editable_questions")} *</label>
+                <Dropdown
+                    id="allowed_presentation_editable_questions"
+                    value={entity.allowed_presentation_editable_questions}
+                    placeholder={T.translate("edit_selection_plan.placeholders.allowed_presentation_editable_questions")}
+                    onChange={this.handleChange}
+                    options={DEFAULT_ALLOWED_EDITABLE_QUESTIONS}
+                    isMulti={true}
+                />
+              </div>
+            </div>
+            <div className="row form-group">
+              <div className="col-md-12">
+                <label> {T.translate("edit_selection_plan.cfp_presentation_edition_default_tab")} *</label>
+                <Dropdown
+                    id="cfp_presentation_edition_default_tab"
+                    value={entity.marketing_settings.cfp_presentation_edition_default_tab?.value || ''}
+                    placeholder={T.translate("edit_selection_plan.placeholders.cfp_presentation_edition_default_tab")}
+                    onChange={this.handleChange}
+                    options={DEFAULT_CFP_PRESENTATION_EDITION_TABS}
+                    isMulti={false}
                 />
               </div>
             </div>
