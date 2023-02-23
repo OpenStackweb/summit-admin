@@ -356,6 +356,7 @@
     "no_presentation_action_types": "No progress flags found",
     "presentation_action_type_remove_warning": "Are you sure you want to remove progress flag",
     "allowed_presentation_questions": "Allowed Questions",
+    "allowed_presentation_editable_questions": "Allowed Editable Questions",
     "import": "Import",
     "import_allowed_members": "Import Allowed Members",
     "import_allowed_members_success": "Emails will be ingested as a background task. Will need to refresh the page to review.",
@@ -384,7 +385,8 @@
       "speaker_notification_email_select_template": "Select a speaker notification email template...",
       "link_question": "Link an Existent Question...",
       "link_presentation_action_type": "Link an Existent Action Type...",
-      "allowed_presentation_questions": "Select questions to display..."
+      "allowed_presentation_questions": "Select questions to display...",
+      "allowed_presentation_editable_questions": "Select questions to Edit..."
     }
   },
   "edit_event": {

@@ -34,7 +34,10 @@ import Many2ManyDropDown from "../inputs/many-2-many-dropdown";
 import {querySelectionPlanExtraQuestions} from '../../actions/selection-plan-actions';
 import {querySummitProgressFlags} from '../../actions/track-chair-actions';
 import {Pagination} from "react-bootstrap";
-import {DEFAULT_ALLOWED_QUESTIONS} from "../../reducers/summits/selection-plan-reducer";
+import {
+  DEFAULT_ALLOWED_EDITABLE_QUESTIONS,
+  DEFAULT_ALLOWED_QUESTIONS
+} from "../../reducers/summits/selection-plan-reducer";
 
 class SelectionPlanForm extends React.Component {
   constructor(props) {
@@ -537,6 +540,19 @@ class SelectionPlanForm extends React.Component {
           </div>
         </div>
 
+        <div className="row form-group">
+          <div className="col-md-12">
+            <label> {T.translate("edit_selection_plan.allowed_presentation_editable_questions")} *</label>
+            <Dropdown
+                id="allowed_presentation_editable_questions"
+                value={entity.allowed_presentation_editable_questions}
+                placeholder={T.translate("edit_selection_plan.placeholders.allowed_presentation_editable_questions")}
+                onChange={this.handleChange}
+                options={DEFAULT_ALLOWED_EDITABLE_QUESTIONS}
+                isMulti={true}
+            />
+          </div>
+        </div>
         <hr/>
 
         {entity.id !== 0 &&

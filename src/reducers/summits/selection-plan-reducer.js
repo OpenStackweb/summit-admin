@@ -32,12 +32,24 @@ import {
 import { RECEIVE_SELECTION_PLAN_SETTINGS } from '../../actions/marketing-actions';
 
 export const DEFAULT_ALLOWED_QUESTIONS = [
+  {label: 'Level of difficulty', value: 'level'},
+  {label: 'Abstract', value: 'description'},
+  {label: 'Social Summary', value: 'social_description'},
   {label: 'What is expected to learn?', value: 'attendees_expected_learnt'},
   {label: 'Discuss with attending media?', value: 'attending_media'},
-  {label: 'Social Summary', value: 'social_description'},
   {label: 'Links', value: 'links'},
-  {label: 'Level of difficulty', value: 'level'},
-  {label: 'Description', value: 'description'}
+];
+
+export const DEFAULT_ALLOWED_EDITABLE_QUESTIONS = [
+    {label:'Disclaimer Accepted', value: 'disclaimer_accepted'},
+    {label:'Title', value: 'title'},
+    {label: 'Category', value: 'track_id'},
+    {label: 'Level of difficulty', value: 'level'},
+    {label: 'Abstract', value: 'description'},
+    {label: 'Social Summary', value: 'social_description'},
+    {label: 'What is expected to learn?', value: 'attendees_expected_learnt'},
+    {label: 'Discuss with attending media?', value: 'attending_media'},
+    {label: 'Links', value: 'links'},
 ];
 
 export const DEFAULT_ENTITY = {
@@ -66,6 +78,7 @@ export const DEFAULT_ENTITY = {
     track_chair_rating_types: [],
     allowed_presentation_action_types: [],
     allowed_presentation_questions: DEFAULT_ALLOWED_QUESTIONS.map(q => q.value),
+    allowed_presentation_editable_questions: DEFAULT_ALLOWED_EDITABLE_QUESTIONS.map(q => q.value),
     marketing_settings: {
         cfp_speakers_singular_label: '',
         cfp_speakers_plural_label: '',
