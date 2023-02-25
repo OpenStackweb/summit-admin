@@ -72,7 +72,6 @@ class ScheduleAdminDashBoard extends React.Component {
     super(props);
 
     this.onScheduleEvent = this.onScheduleEvent.bind(this);
-    this.onScheduleEventWithDuration = this.onScheduleEventWithDuration.bind(this);
     this.onDayChanged = this.onDayChanged.bind(this);
     this.onVenueChanged = this.onVenueChanged.bind(this);
     this.onUnScheduleEventsPageChange = this.onUnScheduleEventsPageChange.bind(this);
@@ -222,10 +221,10 @@ class ScheduleAdminDashBoard extends React.Component {
     );
   }
 
-  onScheduleEvent(event, currentDay, startDateTime) {
+  onScheduleEvent(event, currentDay, startDateTime, duration= null) {
     const eventModel = new SummitEvent(event, this.props.currentSummit);
-    const duration = eventModel.getMinutesDuration(this.props.slotSize);
-    this.props.publishEvent(event, currentDay, startDateTime, duration);
+    const newDuration = duration ? duration : eventModel.getMinutesDuration(this.props.slotSize);
+    this.props.publishEvent(event, currentDay, startDateTime, newDuration);
   }
 
   onDayChanged(day) {
@@ -368,16 +367,6 @@ class ScheduleAdminDashBoard extends React.Component {
     this.props.changeCurrentSelectedDay(null);
     this.props.changeCurrentSelectedLocation(null);
     this.buildFragment(null, null, term);
-  }
-
-  onScheduleEventWithDuration(event, currentDay, startTime, duration) {
-    this.props.publishEvent
-    (
-      event,
-      currentDay,
-      startTime,
-      duration
-    );
   }
 
   buildFragment(locationId = null, day = null, searchTerm = null) {
@@ -844,7 +833,6 @@ class ScheduleAdminDashBoard extends React.Component {
                   onSelectAll={this.onSelectAllPublished}
                   onSelectedBulkAction={this.onSelectedBulkActionPublished}
                   onScheduleEvent={this.onScheduleEvent}
-                  onScheduleEventWithDuration={this.onScheduleEventWithDuration}
                   onUnPublishEvent={this.onUnPublishEvent}
                   onEditEvent={this.onEditEvent}
                   onClickSelected={this.onClickSelected}
