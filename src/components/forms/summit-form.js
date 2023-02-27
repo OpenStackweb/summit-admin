@@ -709,7 +709,7 @@ class SummitForm extends React.Component {
                 <Panel show={showSection === 'virtual_event'} title={T.translate("edit_summit.virtual_event")}
                        handleClick={this.toggleSection.bind(this, 'virtual_event')}>
                     <div className="row form-group">
-                        <div className="col-md-6">
+                        <div className="col-md-4">
                             <label> {T.translate("edit_summit.marketing_site_url")}</label>
                             <Input
                                 className="form-control"
@@ -719,13 +719,22 @@ class SummitForm extends React.Component {
                                 onChange={this.handleChange}
                             />
                         </div>
-                        <div className="col-md-6">
+                        <div className="col-md-4">
                             <label> {T.translate("edit_summit.marketing_site_oauth2_client_id")}</label>
                             <Input
                                 className="form-control"
                                 error={this.hasErrors('marketing_site_oauth2_client_id')}
                                 id="marketing_site_oauth2_client_id"
                                 value={entity.marketing_site_oauth2_client_id}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_summit.marketing_site_oauth2_client_scopes")}</label>
+                            <textarea
+                                className="form-control"
+                                id="marketing_site_oauth2_client_scopes"
+                                value={entity.marketing_site_oauth2_client_scopes}
                                 onChange={this.handleChange}
                             />
                         </div>

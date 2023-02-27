@@ -113,7 +113,9 @@ export const DEFAULT_ENTITY = {
     registration_send_ticket_as_pdf_attachment_on_ticket_email : false,
     registration_allow_automatic_reminder_emails : true,
     registration_send_order_email_automatically: true,
-    speaker_confirmation_default_page_url: ''
+    speaker_confirmation_default_page_url: '',
+    marketing_site_oauth2_client_id:null,
+    marketing_site_oauth2_client_scopes: null,
 };
 
 const DEFAULT_STATE = {
