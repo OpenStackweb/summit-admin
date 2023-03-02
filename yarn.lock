@@ -6408,10 +6408,10 @@ open@^8.0.9:
     is-docker "^2.1.1"
     is-wsl "^2.2.0"
 
-openstack-uicore-foundation@4.0.93:
-  version "4.0.93"
-  resolved "https://registry.yarnpkg.com/openstack-uicore-foundation/-/openstack-uicore-foundation-4.0.93.tgz#c857271958116d0ec1bdd4c4ef67ef05937c3180"
-  integrity sha512-gO4iBWjF7n06x/HijHo90ROJPTTW5FVWPAaIIESfv9F43o2m/Hhb3nZoyIjfDQE2qZ8eY7zPJTNd5YgI4n58Kg==
+openstack-uicore-foundation@4.0.94:
+  version "4.0.94"
+  resolved "https://registry.yarnpkg.com/openstack-uicore-foundation/-/openstack-uicore-foundation-4.0.94.tgz#22014536b1eab83b08d4edc5af5a73fd5e29cffe"
+  integrity sha512-3jdps1xOjxiorbB4IoYzMWcRNcd87T8icY7gy0t46b4g8mKSb2XfOj7isX3n4XYvcV7phEedLN5H9wtaCmK2mQ==
 
 optimize-css-assets-webpack-plugin@^6.0.1:
   version "6.0.1"
