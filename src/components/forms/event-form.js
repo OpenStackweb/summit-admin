@@ -262,7 +262,7 @@ class EventForm extends React.Component {
         // check current ( could not be rendered)
         if (this.formRef.current) {
             this.setState({ ...this.state, publish }, () => {
-                this.formRef.current.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
+                this.formRef.current.doSubmit();
             });
             return;
         }
