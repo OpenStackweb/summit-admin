@@ -19,6 +19,7 @@ import {isEmpty, scrollToError, shallowEqual, hasErrors} from "../../../utils/me
 import Switch from "react-switch";
 import EditLabelSlider from "../../inputs/edit-label-slider";
 import PreFilterInput from "./pre-filter-input";
+import { SortableTable } from 'openstack-uicore-foundation/lib/components';
 
 class ScheduleSettingsForm extends React.Component {
 
@@ -64,10 +65,13 @@ class ScheduleSettingsForm extends React.Component {
         this.setState({entity: entity, errors: errors});
     }
 
+    updateFilterOrder = (filters, filterId, newOrder) => {
+        console.log(`updateFilterOrder`, filters, filterId, newOrder);
+    }
+
     onSwitchChange = (id, val) => {
         const entity = {...this.state.entity};
         entity[id] = val;
-
         this.setState({entity});
     };
 
@@ -103,7 +107,7 @@ class ScheduleSettingsForm extends React.Component {
     }
 
     render() {
-        const {entity, errors} = this.state;
+        const {entity} = this.state;
         const {summit} = this.props;
         const disabledPreFilters = ['CUSTOM_ORDER', 'ABSTRACT', 'DATE'];
         const enabledPreFilters = entity.pre_filters.filter(pf => !disabledPreFilters.includes(pf.type));
@@ -113,6 +117,25 @@ class ScheduleSettingsForm extends React.Component {
             {label: 'Category Groups', value: 'TRACK_GROUP'},
             {label: 'Activity Type', value: 'EVENT_TYPES'},
         ];
+
+        const columns = [
+            { columnKey: 'type', render: (filter) => {
+                return (
+                    <EditLabelSlider
+                        checked={filter.is_enabled}
+                        id={filter.type}
+                        value={filter.label}
+                        onChange={this.onFilterChange}
+                        disabled={!entity.is_enabled}
+                    />
+                )
+                }}
+        ];
+
+        const table_options = {
+            actions: {
+            }
+        };
 
         return (
             <form className="schedule-settings-form">
@@ -175,17 +198,13 @@ class ScheduleSettingsForm extends React.Component {
                 <br/><br/>
                 <legend>Filters</legend>
                 <div className="row form-group">
-                    {entity.filters.map(filter =>
-                        <div className="col-md-6" key={filter.type}>
-                            <EditLabelSlider
-                                checked={filter.is_enabled}
-                                id={filter.type}
-                                value={filter.label}
-                                onChange={this.onFilterChange}
-                                disabled={!entity.is_enabled}
-                            />
-                        </div>
-                    )}
+                    <SortableTable
+                        options={table_options}
+                        data={entity.filters}
+                        columns={columns}
+                        dropCallback={this.updateFilterOrder}
+                        orderField="order"
+                    />
                 </div>
                 <br/><br/>
                 <legend>Pre Filters</legend>

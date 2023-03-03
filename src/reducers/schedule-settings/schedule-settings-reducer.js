@@ -25,16 +25,18 @@ import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
 import { SET_CURRENT_SUMMIT } from '../../actions/summit-actions';
 
 const DEFAULT_FILTERS = [
-    { label:'Track', is_enabled: false, type: FILTER_TYPES.track },
-    { label:'Date', is_enabled: false, type: FILTER_TYPES.date },
-    { label:'Tags', is_enabled: false, type: FILTER_TYPES.tags },
-    { label:'Track Groups', is_enabled: false, type: FILTER_TYPES.track_groups },
-    { label:'Company', is_enabled: false, type: FILTER_TYPES.company },
-    { label:'Level', is_enabled: false, type: FILTER_TYPES.level },
-    { label:'Speakers', is_enabled: false, type: FILTER_TYPES.speakers },
-    { label:'Venues', is_enabled: false, type: FILTER_TYPES.venues },
-    { label:'Event Types', is_enabled: false, type: FILTER_TYPES.event_types },
-    { label:'Title', is_enabled: false, type: FILTER_TYPES.title },
+    {id: 1, label:'Date', is_enabled: false, type: FILTER_TYPES.date, order:1  },
+    {id: 2, label:'Track', is_enabled: false, type: FILTER_TYPES.track, order:2 },
+    {id: 3, label:'Tags', is_enabled: false, type: FILTER_TYPES.tags, order:3  },
+    {id: 4, label:'Track Groups', is_enabled: false, type: FILTER_TYPES.track_groups, order:4 },
+    {id: 5, label:'Company', is_enabled: false, type: FILTER_TYPES.company, order:5  },
+    {id: 6, label:'Level', is_enabled: false, type: FILTER_TYPES.level, order:6  },
+    {id: 7, label:'Speakers', is_enabled: false, type: FILTER_TYPES.speakers, order:7  },
+    {id: 8, label:'Venues', is_enabled: false, type: FILTER_TYPES.venues, order:8  },
+    {id: 9, label:'Event Types', is_enabled: false, type: FILTER_TYPES.event_types, order:9  },
+    {id: 10, label:'Title', is_enabled: false, type: FILTER_TYPES.title, order:10  },
+    {id: 11, label:'Custom Order', is_enabled: false, type: FILTER_TYPES.custom_order, order:11  },
+    {id: 12, label:'Abstract', is_enabled: false, type: FILTER_TYPES.abstract, order:12  },
 ];
 
 const DEFAULT_PRE_FILTERS = [
