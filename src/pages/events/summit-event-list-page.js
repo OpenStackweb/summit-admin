@@ -103,8 +103,8 @@ class SummitEventListPage extends React.Component {
                 level_filter: [],
                 tags_filter: [],
                 published_filter: null,
-                start_date_filter: '',
-                end_date_filter: '',
+                start_date_filter: Array(2).fill(null),
+                end_date_filter: Array(2).fill(null),
                 duration_filter: '',
                 speakers_count_filter: '',
                 submitters: [],
@@ -164,12 +164,7 @@ class SummitEventListPage extends React.Component {
     componentDidMount() {
         const {currentSummit, filters, extraColumns, term, order, orderDir} = this.props;
         const {eventFilters} = this.state;
-        const  enabledFilters = Object.keys(filters).filter(e => filters[e]?.length > 0);
-        // corner case for date_filter
-        let {end_date_filter, start_date_filter} = filters;
-        if((start_date_filter && start_date_filter > 0) || ( end_date_filter && end_date_filter > 0)){
-            enabledFilters.push('date_filter');
-        }
+        const  enabledFilters = Object.keys(filters).filter(e => filters[e]?.length > 0 && filters[e].some(e => e !== null));
 
         this.setState({
             ...this.state, 
@@ -265,16 +260,6 @@ class SummitEventListPage extends React.Component {
         this.setState({...this.state, eventFilters: {...this.state.eventFilters, published_filter: ev}});
     }
 
-    handleChangeStartDate(ev) {
-        const {value} = ev.target;
-        this.setState({...this.state, eventFilters: {...this.state.eventFilters, start_date_filter: value.unix()}});    
-    }
-
-    handleChangeEndDate(ev) {
-        const {value} = ev.target;
-        this.setState({...this.state, eventFilters: {...this.state.eventFilters, end_date_filter: value.unix()}});        
-    }
-
     handleFiltersChange(ev) {
         const {value} = ev.target;
         if(value.length < this.state.enabledFilters.length) {
@@ -291,8 +276,8 @@ class SummitEventListPage extends React.Component {
                     level_filter: [],
                     tags_filter: [],
                     published_filter: null,
-                    start_date_filter: '',
-                    end_date_filter: '',
+                    start_date_filter: Array(2).fill(null),
+                    end_date_filter: Array(2).fill(null),
                     duration_filter: '',
                     speakers_count_filter: '',
                     submitters: [],
@@ -308,10 +293,7 @@ class SummitEventListPage extends React.Component {
             } else {
                 const removedFilter = this.state.enabledFilters.filter(e => !value.includes(e))[0];            
                 const defaultValue = removedFilter === 'published_filter' ? null : Array.isArray(this.state.eventFilters[removedFilter]) ? [] : '';
-                let newEventFilters = {...this.state.eventFilters, [removedFilter]: defaultValue};
-                if(removedFilter === 'date_filter'){
-                    newEventFilters = {...newEventFilters, start_date_filter: '', end_date_filter: ''}
-                }
+                let newEventFilters = {...this.state.eventFilters, [removedFilter]: defaultValue};                
                 this.setState({...this.state, enabledFilters: value, eventFilters: newEventFilters});
             }
         } else {
@@ -319,14 +301,24 @@ class SummitEventListPage extends React.Component {
         }
     }
 
-    handleChangeStartDate(ev) {
+    handleChangeStartDate(ev, lastDate) {
         const {value} = ev.target;
-        this.setState({...this.state, eventFilters: {...this.state.eventFilters, start_date_filter: value.unix()}});    
+        const {start_date_filter} = this.state.eventFilters;
+
+        this.setState({...this.state, eventFilters: {
+            ...this.state.eventFilters, 
+            start_date_filter: lastDate ? [start_date_filter[0], value.unix()] : [value.unix(), start_date_filter[1]]
+        }});
     }
 
-    handleChangeEndDate(ev) {
+    handleChangeEndDate(ev, lastDate) {
         const {value} = ev.target;
-        this.setState({...this.state, eventFilters: {...this.state.eventFilters, end_date_filter: value.unix()}});        
+        const {end_date_filter} = this.state.eventFilters;
+
+        this.setState({...this.state, eventFilters: {
+            ...this.state.eventFilters, 
+            end_date_filter: lastDate ? [end_date_filter[0], value.unix()] : [value.unix(), end_date_filter[1]]
+        }});
     }
 
     handleFiltersChange(ev) {
@@ -345,8 +337,8 @@ class SummitEventListPage extends React.Component {
                     level_filter: [],
                     tags_filter: [],
                     published_filter: null,
-                    start_date_filter: '',
-                    end_date_filter: '',
+                    start_date_filter: Array(2).fill(null),
+                    end_date_filter: Array(2).fill(null),
                     duration_filter: '',
                     speakers_count_filter: '',
                     submitters: [],
@@ -449,7 +441,8 @@ class SummitEventListPage extends React.Component {
             {label: 'Speaker Company', value: 'speaker_company'},
             {label: 'Level', value: 'level_filter'},
             {label: 'Tags', value: 'tags_filter'},
-            {label: 'Date', value: 'date_filter'},
+            {label: 'Start Date', value: 'start_date_filter'},
+            {label: 'End Date', value: 'end_date_filter'},
             {label: 'Duration', value: 'duration_filter'},
             {label: 'Speaker Count', value: 'speakers_count_filter'},
             {label: 'Submitter', value: 'submitters'},
@@ -706,26 +699,54 @@ class SummitEventListPage extends React.Component {
                             />
                         </div>
                     }
-                    {enabledFilters.includes('date_filter') &&
+                    {enabledFilters.includes('start_date_filter') &&
                         <>
                             <div className={'col-md-3'}>
                                 <DateTimePicker
-                                    id="start_date_filter"
-                                    format={{date:"YYYY-MM-DD", time: "HH:mm"}}                            
-                                    inputProps={{placeholder: T.translate("event_list.placeholders.start_date")}}
-                                    timezone={currentSummit.time_zone.name}                            
-                                    onChange={this.handleChangeStartDate}                            
-                                    value={epochToMomentTimeZone(eventFilters.start_date_filter, currentSummit.time_zone_id)}
+                                    id="start_date_from_filter"
+                                    format={{date:"YYYY-MM-DD", time: "HH:mm"}}                                    
+                                    inputProps={{placeholder: T.translate("event_list.placeholders.start_date_from")}}
+                                    timezone={currentSummit.time_zone.name}
+                                    onChange={(ev) => this.handleChangeStartDate(ev, false)}
+                                    value={epochToMomentTimeZone(eventFilters.start_date_filter[0], currentSummit.time_zone_id)}
+                                    className={'event-list-date-picker'}
                                 />
                             </div>                    
                             <div className={'col-md-3'}>
                                 <DateTimePicker
-                                    id="end_date_filter"
-                                    format={{date:"YYYY-MM-DD", time: "HH:mm"}}                            
-                                    inputProps={{placeholder: T.translate("event_list.placeholders.end_date")}}
-                                    timezone={currentSummit.time_zone.name}                            
-                                    onChange={this.handleChangeEndDate}                            
-                                    value={epochToMomentTimeZone(eventFilters.end_date_filter, currentSummit.time_zone_id)}
+                                    id="start_date_to_filter"
+                                    format={{date:"YYYY-MM-DD", time: "HH:mm"}}
+                                    inputProps={{placeholder: T.translate("event_list.placeholders.start_date_to")}}
+                                    timezone={currentSummit.time_zone.name}
+                                    onChange={(ev) => this.handleChangeStartDate(ev, true)}
+                                    value={epochToMomentTimeZone(eventFilters.start_date_filter[1], currentSummit.time_zone_id)}
+                                    className={'event-list-date-picker'}
+                                />
+                            </div>
+                        </>
+                    }
+                    {enabledFilters.includes('end_date_filter') &&
+                        <>
+                            <div className={'col-md-3'}>
+                                <DateTimePicker
+                                    id="end_date_from_filter"
+                                    format={{date:"YYYY-MM-DD", time: "HH:mm"}}
+                                    inputProps={{placeholder: T.translate("event_list.placeholders.end_date_from")}}
+                                    timezone={currentSummit.time_zone.name}
+                                    onChange={(ev) => this.handleChangeEndDate(ev, false)}
+                                    value={epochToMomentTimeZone(eventFilters.end_date_filter[0], currentSummit.time_zone_id)}
+                                    className={'event-list-date-picker'}
+                                />
+                            </div>                    
+                            <div className={'col-md-3'}>
+                                <DateTimePicker
+                                    id="end_date_to_filter"
+                                    format={{date:"YYYY-MM-DD", time: "HH:mm"}}
+                                    inputProps={{placeholder: T.translate("event_list.placeholders.end_date_to")}}
+                                    timezone={currentSummit.time_zone.name}
+                                    onChange={(ev) => this.handleChangeEndDate(ev, true)}
+                                    value={epochToMomentTimeZone(eventFilters.end_date_filter[1], currentSummit.time_zone_id)}
+                                    className={'event-list-date-picker'}
                                 />
                             </div>
                         </>

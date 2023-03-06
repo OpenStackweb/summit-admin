@@ -62,8 +62,8 @@ const eventListReducer = (state = DEFAULT_STATE, action) => {
             let events = payload.response.data.map(e => {
                 let published_date = (e.is_published ? moment(e.published_date * 1000).tz(state.summitTZ).format('MMMM Do YYYY, h:mm a') : 'No');
                 
-                let speakers_companies = e.speakers.map(e => e.company);
-                speakers_companies = speakers_companies.filter((item,index) => item !== '' && speakers_companies.indexOf(item) === index);
+                let speakers_companies = e.speakers && e.speakers.length > 0 ? e.speakers.map(e => e.company) : [];                
+                speakers_companies = speakers_companies.length > 0 ? speakers_companies.filter((item,index) => item !== '' && speakers_companies.indexOf(item) === index) : []; 
 
                 return {
                     id: e.id,

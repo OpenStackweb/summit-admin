@@ -880,12 +880,28 @@ const parseFilters = (filters) => {
         filter.push(`published==${filters.published_filter === 'published' ? '1' : '0'}`);
     }
 
-    if (filters.start_date_filter) {
-        filter.push(`start_date>=${filters.start_date_filter}`);
+    if (filters.start_date_filter && filters.start_date_filter.some(e => e !== null)) {
+        if(filters.start_date_filter.every(e => e !== null )) {
+            filter.push(`start_date>=${filters.start_date_filter[0]},start_date<=${filters.start_date_filter[1]}`);
+        } else {
+            filter.push(`
+            ${filters.start_date_filter[0] !== null ? 
+                `start_date>=${filters.start_date_filter[0]}` : ``}
+            ${filters.start_date_filter[1] !== null ? 
+                `start_date<=${filters.start_date_filter[1]}` : ``}`);
+        }
     }
 
-    if (filters.end_date_filter) {
-        filter.push(`end_date<=${filters.end_date_filter}`);
+    if (filters.end_date_filter && filters.end_date_filter.some(e => e !== null)) {
+        if(filters.end_date_filter.every(e => e !== null )) {
+            filter.push(`end_date>=${filters.end_date_filter[0]},end_date<=${filters.end_date_filter[1]}`);
+        } else {
+            filter.push(`
+            ${filters.end_date_filter[0] !== null ? 
+                `end_date>=${filters.end_date_filter[0]}` : ``}
+            ${filters.end_date_filter[1] !== null ? 
+                `end_date<=${filters.end_date_filter[1]}` : ``}`);
+        }
     }
 
     if (filters.duration_filter) {
