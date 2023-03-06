@@ -411,7 +411,7 @@ class SummitEventListPage extends React.Component {
         const location_ddl = currentSummit.locations?.sort((a,b) => a.order - b.order).map((l => ({label: l.name, value: l.id})));
 
         const selection_status_ddl = [
-            {label: 'Selected', value: 'selected'},
+            {label: 'Accepted', value: 'selected'},
             {label: 'Rejected', value: 'rejected'},
             {label: 'Alternate', value: 'alternate'},
         ];
@@ -435,8 +435,8 @@ class SummitEventListPage extends React.Component {
             {label: 'Location', value: 'location_id_filter'},
             {label: 'Selection Status', value: 'selection_status_filter'},
             {label: 'Published Status', value: 'published_filter'},
-            {label: 'Track', value: 'track_id_filter'},
-            {label: 'Event Type', value: 'event_type_id_filter'},
+            {label: 'Activity Category', value: 'track_id_filter'},
+            {label: 'Activity Type', value: 'event_type_id_filter'},
             {label: 'Speaker', value: 'speaker_id_filter'},
             {label: 'Speaker Company', value: 'speaker_company'},
             {label: 'Level', value: 'level_filter'},
