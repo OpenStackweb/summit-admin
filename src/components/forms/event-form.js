@@ -690,7 +690,35 @@ render() {
         <div>
             <input type="hidden" id="id" value={entity.id} />
             <div className="row form-group">
-                <div className="col-md-8">
+                <div className="col-md-12">
+                    <label> {T.translate("edit_event.submitter")} </label> &nbsp;
+                    <i className='copy-button fa fa-clipboard'
+                       onClick={() => { navigator.clipboard.writeText(
+                           entity.created_by.hasOwnProperty("email") ?
+                               `${entity.created_by.first_name} ${entity.created_by.last_name} <${entity.created_by.email}>` :
+                               `${entity.created_by.first_name} ${entity.created_by.last_name} (${entity.created_by.id})`)
+                       }}
+                       title="Copy to clipboard" />
+                    <div>
+                        <MemberInput
+                            id="created_by"
+                            value={entity.created_by}
+                            getOptionLabel={
+                                (member) => {
+                                    return member.hasOwnProperty("email") ?
+                                        `${member.first_name} ${member.last_name} ${(member.company ? `- ${member.company}`:'')} (${member.email})` :
+                                        `${member.first_name} ${member.last_name} ${(member.company ? `- ${member.company}`:'')} (${member.id})`;
+                                }
+                            }
+                            onChange={this.handleChange}
+                            error={hasErrors('created_by_id', errors)}
+                            placeholder={T.translate("edit_event.placeholders.select_submitter")}
+                        />
+                    </div>
+                </div>
+            </div>
+            <div className="row form-group">
+                <div className="col-md-11">
                     <label> {T.translate("edit_event.title")} *</label>
                     <Input
                         className="form-control"
@@ -699,32 +727,6 @@ render() {
                         value={entity.title}
                         onChange={this.handleChange}
                     />
-                </div>
-                <div className="col-md-3">
-                    <label> {T.translate("edit_event.submitter")} </label> &nbsp;
-                        <i className='copy-button fa fa-clipboard'
-                            onClick={() => { navigator.clipboard.writeText(
-                                entity.created_by.hasOwnProperty("email") ?
-                                    `${entity.created_by.first_name} ${entity.created_by.last_name} <${entity.created_by.email}>` :
-                                    `${entity.created_by.first_name} ${entity.created_by.last_name} (${entity.created_by.id})`) 
-                                }}
-                            title="Copy to clipboard" />
-                    <div>
-                        <MemberInput
-                            id="created_by"
-                            value={entity.created_by}
-                            getOptionLabel={
-                                (member) => {
-                                    return member.hasOwnProperty("email") ?
-                                        `${member.first_name} ${member.last_name} (${member.email})` :
-                                        `${member.first_name} ${member.last_name} (${member.id})`;
-                                }
-                            }
-                            onChange={this.handleChange}
-                            error={hasErrors('created_by_id', errors)}
-                            placeholder={T.translate("edit_event.placeholders.select_submitter")}
-                        />
-                    </div>
                 </div>
                 <div className="col-md-1 published">
                     <label> {T.translate("edit_event.published")} </label>
