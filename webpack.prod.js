@@ -15,8 +15,15 @@ module.exports = merge(common, {
         pathinfo: false
     },
     optimization: {
+        minimize: true,
         minimizer: [
-            new TerserJSPlugin({terserOptions: {compress: {inline: false}}}),
+            new TerserJSPlugin({
+                    parallel: true,
+                    terserOptions: {
+                        mangle:false,
+                        compress: {inline: false}
+                    }
+            }),
             new OptimizeCSSAssetsPlugin({})
         ],
         splitChunks: {
