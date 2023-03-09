@@ -873,7 +873,7 @@
     "allows_location_filter": "Allows location",
     "allows_publishing_dates_filter": "Allows publishing dates",
     "apply_filters": "Apply Filters",
-    "select_fields": "Select Data",
+    "select_fields": "Show Columns",
     "placeholders": {
       "search_events": "Search by Id, Title, Abstract, Speaker Title",
       "event_type_capacity": "Filter by Event Type Capacity",

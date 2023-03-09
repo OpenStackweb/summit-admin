@@ -79,6 +79,7 @@ class SummitEventListPage extends React.Component {
         this.handleApplyEventFilters = this.handleApplyEventFilters.bind(this);
         this.handleFiltersChange = this.handleFiltersChange.bind(this);
         this.handleColumnsChange = this.handleColumnsChange.bind(this);
+        this.handleDDLSortByLabel = this.handleDDLSortByLabel.bind(this);
         this.state = {
             showImportModal: false,
             send_speaker_email:false,
@@ -385,6 +386,10 @@ class SummitEventListPage extends React.Component {
         this.setState({...this.state, selectedColumns: newColumns})
     }
 
+    handleDDLSortByLabel(ddlArray) {
+        return ddlArray.sort((a, b) => a.label.localeCompare(b.label));
+    }
+
 
     render(){
         const {currentSummit, events, lastPage, currentPage, term, order, orderDir, totalEvents, extraColumns, filters} = this.props;
@@ -430,44 +435,44 @@ class SummitEventListPage extends React.Component {
         const streaming_type_ddl = [{ label: 'LIVE', value: 'LIVE' }, { label: 'VOD', value: 'VOD' }];
 
         const filters_ddl = [
-            {label: 'Event Type Capacity', value: 'event_type_capacity_filter'},
-            {label: 'Selection Plan', value: 'selection_plan_id_filter'},
-            {label: 'Location', value: 'location_id_filter'},
-            {label: 'Selection Status', value: 'selection_status_filter'},
-            {label: 'Published Status', value: 'published_filter'},
-            {label: 'Activity Category', value: 'track_id_filter'},
+            {label: 'All Companies', value: 'all_companies'},
             {label: 'Activity Type', value: 'event_type_id_filter'},
-            {label: 'Speaker', value: 'speaker_id_filter'},
-            {label: 'Speaker Company', value: 'speaker_company'},
-            {label: 'Level', value: 'level_filter'},
-            {label: 'Tags', value: 'tags_filter'},
-            {label: 'Start Date', value: 'start_date_filter'},
+            {label: 'Activity Category', value: 'track_id_filter'},
             {label: 'End Date', value: 'end_date_filter'},
             {label: 'Duration', value: 'duration_filter'},
-            {label: 'Speaker Count', value: 'speakers_count_filter'},
-            {label: 'Submitter', value: 'submitters'},
-            {label: 'Submitter Company', value: 'submitter_company'},
-            {label: 'Stream URL', value: 'streaming_url'},
-            {label: 'Meeting URL', value: 'meeting_url'},
+            {label: 'Level', value: 'level_filter'},
             {label: 'Etherpad URL', value: 'etherpad_url'},
-            {label: 'Streaming Type', value: 'streaming_type'},
+            {label: 'Event Type Capacity', value: 'event_type_capacity_filter'},
+            {label: 'Location', value: 'location_id_filter'},
+            {label: 'Selection Plan', value: 'selection_plan_id_filter'},
+            {label: 'Meeting URL', value: 'meeting_url'},
+            {label: 'Published Status', value: 'published_filter'},
+            {label: 'Selection Status', value: 'selection_status_filter'},
             {label: 'Sponsor', value: 'sponsor'},
-            {label: 'All Companies', value: 'all_companies'},            
+            {label: 'Speaker', value: 'speaker_id_filter'},
+            {label: 'Start Date', value: 'start_date_filter'},
+            {label: 'Speaker Company', value: 'speaker_company'},
+            {label: 'Speaker Count', value: 'speakers_count_filter'},
+            {label: 'Tags', value: 'tags_filter'},
+            {label: 'Stream URL', value: 'streaming_url'},
+            {label: 'Submitter', value: 'submitters'},
+            {label: 'Streaming Type', value: 'streaming_type'},
+            {label: 'Submitter Company', value: 'submitter_company'},
         ]
 
         const ddl_columns = [
-            { value: 'speakers', label: T.translate("event_list.speakers") },
+            { value: 'all_companies', label: T.translate("event_list.all_companies") },
             { value: 'created_by_fullname', label: T.translate("event_list.created_by") },
-            { value: 'submitter_company', label: T.translate("event_list.submitter_company")},
-            { value: 'published_date', label: T.translate("event_list.published") },
             { value: 'duration', label: T.translate("event_list.duration") },
-            { value: 'speakers_count', label: T.translate("event_list.speakers_count") },
-            { value: 'speaker_company', label: T.translate("event_list.speaker_company") },
-            { value: 'track', label: T.translate("event_list.track") },
-            { value: 'start_date', label: T.translate("event_list.start_date") },
             { value: 'end_date', label: T.translate("event_list.end_date") },
+            { value: 'published_date', label: T.translate("event_list.published") },
+            { value: 'speaker_company', label: T.translate("event_list.speaker_company") },
+            { value: 'speakers_count', label: T.translate("event_list.speakers_count") },
+            { value: 'speakers', label: T.translate("event_list.speakers") },
             { value: 'sponsor', label: T.translate("event_list.sponsor") },
-            { value: 'all_companies', label: T.translate("event_list.all_companies") }
+            { value: 'start_date', label: T.translate("event_list.start_date") },
+            { value: 'submitter_company', label: T.translate("event_list.submitter_company")},
+            { value: 'track', label: T.translate("event_list.track") },
         ];
 
         const ddl_filterByEventTypeCapacity = [
@@ -523,7 +528,7 @@ class SummitEventListPage extends React.Component {
                             placeholder={'Enabled Filters'}
                             value={enabledFilters}
                             onChange={this.handleFiltersChange}
-                            options={filters_ddl}
+                            options={this.handleDDLSortByLabel(filters_ddl)}
                             isClearable={true}
                             isMulti={true}
                         />
@@ -851,7 +856,7 @@ class SummitEventListPage extends React.Component {
                             placeholder={T.translate("event_list.placeholders.select_fields")}
                             value={this.state.selectedColumns}
                             onChange={this.handleColumnsChange}
-                            options={ddl_columns}
+                            options={this.handleDDLSortByLabel(ddl_columns)}
                             isClearable={true}
                             isMulti={true}
                         />
