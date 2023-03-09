@@ -43,6 +43,7 @@ const DateIntervalFilter = ({ onFilter, timezone = 'UTC'}) => {
       <DateTimePicker
         id="toDate"
         onChange={ev => setToDate(ev.target.value)}
+        validation={{ before: fromDate?.unix(), after: '>' }}
         format={{date: "YYYY-MM-DD", time: "HH:mm"}}
         value={toDate}
         timezone={timezone}
