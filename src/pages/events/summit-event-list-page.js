@@ -85,6 +85,7 @@ class SummitEventListPage extends React.Component {
         this.handleFiltersChange = this.handleFiltersChange.bind(this);
         this.handleColumnsChange = this.handleColumnsChange.bind(this);
         this.handleDDLSortByLabel = this.handleDDLSortByLabel.bind(this);
+        this.onCreateCompany = this.onCreateCompany.bind(this);
         this.state = {
             showImportModal: false,
             send_speaker_email:false,
@@ -254,6 +255,10 @@ class SummitEventListPage extends React.Component {
             }
         }
         this.setState({...this.state, eventFilters: {...this.state.eventFilters, [id]: value}});
+    }
+
+    onCreateCompany(newCompany) {
+       console.log('onCreateCompany', newCompany);
     }
 
     handleTagOrSpeakerFilterChange(ev) {
@@ -445,7 +450,6 @@ class SummitEventListPage extends React.Component {
             {label: 'Selection Plan', value: 'selection_plan_id_filter'},
             {label: 'Activity Type', value: 'event_type_id_filter'},
             {label: 'Activity Category', value: 'track_id_filter'},
-            {label: 'Duration', value: 'duration_filter'},
             {label: 'Level', value: 'level_filter'},
             {label: 'Etherpad URL', value: 'etherpad_url'}, 
             {label: 'Location', value: 'location_id_filter'},
@@ -721,6 +725,8 @@ class SummitEventListPage extends React.Component {
                                 placeholder={T.translate("event_list.placeholders.all_companies")}
                                 onChange={this.handleExtraFilterChange}
                                 multi
+                                allowCreate={true}
+                                onCreate={this.onCreateCompany}
                             />
                         </div>
                     }
@@ -802,6 +808,8 @@ class SummitEventListPage extends React.Component {
                                 placeholder={T.translate("event_list.placeholders.submitter_company")}
                                 onChange={this.handleExtraFilterChange}
                                 multi
+                                allowCreate={true}
+                                onCreate={this.onCreateCompany}
                             />
                         </div>
                     }
