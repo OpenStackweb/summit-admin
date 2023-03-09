@@ -14,6 +14,18 @@
     }
 }
 
+.summit-event-list-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    .summit-event-list-table {
+        td {
+            max-width: 150px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+    }
+}
+
 @media (max-width: 991px) {
     .filters-row {
         display: block;

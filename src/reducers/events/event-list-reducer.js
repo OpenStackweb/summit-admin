@@ -65,6 +65,12 @@ const eventListReducer = (state = DEFAULT_STATE, action) => {
                 let speakers_companies = e.speakers && e.speakers.length > 0 ? e.speakers.map(e => e.company) : [];                
                 speakers_companies = speakers_companies.length > 0 ? speakers_companies.filter((item,index) => item !== '' && speakers_companies.indexOf(item) === index) : []; 
 
+                const event_type_capacity = [];
+
+                if (e.type.allows_location) event_type_capacity.push('Allows Location');
+                if (e.type.allows_attendee_vote) event_type_capacity.push('Allows Attendee Vote');
+                if (e.type.allows_publishing_dates) event_type_capacity.push('Allows Publishing Dates');
+
                 return {
                     id: e.id,
                     type: e.type.name,
@@ -79,7 +85,16 @@ const eventListReducer = (state = DEFAULT_STATE, action) => {
                     duration: e.type.allows_publishing_dates ?
                         formatDuration(e.duration) : 'N/A',
                     speakers_count: e.type.use_speakers ? (e.speakers && e.speakers.length > 0) ? e.speakers.length : '0' : 'N/A',
+                    event_type_capacity: event_type_capacity.reduce((accumulator, capacity) => accumulator + (accumulator !== '' ? ', ' : '') + capacity, ''),
                     track: e.track.name,
+                    level: e.level ? e.level : 'N/A',
+                    tags: e.tags && e.tags.length > 0 ? e.tags.reduce((accumulator, t) => accumulator + (accumulator !== '' ? ', ' : '') + t.tag, '') : 'N/A',
+                    selection_plan: e.selection_plan?.name ? e.selection_plan?.name : 'N/A',
+                    location: e.location?.name ? e.location?.name : 'N/A',
+                    streaming_url: e.streaming_url ? e.streaming_url : 'N/A',
+                    meeting_url: e.meeting_url ? e.meeting_url : 'N/A',
+                    etherpad_url: e.etherpad_link ? e.etherpad_link : 'N/A',
+                    streaming_type: e.streaming_type ? e.streaming_type : 'N/A',
                     start_date: e.start_date ? moment(e.start_date * 1000).tz(state.summitTZ).format('MMMM Do YYYY, h:mm a') : 'TBD',
                     end_date: e.end_date ? moment(e.end_date * 1000).tz(state.summitTZ).format('MMMM Do YYYY, h:mm a') : 'TBD',
                     sponsor: (e.sponsors) ? e.sponsors.map(s => s.name).join(', ') : 'N/A',

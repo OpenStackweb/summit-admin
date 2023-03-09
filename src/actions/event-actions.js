@@ -90,7 +90,7 @@ export const getEvents = (term = null, page = 1, perPage = 10, order = 'id', ord
     }
 
     const params = {
-        expand: 'speakers,type,created_by,track,sponsors',
+        expand: 'speakers,type,created_by,track,sponsors,selection_plan,location,tags',
         page: page,
         per_page: perPage,
         access_token: accessToken,
