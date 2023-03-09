@@ -876,7 +876,7 @@
     "select_fields": "Show Columns",
     "placeholders": {
       "search_events": "Search by Id, Title, Abstract, Speaker Title",
-      "event_type_capacity": "Filter by Event Type Capacity",
+      "event_type_capacity": "Filter by Activity Type Capacity",
       "selection_plan": "Filter by Selection Plan",
       "location": "Filter by Location",
       "selection_status": "Filter by Selection Status",

@@ -70,7 +70,7 @@ const eventListReducer = (state = DEFAULT_STATE, action) => {
                     type: e.type.name,
                     title: e.title,
                     status: e.status,
-                    selection_status: e.selection_status,
+                    selection_status: e.selection_status === 'unaccepted' ? 'rejected' : e.selection_status,
                     published_date: published_date,
                     created_by_fullname: e.hasOwnProperty('created_by') ? `${e.created_by.first_name} ${e.created_by.last_name} (${e.created_by.email})`:'TBD',
                     submitter_company: e.hasOwnProperty('created_by') ? e.created_by.company : 'N/A',
