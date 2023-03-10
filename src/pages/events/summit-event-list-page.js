@@ -32,7 +32,7 @@ import { SegmentedControl } from 'segmented-control'
 import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/utils/methods'
 import { getSummitById }  from '../../actions/summit-actions';
 import { getEvents, deleteEvent, exportEvents, importEventsCSV, importMP4AssetsFromMUX } from "../../actions/event-actions";
-import {hasErrors} from "../../utils/methods";
+import {hasErrors, uuidv4} from "../../utils/methods";
 import '../../styles/summit-event-list-page.less';
 
 const fieldNames = [
@@ -85,7 +85,7 @@ class SummitEventListPage extends React.Component {
         this.handleFiltersChange = this.handleFiltersChange.bind(this);
         this.handleColumnsChange = this.handleColumnsChange.bind(this);
         this.handleDDLSortByLabel = this.handleDDLSortByLabel.bind(this);
-        this.onCreateCompany = this.onCreateCompany.bind(this);
+
         this.state = {
             showImportModal: false,
             send_speaker_email:false,
@@ -255,10 +255,6 @@ class SummitEventListPage extends React.Component {
             }
         }
         this.setState({...this.state, eventFilters: {...this.state.eventFilters, [id]: value}});
-    }
-
-    onCreateCompany(newCompany) {
-       console.log('onCreateCompany', newCompany);
     }
 
     handleTagOrSpeakerFilterChange(ev) {
@@ -726,7 +722,17 @@ class SummitEventListPage extends React.Component {
                                 onChange={this.handleExtraFilterChange}
                                 multi
                                 allowCreate={true}
-                                onCreate={this.onCreateCompany}
+                                allowCreateWhileLoading={true}
+                                formatCreateLabel={(input)=> {
+                                    return `add Company : ${input}`
+                                }}
+                                onCreate={(newCompanyName) => {
+                                    const id = 'all_companies';
+                                    const currFilter = this.state.eventFilters[id];
+                                    const value = {id :uuidv4() , name : newCompanyName};
+                                    const newFilter = [...currFilter, value];
+                                    this.setState({...this.state, eventFilters: {...this.state.eventFilters, [id]: newFilter}});
+                                }}
                             />
                         </div>
                     }
@@ -809,7 +815,17 @@ class SummitEventListPage extends React.Component {
                                 onChange={this.handleExtraFilterChange}
                                 multi
                                 allowCreate={true}
-                                onCreate={this.onCreateCompany}
+                                allowCreateWhileLoading={true}
+                                formatCreateLabel={(input)=> {
+                                    return `add Company : ${input}`
+                                }}
+                                onCreate={(newCompanyName) => {
+                                    const id = 'submitter_company';
+                                    const currFilter = this.state.eventFilters[id];
+                                    const value = {id :uuidv4() , name : newCompanyName};
+                                    const newFilter = [...currFilter, value];
+                                    this.setState({...this.state, eventFilters: {...this.state.eventFilters, [id]: newFilter}});
+                                }}
                             />
                         </div>
                     }
