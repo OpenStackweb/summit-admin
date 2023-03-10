@@ -120,6 +120,7 @@ import presentationVotesReducer from "./reducers/events/summit-presentation-vote
 import ratingTypeReducer from "./reducers/ranking/rating-type-reducer";
 import scoreTypeReducer from './reducers/ranking/score-type-reducer';
 import summitSpeakersListReducer from './reducers/summit_speakers/summit-speakers-list-reducer';
+import summitSubmittersListReducer from './reducers/summit_submitters/summit-submitters-list-reducer';
 import summitStatsReducer from './reducers/summits/summit-stats-reducer';
 import sponsorAdvertisementReducer from './reducers/sponsors/sponsor-advertisement-reducer';
 import sponsorMaterialReducer from './reducers/sponsors/sponsor-material-reducer';
@@ -158,6 +159,7 @@ const reducers = persistCombineReducers(config, {
     currentSummitSpeakersListState: summitSpeakersListReducer,
     currentSpeakerAttendanceListState: speakerAttendanceListReducer,
     currentSpeakerAttendanceState: speakerAttendanceReducer,
+    currentSummitSubmittersListState: summitSubmittersListReducer,
     currentEventTypeListState: eventTypeListReducer,
     currentEventTypeState: eventTypeReducer,
     currentEventCategoryListState: eventCategoryListReducer,

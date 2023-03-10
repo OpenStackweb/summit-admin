@@ -808,7 +808,17 @@
     "placeholders": {
       "search_speakers": "Search by Full Name, Email, Speaker Id, Member Id, Title Or Abstract",
       "test_recipient": "Optional Test Recipient"
-    }
+    },
+    "speakers": "Speakers"
+  },
+  "summit_submitters_list": {
+    "summit_submitters_list": "Summit Submitters List",
+    "no_submitters": "There are no submitters for this search criteria.",
+    "select_items": "Select at least one submitter to perform the action.",
+    "send_emails_title": "You are about to send an EMAIL BLAST to selected submitters !",
+    "resend_done": "Emails sent successfully.",
+    "submitters": "Submitters",
+    "submitters_no_speakers": "Submitters (no speakers)"
   },
   "speaker_attendance_list": {
     "speaker_attendance_list": "Speaker Attendance List",

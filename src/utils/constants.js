@@ -31,3 +31,9 @@ export const MaxTextLengthForTicketTypesOnTable  = 70;
 export const MaxTextLengthForTagsOnTable         = 70;
 
 export const TBALocation = {id : 0, name : 'TBD', class_name: 'SummitVenue'};
+
+export const SpeakersSources = {
+    speakers: 'speakers',
+    submitters: 'submitters',
+    submitters_no_speakers: 'submitters_no_speakers'
+};

@@ -18,6 +18,7 @@ import Swal from "sweetalert2";
 import {Modal, Pagination} from 'react-bootstrap';
 import { FreeTextSearch, SelectableTable, Dropdown, Input } from 'openstack-uicore-foundation/lib/components';
 import {
+    initSpeakersList,
     getSpeakersBySummit,
     exportSummitSpeakers,
     selectSummitSpeaker,
@@ -27,12 +28,28 @@ import {
     setCurrentFlowEvent,
     sendSpeakerEmails
 } from "../../actions/speaker-actions";
+import {
+    initSubmittersList,
+    getSubmittersBySummit,
+    exportSummitSubmitters,
+    selectSummitSubmitter,
+    unselectSummitSubmitter,
+    selectAllSummitSubmitters,
+    unselectAllSummitSubmitters,
+    setCurrentSubmitterFlowEvent,
+    sendSubmitterEmails
+} from "../../actions/submitter-actions";
+
+import { SpeakersSources as sources } from "../../utils/constants";
 
 class SummitSpeakersListPage extends React.Component {
-
     constructor(props) {
         super(props);
 
+        this.getSubjectProps = this.getSubjectProps.bind(this);
+        this.export = this.export.bind(this);
+        this.getBySummit = this.getBySummit.bind(this);
+        this.handleSpeakerSubmitterSourceChange = this.handleSpeakerSubmitterSourceChange.bind(this);
         this.handleEdit = this.handleEdit.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
         this.handleSort = this.handleSort.bind(this);
@@ -45,51 +62,87 @@ class SummitSpeakersListPage extends React.Component {
         this.handleChangeActivityTypeFilter = this.handleChangeActivityTypeFilter.bind(this);
         this.handleChangeSelectionStatusFilter = this.handleChangeSelectionStatusFilter.bind(this);
         this.handleChangeFlowEvent = this.handleChangeFlowEvent.bind(this);
-        this.showSpeakersEmailSendModal = this.showSpeakersEmailSendModal.bind(this);
-        this.handleSendSpeakerEmails = this.handleSendSpeakerEmails.bind(this);
+        this.showEmailSendModal = this.showEmailSendModal.bind(this);
+        this.handleSendEmails = this.handleSendEmails.bind(this);
 
         this.state = {
             testRecipient: '',
             showSendEmailModal: false,
-            excerptRecipient: ''
+            excerptRecipient: '',
+            source: sources.speakers,
         };
     }
 
     componentDidMount() {
-        const { currentSummit } = this.props;
+        const { currentSummit, initSubmittersList, initSpeakersList } = this.props;
+        initSubmittersList();
+        initSpeakersList();
         if (currentSummit) {
-            const { term, page, order, orderDir, perPage, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter } = this.props;
-            this.props.getSpeakersBySummit(term, page, perPage, order, orderDir, {
+            const { term, page, order, orderDir, perPage, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter } = this.getSubjectProps();
+            this.getBySummit(term, page, perPage, order, orderDir, {
                 selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter
             });
         }
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
+        
     }
 
-    handleEdit(speakerId) {
-        const { history } = this.props;
-        history.push(`/app/speakers/${speakerId}`);
+    getSubjectProps() {
+        const { source } = this.state;
+        return source === sources.speakers ? this.props.speakersProps : this.props.submittersProps;
+    }
+
+    getBySummit(term, page, perPage, order, orderDir, filters) {
+        const { source } = this.state;
+        const callable = source === sources.speakers ? this.props.getSpeakersBySummit : this.props.getSubmittersBySummit;
+        callable(term, page, perPage, order, orderDir, filters, source);
+    }
+
+    export(term, order, orderDir, filters) {
+        const { source } = this.state;
+        const callable = source === sources.speakers ? this.props.exportSummitSpeakers : this.props.exportSummitSubmitters;
+        callable(term, order, orderDir, filters, source);
+    }
+
+    handleSpeakerSubmitterSourceChange(ev) {
+        const { value } = ev.target;
+        const { term, order, orderDir, perPage, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter } = this.getSubjectProps();
+        const { initSubmittersList, initSpeakersList } = this.props;
+        this.setState({...this.state, source: value}, function() {
+            initSubmittersList();
+            initSpeakersList();
+            this.getBySummit(term, 1, perPage, order, orderDir, {
+                selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter
+            });
+        });
+    }
+
+    handleEdit(itemId) {
+        if (this.state.source === sources.speakers) {
+            const { history } = this.props;
+            history.push(`/app/speakers/${itemId}`);
+        }
     }
 
     handlePageChange(page) {
-        const { term, order, orderDir, perPage, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter } = this.props;
-        this.props.getSpeakersBySummit(term, page, perPage, order, orderDir, {
+        const { term, order, orderDir, perPage, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter } = this.getSubjectProps();
+        this.getBySummit(term, page, perPage, order, orderDir, {
             selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter
         });
     }
 
     handleSort(index, key, dir, func) {
-        const { term, page, perPage, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter } = this.props;
-        this.props.getSpeakersBySummit(term, page, perPage, key, dir, {
+        const { term, page, perPage, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter } = this.getSubjectProps();
+        this.getBySummit(term, page, perPage, key, dir, {
             selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter
         });
     }
 
     handleSearch(term) {
-        const { order, orderDir, page, perPage, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter } = this.props;
-        this.props.getSpeakersBySummit(term, page, perPage, order, orderDir,
+        const { order, orderDir, page, perPage, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter } = this.getSubjectProps();
+        this.getBySummit(term, page, perPage, order, orderDir,
         {
             selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter
         });
@@ -97,8 +150,8 @@ class SummitSpeakersListPage extends React.Component {
 
     handleChangeSelectionPlanFilter(ev) {
         const { value: newSelectionPlanFilter } = ev.target;
-        const { term, order, page, orderDir, perPage, trackFilter, activityTypeFilter, selectionStatusFilter } = this.props;
-        this.props.getSpeakersBySummit(term, page, perPage, order, orderDir,
+        const { term, order, page, orderDir, perPage, trackFilter, activityTypeFilter, selectionStatusFilter } = this.getSubjectProps();
+        this.getBySummit(term, page, perPage, order, orderDir,
             {
                 selectionPlanFilter: newSelectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter
             });
@@ -106,8 +159,8 @@ class SummitSpeakersListPage extends React.Component {
 
     handleChangeTrackFilter(ev) {
         const { value: newTrackFilter } = ev.target;
-        const { term, order, page, orderDir, perPage, selectionPlanFilter, activityTypeFilter, selectionStatusFilter } = this.props;
-        this.props.getSpeakersBySummit(term, page, perPage, order, orderDir,
+        const { term, order, page, orderDir, perPage, selectionPlanFilter, activityTypeFilter, selectionStatusFilter } = this.getSubjectProps();
+        this.getBySummit(term, page, perPage, order, orderDir,
             {
                 selectionPlanFilter, trackFilter: newTrackFilter, activityTypeFilter, selectionStatusFilter
             });
@@ -115,8 +168,8 @@ class SummitSpeakersListPage extends React.Component {
 
     handleChangeActivityTypeFilter(ev) {
         const { value: newActivityTypeFilter } = ev.target;
-        const { term, order, page, orderDir, perPage, selectionPlanFilter, trackFilter, selectionStatusFilter } = this.props;
-        this.props.getSpeakersBySummit(term, page, perPage, order, orderDir,
+        const { term, order, page, orderDir, perPage, selectionPlanFilter, trackFilter, selectionStatusFilter } = this.getSubjectProps();
+        this.getBySummit(term, page, perPage, order, orderDir,
             {
                 selectionPlanFilter, trackFilter, activityTypeFilter: newActivityTypeFilter, selectionStatusFilter
             });
@@ -144,8 +197,8 @@ class SummitSpeakersListPage extends React.Component {
             newSelectionStatusFilter = ['alternate_rejected'];
         }
 
-        const { term, order, page, orderDir, perPage, selectionPlanFilter, trackFilter, activityTypeFilter } = this.props;
-        this.props.getSpeakersBySummit(term, page, perPage, order, orderDir,
+        const { term, order, page, orderDir, perPage, selectionPlanFilter, trackFilter, activityTypeFilter } = this.getSubjectProps();
+        this.getBySummit(term, page, perPage, order, orderDir,
             {
                 selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter: newSelectionStatusFilter
             });
@@ -153,44 +206,48 @@ class SummitSpeakersListPage extends React.Component {
 
     handleChangeFlowEvent(ev) {
         const { value, id } = ev.target;
-        this.props.setCurrentFlowEvent(value);
+        const { source } = this.state;
+        source === sources.speakers ? this.props.setCurrentFlowEvent(value) : this.props.setCurrentSubmitterFlowEvent(value);
     }
 
-    handleSendSpeakerEmails(ev){
+    handleSendEmails(ev){
         ev.stopPropagation();
         ev.preventDefault();
-        const { testRecipient } = this.state;
+        const { testRecipient, source } = this.state;
+        const isSpeakerMode = source === sources.speakers;
         let excerptRecipient = this.ingestEmailRef.value;
-        let shouldSendCopy2Submitter = this.shouldSendCopy2SubmitterRef.checked
+        let shouldSendCopy2Submitter = isSpeakerMode && this.shouldSendCopy2SubmitterRef.checked
         this.setState({showSendEmailModal: false, excerptRecipient: '', testRecipient: ''});
         // send emails
 
         const {
-            selectedAll, term, selectedSpeakers, currentFlowEvent, sendSpeakerEmails,
-            selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter,
-        } = this.props;
+            selectedAll, term, selectedItems, currentFlowEvent, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter,
+        } = this.getSubjectProps();
 
-        sendSpeakerEmails(currentFlowEvent, selectedAll, selectedSpeakers, testRecipient, excerptRecipient, shouldSendCopy2Submitter, term,
-            { selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter })
+        const callable = isSpeakerMode ? this.props.sendSpeakerEmails : this.props.sendSubmitterEmails;
+
+        callable(currentFlowEvent, selectedAll, selectedItems, testRecipient, excerptRecipient, shouldSendCopy2Submitter, term,
+            { selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter }, source)
     }
 
-    showSpeakersEmailSendModal(ev) {
+    showEmailSendModal(ev) {
         ev.stopPropagation();
         ev.preventDefault();
 
+        const { source } = this.state;
         const {
-            selectedAll, term, selectedSpeakers, currentFlowEvent
-        } = this.props;
-
-        const { testRecipient } = this.state;
+            selectedAll, selectedItems, currentFlowEvent
+        } = this.getSubjectProps();
 
         if (!currentFlowEvent) {
             Swal.fire("Validation error", T.translate("summit_speakers_list.select_template"), "warning");
             return false;
         }
 
-        if (!selectedAll && selectedSpeakers.length === 0) {
-            Swal.fire("Validation error", T.translate("summit_speakers_list.select_items"), "warning");
+        if (!selectedAll && selectedItems.length === 0) {
+            const content = source === sources.speakers ? 
+                T.translate("summit_speakers_list.select_items") : T.translate("summit_submitters_list.select_items");
+            Swal.fire("Validation error", content, "warning");
             return false;
         }
 
@@ -200,33 +257,37 @@ class SummitSpeakersListPage extends React.Component {
     }
 
     handleExport(ev) {
-        const { term, order, orderDir, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter } = this.props;
+        const { term, order, orderDir, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter } = this.getSubjectProps();
         ev.preventDefault();
-        this.props.exportSummitSpeakers(term, order, orderDir,{ selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter });
+        this.export(term, order, orderDir,{ selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter });
     }
 
-    handleSelected(speaker_id, isSelected) {
+    handleSelected(item_id, isSelected) {
+        const { source } = this.state;
         if (isSelected) {
-            this.props.selectSummitSpeaker(speaker_id);
+            source === sources.speakers ? this.props.selectSummitSpeaker(item_id) : this.props.selectSummitSubmitter(item_id);
             return;
         }
-        this.props.unselectSummitSpeaker(speaker_id);
+        source === sources.speakers ? this.props.unselectSummitSpeaker(item_id) : this.props.unselectSummitSubmitter(item_id);
     }
 
     handleSelectedAll(ev) {
         let selectedAll = ev.target.checked;
-        this.props.selectAllSummitSpeakers();
+        const { source } = this.state;
+        source === sources.speakers ? this.props.selectAllSummitSpeakers() : this.props.selectAllSummitSubmitters();
         if (!selectedAll) {
             //clear all selected
-            this.props.unselectAllSummitSpeakers();
+            source === sources.speakers ? this.props.unselectAllSummitSpeakers() : this.props.unselectAllSummitSubmitters();
         }
     }
 
     render() {
-        const { currentSummit, speakers, lastPage, currentPage, term, order, orderDir, totalSpeakers, selectedSpeakers,
-            selectedAll, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, currentFlowEvent } = this.props;
+        const { currentSummit } = this.props;
 
-        const { testRecipient } = this.state;
+        const { testRecipient, source } = this.state;
+
+        const { items, lastPage, currentPage, term, order, orderDir, totalItems, selectedItems,
+            selectedAll, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, currentFlowEvent } = this.getSubjectProps();
 
         const columns = [
             { columnKey: 'full_name', value: T.translate("general.name"), sortable: true },
@@ -252,7 +313,13 @@ class SummitSpeakersListPage extends React.Component {
             { label: 'Alternate/Rejected', value: 'alternate_rejected' },
         ];
 
-        let emailFlowDDL = [
+        const speakerSubmitterSourceSelectorDDL = [
+            { label: T.translate("summit_speakers_list.speakers"), value: sources.speakers },
+            { label: T.translate("summit_submitters_list.submitters"), value: sources.submitters },
+            { label: T.translate("summit_submitters_list.submitters_no_speakers"), value: sources.submitters_no_speakers }
+        ];
+
+        let emailFlowDDL = this.state.source === sources.speakers ? [
             { label: '-- SELECT EMAIL EVENT --', value: '' },
             { label: 'SUMMIT_SUBMISSIONS_PRESENTATION_SPEAKER_ACCEPTED_ALTERNATE', value: 'SUMMIT_SUBMISSIONS_PRESENTATION_SPEAKER_ACCEPTED_ALTERNATE' },
             { label: 'SUMMIT_SUBMISSIONS_PRESENTATION_SPEAKER_ACCEPTED_REJECTED', value: 'SUMMIT_SUBMISSIONS_PRESENTATION_SPEAKER_ACCEPTED_REJECTED' },
@@ -260,6 +327,14 @@ class SummitSpeakersListPage extends React.Component {
             { label: 'SUMMIT_SUBMISSIONS_PRESENTATION_SPEAKER_ACCEPTED_ONLY', value: 'SUMMIT_SUBMISSIONS_PRESENTATION_SPEAKER_ACCEPTED_ONLY' },
             { label: 'SUMMIT_SUBMISSIONS_PRESENTATION_SPEAKER_ALTERNATE_ONLY', value: 'SUMMIT_SUBMISSIONS_PRESENTATION_SPEAKER_ALTERNATE_ONLY' },
             { label: 'SUMMIT_SUBMISSIONS_PRESENTATION_SPEAKER_REJECTED_ONLY', value: 'SUMMIT_SUBMISSIONS_PRESENTATION_SPEAKER_REJECTED_ONLY' },
+        ] : [
+            { label: '-- SELECT EMAIL EVENT --', value: '' },
+            { label: 'SUMMIT_SUBMISSIONS_PRESENTATION_SUBMITTER_ACCEPTED_ALTERNATE', value: 'SUMMIT_SUBMISSIONS_PRESENTATION_SUBMITTER_ACCEPTED_ALTERNATE' },
+            { label: 'SUMMIT_SUBMISSIONS_PRESENTATION_SUBMITTER_ACCEPTED_REJECTED', value: 'SUMMIT_SUBMISSIONS_PRESENTATION_SUBMITTER_ACCEPTED_REJECTED' },
+            { label: 'SUMMIT_SUBMISSIONS_PRESENTATION_SUBMITTER_ALTERNATE_REJECTED', value: 'SUMMIT_SUBMISSIONS_PRESENTATION_SUBMITTER_ALTERNATE_REJECTED' },
+            { label: 'SUMMIT_SUBMISSIONS_PRESENTATION_SUBMITTER_ACCEPTED_ONLY', value: 'SUMMIT_SUBMISSIONS_PRESENTATION_SUBMITTER_ACCEPTED_ONLY' },
+            { label: 'SUMMIT_SUBMISSIONS_PRESENTATION_SUBMITTER_ALTERNATE_ONLY', value: 'SUMMIT_SUBMISSIONS_PRESENTATION_SUBMITTER_ALTERNATE_ONLY' },
+            { label: 'SUMMIT_SUBMISSIONS_PRESENTATION_SUBMITTER_REJECTED_ONLY', value: 'SUMMIT_SUBMISSIONS_PRESENTATION_SUBMITTER_REJECTED_ONLY' },
         ];
 
         const table_options = {
@@ -272,7 +347,7 @@ class SummitSpeakersListPage extends React.Component {
                     onSelectedAll: this.handleSelectedAll
                 }
             },
-            selectedIds: selectedSpeakers,
+            selectedIds: selectedItems,
             selectedAll: selectedAll,
         }
 
@@ -280,16 +355,30 @@ class SummitSpeakersListPage extends React.Component {
 
         return (
             <div className="container">
-                <h3> {T.translate("summit_speakers_list.summit_speakers_list")} ({totalSpeakers})</h3>
+                <h3> {
+                    this.state.source === sources.speakers ?
+                    T.translate("summit_speakers_list.summit_speakers_list") : 
+                    T.translate("summit_submitters_list.summit_submitters_list")
+                } ({totalItems})</h3>
                 <div className={'row'}>
                     <div className={'col-md-6'}>
                         <FreeTextSearch
-                            value={term}
+                            value={term ?? ''}
                             placeholder={T.translate("summit_speakers_list.placeholders.search_speakers")}
                             onSearch={this.handleSearch}
                         />
                     </div>
-                    <div className="col-md-6 text-right">
+                    <div className="col-md-3">
+                        <Dropdown
+                            id="speakerSubmitterSourceSelector"
+                            value={source}
+                            onChange={this.handleSpeakerSubmitterSourceChange}
+                            options={speakerSubmitterSourceSelectorDDL}
+                            isClearable={false}
+                            placeholder={"Select a source"}
+                        />
+                    </div>
+                    <div className="col-md-3 text-right">
                         <button className="btn btn-default right-space" onClick={this.handleExport}>
                             {T.translate("general.export")}
                         </button>
@@ -361,21 +450,25 @@ class SummitSpeakersListPage extends React.Component {
                         />
                     </div>
                     <div className={'col-md-2'} style={{ height: "61px", paddingTop: "8px" }}>
-                        <button className="btn btn-default right-space" onClick={this.showSpeakersEmailSendModal}>
+                        <button className="btn btn-default right-space" onClick={this.showEmailSendModal}>
                             {T.translate("summit_speakers_list.send_emails")}
                         </button>
                     </div>
                 </div>
 
-                {speakers.length === 0 &&
-                    <div>{T.translate("summit_speakers_list.no_speakers")}</div>
+                {items.length === 0 &&
+                    <div>{
+                        this.state.source === sources.speakers ?
+                            T.translate("summit_speakers_list.no_speakers") : 
+                            T.translate("summit_submitters_list.no_submitters")
+                    }</div>
                 }
 
-                {speakers.length > 0 &&
+                {items.length > 0 &&
                     <div>
                         <SelectableTable
                             options={table_options}
-                            data={speakers}
+                            data={items}
                             columns={columns}
                             onSort={this.handleSort}
                         />
@@ -393,9 +486,13 @@ class SummitSpeakersListPage extends React.Component {
                             onSelect={this.handlePageChange}
                         />
 
-                        <Modal show={this.state.showSendEmailModal} onHide={() => this.setState({...this.state, showSendEmailModal:false})} >
+                        <Modal show={this.state.showSendEmailModal} onHide={() => this.setState({...this.state, showSendEmailModal:false})} backdrop={false} >
                             <Modal.Header closeButton>
-                                <Modal.Title>{T.translate("summit_speakers_list.send_emails_title")}</Modal.Title>
+                                <Modal.Title>{
+                                    this.state.source === sources.speakers ?
+                                        T.translate("summit_speakers_list.send_emails_title") : 
+                                        T.translate("summit_submitters_list.send_emails_title")
+                                }</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
                                 <div className="row">
@@ -418,6 +515,7 @@ class SummitSpeakersListPage extends React.Component {
                                             ref={node => this.ingestEmailRef = node}
                                         />
                                     </div>
+                                    { this.state.source === sources.speakers &&
                                     <div className="col-md-12 ticket-ingest-email-wrapper">
                                         <div className="form-check abc-checkbox">
                                             <input
@@ -431,11 +529,11 @@ class SummitSpeakersListPage extends React.Component {
                                             </label>
                                         </div>
                                     </div>
-
+                                    }
                                 </div>
                             </Modal.Body>
                             <Modal.Footer>
-                                <button className="btn btn-primary" onClick={this.handleSendSpeakerEmails}>
+                                <button className="btn btn-primary" onClick={this.handleSendEmails}>
                                     {T.translate("summit_speakers_list.send_emails")}
                                 </button>
                             </Modal.Footer>
@@ -447,14 +545,16 @@ class SummitSpeakersListPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentSummitSpeakersListState }) => ({
+const mapStateToProps = ({ currentSummitState, currentSummitSpeakersListState, currentSummitSubmittersListState }) => ({
     currentSummit: currentSummitState.currentSummit,
-    ...currentSummitSpeakersListState
+    speakersProps: currentSummitSpeakersListState,
+    submittersProps: currentSummitSubmittersListState
 })
 
 export default connect(
     mapStateToProps,
     {
+        initSpeakersList,
         getSpeakersBySummit,
         exportSummitSpeakers,
         selectSummitSpeaker,
@@ -462,6 +562,15 @@ export default connect(
         selectAllSummitSpeakers,
         unselectAllSummitSpeakers,
         setCurrentFlowEvent,
-        sendSpeakerEmails
+        sendSpeakerEmails,
+        initSubmittersList,
+        getSubmittersBySummit,
+        exportSummitSubmitters,
+        selectSummitSubmitter,
+        unselectSummitSubmitter,
+        selectAllSummitSubmitters,
+        unselectAllSummitSubmitters,
+        setCurrentSubmitterFlowEvent,
+        sendSubmitterEmails
     }
 )(SummitSpeakersListPage);

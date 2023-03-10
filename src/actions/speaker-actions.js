@@ -29,6 +29,8 @@ import {
 } from 'openstack-uicore-foundation/lib/utils/actions';
 import {getAccessTokenSafely} from '../utils/methods';
 
+export const INIT_SPEAKERS_LIST_PARAMS  = 'INIT_SPEAKERS_LIST_PARAMS';
+
 export const REQUEST_SPEAKERS       = 'REQUEST_SPEAKERS';
 export const RECEIVE_SPEAKERS       = 'RECEIVE_SPEAKERS';
 export const RECEIVE_SPEAKER        = 'RECEIVE_SPEAKER';
@@ -68,6 +70,10 @@ export const UNSELECT_ALL_SUMMIT_SPEAKERS   = 'UNSELECT_ALL_SUMMIT_SPEAKERS';
 export const SEND_SPEAKERS_EMAILS           = 'SEND_SPEAKERS_EMAILS';
 export const SET_SPEAKERS_CURRENT_FLOW_EVENT= 'SET_SPEAKERS_CURRENT_FLOW_EVENT';
 
+export const initSpeakersList = () => async (dispatch, getState) => {
+    dispatch(createAction(INIT_SPEAKERS_LIST_PARAMS)());
+}
+
 export const getSpeakers = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => async (dispatch) => {
 
     const accessToken = await getAccessTokenSafely();
@@ -75,25 +81,11 @@ export const getSpeakers = ( term = null, page = 1, perPage = 10, order = 'id', 
 
     dispatch(startLoading());
 
-    if(term){
-        const escapedTerm = escapeFilterValue(term);
-
-        let termFilter =  [
-            `full_name=@${escapedTerm}`,
-            `first_name=@${escapedTerm}`,
-            `last_name=@${escapedTerm}`,
-            `email=@${escapedTerm}`,
-        ]
-
-        if (parseInt(escapedTerm)) {
-            const filterTermId = parseInt(escapedTerm)
-            termFilter = [...termFilter, ...[`id==${filterTermId}`,
-                `member_id==${filterTermId}`,
-                `member_user_external_id==${filterTermId}`]];
-        }
+    if(term) {
+        let filterTerm = buildTermFilter(term);
 
         filter.push(
-           termFilter.join(',')
+            filterTerm.join(',')
         );
     }
 
@@ -789,19 +781,10 @@ export const exportSummitSpeakers = (term = null, order = 'id', orderDir = 1, fi
     const filter = parseFilters(filters);
 
     if(term) {
-        const escapedTerm = escapeFilterValue(term);
+        let filterTerm = buildTermFilter(term);
+
         filter.push(
-            [
-                `full_name@@${escapedTerm}`,
-                `email=@${escapedTerm}`,
-                `presentations_title=@${escapedTerm}`,
-                `presentations_abstract=@${escapedTerm}`,
-                `presentations_submitter_full_name@@${escapedTerm}`,
-                `presentations_submitter_email=@${escapedTerm}`,
-                `id==${escapedTerm}`,
-                `member_id==${escapedTerm}`,
-                `member_user_external_id==${escapedTerm}`,
-            ].join(',')
+            filterTerm.join(',')
         );
     }
 
@@ -818,6 +801,18 @@ export const exportSummitSpeakers = (term = null, order = 'id', orderDir = 1, fi
     dispatch(getCSV(`${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/speakers/csv`, params, filename));
 }
 
+/**
+ * @param currentFlowEvent
+ * @param selectedAll
+ * @param selectedIds
+ * @param testRecipient
+ * @param excerptRecipient
+ * @param shouldSendCopy2Submitter
+ * @param term
+ * @param filters
+ * @param source
+ * @returns {function(*=, *): *}
+ */
 export const sendSpeakerEmails = (currentFlowEvent,
                            selectedAll = false ,
                            selectedIds = [],
@@ -825,7 +820,8 @@ export const sendSpeakerEmails = (currentFlowEvent,
                            excerptRecipient= '',
                            shouldSendCopy2Submitter = false,
                            term = '',
-                           filters = {}
+                           filters = {},
+                           source = null
                            ) => async (dispatch, getState) => {
 
     const { currentSummitState } = getState();
@@ -989,4 +985,26 @@ const parseFilters = (filters) => {
     }
 
     return filter;
+}
+
+const buildTermFilter = (term) => {
+    const escapedTerm = escapeFilterValue(term);
+       
+    let termFilter =  [
+        `full_name=@${escapedTerm}`,
+        `first_name=@${escapedTerm}`,
+        `last_name=@${escapedTerm}`,
+        `email=@${escapedTerm}`,
+        `presentations_title=@${escapedTerm}`,
+        `presentations_abstract=@${escapedTerm}`
+    ]
+
+    if (parseInt(escapedTerm)) {
+        const filterTermId = parseInt(escapedTerm)
+        termFilter = [...termFilter, ...[`id==${filterTermId}`,
+            `member_id==${filterTermId}`,
+            `member_user_external_id==${filterTermId}`]];
+    }
+
+    return termFilter;
 }
