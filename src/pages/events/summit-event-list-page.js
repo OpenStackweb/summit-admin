@@ -409,7 +409,7 @@ class SummitEventListPage extends React.Component {
         ];
 
         const table_options = {
-            sortCol: (order === 'last_name') ? 'name' : order,
+            sortCol: (order === 'last_name') ? 'name' : (order === 'created_by_company') ? 'submitter_company' : order,
             sortDir: orderDir,
             className: "summit-event-list-table",
             actions: {
