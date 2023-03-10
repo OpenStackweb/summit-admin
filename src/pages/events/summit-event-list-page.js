@@ -724,7 +724,7 @@ class SummitEventListPage extends React.Component {
                                 allowCreate={true}
                                 allowCreateWhileLoading={true}
                                 formatCreateLabel={(input)=> {
-                                    return `add Company : ${input}`
+                                    return `${input}`
                                 }}
                                 onCreate={(newCompanyName) => {
                                     const id = 'all_companies';
@@ -817,7 +817,7 @@ class SummitEventListPage extends React.Component {
                                 allowCreate={true}
                                 allowCreateWhileLoading={true}
                                 formatCreateLabel={(input)=> {
-                                    return `add Company : ${input}`
+                                    return `${input}`
                                 }}
                                 onCreate={(newCompanyName) => {
                                     const id = 'submitter_company';
