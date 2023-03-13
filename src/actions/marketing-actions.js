@@ -38,6 +38,8 @@ export const SETTING_DELETED = 'SETTING_DELETED';
 export const SETTINGS_CLONED = 'SETTINGS_CLONED';
 export const REQUEST_SELECTION_PLAN_SETTINGS = 'REQUEST_SELECTION_PLAN_SETTINGS';
 export const RECEIVE_SELECTION_PLAN_SETTINGS = 'RECEIVE_SELECTION_PLAN_SETTINGS';
+export const REQUEST_REG_LITE_SETTINGS = 'REQUEST_REG_LITE_SETTINGS';
+export const RECEIVE_REG_LITE_SETTINGS = 'RECEIVE_REG_LITE_SETTINGS';
 
 export const getMarketingSettings = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1) => (dispatch, getState) => {
 
@@ -72,6 +74,30 @@ export const getMarketingSettings = (term = null, page = 1, perPage = 10, order 
         }
     );
 };
+
+export const getMarketingSettingsForRegLite = (page = 1, perPage = 10) => (dispatch, getState) => {
+    const {currentSummitState} = getState();
+    const {currentSummit} = currentSummitState;
+
+    dispatch(startLoading());
+
+    const params = {
+        page: page,
+        per_page: perPage,
+        key__contains : 'REG_LITE',
+    }
+
+    return getRequest(
+        createAction(REQUEST_REG_LITE_SETTINGS),
+        createAction(RECEIVE_REG_LITE_SETTINGS),
+        `${window.MARKETING_API_BASE_URL}/api/public/v1/config-values/all/shows/${currentSummit.id}`,
+        authErrorHandler,
+        {}
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+}
 
 export const getMarketingSettingsBySelectionPlan = (selectionPlanId, term = null, page = 1, perPage = 10, order = 'id', orderDir = 1) => (dispatch, getState) => {
 

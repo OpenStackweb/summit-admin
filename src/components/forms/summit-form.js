@@ -36,6 +36,7 @@ class SummitForm extends React.Component {
 
         this.state = {
             entity: {...props.entity},
+            regLiteMarketingSettings: {...props.regLiteMarketingSettings},
             showSection: 'main',
             errors: props.errors
         };
@@ -59,6 +60,9 @@ class SummitForm extends React.Component {
             state.entity = {...this.props.entity};
             state.errors = {};
         }
+        if(!shallowEqual(prevProps.regLiteMarketingSettings, this.props.regLiteMarketingSettings)) {
+            state.regLiteMarketingSettings = {...this.props.regLiteMarketingSettings};
+        }
 
         if (!shallowEqual(prevProps.errors, this.props.errors)) {
             state.errors = {...this.props.errors};
@@ -79,6 +83,8 @@ class SummitForm extends React.Component {
 
     handleChange(ev) {
         let entity = {...this.state.entity};
+        let regLiteMarketingSettings = {...this.state.regLiteMarketingSettings};
+
         let {onAddHelpMember, onDeleteHelpMember} = this.props;
         let {errors} = this.state;
         let {value, id} = ev.target;
@@ -153,9 +159,20 @@ class SummitForm extends React.Component {
             value = parseInt(value);
         }
 
-        errors[id] = currentError;
-        entity[id] = value;
-        this.setState({entity: entity, errors: errors});
+        if (id.startsWith('REG_LITE')) {
+            if (!regLiteMarketingSettings.hasOwnProperty(id)) {
+                regLiteMarketingSettings[id] = {value: '', id: 0};
+            }
+            if (typeof value == "boolean"){
+                value = value ? '1' : '0';
+            }
+            regLiteMarketingSettings[id].value = value;
+        }
+        else {
+            errors[id] = currentError;
+            entity[id] = value;
+        }
+        this.setState({entity: entity, errors: errors, regLiteMarketingSettings : regLiteMarketingSettings});
     }
 
     handleUploadFile(file) {
@@ -181,11 +198,25 @@ class SummitForm extends React.Component {
     }
 
     handleSubmit(ev) {
-        const {entity} = this.state;
+        const {entity, regLiteMarketingSettings} = this.state;
 
         ev.preventDefault();
+
         if (this.validateForm(entity)) {
-            this.props.onSubmit(entity);
+
+            const marketing_settings = []
+            Object.keys(regLiteMarketingSettings).map(m => {
+                const setting_type = 'TEXT';
+                const mkt_setting = {
+                    id: regLiteMarketingSettings[m].id,
+                    type: setting_type,
+                    key: m.toUpperCase(),
+                    value: regLiteMarketingSettings[m].value ?? '',
+                }
+                marketing_settings.push(this.props.saveMarketingSettings(mkt_setting))
+            })
+
+            this.props.onSubmit(entity).then(() => Promise.all(marketing_settings));
         }
     }
 
@@ -229,7 +260,7 @@ class SummitForm extends React.Component {
     }
 
     render() {
-        const {entity, showSection} = this.state;
+        const {entity, showSection, regLiteMarketingSettings} = this.state;
         const {timezones, onSPlanDelete, onAttributeTypeDelete} = this.props;
         const time_zones_ddl = timezones.map(tz => ({label: tz, value: tz}));
         const dates_enabled = (entity.hasOwnProperty('time_zone_id') && entity.time_zone_id !== '');
@@ -674,6 +705,44 @@ class SummitForm extends React.Component {
                                 error={this.hasErrors('speaker_confirmation_default_page_url')}
                                 id="speaker_confirmation_default_page_url"
                                 value={entity.speaker_confirmation_default_page_url}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                    </div>
+                    <div className="row form-group">
+                        <div className="col-md-4 checkboxes-div">
+                            <div className="form-check abc-checkbox">
+                                <input type="checkbox" id="REG_LITE_ALLOW_PROMO_CODES"
+                                       checked={ parseInt(regLiteMarketingSettings?.REG_LITE_ALLOW_PROMO_CODES?.value) === 1} onChange={this.handleChange}
+                                       className="form-check-input"/>
+                                <label className="form-check-label" htmlFor="REG_LITE_ALLOW_PROMO_CODES">
+                                    {T.translate("edit_summit.reg_lite_allow_promo_codes")}
+                                </label>
+                            </div>
+                        </div>
+                        <div className="col-md-4">
+                            <label>
+                                {T.translate("edit_summit.reg_lite_company_input_placeholder")} &nbsp;
+                                <i className="fa fa-info-circle" aria-hidden="true"
+                                   title={T.translate("edit_summit.reg_lite_company_input_placeholder_info")} />
+                            </label>
+                            <Input
+                                className="form-control"
+                                id="REG_LITE_COMPANY_INPUT_PLACEHOLDER"
+                                value={regLiteMarketingSettings?.REG_LITE_COMPANY_INPUT_PLACEHOLDER?.value}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                        <div className="col-md-4">
+                            <label>
+                                {T.translate("edit_summit.reg_lite_company_ddl_placeholder")} &nbsp;
+                                <i className="fa fa-info-circle" aria-hidden="true"
+                                   title={T.translate("edit_summit.reg_lite_company_ddl_placeholder_info")} />
+                            </label>
+                            <Input
+                                className="form-control"
+                                id="REG_LITE_COMPANY_DDL_PLACEHOLDER"
+                                value={regLiteMarketingSettings?.REG_LITE_COMPANY_DDL_PLACEHOLDER?.value}
                                 onChange={this.handleChange}
                             />
                         </div>

@@ -68,6 +68,7 @@ import ViewTypeLayout from './view-type-layout'
 import RegistrationStatsPage from '../pages/registration/registration-stats-page'
 import AuditLogPage from '../pages/audit-log/audit-log-page'
 import SubmissionInvitationLayout from "./submission-invitation-layout";
+import { getMarketingSettingsForRegLite } from '../actions/marketing-actions';
 
 class SummitIdLayout extends React.Component {
 
@@ -77,7 +78,10 @@ class SummitIdLayout extends React.Component {
         if (!summitId) {
             this.props.resetSummitForm();
         } else {
-            this.props.getSummitById(summitId).then(() => { this.props.getUserRolesBySummit()});
+            this.props.getSummitById(summitId).then(() => {
+                this.props.getMarketingSettingsForRegLite();
+                this.props.getUserRolesBySummit()
+            });
             // this is needed for summit dropdown, runs on background
             this.props.getAllSummits();
         }
@@ -175,7 +179,8 @@ export default connect (
         getSummitById,
         resetSummitForm,
         getAllSummits,
-        getUserRolesBySummit
+        getUserRolesBySummit,
+        getMarketingSettingsForRegLite,
     }
 )(SummitIdLayout);
 

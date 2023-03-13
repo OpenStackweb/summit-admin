@@ -23,6 +23,7 @@ import { deleteRoomBookingAttributeType } from "../../actions/room-booking-actio
 import {addHelpMember, removeHelpMember} from "../../actions/user-chat-roles-actions"
 import '../../styles/edit-summit-page.less';
 import '../../components/form-validation/validate.less';
+import {saveMarketingSetting} from "../../actions/marketing-actions";
 
 class EditSummitPage extends React.Component {
 
@@ -73,7 +74,7 @@ class EditSummitPage extends React.Component {
 
 
     render(){
-        const {currentSummit, attachLogo, deleteLogo, errors, history, timezones} = this.props;
+        const {currentSummit, attachLogo, deleteLogo, errors, history, timezones, currentSummitRegLiteMarketingSettings} = this.props;
 
         return(
             <div className="container">
@@ -82,6 +83,7 @@ class EditSummitPage extends React.Component {
                 <SummitForm
                     history={history}
                     entity={currentSummit}
+                    regLiteMarketingSettings={currentSummitRegLiteMarketingSettings}
                     timezones={timezones}
                     errors={errors}
                     onSubmit={this.props.saveSummit}
@@ -91,6 +93,7 @@ class EditSummitPage extends React.Component {
                     onLogoDelete={deleteLogo}
                     onAddHelpMember={this.props.addHelpMember}
                     onDeleteHelpMember={this.props.removeHelpMember}
+                    saveMarketingSettings={this.props.saveMarketingSetting}
                 />
             </div>
         )
@@ -99,6 +102,7 @@ class EditSummitPage extends React.Component {
 
 const mapStateToProps = ({ currentSummitState, baseState }) => ({
     currentSummit: currentSummitState.currentSummit,
+    currentSummitRegLiteMarketingSettings: currentSummitState.reg_lite_marketing_settings,
     errors: currentSummitState.errors,
     timezones: baseState.timezones
 });
@@ -115,6 +119,7 @@ export default Restrict(connect (
         deleteLogo,
         addHelpMember,
         removeHelpMember,
-        resetSelectionPlanForm
+        resetSelectionPlanForm,
+        saveMarketingSetting,
     }
 )(EditSummitPage), 'summit-edit');

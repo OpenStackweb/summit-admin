@@ -32,6 +32,7 @@ import {
 
 import { RECEIVE_REFUND_POLICIES } from "../../actions/ticket-actions";
 import {RECEIVE_ORDER_EXTRA_QUESTIONS, RECEIVE_MAIN_ORDER_EXTRA_QUESTIONS, ORDER_EXTRA_QUESTION_ADDED} from "../../actions/order-actions";
+import {RECEIVE_REG_LITE_SETTINGS} from "../../actions/marketing-actions";
 
 export const DEFAULT_ENTITY = {
     id: 0,
@@ -118,10 +119,17 @@ export const DEFAULT_ENTITY = {
     marketing_site_oauth2_client_scopes: null,
 };
 
+const DEFAULT_REG_LITE_MARKETING_SETTINGS = {
+    REG_LITE_ALLOW_PROMO_CODES: {id : 0 , value: '1'},
+    REG_LITE_COMPANY_INPUT_PLACEHOLDER :{id : 0 , value: ''},
+    REG_LITE_COMPANY_DDL_PLACEHOLDER : {id : 0 , value: ''},
+};
+
 const DEFAULT_STATE = {
     currentSummit: DEFAULT_ENTITY,
     errors: {},
     loading:  false,
+    reg_lite_marketing_settings: DEFAULT_REG_LITE_MARKETING_SETTINGS,
 };
 
 const currentSummitReducer = (state = DEFAULT_STATE, action) => {
@@ -376,6 +384,19 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
             return {...state, currentSummit: {...state.currentSummit, order_extra_questions: [...state.currentSummit.order_extra_questions, extraQuestion]}} 
         } 
         break;
+        case RECEIVE_REG_LITE_SETTINGS:{
+
+            let { data } = payload.response;
+            let reg_lite_marketing_settings = {};
+
+            data.forEach(setting => {
+                reg_lite_marketing_settings[setting.key] = { id : setting.id, value : setting.value };
+            })
+
+            const newMarketingSettings = { ...DEFAULT_STATE.reg_lite_marketing_settings, ...reg_lite_marketing_settings};
+
+            return {...state, reg_lite_marketing_settings: newMarketingSettings}
+        }
         default:
             return state;
     }
