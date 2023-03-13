@@ -121,8 +121,8 @@ export const DEFAULT_ENTITY = {
 
 const DEFAULT_REG_LITE_MARKETING_SETTINGS = {
     REG_LITE_ALLOW_PROMO_CODES: {id : 0 , value: '1'},
-    REG_LITE_COMPANY_INPUT_PLACEHOLDER :{id : 0 , value: ''},
-    REG_LITE_COMPANY_DDL_PLACEHOLDER : {id : 0 , value: ''},
+    REG_LITE_COMPANY_INPUT_PLACEHOLDER :{id : 0 , value: 'Enter your company'},
+    REG_LITE_COMPANY_DDL_PLACEHOLDER : {id : 0 , value: 'Select a company'},
 };
 
 const DEFAULT_STATE = {
