@@ -171,7 +171,7 @@ class SummitEventListPage extends React.Component {
     componentDidMount() {
         const {currentSummit, filters, extraColumns, term, order, orderDir} = this.props;
         const {eventFilters} = this.state;
-        const  enabledFilters = Object.keys(filters).filter(e => filters[e]?.length > 0 && filters[e].some(e => e !== null));
+        const  enabledFilters = Object.keys(filters).filter(e => Array.isArray(filters[e]) ? filters[e]?.some(e => e !== null) : filters[e]?.length > 0);
 
         this.setState({
             ...this.state, 
@@ -454,7 +454,6 @@ class SummitEventListPage extends React.Component {
             {label: 'Published Status', value: 'published_filter'},    
             {label: 'Speakers', value: 'speaker_id_filter'},
             {label: 'Speakers Companies', value: 'speaker_company'},
-            {label: 'Level', value: 'level_filter'},
             {label: 'Tags', value: 'tags_filter'},
             {label: 'Start Date', value: 'start_date_filter'},
             {label: 'End Date', value: 'end_date_filter'},
@@ -479,7 +478,6 @@ class SummitEventListPage extends React.Component {
             { value: 'published_date', label: T.translate("event_list.published") },
             { value: 'speaker_company', label: T.translate("event_list.speaker_company") },
             { value: 'speakers_count', label: T.translate("event_list.speakers_count") },
-            { value: 'speakers', label: T.translate("event_list.speakers") },
             { value: 'sponsor', label: T.translate("event_list.sponsor") },
             { value: 'selection_plan', label: T.translate("event_list.selection_plan") },
             { value: 'location', label: T.translate("event_list.location") },
