@@ -86,7 +86,7 @@ const eventListReducer = (state = DEFAULT_STATE, action) => {
                         formatDuration(e.duration) : 'N/A',
                     speakers_count: e.type.use_speakers ? (e.speakers && e.speakers.length > 0) ? e.speakers.length : '0' : 'N/A',
                     event_type_capacity: event_type_capacity.reduce((accumulator, capacity) => accumulator + (accumulator !== '' ? ', ' : '') + capacity, ''),
-                    track: e.track.name,
+                    track: e?.track?.name ? e?.track?.name : 'TBD',
                     level: e.level ? e.level : 'N/A',
                     tags: e.tags && e.tags.length > 0 ? e.tags.reduce((accumulator, t) => accumulator + (accumulator !== '' ? ', ' : '') + t.tag, '') : 'N/A',
                     selection_plan: e.selection_plan?.name ? e.selection_plan?.name : 'N/A',
