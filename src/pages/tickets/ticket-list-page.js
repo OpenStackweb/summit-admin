@@ -694,12 +694,20 @@ class TicketListPage extends React.Component {
                     <Modal.Body>
                         <div className="row">
                             <div className="col-md-12">
-                                Format must be the following:<br />
-                                <b>id</b>: the id of the ticket<br />
-                                <b>number</b>: the number of the ticket, only if id is not provided<br />
-                                <b>badge_type_id</b>: the id of the badge type<br />
-                                <b>badge_type_name</b>: the name of the badge type, only if id is not provided<br />
-                                <b>badge_features</b>: a list of badge features names to add to the badge delimited by "|" (pipe)<br />
+                                {T.translate("ticket_list.import_tickets_format")}<br />
+                                <b>{T.translate("ticket_list.import_tickets_id")}</b>{T.translate("ticket_list.import_tickets_id_text")}<br />
+                                <b>{T.translate("ticket_list.import_tickets_number")}</b>{T.translate("ticket_list.import_tickets_number_text")}<br />
+                                <b>{T.translate("ticket_list.import_tickets_attendee_email")}</b>{T.translate("ticket_list.import_tickets_attendee_email_text")}<br />
+                                <b>{T.translate("ticket_list.import_tickets_attendee_first_name")}</b>{T.translate("ticket_list.import_tickets_attendee_first_name_text")}<br />
+                                <b>{T.translate("ticket_list.import_tickets_attendee_last_name")}</b>{T.translate("ticket_list.import_tickets_attendee_last_name_text")}<br />
+                                <b>{T.translate("ticket_list.import_tickets_attendee_company")}</b>{T.translate("ticket_list.import_tickets_attendee_company_text")}<br />
+                                <b>{T.translate("ticket_list.import_tickets_attendee_company_id")}</b>{T.translate("ticket_list.import_tickets_attendee_company_id_text")}<br />
+                                <b>{T.translate("ticket_list.import_tickets_ticket_type_name")}</b>{T.translate("ticket_list.import_tickets_ticket_type_name_text")}<br />
+                                <b>{T.translate("ticket_list.import_tickets_ticket_type_id")}</b>{T.translate("ticket_list.import_tickets_ticket_type_id_text")}<br />
+                                <b>{T.translate("ticket_list.import_tickets_ticket_promo_code")}</b>{T.translate("ticket_list.import_tickets_ticket_promo_code_text")}<br />
+                                <b>{T.translate("ticket_list.import_tickets_badge_type_id")}</b>{T.translate("ticket_list.import_tickets_badge_type_id_text")}<br />
+                                <b>{T.translate("ticket_list.import_tickets_badge_type_name")}</b>{T.translate("ticket_list.import_tickets_badge_type_name_text")}<br />
+                                <b>{T.translate("ticket_list.import_tickets_badge_features")}</b>{T.translate("ticket_list.import_tickets_badge_features_text")}<br />
                             </div>
                             <div className="col-md-12 ticket-import-upload-wrapper">
                                 <UploadInput
