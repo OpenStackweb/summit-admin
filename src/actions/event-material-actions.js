@@ -28,19 +28,19 @@ import {
 import {getAccessTokenSafely} from '../utils/methods';
 
 
-export const RECEIVE_EVENT_MATERIAL        = 'RECEIVE_EVENT_MATERIAL';
-export const RESET_EVENT_MATERIAL_FORM     = 'RESET_EVENT_MATERIAL_FORM';
-export const UPDATE_EVENT_MATERIAL         = 'UPDATE_EVENT_MATERIAL';
-export const EVENT_MATERIAL_UPDATED        = 'EVENT_MATERIAL_UPDATED';
-export const EVENT_MATERIAL_ADDED          = 'EVENT_MATERIAL_ADDED';
-export const EVENT_MATERIAL_DELETED        = 'EVENT_MATERIAL_DELETED';
+export const RECEIVE_EVENT_MATERIAL = 'RECEIVE_EVENT_MATERIAL';
+export const RESET_EVENT_MATERIAL_FORM = 'RESET_EVENT_MATERIAL_FORM';
+export const UPDATE_EVENT_MATERIAL = 'UPDATE_EVENT_MATERIAL';
+export const EVENT_MATERIAL_UPDATED = 'EVENT_MATERIAL_UPDATED';
+export const EVENT_MATERIAL_ADDED = 'EVENT_MATERIAL_ADDED';
+export const EVENT_MATERIAL_DELETED = 'EVENT_MATERIAL_DELETED';
 
 
 export const getEventMaterial = (eventMaterialId) => (dispatch, getState) => {
 
-    const { currentSummitState, currentSummitEventState } = getState();
-    const { currentSummit }   = currentSummitState;
-    const event               = currentSummitEventState.entity;
+    const {currentSummitState, currentSummitEventState} = getState();
+    const {currentSummit} = currentSummitState;
+    const event = currentSummitEventState.entity;
 
     dispatch(startLoading());
 
@@ -57,7 +57,9 @@ export const getEventMaterial = (eventMaterialId) => (dispatch, getState) => {
 
         dispatch(showMessage(
             message,
-            () => { history.push(`/app/summits/${currentSummit.id}/events/${event.id}`) }
+            () => {
+                history.push(`/app/summits/${currentSummit.id}/events/${event.id}`)
+            }
         ));
     }
 
@@ -71,10 +73,10 @@ export const resetEventMaterialForm = () => (dispatch, getState) => {
 
 export const saveEventMaterial = (entity) => async (dispatch, getState) => {
 
-    const { currentSummitState, currentSummitEventState } = getState();
+    const {currentSummitState, currentSummitEventState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
-    const eventId             = currentSummitEventState.entity.id;
+    const {currentSummit} = currentSummitState;
+    const eventId = currentSummitEventState.entity.id;
 
     let slug = '';
 
@@ -83,19 +85,21 @@ export const saveEventMaterial = (entity) => async (dispatch, getState) => {
     else if (entity.class_name === 'PresentationSlide') slug = 'slides';
     else slug = 'media-uploads';
     let withCredentials = false;
-    if(slug == 'media-uploads')
+    if (slug == 'media-uploads')
         withCredentials = true;
     dispatch(startLoading());
 
-    const normalizedEntity = normalizeEntity(entity);
+    const normalizedEventMaterialFormEntity = normalizeEntity(entity);
     const params = {
-        access_token : accessToken,
+        access_token: accessToken,
         expand: 'media_upload_type, media_upload_type.type'
     };
 
+    const normalizedEntity = normalizeEntity(entity);
+
     if (entity.id) {
 
-        putRequest(
+        return putRequest(
             createAction(UPDATE_EVENT_MATERIAL),
             createAction(EVENT_MATERIAL_UPDATED),
             `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/presentations/${eventId}/${slug}/${entity.id}`,
@@ -108,41 +112,42 @@ export const saveEventMaterial = (entity) => async (dispatch, getState) => {
                 dispatch(showSuccessMessage(T.translate("edit_event_material.event_material_saved")));
             });
 
-    } else {
-        const success_message = {
-            title: T.translate("general.done"),
-            html: T.translate("edit_event_material.event_material_created"),
-            type: 'success'
-        };
-
-        postRequest(
-            createAction(UPDATE_EVENT_MATERIAL),
-            createAction(EVENT_MATERIAL_ADDED),
-            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/presentations/${eventId}/${slug}`,
-            normalizedEntity,
-            authErrorHandler,
-            entity,
-            withCredentials
-        )(params)(dispatch)
-            .then((payload) => {
-                dispatch(showMessage(
-                    success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/events/${eventId}`) }
-                ));
-            });
     }
+    const success_message = {
+        title: T.translate("general.done"),
+        html: T.translate("edit_event_material.event_material_created"),
+        type: 'success'
+    };
+
+    return postRequest(
+        createAction(UPDATE_EVENT_MATERIAL),
+        createAction(EVENT_MATERIAL_ADDED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/presentations/${eventId}/${slug}`,
+        normalizedEntity,
+        authErrorHandler,
+        entity,
+        withCredentials
+    )(params)(dispatch)
+        .then((payload) => {
+            dispatch(showMessage(
+                success_message,
+                () => {
+                    history.push(`/app/summits/${currentSummit.id}/events/${eventId}`)
+                }
+            ));
+        });
 }
 
 export const saveEventMaterialWithFile = (entity, file, slug) => async (dispatch, getState) => {
-    const { currentSummitState, currentSummitEventState } = getState();
+    const {currentSummitState, currentSummitEventState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
-    const eventId             = currentSummitEventState.entity.id;
+    const {currentSummit} = currentSummitState;
+    const eventId = currentSummitEventState.entity.id;
 
     dispatch(startLoading());
 
     const params = {
-        access_token : accessToken,
+        access_token: accessToken,
         expand: 'media_upload_type, media_upload_type.type'
     };
 
@@ -183,7 +188,9 @@ export const saveEventMaterialWithFile = (entity, file, slug) => async (dispatch
             .then((payload) => {
                 dispatch(showMessage(
                     success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/events/${eventId}`) }
+                    () => {
+                        history.push(`/app/summits/${currentSummit.id}/events/${eventId}`)
+                    }
                 ));
             });
     }
@@ -191,11 +198,11 @@ export const saveEventMaterialWithFile = (entity, file, slug) => async (dispatch
 
 export const deleteEventMaterial = (eventMaterialId) => async (dispatch, getState) => {
 
-    const { currentSummitState, currentSummitEventState } = getState();
+    const {currentSummitState, currentSummitEventState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
-    const event               = currentSummitEventState.entity;
-    const material            = event.materials.find(m => m.id === eventMaterialId);
+    const {currentSummit} = currentSummitState;
+    const event = currentSummitEventState.entity;
+    const material = event.materials.find(m => m.id === eventMaterialId);
     let slug = '';
 
     if (!material) {
@@ -220,7 +227,7 @@ export const deleteEventMaterial = (eventMaterialId) => async (dispatch, getStat
     }
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     return deleteRequest(
@@ -240,22 +247,22 @@ const normalizeEntity = (entity) => {
     const normalizedEntity = {...entity};
 
     if (entity.class_name !== 'PresentationVideo') {
-        delete(normalizedEntity['youtube_id']);
+        delete (normalizedEntity['youtube_id']);
     }
 
     if (entity.class_name === 'PresentationVideo') {
-        delete(normalizedEntity['link']);
+        delete (normalizedEntity['link']);
     }
 
-    delete(normalizedEntity['id']);
-    delete(normalizedEntity['created']);
-    delete(normalizedEntity['last_edited']);
-    delete(normalizedEntity['is_default']);
-    delete(normalizedEntity['display_on_site_label']);
-    delete(normalizedEntity['order']);
-    delete(normalizedEntity['presentation_id']);
-    delete(normalizedEntity['file']);
-    delete(normalizedEntity['file_link']);
-    delete(normalizedEntity['has_file']);
+    delete (normalizedEntity['id']);
+    delete (normalizedEntity['created']);
+    delete (normalizedEntity['last_edited']);
+    delete (normalizedEntity['is_default']);
+    delete (normalizedEntity['display_on_site_label']);
+    delete (normalizedEntity['order']);
+    delete (normalizedEntity['presentation_id']);
+    delete (normalizedEntity['file']);
+    delete (normalizedEntity['file_link']);
+    delete (normalizedEntity['has_file']);
     return normalizedEntity;
 }

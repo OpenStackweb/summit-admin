@@ -32,6 +32,8 @@ export const DEFAULT_ENTITY = {
     order                       : 0,
     link                        : '',
     file                        : null,
+    filename                   : '',
+    filepath                   : '',
     file_link                   : '',
     has_file                    : false,
     youtube_id                  : '',

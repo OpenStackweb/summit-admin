@@ -75,6 +75,7 @@ class EditEventMaterialPage extends React.Component {
                     event={event}
                     errors={errors}
                     onSubmit={this.props.saveEventMaterial}
+                    onReset={this.props.resetEventMaterialForm}
                     onSubmitWithFile={this.saveMaterialFile}
                 />
                 }

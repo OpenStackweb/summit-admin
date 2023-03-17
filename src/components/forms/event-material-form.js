@@ -96,6 +96,8 @@ class EventMaterialForm extends React.Component {
     handleRemoveFile(ev) {
         const entity = {...this.state.entity};
         entity.file_link = '';
+        entity.filename = '';
+        entity.filepath = '';
         this.setState({entity: entity, file: null});
     }
 
@@ -117,9 +119,9 @@ class EventMaterialForm extends React.Component {
 
     render() {
         const {entity, errors} = this.state;
-        const media_type = entity.media_upload_type;
+        // on admin we upload one per time
+        const media_type ={ ... entity.media_upload_type, max_uploads_qty:1};
         const mediaInputValue = entity.filename ? [entity] : [];
-
 
         const event_materials_ddl = [
             {label: 'Link', value: 'PresentationLink'},
@@ -290,6 +292,7 @@ class EventMaterialForm extends React.Component {
                             onUploadComplete={this.onMediaUploadComplete}
                             value={mediaInputValue}
                             mediaType={media_type}
+                            onRemove={entity.id ? null :  this.handleRemoveFile}
                             postUrl={`${window.API_BASE_URL}/api/public/v1/files/upload`}
                             error={hasErrors(media_type.name, errors)}
                             djsConfig={{withCredentials:true}}
