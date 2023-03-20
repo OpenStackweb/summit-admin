@@ -449,7 +449,6 @@ class SummitEventListPage extends React.Component {
             {label: 'Level', value: 'level_filter'},
             {label: 'Etherpad URL', value: 'etherpad_url'}, 
             {label: 'Location', value: 'location_id_filter'},
-            {label: 'Selection Plan', value: 'selection_plan_id_filter'},
             {label: 'Meeting URL', value: 'meeting_url'},
             {label: 'Published Status', value: 'published_filter'},    
             {label: 'Speakers', value: 'speaker_id_filter'},
