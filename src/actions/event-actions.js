@@ -64,6 +64,9 @@ export const FLAG_CHANGED = 'FLAG_CHANGED';
 export const REQUEST_EVENT_COMMENTS = 'REQUEST_EVENT_COMMENTS';
 export const RECEIVE_EVENT_COMMENTS = 'RECEIVE_EVENT_COMMENTS';
 export const EVENT_COMMENT_DELETED = 'EVENT_COMMENT_DELETED';
+export const EVENT_SPEAKER_ASSIGNED = 'EVENT_SPEAKER_ASSIGNED';
+export const EVENT_SPEAKER_ORDER_UPDATED = 'EVENT_SPEAKER_ORDER_UPDATED';
+export const EVENT_SPEAKER_UNASSIGNED = 'EVENT_SPEAKER_UNASSIGNED';
 
 export const getEvents = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1, filters = {}, extraColumns = []) => async (dispatch, getState) => {
 
@@ -1205,4 +1208,77 @@ export const queryEvents = _.debounce(async (summitId, input, callback) => {
         })
         .catch(fetchErrorHandler);
 }, 500);
+
+export const assignSpeaker = (eventId, speaker) => async (dispatch, getState) => {
+    const {currentSummitState} = getState();
+    const accessToken = await getAccessTokenSafely();
+    const {currentSummit} = currentSummitState;
+
+    const params = {
+        access_token: accessToken
+    };
+
+    dispatch(startLoading());
+
+    postRequest(
+        null,
+        createAction(EVENT_SPEAKER_ASSIGNED)(speaker),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/presentations/${eventId}/speakers/${speaker.id}`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+}
+
+export const updateSpeakersOrder = (speakers, speakerId, newOrder) => async (dispatch, getState) => {
+    const {currentSummitState, currentSummitEventState} = getState();
+    const accessToken = await getAccessTokenSafely();
+    const {currentSummit} = currentSummitState;
+    const {entity: {id}} = currentSummitEventState;
+
+    const params = {
+        access_token: accessToken
+    };
+
+    const speaker = speakers.find(s => s.id === speakerId);
+
+    dispatch(startLoading());
+
+    putRequest(
+        null,
+        createAction(EVENT_SPEAKER_ORDER_UPDATED)(speakers),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/presentations/${id}/speakers/${speaker.id}`,
+        { order: newOrder },
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+}
+
+export const unassignSpeaker = (eventId, speakerId) => async (dispatch, getState) => {
+    const {currentSummitState} = getState();
+    const accessToken = await getAccessTokenSafely();
+    const {currentSummit} = currentSummitState;
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token: accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(EVENT_SPEAKER_UNASSIGNED)({speakerId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/presentations/${eventId}/speakers/${speakerId}`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+
+}
 

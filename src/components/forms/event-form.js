@@ -31,7 +31,8 @@ import {
     Panel,
     Table,
     MemberInput,
-    FreeTextSearch
+    FreeTextSearch,
+    SortableTable
 } from 'openstack-uicore-foundation/lib/components'
 import { isEmpty, scrollToError, shallowEqual, hasErrors } from "../../utils/methods";
 import { Pagination } from "react-bootstrap";
@@ -45,6 +46,7 @@ class EventForm extends React.Component {
         super(props);
 
         this.state = {
+            speakerToAdd: null,
             entity: { ...props.entity },
             showSection: 'main',
             errors: props.errors,
@@ -85,6 +87,10 @@ class EventForm extends React.Component {
         this.handleTrackChairCommentPageChange = this.handleTrackChairCommentPageChange.bind(this);
         this.handleTrackChairCommentSort = this.handleTrackChairCommentSort.bind(this);
         this.handleTrackChairFilterChange = this.handleTrackChairFilterChange.bind(this);
+        this.handleSelectSpeakerToAdd = this.handleSelectSpeakerToAdd.bind(this);
+        this.handleSpeakerUnassign = this.handleSpeakerUnassign.bind(this);
+        this.handleSpeakerAssign = this.handleSpeakerAssign.bind(this);
+        this.handleSpeakerEdit = this.handleSpeakerEdit.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -540,6 +546,43 @@ class EventForm extends React.Component {
         });
     }
 
+    handleSelectSpeakerToAdd(ev) {
+        const {value} = ev.target;
+        this.setState({...this.state, speakerToAdd: value});
+    }
+
+    handleSpeakerAssign() {
+        const { entity, speakerToAdd } = this.state;
+        const { onAssignSpeaker } = this.props;
+        if (speakerToAdd) {
+            onAssignSpeaker(entity.id, speakerToAdd);
+            this.setState({...this.state, speakerToAdd: null});
+        }
+    }
+
+    handleSpeakerUnassign(speakerId) {
+        const { entity, onUnassignSpeaker } = this.props;
+        const speaker = entity.speakers.find(c => c.id === speakerId);
+
+        Swal.fire({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("edit_event.unassign_speaker") + ' ' + `${speaker.first_name} ${speaker.last_name}?`,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: T.translate("general.yes_delete")
+        }).then(function (result) {
+            if (result.value) {
+                onUnassignSpeaker(entity.id, speakerId);
+            }
+        });
+    }
+
+    handleSpeakerEdit(speakerId) {
+        const { history } = this.props;
+        history.push(`/app/speakers/${speakerId}`);
+    }
+
     handleTrackChairCommentSearch(term) {
         const { entity } = this.state;
         const { commentState } = this.props;
@@ -567,12 +610,12 @@ class EventForm extends React.Component {
     }
 
 render() {
-    const { entity, showSection, errors } = this.state;
+    const { entity, showSection, errors, speakerToAdd } = this.state;
 
     const {
         currentSummit, levelOpts, typeOpts, trackOpts,
         locationOpts, rsvpTemplateOpts, selectionPlansOpts, history,
-        feedbackState, commentState, actionTypes, auditLogState
+        feedbackState, commentState, actionTypes, auditLogState, onAssignSpeaker,
     } = this.props;
 
     const event_types_ddl = typeOpts.map(
@@ -683,6 +726,21 @@ render() {
         actions: {
             edit: { onClick: this.handleTrackChairCommentEdit },
             delete: { onClick: this.handleTrackChairCommentDelete },
+        }
+    };
+
+    const speakers_columns = [
+        { columnKey: 'id', value: T.translate("general.id") },
+        { columnKey: 'first_name', value: T.translate("edit_event.speaker_first_name") },
+        { columnKey: 'last_name', value: T.translate("edit_event.speaker_last_name") },
+        { columnKey: 'company', value: T.translate("edit_event.speaker_company") },
+        { columnKey: 'email', value: T.translate("edit_event.speaker_email") }
+    ];
+
+    const speakers_options = {
+        actions: {
+            edit: { onClick: this.handleSpeakerEdit },
+            delete: { onClick: this.handleSpeakerUnassign }
         }
     };
 
@@ -977,19 +1035,42 @@ render() {
                 </div>
             }
             {this.shouldShowField('use_speakers') &&
-                <div className="row form-group">
-                    <div className="col-md-12">
-                        <label> {T.translate("general.speakers")} </label>
-                        <SpeakerInput
-                            id="speakers"
-                            value={entity.speakers}
-                            onChange={this.handleChange}
-                            multi={true}
-                            history={history}
-                            getOptionLabel={(speaker) => `${speaker.first_name} ${speaker.last_name} (${speaker.email})`}
-                        />
+                <>
+                    <div className="row form-group">
+                        <div className="col-md-10">
+                            <label> {T.translate("general.speakers")} </label>
+                            <SpeakerInput
+                                id="speaker"
+                                value={speakerToAdd}
+                                onChange={this.handleSelectSpeakerToAdd}
+                                isClearable={true}
+                                placeholder={T.translate("edit_event.select_speaker")}
+                                getOptionLabel={(speaker) => `${speaker.first_name} ${speaker.last_name} (${speaker.email})`}
+                            />
+                        </div>
+                        <div className="col-md-2" style={{ marginTop: 25 }}>
+                            <button className="btn btn-primary pull-right left-space" onClick={this.handleSpeakerAssign}>
+                                {T.translate("edit_event.assign_speaker")}
+                            </button>
+                        </div>
                     </div>
-                </div>
+                    <div className="row">
+                        <div className="col-md-12">
+                        {entity.speakers.length > 0 ?
+                            <SortableTable
+                                options={speakers_options}
+                                data={entity.speakers}
+                                columns={speakers_columns}
+                                dropCallback={this.props.onUpdateSpeakersOrder}
+                                orderField="order"
+                            />
+                            : 
+                            <div>{T.translate("edit_event.no_speakers")}</div>
+                        }
+                        </div>
+                    </div>
+                    <div className="row">&nbsp;</div>
+                </>
             }
             {this.shouldShowField('use_moderator') &&
                 <div className="row form-group">
