@@ -1332,7 +1332,7 @@
     "show_printable_info": "Must be an active ticket with the access level of IN_PERSON.",
     "items_qty": "Selected {qty} Tickets",
     "select_view_2_print": "Select a View Type to Print",
-    "select_fields": "Select Data",
+    "select_fields": "Show Columns",
     "promocode": "Promo Code",
     "promo_code_tags": "Promo Code Tags",
     "import_tickets_format": "Format must be the following:",
