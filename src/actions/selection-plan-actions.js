@@ -99,6 +99,7 @@ export const saveSelectionPlan = (entity) => async (dispatch, getState) => {
       entity
     )({})(dispatch)
       .then((payload) => {
+        dispatch(stopLoading());
         dispatch(showSuccessMessage(T.translate("edit_selection_plan.selection_plan_saved")));
       });
 

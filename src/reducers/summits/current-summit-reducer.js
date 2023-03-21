@@ -7,7 +7,8 @@ import { LOCATION_UPDATED, LOCATION_ADDED, LOCATION_DELETED } from '../../action
 
 import {
     SELECTION_PLAN_DELETED,
-    SELECTION_PLAN_ADDED
+    SELECTION_PLAN_ADDED,
+    SELECTION_PLAN_UPDATED
 } from "../../actions/selection-plan-actions";
 
 import {
@@ -266,6 +267,12 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
         case SELECTION_PLAN_ADDED: {
             let { response } = payload;
             return {...state, currentSummit: {...state.currentSummit, selection_plans: [...state.currentSummit.selection_plans, response]}};
+        }
+        break;
+        case SELECTION_PLAN_UPDATED: {
+            let {response} = payload;
+            let selection_plans = state.currentSummit.selection_plans.filter(sp => sp.id !== response.id);
+            return {...state, currentSummit: {...state.currentSummit, selection_plans: [...selection_plans, response].sort((a, b) => a.id - b.id)}};
         }
         break;
         case SELECTION_PLAN_DELETED: {
