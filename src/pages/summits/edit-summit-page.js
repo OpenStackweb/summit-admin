@@ -17,13 +17,12 @@ import T from "i18n-react/dist/i18n-react";
 import Swal from "sweetalert2";
 import Restrict from '../../routes/restrict'
 import SummitForm from '../../components/forms/summit-form';
-import { getSummitById, resetSummitForm, saveSummit, attachLogo, deleteLogo }  from '../../actions/summit-actions';
+import { getSummitById, resetSummitForm, saveSummit, attachLogo, deleteLogo, saveRegistrationLiteMarketingSettings }  from '../../actions/summit-actions';
 import { deleteSelectionPlan, resetSelectionPlanForm } from '../../actions/selection-plan-actions';
 import { deleteRoomBookingAttributeType } from "../../actions/room-booking-actions";
 import {addHelpMember, removeHelpMember} from "../../actions/user-chat-roles-actions"
 import '../../styles/edit-summit-page.less';
 import '../../components/form-validation/validate.less';
-import {saveMarketingSetting} from "../../actions/marketing-actions";
 
 class EditSummitPage extends React.Component {
 
@@ -93,7 +92,7 @@ class EditSummitPage extends React.Component {
                     onLogoDelete={deleteLogo}
                     onAddHelpMember={this.props.addHelpMember}
                     onDeleteHelpMember={this.props.removeHelpMember}
-                    saveMarketingSettings={this.props.saveMarketingSetting}
+                    saveRegistrationLiteMarketingSettings={this.props.saveRegistrationLiteMarketingSettings}
                 />
             </div>
         )
@@ -120,6 +119,6 @@ export default Restrict(connect (
         addHelpMember,
         removeHelpMember,
         resetSelectionPlanForm,
-        saveMarketingSetting,
+        saveRegistrationLiteMarketingSettings,
     }
 )(EditSummitPage), 'summit-edit');

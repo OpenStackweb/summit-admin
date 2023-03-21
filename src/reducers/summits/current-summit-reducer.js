@@ -120,7 +120,7 @@ export const DEFAULT_ENTITY = {
 };
 
 const DEFAULT_REG_LITE_MARKETING_SETTINGS = {
-    REG_LITE_ALLOW_PROMO_CODES: {id : 0 , value: '1'},
+    REG_LITE_ALLOW_PROMO_CODES: {id : 0 , value: true},
     REG_LITE_COMPANY_INPUT_PLACEHOLDER :{id : 0 , value: 'Enter your company'},
     REG_LITE_COMPANY_DDL_PLACEHOLDER : {id : 0 , value: 'Select a company'},
 };
@@ -390,7 +390,11 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
             let reg_lite_marketing_settings = {};
 
             data.forEach(setting => {
-                reg_lite_marketing_settings[setting.key] = { id : setting.id, value : setting.value };
+                let value = setting.value;
+                if(setting.key === 'REG_LITE_ALLOW_PROMO_CODES'){
+                    value = value === '1';
+                }
+                reg_lite_marketing_settings[setting.key] = { id : setting.id, value : value};
             })
 
             const newMarketingSettings = { ...DEFAULT_STATE.reg_lite_marketing_settings, ...reg_lite_marketing_settings};

@@ -29,6 +29,7 @@ import {
 
 import {Exclusive} from 'openstack-uicore-foundation/lib/components'
 import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
+import {saveRegistrationLiteMarketingSettings} from "../../actions/summit-actions";
 
 class SummitForm extends React.Component {
     constructor(props) {
@@ -163,9 +164,6 @@ class SummitForm extends React.Component {
             if (!regLiteMarketingSettings.hasOwnProperty(id)) {
                 regLiteMarketingSettings[id] = {value: '', id: 0};
             }
-            if (typeof value == "boolean"){
-                value = value ? '1' : '0';
-            }
             regLiteMarketingSettings[id].value = value;
         }
         else {
@@ -203,20 +201,9 @@ class SummitForm extends React.Component {
         ev.preventDefault();
 
         if (this.validateForm(entity)) {
-
-            const marketing_settings = []
-            Object.keys(regLiteMarketingSettings).map(m => {
-                const setting_type = 'TEXT';
-                const mkt_setting = {
-                    id: regLiteMarketingSettings[m].id,
-                    type: setting_type,
-                    key: m.toUpperCase(),
-                    value: regLiteMarketingSettings[m].value ?? '',
-                }
-                marketing_settings.push(this.props.saveMarketingSettings(mkt_setting))
-            })
-
-            this.props.onSubmit(entity).then(() => Promise.all(marketing_settings));
+            this.props.onSubmit(entity).then(() =>
+                this.props.saveRegistrationLiteMarketingSettings(regLiteMarketingSettings)
+            );
         }
     }
 
@@ -713,7 +700,7 @@ class SummitForm extends React.Component {
                         <div className="col-md-4 checkboxes-div">
                             <div className="form-check abc-checkbox">
                                 <input type="checkbox" id="REG_LITE_ALLOW_PROMO_CODES"
-                                       checked={ parseInt(regLiteMarketingSettings?.REG_LITE_ALLOW_PROMO_CODES?.value) === 1} onChange={this.handleChange}
+                                       checked={regLiteMarketingSettings?.REG_LITE_ALLOW_PROMO_CODES?.value} onChange={this.handleChange}
                                        className="form-check-input"/>
                                 <label className="form-check-label" htmlFor="REG_LITE_ALLOW_PROMO_CODES">
                                     {T.translate("edit_summit.reg_lite_allow_promo_codes")}
