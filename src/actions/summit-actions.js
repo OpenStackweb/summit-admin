@@ -25,6 +25,7 @@ import {
     showSuccessMessage,
     authErrorHandler
 } from 'openstack-uicore-foundation/lib/utils/actions';
+
 import {getAccessTokenSafely} from '../utils/methods';
 import Swal from "sweetalert2";
 import {saveMarketingSetting} from "./marketing-actions";
@@ -314,11 +315,10 @@ export const deleteLogo = () => async (dispatch, getState) => {
  * @param regLiteMarketingSettings
  * @returns {function(*, *): Promise<unknown[]>}
  */
-export const saveRegistrationLiteMarketingSettings = (regLiteMarketingSettings) => async (dispatch, getState) => {
+export const saveRegistrationLiteMarketingSettings = (regLiteMarketingSettings) => async (dispatch) => {
 
-    const marketing_settings = []
+    return Promise.all(Object.keys(regLiteMarketingSettings).map(m => {
 
-    Object.keys(regLiteMarketingSettings).map(m => {
         const setting_type = 'TEXT';
         let value = regLiteMarketingSettings[m].value ?? '';
 
@@ -332,10 +332,10 @@ export const saveRegistrationLiteMarketingSettings = (regLiteMarketingSettings) 
             key: m.toUpperCase(),
             value: value,
         }
-        marketing_settings.push(dispatch(saveMarketingSetting(mkt_setting)))
-    })
 
-    return Promise.all(marketing_settings);
+        return dispatch(saveMarketingSetting(mkt_setting));
+    }));
+
 }
 
 
