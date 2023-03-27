@@ -229,7 +229,7 @@ const wrapReport = (ReportComponent, specs) => {
                 this.refs.childCmp && this.refs.childCmp.getSearchPlaceholder ?
                     this.refs.childCmp.getSearchPlaceholder() :
                     T.translate("reports.placeholders.search");
-
+            
             return (
                 <div className="container large">
                     <Breadcrumb data={{ title:reportName, pathname: match.url }} />
@@ -237,7 +237,6 @@ const wrapReport = (ReportComponent, specs) => {
                         <div className="col-md-8">
                             <h3>{reportName}</h3>
                         </div>
-
                     </div>
                     <hr/>
                     <div className={'row'}>
