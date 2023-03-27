@@ -98,6 +98,8 @@ export const DEFAULT_ENTITY = {
         cfp_presentation_summary_links_label: {id : 0 , value: ''},
         cfp_presentation_edition_custom_message: {id : 0 , value: ''},
         cfp_presentation_edition_default_tab: {id : 0 , value: ''},
+        cfp_presentation_summary_hide_track_selection: {id : 0 , value: false},
+        cfp_presentation_summary_hide_activity_type_selection: {id : 0 , value: false},
     }
 }
 
@@ -274,7 +276,11 @@ const selectionPlanReducer = (state = DEFAULT_STATE, action) => {
         case RECEIVE_SELECTION_PLAN_SETTINGS: {
             let data = payload.response.data;
             // parse data
-            const settings = data.map(ms => ({[ms.key.toLowerCase()] : {id: ms.id || null, value: ms.value}}));
+            const settings = data.map(ms => ({[ms.key.toLowerCase()] : {
+                id: ms.id || null, 
+                // if is one of the settings that uses boolean values, parse the 1/0 values to true/false
+                value: (ms.key === 'CFP_PRESENTATION_SUMMARY_HIDE_TRACK_SELECTION' || ms.key === 'CFP_PRESENTATION_SUMMARY_HIDE_ACTIVITY_TYPE_SELECTION') ? ms.value === '1' ? true : false : ms.value
+            }}));
             // array to object
             const marketing_settings = Object.assign(...settings, {});
             return { ...state, entity: { ...state.entity, marketing_settings: {...state.entity.marketing_settings, ...marketing_settings} } }

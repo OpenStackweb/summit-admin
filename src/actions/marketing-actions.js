@@ -182,6 +182,7 @@ export const saveMarketingSetting = (entity, file = null) => async (dispatch, ge
             entity
         )(params)(dispatch)
             .then((payload) => {
+                dispatch(stopLoading());
                 return payload;
             });
     }
@@ -196,7 +197,8 @@ export const saveMarketingSetting = (entity, file = null) => async (dispatch, ge
         entity
     )(params)(dispatch)
         .then((payload) => {
-           return payload
+            dispatch(stopLoading());
+            return payload
         });
 }
 

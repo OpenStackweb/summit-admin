@@ -32,8 +32,8 @@ import {
     removeAllowedMemberFromSelectionPlan,
     getAllowedMembers,
     importAllowedMembersCSV,
+    saveSelectionPlanSettings
 } from "../../actions/selection-plan-actions";
-import { saveMarketingSetting } from '../../actions/marketing-actions';
 import Swal from "sweetalert2";
 
 class EditSelectionPlanPage extends React.Component {
@@ -168,7 +168,7 @@ class EditSelectionPlanPage extends React.Component {
                     onTrackGroupLink={this.props.addTrackGroupToSelectionPlan}
                     onTrackGroupUnLink={this.props.removeTrackGroupFromSelectionPlan}
                     onSubmit={this.props.saveSelectionPlan}
-                    saveMarketingSettings={this.props.saveMarketingSetting}
+                    saveSelectionPlanSettings={this.props.saveSelectionPlanSettings}
                     updateExtraQuestionOrder={this.onUpdateExtraQuestionOrder}
                     onAddNewExtraQuestion={this.onAddNewExtraQuestion}
                     onDeleteExtraQuestion={this.onDeleteExtraQuestion}
@@ -220,6 +220,6 @@ export default connect (
         removeAllowedMemberFromSelectionPlan,
         getAllowedMembers,
         importAllowedMembersCSV,
-        saveMarketingSetting
+        saveSelectionPlanSettings
     }
 )(EditSelectionPlanPage);

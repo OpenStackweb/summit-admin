@@ -28,6 +28,7 @@ import {
 } from 'openstack-uicore-foundation/lib/utils/actions';
 import {getAccessTokenSafely, escapeFilterValue, fetchResponseHandler, fetchErrorHandler} from '../utils/methods';
 import _ from 'lodash';
+import { saveMarketingSetting } from "./marketing-actions";
 
 export const RECEIVE_SELECTION_PLAN = 'RECEIVE_SELECTION_PLAN';
 export const RESET_SELECTION_PLAN_FORM = 'RESET_SELECTION_PLAN_FORM';
@@ -820,3 +821,20 @@ export const unassignProgressFlagFromSelectionPlan = (selectionPlanId, progressF
     }
   );
 };
+
+
+export const saveSelectionPlanSettings = (marketingSettings, selectionPlanId) => async (dispatch, getState) => {  
+
+  return Promise.all(Object.keys(marketingSettings).map(m => {
+      const setting_type = m === 'cfp_presentation_edition_custom_message' ? 'TEXTAREA' : 'TEXT';
+      const questionValue = typeof(marketingSettings[m].value) === 'boolean' ?  marketingSettings[m].value ? '1' : '0' : marketingSettings[m].value;
+      const mkt_setting = {
+          id: marketingSettings[m].id,
+          type: setting_type,
+          key: m.toUpperCase(),
+          value: questionValue ?? '',
+          selection_plan_id: selectionPlanId
+    }
+      return dispatch(saveMarketingSetting(mkt_setting));
+  }))
+}

@@ -385,6 +385,10 @@
     "cfp_presentation_summary_links_label_info": "cfp_presentation_summary_links_label_info",
     "cfp_presentation_edition_custom_message": "cfp_presentation_edition_custom_message",
     "cfp_presentation_edition_custom_message_info": "This is a custom message to help inform the user what is expected of them that gets displayed when they add a new presentation or view an existing one. This would pop up as a modal dialogue each time the user entered the presentation UI.",
+    "cfp_presentation_summary_hide_track_selection": "Hide Track Selection",
+    "cfp_presentation_summary_hide_track_selection_info": "cfp_presentation_summary_hide_track_selection_info",
+    "cfp_presentation_summary_hide_activity_type_selection": "Hide Activity Type Selection",
+    "cfp_presentation_summary_hide_activity_type_selection_info": "cfp_presentation_summary_hide_activity_type_selection_info",
     "cfp_presentation_edition_default_tab": "Default Landing Tab on Edition",
     "placeholders": {
       "creator_notification_email_select_template": "Select a creator notification email template...",
