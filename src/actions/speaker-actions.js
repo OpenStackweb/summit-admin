@@ -82,7 +82,7 @@ export const getSpeakers = ( term = null, page = 1, perPage = 10, order = 'id', 
     dispatch(startLoading());
 
     if(term) {
-        let filterTerm = buildTermFilter(term);
+        let filterTerm = buildTermFilter(term, false);
 
         filter.push(
             filterTerm.join(',')
@@ -987,7 +987,7 @@ const parseFilters = (filters) => {
     return filter;
 }
 
-const buildTermFilter = (term) => {
+const buildTermFilter = (term, usePresentationFilters = true) => {
     const escapedTerm = escapeFilterValue(term);
        
     let termFilter =  [
@@ -995,9 +995,12 @@ const buildTermFilter = (term) => {
         `first_name=@${escapedTerm}`,
         `last_name=@${escapedTerm}`,
         `email=@${escapedTerm}`,
-        `presentations_title=@${escapedTerm}`,
-        `presentations_abstract=@${escapedTerm}`
-    ]
+    ];
+
+    if(usePresentationFilters){
+        termFilter.push( `presentations_title=@${escapedTerm}`);
+        termFilter.push(`presentations_abstract=@${escapedTerm}`);
+    }
 
     if (parseInt(escapedTerm)) {
         const filterTermId = parseInt(escapedTerm)
