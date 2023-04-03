@@ -38,6 +38,7 @@ class ReportListPage extends React.Component {
     render(){
         const {currentSummit} = this.props;
         const presentationTypeId = currentSummit?.event_types?.find(et => et.name === 'Presentation')?.id;
+        const typeFilterQS = presentationTypeId ? `&type=${presentationTypeId}` : '';
 
         return(
             <div className="container report-list">
@@ -60,7 +61,7 @@ class ReportListPage extends React.Component {
                         </button>
                     </div>
                     <div className="col-md-6">
-                        <button className="btn btn-default" onClick={this.handleClick.bind(this, `room_report#sort=time&sortdir=1&type=${presentationTypeId}`)}>
+                        <button className="btn btn-default" onClick={this.handleClick.bind(this, `room_report#sort=time&sortdir=1${typeFilterQS}`)}>
                             {T.translate(`reports.room_report`)}
                         </button>
                     </div>
