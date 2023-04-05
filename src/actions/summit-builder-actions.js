@@ -31,6 +31,8 @@ export const REQUEST_UNSCHEDULE_EVENTS_PAGE               = 'REQUEST_UNSCHEDULE_
 export const RECEIVE_UNSCHEDULE_EVENTS_PAGE               = 'RECEIVE_UNSCHEDULE_EVENTS_PAGE';
 export const REQUEST_SCHEDULE_EVENTS_PAGE                 = 'REQUEST_SCHEDULE_EVENTS_PAGE';
 export const RECEIVE_SCHEDULE_EVENTS_PAGE                 = 'RECEIVE_SCHEDULE_EVENTS_PAGE';
+export const REQUEST_PROPOSED_SCHEDULE                 = 'REQUEST_PROPOSED_SCHEDULE';
+export const RECEIVE_PROPOSED_SCHEDULE                 = 'RECEIVE_PROPOSED_SCHEDULE';
 export const REQUEST_PUBLISH_EVENT                        = 'REQUEST_PUBLISH_EVENT';
 export const ERROR_PUBLISH_EVENT                          = 'ERROR_PUBLISH_EVENT';
 export const CHANGE_CURRENT_DAY                           = 'CHANGE_CURRENT_DAY';
@@ -48,8 +50,11 @@ export const RECEIVE_SCHEDULE_EVENTS_SEARCH_PAGE          = 'RECEIVE_SCHEDULE_EV
 export const RECEIVE_EMPTY_SPOTS                          = 'RECEIVE_EMPTY_SPOTS';
 export const CLEAR_EMPTY_SPOTS                            = 'CLEAR_EMPTY_SPOTS';
 export const CLEAR_PUBLISHED_EVENTS                       = 'CLEAR_PUBLISHED_EVENTS';
+export const CLEAR_PROPOSED_EVENTS                       = 'CLEAR_PROPOSED_EVENTS';
 export const CHANGE_SUMMIT_BUILDER_FILTERS                = 'CHANGE_SUMMIT_BUILDER_FILTERS';
 export const SET_SLOT_SIZE                                = 'SET_SLOT_SIZE';
+export const SET_SOURCE                                = 'SET_SOURCE';
+export const PROPOSED_EVENTS_PUBLISHED                 = 'PROPOSED_EVENTS_PUBLISHED';
 
 export const getUnScheduleEventsPage =
     (
@@ -196,8 +201,12 @@ export const changeCurrentSelectedLocation = (currentSelectedLocation) => (dispa
     ));
 }
 
-export const changeSlotSize = (slotSize) => (dispatch, getState) => {
+export const changeSlotSize = (slotSize) => (dispatch) => {
     dispatch(createAction(SET_SLOT_SIZE)({slotSize}));
+}
+
+export const changeSource = (selectedSource) => (dispatch) => {
+    dispatch(createAction(SET_SOURCE)({selectedSource}));
 }
 
 export const getPublishedEventsBySummitDayLocation = (currentSummit, currentDay, currentLocation) => async (dispatch, getState) => {
@@ -220,6 +229,78 @@ export const getPublishedEventsBySummitDayLocation = (currentSummit, currentDay,
         .then(() =>
             dispatch(stopLoading())
         );
+}
+
+const refreshPublishedList = () => async (dispatch, getState) => {
+    const {currentSummitState, currentScheduleBuilderState} = getState();
+    const { currentSummit }   = currentSummitState;
+    const { currentLocation, currentDay } = currentScheduleBuilderState;
+    return getPublishedEventsBySummitDayLocation(currentSummit, currentDay, currentLocation)(dispatch, getState);
+}
+
+export const getProposedEvents = (summit, proposedSchedDay, proposedSchedLocation, proposedSchedTrack) => async (dispatch, getState) => {
+    if (!summit || !proposedSchedDay || !proposedSchedLocation) {
+        dispatch(createAction(CLEAR_PROPOSED_EVENTS)({proposedSchedDay, proposedSchedLocation, proposedSchedTrack}));
+        return;
+    }
+    
+    const accessToken = await getAccessTokenSafely();
+    const proposedSchedDayMoment = moment.tz(proposedSchedDay, summit.time_zone.name);
+    const startDate = ( proposedSchedDayMoment.clone().hours(0).minutes(0).seconds(0).valueOf()) / 1000;
+    const endDate = ( proposedSchedDayMoment.clone().hours(23).minutes(59).seconds(59).valueOf()) /1000;
+    const proposedSchedLocationId = proposedSchedLocation.id === 0 ? 'tbd': proposedSchedLocation.id;
+    const filter = [];
+    const params = {
+        expand: 'summit_event',
+        page: 1,
+        per_page: 100,
+        access_token: accessToken,
+    };
+    
+    filter.push(`start_date>=${startDate}`);
+    filter.push(`end_date<=${endDate}`);
+    filter.push(`location_id==${proposedSchedLocationId}`);
+    
+    if(proposedSchedTrack){
+        filter.push(`track_id==${proposedSchedTrack.id}`);
+    }
+    
+    if(filter.length > 0){
+        params['filter[]']= filter;
+    }
+    
+    dispatch(startLoading());
+    
+    
+    return getRequest(
+      createAction(REQUEST_PROPOSED_SCHEDULE),
+      createAction(RECEIVE_PROPOSED_SCHEDULE),
+      `${window.API_BASE_URL}/api/v1/summits/${summit.id}/proposed-schedules/track-chairs/presentations`,
+      authErrorHandler,
+      {proposedSchedDay, proposedSchedLocation, proposedSchedTrack}
+    )(params)(dispatch)
+      .then(() =>
+        dispatch(stopLoading())
+      );
+}
+
+export const publishAllProposed = (eventIds) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
+    const params = { access_token : accessToken };
+    dispatch(startLoading());
+    
+    putRequest(
+      null,
+      createAction(PROPOSED_EVENTS_PUBLISHED),
+      `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/proposed-schedules/track-chairs/presentations/all/publish`,
+      {event_ids : eventIds},
+      authErrorHandler
+    )(params)(dispatch)
+      .then(() => {
+          dispatch(refreshPublishedList());
+      });
 }
 
 export const changeCurrentEventType = (currentEventType) => (dispatch, getState) => {

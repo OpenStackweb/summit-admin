@@ -14,7 +14,7 @@
 import T from 'i18n-react/dist/i18n-react'
 import URI from "urijs";
 import history from '../history'
-import {BulkActionEdit, BulkActionUnPublish} from '../utils/constants';
+import {BulkActionEdit, BulkActionUnPublish} from 'openstack-uicore-foundation/lib/components/schedule-builder-constants';
 import { getPublishedEventsBySummitDayLocation } from './summit-builder-actions';
 import {
     getRequest,
@@ -204,7 +204,7 @@ export const performBulkAction = (eventsIds, bulkAction, published) => async (di
     const accessToken = await getAccessTokenSafely();
     const { currentSummit }                       = currentSummitState;
     const { currentDay,  currentLocation }        = currentScheduleBuilderState;
-
+    
     switch(bulkAction){
         case BulkActionEdit:{
             let url = URI(`/app/summits/${currentSummit.id}/events/bulk-actions`);

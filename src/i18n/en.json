@@ -162,7 +162,8 @@
       "select_venue": "Select a Venue ...",
       "select_event_type": "Select an Activity Type ...",
       "select_track": "Select an Activity Category ...",
-      "selected_filters": "Enabled Filters"
+      "selected_filters": "Enabled Filters",
+      "selected_source": "Select Source"
     }
   },
   "bulk_actions_page": {

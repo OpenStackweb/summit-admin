@@ -21,6 +21,7 @@ import {
   changeCurrentSelectedDay,
   changeCurrentSelectedLocation,
   getPublishedEventsBySummitDayLocation,
+  getProposedEvents,
   changeCurrentEventType,
   changeCurrentTrack,
   changeCurrentDuration,
@@ -35,7 +36,9 @@ import {
   clearEmptySpots,
   clearPublishedEvents,
   changeSummitBuilderFilters,
-  changeSlotSize
+  changeSlotSize,
+  changeSource,
+  publishAllProposed
 } from '../../actions/summit-builder-actions';
 
 import {
@@ -45,8 +48,8 @@ import {
 } from '../../actions/summit-event-bulk-actions';
 import UnScheduleEventList from './unschedule-event-list';
 import {
-  BulkActionEdit, BulkActionUnPublish, TBALocation, SlotSizeOptions
-} from '../../utils/constants';
+  BulkActionEdit, BulkActionUnPublish
+} from 'openstack-uicore-foundation/lib/components/schedule-builder-constants';
 import ScheduleAdminEventTypeSelector from './schedule-admin-event-type-selector';
 import ScheduleAdminTrackSelector from './schedule-admin-track-selector';
 import ScheduleAdminPresentationSelectionStatusSelector from './schedule-admin-presentation-selection-status-selector';
@@ -62,8 +65,7 @@ import * as Scroll from 'react-scroll';
 import Swal from "sweetalert2";
 import ScheduleAdminEmptySpotsModal from './schedule-admin-empty-spots-modal';
 import ScheduleAdminEmptySpotsList from './schedule-admin-empty-spots-list';
-import {epochToMomentTimeZone} from 'openstack-uicore-foundation/lib/utils/methods';
-import {Dropdown, OperatorInput, ScheduleBuilderView, BulkActionsSelector} from 'openstack-uicore-foundation/lib/components';
+import {Dropdown, OperatorInput, BulkActionsSelector, ScheduleBuilderView} from 'openstack-uicore-foundation/lib/components';
 import {SummitEvent} from "openstack-uicore-foundation/lib/models";
 
 class ScheduleAdminDashBoard extends React.Component {
@@ -74,6 +76,9 @@ class ScheduleAdminDashBoard extends React.Component {
     this.onScheduleEvent = this.onScheduleEvent.bind(this);
     this.onDayChanged = this.onDayChanged.bind(this);
     this.onVenueChanged = this.onVenueChanged.bind(this);
+    this.onProposedDayChanged = this.onProposedDayChanged.bind(this);
+    this.onProposedVenueChanged = this.onProposedVenueChanged.bind(this);
+    this.onProposedTrackChanged = this.onProposedTrackChanged.bind(this);
     this.onUnScheduleEventsPageChange = this.onUnScheduleEventsPageChange.bind(this);
     this.onEventTypeChanged = this.onEventTypeChanged.bind(this);
     this.onTrackChanged = this.onTrackChanged.bind(this);
@@ -98,6 +103,7 @@ class ScheduleAdminDashBoard extends React.Component {
     this.handleDurationFilter = this.handleDurationFilter.bind(this);
     this.handleFiltersChange = this.handleFiltersChange.bind(this);
     this.onSlotSizeChange = this.onSlotSizeChange.bind(this);
+    this.onSourceChange = this.onSourceChange.bind(this);
 
     this.fragmentParser = new FragmentParser();
     this.filters = this.parseFilterFromFragment();
@@ -107,6 +113,7 @@ class ScheduleAdminDashBoard extends React.Component {
     this.state = {
       showModal: false,
       durationFilter: props.currentDuration || '',
+      proposedSchedSelectedEvents: []
     }
   }
 
@@ -220,6 +227,17 @@ class ScheduleAdminDashBoard extends React.Component {
       location
     );
   }
+  
+  updateProposedList(day, location, track) {
+    const {currentSummit} = this.props;
+    this.props.getProposedEvents
+    (
+      currentSummit,
+      day,
+      location,
+      track
+    );
+  }
 
   onScheduleEvent(event, currentDay, startDateTime, duration= null) {
     const eventModel = new SummitEvent(event, this.props.currentSummit);
@@ -244,6 +262,21 @@ class ScheduleAdminDashBoard extends React.Component {
     this.filters = this.parseFilterFromFragment();
     this.byPassHashRefresh = true;
     this.updatePublishedList(currentDay, location);
+  }
+  
+  onProposedDayChanged(proposedSchedDay) {
+    const {proposedSchedLocation, proposedSchedTrack} = this.props;
+    this.updateProposedList(proposedSchedDay, proposedSchedLocation, proposedSchedTrack);
+  }
+  
+  onProposedVenueChanged(proposedSchedLocation) {
+    const {proposedSchedDay, proposedSchedTrack} = this.props;
+    this.updateProposedList(proposedSchedDay, proposedSchedLocation, proposedSchedTrack);
+  }
+  
+  onProposedTrackChanged(proposedSchedTrack) {
+    const {proposedSchedDay, proposedSchedLocation} = this.props;
+    this.updateProposedList(proposedSchedDay, proposedSchedLocation, proposedSchedTrack);
   }
 
   onUnScheduleEventsPageChange(currentPage) {
@@ -633,16 +666,48 @@ class ScheduleAdminDashBoard extends React.Component {
   onSlotSizeChange(value) {
     this.props.changeSlotSize(value);
   }
+  
+  onSourceChange(ev) {
+    this.props.changeSource(ev.target.value);
+  }
+  
+  onProposedEventSelected = (event) => {
+    const {proposedSchedSelectedEvents} = this.state;
+    const isSelected = proposedSchedSelectedEvents.includes(event.id);
+    const newSelected = isSelected ? proposedSchedSelectedEvents.filter(evId => evId !== event.id) : [...proposedSchedSelectedEvents, event.id];
+    
+    this.setState({proposedSchedSelectedEvents: newSelected});
+  }
+  
+  onProposedSchedSelectAll = (evt) => {
+    const {proposedSchedEvents} = this.props;
+    const newSelected = evt.target.checked ? proposedSchedEvents.map(e => e.id) : [];
+    this.setState({proposedSchedSelectedEvents: newSelected});
+  }
+  
+  onProposedSchedSelectedBulkAction = (bulkAction) => {
+    const {proposedSchedSelectedEvents} = this.state;
+    if (proposedSchedSelectedEvents.length === 0 || !bulkAction) return;
+    
+    this.props.publishAllProposed(proposedSchedSelectedEvents);
+  }
+  
+  onProposedSchedMoveEvent = (event) => {
+    this.props.publishAllProposed([event.id]);
+  }
 
   render() {
 
-    let {
+    const {
       scheduleEvents,
+      proposedSchedEvents,
       unScheduleEvents,
       currentSummit,
       currentDay,
       currentLocation,
-      currentDuration,
+      proposedSchedDay,
+      proposedSchedLocation,
+      proposedSchedTrack,
       unScheduleEventsCurrentPage,
       unScheduleEventsLasPage,
       currentEventType,
@@ -658,68 +723,22 @@ class ScheduleAdminDashBoard extends React.Component {
       selectedPublishedEvents,
       selectedUnPublishedEvents,
       selectedFilters,
-      slotSize
+      slotSize,
+      selectedSource
     } = this.props;
 
-    const {durationFilter} = this.state;
+    const {durationFilter, proposedSchedSelectedEvents} = this.state;
 
     if (!currentSummit.id) return (<div/>);
 
 
     // parse summits dates
-    const days = [];
-    const summitLocalStartDate = epochToMomentTimeZone(currentSummit.start_date, currentSummit.time_zone_id);
-    const summitLocalEndDate = epochToMomentTimeZone(currentSummit.end_date, currentSummit.time_zone_id);
-    let currentAuxDay = summitLocalStartDate.clone();
-    let currentVenueSelectorItem = null;
     let currentTrackSelectorItem = null;
     let currentEventTypeSelectorItem = null;
     const isNotSearchOrEmpty = !scheduleEventsCurrentSearchTerm && emptySpots.length === 0;
 
-    do {
-      const option = {value: currentAuxDay.format("YYYY-MM-DD"), label: currentAuxDay.format('dddd Do , MMMM YYYY')};
-      days.push(option);
-      currentAuxDay = currentAuxDay.clone();
-      currentAuxDay.add(1, 'day');
-    } while (!currentAuxDay.isAfter(summitLocalEndDate));
-
-    // parse summit venues
-    // TBD location
-
-    let tbdOption = {
-      value: TBALocation,
-      label: TBALocation.name,
-    };
-
-    let venues = [
-      tbdOption
-    ];
-
-    if (currentLocation != null && TBALocation.id === currentLocation.id) {
-      currentVenueSelectorItem = tbdOption;
-    }
-
-
-    for (let i = 0; i < currentSummit.locations.length; i++) {
-      let location = currentSummit.locations[i];
-      if (location.class_name !== "SummitVenue") continue;
-      let option = {value: location, label: location.name};
-      if (currentLocation != null && location.id === currentLocation.id)
-        currentVenueSelectorItem = option;
-      venues.push(option);
-      if (!location.hasOwnProperty('rooms')) continue;
-      for (let j = 0; j < location.rooms.length; j++) {
-        let subOption = {value: location.rooms[j], label: location.rooms[j].name};
-        if (currentLocation != null && location.rooms[j].id === currentLocation.id)
-          currentVenueSelectorItem = subOption;
-        venues.push(subOption);
-      }
-    }
-
     // parse event types
-
-    let eventTypes = [];
-
+    const eventTypes = [];
     for (let i = 0; i < currentSummit.event_types.length; i++) {
       let event_type = currentSummit.event_types[i];
       let option = {value: event_type, label: event_type.name};
@@ -729,9 +748,7 @@ class ScheduleAdminDashBoard extends React.Component {
     }
 
     // parse tracks
-
-    let tracks = [];
-
+    const tracks = [];
     for (let i = 0; i < currentSummit.tracks.length; i++) {
       let track = currentSummit.tracks[i];
       let option = {value: track, label: track.name};
@@ -781,9 +798,16 @@ class ScheduleAdminDashBoard extends React.Component {
       {label: 'Selection Status', value: 'selection_status_filter'},
       {label: 'Duration (minutes)', value: 'duration_filter'},
     ];
-
-    const slotSizeOptions = SlotSizeOptions.map(op => ({value: op, label: `${op} min.`}))
-
+  
+    const source_ddl = [
+      {label: 'Unscheduled Activities', value: 'unscheduled'},
+      {label: 'Proposed by Track Chairs', value: 'proposed'},
+    ];
+    
+    const proposedBulkOptions = [
+      {value: 'BULK_ACTION_PUBLISH', label: 'Publish'},
+    ];
+    
     return (
       <DndProvider backend={HTML5Backend}>
         <div className="row schedule-app-container no-margin">
@@ -794,6 +818,159 @@ class ScheduleAdminDashBoard extends React.Component {
             onFindEmptySpots={this.onFindEmptySpots}
             initialGapSize={20}
           />
+          <div className="col-md-6 source-container">
+            <div className="row" style={{marginBottom: 10}}>
+              <div className="col-md-12">
+                <Dropdown
+                  id="selected_source"
+                  placeholder={T.translate("schedule.placeholders.selected_source")}
+                  value={selectedSource}
+                  onChange={this.onSourceChange}
+                  options={source_ddl}
+                />
+              </div>
+            </div>
+            {selectedSource === 'unscheduled' &&
+            <div className="unpublished-container">
+              <div className="row">
+                <div className="col-md-6">
+                  <ScheduleAdminSearchFreeTextUnScheduleEvents
+                    onFilterTextChange={this.onUnscheduledEventsFilterTextChanged}
+                    currentValue={unScheduleEventsCurrentSearchTerm}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <ScheduleAdminOrderSelector
+                    onOrderByChanged={this.onOrderByChanged}
+                    sortOptions={orderByOptions}
+                    currentValue={currentUnScheduleOrderBy}
+                    disableTrackOrder={currentPresentationSelectionStatus == null}
+                  />
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-md-12">
+                  <Dropdown
+                    id="selected_filters"
+                    placeholder={T.translate("schedule.placeholders.selected_filters")}
+                    value={selectedFilters}
+                    onChange={this.handleFiltersChange}
+                    options={filters_ddl}
+                    isClearable={true}
+                    isMulti={true}
+                  />
+                </div>
+              </div>
+              <div className='row' style={{marginTop: 10}}>
+                {selectedFilters.includes('activity_type_filter') &&
+                  <div className="col-md-6">
+                    <ScheduleAdminEventTypeSelector
+                      onEventTypeChanged={this.onEventTypeChanged}
+                      eventTypes={eventTypes}
+                      currentValue={currentEventTypeSelectorItem}
+                    />
+                  </div>
+                }
+                {selectedFilters.includes('activity_category_filter') &&
+                  <div className="col-md-6">
+                    <ScheduleAdminTrackSelector
+                      onTrackChanged={this.onTrackChanged}
+                      tracks={tracks}
+                      currentValue={currentTrackSelectorItem}
+                    />
+                  </div>
+                }
+                {selectedFilters.includes('selection_status_filter') &&
+                  <div className="col-md-6">
+                    <ScheduleAdminPresentationSelectionStatusSelector
+                      presentationSelectionStatus={presentationSelectionStatusOptions}
+                      onPresentationSelectionStatusChanged={this.onPresentationSelectionStatusChanged}
+                      currentValue={currentPresentationSelectionStatus}
+                    />
+                  </div>
+                }
+                {selectedFilters.includes('selection_plan_id_filter') &&
+                  <div className="col-md-6">
+                    <ScheduleAdminPresentationSelectionPlanSelector
+                      presentationSelectionPlans={presentationSelectionPlanOptions}
+                      onPresentationSelectionPlanChanged={this.onPresentationSelectionPlanChanged}
+                      currentValue={currentPresentationSelectionPlan}
+                    />
+                  </div>
+                }
+                {selectedFilters.includes('duration_filter') &&
+                  <>
+                    <div className="col-md-10">
+                      <OperatorInput
+                        id="duration_filter"
+                        label={T.translate("schedule.duration")}
+                        value={durationFilter}
+                        onChange={this.handleDurationFilter}/>
+                    </div>
+                    <div className="col-md-2">
+                      <button className="btn btn-primary right-space" onClick={this.onDurationFilterApplied}>
+                        {T.translate("schedule.apply_duration")}
+                      </button>
+                    </div>
+                  </>
+                }
+              </div>
+  
+              <div className="row">
+                <div className="col-md-12">
+                  {unScheduleEvents.length > 0 &&
+                    <BulkActionsSelector
+                      bulkOptions={bulkOptionsUnPublished}
+                      onSelectAll={this.onSelectAllUnPublished}
+                      onSelectedBulkAction={this.onSelectedBulkActionUnPublished}
+                    />
+                  }
+                </div>
+              </div>
+  
+              <UnScheduleEventList
+                events={unScheduleEvents}
+                currentPage={unScheduleEventsCurrentPage}
+                lastPage={unScheduleEventsLasPage}
+                onEditEvent={this.onEditEvent}
+                onPageChange={this.onUnScheduleEventsPageChange}
+                onClickSelected={this.onClickSelected}
+                selectedUnPublishedEvents={selectedUnPublishedEvents}
+              />
+            </div>
+            }
+            {selectedSource === 'proposed' &&
+              <>
+                <ScheduleAdminTrackSelector
+                  onTrackChanged={this.onProposedTrackChanged}
+                  tracks={tracks}
+                  currentValue={tracks.find(t => t.label === proposedSchedTrack)}
+                />
+                <div className="proposed-container">
+                  <ScheduleBuilderView
+                    summit={currentSummit}
+                    scheduleEvents={proposedSchedEvents}
+                    selectedEvents={proposedSchedSelectedEvents}
+                    currentDay={proposedSchedDay}
+                    currentVenue={proposedSchedLocation}
+                    slotSize={slotSize}
+                    onDayChanged={this.onProposedDayChanged}
+                    onVenueChanged={this.onProposedVenueChanged}
+                    onClickSelected={this.onProposedEventSelected}
+                    onSelectAll={this.onProposedSchedSelectAll}
+                    onSelectedBulkAction={this.onProposedSchedSelectedBulkAction}
+                    onEditEvent={this.onEditEvent}
+                    allowResize={false}
+                    allowDrag={false}
+                    canDropEvent={() => false}
+                    customBulkOptions={proposedBulkOptions}
+                    onMoveSingleEvent={this.onProposedSchedMoveEvent}
+                  />
+                </div>
+              </>
+            }
+            
+          </div>
           <div className="col-md-6 published-container">
             <ScheduleAdminSearchFreeTextScheduleEvents
               onFilterTextChange={this.onScheduledEventsFilterTextChanged}
@@ -848,116 +1025,6 @@ class ScheduleAdminDashBoard extends React.Component {
             <p className="empty-list-message">{T.translate("errors.empty_list_schedule_events")}</p>
             }
           </div>
-          <div className="col-md-6 unpublished-container">
-            <ScheduleAdminSearchFreeTextUnScheduleEvents
-              onFilterTextChange={this.onUnscheduledEventsFilterTextChanged}
-              currentValue={unScheduleEventsCurrentSearchTerm}
-            />
-
-            <div className="row">
-              <div className="col-md-12">
-                <div className="row">
-                  <div className="col-md-6">
-                    <ScheduleAdminOrderSelector
-                      onOrderByChanged={this.onOrderByChanged}
-                      sortOptions={orderByOptions}
-                      currentValue={currentUnScheduleOrderBy}
-                      disableTrackOrder={currentPresentationSelectionStatus == null}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-md-12">
-                <Dropdown
-                  id="selected_filters"
-                  placeholder={T.translate("schedule.placeholders.selected_filters")}
-                  value={selectedFilters}
-                  onChange={this.handleFiltersChange}
-                  options={filters_ddl}
-                  isClearable={true}
-                  isMulti={true}
-                />
-              </div>
-            </div>
-            <div className='row' style={{marginTop: 10}}>
-              {selectedFilters.includes('activity_type_filter') &&
-              <div className="col-md-6">
-                <ScheduleAdminEventTypeSelector
-                  onEventTypeChanged={this.onEventTypeChanged}
-                  eventTypes={eventTypes}
-                  currentValue={currentEventTypeSelectorItem}
-                />
-              </div>
-              }
-              {selectedFilters.includes('activity_category_filter') &&
-              <div className="col-md-6">
-                <ScheduleAdminTrackSelector
-                  onTrackChanged={this.onTrackChanged}
-                  tracks={tracks}
-                  currentValue={currentTrackSelectorItem}
-                />
-              </div>
-              }
-              {selectedFilters.includes('selection_status_filter') &&
-              <div className="col-md-6">
-                <ScheduleAdminPresentationSelectionStatusSelector
-                  presentationSelectionStatus={presentationSelectionStatusOptions}
-                  onPresentationSelectionStatusChanged={this.onPresentationSelectionStatusChanged}
-                  currentValue={currentPresentationSelectionStatus}
-                />
-              </div>
-              }
-              {selectedFilters.includes('selection_plan_id_filter') &&
-              <div className="col-md-6">
-                <ScheduleAdminPresentationSelectionPlanSelector
-                  presentationSelectionPlans={presentationSelectionPlanOptions}
-                  onPresentationSelectionPlanChanged={this.onPresentationSelectionPlanChanged}
-                  currentValue={currentPresentationSelectionPlan}
-                />
-              </div>
-              }
-              {selectedFilters.includes('duration_filter') &&
-              <>
-                <div className="col-md-10">
-                  <OperatorInput
-                    id="duration_filter"
-                    label={T.translate("schedule.duration")}
-                    value={durationFilter}
-                    onChange={this.handleDurationFilter}/>
-                </div>
-                <div className="col-md-2">
-                  <button className="btn btn-primary right-space" onClick={this.onDurationFilterApplied}>
-                    {T.translate("schedule.apply_duration")}
-                  </button>
-                </div>
-              </>
-              }
-            </div>
-
-            <div className="row">
-              <div className="col-md-12">
-                {unScheduleEvents.length > 0 &&
-                <BulkActionsSelector
-                  bulkOptions={bulkOptionsUnPublished}
-                  onSelectAll={this.onSelectAllUnPublished}
-                  onSelectedBulkAction={this.onSelectedBulkActionUnPublished}
-                />
-                }
-              </div>
-            </div>
-
-            <UnScheduleEventList
-              events={unScheduleEvents}
-              currentPage={unScheduleEventsCurrentPage}
-              lastPage={unScheduleEventsLasPage}
-              onEditEvent={this.onEditEvent}
-              onPageChange={this.onUnScheduleEventsPageChange}
-              onClickSelected={this.onClickSelected}
-              selectedUnPublishedEvents={selectedUnPublishedEvents}
-            />
-          </div>
         </div>
       </DndProvider>
     );
@@ -967,28 +1034,10 @@ class ScheduleAdminDashBoard extends React.Component {
 
 function mapStateToProps({currentScheduleBuilderState, currentSummitState, summitEventsBulkActionsState}) {
   return {
-    scheduleEvents: currentScheduleBuilderState.scheduleEvents,
-    unScheduleEvents: currentScheduleBuilderState.unScheduleEvents,
+    ...currentScheduleBuilderState,
     currentSummit: currentSummitState.currentSummit,
-    currentDay: currentScheduleBuilderState.currentDay,
-    currentLocation: currentScheduleBuilderState.currentLocation,
-    currentEventType: currentScheduleBuilderState.currentEventType,
-    currentTrack: currentScheduleBuilderState.currentTrack,
-    unScheduleEventsCurrentPage: currentScheduleBuilderState.unScheduleEventsCurrentPage,
-    unScheduleEventsLasPage: currentScheduleBuilderState.unScheduleEventsLasPage,
-    currentPresentationSelectionStatus: currentScheduleBuilderState.currentPresentationSelectionStatus,
-    currentPresentationSelectionPlan: currentScheduleBuilderState.currentPresentationSelectionPlan,
-    unScheduleEventsCurrentSearchTerm: currentScheduleBuilderState.unScheduleEventsCurrentSearchTerm,
-    scheduleEventsCurrentSearchTerm: currentScheduleBuilderState.scheduleEventsCurrentSearchTerm,
-    scheduleEventsSearch: currentScheduleBuilderState.scheduleEventsSearch,
-    currentUnScheduleOrderBy: currentScheduleBuilderState.currentUnScheduleOrderBy,
-    emptySpots: currentScheduleBuilderState.emptySpots,
-    searchingEmpty: currentScheduleBuilderState.searchingEmpty,
     selectedPublishedEvents: summitEventsBulkActionsState.selectedPublishedEvents,
     selectedUnPublishedEvents: summitEventsBulkActionsState.selectedUnPublishedEvents,
-    currentDuration: currentScheduleBuilderState.currentDuration,
-    selectedFilters: currentScheduleBuilderState.selectedFilters,
-    slotSize: currentScheduleBuilderState.slotSize,
   }
 }
 
@@ -999,6 +1048,7 @@ export default connect(mapStateToProps, {
   changeCurrentSelectedDay,
   changeCurrentSelectedLocation,
   getPublishedEventsBySummitDayLocation,
+  getProposedEvents,
   changeCurrentEventType,
   changeCurrentTrack,
   changeCurrentDuration,
@@ -1015,5 +1065,7 @@ export default connect(mapStateToProps, {
   performBulkAction,
   clearPublishedEvents,
   changeSummitBuilderFilters,
-  changeSlotSize
+  changeSlotSize,
+  changeSource,
+  publishAllProposed
 })(ScheduleAdminDashBoard);
