@@ -354,11 +354,11 @@ class TicketListPage extends React.Component {
         ];
 
         const filters_ddl = [
-            {label: 'Owner', value: 'hasOwnerFilter'},
+            {label: 'Has Assignee?', value: 'hasOwnerFilter'},
             {label: 'Completed', value: 'completedFilter'},
             {label: 'Badge', value: 'hasBadgeFilter'},
             {label: 'Amount', value: 'amountFilter'},
-            {label: 'Owner Name', value: 'ownerFullNameStartWithFilter'},
+            {label: 'Assignee Name', value: 'ownerFullNameStartWithFilter'},
             {label: 'View Type', value: 'viewTypesFilter'},
             {label: 'Ticket Type', value: 'ticketTypesFilter'},
             {label: 'Promo Code', value: 'promocodesFilter'},
