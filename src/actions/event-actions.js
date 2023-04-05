@@ -952,8 +952,8 @@ const parseFilters = (filters) => {
         const searchString = escapeFilterValue(filters.meeting_url);
         filter.push(`meeting_url@@${searchString}` )
     }
-    if(filters.hasOwnProperty('etherpad_url') && filters.etherpad_url) {
-        const searchString = escapeFilterValue(filters.etherpad_url);
+    if(filters.hasOwnProperty('etherpad_link') && filters.etherpad_link) {
+        const searchString = escapeFilterValue(filters.etherpad_link);
         filter.push(`etherpad_link@@${searchString}`)
     }
 

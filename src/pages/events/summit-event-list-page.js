@@ -38,11 +38,11 @@ import '../../styles/summit-event-list-page.less';
 const fieldNames = [
     { columnKey: 'speakers', value: 'speakers' },
     { columnKey: 'created_by_fullname', value: 'created_by', sortable: true },
-    { columnKey: 'published_date', value: 'published' },
+    { columnKey: 'published_date', value: 'published', sortable: true },
     { columnKey: 'duration', value: 'duration', sortable: true },
     { columnKey: 'speakers_count', value: 'speakers_count', sortable: true },
     { columnKey: 'speaker_company', value: 'speaker_company', sortable: true },
-    { columnKey: 'track', value: 'track' },
+    { columnKey: 'track', value: 'track', sortable: true },
     { columnKey: 'start_date', value: 'start_date', sortable: true },
     { columnKey: 'end_date', value: 'end_date', sortable: true },
     { columnKey: 'submitters', value: 'submitters' },
@@ -55,7 +55,7 @@ const fieldNames = [
     { columnKey: 'tags', value: 'tags', sortable: true },
     { columnKey: 'streaming_url', value: 'streaming_url', sortable: true, title: true },
     { columnKey: 'meeting_url', value: 'meeting_url', sortable: true, title: true },
-    { columnKey: 'etherpad_url', value: 'etherpad_url', sortable: true, title: true },
+    { columnKey: 'etherpad_link', value: 'etherpad_link', sortable: true, title: true },
     { columnKey: 'streaming_type', value: 'streaming_type', sortable: true },
 ]
 
@@ -118,7 +118,7 @@ class SummitEventListPage extends React.Component {
                 submitter_company: [],
                 streaming_url: '',
                 meeting_url: '',
-                etherpad_url: '',
+                etherpad_link: '',
                 streaming_type: '',
                 sponsor: [],
                 all_companies: []
@@ -291,7 +291,7 @@ class SummitEventListPage extends React.Component {
                     submitter_company: [],
                     streaming_url: '',
                     meeting_url: '',
-                    etherpad_url: '',
+                    etherpad_link: '',
                     streaming_type: '',
                     sponsor: [],
                     all_companies: []
@@ -352,7 +352,7 @@ class SummitEventListPage extends React.Component {
                     submitter_company: [],
                     streaming_url: '',
                     meeting_url: '',
-                    etherpad_url: '',
+                    etherpad_link: '',
                     streaming_type: '',
                     sponsor: [],
                     all_companies: []
@@ -376,18 +376,18 @@ class SummitEventListPage extends React.Component {
         
         if(selectedColumns.includes('all_companies') && !newColumns.includes('all_companies')) {
             newColumns = [...newColumns.filter(e => !all_companies.includes(e))];
-        }      
+        }
         const selectedCompanies = selectedColumns.filter(c => all_companies.includes(c)).length;
-        const newCompanies = newColumns.filter(c => all_companies.includes(c)).length
+        const newCompanies = newColumns.filter(c => all_companies.includes(c)).length;
         if(newColumns.includes('all_companies')) {
             if(newColumns.filter(c => all_companies.includes(c)).length === 0) {
                 newColumns = [...this.state.selectedColumns, ...all_companies, 'all_companies'];
             } else if (selectedCompanies === newCompanies) {
-                newColumns = [...this.state.selectedColumns, ...all_companies, 'all_companies'];
-            } else if (newCompanies < selectedCompanies) {                
+                newColumns = [...new Set([...newColumns, ...all_companies, 'all_companies'])];
+            } else if (newCompanies < selectedCompanies) {
                 newColumns = [...newColumns.filter(c => c !== 'all_companies')];
-            } 
-        }          
+            }
+        }      
 
         this.setState({...this.state, selectedColumns: newColumns})
     }
@@ -403,9 +403,9 @@ class SummitEventListPage extends React.Component {
 
         let columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
-            { columnKey: 'type', value: T.translate("event_list.type") },
+            { columnKey: 'type', value: T.translate("event_list.type"), sortable: true },
             { columnKey: 'title', value: T.translate("event_list.title"), sortable: true },
-            { columnKey: 'selection_status', value: T.translate("event_list.selection_status") }            
+            { columnKey: 'selection_status', value: T.translate("event_list.selection_status"), sortable: true }
         ];
 
         const table_options = {
@@ -447,7 +447,7 @@ class SummitEventListPage extends React.Component {
             {label: 'Activity Type', value: 'event_type_id_filter'},
             {label: 'Activity Category', value: 'track_id_filter'},
             {label: 'Level', value: 'level_filter'},
-            {label: 'Etherpad URL', value: 'etherpad_url'}, 
+            {label: 'Etherpad URL', value: 'etherpad_link'}, 
             {label: 'Location', value: 'location_id_filter'},
             {label: 'Meeting URL', value: 'meeting_url'},
             {label: 'Published Status', value: 'published_filter'},    
@@ -484,7 +484,7 @@ class SummitEventListPage extends React.Component {
             { value: 'tags', label: T.translate("event_list.tags") },
             { value: 'streaming_url', label: T.translate("event_list.streaming_url") },
             { value: 'meeting_url', label: T.translate("event_list.meeting_url") },
-            { value: 'etherpad_url', label: T.translate("event_list.etherpad_url") },
+            { value: 'etherpad_link', label: T.translate("event_list.etherpad_link") },
             { value: 'streaming_type', label: T.translate("event_list.streaming_type") },
             { value: 'start_date', label: T.translate("event_list.start_date") },
             { value: 'submitter_company', label: T.translate("event_list.submitter_company")},
@@ -846,12 +846,12 @@ class SummitEventListPage extends React.Component {
                         />
                     </div>
                     }
-                    {enabledFilters.includes('etherpad_url') && 
+                    {enabledFilters.includes('etherpad_link') && 
                         <div className={'col-md-6'}> 
                         <Input
-                            id='etherpad_url'
-                            value={eventFilters.etherpad_url}
-                            placeholder={T.translate("event_list.placeholders.etherpad_url")}
+                            id='etherpad_link'
+                            value={eventFilters.etherpad_link}
+                            placeholder={T.translate("event_list.placeholders.etherpad_link")}
                             onChange={this.handleExtraFilterChange}
                         />
                     </div>

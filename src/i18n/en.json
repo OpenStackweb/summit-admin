@@ -875,7 +875,7 @@
     "tags": "Tags",
     "streaming_url": "Streaming URL",
     "meeting_url": "Meeting URL",
-    "etherpad_url": "Etherpad URL",
+    "etherpad_link": "Etherpad URL",
     "streaming_type": "Streaming Type",
     "status": "Status",
     "selection_status": "Selection Status",
@@ -933,7 +933,7 @@
       "submitter_company": "Filter by Submitter Company",
       "streaming_url": "Filter by Stream URL",
       "meeting_url": "Filter by Meeting URL",
-      "etherpad_url": "Filter by Etherpad URL",
+      "etherpad_link": "Filter by Etherpad URL",
       "streaming_type": "Filter by Streaming Type",
       "sponsor": "Filter by Sponsor",
       "all_companies": "Filter by All Companies"
