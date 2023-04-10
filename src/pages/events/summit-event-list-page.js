@@ -403,7 +403,7 @@ class SummitEventListPage extends React.Component {
 
         let columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
-            { columnKey: 'type', value: T.translate("event_list.type"), sortable: true },
+            { columnKey: 'event_type', value: T.translate("event_list.type"), sortable: true },
             { columnKey: 'title', value: T.translate("event_list.title"), sortable: true },
             { columnKey: 'selection_status', value: T.translate("event_list.selection_status"), sortable: true }
         ];

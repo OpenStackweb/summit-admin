@@ -73,7 +73,7 @@ const eventListReducer = (state = DEFAULT_STATE, action) => {
 
                 return {
                     id: e.id,
-                    type: e.type.name,
+                    event_type: e.type.name,
                     title: e.title,
                     status: e.status,
                     selection_status: e.selection_status === 'unaccepted' && e.is_published === true ? 'accepted' : e.selection_status,
