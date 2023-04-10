@@ -182,7 +182,19 @@ class MediaUploadForm extends React.Component {
                             onChange={this.handleChange}
                         />
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-4 checkboxes-div">
+                        <div className="form-check abc-checkbox">
+                            <input type="checkbox" id="is_editable"
+                                   checked={entity.is_editable}
+                                   onChange={this.handleChange} className="form-check-input"/>
+                            <label className="form-check-label" htmlFor="is_editable">
+                                {T.translate("media_upload.is_editable")}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div className="row form-group">
+                    <div className="col-md-3">
                         <label> {T.translate("media_upload.private_storage_type")}</label>
                         <Dropdown
                             id="private_storage_type"
@@ -193,54 +205,42 @@ class MediaUploadForm extends React.Component {
                             onChange={this.handleChange}
                         />
                     </div>
-                    <div className="col-md-4">
-                        <div className="row">
-                            <div className="col-md-12">
-                                <div className="row">
-                                    <div className="col-md-12">
-                                        <label> {T.translate("media_upload.public_storage_type")}</label>
-                                        <Dropdown
-                                            id="public_storage_type"
-                                            className="right-space"
-                                            value={entity.public_storage_type}
-                                            placeholder={T.translate("media_upload.placeholders.select_public_storage")}
-                                            options={public_storage_ddl}
-                                            onChange={this.handleChange}
-                                        />
-                                    </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-md-12">
-                                        <div className="form-check abc-checkbox">
-                                            <input type="checkbox" id="use_temporary_links_on_public_storage"
-                                                   checked={entity.use_temporary_links_on_public_storage}
-                                                   onChange={this.handleChange} className="form-check-input"/>
-                                            <label className="form-check-label"
-                                                   htmlFor="use_temporary_links_on_public_storage">
-                                                {T.translate("media_upload.use_temporary_links_on_public_storage")}
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-md-12">
-                                        <i className="fa fa-info-circle info-help" aria-hidden="true"
-                                           title={T.translate("media_upload.temporary_links_public_storage_ttl_info")}/>
-                                        &nbsp;
-                                        <Input
-                                            type="number"
-                                            id="temporary_links_public_storage_ttl"
-                                            className="form-control"
-                                            style={{width: '100px'}}
-                                            error={this.hasErrors('temporary_links_public_storage_ttl')}
-                                            onChange={this.handleChange}
-                                            placeholder={T.translate("media_upload.placeholders.temporary_links_public_storage_ttl")}
-                                            value={entity.temporary_links_public_storage_ttl}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
+                    <div className="col-md-3">
+                        <label> {T.translate("media_upload.public_storage_type")}</label>
+                        <Dropdown
+                          id="public_storage_type"
+                          className="right-space"
+                          value={entity.public_storage_type}
+                          placeholder={T.translate("media_upload.placeholders.select_public_storage")}
+                          options={public_storage_ddl}
+                          onChange={this.handleChange}
+                        />
+                    </div>
+                    <div className="col-md-3 checkboxes-div">
+                        <div className="form-check abc-checkbox">
+                            <input type="checkbox" id="use_temporary_links_on_public_storage"
+                                   checked={entity.use_temporary_links_on_public_storage}
+                                   onChange={this.handleChange} className="form-check-input"/>
+                            <label className="form-check-label"
+                                   htmlFor="use_temporary_links_on_public_storage">
+                                {T.translate("media_upload.use_temporary_links_on_public_storage")}
+                            </label>
                         </div>
+                    </div>
+                    <div className="col-md-3">
+                        <label> {T.translate("media_upload.temporary_links_public_storage_ttl_info")}</label>
+                        <div style={{display: 'inline-block'}}>
+                        <Input
+                          type="number"
+                          id="temporary_links_public_storage_ttl"
+                          className="form-control"
+                          style={{width: '100px'}}
+                          error={this.hasErrors('temporary_links_public_storage_ttl')}
+                          onChange={this.handleChange}
+                          placeholder={T.translate("media_upload.placeholders.temporary_links_public_storage_ttl")}
+                          value={entity.temporary_links_public_storage_ttl}
+                        />
+                        </div>&nbsp;minutes
                     </div>
                 </div>
                 <div className="row form-group">

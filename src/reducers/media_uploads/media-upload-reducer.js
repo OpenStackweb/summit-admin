@@ -34,6 +34,7 @@ export const DEFAULT_ENTITY = {
     min_uploads_qty     : 0,
     max_uploads_qty     : 0, //0: unrestricted
     is_mandatory        : false,
+    is_editable         : true,
     private_storage_type: 'None',
     public_storage_type : 'None',
     presentation_types  : [],

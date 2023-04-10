@@ -2192,6 +2192,7 @@
     "max_qty": "Max Media Uploads Quantity",
     "max_qty_hint": "0: Unrestricted",
     "is_mandatory": "Is Mandatory",
+    "is_editable": "Is Editable",
     "type": "File Type",
     "public_storage_type": "Public Storage Type",
     "private_storage_type": "Private Storage Type",
@@ -2200,8 +2201,9 @@
     "delete_warning": "Are you sure you want to delete media media type ",
     "saved": "Media Upload Type saved successfully.",
     "created": "Media Upload Type created successfully.",
+    "temporary_links_on_public_storage": "Temporary Links",
     "use_temporary_links_on_public_storage": "Use Temporary Links",
-    "temporary_links_public_storage_ttl_info": "Temporary Link Time To Live (TTL) in minutes",
+    "temporary_links_public_storage_ttl_info": "Temporary Link Time To Live (TTL)",
     "placeholders": {
       "search": "Search types by name",
       "select_type": "Select File Type",
