@@ -1235,6 +1235,7 @@
     "hint": "Text Input Hint",
     "usage": "Usage",
     "mandatory": "Mandatory",
+    "is_editable": "Editable",
     "printable": "Printable",
     "value": "Hidden Value",
     "visible_option": "Visible Option (as appears on site)",

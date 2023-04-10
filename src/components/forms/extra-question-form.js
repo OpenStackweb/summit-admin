@@ -261,6 +261,15 @@ class ExtraQuestionForm extends React.Component {
                             </label>
                         </div>
                     </div>
+                    <div className="col-md-3 checkboxes-div">
+                        <div className="form-check abc-checkbox">
+                            <input type="checkbox" id="is_editable" checked={entity.is_editable}
+                                   onChange={this.handleChange} className="form-check-input" />
+                            <label className="form-check-label" htmlFor="is_editable">
+                                {T.translate("question_form.is_editable")}
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
                 {this.shouldShowField('values') && entity.id !== 0 &&

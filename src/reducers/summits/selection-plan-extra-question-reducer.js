@@ -34,6 +34,7 @@ export const DEFAULT_ENTITY = {
     label               : '',
     type                : null,
     mandatory           : false,
+    is_editable         : true,
     placeholder         : '',
     values              : []
 }
