@@ -133,6 +133,7 @@ class RegistrationInvitationForm extends React.Component {
                             audience='WithInvitation'
                             version='v2'
                             error={hasErrors('allowed_ticket_types', errors)}
+                            optionsLimit={10}
                         />
                     </div>
                 </div>
