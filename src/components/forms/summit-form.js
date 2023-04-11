@@ -699,11 +699,11 @@ class SummitForm extends React.Component {
                     <div className="row form-group">
                         <div className="col-md-4 checkboxes-div">
                             <div className="form-check abc-checkbox">
-                                <input type="checkbox" id="REG_LITE_ALLOW_PROMO_CODES"
-                                       checked={regLiteMarketingSettings?.REG_LITE_ALLOW_PROMO_CODES?.value} onChange={this.handleChange}
+                                <input type="checkbox" id="REG_LITE_SHOW_COMPANY_INPUT"
+                                       checked={regLiteMarketingSettings?.REG_LITE_SHOW_COMPANY_INPUT?.value} onChange={this.handleChange}
                                        className="form-check-input"/>
-                                <label className="form-check-label" htmlFor="REG_LITE_ALLOW_PROMO_CODES">
-                                    {T.translate("edit_summit.reg_lite_allow_promo_codes")}
+                                <label className="form-check-label" htmlFor="REG_LITE_SHOW_COMPANY_INPUT">
+                                    {T.translate("edit_summit.reg_lite_show_company_input")}
                                 </label>
                             </div>
                         </div>
@@ -732,6 +732,18 @@ class SummitForm extends React.Component {
                                 value={regLiteMarketingSettings?.REG_LITE_COMPANY_DDL_PLACEHOLDER?.value}
                                 onChange={this.handleChange}
                             />
+                        </div>
+                    </div>
+                    <div className="row form-group">
+                        <div className="col-md-12 checkboxes-div">
+                            <div className="form-check abc-checkbox">
+                                <input type="checkbox" id="REG_LITE_ALLOW_PROMO_CODES"
+                                       checked={regLiteMarketingSettings?.REG_LITE_ALLOW_PROMO_CODES?.value} onChange={this.handleChange}
+                                       className="form-check-input"/>
+                                <label className="form-check-label" htmlFor="REG_LITE_ALLOW_PROMO_CODES">
+                                    {T.translate("edit_summit.reg_lite_allow_promo_codes")}
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </Panel>
