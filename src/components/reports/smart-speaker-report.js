@@ -115,7 +115,7 @@ class SmartSpeakerReport extends React.Component {
                 sortKey = 'first_name,last_name';
                 break;
             case 'emails':
-                sortKey = 'registration__email,member__email';
+                sortKey = 'member__email';
                 break;
             case 'rolebysummit':
                 sortKey = 'role_by_summit';
