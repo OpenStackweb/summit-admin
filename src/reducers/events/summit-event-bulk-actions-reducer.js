@@ -22,6 +22,13 @@ import { RECEIVE_SELECTED_EVENTS,
     UPDATE_TYPE_BULK,
     UPDATE_START_DATE_BULK,
     UPDATE_END_DATE_BULK,
+    UPDATE_ACTIVITY_TYPE_BULK,
+    UPDATE_ACTIVITY_CATEGORY_BULK,
+    UPDATE_DURATION_BULK,
+    UPDATE_STREAMING_URL_BULK,
+    UPDATE_STREAMING_TYPE_BULK,
+    UPDATE_MEETING_URL_BULK,
+    UPDATE_ETHERPAD_URL_BULK,
 } from '../../actions/summit-event-bulk-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
@@ -172,6 +179,69 @@ const summitEventBulkActionReducer = (state = DEFAULT_STATE, action) => {
             let { eventOnBulkEdition } = state;
             eventOnBulkEdition = eventOnBulkEdition.map(event => {
                 return {...event, end_date}
+            });
+            return { ... state, eventOnBulkEdition}
+        }
+            break;
+        case UPDATE_ACTIVITY_TYPE_BULK: {
+            let { activityType }      = payload;
+            let { eventOnBulkEdition } = state;
+            eventOnBulkEdition = eventOnBulkEdition.map(event => {
+                return {...event, type_id : activityType}
+            });
+            return { ... state, eventOnBulkEdition}
+        }
+            break;
+        case UPDATE_ACTIVITY_CATEGORY_BULK: {
+            let { activityCategory }      = payload;
+            let { eventOnBulkEdition } = state;
+            eventOnBulkEdition = eventOnBulkEdition.map(event => {
+                return {...event, track_id: activityCategory}
+            });
+            return { ... state, eventOnBulkEdition}
+        }
+            break;
+        case UPDATE_DURATION_BULK: {
+            let { duration }      = payload;
+            let { eventOnBulkEdition } = state;
+            eventOnBulkEdition = eventOnBulkEdition.map(event => {
+                return {...event, duration}
+            });
+            return { ... state, eventOnBulkEdition}
+        }
+            break;
+        case UPDATE_STREAMING_URL_BULK: {
+            let { streamingURL }      = payload;
+            let { eventOnBulkEdition } = state;
+            eventOnBulkEdition = eventOnBulkEdition.map(event => {
+                return {...event, streaming_url: streamingURL}
+            });
+            return { ... state, eventOnBulkEdition}
+        }
+            break;
+        case UPDATE_STREAMING_TYPE_BULK: {
+            let { streamingType }      = payload;
+            let { eventOnBulkEdition } = state;
+            eventOnBulkEdition = eventOnBulkEdition.map(event => {
+                return {...event, streaming_type: streamingType}
+            });
+            return { ... state, eventOnBulkEdition}
+        }
+            break;
+        case UPDATE_MEETING_URL_BULK: {
+            let { meetingURL }      = payload;
+            let { eventOnBulkEdition } = state;
+            eventOnBulkEdition = eventOnBulkEdition.map(event => {
+                return {...event, meeting_url: meetingURL}
+            });
+            return { ... state, eventOnBulkEdition}
+        }
+            break;
+        case UPDATE_ETHERPAD_URL_BULK: {
+            let { etherpadURL }      = payload;
+            let { eventOnBulkEdition } = state;
+            eventOnBulkEdition = eventOnBulkEdition.map(event => {
+                return {...event, etherpad_link: etherpadURL}
             });
             return { ... state, eventOnBulkEdition}
         }

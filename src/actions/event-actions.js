@@ -341,7 +341,7 @@ export const saveEvent = (entity, publish) => async (dispatch, getState) => {
 
     dispatch(startLoading());
 
-    const normalizedEntity = normalizeEntity(entity, eventTypeConfig);
+    const normalizedEntity = normalizeEvent(entity, eventTypeConfig);
 
     const params = {
         access_token: accessToken,
@@ -533,7 +533,7 @@ export const attachFile = (entity, file, attr) => async (dispatch, getState) => 
     const accessToken = await getAccessTokenSafely();
     const {currentSummit} = currentSummitState;
 
-    const normalizedEntity = normalizeEntity(entity);
+    const normalizedEntity = normalizeEvent(entity);
 
     const params = {
         access_token: accessToken
@@ -623,7 +623,7 @@ export const removeImage = (eventId) => async (dispatch, getState) => {
     );
 };
 
-const normalizeEntity = (entity, eventTypeConfig) => {
+export const normalizeEvent = (entity, eventTypeConfig) => {
     const normalizedEntity = {...entity};
     if (!normalizedEntity.start_date) delete normalizedEntity['start_date'];
     if (!normalizedEntity.end_date) delete normalizedEntity['end_date'];

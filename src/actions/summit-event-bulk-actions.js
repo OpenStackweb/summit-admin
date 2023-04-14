@@ -27,6 +27,7 @@ import {
     authErrorHandler
 } from 'openstack-uicore-foundation/lib/utils/actions';
 import {getAccessTokenSafely} from '../utils/methods';
+import { normalizeEvent } from './event-actions';
 
 export const UPDATE_LOCAL_EVENT               = 'UPDATE_LOCAL_EVENT';
 export const RECEIVE_SELECTED_EVENTS          = 'REQUEST_SELECTED_EVENTS';
@@ -39,6 +40,13 @@ export const UPDATE_TYPE_BULK                 = 'UPDATE_TYPE_BULK';
 export const UPDATE_START_DATE_BULK           = 'UPDATE_START_DATE_BULK';
 export const UPDATE_END_DATE_BULK             = 'UPDATE_END_DATE_BULK';
 export const UPDATE_SELECTION_PLAN_BULK       = 'UPDATE_SELECTION_PLAN_BULK';
+export const UPDATE_ACTIVITY_TYPE_BULK        = 'UPDATE_ACTIVITY_TYPE_BULK';
+export const UPDATE_ACTIVITY_CATEGORY_BULK    = 'UPDATE_ACTIVITY_CATEGORY_BULK';
+export const UPDATE_DURATION_BULK             = 'UPDATE_DURATION_BULK';
+export const UPDATE_STREAMING_URL_BULK        = 'UPDATE_STREAMING_URL_BULK';
+export const UPDATE_STREAMING_TYPE_BULK       = 'UPDATE_STREAMING_TYPE_BULK';
+export const UPDATE_MEETING_URL_BULK          = 'UPDATE_MEETING_URL_BULK';
+export const UPDATE_ETHERPAD_URL_BULK         = 'UPDATE_ETHERPAD_URL_BULK';
 
 export const getSummitEventsById = (summitId, eventIds ) => async (dispatch, getState) => {
 
@@ -106,9 +114,54 @@ export const updateEventTitleLocal = (event, title, isValid) => (dispatch) => {
     dispatch(createAction(UPDATE_LOCAL_EVENT)({ eventId: event.id, mutator: mutator(title, isValid) }))
 };
 
+export const updateEventActivityTypeLocal = (event, activityType, isValid) => (dispatch) => {
+
+    let mutator = (activityType, isValid) => event => ({...event, type_id: activityType, is_valid: isValid});
+
+    dispatch(createAction(UPDATE_LOCAL_EVENT)({ eventId: event.id, mutator: mutator(activityType, isValid)}));
+}
+export const updateEventActivityCategoryLocal = (event, activityCategory, isValid) => (dispatch) => {
+
+    let mutator = (activityCategory, isValid) => event => ({...event, track_id: activityCategory, is_valid: isValid});
+
+    dispatch(createAction(UPDATE_LOCAL_EVENT)({ eventId: event.id, mutator: mutator(activityCategory, isValid)}));
+}
+export const updateEventDurationLocal = (event, duration, isValid) => (dispatch) => {
+
+    let mutator = (duration, isValid) => event => ({...event, duration: duration, is_valid: isValid});
+
+    dispatch(createAction(UPDATE_LOCAL_EVENT)({ eventId: event.id, mutator: mutator(duration, isValid)}));
+}
+export const updateEventStreamingURLLocal = (event, streamingURL, isValid) => (dispatch) => {
+
+    let mutator = (streamingURL, isValid) => event => ({...event, streaming_url: streamingURL, is_valid: isValid});
+
+    dispatch(createAction(UPDATE_LOCAL_EVENT)({ eventId: event.id, mutator: mutator(streamingURL, isValid)}));
+}
+export const updateEventStreamingTypeLocal = (event, streamingType, isValid) => (dispatch) => {
+
+    let mutator = (streamingType, isValid) => event => ({...event, streaming_type: streamingType, is_valid: isValid});
+
+    dispatch(createAction(UPDATE_LOCAL_EVENT)({ eventId: event.id, mutator: mutator(streamingType, isValid)}));
+}
+export const updateEventMeetingURLLocal = (event, meetingURL, isValid) => (dispatch) => {
+
+    let mutator = (meetingURL, isValid) => event => ({...event, meeting_url: meetingURL, is_valid: isValid});
+
+    dispatch(createAction(UPDATE_LOCAL_EVENT)({ eventId: event.id, mutator: mutator(meetingURL, isValid)}));
+}
+export const updateEventEtherpadURLLocal = (event, etherpadURL, isValid) => (dispatch) => {
+
+    let mutator = (etherpadURL, isValid) => event => ({...event, etherpad_link: etherpadURL, is_valid: isValid});
+
+    dispatch(createAction(UPDATE_LOCAL_EVENT)({ eventId: event.id, mutator: mutator(etherpadURL, isValid)}));
+}
+
 export const updateEvents = (summitId, events) =>  async (dispatch, getState) => {
 
+    const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
     dispatch(startLoading());
 
     putRequest(
@@ -116,15 +169,7 @@ export const updateEvents = (summitId, events) =>  async (dispatch, getState) =>
         createAction(UPDATED_REMOTE_EVENTS)({}),
         `${window.API_BASE_URL}/api/v1/summits/${summitId}/events/?access_token=${accessToken}`,
         {
-            events: events.map((event) => ({
-                id:event.id,
-                title:event.title,
-                location_id:event.location_id,
-                type_id:event.type_id,
-                start_date:event.start_date,
-                end_date:event.end_date,
-                selection_plan_id: event.selection_plan_id,
-            }))
+            events: normalizeBulkEvents(events.map((event) => normalizeEvent(event, currentSummit.event_types.find(et => et.id === event.type_id))))
         },
         authErrorHandler
     )({})(dispatch)
@@ -142,25 +187,18 @@ export const updateEvents = (summitId, events) =>  async (dispatch, getState) =>
 export const updateAndPublishEvents = (summitId, events) =>  async (dispatch, getState) => {
 
     const accessToken = await getAccessTokenSafely();
+    const { currentSummitState: { currentSummit } } = getState();
     dispatch(startLoading());
 
-    events = events.map((event) => (
-            {
-            id:event.id,
-            title:event.title,
-            location_id:event.location_id,
-            type_id:event.type_id,
-            start_date:event.start_date,
-            end_date:event.end_date,
-            selection_plan_id: event.selection_plan_id,
-            }
-    ))
+    events = events.map((event) => normalizeEvent(event, currentSummit.event_types.find(et => et.id === event.type_id)));
+    const normalizedEvents = normalizeBulkEvents(events);
+    dispatch(stopLoading());
     putRequest(
         null,
         createAction(UPDATED_REMOTE_EVENTS)({}),
         `${window.API_BASE_URL}/api/v1/summits/${summitId}/events/?access_token=${accessToken}`,
         {
-            events
+            events: normalizedEvents
         },
         authErrorHandler
     )({})(dispatch)
@@ -172,7 +210,7 @@ export const updateAndPublishEvents = (summitId, events) =>  async (dispatch, ge
                     createAction(UPDATED_REMOTE_EVENTS)({}),
                     `${window.API_BASE_URL}/api/v1/summits/${summitId}/events/publish/?access_token=${accessToken}`,
                     {
-                        events: events.map((event) => ({
+                        events: normalizedEvents.map((event) => ({
                             id:event.id,
                             location_id:event.location_id,
                             start_date:event.start_date,
@@ -254,4 +292,53 @@ export const updateEventsStartDateLocal = (startDate) => (dispatch) => {
 
 export const updateEventsEndDateLocal = (endDate) => (dispatch) => {
     dispatch(createAction(UPDATE_END_DATE_BULK)({end_date:endDate}));
+}
+
+export const updateEventsActivityTypeLocal = (activityType) => (dispatch) => {
+    dispatch(createAction(UPDATE_ACTIVITY_TYPE_BULK)({activityType}));
+}
+export const updateEventsActivityCategoryLocal = (activityCategory) => (dispatch) => {
+    dispatch(createAction(UPDATE_ACTIVITY_CATEGORY_BULK)({activityCategory}));
+}
+export const updateEventsDurationLocal = (duration) => (dispatch) => {
+    dispatch(createAction(UPDATE_DURATION_BULK)({duration}));
+}
+export const updateEventsStreamingURLLocal = (streamingURL) => (dispatch) => {
+    dispatch(createAction(UPDATE_STREAMING_URL_BULK)({streamingURL}));
+}
+export const updateEventsStreamingTypeLocal = (streamingType) => (dispatch) => {
+    dispatch(createAction(UPDATE_STREAMING_TYPE_BULK)({streamingType}));
+}
+export const updateEventsMeetingURLLocal = (meetingURL) => (dispatch) => {
+    dispatch(createAction(UPDATE_MEETING_URL_BULK)({meetingURL}));
+}
+export const updateEventsEtherpadURLLocal = (etherpadURL) => (dispatch) => {
+    dispatch(createAction(UPDATE_ETHERPAD_URL_BULK)({etherpadURL}));
+}
+
+const normalizeBulkEvents = (entity) => {
+    const normalizedEntity = entity.map(e => {
+        const normalizedEvent = {
+            id: e.id,
+            title: e.title,
+            selection_plan_id: e.selection_plan_id,
+            location_id: e.location_id,
+            start_date: e.start_date,
+            end_date: e.end_date,
+            type_id: e.type_id,
+            track_id: e.track_id,
+            duration: e.duration,
+            streaming_url: e.streaming_url,
+            streaming_type: e.streaming_type,
+            meeting_url: e.meeting_url,
+            etherpad_link: e.etherpad_link   
+        }
+        for (let property in normalizedEvent) {
+            if (normalizedEvent[property] === undefined || normalizedEvent[property] === null) {
+                delete normalizedEvent[property];
+            }
+        }
+        return normalizedEvent;
+    });
+    return normalizedEntity;
 }

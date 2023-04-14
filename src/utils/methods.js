@@ -163,6 +163,47 @@ export const fetchErrorHandler = (response) => {
     }
 }
 
+export const adjustEventDuration = (evt, entity) => {
+
+    let adjustedEntity = {...entity};
+    let {value, id, type} = evt.target;
+
+    if (type === 'datetime') {        
+        value = value.valueOf() / 1000;
+        // if we have both dates, update duration
+        if (id === 'start_date' && adjustedEntity.end_date) {
+            adjustedEntity.duration = adjustedEntity.end_date > value ? adjustedEntity.end_date - value : 0;
+        } else if (id === 'end_date' && adjustedEntity.start_date) {
+            adjustedEntity.duration = adjustedEntity.start_date < value ? value - adjustedEntity.start_date : 0;
+        } else if (adjustedEntity.duration) {
+            // if one of the dates is missing but we have duration, update missing date
+            if (id === 'start_date') {
+                adjustedEntity.end_date = value + adjustedEntity.duration;
+            } else {
+                adjustedEntity.start_date = value - adjustedEntity.duration;
+            }
+        }
+    } else { // updating duration unless is empty        
+        // check if the value is a valid number
+        if (value !== "") {
+            value = parseInt(value*60);
+            if (!Number.isNaN(value)) {
+                if (adjustedEntity.start_date) {
+                    // if we have start date, update end date
+                    adjustedEntity.end_date = adjustedEntity.start_date + value;
+                } else if (adjustedEntity.end_date) {
+                    // if we only have end date, update start date
+                    adjustedEntity.start_date = adjustedEntity.end_date - value;
+                }
+            }
+        }        
+    }
+
+    adjustedEntity[id] = value;
+
+    return adjustedEntity;
+}
+
 export const uuidv4 = () => {
     return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
         (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)

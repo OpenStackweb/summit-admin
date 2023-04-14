@@ -1,0 +1,36 @@
+.bulk-edit-form {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 60px;
+}
+
+.bulk-edit-row {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0 30px;
+    align-items: baseline;
+    padding-bottom: 10px;
+}
+
+.bulk-edit-col  {    
+    min-width: 250px;
+    &-title {
+        padding: 1em 0;
+        font-weight: 700;
+    }
+    &-empty {
+        min-width: 380px;
+    }
+    &-id {
+        min-width: 100px;
+    }
+    .bulk-edit-date-picker {
+        >div:first-of-type {
+            width: 100%;
+        }
+    }
+}
+
+.bulk-edit-buttons {
+    position: fixed;
+}

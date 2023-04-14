@@ -34,7 +34,7 @@ import {
     FreeTextSearch,
     SortableTable
 } from 'openstack-uicore-foundation/lib/components'
-import { isEmpty, scrollToError, shallowEqual, hasErrors } from "../../utils/methods";
+import { isEmpty, scrollToError, shallowEqual, hasErrors, adjustEventDuration } from "../../utils/methods";
 import { Pagination } from "react-bootstrap";
 import ExtraQuestionsForm from 'openstack-uicore-foundation/lib/components/extra-questions';
 import ProgressFlags from '../inputs/ProgressFlags';
@@ -202,38 +202,11 @@ class EventForm extends React.Component {
     }
 
     handleTimeChange(ev) {
-        const entity = { ...this.state.entity };
+        let entity = { ...this.state.entity };
         const { errors } = this.state;
-        let { value, id } = ev.target;
-
-        if (value) {
-            if (ev.target.type === 'datetime') {
-                value = value.valueOf() / 1000;
-                // if we have both dates, update duration
-                if (id === 'start_date' && entity.end_date) {
-                    entity.duration = entity.end_date > value ? entity.end_date - value : 0;
-                } else if (id === 'end_date' && entity.start_date) {
-                    entity.duration = entity.start_date < value ? value - entity.start_date : 0;
-                } else if (entity.duration) {
-                    // if one of the dates is missing but we have duration, update missing date
-                    if (id === 'start_date') {
-                        entity.end_date = value + duration;
-                    } else {
-                        entity.start_date = value - duration;
-                    }
-                }
-            } else { // updating duration unless is empty
-                value = value * 60; // transform to seconds
-                if (entity.start_date) { // if we have start date, update end date
-                    entity.end_date = entity.start_date + value;
-                } else if (entity.end_date) { // if we only have end date, update start date
-                    entity.start_date = entity.end_date - value;
-                }
-            }
-        }
-
-        errors[id] = '';
-        entity[id] = value;
+        let { id } = ev.target;    
+        errors[id] = '';        
+        entity = adjustEventDuration(ev, entity);
         this.setState({ entity: entity });
     }
 
@@ -855,7 +828,7 @@ render() {
                             <label> {T.translate("edit_event.duration")} (minutes) </label>
                             <input
                                 className="form-control"
-                                id="duration" value={entity.duration !== '' ? entity.duration / 60 : null}
+                                id="duration" value={entity.duration !== '' ? entity.duration / 60 : ''}
                                 onChange={this.handleTimeChange}
                                 type="number"
                                 min="0"

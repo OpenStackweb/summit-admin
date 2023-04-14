@@ -28,7 +28,21 @@ import {
     updateEventsStartDateLocal,
     updateEventsEndDateLocal,
     updateEventSelectionPlanLocal,
-    updateEventsSelectionPlanLocal
+    updateEventsSelectionPlanLocal,
+    updateEventActivityTypeLocal,
+    updateEventActivityCategoryLocal,
+    updateEventDurationLocal,
+    updateEventStreamingURLLocal,
+    updateEventStreamingTypeLocal,
+    updateEventMeetingURLLocal,
+    updateEventEtherpadURLLocal,
+    updateEventsActivityTypeLocal,
+    updateEventsActivityCategoryLocal,
+    updateEventsDurationLocal,
+    updateEventsStreamingURLLocal,
+    updateEventsStreamingTypeLocal,
+    updateEventsMeetingURLLocal,
+    updateEventsEtherpadURLLocal
 } from '../../actions/summit-event-bulk-actions';
 import {getSummitById} from "../../actions/summit-actions";
 import T from 'i18n-react/dist/i18n-react'
@@ -77,6 +91,20 @@ class SummitEventsBulkActionsPage extends React.Component {
             updateEventsEndDateLocal,
             updateEventSelectionPlanLocal,
             updateEventsSelectionPlanLocal,
+            updateEventActivityTypeLocal,
+            updateEventActivityCategoryLocal,
+            updateEventDurationLocal,
+            updateEventStreamingURLLocal,
+            updateEventStreamingTypeLocal,
+            updateEventMeetingURLLocal,
+            updateEventEtherpadURLLocal,
+            updateEventsActivityTypeLocal,
+            updateEventsActivityCategoryLocal,
+            updateEventsDurationLocal,
+            updateEventsStreamingURLLocal,
+            updateEventsStreamingTypeLocal,
+            updateEventsMeetingURLLocal,
+            updateEventsEtherpadURLLocal,
         } = this.props;
 
         if(!currentSummit.id) return(<div />);
@@ -102,6 +130,20 @@ class SummitEventsBulkActionsPage extends React.Component {
                         updateEventsEndDateLocal={updateEventsEndDateLocal}
                         updateEventSelectionPlanLocal={updateEventSelectionPlanLocal}
                         updateEventsSelectionPlanLocal={updateEventsSelectionPlanLocal}
+                        updateEventActivityTypeLocal={updateEventActivityTypeLocal}
+                        updateEventActivityCategoryLocal={updateEventActivityCategoryLocal}
+                        updateEventDurationLocal={updateEventDurationLocal}
+                        updateEventStreamingURLLocal={updateEventStreamingURLLocal}
+                        updateEventStreamingTypeLocal={updateEventStreamingTypeLocal}
+                        updateEventMeetingURLLocal={updateEventMeetingURLLocal}
+                        updateEventEtherpadURLLocal={updateEventEtherpadURLLocal}
+                        updateEventsActivityTypeLocal={updateEventsActivityTypeLocal}
+                        updateEventsActivityCategoryLocal={updateEventsActivityCategoryLocal}
+                        updateEventsDurationLocal={updateEventsDurationLocal}
+                        updateEventsStreamingURLLocal={updateEventsStreamingURLLocal}
+                        updateEventsStreamingTypeLocal={updateEventsStreamingTypeLocal}
+                        updateEventsMeetingURLLocal={updateEventsMeetingURLLocal}
+                        updateEventsEtherpadURLLocal={updateEventsEtherpadURLLocal}
                         history={this.props.history}
                     />
                 </div>
@@ -135,5 +177,19 @@ export default connect (
         updateEventsEndDateLocal,
         updateEventSelectionPlanLocal,
         updateEventsSelectionPlanLocal,
+        updateEventActivityTypeLocal,
+        updateEventActivityCategoryLocal,
+        updateEventDurationLocal,
+        updateEventStreamingURLLocal,
+        updateEventStreamingTypeLocal,
+        updateEventMeetingURLLocal,
+        updateEventEtherpadURLLocal,
+        updateEventsActivityTypeLocal,
+        updateEventsActivityCategoryLocal,
+        updateEventsDurationLocal,
+        updateEventsStreamingURLLocal,
+        updateEventsStreamingTypeLocal,
+        updateEventsMeetingURLLocal,
+        updateEventsEtherpadURLLocal,
     }
 )(SummitEventsBulkActionsPage);

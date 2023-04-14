@@ -175,6 +175,13 @@
     "event_location_label": "Location",
     "event_start_date_label": "Start Date",
     "event_end_date_label": "End Date",
+    "event_activity_type_label": "Activity Type",
+    "event_activity_category_label": "Activity Category",
+    "event_duration_label": "Duration",
+    "event_streaming_url_label": "Streaming URL",
+    "event_streaming_type_label": "Streaming Type",
+    "event_meeting_url_label": "Meeting URL",
+    "event_etherpad_link_label": "Etherpad URL",
     "btn_apply_changes": "Apply Changes",
     "btn_apply_publish_changes": "Apply And Publish Changes",
     "messages": {
@@ -186,7 +193,14 @@
     "placeholders": {
       "event_title": "Enter Activity title",
       "start_date": "Enter start date",
-      "end_date": "Enter end date"
+      "end_date": "Enter end date",
+      "event_type": "Select an Activity Type",
+      "track": "Select an Activity Category",
+      "duration": "Enter Duration",
+      "streaming_url": "Enter Streaming URL",
+      "streaming_type": "Select a Streaming Type",
+      "meeting_url": "Enter Meeting URL",
+      "etherpad_link": "Enter Etherpad URL"
     },
     "titles": {
       "view_event": "View Activity"
