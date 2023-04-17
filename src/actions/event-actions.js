@@ -874,7 +874,7 @@ const parseFilters = (filters) => {
     if (filters.hasOwnProperty('tags_filter') && Array.isArray(filters.tags_filter)
         && filters.tags_filter.length > 0) {
         filter.push('tags==' + filters.tags_filter.reduce(
-            (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + tt.id,
+            (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + tt.tag,
             ''
         ));
     }
