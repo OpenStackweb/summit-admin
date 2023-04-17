@@ -91,6 +91,7 @@ class EditOrderExtraQuestionPage extends React.Component {
                 <hr />
                 {currentSummit &&
                     <ExtraQuestionForm
+                        currentSummit={currentSummit}
                         questionClasses={allClasses}
                         entity={entity}
                         errors={errors}

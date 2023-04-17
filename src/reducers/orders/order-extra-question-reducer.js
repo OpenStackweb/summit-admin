@@ -46,6 +46,8 @@ export const DEFAULT_ENTITY = {
     max_selected_values : 0,
     values              : [],
     sub_question_rules  : [],
+    allowed_ticket_types        : [],
+    allowed_badge_features_types: []
 }
 
 const DEFAULT_STATE = {
