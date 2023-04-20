@@ -104,6 +104,7 @@ class EditOrderExtraQuestionPage extends React.Component {
                         onRuleDelete={this.handleRuleDelete}
                         onSubmit={this.props.saveOrderExtraQuestion}
                         updateSubQuestionRuleOrder={updateOrderExtraQuestionsSubQuestionsRuleOrder}
+                        shouldShowEditable={false}
                     />
                 }
             </div>

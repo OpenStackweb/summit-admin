@@ -344,9 +344,22 @@ export const saveSelectionPlanExtraQuestion = (selectionPlanId, entity) => async
       authErrorHandler,
       entity
     )(params)(dispatch)
-      .then(() => {
+      .then((payload) => {
         dispatch(stopLoading());
-        dispatch(showSuccessMessage(T.translate("edit_order_extra_question.order_extra_question_saved")));
+
+        const success_message = {
+          title: T.translate("general.done"),
+          html: T.translate("edit_order_extra_question.order_extra_question_saved"),
+          type: 'success'
+        };
+
+        dispatch(showMessage(
+            success_message,
+            () => {
+              history.push(`/app/summits/${currentSummit.id}/selection-plans/${selectionPlanId}/extra-questions/${payload.response.id}`)
+            }
+        ));
+
       });
   }
 
@@ -367,7 +380,10 @@ export const saveSelectionPlanExtraQuestion = (selectionPlanId, entity) => async
     .then((payload) => {
       dispatch(stopLoading());
       dispatch(showMessage(
-        success_message
+          success_message,
+          () => {
+            history.push(`/app/summits/${currentSummit.id}/selection-plans/${selectionPlanId}/extra-questions/${payload.response.id}`)
+          }
       ));
     });
 

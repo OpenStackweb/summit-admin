@@ -36,6 +36,7 @@ export const DEFAULT_ENTITY = {
     mandatory                   : false,
     placeholder                 : '',
     values                      : [],
+    is_editable:                true,
 }
 
 const DEFAULT_STATE = {

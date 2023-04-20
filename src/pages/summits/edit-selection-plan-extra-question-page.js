@@ -113,6 +113,7 @@ class EditSelectionPlanExtraQuestionPage extends React.Component {
                     onValueDelete={this.handleValueDelete}
                     onValueSave={this.handleValueSave}
                     onSubmit={this.onSaveSelectionPlanExtraQuestion}
+                    shouldShowEditable={true}
                 />
                 }
             </div>
