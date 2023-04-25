@@ -19,7 +19,9 @@ import
     ATTENDEE_UPDATED,
     TICKET_ADDED,
     TICKET_DELETED,
-    RSVP_DELETED, RECEIVE_ATTENDEE_ORDERS
+    RSVP_DELETED, 
+    RECEIVE_ATTENDEE_ORDERS,
+    RECEIVE_ALLOWED_EXTRA_QUESTIONS
 } from '../../actions/attendee-actions';
 
 import {AFFILIATION_ADDED, AFFILIATION_DELETED} from "../../actions/member-actions";
@@ -41,6 +43,7 @@ export const DEFAULT_ENTITY = {
     summit_hall_checked_in: 0,
     disclaimer_accepted: 0,
     tickets: [],
+    allowed_extra_questions: [],
     extra_question_answers: [],
     orders: []
 };
@@ -154,6 +157,10 @@ const attendeeReducer = (state = DEFAULT_STATE, action) => {
         }
         case VALIDATE: {
             return {...state,  errors: payload.errors };
+        }
+        case RECEIVE_ALLOWED_EXTRA_QUESTIONS: {
+            const mainExtraQuestions = payload.response.data;
+            return {...state, entity: {...state.entity, allowed_extra_questions: mainExtraQuestions } };
         }
         default:
             return state;

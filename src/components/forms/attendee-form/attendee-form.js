@@ -297,12 +297,12 @@ class AttendeeForm extends React.Component {
                 </div>
             </form>
             {/* Second Form ( Extra Questions )*/}
-            { entity.id !== 0 && currentSummit.attendee_main_extra_questions && currentSummit.attendee_main_extra_questions.length > 0 &&
+            { entity.id !== 0 && entity.allowed_extra_questions && entity.allowed_extra_questions.length > 0 &&
                 <Panel show={showSection === 'extra_questions'}
                        title={T.translate("edit_attendee.extra_questions")}
                        handleClick={this.toggleSection.bind(this, 'extra_questions')}>
                     <ExtraQuestionsForm
-                        extraQuestions={currentSummit.attendee_main_extra_questions}
+                        extraQuestions={entity.allowed_extra_questions}
                         userAnswers={entity.extra_questions}
                         onAnswerChanges={this.handleSubmit}
                         ref={this.formRef}

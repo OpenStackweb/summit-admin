@@ -48,6 +48,7 @@ export const CLEAR_ALL_SELECTED_ATTENDEES = 'CLEAR_ALL_SELECTED_ATTENDEES';
 export const SET_ATTENDEES_CURRENT_FLOW_EVENT = 'SET_ATTENDEES_CURRENT_FLOW_EVENT';
 export const SET_SELECTED_ALL_ATTENDEES = 'SET_SELECTED_ALL_ATTENDEES';
 export const SEND_ATTENDEES_EMAILS = 'SEND_ATTENDEES_EMAILS';
+export const RECEIVE_ALLOWED_EXTRA_QUESTIONS = 'RECEIVE_ALLOWED_EXTRA_QUESTIONS';
 
 export const selectAttendee = (attendeeId) => (dispatch) => {
     dispatch(createAction(SELECT_ATTENDEE)(attendeeId));
@@ -244,6 +245,29 @@ export const getAttendeeOrders = ( attendee ) => async (dispatch) => {
         null,
         createAction(RECEIVE_ATTENDEE_ORDERS),
         `${window.API_BASE_URL}/api/v1/summits/${attendee.summit_id}/orders`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const getAllowedExtraQuestions = ( attendeeId ) => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
+
+    const params = {
+        expand       : '*sub_question_rules,*sub_question,*values',
+        page         : 1,
+        per_page     : 100,
+        access_token : accessToken
+    };
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_ALLOWED_EXTRA_QUESTIONS),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}/allowed-extra-questions`,
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -487,6 +511,7 @@ const normalizeEntity = (entity) => {
     delete normalizedEntity['id'];
     delete normalizedEntity['created'];
     delete normalizedEntity['last_edited'];
+    delete normalizedEntity['allowed_extra_questions'];
 
     if(!normalizedEntity.company_id){
         delete (normalizedEntity.company_id);
