@@ -108,7 +108,7 @@ const createNewRow = (row, actions) => {
 
     cells.push(
         <td key='add_new'>
-            <button className="btn btn-default" onClick={actions.save}> Add </button>
+            <button type="button" className="btn btn-default" onClick={actions.save}> Add </button>
         </td>
     );
 
