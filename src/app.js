@@ -55,6 +55,7 @@ window.API_BASE_URL             = process.env['API_BASE_URL'];
 window.REPORT_API_BASE_URL      = process.env['REPORT_API_BASE_URL'];
 window.MARKETING_API_BASE_URL   = process.env['MARKETING_API_BASE_URL'];
 window.EMAIL_API_BASE_URL       = process.env['EMAIL_API_BASE_URL'];
+window.SIGNAGE_BASE_URL         = process.env['SIGNAGE_BASE_URL'];
 window.OAUTH2_CLIENT_ID         = process.env['OAUTH2_CLIENT_ID'];
 window.SCOPES                   = process.env['SCOPES'];
 window.ALLOWED_USER_GROUPS      = process.env['ALLOWED_USER_GROUPS'];

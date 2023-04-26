@@ -181,6 +181,7 @@ class NavMenu extends React.Component {
                 ]
             },
             {name:'locations', iconClass: 'fa-map-marker', linkUrl:`summits/${summit_id}/locations`, accessRoute: 'locations'},
+            {name:'signage', iconClass: 'fa-map-signs', linkUrl:`summits/${summit_id}/signage`, accessRoute: 'signage'},
             {name: 'rsvps', iconClass: 'fa-user-plus', accessRoute: 'rsvp',
                 childs: [
                     {name:'rsvp_template_list', linkUrl:`summits/${summit_id}/rsvp-templates`}

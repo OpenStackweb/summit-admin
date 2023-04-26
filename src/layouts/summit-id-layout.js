@@ -31,6 +31,7 @@ import PromocodeLayout from './promocode-layout'
 import EventCategoryLayout from './event-category-layout'
 import EventCategoryGroupLayout from './event-category-group-layout'
 import LocationLayout from './location-layout'
+import SignagePage from '../pages/signage'
 import RsvpTemplateLayout from './rsvp-template-layout'
 import TicketTypeLayout from './ticket-type-layout'
 import TaxTypeLayout from './tax-type-layout'
@@ -126,6 +127,7 @@ class SummitIdLayout extends React.Component {
                     <Route path={`${match.url}/speakers`} component={SummitSpeakersLayout}/>
                     <Route path={`${match.url}/featured-speakers`} component={FeaturedSpeakersPage}/>
                     <Route path={`${match.url}/locations`} component={LocationLayout}/>
+                    <Route path={`${match.url}/signage`} component={SignagePage}/>
                     <Route path={`${match.url}/rsvp-templates`} component={RsvpTemplateLayout}/>
                     <Route path={`${match.url}/promocodes`} component={PromocodeLayout}/>
                     <Route path={`${match.url}/ticket-types`} component={TicketTypeLayout}/>

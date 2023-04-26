@@ -98,6 +98,7 @@
     "event_types": "Activity Types",
     "event_categories": "Activity Categories",
     "event_category_groups": "Activity Category Groups",
+    "signage": "Signage",
     "locations": "Locations",
     "rsvps": "RSVPs",
     "rsvp_template_list": "Templates",
@@ -2455,6 +2456,37 @@
     "order": "Order",
     "placeholders": {
       "search_log": "Search By Action / User Full Name"
+    }
+  },
+  "signage": {
+    "signs": "Signs",
+    "location": "Location",
+    "template": "Template",
+    "date": "Jump to date",
+    "static_banner": "Static Banner",
+    "view_sign": "View Sign",
+    "reload_sign": "Reload Sign",
+    "jump": "Jump",
+    "set": "Set",
+    "activities": "Activities",
+    "banners": "Banners",
+    "id": "ID",
+    "title": "Title",
+    "content": "Content",
+    "speakers": "Speakers",
+    "type": "Type",
+    "floor_loc": "Floor / Location",
+    "start_date": "Start date",
+    "end_date": "End date",
+    "sign_reloaded": "Sign reloaded",
+    "date_published": "Date published",
+    "template_published": "Template published",
+    "static_saved": "Static banner updated",
+    "placeholders": {
+      "locations": "Select location",
+      "template": "Select template",
+      "date": "Select date",
+      "search": "Search signs"
     }
   }
 }

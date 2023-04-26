@@ -126,6 +126,7 @@ import sponsorAdvertisementReducer from './reducers/sponsors/sponsor-advertiseme
 import sponsorMaterialReducer from './reducers/sponsors/sponsor-material-reducer';
 import sponsorSocialNetworkReducer from './reducers/sponsors/sponsor-social-network-reducer';
 import auditLogReducer from './reducers/audit_log/audit-log-reducer';
+import signageReducer from './reducers/signage/signage-reducer';
 import eventCommentReducer from './reducers/events/event-comment-reducer';
 import SubmmissionInvitationListReducer from './reducers/speakers/submission-invitation-list-reducer';
 import submissionInvitationReducer from './reducers/speakers/submission-invitation-reducer';
@@ -257,7 +258,8 @@ const reducers = persistCombineReducers(config, {
     ratingTypeState: ratingTypeReducer,
     scoreTypeState: scoreTypeReducer,
     summitStatsState: summitStatsReducer,
-    auditLogState: auditLogReducer
+    auditLogState: auditLogReducer,
+    signageState: signageReducer
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

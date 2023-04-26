@@ -24,6 +24,7 @@
     "@types/markerclustererplus": "^2.1.29",
     "@types/react": "^16.9.32",
     "@uiw/react-codemirror": "^2.2.1",
+    "ably": "^1.2.39",
     "awesome-bootstrap-checkbox": "^1.0.1",
     "babel-cli": "^6.26.0",
     "babel-loader": "^8.1.0",
