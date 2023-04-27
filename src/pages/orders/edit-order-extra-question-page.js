@@ -26,6 +26,7 @@ import {
     deleteOrderExtraQuestionsSubQuestionsRule,
     updateOrderExtraQuestionsSubQuestionsRuleOrder,
 } from "../../actions/order-actions";
+import { getBadgeFeatures } from '../../actions/badge-actions';
 import Swal from "sweetalert2";
 
 class EditOrderExtraQuestionPage extends React.Component {
@@ -34,6 +35,7 @@ class EditOrderExtraQuestionPage extends React.Component {
         super(props);
 
         props.getOrderExtraQuestionMeta();
+        props.getBadgeFeatures();
 
         this.handleValueSave = this.handleValueSave.bind(this);
         this.handleValueDelete = this.handleValueDelete.bind(this);
@@ -129,5 +131,6 @@ export default connect(
         saveOrderExtraQuestion,
         deleteOrderExtraQuestionsSubQuestionsRule,
         updateOrderExtraQuestionsSubQuestionsRuleOrder,
+        getBadgeFeatures
     }
 )(EditOrderExtraQuestionPage);

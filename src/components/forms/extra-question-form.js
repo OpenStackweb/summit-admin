@@ -295,7 +295,7 @@ class ExtraQuestionForm extends React.Component {
                     }
                     {badge_features_ddl.length > 0 &&
                         <div className="col-md-4">
-                            <label> 
+                            <label>
                                 {T.translate("question_form.allowed_badge_features_types")} &nbsp; 
                                 <i className="fa fa-info-circle" title={T.translate("question_form.allowed_badge_features_types_info")} />
                             </label>
