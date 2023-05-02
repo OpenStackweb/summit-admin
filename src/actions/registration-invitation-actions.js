@@ -328,6 +328,10 @@ const normalizeEntity = (entity) => {
     const normalizedEntity = {...entity};
     normalizedEntity.allowed_ticket_types = entity.allowed_ticket_types.map(tt => tt.id);
     normalizedEntity.tags = entity.tags.map(t => t.tag);
+    delete normalizedEntity['created'];
+    delete normalizedEntity['last_edited'];
+    delete normalizedEntity['is_sent'];
+    delete normalizedEntity['accepted_date'];
     return normalizedEntity;
 };
 

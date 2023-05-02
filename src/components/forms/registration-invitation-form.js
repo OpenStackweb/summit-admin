@@ -152,6 +152,17 @@ class RegistrationInvitationForm extends React.Component {
                         />
                     </div>
                 </div>
+                <div className="row form-group">
+                    <div className="col-md-6">
+                        <div className="form-check abc-checkbox">
+                            <input type="checkbox" id="is_accepted" checked={entity.is_accepted}
+                                className="form-check-input"
+                                onChange={this.handleChange}
+                            />
+                            <label className="form-check-label" htmlFor="is_accepted"> {T.translate("edit_registration_invitation.is_accepted")}</label>
+                        </div>
+                    </div>
+                </div>                
                 <hr />
                 <div className="row">
                     <div className="col-md-12 submit-buttons">

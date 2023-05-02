@@ -2246,6 +2246,7 @@
     "allowed_ticket_types": "Allowed Ticket Types",
     "allowed_ticket_types_info": "Allowed Ticket Types that Attendee is allowed to buy",
     "tags": "Tags",
+    "is_accepted": "Is Accepted?",
     "placeholders": {
       "tags": "Select tags"
     }

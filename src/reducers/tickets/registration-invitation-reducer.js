@@ -35,7 +35,8 @@ export const DEFAULT_ENTITY = {
     last_name : '',
     email : '',
     allowed_ticket_types : [],
-    tags: []
+    tags: [],
+    is_accepted: false,
 }
 
 const DEFAULT_STATE = {
