@@ -58,6 +58,7 @@ class EditRoomPage extends React.Component {
                     history={this.props.history}
                     currentSummit={currentSummit}
                     locationId={currentLocation.id}
+                    locationHours={{opening_hour: currentLocation.opening_hour, closing_hour: currentLocation.closing_hour}}
                     allFloors={allFloors}
                     entity={entity}
                     errors={errors}

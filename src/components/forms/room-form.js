@@ -16,6 +16,7 @@ import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import { Input, TextEditor, SimpleLinkList, Dropdown, UploadInput } from 'openstack-uicore-foundation/lib/components'
 import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
+import HourIntervalInput from '../inputs/date-interval-input';
 
 class RoomForm extends React.Component {
     constructor(props) {
@@ -31,6 +32,7 @@ class RoomForm extends React.Component {
         this.handleUploadFile = this.handleUploadFile.bind(this);
         this.handleRemoveFile = this.handleRemoveFile.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleClearHours = this.handleClearHours.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -76,6 +78,13 @@ class RoomForm extends React.Component {
         ev.preventDefault();
 
         this.props.onSubmit(locationId, entity, continueAdding);
+    }
+
+    handleClearHours() {
+        let entity = {...this.state.entity};        
+        entity['opening_hour'] = null;
+        entity['closing_hour'] = null;
+        this.setState({entity: entity});
     }
 
     hasErrors(field) {
@@ -126,7 +135,7 @@ class RoomForm extends React.Component {
 
     render() {
         const {entity} = this.state;
-        let { allFloors, currentSummit } = this.props;
+        let { allFloors, currentSummit, locationHours } = this.props;
         let floors_ddl = allFloors.map(f => ({label: f.name, value: f.id}));
 
         let attributeColumns = [
@@ -222,6 +231,20 @@ class RoomForm extends React.Component {
                                 {T.translate("edit_room.override_blackouts")}
                             </label>
                         </div>
+                    </div>
+                </div>
+                <div className="row form-group">
+                    <div className="col-md-8">
+                        <label> {T.translate("edit_location.open_hours")}</label>
+                        <HourIntervalInput 
+                            onChange={this.handleChange}
+                            onClear={this.handleClearHours}
+                            fromDate={entity.opening_hour || locationHours.opening_hour}
+                            fromId='opening_hour'
+                            toDate={entity.closing_hour || locationHours.closing_hour}
+                            toId='closing_hour'
+                            timezone={currentSummit.time_zone_id}
+                        />
                     </div>
                 </div>
                 <div className="row form-group">

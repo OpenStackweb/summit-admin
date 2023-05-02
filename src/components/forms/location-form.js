@@ -25,6 +25,7 @@ import {
 } from 'openstack-uicore-foundation/lib/components';
 import { GMap } from 'openstack-uicore-foundation/lib/components/google-map';
 import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
+import HourIntervalInput from "../inputs/date-interval-input";
 
 class LocationForm extends React.Component {
 
@@ -51,6 +52,7 @@ class LocationForm extends React.Component {
         this.handleMarkerDragged    = this.handleMarkerDragged.bind(this);
         this.handleMapUpdate        = this.handleMapUpdate.bind(this);
         this.handleMapClick         = this.handleMapClick.bind(this);
+        this.handleClearHours       = this.handleClearHours.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -79,10 +81,21 @@ class LocationForm extends React.Component {
         if (ev.target.type === 'checkbox') {
             value = ev.target.checked;
         }
+    
+        if (ev.target.type === 'datetime') {
+            value = value.valueOf() / 1000;
+        }
 
         errors[id] = '';
         entity[id] = value;
         this.setState({entity: entity, errors: errors});
+    }
+
+    handleClearHours() {
+        let entity = {...this.state.entity};        
+        entity['opening_hour'] = null;
+        entity['closing_hour'] = null;
+        this.setState({entity: entity});
     }
 
     handleSubmit(ev) {
@@ -270,10 +283,22 @@ class LocationForm extends React.Component {
                 </div>
                 {this.display('website_url') &&
                 <div className="row form-group">
-                    <div className="col-md-12">
+                    <div className="col-md-4">
                         <label> {T.translate("edit_location.website")}</label>
                         <Input id="website_url" value={entity.website_url} onChange={this.handleChange}
                                error={this.hasErrors('website_url')}/>
+                    </div>
+                    <div className="col-md-8">
+                        <label> {T.translate("edit_location.open_hours")}</label>
+                        <HourIntervalInput
+                          onChange={this.handleChange}
+                          onClear={this.handleClearHours}
+                          fromDate={entity.opening_hour}
+                          fromId='opening_hour'
+                          toDate={entity.closing_hour}
+                          toId='closing_hour'
+                          timezone={currentSummit.time_zone_id}
+                        />
                     </div>
                 </div>
                 }

@@ -1098,6 +1098,7 @@
   "edit_location": {
     "location": "Location",
     "number": "Number",
+    "open_hours": "Opening hours",
     "capacity": "Capacity",
     "floor": "Floor",
     "type": "Type",
