@@ -2138,6 +2138,8 @@
     "select_template": "Select a Email Template to perform the action.",
     "select_items": "Select at least one invitation to perform the action.",
     "tags": "Tags",
+    "items_qty": "Selected {qty} Invitations",
+    "send_email_warning": "You're about to send the {template} email template to {qty} people. Please confirm. ",
     "placeholders": {
       "search": "Search invitations by term",
       "allowed_ticket_types_filter": "Filter by one or more ticket types",

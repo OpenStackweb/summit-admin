@@ -134,6 +134,7 @@ class RegistrationInvitationsListPage extends React.Component {
 
         const {
             selectedAll,
+            totalInvitations,
             term,
             showNonAccepted,
             showNotSent,
@@ -154,17 +155,30 @@ class RegistrationInvitationsListPage extends React.Component {
             return false;
         }
 
-        sendEmails
-        (
-            currentFlowEvent,
-            selectedAll ,
-            selectedInvitationsIds,
-            term,
-            showNonAccepted,
-            showNotSent,
-            allowedTicketTypesIds,
-            tagFilter
-        );
+        Swal.fire({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("registration_invitation_list.send_email_warning", 
+                {template: currentFlowEvent, qty: selectedAll ? totalInvitations : selectedInvitationsIds.length}),
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: T.translate("general.yes")
+        }).then(function(result){
+            if (result.value) {
+                sendEmails
+                (
+                    currentFlowEvent,
+                    selectedAll ,
+                    selectedInvitationsIds,
+                    term,
+                    showNonAccepted,
+                    showNotSent,
+                    allowedTicketTypesIds,
+                    tagFilter
+                );
+            }
+        });        
     }
 
     handleSelected(invitation_id, isSelected){
@@ -388,6 +402,12 @@ class RegistrationInvitationsListPage extends React.Component {
 
                     { invitations.length > 0 &&
                     <div>
+                        { selectedInvitationsIds.length > 0 &&
+                                <span><b>{T.translate("registration_invitation_list.items_qty", {qty:selectedInvitationsIds.length})}</b></span>
+                        }
+                        { selectedAll &&
+                            <span><b>{T.translate("registration_invitation_list.items_qty", {qty:totalInvitations})}</b></span>
+                        }
                         <SelectableTable
                             options={table_options}
                             data={invitations}
