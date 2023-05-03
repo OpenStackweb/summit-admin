@@ -246,7 +246,7 @@ class RegistrationInvitationsListPage extends React.Component {
             { columnKey: 'email', value: T.translate("registration_invitation_list.email") },
             { columnKey: 'first_name', value: T.translate("registration_invitation_list.first_name") },
             { columnKey: 'last_name', value: T.translate("registration_invitation_list.last_name") },
-            { columnKey: 'is_accepted', value: T.translate("registration_invitation_list.completed") },
+            { columnKey: 'is_accepted', value: T.translate("registration_invitation_list.is_accepted") },
             { columnKey: 'is_sent', value: T.translate("registration_invitation_list.sent") },
             { columnKey: 'allowed_ticket_types', value: T.translate("registration_invitation_list.allowed_ticket_types"), render: (t) =>
                 t.allowed_ticket_types_full.length > MaxTextLengthForTicketTypesOnTable ?

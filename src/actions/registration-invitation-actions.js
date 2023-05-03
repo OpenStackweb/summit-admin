@@ -24,11 +24,10 @@ import {
     putRequest,
     deleteRequest,
     showMessage,
-    showSuccessMessage
 } from 'openstack-uicore-foundation/lib/utils/actions';
 import history from "../history";
 import {getAccessTokenSafely} from '../utils/methods';
-
+import {getSentEmailsByTemplatesAndEmail} from './email-actions';
 export const REQUEST_INVITATIONS = 'REQUEST_INVITATIONS';
 export const RECEIVE_INVITATIONS = 'RECEIVE_INVITATIONS';
 export const INVITATIONS_IMPORTED = 'INVITATIONS_IMPORTED';
@@ -110,7 +109,6 @@ export const getInvitations = ( term = null, page = 1, perPage = 10, order = 'id
         }
     );
 };
-
 export const importInvitationsCSV = (file) => async (dispatch, getState) => {
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
@@ -297,16 +295,27 @@ export const saveRegistrationInvitation = (entity) => async (dispatch, getState)
             entity
         )(params)(dispatch)
             .then((payload) => {
-                dispatch(showSuccessMessage(T.translate("edit_registration_invitation.registration_invitation_saved")));
+                dispatch(showMessage(
+                    {
+                        title: T.translate("general.done"),
+                        html: T.translate("edit_registration_invitation.registration_invitation_saved"),
+                        type: 'success'
+                    },
+                    () => {
+                        getRegistrationInvitation(payload.response.id)(dispatch, getState).then((payload) => {
+                            getSentEmailsByTemplatesAndEmail(
+                                [
+                                    'SUMMIT_REGISTRATION_INVITE_REGISTRATION',
+                                    'SUMMIT_REGISTRATION_REINVITE_REGISTRATION'
+                                ],
+                                payload.email
+                            )(dispatch, getState)
+                        });
+                    }
+                ));
             });
         return;
     }
-
-    const success_message = {
-        title: T.translate("general.done"),
-        html: T.translate("edit_registration_invitation.registration_invitation_created"),
-        type: 'success'
-    };
 
     postRequest(
         createAction(UPDATE_REGISTRATION_INVITATION),
@@ -318,7 +327,11 @@ export const saveRegistrationInvitation = (entity) => async (dispatch, getState)
     ) (params)(dispatch)
         .then((payload) => {
             dispatch(showMessage(
-                success_message,
+                {
+                    title: T.translate("general.done"),
+                    html: T.translate("edit_registration_invitation.registration_invitation_created"),
+                    type: 'success'
+                },
                 () => { history.push(`/app/summits/${currentSummit.id}/registration-invitations/${payload.response.id}`) }
             ));
         });
