@@ -115,6 +115,7 @@ export const getUnScheduleEventsPage =
             page         : page,
             per_page     : per_page,
             access_token : accessToken,
+            expand       : 'speakers'
         };
 
         if(filter.length > 0){

@@ -32,6 +32,20 @@ const UnScheduleEvent = ({event, onEditEvent, onClickSelected, selectedUnPublish
   const opacity = collected.isDragging ? 0.5 : 1;
   const cursor = collected.isDragging ? 'move' : '-webkit-grab';
 
+  const formatSpeakers = (speakers) => {
+    let formatedSpeakers = '';
+    if (speakers && speakers.length > 0) {
+      speakers.forEach((speaker, index) => {
+        formatedSpeakers += `${speaker.first_name} ${speaker.last_name}`;
+        if (speakers.length > index + 2) formatedSpeakers += ', ';
+        if (speakers.length - 2 === index) formatedSpeakers += ' & ';
+      });
+    }    
+    return formatedSpeakers;
+  }
+
+  const speakers = formatSpeakers(event.speakers).slice(0, 30) + (event.title.length > 30 ? '...' : '');
+
   const popoverHoverFocus = () => {
     return (
       <Popover id="popover-trigger-focus" title={event.title}>
@@ -56,7 +70,7 @@ const UnScheduleEvent = ({event, onEditEvent, onClickSelected, selectedUnPublish
             <div className="event-content">
               <OverlayTrigger trigger={['hover']} placement="bottom" overlay={popoverHoverFocus()}>
                                 <span className="event-title">
-                                    {title}
+                                    {`${event.id} - ${title} ${speakers? ` - ${speakers}` : ''} ${event.duration ? ` - ${event.duration/60} minutes`:''}`}
                                   {rank}
                                 </span>
               </OverlayTrigger>
