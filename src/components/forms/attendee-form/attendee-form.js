@@ -104,10 +104,10 @@ class AttendeeForm extends React.Component {
     }
 
     handleSubmit(formValues) {
-
-        const {currentSummit} = this.props;
-        const qs = new QuestionsSet(currentSummit.attendee_main_extra_questions);
+        const {entity} = this.state;
+        const qs = new QuestionsSet(entity.allowed_extra_questions);
         const formattedAnswers = [];
+
         Object.keys(formValues).map(name => {
             let question = qs.getQuestionByName(name);
             const newQuestion = { question_id: question.id, answer: `${formValues[name]}` }
