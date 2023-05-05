@@ -235,8 +235,8 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
         case EVENT_CATEGORIES_SEEDED: {
             let eventCategoriesAdded = payload.response.data;
 
-            if (eventCategoriesAdded.length > 0) {
-                return {...state, tracks: [...state.currentSummit.tracks, ...eventCategoriesAdded] };
+        if (eventCategoriesAdded.length > 0) {
+                return {...state, currentSummit: {...state.currentSummit, tracks: [...state.currentSummit.tracks, ...eventCategoriesAdded]}};
             } else {
                 return state;
             }
