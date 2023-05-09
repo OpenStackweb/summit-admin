@@ -177,7 +177,7 @@ const SignagePage = ({
               <label> {T.translate("signage.template")} </label>
               <Dropdown
                 placeholder={T.translate("signage.placeholders.template")}
-                value={sign?.template}
+                value={sign?.template || null}
                 onChange={ev => props.publishTemplate(ev.target.value)}
                 options={templateOptions}
                 disabled={!locationId}

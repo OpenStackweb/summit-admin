@@ -23,6 +23,7 @@ import {
     RECEIVE_SIGNAGE_TEMPLATES,
     RECEIVE_SIGN,
     SIGN_UPDATED,
+    SIGN_ADDED,
     SIGNAGE_BANNER_ADDED,
     SIGNAGE_BANNER_UPDATED,
     SIGNAGE_BANNER_DELETED,
@@ -56,8 +57,9 @@ const signageReducer = (state = DEFAULT_STATE, action) => {
         case RECEIVE_SIGN: {
             const { data } = payload.response;
             const sign = data.length > 0 ? data[0] : null;
-            return {...state, sign}
+            return {...state, sign: sign}
         }
+        case SIGN_ADDED:
         case SIGN_UPDATED: {
             const sign = payload.response;
             return {...state, sign}
