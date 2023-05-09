@@ -346,7 +346,7 @@ export const getLocations = () => async (dispatch, getState) => {
     dispatch(startLoading());
     
     const params = {
-        expand       : 'rooms,floors',
+        expand       : 'rooms,floors,floors.rooms',
         page         : 1,
         per_page     : 100,
         access_token : accessToken,

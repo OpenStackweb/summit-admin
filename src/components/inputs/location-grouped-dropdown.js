@@ -4,7 +4,7 @@ import Select, {createFilter} from "react-select";
 const RoomLabel = ({room}) => (<span>{room.name} <i style={{color: 'gray', fontSize: '0.8em'}}>- {room.id}</i></span>);
 
 const LocationGroupedDropdown = ({value, locations, className, placeholder, ...rest}) => {
-  const options = [];
+  let options = [];
   let theValue = null;
   
   const filterOptions = (candidate, input) => {
@@ -15,12 +15,12 @@ const LocationGroupedDropdown = ({value, locations, className, placeholder, ...r
   };
   
   locations.forEach(loc => {
-    const roomsWithoutFloors = loc.rooms.filter(rm => rm.floor_id === 0);
+    const roomsWithoutFloors = loc.rooms?.filter(rm => rm.floor_id === 0) || [];
     
     options.push({label:<i><b>All {loc.name} locations</b></i>, value: loc.id});
-    options.push(...roomsWithoutFloors.map(rm => ({label: <RoomLabel room={rm} />, value: rm.id})));
+    options = options.concat(roomsWithoutFloors.map(rm => ({label: <RoomLabel room={rm} />, value: rm.id})));
     
-    loc.floors.forEach(fl => {
+    loc.floors?.forEach(fl => {
       const floorRooms = loc.rooms.filter(rm => rm.floor_id === fl.id);
       options.push({
         label: fl.name,
