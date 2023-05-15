@@ -201,14 +201,17 @@ class BadgeTypeForm extends React.Component {
                     </div>
                 </div>
                 <div className="row form-group">
-                    <div className="col-md-8">
+                    <div className="col-md-10">
                         <label> {T.translate("edit_badge_type.description")} *</label>
                         <textarea
                             id="description"
                             value={entity.description}
                             onChange={this.handleChange}
+                            rows={6}
+                            maxLength={500}
                             className="form-control"
                         />
+                        <span className='character-counter'>{`${entity.description?.length}/500`}</span>
                     </div>
                 </div>
 
