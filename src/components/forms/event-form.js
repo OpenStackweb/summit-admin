@@ -91,6 +91,7 @@ class EventForm extends React.Component {
         this.handleSpeakerUnassign = this.handleSpeakerUnassign.bind(this);
         this.handleSpeakerAssign = this.handleSpeakerAssign.bind(this);
         this.handleSpeakerEdit = this.handleSpeakerEdit.bind(this);
+        this.handleSpeakersReordering = this.handleSpeakersReordering.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -526,17 +527,17 @@ class EventForm extends React.Component {
 
     handleSpeakerAssign() {
         const { entity, speakerToAdd } = this.state;
-        const { onAssignSpeaker } = this.props;
         if (speakerToAdd) {
-            onAssignSpeaker(entity.id, speakerToAdd);
-            this.setState({...this.state, speakerToAdd: null});
+            if(entity.speakers.some(s => s.id === speakerToAdd.id)) return;
+            const speakers = [...entity.speakers, speakerToAdd];
+            this.setState({...this.state, speakerToAdd: null, entity: {...entity, speakers: speakers}});
         }
     }
 
     handleSpeakerUnassign(speakerId) {
-        const { entity, onUnassignSpeaker } = this.props;
+        const { entity } = this.state;
         const speaker = entity.speakers.find(c => c.id === speakerId);
-
+        if(!speaker) return;
         Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: T.translate("edit_event.unassign_speaker") + ' ' + `${speaker.first_name} ${speaker.last_name}?`,
@@ -544,11 +545,16 @@ class EventForm extends React.Component {
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
             confirmButtonText: T.translate("general.yes_delete")
-        }).then(function (result) {
+        }).then((result) =>{
             if (result.value) {
-                onUnassignSpeaker(entity.id, speakerId);
+                this.setState({...this.state, entity: {...entity, speakers: this.state.entity.speakers.filter(e => e.id !== speaker.id)}});
             }
         });
+    }
+
+    handleSpeakersReordering(speakers, speakerId, newOrder){
+        const { entity } = this.state;
+        this.setState({...this.state, entity: {...entity, speakers: speakers}});
     }
 
     handleSpeakerEdit(speakerId) {
@@ -1034,7 +1040,7 @@ render() {
                                 options={speakers_options}
                                 data={entity.speakers}
                                 columns={speakers_columns}
-                                dropCallback={this.props.onUpdateSpeakersOrder}
+                                dropCallback={this.handleSpeakersReordering}
                                 orderField="order"
                             />
                             : 

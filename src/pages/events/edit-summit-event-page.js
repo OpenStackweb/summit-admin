@@ -28,9 +28,6 @@ import {
     getEventComments,
     fetchExtraQuestions,
     fetchExtraQuestionsAnswers,
-    assignSpeaker,
-    updateSpeakersOrder,
-    unassignSpeaker
 } from '../../actions/event-actions';
 import {unPublishEvent} from '../../actions/summit-builder-actions';
 import {deleteEventMaterial} from '../../actions/event-material-actions';
@@ -192,9 +189,6 @@ const EditSummitEventPage = (props) => {
         deleteEventFeedback={props.deleteEventFeedback}
         getEventFeedbackCSV={props.getEventFeedbackCSV}
         onFlagChange={props.changeFlag}
-        onAssignSpeaker={props.assignSpeaker}
-        onUpdateSpeakersOrder={props.updateSpeakersOrder}
-        onUnassignSpeaker={props.unassignSpeaker}
       />
       }
     </div>
@@ -235,9 +229,6 @@ export default connect(
     clearAuditLogParams,
     getEventComments,
     deleteEventComment,
-    assignSpeaker,
-    updateSpeakersOrder,
-    unassignSpeaker,
   }
 
 )(EditSummitEventPage);

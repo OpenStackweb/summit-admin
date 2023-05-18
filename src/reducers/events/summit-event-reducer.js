@@ -15,7 +15,6 @@ import
 {
     RECEIVE_EVENT,
     RESET_EVENT_FORM,
-    UPDATE_EVENT,
     EVENT_UPDATED,
     EVENT_ADDED,
     EVENT_PUBLISHED,
@@ -28,9 +27,6 @@ import
     RECEIVE_EVENT_COMMENTS,
     RECEIVE_ACTION_TYPES,
     FLAG_CHANGED,
-    EVENT_SPEAKER_ASSIGNED,
-    EVENT_SPEAKER_ORDER_UPDATED,
-    EVENT_SPEAKER_UNASSIGNED,
 } from '../../actions/event-actions';
 import moment from 'moment-timezone';
 
@@ -288,18 +284,6 @@ const summitEventReducer = (state = DEFAULT_STATE, action) => {
             }
 
             return {...state, entity: {...entity, actions: tmpActions}};
-        }
-        case EVENT_SPEAKER_ASSIGNED: {
-            // remove duplicated local speakers
-            const speakers = [...state.entity.speakers, payload].filter((arr, index, self) => index === self.findIndex((t) => (t.id === arr.id)));
-            return {...state, entity: {...state.entity, speakers: speakers}};
-        }
-        case EVENT_SPEAKER_ORDER_UPDATED: {
-            return {...state, entity: {...state.entity, speakers: payload}};
-        }
-        case EVENT_SPEAKER_UNASSIGNED: {
-            let { speakerId } = payload;
-            return {...state, entity: {...state.entity, speakers: state.entity.speakers.filter(e => e.id !== speakerId)}};
         }
         default:
             return state;
