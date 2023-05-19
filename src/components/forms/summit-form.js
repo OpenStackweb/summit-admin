@@ -273,6 +273,7 @@ class SummitForm extends React.Component {
         const external_registration_feed_type_ddl = [
             {label: 'None', value: 'none'},
             {label: 'Eventbrite', value: 'Eventbrite'},
+            {label: 'Samsung', value: 'SAMSUNG'},
         ];
 
         const attribute_columns = [

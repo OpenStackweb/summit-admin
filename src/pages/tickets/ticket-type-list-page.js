@@ -141,9 +141,11 @@ class TicketTypeListPage extends React.Component {
                         <button className="btn btn-primary right-space" onClick={this.handleNewTicketType}>
                             {T.translate("ticket_type_list.add_ticket_type")}
                         </button>
-                        <button className="btn btn-default" onClick={this.handleSeedTickets}>
-                            {T.translate("ticket_type_list.seed_tickets")}
-                        </button>
+                        { currentSummit.external_registration_feed_type == 'Eventbrite' &&
+                            <button className="btn btn-default" onClick={this.handleSeedTickets}>
+                                {T.translate("ticket_type_list.seed_tickets")}
+                            </button>
+                        }
                     </div>
                 </div>
                 <div className='row'>

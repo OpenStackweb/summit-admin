@@ -656,15 +656,14 @@ class TicketListPage extends React.Component {
                         </div>
                     }
                 </div>
-                <Modal show={showIngestModal} onHide={() => this.setState({...this.state, showIngestModal:false})} >
+                <Modal className="modal_ingest" show={showIngestModal} onHide={() => this.setState({...this.state, showIngestModal:false})} >
                     <Modal.Header closeButton>
-                        <Modal.Title>{T.translate("ticket_list.ingest_tickets")}</Modal.Title>
+                        <Modal.Title>{T.translate("ticket_list.ingest_tickets", {source: currentSummit.external_registration_feed_type})}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <div className="row">
                             <div className="col-md-12">
-                                This will trigger the external registration data ingestion from defined feed on Summit
-                                Badge data will not be overwritten unless a promo code is applied
+                                {T.translate("ticket_list.ingest_tickets_text",{source: currentSummit.external_registration_feed_type})}
                             </div>
                             <br />
                             <br />
