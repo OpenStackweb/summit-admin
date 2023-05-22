@@ -110,7 +110,7 @@ const SignagePage = ({
   
   const jumpToEvent = (id) => {
     const event = events.find(ev => ev.id === id);
-    props.publishDate(event.start_date);
+    props.publishDate(event.start_date, "signage.event_jump");
   };
   
   const saveStaticBanner = () => {
@@ -121,7 +121,7 @@ const SignagePage = ({
   };
   
   const jumpToDate = () => {
-    props.publishDate(jumpDate);
+    props.publishDate(jumpDate, "signage.date_published");
   }
   
   const viewSign = () => {
@@ -267,7 +267,7 @@ const SignagePage = ({
                 <div className="col-md-6 text-right">
                   <FreeTextSearch
                     value={term}
-                    placeholder={T.translate("signage.placeholders.search")}
+                    placeholder={T.translate("signage.placeholders.search", {option: view})}
                     onSearch={onSearch}
                   />
                 </div>

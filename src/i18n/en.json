@@ -2486,13 +2486,14 @@
     "end_date": "End date",
     "sign_reloaded": "Sign reloaded",
     "date_published": "Date published",
+    "event_jump": "Time has been jumped to the selected activity",
     "template_published": "Template published",
     "static_saved": "Static banner updated",
     "placeholders": {
       "locations": "Select location",
       "template": "Select template",
       "date": "Select date",
-      "search": "Search signs"
+      "search": "Search for {option}"
     }
   }
 }
