@@ -202,10 +202,10 @@ class SummitEventBulkEditorForm extends React.Component
     handleChangeBulkEndDate(ev){
         let { value } = ev.target;
         value = value.valueOf()/1000;
-        const { currentBulkStartDate, currentBulkDuration } = this.state;        
+        const { currentBulkStartDate, currentBulkDuration } = this.state;
         this.setState({...this.state, currentBulkEndDate: value}, () => this.props.updateEventsEndDateLocal(value));
         if(currentBulkStartDate) {
-            const duration = currentBulkStartDate < value ? value - currentBulkStartDate : 0;            
+            const duration = currentBulkStartDate < value ? value - currentBulkStartDate : 0;
             this.setState({...this.state, currentBulkDuration: duration/60}, () => this.props.updateEventsDurationLocal(parseInt(duration)));
         } else if(currentBulkDuration) {
             const start_date = value - currentBulkDuration;
@@ -214,7 +214,7 @@ class SummitEventBulkEditorForm extends React.Component
     }
 
     onBulkActivityType (ev) {
-        let { value } = ev.target;        
+        let { value } = ev.target;
         this.setState({ ...this.state, currentBulkActivityType: value});
         this.props.updateEventsActivityTypeLocal(value);
     }
@@ -224,7 +224,8 @@ class SummitEventBulkEditorForm extends React.Component
         this.props.updateEventsActivityCategoryLocal(value);
     }
     onBulkDuration (ev) {
-        let duration = Number.isInteger(parseInt(digits)) ? parseInt(digits) : null;
+        let { value } = ev.target;
+        let duration = Number.isInteger(parseInt(value)) ? parseInt(value) : null;
         const { currentBulkStartDate, currentBulkEndDate } = this.state;
         this.setState({...this.state, currentBulkDuration: duration}, () => this.props.updateEventsDurationLocal(duration*60));
         if(duration !== null) {
@@ -352,7 +353,7 @@ class SummitEventBulkEditorForm extends React.Component
                             timezone={currentSummit.time_zone.name}
                             value={epochToMomentTimeZone(currentBulkStartDate, currentSummit.time_zone_id)}
                             timeConstraints={{ hours: { min: 7, max: 22}}}
-                            validation={{after: currentSummitStartDate.valueOf()/1000, before: currentSummitEndDate.valueOf()/1000}}
+                            validation={{before: currentBulkEndDate ? currentBulkEndDate : currentSummitEndDate.valueOf()/1000, after: currentSummitStartDate.valueOf()/1000}}
                             onChange={this.handleChangeBulkStartDate}
                             className="bulk-edit-date-picker"
                          />
@@ -365,7 +366,7 @@ class SummitEventBulkEditorForm extends React.Component
                             inputProps={{placeholder: T.translate("bulk_actions_page.placeholders.end_date")}}
                             timezone={currentSummit.time_zone.name}
                             value={epochToMomentTimeZone(currentBulkEndDate, currentSummit.time_zone_id)}
-                            validation={{after: currentSummitStartDate.valueOf()/1000, before: currentSummitEndDate.valueOf()/1000}}
+                            validation={{before: currentSummitEndDate.valueOf()/1000, after: currentBulkStartDate ? currentBulkStartDate : currentSummitStartDate.valueOf()/1000}}
                             onChange={this.handleChangeBulkEndDate}
                             className="bulk-edit-date-picker"
                         />
