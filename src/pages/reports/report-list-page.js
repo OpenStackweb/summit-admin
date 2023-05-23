@@ -17,80 +17,69 @@ import T from 'i18n-react/dist/i18n-react';
 
 import '../../styles/report-list-page.less';
 
-class ReportListPage extends React.Component {
-
-    constructor(props) {
-        super(props);
-
-        this.handleClick = this.handleClick.bind(this);
-
-        this.state = {}
-
-    }
-
-    handleClick(reportName, ev) {
-        const {currentSummit, history} = this.props;
-
+const ReportListPage = ({currentSummit, history}) => {
+    const presentationTypeId = currentSummit?.event_types?.find(et => et.name === 'Presentation')?.id;
+    const typeFilterQS = presentationTypeId ? `&type=${presentationTypeId}` : '';
+    
+    const handleClick = (reportName) => {
         history.push(`/app/summits/${currentSummit.id}/reports/${reportName}`);
     }
-
-
-    render(){
-        const {currentSummit} = this.props;
-        const presentationTypeId = currentSummit?.event_types?.find(et => et.name === 'Presentation')?.id;
-        const typeFilterQS = presentationTypeId ? `&type=${presentationTypeId}` : '';
-
-        return(
-            <div className="container report-list">
-                <h3> {T.translate("reports.reports")} </h3>
-
-                <div className="row">
-                    <div className="col-md-6">
-                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'presentation_report')}>
-                            {T.translate(`reports.presentation_report`)}
-                        </button>
-                    </div>
-                    <div className="col-md-6">
-                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'speaker_report#published_in=true')}>
-                            {T.translate(`reports.speaker_report`)}
-                        </button>
-                    </div>
-                    <div className="col-md-6">
-                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'rsvp_report')}>
-                            {T.translate(`reports.rsvp_report`)}
-                        </button>
-                    </div>
-                    <div className="col-md-6">
-                        <button className="btn btn-default" onClick={this.handleClick.bind(this, `room_report#sort=time&sortdir=1${typeFilterQS}`)}>
-                            {T.translate(`reports.room_report`)}
-                        </button>
-                    </div>
-                    <div className="col-md-6">
-                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'presentation_video_report')}>
-                            {T.translate(`reports.presentation_video_report`)}
-                        </button>
-                    </div>
-                    <div className="col-md-6">
-                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'feedback_report')}>
-                            {T.translate(`reports.feedback_report`)}
-                        </button>
-                    </div>
-                    <div className="col-md-6">
-                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'tag_report')}>
-                            {T.translate(`reports.tag_report`)}
-                        </button>
-                    </div>
-                    <div className="col-md-6">
-                        <button className="btn btn-default" onClick={this.handleClick.bind(this, 'metrics_report')}>
-                            {T.translate(`reports.metrics_report`)}
-                        </button>
-                    </div>
-
-                </div>
-
-            </div>
-        )
-    }
+    
+    return(
+      <div className="container report-list">
+          <h3> {T.translate("reports.reports")} </h3>
+          
+          <div className="row">
+              <div className="col-md-6">
+                  <button className="btn btn-default" onClick={() => handleClick('presentation_report')}>
+                      {T.translate(`reports.presentation_report`)}
+                  </button>
+              </div>
+              <div className="col-md-6">
+                  <button className="btn btn-default" onClick={() => handleClick('speaker_report#published_in=true')}>
+                      {T.translate(`reports.speaker_report`)}
+                  </button>
+              </div>
+              <div className="col-md-6">
+                  <button className="btn btn-default" onClick={() => handleClick('rsvp_report')}>
+                      {T.translate(`reports.rsvp_report`)}
+                  </button>
+              </div>
+              <div className="col-md-6">
+                  <button className="btn btn-default" onClick={() => handleClick(`room_report#sort=time&sortdir=1${typeFilterQS}`)}>
+                      {T.translate(`reports.room_report`)}
+                  </button>
+              </div>
+              <div className="col-md-6">
+                  <button className="btn btn-default" onClick={() => handleClick('presentation_video_report')}>
+                      {T.translate(`reports.presentation_video_report`)}
+                  </button>
+              </div>
+              <div className="col-md-6">
+                  <button className="btn btn-default" onClick={() => handleClick('feedback_report')}>
+                      {T.translate(`reports.feedback_report`)}
+                  </button>
+              </div>
+              <div className="col-md-6">
+                  <button className="btn btn-default" onClick={() => handleClick('tag_report')}>
+                      {T.translate(`reports.tag_report`)}
+                  </button>
+              </div>
+              <div className="col-md-6">
+                  <button className="btn btn-default" onClick={() => handleClick('metrics_report')}>
+                      {T.translate(`reports.metrics_report`)}
+                  </button>
+              </div>
+              <div className="col-md-6">
+                  <button className="btn btn-default" onClick={() => handleClick('attendee_report')}>
+                      {T.translate(`reports.attendee_report`)}
+                  </button>
+              </div>
+          
+          </div>
+      
+      </div>
+    )
 }
 
 const mapStateToProps = ({ currentSummitState }) => ({

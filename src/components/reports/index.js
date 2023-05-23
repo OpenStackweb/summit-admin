@@ -22,6 +22,7 @@ import FeedbackGroupReport from './feedback-group-report'
 import SmartSpeakerReport from './smart-speaker-report'
 import SmartPresentationReport from './smart-presentation-report'
 import MetricsReport from "./metrics-report";
+import AttendeeReport from "./attendee-report";
 
 export {
     RsvpReport,
@@ -34,5 +35,6 @@ export {
     SingleTagReport,
     SmartSpeakerReport,
     SmartPresentationReport,
-    MetricsReport
+    MetricsReport,
+    AttendeeReport
 }

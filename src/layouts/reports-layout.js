@@ -19,17 +19,18 @@ import Restrict from '../routes/restrict';
 import ReportListPage from '../pages/reports/report-list-page';
 import NoMatchPage from "../pages/no-match-page";
 import {
-    RsvpReport,
-    RsvpEventReport,
-    RoomReport,
-    PresentationVideoReport,
-    FeedbackReport,
-    FeedbackGroupReport,
-    TagReport,
-    SingleTagReport,
-    SmartSpeakerReport,
-    SmartPresentationReport,
-    MetricsReport
+  RsvpReport,
+  RsvpEventReport,
+  RoomReport,
+  PresentationVideoReport,
+  FeedbackReport,
+  FeedbackGroupReport,
+  TagReport,
+  SingleTagReport,
+  SmartSpeakerReport,
+  SmartPresentationReport,
+  MetricsReport,
+  AttendeeReport
 } from "../components/reports"
 
 
@@ -81,6 +82,7 @@ class ReportsLayout extends React.Component {
                     <Route strict exact path={`${match.url}/speaker_report`} component={SmartSpeakerReport}/>
                     <Route strict exact path={`${match.url}/presentation_report`} component={SmartPresentationReport}/>
                     <Route strict exact path={`${match.url}/metrics_report`} component={MetricsReport}/>
+                    <Route strict exact path={`${match.url}/attendee_report`} component={AttendeeReport}/>
                     <Route component={NoMatchPage}/>
                 </Switch>
             </div>

@@ -10,6 +10,8 @@ import FragmentParser from "../../utils/fragmen-parser";
 import { getMembersForEventCSV } from '../../actions/member-actions'
 import {TrackFilter, TypeFilter, RoomFilter, PublishedFilter, PublishedInFilter, StatusFilter, AttendanceFilter, MediaFilter} from '../filters'
 import ExportData from '../export'
+import {getOrderExtraQuestions} from "../../actions/order-actions";
+import {getBadgeFeatures} from "../../actions/badge-actions";
 
 
 const wrapReport = (ReportComponent, specs) => {
@@ -54,6 +56,10 @@ const wrapReport = (ReportComponent, specs) => {
 
             if (published_in) {
                 otherFilters['publishedIn'] = summitId;
+            }
+            
+            if (this.refs.childCmp.translateFilters) {
+                return this.refs.childCmp.translateFilters(otherFilters);
             }
 
             return otherFilters;
@@ -123,15 +129,8 @@ const wrapReport = (ReportComponent, specs) => {
             this.props.getReport(query, name, page);
         }
 
-        handleFilterChange(filter, value) {
-            let multiFilters = ['track', 'room', 'type'];
-            let theValue = null;
-
-            if (multiFilters.includes(filter)) {
-                theValue = value.join(',');
-            } else {
-                theValue = value;
-            }
+        handleFilterChange = (filter, value, isMulti = false) => {
+            const theValue = isMulti ? value.join(',') : value;
 
             this.fragmentParser.setParam(filter, theValue);
             window.location.hash   = this.fragmentParser.serialize();
@@ -148,7 +147,7 @@ const wrapReport = (ReportComponent, specs) => {
                 let filterValue = filters.hasOwnProperty('track') ? filters.track : null;
                 filterHtml.push(
                     <div className="col-md-3" key="track-filter">
-                        <TrackFilter value={filterValue} tracks={currentSummit.tracks} onChange={(value) => {this.handleFilterChange('track',value)}} isMulti/>
+                        <TrackFilter value={filterValue} tracks={currentSummit.tracks} onChange={(value) => {this.handleFilterChange('track',value, true)}} isMulti/>
                     </div>
                 );
             }
@@ -157,7 +156,7 @@ const wrapReport = (ReportComponent, specs) => {
                 let filterValue = filters.hasOwnProperty('type') ? filters.type : null;
                 filterHtml.push(
                     <div className="col-md-3" key="type-filter">
-                        <TypeFilter value={filterValue} types={currentSummit.event_types} onChange={(value) => {this.handleFilterChange('type',value)}} isMulti/>
+                        <TypeFilter value={filterValue} types={currentSummit.event_types} onChange={(value) => {this.handleFilterChange('type',value, true)}} isMulti/>
                     </div>
                 );
             }
@@ -166,7 +165,7 @@ const wrapReport = (ReportComponent, specs) => {
                 let filterValue = filters.hasOwnProperty('room') ? filters.room : null;
                 filterHtml.push(
                     <div className="col-md-3" key="room-filter">
-                        <RoomFilter value={filterValue} rooms={currentSummit.locations.filter(l => l.class_name === 'SummitVenueRoom')} onChange={(value) => {this.handleFilterChange('room',value)}} isMulti/>
+                        <RoomFilter value={filterValue} rooms={currentSummit.locations.filter(l => l.class_name === 'SummitVenueRoom')} onChange={(value) => {this.handleFilterChange('room',value, true)}} isMulti/>
                     </div>
                 );
             }
@@ -242,7 +241,7 @@ const wrapReport = (ReportComponent, specs) => {
                     <div className={'row'}>
                         <div className={'col-md-6'}>
                             <FreeTextSearch
-                                value={search}
+                                value={search || ''}
                                 placeholder={searchPlaceholder}
                                 onSearch={this.handleSearch}
                             />
@@ -276,6 +275,8 @@ const wrapReport = (ReportComponent, specs) => {
                             onSort={this.handleSort}
                             onReload={this.handleReload}
                             data={this.props.data}
+                            filters={filters}
+                            onFilterChange={this.handleFilterChange}
                             {...this.props}
                         />
                     </div>
@@ -309,7 +310,10 @@ const mapStateToProps = ({ currentSummitState, currentReportState }) => ({
 });
 
 const composedReportWrapper = compose(
-    connect(mapStateToProps, {getReport, exportReport, getMembersForEventCSV, getMetricRaw}),
+    connect(
+      mapStateToProps,
+      {getReport, exportReport, getMembersForEventCSV, getMetricRaw, getOrderExtraQuestions, getBadgeFeatures}
+    ),
     wrapReport
 )
 

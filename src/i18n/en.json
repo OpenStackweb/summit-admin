@@ -1666,10 +1666,12 @@
     "speaker_report": "Speaker Report",
     "tag_report": "Tag Report",
     "metrics_report": "Metrics Report",
+    "attendee_report": "Attendee Report",
     "export": "Export",
     "placeholders": {
       "search": "Search by Title, Abstract, Speaker LastName, Member Email ",
-      "select_fields": "Select data to display"
+      "select_fields": "Select data to display",
+      "select_questions": "Select questions to display"
     }
   },
   "badge_type_list": {
