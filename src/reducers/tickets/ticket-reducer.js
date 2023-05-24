@@ -79,6 +79,7 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
             let bought_date = entity.bought_date ? epochToMoment(entity.bought_date).format('MMMM Do YYYY, h:mm:ss a') : null;
             let attendee_full_name = 'N/A';
             let promocode_name = 'N/A';
+            let attendee_company = 'N/A';
             let attendee_email = null;
             const final_amount_formatted = `$${entity.final_amount.toFixed(2)}`;
             const refunded_amount_formatted = `$${entity.refunded_amount.toFixed(2)}`;
@@ -94,6 +95,7 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
             }
 
             if (entity.owner) {
+                attendee_company = entity.owner?.company;
                 attendee_email = entity.owner.email;
                 if (entity.owner.first_name && entity.owner.last_name) {
                     attendee_full_name = `${entity.owner.first_name} ${entity.owner.last_name}`;
@@ -119,7 +121,8 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
                     refunded_amount_formatted,
                     final_amount_adjusted_formatted,
                     ticket_type_id: entity?.ticket_type?.id,
-                    attendee_email: attendee_email
+                    attendee_email: attendee_email,
+                    attendee_company,
                 } };
         }
         break;
