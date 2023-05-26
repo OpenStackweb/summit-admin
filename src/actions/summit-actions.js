@@ -338,6 +338,33 @@ export const saveRegistrationLiteMarketingSettings = (regLiteMarketingSettings) 
 
 }
 
+/**
+ * @param regLiteMarketingSettings
+ * @returns {function(*, *): Promise<unknown[]>}
+ */
+export const savePrintAppMarketingSettings = (printAppMarketingSettings) => async (dispatch) => {
+
+    return Promise.all(Object.keys(printAppMarketingSettings).map(m => {
+
+        const setting_type = 'TEXT';
+        let value = printAppMarketingSettings[m].value ?? '';
+
+        if (typeof value == "boolean"){
+            value = value ? '1' : '0';
+        }
+
+        const mkt_setting = {
+            id: printAppMarketingSettings[m].id,
+            type: setting_type,
+            key: m.toUpperCase(),
+            value: value,
+        }
+
+        return dispatch(saveMarketingSetting(mkt_setting));
+    }));
+
+}
+
 
 const normalizeEntity = (entity) => {
     const normalizedEntity = {...entity};

@@ -335,6 +335,10 @@
     "reg_lite_show_company_input": "Show user company input during registration?",
     "reg_lite_company_ddl_placeholder": "Company Dropdown Placeholder",
     "reg_lite_company_ddl_placeholder_info": "This placeholder will be used for the company dropdown field on the registration lite.",
+    "print_app_hide_find_ticket_by_fullname": "Hide Find By FullName Criteria",
+    "print_app_hide_find_ticket_by_email": "Hide Find By Email Criteria",
+    "reg_lite_settings": "Registration Lite Settings",
+    "check_in_settings": "Print/Check In App Settings",
     "placeholders": {
       "api_feed_type": "Select API feed type...",
       "external_registration_feed_type": "Select Ext. Reg. feed type..."

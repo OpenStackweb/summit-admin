@@ -33,7 +33,7 @@ import {
 
 import { RECEIVE_REFUND_POLICIES } from "../../actions/ticket-actions";
 import {RECEIVE_ORDER_EXTRA_QUESTIONS, RECEIVE_MAIN_ORDER_EXTRA_QUESTIONS, ORDER_EXTRA_QUESTION_ADDED} from "../../actions/order-actions";
-import {RECEIVE_REG_LITE_SETTINGS} from "../../actions/marketing-actions";
+import {RECEIVE_PRINT_APP_SETTINGS, RECEIVE_REG_LITE_SETTINGS} from "../../actions/marketing-actions";
 
 export const DEFAULT_ENTITY = {
     id: 0,
@@ -127,11 +127,17 @@ const DEFAULT_REG_LITE_MARKETING_SETTINGS = {
     REG_LITE_COMPANY_DDL_PLACEHOLDER: {id: 0 , value: 'Select a company'},
 };
 
+const DEFAULT_PRINT_APP_MARKETING_SETTINGS = {
+    PRINT_APP_HIDE_FIND_TICKET_BY_EMAIL: {id: 0 , value: false},
+    PRINT_APP_HIDE_FIND_TICKET_BY_FULLNAME: {id: 0 , value: false},    
+};
+
 const DEFAULT_STATE = {
     currentSummit: DEFAULT_ENTITY,
     errors: {},
     loading:  false,
     reg_lite_marketing_settings: DEFAULT_REG_LITE_MARKETING_SETTINGS,
+    print_app_marketing_settings: DEFAULT_PRINT_APP_MARKETING_SETTINGS
 };
 
 const currentSummitReducer = (state = DEFAULT_STATE, action) => {
@@ -408,6 +414,23 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
             const newMarketingSettings = { ...DEFAULT_STATE.reg_lite_marketing_settings, ...reg_lite_marketing_settings};
 
             return {...state, reg_lite_marketing_settings: newMarketingSettings}
+        }
+        case RECEIVE_PRINT_APP_SETTINGS:{
+
+            let { data } = payload.response;
+            let print_app_marketing_settings = {};
+
+            data.forEach(setting => {
+                let value = setting.value;
+                if(setting.key === 'PRINT_APP_HIDE_FIND_TICKET_BY_EMAIL' || setting.key === 'PRINT_APP_HIDE_FIND_TICKET_BY_FULLNAME'){
+                    value = value === '1';
+                }
+                print_app_marketing_settings[setting.key] = { id : setting.id, value : value};
+            })
+
+            const newMarketingSettings = { ...DEFAULT_STATE.print_app_marketing_settings, ...print_app_marketing_settings};
+
+            return {...state, print_app_marketing_settings: newMarketingSettings}
         }
         default:
             return state;

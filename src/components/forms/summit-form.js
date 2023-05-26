@@ -26,10 +26,11 @@ import {
     TextEditor,
     MemberInput
 } from 'openstack-uicore-foundation/lib/components'
+import Switch from "react-switch";
 
 import {Exclusive} from 'openstack-uicore-foundation/lib/components'
 import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
-import {saveRegistrationLiteMarketingSettings} from "../../actions/summit-actions";
+import {saveRegistrationLiteMarketingSettings, savePrintAppMarketingSettings} from "../../actions/summit-actions";
 
 class SummitForm extends React.Component {
     constructor(props) {
@@ -38,6 +39,7 @@ class SummitForm extends React.Component {
         this.state = {
             entity: {...props.entity},
             regLiteMarketingSettings: {...props.regLiteMarketingSettings},
+            printAppMarketingSettings: {...props.printAppMarketingSettings},
             showSection: 'main',
             errors: props.errors
         };
@@ -65,6 +67,10 @@ class SummitForm extends React.Component {
             state.regLiteMarketingSettings = {...this.props.regLiteMarketingSettings};
         }
 
+        if(!shallowEqual(prevProps.printAppMarketingSettings, this.props.printAppMarketingSettings)) {
+            state.printAppMarketingSettings = {...this.props.printAppMarketingSettings};
+        }
+
         if (!shallowEqual(prevProps.errors, this.props.errors)) {
             state.errors = {...this.props.errors};
         }
@@ -85,6 +91,7 @@ class SummitForm extends React.Component {
     handleChange(ev) {
         let entity = {...this.state.entity};
         let regLiteMarketingSettings = {...this.state.regLiteMarketingSettings};
+        let printAppMarketingSettings = {...this.state.printAppMarketingSettings};
 
         let {onAddHelpMember, onDeleteHelpMember} = this.props;
         let {errors} = this.state;
@@ -170,7 +177,7 @@ class SummitForm extends React.Component {
             errors[id] = currentError;
             entity[id] = value;
         }
-        this.setState({entity: entity, errors: errors, regLiteMarketingSettings : regLiteMarketingSettings});
+        this.setState({entity: entity, errors: errors, regLiteMarketingSettings : regLiteMarketingSettings, printAppMarketingSettings : printAppMarketingSettings });
     }
 
     handleUploadFile(file) {
@@ -196,14 +203,15 @@ class SummitForm extends React.Component {
     }
 
     handleSubmit(ev) {
-        const {entity, regLiteMarketingSettings} = this.state;
+        const {entity, regLiteMarketingSettings, printAppMarketingSettings} = this.state;
 
         ev.preventDefault();
 
         if (this.validateForm(entity)) {
-            this.props.onSubmit(entity).then(() =>
-                this.props.saveRegistrationLiteMarketingSettings(regLiteMarketingSettings)
-            );
+            this.props.onSubmit(entity).then(() => {
+                this.props.saveRegistrationLiteMarketingSettings(regLiteMarketingSettings);
+                this.props.savePrintAppMarketingSettings(printAppMarketingSettings);
+            });
         }
     }
 
@@ -246,8 +254,26 @@ class SummitForm extends React.Component {
         history.push(`/app/summits/${entity.id}/room-booking-attributes/new`);
     }
 
+    handleOnSwitchChange(setting, value) {
+        let printAppMarketingSettings = {...this.state.printAppMarketingSettings};
+        let errors = {...this.state.errors};
+
+        console.log('settings./..', setting)
+        console.log('value./..', value)
+
+        if (!printAppMarketingSettings.hasOwnProperty(setting)) {
+            printAppMarketingSettings[setting] = {value: ''};
+        }
+
+        printAppMarketingSettings[setting].value = value;
+
+        console.log('new value...', printAppMarketingSettings);
+
+        this.setState({...this.state, printAppMarketingSettings: printAppMarketingSettings, errors: errors});
+    }
+
     render() {
-        const {entity, showSection, regLiteMarketingSettings} = this.state;
+        const {entity, showSection, regLiteMarketingSettings, printAppMarketingSettings} = this.state;
         const {timezones, onSPlanDelete, onAttributeTypeDelete} = this.props;
         const time_zones_ddl = timezones.map(tz => ({label: tz, value: tz}));
         const dates_enabled = (entity.hasOwnProperty('time_zone_id') && entity.time_zone_id !== '');
@@ -698,6 +724,11 @@ class SummitForm extends React.Component {
                         </div>
                     </div>
                     <div className="row form-group">
+                        <div className="col-md-12">
+                            <label>{T.translate("edit_summit.reg_lite_settings")}</label><hr/>
+                        </div>
+                    </div>
+                    <div className="row form-group">
                         <div className="col-md-4 checkboxes-div">
                             <div className="form-check abc-checkbox">
                                 <input type="checkbox" id="REG_LITE_SHOW_COMPANY_INPUT"
@@ -745,6 +776,35 @@ class SummitForm extends React.Component {
                                     {T.translate("edit_summit.reg_lite_allow_promo_codes")}
                                 </label>
                             </div>
+                        </div>
+                    </div>
+                    <div className="row form-group">
+                        <div className="col-md-12">
+                            <label>{T.translate("edit_summit.check_in_settings")}</label><hr/>
+                        </div>
+                    </div>
+                    <div className="row form-group">
+                        <div className="col-md-6">
+                            <label> {T.translate("edit_summit.print_app_hide_find_ticket_by_fullname")}&nbsp;
+                            </label> <br/>
+                            <Switch
+                                checked={printAppMarketingSettings?.PRINT_APP_HIDE_FIND_TICKET_BY_FULLNAME?.value || false}
+                                onChange={val => {this.handleOnSwitchChange('PRINT_APP_HIDE_FIND_TICKET_BY_FULLNAME', val)}}
+                                uncheckedIcon={false}
+                                checkedIcon={false}
+                                className="react-switch"
+                            />
+                        </div>
+                        <div className="col-md-6">
+                            <label> {T.translate("edit_summit.print_app_hide_find_ticket_by_email")}&nbsp;
+                            </label> <br/>
+                            <Switch
+                                checked={printAppMarketingSettings?.PRINT_APP_HIDE_FIND_TICKET_BY_EMAIL?.value || false}
+                                onChange={val => {this.handleOnSwitchChange('PRINT_APP_HIDE_FIND_TICKET_BY_EMAIL', val)}}
+                                uncheckedIcon={false}
+                                checkedIcon={false}
+                                className="react-switch"
+                            />
                         </div>
                     </div>
                 </Panel>
