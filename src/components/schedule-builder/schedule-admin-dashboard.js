@@ -995,7 +995,7 @@ class ScheduleAdminDashBoard extends React.Component {
               </Modal.Body>
             </Modal>
             }
-
+  
             {isNotSearchOrEmpty &&
               <ScheduleBuilderView
                   summit={currentSummit}

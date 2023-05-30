@@ -139,6 +139,7 @@
     "media_uploads": "Media Upload Types",
     "track_chairs": "Track Chairs",
     "track_chair_list": "Track Chair List",
+    "track_timeframes": "Track Timeframes",
     "progress_flags": "Progress Flags",
     "sponsored_projects": "Sponsored Projects",
     "settings": "Settings",
@@ -2502,5 +2503,20 @@
       "date": "Select date",
       "search": "Search for {option}"
     }
+  },
+  "track_timeframes": {
+    "track_timeframes": "Track Timeframes",
+    "track": "Track",
+    "locations": "Locations",
+    "add_new": "Add new",
+    "timeframes": "Timeframes",
+    "location": "Location",
+    "all_days": "All days",
+    "day": "Day",
+    "opening_hour": "Opening Hour",
+    "closing_hour": "Closing Hour",
+    "no_items": "No Track Timeframes found.",
+    "remove_warning": "Are you sure you want to remove the timeframes for ",
+    "timeframe_created": "Track timeframe created successfully."
   }
 }

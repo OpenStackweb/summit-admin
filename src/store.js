@@ -130,6 +130,8 @@ import signageReducer from './reducers/signage/signage-reducer';
 import eventCommentReducer from './reducers/events/event-comment-reducer';
 import SubmmissionInvitationListReducer from './reducers/speakers/submission-invitation-list-reducer';
 import submissionInvitationReducer from './reducers/speakers/submission-invitation-reducer';
+import trackTimeframesListReducer from "./reducers/track_chairs/track-timeframes-list-reducer";
+import trackTimeframeReducer from "./reducers/track_chairs/track-timeframe-reducer";
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
 import storage from 'redux-persist/es/storage'
@@ -259,7 +261,9 @@ const reducers = persistCombineReducers(config, {
     scoreTypeState: scoreTypeReducer,
     summitStatsState: summitStatsReducer,
     auditLogState: auditLogReducer,
-    signageState: signageReducer
+    signageState: signageReducer,
+    trackTimeframesListState: trackTimeframesListReducer,
+    trackTimeframeState: trackTimeframeReducer
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

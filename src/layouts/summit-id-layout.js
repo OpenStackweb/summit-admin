@@ -60,8 +60,7 @@ import RegistrationInvitationLayout from "./registration-invitation-layout";
 import MediaUploadLayout from "./media-upload-layout";
 import ScheduleSettingsLayout from "./schedule-settings-layout";
 import FeaturedSpeakersPage from '../pages/summit_speakers/featured-speakers-page';
-import TrackChairListPage from "../pages/track_chairs/track-chair-list-page";
-import ProgressFlagsPage from "../pages/track_chairs/progress-flags-page";
+import TrackChairsLayout from "./track-chairs-layout";
 import SummitPresentationsVotesPage from "../pages/events/summit-presentations-votes-page";
 import RegistrationCompaniesLayout from './registration-companies-layout';
 import SummitSpeakersLayout from './summit-speakers-layout';
@@ -157,8 +156,7 @@ class SummitIdLayout extends React.Component {
                     <Route path={`${match.url}/summitdocs`} component={SummitDocsLayout}/>
                     <Route path={`${match.url}/email-flow-events`} component={EmailFlowEventLayout}/>
                     <Route path={`${match.url}/media-uploads`} component={MediaUploadLayout}/>
-                    <Route path={`${match.url}/track-chairs`} component={TrackChairListPage}/>
-                    <Route path={`${match.url}/progress-flags`} component={ProgressFlagsPage}/>
+                    <Route path={`${match.url}/track-chairs`} component={TrackChairsLayout}/>
                     <Route path={`${match.url}/schedule-settings`} component={ScheduleSettingsLayout}/>
                     <Route path={`${match.url}/registration-companies`} component={RegistrationCompaniesLayout}/>
                     <Route path={`${match.url}/registration-stats`} component={RegistrationStatsPage}/>

@@ -12,7 +12,7 @@
  **/
 
 import moment from "moment-timezone";
-import {findElementPos} from "openstack-uicore-foundation/lib/utils/methods";
+import {findElementPos, epochToMomentTimeZone} from "openstack-uicore-foundation/lib/utils/methods";
 import {getAccessToken} from 'openstack-uicore-foundation/lib/security/methods'
 import { initLogOut} from 'openstack-uicore-foundation/lib/security/methods';
 import Swal from "sweetalert2";
@@ -208,4 +208,25 @@ export const uuidv4 = () => {
     return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
         (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
     );
+}
+
+export const getSummitDays = (summit) => {
+    const days = [];
+    const summitLocalStartDate = epochToMomentTimeZone(summit.start_date, summit.time_zone_id);
+    const summitLocalEndDate = epochToMomentTimeZone(summit.end_date, summit.time_zone_id);
+    let currentAuxDay = summitLocalStartDate.clone();
+    
+    do {
+        const option = {
+            value: currentAuxDay.valueOf() / 1000,
+            label: currentAuxDay.format('MMM Do YYYY')
+        };
+    
+        days.push(option);
+       
+        currentAuxDay = currentAuxDay.clone();
+        currentAuxDay.add(1, 'day');
+    } while (!currentAuxDay.isAfter(summitLocalEndDate));
+    
+    return days;
 }

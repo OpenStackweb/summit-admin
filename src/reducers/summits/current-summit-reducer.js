@@ -3,7 +3,7 @@ import{ LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
 import { SET_CURRENT_SUMMIT, REQUEST_SUMMIT,RECEIVE_SUMMIT, UPDATE_SUMMIT, SUMMIT_ADDED, RESET_SUMMIT_FORM, SUMMIT_LOGO_ATTACHED, SUMMIT_LOGO_DELETED, CLEAR_SUMMIT } from '../../actions/summit-actions';
 import { EVENT_CATEGORY_UPDATED, EVENT_CATEGORY_ADDED, EVENT_CATEGORY_DELETED, EVENT_CATEGORIES_SEEDED } from '../../actions/event-category-actions';
 import { EVENT_TYPE_UPDATED, EVENT_TYPE_ADDED, EVENT_TYPE_DELETED, EVENT_TYPES_SEEDED } from '../../actions/event-type-actions';
-import { LOCATION_UPDATED, LOCATION_ADDED, LOCATION_DELETED } from '../../actions/location-actions';
+import {LOCATION_UPDATED, LOCATION_ADDED, LOCATION_DELETED, ROOM_ADDED, ROOM_DELETED} from '../../actions/location-actions';
 
 import {
     SELECTION_PLAN_DELETED,
@@ -146,15 +146,12 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
         case SET_CURRENT_SUMMIT: {
             return {...state, currentSummit: payload.response};
         }
-        break;
         case LOGOUT_USER: {
             return DEFAULT_STATE
         }
-        break;
         case RESET_SUMMIT_FORM: {
             return DEFAULT_STATE
         }
-        break;
         case REQUEST_SUMMIT: {
             const { id } = payload;
             let { currentSummit} = state;
@@ -163,11 +160,9 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
             }
             return {...DEFAULT_STATE, loading: true, currentSummit: currentSummit };
         }
-        break;
         case CLEAR_SUMMIT: {
             return DEFAULT_STATE;
         }
-        break
         case SUMMIT_ADDED:
         case RECEIVE_SUMMIT: {
             let entity = {...payload.response};
@@ -186,21 +181,17 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, currentSummit: {...state.currentSummit, ...entity}, errors: {}, loading: false};
         }
-        break;
         case UPDATE_SUMMIT: {
             return {...state,  currentSummit: {...payload}, errors: {} };
         }
-        break;
         case SUMMIT_LOGO_ATTACHED: {
             let logo = {...payload.response};
             return {...state, currentSummit: {...state.currentSummit, logo: logo.url} };
         }
-        break;
         case SUMMIT_LOGO_DELETED: {
             let {summitId} = payload;
             return {...state, currentSummit: {...state.currentSummit, logo: null} };
         }
-        break;
         case EVENT_TYPE_UPDATED: {
             let { response } = payload;
             let eventTypes = state.currentSummit.event_types.filter(e => e.id !== response.id);
@@ -210,13 +201,11 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
             let { response } = payload;
             return {...state, currentSummit: {...state.currentSummit, event_types: [...state.currentSummit.event_types, response]}};
         }
-        break;
         case EVENT_TYPE_DELETED: {
             let {eventTypeId} = payload;
             let eventTypes = state.currentSummit.event_types.filter(e => e.id !== eventTypeId);
             return {...state, currentSummit: {...state.currentSummit, event_types: eventTypes}};
         }
-        break;
         case EVENT_TYPES_SEEDED: {
             let eventTypesAdded = payload.response.data;
 
@@ -226,18 +215,15 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
                 return state;
             }
         }
-        break;
         case EVENT_CATEGORY_UPDATED: {
             let { response } = payload;
             let tracks = state.currentSummit.tracks.filter(t => t.id !== response.id);
             return {...state, currentSummit: {...state.currentSummit, tracks: [...tracks, response]}};
         }
-        break;
         case EVENT_CATEGORY_ADDED: {
             let { response } = payload;
             return {...state, currentSummit: {...state.currentSummit, tracks: [...state.currentSummit.tracks, response]}};
         }
-        break;
         case EVENT_CATEGORIES_SEEDED: {
             let eventCategoriesAdded = payload.response.data;
 
@@ -247,47 +233,45 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
                 return state;
             }
         }
-        break;
         case EVENT_CATEGORY_DELETED: {
             let {trackId} = payload;
             let tracks = state.currentSummit.tracks.filter(t => t.id !== trackId);
             return {...state, currentSummit: {...state.currentSummit, tracks: tracks}};
         }
-        break;
         case LOCATION_UPDATED: {
             let { response } = payload;
             let locations = state.currentSummit.locations.filter(l => l.id !== response.id);
             return {...state, currentSummit: {...state.currentSummit, locations: [...locations, response]}};
         }
-        break;
+        case ROOM_ADDED:
         case LOCATION_ADDED: {
             let { response } = payload;
             return {...state, currentSummit: {...state.currentSummit, locations: [...state.currentSummit.locations, response]}};
         }
-        break;
         case LOCATION_DELETED: {
             let {locationId} = payload;
             let locations = state.currentSummit.locations.filter(l => l.id !== locationId);
             return {...state, currentSummit: {...state.currentSummit, locations: locations}};
         }
-        break;
+        case ROOM_DELETED: {
+            let {roomId} = payload;
+            let locations = state.currentSummit.locations.filter(l => l.id !== roomId);
+            return {...state, currentSummit: {...state.currentSummit, locations: locations}};
+        }
         case SELECTION_PLAN_ADDED: {
             let { response } = payload;
             return {...state, currentSummit: {...state.currentSummit, selection_plans: [...state.currentSummit.selection_plans, response]}};
         }
-        break;
         case SELECTION_PLAN_UPDATED: {
             let {response} = payload;
             let selection_plans = state.currentSummit.selection_plans.filter(sp => sp.id !== response.id);
             return {...state, currentSummit: {...state.currentSummit, selection_plans: [...selection_plans, response].sort((a, b) => a.id - b.id)}};
         }
-        break;
         case SELECTION_PLAN_DELETED: {
             let {selectionPlanId} = payload;
             let selection_plans = state.currentSummit.selection_plans.filter(sp => sp.id !== selectionPlanId);
             return {...state, currentSummit: {...state.currentSummit, selection_plans: selection_plans}};
         }
-        break;
         case ROOM_BOOKING_ATTRIBUTE_TYPE_UPDATED:
         case ROOM_BOOKING_ATTRIBUTE_TYPE_ADDED: {
             let {response} = payload;
@@ -307,13 +291,11 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
                 }
             };
         }
-        break;
         case ROOM_BOOKING_ATTRIBUTE_TYPE_DELETED: {
             let {attributeTypeId} = payload;
             let attributeTypes = state.currentSummit.meeting_booking_room_allowed_attributes.filter(a => a.id !== attributeTypeId);
             return {...state, currentSummit: {...state.currentSummit, meeting_booking_room_allowed_attributes: attributeTypes}};
         }
-        break;
         case ROOM_BOOKING_ATTRIBUTE_UPDATED:
         case ROOM_BOOKING_ATTRIBUTE_ADDED: {
             let {response} = payload;
@@ -333,7 +315,6 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
                 }
             };
         }
-        break;
         case ROOM_BOOKING_ATTRIBUTE_DELETED: {
             let {attributeTypeId, attributeValueId} = payload;
             let attributeTypes = state.currentSummit.meeting_booking_room_allowed_attributes.filter(a => a.id !== attributeTypeId);
@@ -342,25 +323,21 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
             attributeType = {...attributeType, values: values};
             return {...state, currentSummit: {...state.currentSummit, meeting_booking_room_allowed_attributes: [...attributeTypes, attributeType]}};
         }
-        break;
         case RECEIVE_BADGE_TYPES: {
             let badgeTypes = payload.response.data;
 
             return {...state, currentSummit: {...state.currentSummit, badge_types: badgeTypes} };
         }
-        break;
         case RECEIVE_REFUND_POLICIES: {
             let refundPolicies = payload.response.data;
 
             return {...state, currentSummit: {...state.currentSummit, refund_policies: refundPolicies} };
         }
-        break;
         case RECEIVE_ACCESS_LEVELS: {
             let accessLevels = payload.response.data;
 
             return {...state, currentSummit: {...state.currentSummit, access_level_types: accessLevels} };
         }
-        break;
         case RECEIVE_BADGE_FEATURES: {
             let badgeFeatures = payload.response.data;
 
@@ -371,7 +348,6 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, currentSummit: {...state.currentSummit, badge_view_types: viewTypes} };
         }
-        break;
         case RECEIVE_ORDER_EXTRA_QUESTIONS: {
             let allExtraQuestions = payload.response.data;
 
@@ -380,11 +356,9 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, currentSummit: {...state.currentSummit, order_only_extra_questions, attendee_extra_questions } };
         }
-        break;
         case VALIDATE: {
             return {...state,  errors: payload.errors };
         }
-        break;
         case RECEIVE_USER_ROLES_BY_SUMMIT:{
             let helpUsers = payload.response;
             return {...state, currentSummit: {...state.currentSummit, help_users: helpUsers} }
@@ -397,7 +371,6 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
             const extraQuestion = payload.response;
             return {...state, currentSummit: {...state.currentSummit, order_extra_questions: [...state.currentSummit.order_extra_questions, extraQuestion]}} 
         } 
-        break;
         case RECEIVE_REG_LITE_SETTINGS:{
 
             let { data } = payload.response;
