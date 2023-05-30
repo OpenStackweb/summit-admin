@@ -25,6 +25,7 @@ import {
     saveOrderExtraQuestionValue,
     deleteOrderExtraQuestionsSubQuestionsRule,
     updateOrderExtraQuestionsSubQuestionsRuleOrder,
+    updateOrderExtraQuestionValueOrder,
 } from "../../actions/order-actions";
 import { getBadgeFeatures } from '../../actions/badge-actions';
 import Swal from "sweetalert2";
@@ -79,12 +80,12 @@ class EditOrderExtraQuestionPage extends React.Component {
     }
 
     handleValueSave(valueEntity) {
-        const { entity, currentSummit } = this.props;
+        const { entity } = this.props;
         this.props.saveOrderExtraQuestionValue(entity.id, valueEntity);
     }
 
     render() {
-        const { currentSummit, entity, errors, allClasses, updateOrderExtraQuestionsSubQuestionsRuleOrder } = this.props;
+        const { currentSummit, entity, errors, allClasses, updateOrderExtraQuestionsSubQuestionsRuleOrder, updateOrderExtraQuestionValueOrder } = this.props;
         const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
 
         return (
@@ -106,6 +107,7 @@ class EditOrderExtraQuestionPage extends React.Component {
                         onRuleDelete={this.handleRuleDelete}
                         onSubmit={this.props.saveOrderExtraQuestion}
                         updateSubQuestionRuleOrder={updateOrderExtraQuestionsSubQuestionsRuleOrder}
+                        updateQuestionValueOrder={updateOrderExtraQuestionValueOrder}
                         shouldShowEditable={false}
                     />
                 }
@@ -131,6 +133,7 @@ export default connect(
         saveOrderExtraQuestion,
         deleteOrderExtraQuestionsSubQuestionsRule,
         updateOrderExtraQuestionsSubQuestionsRuleOrder,
-        getBadgeFeatures
+        getBadgeFeatures,
+        updateOrderExtraQuestionValueOrder,
     }
 )(EditOrderExtraQuestionPage);

@@ -25,7 +25,8 @@ import {
     deleteSelectionPlanExtraQuestion,
     updateSelectionPlanExtraQuestionOrder,
     saveSelectionPlanExtraQuestionValue,
-    deleteSelectionPlanExtraQuestionValue
+    deleteSelectionPlanExtraQuestionValue,
+    updateSelectionPlanExtraQuestionValueOrder
 } from "../../actions/selection-plan-actions";
 import Swal from "sweetalert2";
 
@@ -93,7 +94,7 @@ class EditSelectionPlanExtraQuestionPage extends React.Component {
     }
 
     render(){
-        const {currentSummit, entity, errors, match, allClasses} = this.props;
+        const {currentSummit, entity, errors, match, allClasses, updateSelectionPlanExtraQuestionValueOrder} = this.props;
         const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         const breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
@@ -114,6 +115,7 @@ class EditSelectionPlanExtraQuestionPage extends React.Component {
                     onValueSave={this.handleValueSave}
                     onSubmit={this.onSaveSelectionPlanExtraQuestion}
                     shouldShowEditable={true}
+                    updateQuestionValueOrder={updateSelectionPlanExtraQuestionValueOrder}
                 />
                 }
             </div>
@@ -137,6 +139,7 @@ export default connect (
         updateSelectionPlanExtraQuestionOrder,
         saveSelectionPlanExtraQuestionValue,
         deleteSelectionPlanExtraQuestionValue,
-        resetSelectionPlanExtraQuestionForm
+        resetSelectionPlanExtraQuestionForm,
+        updateSelectionPlanExtraQuestionValueOrder,
     }
 )(EditSelectionPlanExtraQuestionPage);

@@ -71,9 +71,9 @@ export const ORDER_EXTRA_QUESTION_SUB_QUESTION_ORDER_UPDATED = 'ORDER_EXTRA_QUES
 
 export const getOrderExtraQuestionMeta = () => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
         access_token: accessToken,
@@ -91,9 +91,9 @@ export const getOrderExtraQuestionMeta = () => async (dispatch, getState) => {
 };
 
 export const getOrderExtraQuestions = () => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
@@ -117,12 +117,12 @@ export const getOrderExtraQuestions = () => async (dispatch, getState) => {
 };
 
 export const getMainOrderExtraQuestions = () => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit } = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
-    
+
     let apiUrl = URI(`${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/order-extra-questions`);
     apiUrl.addQuery('filter[]', 'class==MainQuestion');
     apiUrl.addQuery('filter[]', 'usage==Ticket');
@@ -146,9 +146,9 @@ export const getMainOrderExtraQuestions = () => async (dispatch, getState) => {
 };
 
 export const getOrderExtraQuestion = (orderExtraQuestionId) => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
@@ -173,9 +173,9 @@ export const resetOrderExtraQuestionForm = () => (dispatch) => {
 };
 
 export const saveOrderExtraQuestion = (entity) => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
         access_token: accessToken,
@@ -225,9 +225,9 @@ export const saveOrderExtraQuestion = (entity) => async (dispatch, getState) => 
 
 export const deleteOrderExtraQuestion = (orderExtraQuestionId) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
         access_token: accessToken
@@ -247,9 +247,9 @@ export const deleteOrderExtraQuestion = (orderExtraQuestionId) => async (dispatc
 
 export const updateOrderExtraQuestionOrder = (questions, questionId, newOrder) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
         access_token: accessToken
@@ -269,10 +269,15 @@ export const updateOrderExtraQuestionOrder = (questions, questionId, newOrder) =
     );
 }
 
+/**
+ * @param orderExtraQuestionId
+ * @param entity
+ * @returns {(function(*=, *): Promise<*>)|*}
+ */
 export const saveOrderExtraQuestionValue = (orderExtraQuestionId, entity) => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
@@ -281,7 +286,7 @@ export const saveOrderExtraQuestionValue = (orderExtraQuestionId, entity) => asy
     };
 
     if (entity.id) {
-        putRequest(
+        return putRequest(
             createAction(UPDATE_ORDER_EXTRA_QUESTION_VALUE),
             createAction(ORDER_EXTRA_QUESTION_VALUE_UPDATED),
             `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/order-extra-questions/${orderExtraQuestionId}/values/${entity.id}`,
@@ -293,26 +298,57 @@ export const saveOrderExtraQuestionValue = (orderExtraQuestionId, entity) => asy
                 dispatch(stopLoading());
             });
 
-    } else {
-
-        postRequest(
-            createAction(UPDATE_ORDER_EXTRA_QUESTION_VALUE),
-            createAction(ORDER_EXTRA_QUESTION_VALUE_ADDED),
-            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/order-extra-questions/${orderExtraQuestionId}/values`,
-            entity,
-            authErrorHandler,
-            entity
-        )(params)(dispatch)
-            .then(() => {
-                dispatch(stopLoading());
-            });
     }
+
+    return postRequest(
+        createAction(UPDATE_ORDER_EXTRA_QUESTION_VALUE),
+        createAction(ORDER_EXTRA_QUESTION_VALUE_ADDED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/order-extra-questions/${orderExtraQuestionId}/values`,
+        entity,
+        authErrorHandler,
+        entity
+    )(params)(dispatch)
+        .then(() => {
+            dispatch(stopLoading());
+        });
+}
+
+/**
+ *
+ * @param values
+ * @param valueId
+ * @param newOrder
+ * @returns {function(*=, *): *}
+ */
+export const updateOrderExtraQuestionValueOrder = (values, valueId, newOrder) => async (dispatch, getState) => {
+
+    const {currentOrderExtraQuestionState} = getState();
+    const accessToken = await getAccessTokenSafely();
+    const {entity: {summit_id, id}} = currentOrderExtraQuestionState;
+
+    const params = {
+        access_token: accessToken
+    };
+
+    dispatch(startLoading());
+
+    return putRequest(
+        createAction(UPDATE_ORDER_EXTRA_QUESTION_VALUE),
+        createAction(ORDER_EXTRA_QUESTION_VALUE_UPDATED),
+        `${window.API_BASE_URL}/api/v1/summits/${summit_id}/order-extra-questions/${id}/values/${valueId}`,
+        {order: newOrder},
+        authErrorHandler,
+        {order: newOrder, id: valueId},
+    )(params)(dispatch)
+        .then(() => {
+            dispatch(stopLoading());
+        });
 }
 
 export const deleteOrderExtraQuestionValue = (orderExtraQuestionId, orderExtraQuestionValueId) => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
         access_token: accessToken
@@ -340,11 +376,11 @@ const normalizeQuestion = (entity) => {
 
 /***************************  PURCHASE ORDERS  ******************************/
 
-export const getPurchaseOrders = ( term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => async (dispatch, getState) => {
+export const getPurchaseOrders = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
     const filter = [];
 
     dispatch(startLoading());
@@ -371,7 +407,6 @@ export const getPurchaseOrders = ( term = null, page = 1, perPage = 10, order = 
         params['order'] = `${orderDirSign}${order}`;
     }
 
-
     return getRequest(
         createAction(REQUEST_PURCHASE_ORDERS),
         createAction(RECEIVE_PURCHASE_ORDERS),
@@ -386,9 +421,9 @@ export const getPurchaseOrders = ( term = null, page = 1, perPage = 10, order = 
 
 export const getPurchaseOrder = (orderId) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
@@ -413,9 +448,9 @@ export const resetPurchaseOrderForm = () => (dispatch) => {
 };
 
 export const savePurchaseOrder = (entity) => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
@@ -468,9 +503,9 @@ export const savePurchaseOrder = (entity) => async (dispatch, getState) => {
 };
 
 export const addTicketsToOrder = (orderId, typeId, qty, promoCode = null) => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
@@ -502,9 +537,9 @@ export const addTicketsToOrder = (orderId, typeId, qty, promoCode = null) => asy
 
 export const deletePurchaseOrder = (orderId) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
         access_token: accessToken
@@ -583,7 +618,7 @@ const normalizePurchaseOrder = (entity) => {
         delete (normalizedEntity.owner);
     }
 
-    if(!normalizedEntity.owner_company_id){
+    if (!normalizedEntity.owner_company_id) {
         delete (normalizedEntity.owner_company_id);
     }
 
@@ -598,7 +633,7 @@ const normalizePurchaseOrder = (entity) => {
 const normalizeSubRule = (entity) => {
     const normalizedEntity = {...entity};
 
-    if (entity.id === 0) delete(normalizedEntity['id']);    
+    if (entity.id === 0) delete (normalizedEntity['id']);
 
     return normalizedEntity;
 }
@@ -614,7 +649,7 @@ export const getOrderExtraQuestionsSubQuestionsRule = (orderExtraQuestionId, rul
 
     dispatch(startLoading());
 
-    const params = {        
+    const params = {
         access_token: accessToken,
     };
 
@@ -631,23 +666,23 @@ export const getOrderExtraQuestionsSubQuestionsRule = (orderExtraQuestionId, rul
 
 export const saveOrderExtraQuestionsSubQuestionsRule = (entity) => async (dispatch, getState) => {
 
-    const { currentOrderExtraQuestionState } = getState();
+    const {currentOrderExtraQuestionState} = getState();
     const accessToken = await getAccessTokenSafely();
     const {entity: {summit_id, id}} = currentOrderExtraQuestionState;
 
     dispatch(startLoading());
 
-    const params = {        
+    const params = {
         access_token: accessToken,
     };
-    
+
     const normalizedEntity = normalizeSubRule(entity);
 
     if (entity.id) {
         return putRequest(
             createAction(UPDATE_ORDER_EXTRA_QUESTION_SUB_QUESTION),
             createAction(ORDER_EXTRA_QUESTION_SUB_QUESTION_UPDATED),
-            `${window.API_BASE_URL}/api/v1/summits/${summit_id}/order-extra-questions/${id}/sub-question-rules/${entity.id}`,            
+            `${window.API_BASE_URL}/api/v1/summits/${summit_id}/order-extra-questions/${id}/sub-question-rules/${entity.id}`,
             normalizedEntity,
             authErrorHandler,
             entity
@@ -679,7 +714,7 @@ export const saveOrderExtraQuestionsSubQuestionsRule = (entity) => async (dispat
                     history.push(`/app/summits/${summit_id}/order-extra-questions/${id}/sub-rule/${payload.response.id}`)
                 }
             ));
-        });    
+        });
 };
 
 export const updateOrderExtraQuestionsSubQuestionsRuleOrder = (rules, ruleId, newOrder) => async (dispatch, getState) => {
@@ -695,7 +730,7 @@ export const updateOrderExtraQuestionsSubQuestionsRuleOrder = (rules, ruleId, ne
         null,
         createAction(ORDER_EXTRA_QUESTION_SUB_QUESTION_ORDER_UPDATED)(rules),
         `${window.API_BASE_URL}/api/v1/summits/${summit_id}/order-extra-questions/${id}/sub-question-rules/${ruleId}`,
-        { order : newOrder },
+        {order: newOrder},
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -710,7 +745,7 @@ export const deleteOrderExtraQuestionsSubQuestionsRule = (orderExtraQuestionId, 
 
     dispatch(startLoading());
 
-    const params = {        
+    const params = {
         access_token: accessToken,
     };
 
@@ -723,7 +758,7 @@ export const deleteOrderExtraQuestionsSubQuestionsRule = (orderExtraQuestionId, 
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
-    );    
+    );
 };
 
 

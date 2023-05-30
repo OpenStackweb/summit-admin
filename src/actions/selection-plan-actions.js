@@ -475,6 +475,38 @@ export const saveSelectionPlanExtraQuestionValue = (selectionPlanId, questionId,
 
 }
 
+/**
+ * @param values
+ * @param valueId
+ * @param newOrder
+ * @returns {function(*=, *): *}
+ */
+export const updateSelectionPlanExtraQuestionValueOrder = (values, valueId, newOrder) => async (dispatch, getState) => {
+
+  const {currentSelectionPlanExtraQuestionState} = getState();
+  const accessToken = await getAccessTokenSafely();
+  const {entity: {summit_id, id, selection_plan_id}} = currentSelectionPlanExtraQuestionState;
+
+  dispatch(startLoading());
+
+  const params = {
+    access_token: accessToken,
+  };
+
+  return putRequest(
+      createAction(UPDATE_SELECTION_PLAN_EXTRA_QUESTION_VALUE),
+      createAction(SELECTION_PLAN_EXTRA_QUESTION_VALUE_UPDATED),
+      `${window.API_BASE_URL}/api/v1/summits/${summit_id}/selection-plans/${selection_plan_id}/extra-questions/${id}/values/${valueId}`,
+      {order: newOrder},
+      authErrorHandler,
+      {order: newOrder, id: valueId},
+  )(params)(dispatch)
+      .then((payload) => {
+        dispatch(stopLoading());
+      });
+
+}
+
 export const deleteSelectionPlanExtraQuestionValue = (selectionPlanId, questionId, valueId) => async (dispatch, getState) => {
 
   const {currentSummitState} = getState();
