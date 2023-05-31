@@ -28,6 +28,8 @@ import {
 } from 'openstack-uicore-foundation/lib/components'
 import Switch from "react-switch";
 
+import TextAreaInputWithCounter from '../inputs/text-area-input-with-counter'
+import TextInputWithCounter from '../inputs/text-input-with-counter'
 import {Exclusive} from 'openstack-uicore-foundation/lib/components'
 import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 import {saveRegistrationLiteMarketingSettings, savePrintAppMarketingSettings} from "../../actions/summit-actions";
@@ -258,16 +260,11 @@ class SummitForm extends React.Component {
         let printAppMarketingSettings = {...this.state.printAppMarketingSettings};
         let errors = {...this.state.errors};
 
-        console.log('settings./..', setting)
-        console.log('value./..', value)
-
         if (!printAppMarketingSettings.hasOwnProperty(setting)) {
             printAppMarketingSettings[setting] = {value: ''};
         }
 
         printAppMarketingSettings[setting].value = value;
-
-        console.log('new value...', printAppMarketingSettings);
 
         this.setState({...this.state, printAppMarketingSettings: printAppMarketingSettings, errors: errors});
     }
@@ -776,6 +773,107 @@ class SummitForm extends React.Component {
                                     {T.translate("edit_summit.reg_lite_allow_promo_codes")}
                                 </label>
                             </div>
+                        </div>
+                    </div>
+                    <div className="row form-group">
+                        <div className="col-md-6">
+                            <label>
+                                {T.translate("edit_summit.reg_lite_initial_order_complete_step_1st_paragraph")}
+                            </label>
+                            &nbsp;
+                            <i className="fa fa-info-circle" aria-hidden="true"
+                               title={T.translate("edit_summit.reg_lite_initial_order_complete_step_1st_paragraph_info")} />
+                            <TextAreaInputWithCounter
+                                className="form-control"
+                                rows={5}
+                                maxLength={255}
+                                id="REG_LITE_INITIAL_ORDER_COMPLETE_STEP_1ST_PARAGRAPH"
+                                value={regLiteMarketingSettings?.REG_LITE_INITIAL_ORDER_COMPLETE_STEP_1ST_PARAGRAPH?.value}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                        <div className="col-md-6">
+                            <label>
+                                {T.translate("edit_summit.reg_lite_initial_order_complete_step_2nd_paragraph")}
+                            </label>
+                            &nbsp;
+                            <i className="fa fa-info-circle" aria-hidden="true"
+                               title={T.translate("edit_summit.reg_lite_initial_order_complete_step_2nd_paragraph_info")} />
+                            <TextAreaInputWithCounter
+                                className="form-control"
+                                rows={5}
+                                maxLength={255}
+                                id="REG_LITE_INITIAL_ORDER_COMPLETE_STEP_2ND_PARAGRAPH"
+                                value={regLiteMarketingSettings?.REG_LITE_INITIAL_ORDER_COMPLETE_STEP_2ND_PARAGRAPH?.value}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                    </div>
+                    <div className="row form-group">
+                        <div className="col-md-6">
+                            <label>
+                                {T.translate("edit_summit.reg_lite_initial_order_complete_btn_label")}
+                            </label>
+                            &nbsp;
+                            <i className="fa fa-info-circle" aria-hidden="true"
+                               title={T.translate("edit_summit.reg_lite_initial_order_complete_btn_label_info")} />
+                            <TextInputWithCounter
+                                className="form-control"
+                                maxLength={50}
+                                id="REG_LITE_INITIAL_ORDER_COMPLETE_BTN_LABEL"
+                                value={regLiteMarketingSettings?.REG_LITE_INITIAL_ORDER_COMPLETE_BTN_LABEL?.value}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                    </div>
+                    <div className="row form-group">
+                        <div className="col-md-6">
+                            <label>
+                                {T.translate("edit_summit.reg_lite_order_complete_step_1st_paragraph")}
+                            </label>&nbsp;
+                            <i className="fa fa-info-circle" aria-hidden="true"
+                               title={T.translate("edit_summit.reg_lite_order_complete_step_1st_paragraph_info")} />
+                            <TextAreaInputWithCounter
+                                className="form-control"
+                                rows={5}
+                                maxLength={255}
+                                id="REG_LITE_ORDER_COMPLETE_STEP_1ST_PARAGRAPH"
+                                value={regLiteMarketingSettings?.REG_LITE_ORDER_COMPLETE_STEP_1ST_PARAGRAPH?.value}
+                                onChange={this.handleChange}
+                            />                            
+                        </div>
+                        <div className="col-md-6">
+                            <label>
+                                {T.translate("edit_summit.reg_lite_order_complete_step_2nd_paragraph")}
+                            </label>
+                            &nbsp;
+                            <i className="fa fa-info-circle" aria-hidden="true"
+                               title={T.translate("edit_summit.reg_lite_order_complete_step_2nd_paragraph_info")} />
+                            <TextAreaInputWithCounter
+                                className="form-control"
+                                rows={5}
+                                maxLength={255}
+                                id="REG_LITE_ORDER_COMPLETE_STEP_2ND_PARAGRAPH"
+                                value={regLiteMarketingSettings?.REG_LITE_ORDER_COMPLETE_STEP_2ND_PARAGRAPH?.value}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                    </div>
+                    <div className="row form-group">
+                        <div className="col-md-6">
+                            <label>
+                                {T.translate("edit_summit.reg_lite_order_complete_btn_label")}
+                            </label>
+                            &nbsp;
+                            <i className="fa fa-info-circle" aria-hidden="true"
+                               title={T.translate("edit_summit.reg_lite_order_complete_btn_label_info")} />
+                            <TextInputWithCounter
+                                className="form-control"
+                                maxLength={50}
+                                id="REG_LITE_ORDER_COMPLETE_BTN_LABEL"
+                                value={regLiteMarketingSettings?.REG_LITE_ORDER_COMPLETE_BTN_LABEL?.value}
+                                onChange={this.handleChange}
+                            />                            
                         </div>
                     </div>
                     <div className="row form-group">
