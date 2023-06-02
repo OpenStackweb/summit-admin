@@ -63,7 +63,8 @@
     "drag_and_drop": "Drag and Drop to sort items.",
     "remove_warning": "Are you sure you want to delete this?",
     "placeholders": {
-      "search_speakers": "Search Speakers by Name, Email, Speaker Id or Member Id"
+      "search_speakers": "Search Speakers by Name, Email, Speaker Id or Member Id",
+      "select_acceptance_criteria": "Select acceptance criteria"
     }
   },
   "landing": {
@@ -2264,6 +2265,7 @@
     "first_name_info": "",
     "last_name": "Last Name",
     "last_name_info": "",
+    "acceptance_criteria": "Acceptance Criteria",
     "email": "Email",
     "email_info": "",
     "registration_invitation_created": "Invitation created successfully.",

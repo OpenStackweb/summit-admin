@@ -14,6 +14,7 @@ import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import {TicketTypesInput, Input, TagInput} from 'openstack-uicore-foundation/lib/components';
 import {hasErrors, isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
+import AcceptanceCriteriaDropdown from "../inputs/acceptance-criteria-dropdown";
 
 class RegistrationInvitationForm extends React.Component {
     constructor(props) {
@@ -78,7 +79,7 @@ class RegistrationInvitationForm extends React.Component {
     render() {
         const {entity, errors} = this.state;
         const { currentSummit } = this.props;
-
+        
         return (
             <form className="registration-invitation-form">
                 <input type="hidden" id="id" value={entity.id} />
@@ -107,7 +108,7 @@ class RegistrationInvitationForm extends React.Component {
                     </div>
                 </div>
                 <div className="row form-group">
-                    <div className="col-md-12">
+                    <div className="col-md-6">
                         <label> {T.translate("edit_registration_invitation.email")}</label>
                         &nbsp;<i className="fa fa-info-circle" aria-hidden="true" title={T.translate("edit_registration_invitation.email_info")}/>
                         <Input
@@ -116,6 +117,15 @@ class RegistrationInvitationForm extends React.Component {
                             error={hasErrors('email', errors)}
                             onChange={this.handleChange}
                             value={entity.email}
+                        />
+                    </div>
+                    <div className="col-md-6">
+                        <label> {T.translate("edit_registration_invitation.acceptance_criteria")}</label>
+                        <AcceptanceCriteriaDropdown
+                            id="acceptance_criteria"
+                            value={entity.acceptance_criteria}
+                            onChange={this.handleChange}
+                            error={hasErrors('acceptance_criteria', errors)}
                         />
                     </div>
                 </div>

@@ -24,6 +24,7 @@ import {
     putRequest,
     deleteRequest,
     showMessage,
+    postFile,
 } from 'openstack-uicore-foundation/lib/utils/actions';
 import history from "../history";
 import {getAccessTokenSafely} from '../utils/methods';
@@ -109,7 +110,7 @@ export const getInvitations = ( term = null, page = 1, perPage = 10, order = 'id
         }
     );
 };
-export const importInvitationsCSV = (file) => async (dispatch, getState) => {
+export const importInvitationsCSV = (file, acceptanceCriteria) => async (dispatch, getState) => {
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
@@ -117,12 +118,13 @@ export const importInvitationsCSV = (file) => async (dispatch, getState) => {
     const params = {
         access_token : accessToken
     };
-
-    postRequest(
+    
+    postFile(
         null,
         createAction(INVITATIONS_IMPORTED),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/registration-invitations/csv`,
         file,
+        {acceptance_criteria: acceptanceCriteria},
         authErrorHandler,
     )(params)(dispatch)
         .then(() => {

@@ -30,9 +30,10 @@ import {
     setSelectedAll, sendEmails
 }
 from "../../actions/registration-invitation-actions";
-
+import AcceptanceCriteriaDropdown from "../../components/inputs/acceptance-criteria-dropdown";
 import { MaxTextLengthForTicketTypesOnTable, MaxTextLengthForTagsOnTable } from '../../utils/constants';
 
+import "../../styles/registration-invitation-list-page.less";
 
 
 class RegistrationInvitationsListPage extends React.Component {
@@ -61,6 +62,7 @@ class RegistrationInvitationsListPage extends React.Component {
         this.state = {
             showImportModal: false,
             importFile: null,
+            acceptanceCriteria: null
         }
     }
 
@@ -216,11 +218,10 @@ class RegistrationInvitationsListPage extends React.Component {
     }
 
     handleImportInvitations() {
+        const {importFile, acceptanceCriteria} = this.state;
         this.setState({showImportModal: false});
-        let formData = new FormData();
-        if (this.state.importFile) {
-            formData.append('file', this.state.importFile);
-            this.props.importInvitationsCSV(formData);
+        if (importFile && acceptanceCriteria) {
+            this.props.importInvitationsCSV(importFile, acceptanceCriteria);
         }
     }
 
@@ -253,7 +254,7 @@ class RegistrationInvitationsListPage extends React.Component {
             currentFlowEvent, selectedAll, allowedTicketTypesIds, tagFilter
         } = this.props;
 
-        const {showImportModal, importFile} = this.state;
+        const {showImportModal, importFile, acceptanceCriteria} = this.state;
         
         const columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
@@ -445,6 +446,13 @@ class RegistrationInvitationsListPage extends React.Component {
                                 <b>last_name</b>: invitee Last Name<br />
                                 <b>allowed_ticket_types (optional) </b>: Pipe Separated list of ticket types ids<br />
                             </div>
+                            <div className="col-md-12 acceptance-criteria-wrapper">
+                                <AcceptanceCriteriaDropdown
+                                  id="acceptance-criteria"
+                                  value={acceptanceCriteria}
+                                  onChange={ev => this.setState({acceptanceCriteria: ev.target.value})}
+                                />
+                            </div>
                             <div className="col-md-12 invitation-import-upload-wrapper">
                                 <UploadInput
                                     value={importFile && importFile.name}
@@ -459,7 +467,7 @@ class RegistrationInvitationsListPage extends React.Component {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <button disabled={!this.state.importFile} className="btn btn-primary" onClick={this.handleImportInvitations}>
+                        <button disabled={!importFile || !acceptanceCriteria} className="btn btn-primary" onClick={this.handleImportInvitations}>
                             {T.translate("registration_invitation_list.ingest")}
                         </button>
                     </Modal.Footer>

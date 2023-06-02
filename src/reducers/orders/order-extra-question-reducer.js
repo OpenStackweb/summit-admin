@@ -131,14 +131,16 @@ const orderExtraQuestionReducer = (state = DEFAULT_STATE, action) => {
             return {...state, entity: {...state.entity, sub_question_rules: state.entity.sub_question_rules.filter(v => v.id !== ruleId)}};
         }
         case VALIDATE: {
-            const newRules = payload.map(r => {
-
-                return {
-                    ...r,
-                    order: parseInt(r.order)
-                };
-            });
-
+            let newRules = [];
+            if (Array.isArray(payload)) {
+                newRules = payload.map(r => {
+                    return {
+                        ...r,
+                        order: parseInt(r.order)
+                    };
+                });
+            }
+            
             return {...state, sub_question_rules: newRules };
         }
         case ORDER_EXTRA_QUESTION_SUB_QUESTION_ORDER_UPDATED: {

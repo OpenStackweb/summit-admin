@@ -37,6 +37,7 @@ export const DEFAULT_ENTITY = {
     allowed_ticket_types : [],
     tags: [],
     is_accepted: false,
+    acceptance_criteria: null,
 }
 
 const DEFAULT_STATE = {
@@ -47,6 +48,7 @@ const DEFAULT_STATE = {
 
 const registrationInvitationReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
+
     switch (type) {
         case LOGOUT_USER: {
             // we need this in case the token expired while editing the form
@@ -56,16 +58,13 @@ const registrationInvitationReducer = (state = DEFAULT_STATE, action) => {
                 return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
             }
         }
-            break;
         case SET_CURRENT_SUMMIT:
         case RESET_REGISTRATION_INVITATION_FORM: {
             return {...state,  entity: {...DEFAULT_ENTITY}, emailActivity:[], errors: {} };
         }
-            break;
         case UPDATE_REGISTRATION_INVITATION: {
             return {...state,  entity: {...payload}, errors: {} };
         }
-            break;
         case REGISTRATION_INVITATION_ADDED:
         case RECEIVE_REGISTRATION_INVITATION: {
             let entity = {...payload.response};
@@ -78,15 +77,12 @@ const registrationInvitationReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, entity: {...DEFAULT_ENTITY, ...entity}, emailActivity:[] };
         }
-            break;
         case REGISTRATION_INVITATION_UPDATED: {
             return state;
         }
-            break;
         case VALIDATE: {
             return {...state,  errors: payload.errors };
         }
-            break;
         case RECEIVE_EMAILS_BY_USER :{
             let data = payload.response.data;
 
@@ -97,7 +93,6 @@ const registrationInvitationReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state,  emailActivity: data };
         }
-        break;
         default:
             return state;
     }
