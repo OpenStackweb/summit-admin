@@ -38,13 +38,13 @@ const DEFAULT_STATE = {
     lastPage: 1,
     perPage: 10,
     totalInvitations: 0,
-    showNonAccepted: false,
-    showNotSent: false,
     selectedInvitationsIds: [],
     currentFlowEvent: '',
     selectedAll: false,
     allowedTicketTypesIds: [],
     tagFilter: [],
+    isAccepted: null,
+    isSent: null,
 };
 
 const RegistrationInvitationListReducer = (state = DEFAULT_STATE, action) => {
@@ -55,9 +55,9 @@ const RegistrationInvitationListReducer = (state = DEFAULT_STATE, action) => {
             return DEFAULT_STATE;
         }
         case REQUEST_INVITATIONS: {            
-            let {order, orderDir, page, perPage, term, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter} = payload;
+            let {order, orderDir, page, perPage, term, isAccepted, isSent, allowedTicketTypesIds, tagFilter} = payload;
 
-            return {...state, order, orderDir, currentPage: page, perPage, term, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter};
+            return {...state, order, orderDir, currentPage: page, perPage, term, isAccepted, isSent, allowedTicketTypesIds, tagFilter};
         }
         case RECEIVE_INVITATIONS: {
             let {total, last_page, data} = payload.response;

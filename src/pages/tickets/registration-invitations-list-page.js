@@ -34,7 +34,7 @@ import AcceptanceCriteriaDropdown from "../../components/inputs/acceptance-crite
 import { MaxTextLengthForTicketTypesOnTable, MaxTextLengthForTagsOnTable } from '../../utils/constants';
 
 import "../../styles/registration-invitation-list-page.less";
-
+import {SegmentedControl} from "segmented-control";
 
 class RegistrationInvitationsListPage extends React.Component {
 
@@ -69,14 +69,14 @@ class RegistrationInvitationsListPage extends React.Component {
     componentDidMount() {
         const {currentSummit} = this.props;
         if(currentSummit) {
-            const {term, order, orderDir, currentPage, perPage, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter} = this.props;
-            this.props.getInvitations(term, currentPage, perPage, order, orderDir, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter);
+            const {term, order, orderDir, currentPage, perPage, allowedTicketTypesIds, tagFilter, isAccepted, isSent} = this.props;
+            this.props.getInvitations(term, currentPage, perPage, order, orderDir,{ isAccepted, isSent, allowedTicketTypesIds, tagFilter});
         }
     }
 
     handleSearch(term) {
-        const {order, orderDir, page, perPage, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter} = this.props;
-        this.props.getInvitations(term, page, perPage, order, orderDir, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter);
+        const {order, orderDir, page, perPage, allowedTicketTypesIds, tagFilter, isAccepted, isSent} = this.props;
+        this.props.getInvitations(term, page, perPage, order, orderDir, { isAccepted, isSent, allowedTicketTypesIds, tagFilter});
     }
 
     handleEdit(invitation_id) {
@@ -201,20 +201,20 @@ class RegistrationInvitationsListPage extends React.Component {
     }
 
     handleTicketTypeSelected(ev){
-        const {term, page, order, orderDir, perPage, showNonAccepted, showNotSent, tagFilter} = this.props;
+        const {term, page, order, orderDir, perPage, isAccepted, isSent, tagFilter} = this.props;
         let {value} = ev.target;
         const ticketTypeFilter = [...value];
-        this.props.getInvitations(term, page, perPage, order, orderDir, showNonAccepted, showNotSent, ticketTypeFilter, tagFilter);
+        this.props.getInvitations(term, page, perPage, order, orderDir, {isAccepted, isSent, allowedTicketTypesIds: ticketTypeFilter, tagFilter});
     }
 
     handleSort(index, key, dir, func) {
-        const {term, page, perPage, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter} = this.props;
-        this.props.getInvitations(term, page, perPage, key, dir, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter);
+        const {term, page, perPage, allowedTicketTypesIds, tagFilter, isAccepted, isSent} = this.props;
+        this.props.getInvitations(term, page, perPage, key, dir, { isAccepted, isSent, allowedTicketTypesIds, tagFilter});
     }
 
     handlePageChange(page) {
-        const {term, order, orderDir, perPage, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter} = this.props;
-        this.props.getInvitations(term, page, perPage, order, orderDir, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter);
+        const {term, order, orderDir, perPage, allowedTicketTypesIds, tagFilter, isAccepted, isSent} = this.props;
+        this.props.getInvitations(term, page, perPage, order, orderDir,  {isAccepted, isSent, allowedTicketTypesIds, tagFilter});
     }
 
     handleImportInvitations() {
@@ -226,32 +226,35 @@ class RegistrationInvitationsListPage extends React.Component {
     }
 
     handleExportInvitations() {        
-        const {term, order, orderDir, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter} = this.props;
-        this.props.exportInvitationsCSV(term, order, orderDir, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter);
+        const {term, order, orderDir, allowedTicketTypesIds, tagFilter, isAccepted, isSent} = this.props;
+        this.props.exportInvitationsCSV(term, order, orderDir, { isAccepted, isSent, allowedTicketTypesIds, tagFilter});
     }
 
     handleTagFilterChange(ev) {
-        const {term, order, page, orderDir, perPage, showNonAccepted, showNotSent, allowedTicketTypesIds} = this.props;
-        this.props.getInvitations(term, page, perPage, order, orderDir, showNonAccepted, showNotSent, allowedTicketTypesIds, ev.target.value);        
+        const {term, order, page, orderDir, perPage, allowedTicketTypesIds, isAccepted, isSent} = this.props;
+        this.props.getInvitations(term, page, perPage, order, orderDir, { isAccepted, isSent, allowedTicketTypesIds, tagFilter: ev.target.value});
     }
 
-    handleChangeNonAccepted() {
-        const {term, order, page, orderDir, perPage, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter} = this.props;
-        this.props.getInvitations(term, page, perPage, order, orderDir, !showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter);
+    handleChangeNonAccepted(newValue) {
+        const {term, order, page, orderDir, perPage, allowedTicketTypesIds, tagFilter, isSent} = this.props;
+        this.props.getInvitations(term, page, perPage, order, orderDir, {isAccepted: newValue, isSent, allowedTicketTypesIds, tagFilter});
     }
 
-    handleChangeNoSent() {
-        const {term, order, page, orderDir, perPage, showNonAccepted, showNotSent, allowedTicketTypesIds, tagFilter} = this.props;
-        this.props.getInvitations(term, page, perPage, order, orderDir, showNonAccepted, !showNotSent, allowedTicketTypesIds, tagFilter);
+    handleChangeNoSent(newValue) {
+        const {term, order, page, orderDir, perPage, allowedTicketTypesIds, tagFilter,isAccepted} = this.props;
+        this.props.getInvitations(term, page, perPage, order, orderDir, { isAccepted, isSent: newValue, allowedTicketTypesIds, tagFilter});
     }
 
     render(){
 
         const { currentSummit, invitations, term, order,
             orderDir, totalInvitations,
-            lastPage, currentPage, showNonAccepted,
-            selectedInvitationsIds, showNotSent,
-            currentFlowEvent, selectedAll, allowedTicketTypesIds, tagFilter
+            lastPage, currentPage,
+            selectedInvitationsIds,
+            isAccepted,
+            isSent,
+            currentFlowEvent,
+            selectedAll, allowedTicketTypesIds, tagFilter
         } = this.props;
 
         const {showImportModal, importFile, acceptanceCriteria} = this.state;
@@ -358,23 +361,31 @@ class RegistrationInvitationsListPage extends React.Component {
                         </div>
                         <div className="row">
                             <div className="col-md-6">
-                                <div className="form-check abc-checkbox col-md-6">
-                                    <input type="checkbox" id="showNonSent" checked={showNotSent}
-                                           className="form-check-input"
-                                           onChange={this.handleChangeNoSent}
-                                    />
-                                    <label className="form-check-label" htmlFor="showNonSent">
-                                        {T.translate("registration_invitation_list.show_non_sent")}
-                                    </label>
-                                </div>
-                                <div className="form-check abc-checkbox col-md-6">
-                                    <input type="checkbox" id="showNonAccepted" checked={showNonAccepted}
-                                           className="form-check-input"
-                                           onChange={this.handleChangeNonAccepted}
-                                    />
-                                    <label className="form-check-label" htmlFor="showNonAccepted">
-                                        {T.translate("registration_invitation_list.show_non_accepted")}
-                                    </label>
+                                <div className={'row'}>
+                                    <div className="col-md-6">
+                                        <SegmentedControl
+                                            name="isSent"
+                                            options={[
+                                                { label: "All", value: null, default: isSent === null},
+                                                { label: "Sent", value: "true",default: isSent === "true"},
+                                                { label: "Non Sent", value: "false", default: isSent === "false"},
+                                            ]}
+                                            setValue={newValue => this.handleChangeNoSent(newValue)}
+                                            style={{ width: "100%", height:40, color: '#337ab7', fontSize: '10px'  }}
+                                        />
+                                    </div>
+                                    <div className=" col-md-6">
+                                        <SegmentedControl
+                                            name="isAccepted"
+                                            options={[
+                                                { label: "All", value: null, default: isAccepted === null},
+                                                { label: "Accepted", value: "true",default: isAccepted === "true"},
+                                                { label: "Non Accepted", value: "false", default: isAccepted === "false"},
+                                            ]}
+                                            setValue={newValue => this.handleChangeNonAccepted(newValue)}
+                                            style={{ width: "100%", height:40, color: '#337ab7', fontSize: '10px'  }}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                             <div className="col-md-6 text-right">
@@ -444,7 +455,7 @@ class RegistrationInvitationsListPage extends React.Component {
                                 <b>email</b>: invitee email<br />
                                 <b>first_name</b>: invitee First Name<br />
                                 <b>last_name</b>: invitee Last Name<br />
-                                <b>allowed_ticket_types (optional) </b>: Pipe Separated list of ticket types ids<br />
+                                <b>allowed_ticket_types (optional) </b>: Pipe Separated list of ticket types IDs<br />
                             </div>
                             <div className="col-md-12 acceptance-criteria-wrapper">
                                 <AcceptanceCriteriaDropdown
