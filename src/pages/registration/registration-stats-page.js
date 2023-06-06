@@ -15,6 +15,7 @@ import React, {useEffect, useState, useMemo} from 'react'
 import {connect} from 'react-redux';
 import T from "i18n-react";
 import {trim} from "../../utils/methods";
+import {formatCurrency} from "../../helpers/formatCurrency";
 import {Breadcrumb} from "react-breadcrumbs";
 import DateIntervalFilter from "../../components/filters/date-interval-filter";
 import {getRegistrationStats} from "../../actions/summit-stats-actions";
@@ -82,13 +83,17 @@ const RegistrationStatsPage = ({currentSummit, summitStats, match, getRegistrati
       </div>
       <div>
         <div className="row">
-          <div className="col-md-6">
+          <div className="col-md-4">
             <i className="fa fa-money"/>&nbsp;{T.translate("dashboard.payment_amount_collected")}&nbsp;
-            <strong>$&nbsp;{parseFloat(summitStats.total_payment_amount_collected).toFixed(2)}</strong>
+            <strong>{formatCurrency(summitStats.total_payment_amount_collected, { locale: 'en-US'})}</strong>
           </div>
-          <div className="col-md-6">
+          <div className="col-md-4">
             {T.translate("dashboard.refund_amount_emitted")}&nbsp;
-            <strong>$&nbsp;{parseFloat(summitStats.total_refund_amount_emitted).toFixed(2)}</strong>
+            <strong>{formatCurrency(summitStats.total_refund_amount_emitted, { locale: 'en-US'})}</strong>
+          </div>
+          <div className="col-md-4">
+            <i className="fa fa-money"/>&nbsp;{T.translate("dashboard.payment_net_amount_collected")}&nbsp;
+            <strong>{formatCurrency(parseFloat(summitStats.total_payment_amount_collected) - parseFloat(summitStats.total_refund_amount_emitted), { locale: 'en-US'})}</strong>
           </div>
         </div>
 

@@ -259,6 +259,7 @@
     "attendees_checked_in_virtual": "Virtual Checked In",
     "orders": "Orders",
     "payment_amount_collected": "Amount Collected",
+    "payment_net_amount_collected": "Net Amount Collected",
     "refund_amount_emitted": "Amount Refund",
     "ticket_types": "Active Tickets per Ticket Types",
     "badge_types": "Active Tickets per Badge Types",
