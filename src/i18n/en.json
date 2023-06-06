@@ -350,6 +350,8 @@
     "reg_lite_order_complete_step_2nd_paragraph_info": "2nd Paragraph shown on Order Complete Step When is not the first order of the Buyer.",
     "reg_lite_order_complete_btn_label" : "Order Complete Button",
     "reg_lite_order_complete_btn_label_info" : "Order Complete Button Text shown on Order Complete Step When is not the first order of the Buyer.",
+    "reg_lite_no_allowed_tickets_message": "No Allowed Tickets Message",
+    "reg_lite_no_allowed_tickets_message_info": "This message is shown when there are no available tickets to buy",
     "print_app_hide_find_ticket_by_fullname": "Hide Find By FullName Criteria",
     "print_app_hide_find_ticket_by_email": "Hide Find By Email Criteria",
     "reg_lite_settings": "Registration Lite Settings",

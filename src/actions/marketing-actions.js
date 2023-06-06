@@ -77,7 +77,7 @@ export const getMarketingSettings = (term = null, page = 1, perPage = 10, order 
     );
 };
 
-export const getMarketingSettingsForRegLite = (page = 1, perPage = 10) => (dispatch, getState) => {
+export const getMarketingSettingsForRegLite = (page = 1, perPage = 100) => (dispatch, getState) => {
     const {currentSummitState} = getState();
     const {currentSummit} = currentSummitState;
 

@@ -132,6 +132,7 @@ const DEFAULT_REG_LITE_MARKETING_SETTINGS = {
             ' assign/reassign tickets or to complete any required ticket details.'},
     REG_LITE_ORDER_COMPLETE_STEP_2ND_PARAGRAPH: {id: 0, value: ''},
     REG_LITE_ORDER_COMPLETE_BTN_LABEL: {id: 0, value: ''},
+    REG_LITE_NO_ALLOWED_TICKETS_MESSAGE: {id: 0, value: `<span>You already have purchased all available tickets for this event and/or there are no tickets available for you to purchase.</span><br/><span><a href="/a/my-tickets">Visit the my orders / my tickets page</a> to review your existing tickets.</span>`}
 };
 
 const DEFAULT_PRINT_APP_MARKETING_SETTINGS = {

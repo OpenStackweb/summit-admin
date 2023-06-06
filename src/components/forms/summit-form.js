@@ -878,6 +878,20 @@ class SummitForm extends React.Component {
                     </div>
                     <div className="row form-group">
                         <div className="col-md-12">
+                            <label>
+                                {T.translate("edit_summit.reg_lite_no_allowed_tickets_message")}
+                            </label>&nbsp;
+                            <i className="fa fa-info-circle" aria-hidden="true"
+                               title={T.translate("edit_summit.reg_lite_no_allowed_tickets_message_info")} />
+                            <TextEditor
+                                id="REG_LITE_NO_ALLOWED_TICKETS_MESSAGE"
+                                value={regLiteMarketingSettings?.REG_LITE_NO_ALLOWED_TICKETS_MESSAGE?.value}
+                                onChange={this.handleChange}
+                            />                            
+                        </div>                        
+                    </div>                
+                    <div className="row form-group">
+                        <div className="col-md-12">
                             <label>{T.translate("edit_summit.check_in_settings")}</label><hr/>
                         </div>
                     </div>
