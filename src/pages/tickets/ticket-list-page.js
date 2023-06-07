@@ -223,9 +223,10 @@ class TicketListPage extends React.Component {
     handleDoPrinting(ev){
         ev.stopPropagation();
         ev.preventDefault();
-        const {term, order, orderDir } = this.props;        
+        const {selectedIds, selectedAll, term, order, orderDir } = this.props;
         const {ticketFilters} = this.state;
-        this.props.printTickets(term, ticketFilters, order, orderDir, this.state.doCheckIn, this.state.selectedViewType);
+        this.props.printTickets(term, { selectedIds,
+            selectedAll, ...ticketFilters}, order, orderDir, this.state.doCheckIn, this.state.selectedViewType);
     }
 
     handleScanQR(qrCode){
