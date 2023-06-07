@@ -15,7 +15,7 @@ export const DefaultEventMinutesDuration       = 10;
 export const ScheduleEventsSearchResultMaxPage = 25;
 export const PresentationTypeClassName         = 'PRESENTATION_TYPE'
 
-export const ExtraQuestionsTypeAllowSubQuestion = ['ComboBox','CheckBoxList' , 'RadioButtonList'];
+export const ExtraQuestionsTypeAllowSubQuestion = ['ComboBox','CheckBoxList' , 'RadioButtonList', 'CountryComboBox'];
 
 export const SubQuestionAnswerValuesOperators    = [{ value: 'And', label: 'And' }, { value: 'Or', label: 'Or' }];
 export const SubQuestionVisibilityOptions        = [{ value: 'Visible', label: 'Show' }, { value: 'NotVisible', label: 'Hide' }];
