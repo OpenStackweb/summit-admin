@@ -98,7 +98,6 @@ class ExtraQuestionForm extends React.Component {
     }
 
     handleOnSaveQuestionValue(ev) {
-        debugger;
         ev.preventDefault();
         this.props.onValueSave(this.state.currentEditValue);
         this.setState({...this.state, currentEditValue: null});
