@@ -81,9 +81,10 @@ class RoomForm extends React.Component {
     }
 
     handleClearHours() {
-        let entity = {...this.state.entity};        
-        entity['opening_hour'] = null;
-        entity['closing_hour'] = null;
+        let entity = {...this.state.entity};
+        const { locationHours } = this.props;
+        entity['opening_hour'] = locationHours.opening_hour || null;
+        entity['closing_hour'] = locationHours.closing_hour || null;
         this.setState({entity: entity});
     }
 
