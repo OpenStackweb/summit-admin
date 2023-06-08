@@ -1499,6 +1499,7 @@
     "ticket_type_list": "Ticket Type List",
     "no_ticket_types": "No ticket types found for current search criteria.",
     "add_ticket_type": "Add Ticket Type",
+    "id": "#",
     "name": "Name",
     "audience": "Audience",
     "badge_type_name": "Badge Type",

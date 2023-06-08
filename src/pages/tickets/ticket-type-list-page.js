@@ -110,6 +110,7 @@ class TicketTypeListPage extends React.Component {
         const { currentSummit, ticketTypes, order, orderDir, totalTicketTypes, audienceFilter, lastPage, currentPage } = this.props;
 
         const columns = [
+            { columnKey: 'id', value: T.translate("ticket_type_list.id"), sortable: true },
             { columnKey: 'name', value: T.translate("ticket_type_list.name"), sortable: true },
             { columnKey: 'audience', value: T.translate("ticket_type_list.audience"), sortable: true },
             { columnKey: 'badge_type_name', value: T.translate("ticket_type_list.badge_type_name") },
