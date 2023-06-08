@@ -784,6 +784,7 @@
     }
   },
   "promocode_list": {
+    "id": "#",
     "promocode_list": "Promocode List",
     "promocodes": "Promocodes",
     "no_promocodes": "No promocodes found for current search criteria.",
@@ -853,6 +854,12 @@
     "alternate": "Alternate",
     "no_speakers": "There are no speakers for this search criteria.",
     "send_emails": "Send",
+    "promo_code_strategy": "Promo Code Strategy",
+    "select_promo_code_strategy": "-- SELECT PROMO CODE STRATEGY --",
+    "select_speaker_promo_code": "Select speaker promo code",
+    "select_speaker_discount_code": "Select speaker discount code",
+    "select_auto_generate_speaker_promo_code": "Auto generate speaker promo code",
+    "select_auto_generate_speaker_discount_code": "Auto generate speaker discount code",
     "excerpt_email": "Excerpt Recipient",
     "select_template": "Select a Email Template to perform the action.",
     "select_items": "Select at least one speaker to perform the action.",
@@ -2535,5 +2542,34 @@
     "no_items": "No Track Timeframes found.",
     "remove_warning": "Are you sure you want to remove the timeframes for ",
     "timeframe_created": "Track timeframe created successfully."
+  },
+  "promo_code_specification": {
+    "select_promo_code_type": "-- SELECT PROMO CODE TYPE --",
+    "promo_code_mandatory": "Existing promocode is mandatory",
+    "type_mandatory": "Type is mandatory",
+    "placeholders": {
+      "amount": "Amount ($)",
+      "rate": "Rate (% discount)",
+      "speakers_promo_code": "-- SELECT SPEAKERS PROMO CODE --",
+      "speakers_discount_code": "-- SELECT SPEAKERS DISCOUNT CODE --",
+      "tags": "-- SELECT TAGS --",
+      "badge_features": "-- SELECT BADGE FEATURES --",
+      "ticket_types": "-- SELECT TICKET TYPES --"
+    }
+  },
+  "edit_promo_code": {
+    "assign_speaker": "Assign speaker",
+    "speakers": "Assigned speakers",
+    "unassign_speaker_warning": "Are you sure you want unassign speaker",
+    "cannot_unassign_speaker_warning_title": "Unassignment not allowed",
+    "cannot_unassign_speaker_warning": "Cannot unassign a speaker who has redeemed the promo code",
+    "assigned_speakers_list": {
+      "email_sent": "Email Sent",
+      "redeemed": "Redeemed"
+    },
+    "placeholders": {
+      "search_speakers": "Search assigned speakers by name or email",
+      "speaker_to_assign": "Select a speaker to assign"
+    }
   }
 }

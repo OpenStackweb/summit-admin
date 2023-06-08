@@ -19,6 +19,7 @@ import {Modal, Pagination} from 'react-bootstrap';
 import {FreeTextSearch, Dropdown, Table, UploadInput} from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getPromocodes, getPromocodeMeta, deletePromocode, exportPromocodes, importPromoCodesCSV } from "../../actions/promocode-actions";
+import { trim } from '../../utils/methods'
 
 class PromocodeListPage extends React.Component {
 
@@ -127,6 +128,7 @@ class PromocodeListPage extends React.Component {
         const {showImportModal} = this.state;
 
         const columns = [
+            { columnKey: 'id', value: T.translate("promocode_list.id"), sortable: true },
             { columnKey: 'code', value: T.translate("promocode_list.code"), sortable: true },
             { columnKey: 'class_name', value: T.translate("promocode_list.type") },
             /*{ columnKey: 'owner', value: T.translate("promocode_list.owner") },*/
@@ -196,7 +198,7 @@ class PromocodeListPage extends React.Component {
                 <div>
                     <Table
                         options={table_options}
-                        data={promocodes}
+                        data={promocodes.map(p => {return {...p, owner_email: <abbr title={p.owner_email}>{trim(p.owner_email, 40)}</abbr>}})}
                         columns={columns}
                         onSort={this.handleSort}
                     />

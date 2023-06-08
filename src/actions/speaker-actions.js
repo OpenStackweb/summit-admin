@@ -27,6 +27,13 @@ import {
     authErrorHandler,
     escapeFilterValue
 } from 'openstack-uicore-foundation/lib/utils/actions';
+import {SPEAKERS_PROMO_CODE_CLASS_NAME, SPEAKERS_DISCOUNT_CODE_CLASS_NAME} from './promocode-specification-actions';
+import {
+    EXISTING_SPEAKERS_PROMO_CODE, 
+    EXISTING_SPEAKERS_DISCOUNT_CODE,
+    AUTO_GENERATED_SPEAKERS_PROMO_CODE,
+    AUTO_GENERATED_SPEAKERS_DISCOUNT_CODE
+} from './promocode-actions';
 import {getAccessTokenSafely} from '../utils/methods';
 
 export const INIT_SPEAKERS_LIST_PARAMS  = 'INIT_SPEAKERS_LIST_PARAMS';
@@ -821,7 +828,9 @@ export const sendSpeakerEmails = (currentFlowEvent,
                            shouldSendCopy2Submitter = false,
                            term = '',
                            filters = {},
-                           source = null
+                           source = null,
+                           promoCodeStrategy = null,
+                           promocodeSpecification = null,
                            ) => async (dispatch, getState) => {
 
     const { currentSummitState } = getState();
@@ -856,6 +865,36 @@ export const sendSpeakerEmails = (currentFlowEvent,
         email_flow_event : currentFlowEvent,
         should_send_copy_2_submitter : shouldSendCopy2Submitter,
     };
+
+    if([EXISTING_SPEAKERS_PROMO_CODE, EXISTING_SPEAKERS_DISCOUNT_CODE].includes(promoCodeStrategy)) {
+        payload['promo_code'] = promocodeSpecification.existingPromoCode.code;
+    } else if([AUTO_GENERATED_SPEAKERS_PROMO_CODE, AUTO_GENERATED_SPEAKERS_DISCOUNT_CODE].includes(promoCodeStrategy)) {
+        const className = promoCodeStrategy === 3 ? SPEAKERS_PROMO_CODE_CLASS_NAME : SPEAKERS_DISCOUNT_CODE_CLASS_NAME;
+        payload['promo_code_spec'] = {
+            'class_name'          : className,
+            'type'                : promocodeSpecification.type,
+            'allowed_ticket_types': promocodeSpecification.ticketTypes.map(t => t.id),
+            'badge_features'      : promocodeSpecification.badgeFeatures.map(b => b.id),
+            'tags'                : promocodeSpecification.tags.map(t => t.tag),
+        };
+
+        if (promoCodeStrategy === AUTO_GENERATED_SPEAKERS_DISCOUNT_CODE) {
+            const amount = promocodeSpecification.amount ? parseFloat(promocodeSpecification.amount) : 0;
+            const rate = promocodeSpecification.rate ? parseFloat(promocodeSpecification.rate) : 0;
+            payload['promo_code_spec']['amount'] = amount;
+            payload['promo_code_spec']['rate'] = rate;
+            if (!promocodeSpecification.applyToAllTix) {
+                payload['promo_code_spec']['ticket_types_rules'] = 
+                    promocodeSpecification.ticketTypes.map(t => { 
+                        return { 
+                            ticket_type_id: t.id,
+                            amount: amount, 
+                            rate: rate
+                        };
+                    });
+            }
+        }
+    }
 
     if(!selectedAll && selectedIds.length > 0){
         payload['speaker_ids'] = selectedIds;

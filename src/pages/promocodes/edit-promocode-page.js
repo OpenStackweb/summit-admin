@@ -17,7 +17,17 @@ import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import PromocodeForm from '../../components/forms/promocode-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getPromocode, getPromocodeMeta, resetPromocodeForm, sendEmail, addBadgeFeatureToPromocode, removeBadgeFeatureFromPromocode, savePromocode } from "../../actions/promocode-actions";
+import { getPromocode, 
+    getPromocodeMeta, 
+    resetPromocodeForm, 
+    sendEmail, 
+    addBadgeFeatureToPromocode, 
+    removeBadgeFeatureFromPromocode, 
+    savePromocode, 
+    assignSpeaker,
+    getAssignedSpeakers,
+    unAssignSpeaker
+} from "../../actions/promocode-actions";
 import { getBadgeFeatures, getBadgeTypes } from '../../actions/badge-actions'
 import '../../styles/edit-promocode-page.less';
 import {createCompany} from "../../actions/sponsor-actions";
@@ -80,6 +90,10 @@ class EditPromocodePage extends React.Component {
                     onBadgeFeatureUnLink={this.props.removeBadgeFeatureFromPromocode}
                     onCreateCompany={this.props.createCompany}
                     onSubmit={this.props.savePromocode}
+                    assignSpeaker={this.props.assignSpeaker}
+                    getAssignedSpeakers={this.props.getAssignedSpeakers}
+                    unAssignSpeaker={this.props.unAssignSpeaker}
+                    resetPromocodeForm={this.props.resetPromocodeForm}
                 />
                 }
             </div>
@@ -106,5 +120,8 @@ export default connect (
         addBadgeFeatureToPromocode,
         removeBadgeFeatureFromPromocode,
         savePromocode,
+        assignSpeaker,
+        getAssignedSpeakers,
+        unAssignSpeaker
     }
 )(EditPromocodePage);

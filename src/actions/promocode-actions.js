@@ -30,6 +30,11 @@ import {
 } from 'openstack-uicore-foundation/lib/utils/actions';
 import {getAccessTokenSafely} from '../utils/methods';
 
+export const EXISTING_SPEAKERS_PROMO_CODE          = 1;
+export const EXISTING_SPEAKERS_DISCOUNT_CODE       = 2;
+export const AUTO_GENERATED_SPEAKERS_PROMO_CODE    = 3;
+export const AUTO_GENERATED_SPEAKERS_DISCOUNT_CODE = 4;
+
 export const REQUEST_PROMOCODES       = 'REQUEST_PROMOCODES';
 export const RECEIVE_PROMOCODES       = 'RECEIVE_PROMOCODES';
 export const RECEIVE_PROMOCODE        = 'RECEIVE_PROMOCODE';
@@ -43,9 +48,15 @@ export const EMAIL_SENT               = 'EMAIL_SENT';
 export const PROMO_CODES_IMPORTED     = 'PROMO_CODES_IMPORTED';
 export const DISCOUNT_TICKET_ADDED    = 'DISCOUNT_TICKET_ADDED';
 export const DISCOUNT_TICKET_DELETED  = 'DISCOUNT_TICKET_DELETED';
-export const BADGE_FEATURE_ADDED    = 'BADGE_FEATURE_ADDED';
-export const BADGE_FEATURE_REMOVED  = 'BADGE_FEATURE_REMOVED';
-
+export const BADGE_FEATURE_ADDED      = 'BADGE_FEATURE_ADDED';
+export const BADGE_FEATURE_REMOVED    = 'BADGE_FEATURE_REMOVED';
+export const SPEAKER_ASSIGNED              = 'SPEAKER_ASSIGNED';
+export const SPEAKER_ASSIGNED_LOCALLY      = 'SPEAKER_ASSIGNED_LOCALLY';
+export const SPEAKER_UNASSIGNED            = 'SPEAKER_UNASSIGNED';
+export const SPEAKER_UNASSIGNED_LOCALLY    = 'SPEAKER_UNASSIGNED_LOCALLY';
+export const GET_ASSIGNED_SPEAKERS_LOCALLY = 'GET_ASSIGNED_SPEAKERS_LOCALLY';
+export const REQUEST_ASSIGNED_SPEAKERS     = 'REQUEST_ASSIGNED_SPEAKERS';
+export const RECEIVE_ASSIGNED_SPEAKERS     = 'RECEIVE_ASSIGNED_SPEAKERS';
 
 export const getPromocodeMeta = () => async (dispatch, getState) => {
 
@@ -87,7 +98,7 @@ export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'cod
     }
 
     const params = {
-        expand       : 'speaker,owner,sponsor,creator,tags',
+        expand       : 'speaker,owner,sponsor,creator,tags,owners,owners.speaker',
         page         : page,
         per_page     : perPage,
         access_token : accessToken,
@@ -159,8 +170,6 @@ export const savePromocode = (entity) => async (dispatch, getState) => {
     };
 
     if (entity.id) {
-
-
         return putRequest(
             createAction(UPDATE_PROMOCODE),
             createAction(PROMOCODE_UPDATED),
@@ -292,6 +301,11 @@ const normalizeEntity = (entity) => {
     } else if (entity.class_name.indexOf('SPEAKER_') === 0) {
         if (entity.speaker != null)
             normalizedEntity.speaker_id = entity.speaker.id;
+    } else if (entity.class_name.indexOf('SPEAKERS_') === 0) {
+        if (entity.speakers != null && entity.speakers.speakers_list.length > 0) {
+            normalizedEntity.speaker_ids = entity.speakers.speakers_list.map(s => s.id);
+        }
+        delete normalizedEntity['speakers'];
     } else if (entity.class_name.indexOf('SPONSOR_') === 0) {
         if (entity.sponsor != null)
             normalizedEntity.sponsor_id = entity.sponsor.id;
@@ -322,6 +336,7 @@ const normalizeEntity = (entity) => {
     delete normalizedEntity['owner_id'];
     delete normalizedEntity['speaker'];
     delete normalizedEntity['sponsor'];
+    delete normalizedEntity['apply_to_all_tix'];
 
     return normalizedEntity;
 
@@ -449,4 +464,105 @@ export const importPromoCodesCSV = (file) => async (dispatch, getState) => {
             dispatch(stopLoading());
             window.location.reload();
         });
+};
+
+/************************  PROMOCODE SPEAKERS **********************************/
+
+export const getAssignedSpeakers = (entity, term = null, page = 1, perPage = 10, order = 'id', orderDir = 1) => async (dispatch, getState) => {
+
+    if (entity.id === 0) return dispatch(createAction(GET_ASSIGNED_SPEAKERS_LOCALLY)({promoCodeClassName: entity.class_name, term, page, perPage, order, orderDir}));
+
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely()
+    const { currentSummit }   = currentSummitState;
+    const filter = [];
+
+    dispatch(startLoading());
+
+    const params = {
+        page         : page,
+        per_page     : perPage,
+        expand       : 'speaker',
+        access_token : accessToken,
+    };
+
+    if(term){
+        const escapedTerm = escapeFilterValue(term);
+        filter.push(`full_name=@${escapedTerm},email=@${escapedTerm}`);
+    }
+
+    if(filter.length > 0){
+        params['filter[]']= filter;
+    }
+
+    // order
+    if(order != null && orderDir != null){
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
+        params['order']= `${orderDirSign}${order}`;
+    }
+
+    const promoCodeRoute = entity.class_name === 'SPEAKERS_PROMO_CODE' ? 'speakers-promo-codes' : 'speakers-discount-codes';
+
+    return getRequest(
+        createAction(REQUEST_ASSIGNED_SPEAKERS),
+        createAction(RECEIVE_ASSIGNED_SPEAKERS),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/${promoCodeRoute}/${entity.id}/speakers`,
+        authErrorHandler,
+        {entity, order, orderDir, page, term}
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+};
+
+export const assignSpeaker = (entity) => async (dispatch, getState) => {
+ 
+    if (entity.id === 0) return dispatch(createAction(SPEAKER_ASSIGNED_LOCALLY)({entity}));
+    
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit } = currentSummitState;
+
+    const params = {
+        access_token : accessToken
+    };
+
+    dispatch(startLoading());
+    return postRequest(
+        null,
+        createAction(SPEAKER_ASSIGNED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/speakers-promo-codes/${entity.id}/speakers/${entity.speaker.id}`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+            dispatch(getAssignedSpeakers(entity));
+        }
+    );
+};
+
+export const unAssignSpeaker = (className, promocodeId, speakerId) => async (dispatch, getState) => {
+    
+    if (promocodeId === 0 && speakerId) return dispatch(createAction(SPEAKER_UNASSIGNED_LOCALLY)({class_name: className, speakerId}));
+    
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit } = currentSummitState;
+
+    const params = {
+        access_token : accessToken
+    };
+
+    dispatch(startLoading());
+
+    return deleteRequest(
+        null,
+        createAction(SPEAKER_UNASSIGNED)({speakerId}),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/speakers-promo-codes/${promocodeId}/speakers/${speakerId}`,
+        null,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
 };

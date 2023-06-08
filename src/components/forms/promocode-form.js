@@ -11,11 +11,13 @@
  * limitations under the License.
  **/
 
-import React from 'react'
+import React, {useEffect} from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
+import Swal from "sweetalert2";
 import {epochToMomentTimeZone} from 'openstack-uicore-foundation/lib/utils/methods'
-import { Dropdown, DateTimePicker, SpeakerInput, CompanyInput, Input, TagInput } from 'openstack-uicore-foundation/lib/components'
+import { Dropdown, DateTimePicker, FreeTextSearch, SpeakerInput, CompanyInput, Input, TagInput, Table } from 'openstack-uicore-foundation/lib/components'
+import {Pagination} from "react-bootstrap";
 import { DiscountTicketTable } from '../tables/dicount-ticket-table';
 import OwnerInput from "../inputs/owner-input";
 import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
@@ -55,6 +57,7 @@ const EmailRedeemForm = (props) => (
 const BasePCForm = (props) => {
 
     let badge_features_ddl = props.summit.badge_features.map(f => ({label:f.name, value:f.id}));
+    const qtyAvailableDisabled = ['SPEAKERS_PROMO_CODE', 'SPEAKERS_DISCOUNT_CODE'].includes(props.entity.class_name);
 
     return (
         <>
@@ -67,6 +70,7 @@ const BasePCForm = (props) => {
                         value={props.entity.quantity_available}
                         onChange={props.handleChange}
                         className="form-control"
+                        disabled={qtyAvailableDisabled}
                     />
                 </div>
                 <div className="col-md-4">
@@ -188,7 +192,6 @@ const MemberBasePCForm = (props) => (
     </>
 );
 
-
 const SponsorBasePCForm = (props) => (
     <>
         <div className="row form-group">
@@ -208,9 +211,6 @@ const SponsorBasePCForm = (props) => (
         <MemberBasePCForm {...props} />
     </>
 );
-
-
-
 
 const DiscountBasePCForm = (props) => (
     <>
@@ -280,6 +280,149 @@ const DiscountBasePCForm = (props) => (
 );
 
 
+const SpeakersBasePCForm = (props) => {
+    const {entity, summit} = props;
+    const {speakers: {filtered_speakers_list, term, order, orderDir, currentPage, lastPage}} = entity;
+
+    useEffect(() => {
+        const {entity} = props;
+        if (entity.id) props.getAssignedSpeakers(entity);
+        return () => {
+            props.resetPromocodeForm();
+        };
+    }, []);
+
+    const handleSpeakerAssignment = (ev) => {
+        const {assignSpeaker, entity} = props;
+        ev.preventDefault();
+        if (entity.speaker) assignSpeaker(entity);
+    }
+
+    const handleDelete = (speakerId) => {
+        const {unAssignSpeaker, entity: {class_name, id, speakers}} = props;
+        const speakerToDelete = speakers.speakers_list.find(s => s.id === speakerId);
+
+        if (speakerToDelete.redeemed) {
+            Swal.fire({
+                title: T.translate("edit_promo_code.cannot_unassign_speaker_warning_title"),
+                text: T.translate("edit_promo_code.cannot_unassign_speaker_warning"),
+                type: "warning"
+            });
+            return;
+        }
+
+        Swal.fire({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("edit_promo_code.unassign_speaker_warning") + ' ' + speakerToDelete.name,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: T.translate("general.yes_delete")
+        }).then(function(result){
+            if (result.value) {
+                unAssignSpeaker(class_name, id, speakerId);
+            }
+        });
+    }
+
+    const handleSearch = (term) => {
+        const {entity} = props;
+        const {speakers: {order, orderDir, currentPage, perPage}} = entity;
+        props.getAssignedSpeakers(entity, term, currentPage, perPage, order, orderDir);
+    }
+
+    const handlePageChange = (page) => {
+        const {entity} = props;
+        const {speakers: {term, order, orderDir, perPage}, class_name} = entity;
+        props.getAssignedSpeakers(entity, term, page, perPage, order, orderDir);
+    }
+
+    const handleSort = (index, key, dir, func) => {
+        const {entity} = props;
+        const {speakers: {term, currentPage, perPage}, class_name} = entity;
+        props.getAssignedSpeakers(entity, term, currentPage, perPage, key, dir);
+    }
+
+    const columns = [
+        { columnKey: 'id', value: 'Id', sortable: true },
+        { columnKey: 'full_name', value: T.translate("general.name"), sortable: true },
+        { columnKey: 'email', value: T.translate("general.email"), sortable: true },
+        { columnKey: 'email_sent', value: T.translate("edit_promo_code.assigned_speakers_list.email_sent") },
+        { columnKey: 'redeemed', value: T.translate("edit_promo_code.assigned_speakers_list.redeemed") }
+    ];
+
+    const table_options = {
+        sortCol: order,
+        sortDir: orderDir,
+        actions: {
+            delete: { onClick: handleDelete }
+        }
+    };
+
+    return(
+        <>
+            <hr/>
+            <label> {T.translate("edit_promo_code.speakers")} </label>
+            <div className="row">
+                <div className="col-md-6" style={{ zIndex: 0 }}>
+                    <FreeTextSearch
+                        value={term ?? ''}
+                        placeholder={T.translate("edit_promo_code.placeholders.search_speakers")}
+                        onSearch={handleSearch}
+                        preventEvents={true}
+                    />
+                </div>
+                <div className="col-md-4">
+                    <SpeakerInput
+                        id="speaker"
+                        value={entity.speaker}
+                        placeholder={T.translate("edit_promo_code.placeholders.speaker_to_assign")}
+                        onChange={props.handleChange}
+                        summitId={summit.id}
+                        error={props.hasErrors('speaker_id')}
+                    />
+                </div>
+                <div className="col-md-2">
+                    <button className="btn btn-primary" onClick={handleSpeakerAssignment}>
+                        {T.translate("edit_promo_code.assign_speaker")}
+                    </button>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-md-12">
+                    <Table
+                        options={table_options}
+                        data= {
+                            filtered_speakers_list.map(sp => ({...sp, 
+                                email_sent: sp.email_sent ? T.translate("general.yes") : T.translate("general.no"), 
+                                redeemed: sp.redeemed ? T.translate("general.yes") : T.translate("general.no")
+                            }))
+                        }
+                        columns={columns}
+                        onSort={handleSort}
+                    />
+                    <Pagination
+                        bsSize="medium"
+                        prev
+                        next
+                        first
+                        last
+                        ellipsis
+                        boundaryLinks
+                        maxButtons={10}
+                        items={lastPage}
+                        activePage={currentPage}
+                        onSelect={handlePageChange}
+                    />
+                </div>
+            </div>
+            <hr/>
+        </>
+    );
+}
+
+
+
 const MemberPCForm = (props) => (
     <>
         <MemberBasePCForm {...props} />
@@ -334,7 +477,19 @@ const SummitDiscountPCForm = (props) => (
     </>
 );
 
+const SpeakersPCForm = (props) => (
+    <>
+        <SpeakersBasePCForm {...props} />
+        <GenericBasePCForm {...props} />
+    </>
+);
 
+const SpeakersDiscountPCForm = (props) => (
+    <>
+        <SpeakersBasePCForm {...props} />
+        <DiscountBasePCForm {...props} />
+    </>
+);
 
 
 class PromocodeForm extends React.Component {
@@ -460,11 +615,13 @@ class PromocodeForm extends React.Component {
     render() {
         const {entity} = this.state;
         const { currentSummit, allTypes, allClasses } = this.props;
+
         let promocode_class_ddl = allClasses.map(c => ({label: c.class_name, value: c.class_name}));
         let promocode_types_ddl = [];
 
         if (entity.class_name) {
             let classTypes = allClasses.find(c => c.class_name === entity.class_name).type;
+
             if (classTypes) {
                 promocode_types_ddl = classTypes.map(t => ({label: t, value: t}));
             }
@@ -645,6 +802,38 @@ class PromocodeForm extends React.Component {
                     badgeFeatureColumns={badgeFeatureColumns}
                     badgeFeatureOptions={badgeFeatureOptions}
                     hasErrors={this.hasErrors}
+                />
+                }
+
+                {entity.class_name === 'SPEAKERS_PROMO_CODE' &&
+                <SpeakersPCForm
+                    entity={entity}
+                    summit={currentSummit}
+                    handleChange={this.handleChange}
+                    handleSendEmail={this.handleSendEmail}
+                    badgeFeatureColumns={badgeFeatureColumns}
+                    badgeFeatureOptions={badgeFeatureOptions}
+                    hasErrors={this.hasErrors}
+                    assignSpeaker={this.props.assignSpeaker}
+                    getAssignedSpeakers={this.props.getAssignedSpeakers}
+                    unAssignSpeaker={this.props.unAssignSpeaker}
+                    resetPromocodeForm={this.props.resetPromocodeForm}
+                />
+                }
+
+                {entity.class_name === 'SPEAKERS_DISCOUNT_CODE' &&
+                <SpeakersDiscountPCForm
+                    entity={entity}
+                    summit={currentSummit}
+                    handleChange={this.handleChange}
+                    handleSendEmail={this.handleSendEmail}
+                    badgeFeatureColumns={badgeFeatureColumns}
+                    badgeFeatureOptions={badgeFeatureOptions}
+                    hasErrors={this.hasErrors}
+                    assignSpeaker={this.props.assignSpeaker}
+                    getAssignedSpeakers={this.props.getAssignedSpeakers}
+                    unAssignSpeaker={this.props.unAssignSpeaker}
+                    resetPromocodeForm={this.props.resetPromocodeForm}
                 />
                 }
 
