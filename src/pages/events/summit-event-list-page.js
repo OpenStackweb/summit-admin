@@ -57,6 +57,7 @@ const fieldNames = [
     { columnKey: 'meeting_url', value: 'meeting_url', sortable: true, title: true },
     { columnKey: 'etherpad_link', value: 'etherpad_link', sortable: true, title: true },
     { columnKey: 'streaming_type', value: 'streaming_type', sortable: true },
+    { columnKey: 'status', value: 'submission_status', sortable: false, title: true },
 ]
 
 class SummitEventListPage extends React.Component {
@@ -121,7 +122,8 @@ class SummitEventListPage extends React.Component {
                 etherpad_link: '',
                 streaming_type: '',
                 sponsor: [],
-                all_companies: []
+                all_companies: [],
+                submission_status_filter: []
             },
             selectedColumns: []
         };
@@ -294,7 +296,8 @@ class SummitEventListPage extends React.Component {
                     etherpad_link: '',
                     streaming_type: '',
                     sponsor: [],
-                    all_companies: []
+                    all_companies: [],
+                    submission_status_filter: []
                 };
                 this.setState({...this.state, enabledFilters: value, eventFilters: resetFilters});
             } else {
@@ -355,7 +358,8 @@ class SummitEventListPage extends React.Component {
                     etherpad_link: '',
                     streaming_type: '',
                     sponsor: [],
-                    all_companies: []
+                    all_companies: [],
+                    submission_status_filter: []
                 };
                 this.setState({...this.state, enabledFilters: value, eventFilters: resetFilters});
             } else {
@@ -387,8 +391,7 @@ class SummitEventListPage extends React.Component {
             } else if (newCompanies < selectedCompanies) {
                 newColumns = [...newColumns.filter(c => c !== 'all_companies')];
             }
-        }      
-
+        }   
         this.setState({...this.state, selectedColumns: newColumns})
     }
 
@@ -464,7 +467,8 @@ class SummitEventListPage extends React.Component {
             {label: 'Stream URL', value: 'streaming_url'},
             {label: 'Streaming Type', value: 'streaming_type'},
             {label: 'Sponsors', value: 'sponsor'},
-            {label: 'All Companies', value: 'all_companies'},            
+            {label: 'All Companies', value: 'all_companies'},
+            {label: T.translate("event_list.submission_status"), value: 'submission_status_filter' },          
         ]
 
         const ddl_columns = [
@@ -489,13 +493,20 @@ class SummitEventListPage extends React.Component {
             { value: 'start_date', label: T.translate("event_list.start_date") },
             { value: 'submitter_company', label: T.translate("event_list.submitter_company")},
             { value: 'track', label: T.translate("event_list.track") },
+            { value: 'status', label: T.translate("event_list.submission_status") },
         ];
 
         const ddl_filterByEventTypeCapacity = [
             {value: 'allows_attendee_vote_filter', label: T.translate("event_list.allows_attendee_vote_filter")},
             {value: 'allows_location_filter', label: T.translate("event_list.allows_location_filter")},
             {value: 'allows_publishing_dates_filter', label: T.translate("event_list.allows_publishing_dates_filter")}
-        ]
+        ];
+
+        const submission_status_ddl = [
+            {label: T.translate("event_list.submission_status_accepted"), value: 'Accepted'},
+            {label: T.translate("event_list.submission_status_received"), value: 'Received'},
+            {label: T.translate("event_list.submission_status_not_submitted"), value: 'NonReceived'}
+        ];
 
         let showColumns = fieldNames
         .filter(f => this.state.selectedColumns.includes(f.columnKey) )
@@ -884,6 +895,19 @@ class SummitEventListPage extends React.Component {
                                 value={eventFilters.speakers_count_filter}
                                 onChange={this.handleExtraFilterChange}/>
                         </div>
+                    }
+                     {enabledFilters.includes('submission_status_filter') &&
+                        <div className={'col-md-6'}> 
+                            <Dropdown
+                                id="submission_status_filter"
+                                placeholder={T.translate("event_list.placeholders.submission_status")}
+                                value={eventFilters.submission_status_filter}
+                                onChange={this.handleExtraFilterChange}
+                                options={submission_status_ddl}
+                                isClearable={true}
+                                isMulti={true}
+                            />
+                        </div>                
                     }
                 </div>
 

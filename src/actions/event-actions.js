@@ -1001,6 +1001,14 @@ const parseFilters = (filters) => {
         filter.push(`is_activity==1`);
     }
 
+    if (filters.hasOwnProperty('submission_status_filter') && Array.isArray(filters.submission_status_filter)
+        && filters.submission_status_filter.length > 0) {
+        filter.push('submission_status==' + filters.submission_status_filter.reduce(
+            (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + tt,
+            ''
+        ));
+    }
+
     return filter;
 }
 
