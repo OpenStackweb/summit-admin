@@ -6705,10 +6705,10 @@ open@^8.0.9:
     is-docker "^2.1.1"
     is-wsl "^2.2.0"
 
-openstack-uicore-foundation@4.1.23:
-  version "4.1.23"
-  resolved "https://registry.yarnpkg.com/openstack-uicore-foundation/-/openstack-uicore-foundation-4.1.23.tgz#1d525e4e257414a1c7fef246fc60c2c5f40714fe"
-  integrity sha512-VRGCI24LxgLcHZyUiqcSVgNVrJeBnTI6xmEQL9Iavkv+JqESQ+2eu1dBrJQF0x8DjK5Gvjayr5thgA7qjrDilA==
+openstack-uicore-foundation@^4.1.24:
+  version "4.1.24"
+  resolved "https://registry.yarnpkg.com/openstack-uicore-foundation/-/openstack-uicore-foundation-4.1.24.tgz#5211d45c95d942fe8aa910416146b3c22bc6abe0"
+  integrity sha512-tlZnSRcpuMJPJjpqc8rITGFZL15CGS+d9ta+DZaEP+M2Yv4sOlsFwQwW4+arw8kvk1OfMsIlzgncxnjbBtpGdQ==
 
 os-homedir@^1.0.0:
   version "1.0.2"

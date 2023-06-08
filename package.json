@@ -8,7 +8,7 @@
     "build-dev": "./node_modules/.bin/webpack --config webpack.dev.js",
     "build": "./node_modules/.bin/webpack --config webpack.prod.js",
     "serve": "webpack-dev-server  --port 8080 --open --https --config webpack.dev.js",
-    "clean-branchs" : "git branch | grep -v \"master\\|main\\|production\" | xargs git branch -D"
+    "clean-branchs": "git branch | grep -v \"master\\|main\\|production\" | xargs git branch -D"
   },
   "author": "",
   "license": "ISC",
@@ -61,7 +61,7 @@
     "moment-duration-format": "^2.3.2",
     "moment-timezone": "^0.5.33",
     "node-sass": "^7.0.1",
-    "openstack-uicore-foundation": "4.1.23",
+    "openstack-uicore-foundation": "^4.1.24",
     "path-browserify": "^1.0.1",
     "postcss-loader": "^6.2.1",
     "process": "^0.11.10",
