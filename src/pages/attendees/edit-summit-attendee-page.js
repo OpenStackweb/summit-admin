@@ -22,6 +22,11 @@ import '../../styles/edit-summit-attendee-page.less';
 
 class EditSummitAttendeePage extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.handleOnSubmit = this.handleOnSubmit.bind(this);
+    }
+
     componentDidMount() {
         const {match} = this.props;
         const new_attendee_id = match.params.attendee_id;
@@ -50,6 +55,11 @@ class EditSummitAttendeePage extends React.Component {
         }
     }
 
+    handleOnSubmit(entity){
+        let {saveAttendee, getAllowedExtraQuestions} = this.props;
+        saveAttendee(entity).then(() => getAllowedExtraQuestions(entity.id));
+    }
+
     render(){
         const {currentSummit, entity, errors, match} = this.props;
         const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
@@ -66,7 +76,7 @@ class EditSummitAttendeePage extends React.Component {
                     currentSummit={currentSummit}
                     entity={entity}
                     errors={errors}
-                    onSubmit={this.props.saveAttendee}
+                    onSubmit={this.handleOnSubmit}
                     onTicketReassign={this.props.reassignTicket}
                     onSaveTicket={this.props.saveTicket}
                     onDeleteTicket={this.props.deleteTicket}

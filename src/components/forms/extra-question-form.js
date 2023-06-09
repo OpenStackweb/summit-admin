@@ -33,7 +33,6 @@ class ExtraQuestionForm extends React.Component {
         this.state = {
             entity: {...props.entity},
             errors: props.errors,
-            newValue: {question_value_val_new: '', question_value_label_new: ''},
             currentEditValue: null,
         };
 
@@ -45,11 +44,10 @@ class ExtraQuestionForm extends React.Component {
         this.formatRuleConditionColumn = this.formatRuleConditionColumn.bind(this);
         this.formatRuleQuestionColumn = this.formatRuleQuestionColumn.bind(this);
         this.allowsSubQuestionRules = this.allowsSubQuestionRules.bind(this);
-        this.handleNewQuestionValue = this.handleNewQuestionValue.bind(this);
-        this.handleAddValueChange = this.handleAddValueChange.bind(this);
         this.handleEditValue = this.handleEditValue.bind(this);
         this.handleOnSaveQuestionValue = this.handleOnSaveQuestionValue.bind(this);
         this.handleChangeValue = this.handleChangeValue.bind(this);
+        this.handleAddNewValue = this.handleAddNewValue.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -72,7 +70,13 @@ class ExtraQuestionForm extends React.Component {
 
     handleChangeValue(ev) {
         const currentEditValue = {...this.state.currentEditValue};
-        currentEditValue[ev.target.id] = ev.target.value;
+        let {value, id} = ev.target;
+
+        if (ev.target.type === 'checkbox') {
+            value = ev.target.checked;
+        }
+
+        currentEditValue[id] = value;
         this.setState({...this.state, currentEditValue: currentEditValue});
     }
 
@@ -103,11 +107,8 @@ class ExtraQuestionForm extends React.Component {
         this.setState({...this.state, currentEditValue: null});
     }
 
-    handleAddValueChange(ev) {
-        const newValue = {...this.state.newValue};
-        let {value, id} = ev.target;
-        newValue[id] = value;
-        this.setState({...this.state, newValue: newValue});
+    handleAddNewValue(newValue) {
+        this.props.onValueSave(newValue);
     }
 
     handleSubmit(ev) {
@@ -165,7 +166,7 @@ class ExtraQuestionForm extends React.Component {
     }
 
     render() {
-        const {entity, errors, newValue, currentEditValue} = this.state;
+        const {entity, errors, currentEditValue} = this.state;
         const {
             currentSummit = null,
             onValueDelete,
@@ -188,18 +189,31 @@ class ExtraQuestionForm extends React.Component {
         const question_usage_ddl = [
             {label: 'Order', value: 'Order'},
             {label: 'Ticket', value: 'Ticket'},
-            {label: 'Both', value: 'Both'}
+            {label: 'Both', value: 'Both'},
         ];
 
         const value_columns = [
-            {columnKey: 'value', value: T.translate("question_form.value")},
-            {columnKey: 'label', value: T.translate("question_form.visible_option")}
+            {
+                columnKey: 'value',
+                value: T.translate("question_form.value"),
+            },
+            {
+                columnKey: 'label',
+                value: T.translate("question_form.visible_option"),
+            },
+            {
+                columnKey: 'is_default',
+                value: T.translate("question_form.is_default"),
+                render: (row, val) => { return val ?  T.translate("general.yes") : T.translate("general.no")},
+                input: 'checkbox',
+            },
         ];
 
         const value_options = {
             actions: {
                 edit: {onClick: this.handleEditValue},
-                delete: {onClick: onValueDelete}
+                delete: {onClick: onValueDelete},
+                save: { onClick: this.handleAddNewValue}
             }
         };
 
@@ -375,38 +389,18 @@ class ExtraQuestionForm extends React.Component {
                         <label>{T.translate("question_form.values")}</label>
                         <hr/>
                         {entity.values.length > 0 &&
-                        <div className="row">
-                            <div className="col-md-12">
-                                <SortableTable
-                                    options={value_options}
-                                    data={entity.values}
-                                    columns={value_columns}
-                                    dropCallback={updateQuestionValueOrder}
-                                    orderField="order"
-                                />
+                            <div className="row">
+                                <div className="col-md-12">
+                                    <SortableTable
+                                        options={value_options}
+                                        data={entity.values}
+                                        columns={value_columns}
+                                        dropCallback={updateQuestionValueOrder}
+                                        orderField="order"
+                                    />
+                                </div>
                             </div>
-                        </div>
                         }
-                        <div className="row">
-                            <div className="col-md-3">
-                                <input type="text" id="question_value_val_new"
-                                       placeholder={T.translate("question_form.value")}
-                                       maxLength={255}
-                                       value={newValue.question_value_val_new} onChange={this.handleAddValueChange}/>
-                            </div>
-                            <div className="col-md-6">
-                                <input type="text" id="question_value_label_new"
-                                       placeholder={T.translate("question_form.visible_option")}
-                                       style={{width: '100%'}}
-                                       value={newValue.question_value_label_new} onChange={this.handleAddValueChange}/>
-                            </div>
-                            <div className="col-md-3">
-                                <button className="btn btn-primary pull-right left-space"
-                                        onClick={this.handleNewQuestionValue}>
-                                    {T.translate("question_form.add_value")}
-                                </button>
-                            </div>
-                        </div>
                     </>
                     }
                     {entity.id !== 0 && this.allowsSubQuestionRules(entity) &&
@@ -467,6 +461,17 @@ class ExtraQuestionForm extends React.Component {
                                 <textarea id="label"
                                           placeholder={T.translate("question_form.visible_option")}
                                           value={currentEditValue.label} onChange={this.handleChangeValue}/>
+                            </div>
+                        </div>
+                        <div className="row modal_edit_value_row">
+                            <div className="col-md-12 checkboxes-div">
+                                <div className="form-check abc-checkbox">
+                                    <input type="checkbox" id="is_default" checked={currentEditValue.is_default}
+                                           onChange={this.handleChangeValue} className="form-check-input"/>
+                                    <label className="form-check-label" htmlFor="is_default">
+                                        {T.translate("question_form.is_default")}
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </Modal.Body>

@@ -100,13 +100,23 @@ const orderExtraQuestionReducer = (state = DEFAULT_STATE, action) => {
             }
         case ORDER_EXTRA_QUESTION_VALUE_ADDED: {
             let entity = {...payload.response};
-            let values = [...state.entity.values, entity];
+            let values = [...state.entity.values];
+            if(entity.is_default){
+                values = values.map(v => {
+                    return {...v, is_default: false}
+                });
+            }
 
-            return {...state, entity: { ...state.entity, values: values}};
+            return {...state, entity: { ...state.entity, values: [...values, entity]}};
         }
         case ORDER_EXTRA_QUESTION_VALUE_UPDATED: {
             let entity = {...payload.response};
             let values_tmp = state.entity.values.filter(v => v.id !== entity.id);
+            if(entity.is_default){
+                values_tmp = values_tmp.map(v => {
+                    return {...v, is_default: false}
+                });
+            }
             let values = [...values_tmp, entity];
 
             values.sort((a, b) => (a.order > b.order ? 1 : (a.order < b.order ? -1 : 0)));

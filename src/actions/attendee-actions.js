@@ -326,7 +326,7 @@ export const saveAttendee = (entity) => async (dispatch, getState) => {
 
     if (entity.id) {
 
-        putRequest(
+        return putRequest(
             createAction(UPDATE_ATTENDEE),
             createAction(ATTENDEE_UPDATED),
             `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/attendees/${entity.id}`,
@@ -345,7 +345,7 @@ export const saveAttendee = (entity) => async (dispatch, getState) => {
             type: 'success'
         };
 
-        postRequest(
+        return postRequest(
             createAction(UPDATE_ATTENDEE),
             createAction(ATTENDEE_ADDED),
             `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/attendees`,

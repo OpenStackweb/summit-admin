@@ -91,14 +91,23 @@ const selectionPlanExtraQuestionReducer = (state = DEFAULT_STATE, action) => {
             break;
         case SELECTION_PLAN_EXTRA_QUESTION_VALUE_ADDED: {
             let entity = {...payload.response};
-            let values = [...state.entity.values, entity];
+            let values = [...state.entity.values];
+            if(entity.is_default){
+                // reset all other values
+                values = values.map(v => ({...v, is_default: false}));
+            }
 
-            return {...state, entity: { ...state.entity, values: values}};
+            return {...state, entity: { ...state.entity, values: [...values, entity]}};
         }
             break;
         case SELECTION_PLAN_EXTRA_QUESTION_VALUE_UPDATED: {
             let entity = {...payload.response};
             let values_tmp = state.entity.values.filter(v => v.id !== entity.id);
+            if(entity.is_default){
+                // reset all other values
+                values_tmp = values_tmp.map(v => ({...v, is_default: false}));
+            }
+
             let values = [...values_tmp, entity];
 
             values.sort((a, b) => (a.order > b.order ? 1 : (a.order < b.order ? -1 : 0)));
