@@ -90,7 +90,7 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
             if(day == null){
                 return {...state, currentDay : null, scheduleEvents : []};
             }
-            return {...state, currentDay : day};
+            return {...state, currentDay: day};
         }
         case SET_SLOT_SIZE: {
             const {slotSize} = payload;
@@ -104,26 +104,21 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
             let {eventType} = payload;
             return {...state, currentEventType : eventType};
         }
-        break;
         case CHANGE_CURRENT_PRESENTATION_SELECTION_STATUS: {
             let {presentationSelectionStatus} = payload;
             return {...state, currentPresentationSelectionStatus : presentationSelectionStatus};
         }
-        break;
         case CHANGE_CURRENT_PRESENTATION_SELECTION_PLAN: {
             let {presentationSelectionPlan} = payload;
             return {...state, currentPresentationSelectionPlan : presentationSelectionPlan};
         }
-        break;
         case RECEIVE_EMPTY_SPOTS:{
             let { data } = payload.response;
             return {...state, emptySpots : data, searchingEmpty: true};
         }
-        break;
         case CLEAR_EMPTY_SPOTS: {
             return {...state, emptySpots : [], searchingEmpty: false};
         }
-        break;
         case CLEAR_PUBLISHED_EVENTS:{
             return {...state, scheduleEvents : []};
         }
@@ -135,36 +130,30 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
             let {orderBy} = payload;
             return {...state, currentUnScheduleOrderBy : orderBy};
         }
-        break;
         case CHANGE_CURRENT_TRACK: {
             let {track} = payload;
             return {...state, currentTrack: track};
         }
-        break;
         case CHANGE_CURRENT_DURATION: {
             let {duration} = payload;
             return {...state, currentDuration: duration};
         }
-        break;
         case CHANGE_CURRENT_LOCATION: {
             let { location } = payload;
             if(location == null){
-                return {...state, currentLocation : null, scheduleEvents : []};
+                return {...state, currentLocation: null, scheduleEvents: []};
             }
-            return {...state, currentLocation : location};
+            return {...state, currentLocation: location};
         }
-        break;
         case CHANGE_CURRENT_UNSCHEDULE_SEARCH_TERM:{
             let {term} = payload;
             return {...state, unScheduleEventsCurrentSearchTerm : term};
         }
-        break;
         case CHANGE_CURRENT_SCHEDULE_SEARCH_TERM:{
             let {term}               = payload;
             let scheduleEventsSearch = (term == null || term === '') ? [] : state.scheduleEventsSearch;
             return {...state, scheduleEventsSearch, scheduleEventsCurrentSearchTerm : term };
         }
-        break;
         case RECEIVE_SCHEDULE_EVENTS_SEARCH_PAGE:{
             let { data } = payload.response;
             return {...state,
@@ -177,7 +166,6 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
                 scheduleEvents  : data
             };
         }
-        break;
         case REQUEST_PROPOSED_SCHEDULE:{
             const { proposedSchedDay, proposedSchedLocation, proposedSchedTrack } = payload;
             return {...state, proposedSchedDay, proposedSchedLocation, proposedSchedTrack };
@@ -210,7 +198,6 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
                 scheduleEvents
             };
         }
-        break;
         case REQUEST_PUBLISH_EVENT:
             const {currentSummit, currentLocation, event, startTime, day, minutes } = payload;
             let eventModel        = new SummitEvent(event, currentSummit);
@@ -252,25 +239,20 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
                 ],
                 unScheduleEvents
             };
-        break;
         case ERROR_PUBLISH_EVENT:
             // force update of schedule events ...
             return {...state,
                 scheduleEvents: [...state.scheduleEvents],
             };
-            break;
         case CHANGE_SUMMIT_BUILDER_FILTERS: {
             return {...state, selectedFilters: payload}
         }
-        break;
         case LOGOUT_USER:
         case SET_CURRENT_SUMMIT:
         case RECEIVE_SUMMIT:
             return DEFAULT_STATE;
-            break;
         default:
             return state;
-            break;
     }
 };
 

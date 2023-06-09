@@ -266,11 +266,13 @@ class ScheduleAdminDashBoard extends React.Component {
   
   onProposedDayChanged(proposedSchedDay) {
     const {proposedSchedLocation, proposedSchedTrack} = this.props;
+    this.onDayChanged(proposedSchedDay);
     this.updateProposedList(proposedSchedDay, proposedSchedLocation, proposedSchedTrack);
   }
   
   onProposedVenueChanged(proposedSchedLocation) {
     const {proposedSchedDay, proposedSchedTrack} = this.props;
+    this.onVenueChanged(proposedSchedLocation);
     this.updateProposedList(proposedSchedDay, proposedSchedLocation, proposedSchedTrack);
   }
   
