@@ -10,3 +10,4 @@ node_modules
 /.env.staging
 package-lock.json
 .vscode/settings.json
+*.log
