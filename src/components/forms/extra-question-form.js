@@ -388,7 +388,6 @@ class ExtraQuestionForm extends React.Component {
                     <>
                         <label>{T.translate("question_form.values")}</label>
                         <hr/>
-                        {entity.values.length > 0 &&
                             <div className="row">
                                 <div className="col-md-12">
                                     <SortableTable
@@ -400,7 +399,6 @@ class ExtraQuestionForm extends React.Component {
                                     />
                                 </div>
                             </div>
-                        }
                     </>
                     }
                     {entity.id !== 0 && this.allowsSubQuestionRules(entity) &&
