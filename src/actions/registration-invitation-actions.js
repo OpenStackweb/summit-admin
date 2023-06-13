@@ -354,7 +354,7 @@ const normalizeEntity = (entity) => {
 };
 
 export const sendEmails = (currentFlowEvent, selectedAll = false , selectedInvitationsIds = [],
-                          term = null, showNonAccepted = false , showNotSent = false, allowedTicketTypesIds = [], tagFilter = []) => async (dispatch, getState) => {
+                          term = null,  isAccepted = null, isSent = null, allowedTicketTypesIds = [], tagFilter = []) => async (dispatch, getState) => {
 
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
@@ -371,12 +371,12 @@ export const sendEmails = (currentFlowEvent, selectedAll = false , selectedInvit
         filter.push(`email=@${escapedTerm},first_name=@${escapedTerm},last_name=@${escapedTerm}`);
     }
 
-    if(showNonAccepted){
-        filter.push('is_accepted==false');
+    if(isAccepted != null){
+        filter.push(`is_accepted==${isAccepted}`);
     }
 
-    if(showNotSent){
-        filter.push('is_sent==false');
+    if(isSent !=null ){
+        filter.push(`is_sent==${isSent}`);
     }
 
     if(allowedTicketTypesIds.length > 0){
@@ -422,6 +422,6 @@ export const sendEmails = (currentFlowEvent, selectedAll = false , selectedInvit
                 success_message,
             ));
             dispatch(stopLoading());
-            return data.response;
+            return payload;
         });
 }

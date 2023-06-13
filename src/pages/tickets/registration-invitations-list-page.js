@@ -138,8 +138,8 @@ class RegistrationInvitationsListPage extends React.Component {
             selectedAll,
             totalInvitations,
             term,
-            showNonAccepted,
-            showNotSent,
+            isAccepted,
+            isSent,
             selectedInvitationsIds,
             currentFlowEvent,
             sendEmails,
@@ -168,14 +168,15 @@ class RegistrationInvitationsListPage extends React.Component {
             confirmButtonText: T.translate("general.yes")
         }).then(function(result){
             if (result.value) {
+
                 sendEmails
                 (
                     currentFlowEvent,
                     selectedAll ,
                     selectedInvitationsIds,
                     term,
-                    showNonAccepted,
-                    showNotSent,
+                    isAccepted,
+                    isSent,
                     allowedTicketTypesIds,
                     tagFilter
                 );
