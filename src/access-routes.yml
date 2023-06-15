@@ -24,6 +24,11 @@ audit-log:
   - administrators
   - summit-front-end-administrators
 
+sponsorship-types:
+  - super-admins
+  - administrators
+  - summit-front-end-administrators
+
 summit-edit:
   - super-admins
   - administrators
@@ -136,6 +141,7 @@ reports:
   - super-admins
   - administrators
   - summit-front-end-administrators
+  - summit-registration-administrators
 
 purchase-orders:
   - super-admins
@@ -165,25 +171,21 @@ summitdocs:
   - super-admins
   - administrators
   - summit-front-end-administrators
-  - summit-registration-administrators
 
 email-flow-events:
   - super-admins
   - administrators
   - summit-front-end-administrators
-  - summit-registration-administrators
 
 tag-groups:
   - super-admins
   - administrators
   - summit-front-end-administrators
-  - summit-registration-administrators
 
 settings:
   - super-admins
   - administrators
   - summit-front-end-administrators
-  - summit-registration-administrators
 
 purchase_orders:
   - super-admins
@@ -196,3 +198,8 @@ progress-flags:
   - administrators
   - summit-front-end-administrators
   - summit-registration-administrators
+
+signage:
+  - super-admins
+  - administrators
+  - summit-front-end-administrators
