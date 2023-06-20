@@ -16,6 +16,7 @@ import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import {
     Input,
+    Panel,
     TextEditor,
     TagInput,
     UploadInput,
@@ -31,6 +32,7 @@ class EventCategoryForm extends React.Component {
         this.state = {
             entity: {...props.entity},
             errors: props.errors,
+            showSection: 'main'
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -102,8 +104,16 @@ class EventCategoryForm extends React.Component {
         this.props.onUploadImage(this.state.entity, formData);
     }
 
+    toggleSection(section, ev) {
+        const { showSection } = this.state;
+        const newShowSection = (showSection === section) ? 'main' : section;
+        ev.preventDefault();
+
+        this.setState({ showSection: newShowSection });
+    }
+
     render() {
-        const {entity, errors} = this.state;
+        const {entity, errors, showSection} = this.state;
         const { currentSummit } = this.props;
 
         return (
@@ -264,6 +274,23 @@ class EventCategoryForm extends React.Component {
                     </div>
                 </div>
                 }
+
+                <Panel show={showSection === 'proposed_schedule_settings'} title={T.translate("edit_event_category.proposed_schedule_settings.title")}
+                    handleClick={this.toggleSection.bind(this, 'proposed_schedule_settings')}>
+                    <div className={'row'}>
+                        <div className={'col-md-4'}>
+                            <Input
+                                type="number"
+                                id="proposed_schedule_transition_time"
+                                value={entity.proposed_schedule_transition_time}
+                                onChange={this.handleChange}
+                                placeholder={T.translate("edit_event_category.proposed_schedule_settings.placeholders.transition_time")}
+                                className="form-control"
+                                error={hasErrors('proposed_schedule_transition_time', errors)}
+                            />
+                        </div>
+                    </div>
+                </Panel>
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">

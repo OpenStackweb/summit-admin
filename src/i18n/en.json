@@ -1064,7 +1064,13 @@
     "add_question": "New Question",
     "category_saved": "Activity Category saved successfully.",
     "category_created": "Activity Category created successfully.",
-    "delete_warning": "Are you sure you want to delete extra question "
+    "delete_warning": "Are you sure you want to delete extra question ",
+    "proposed_schedule_settings": {
+      "title": "Proposed Schedule Settings",
+      "placeholders": {
+        "transition_time": "Transition Time (in minutes)"
+      }
+    }
   },
   "edit_event_category_question": {
     "extra_question": "Extra Question",

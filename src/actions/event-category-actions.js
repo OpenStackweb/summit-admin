@@ -26,45 +26,45 @@ import {
 } from "openstack-uicore-foundation/lib/utils/actions";
 import {getAccessTokenSafely} from '../utils/methods';
 
-export const REQUEST_EVENT_CATEGORIES      = 'REQUEST_EVENT_CATEGORIES';
-export const RECEIVE_EVENT_CATEGORIES      = 'RECEIVE_EVENT_CATEGORIES';
-export const RECEIVE_EVENT_CATEGORY        = 'RECEIVE_EVENT_CATEGORY';
-export const RESET_EVENT_CATEGORY_FORM     = 'RESET_EVENT_CATEGORY_FORM';
-export const UPDATE_EVENT_CATEGORY         = 'UPDATE_EVENT_CATEGORY';
-export const EVENT_CATEGORY_UPDATED        = 'EVENT_CATEGORY_UPDATED';
-export const EVENT_CATEGORY_ADDED          = 'EVENT_CATEGORY_ADDED';
-export const EVENT_CATEGORY_DELETED        = 'EVENT_CATEGORY_DELETED';
-export const EVENT_CATEGORIES_SEEDED       = 'EVENT_CATEGORIES_SEEDED';
+export const REQUEST_EVENT_CATEGORIES = 'REQUEST_EVENT_CATEGORIES';
+export const RECEIVE_EVENT_CATEGORIES = 'RECEIVE_EVENT_CATEGORIES';
+export const RECEIVE_EVENT_CATEGORY = 'RECEIVE_EVENT_CATEGORY';
+export const RESET_EVENT_CATEGORY_FORM = 'RESET_EVENT_CATEGORY_FORM';
+export const UPDATE_EVENT_CATEGORY = 'UPDATE_EVENT_CATEGORY';
+export const EVENT_CATEGORY_UPDATED = 'EVENT_CATEGORY_UPDATED';
+export const EVENT_CATEGORY_ADDED = 'EVENT_CATEGORY_ADDED';
+export const EVENT_CATEGORY_DELETED = 'EVENT_CATEGORY_DELETED';
+export const EVENT_CATEGORIES_SEEDED = 'EVENT_CATEGORIES_SEEDED';
 export const EVENT_CATEGORY_IMAGE_ATTACHED = 'EVENT_CATEGORY_IMAGE_ATTACHED';
-export const EVENT_CATEGORY_IMAGE_DELETED  = 'EVENT_CATEGORY_IMAGE_DELETED';
+export const EVENT_CATEGORY_IMAGE_DELETED = 'EVENT_CATEGORY_IMAGE_DELETED';
 
-export const REQUEST_EVENT_CATEGORY_GROUPS       = 'REQUEST_EVENT_CATEGORY_GROUPS';
-export const RECEIVE_EVENT_CATEGORY_GROUPS       = 'RECEIVE_EVENT_CATEGORY_GROUPS';
-export const RECEIVE_EVENT_CATEGORY_GROUP        = 'RECEIVE_EVENT_CATEGORY_GROUP';
-export const RESET_EVENT_CATEGORY_GROUP_FORM     = 'RESET_EVENT_CATEGORY_GROUP_FORM';
-export const UPDATE_EVENT_CATEGORY_GROUP         = 'UPDATE_EVENT_CATEGORY_GROUP';
-export const EVENT_CATEGORY_GROUP_UPDATED        = 'EVENT_CATEGORY_GROUP_UPDATED';
-export const EVENT_CATEGORY_GROUP_ADDED          = 'EVENT_CATEGORY_GROUP_ADDED';
-export const EVENT_CATEGORY_GROUP_DELETED        = 'EVENT_CATEGORY_GROUP_DELETED';
-export const RECEIVE_EVENT_CATEGORY_GROUP_META   = 'RECEIVE_EVENT_CATEGORY_GROUP_META';
-export const CATEGORY_ADDED_TO_GROUP             = 'CATEGORY_ADDED_TO_GROUP';
-export const CATEGORY_REMOVED_FROM_GROUP         = 'CATEGORY_REMOVED_FROM_GROUP';
-export const GROUP_ADDED_TO_GROUP                = 'GROUP_ADDED_TO_GROUP';
-export const GROUP_REMOVED_FROM_GROUP            = 'GROUP_REMOVED_FROM_GROUP';
-export const EVENT_CATEGORY_ORDER_UPDATED        = 'EVENT_CATEGORY_ORDER_UPDATED';
+export const REQUEST_EVENT_CATEGORY_GROUPS = 'REQUEST_EVENT_CATEGORY_GROUPS';
+export const RECEIVE_EVENT_CATEGORY_GROUPS = 'RECEIVE_EVENT_CATEGORY_GROUPS';
+export const RECEIVE_EVENT_CATEGORY_GROUP = 'RECEIVE_EVENT_CATEGORY_GROUP';
+export const RESET_EVENT_CATEGORY_GROUP_FORM = 'RESET_EVENT_CATEGORY_GROUP_FORM';
+export const UPDATE_EVENT_CATEGORY_GROUP = 'UPDATE_EVENT_CATEGORY_GROUP';
+export const EVENT_CATEGORY_GROUP_UPDATED = 'EVENT_CATEGORY_GROUP_UPDATED';
+export const EVENT_CATEGORY_GROUP_ADDED = 'EVENT_CATEGORY_GROUP_ADDED';
+export const EVENT_CATEGORY_GROUP_DELETED = 'EVENT_CATEGORY_GROUP_DELETED';
+export const RECEIVE_EVENT_CATEGORY_GROUP_META = 'RECEIVE_EVENT_CATEGORY_GROUP_META';
+export const CATEGORY_ADDED_TO_GROUP = 'CATEGORY_ADDED_TO_GROUP';
+export const CATEGORY_REMOVED_FROM_GROUP = 'CATEGORY_REMOVED_FROM_GROUP';
+export const GROUP_ADDED_TO_GROUP = 'GROUP_ADDED_TO_GROUP';
+export const GROUP_REMOVED_FROM_GROUP = 'GROUP_REMOVED_FROM_GROUP';
+export const EVENT_CATEGORY_ORDER_UPDATED = 'EVENT_CATEGORY_ORDER_UPDATED';
 
-export const getEventCategories = ( ) => async (dispatch, getState) => {
+export const getEventCategories = () => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const params = {
-        expand       : "track_groups",
-        access_token : accessToken,
-        page : 1,
+        expand: "track_groups",
+        access_token: accessToken,
+        page: 1,
         per_page: 100,
         order: '+order',
     };
@@ -82,15 +82,15 @@ export const getEventCategories = ( ) => async (dispatch, getState) => {
 
 export const getEventCategory = (eventCategoryId) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const params = {
-        expand       : "track_groups,allowed_tags,extra_questions,allowed_access_levels",
-        access_token : accessToken,
+        expand: "track_groups,allowed_tags,extra_questions,allowed_access_levels",
+        access_token: accessToken,
     };
 
     return getRequest(
@@ -126,7 +126,7 @@ export const updateEventCategoryOrder = (tracks, trackId, newOrder) => async (di
         null,
         createAction(EVENT_CATEGORY_ORDER_UPDATED)(tracks),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tracks/${track.id}`,
-        { order: newOrder},
+        {order: newOrder},
         authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
@@ -136,18 +136,18 @@ export const updateEventCategoryOrder = (tracks, trackId, newOrder) => async (di
 }
 
 export const saveEventCategory = (entity) => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const normalizedEntity = normalizeEntity(entity);
-    const params = { access_token : accessToken };
+    const params = {access_token: accessToken};
 
     if (entity.id) {
 
-        putRequest(
+        return putRequest(
             createAction(UPDATE_EVENT_CATEGORY),
             createAction(EVENT_CATEGORY_UPDATED),
             `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tracks/${entity.id}`,
@@ -156,42 +156,46 @@ export const saveEventCategory = (entity) => async (dispatch, getState) => {
             entity
         )(params)(dispatch)
             .then(() => {
+                dispatch(stopLoading());
                 dispatch(showSuccessMessage(T.translate("edit_event_category.category_saved")));
             });
 
-    } else {
-
-        const success_message = {
-            title: T.translate("general.done"),
-            html: T.translate("edit_event_category.category_created"),
-            type: 'success'
-        };
-
-        postRequest(
-            createAction(UPDATE_EVENT_CATEGORY),
-            createAction(EVENT_CATEGORY_ADDED),
-            `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tracks`,
-            normalizedEntity,
-            authErrorHandler,
-            entity
-        )(params)(dispatch)
-            .then((payload) => {
-                dispatch(showMessage(
-                    success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/event-categories/${payload.response.id}`) }
-                ));
-            });
     }
+
+    const success_message = {
+        title: T.translate("general.done"),
+        html: T.translate("edit_event_category.category_created"),
+        type: 'success'
+    };
+
+    return postRequest(
+        createAction(UPDATE_EVENT_CATEGORY),
+        createAction(EVENT_CATEGORY_ADDED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tracks`,
+        normalizedEntity,
+        authErrorHandler,
+        entity
+    )(params)(dispatch)
+        .then((payload) => {
+            dispatch(stopLoading());
+            dispatch(showMessage(
+                success_message,
+                () => {
+                    history.push(`/app/summits/${currentSummit.id}/event-categories/${payload.response.id}`)
+                }
+            ));
+        });
+
 };
 
 export const copyEventCategories = (fromSummitId) => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
-    const params = { access_token : accessToken };
+    const params = {access_token: accessToken};
 
     postRequest(
         null,
@@ -207,12 +211,12 @@ export const copyEventCategories = (fromSummitId) => async (dispatch, getState) 
 
 export const deleteEventCategory = (categoryId) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     return deleteRequest(
@@ -228,12 +232,12 @@ export const deleteEventCategory = (categoryId) => async (dispatch, getState) =>
 };
 
 export const uploadImage = (entity, file) => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     postRequest(
@@ -249,12 +253,12 @@ export const uploadImage = (entity, file) => async (dispatch, getState) => {
 };
 
 export const removeImage = (eventId) => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     return deleteRequest(
@@ -276,12 +280,15 @@ const normalizeEntity = (entity) => {
     if (normalizedEntity.color)
         normalizedEntity.color = normalizedEntity.color.substr(1);
 
-    normalizedEntity.session_count              = parseInt(entity.session_count);
-    normalizedEntity.alternate_count            = parseInt(entity.alternate_count);
-    normalizedEntity.lightning_count            = parseInt(entity.lightning_count);
-    normalizedEntity.lightning_alternate_count  = parseInt(entity.lightning_alternate_count);
+    normalizedEntity.session_count = parseInt(entity.session_count);
+    normalizedEntity.alternate_count = parseInt(entity.alternate_count);
+    normalizedEntity.lightning_count = parseInt(entity.lightning_count);
+    normalizedEntity.lightning_alternate_count = parseInt(entity.lightning_alternate_count);
     normalizedEntity.allowed_tags = entity.allowed_tags.map(t => t.tag);
     normalizedEntity.allowed_access_levels = entity.allowed_access_levels.map(al => al.id);
+
+    if (normalizedEntity.proposed_schedule_transition_time)
+        normalizedEntity.proposed_schedule_transition_time = parseInt(entity.proposed_schedule_transition_time);
 
     return normalizedEntity;
 
@@ -291,16 +298,16 @@ const normalizeEntity = (entity) => {
 
 export const getEventCategoryGroups = () => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const params = {
         expand: 'tracks',
-        access_token : accessToken,
-        page : 1,
+        access_token: accessToken,
+        page: 1,
         per_page: 100,
     };
 
@@ -317,15 +324,15 @@ export const getEventCategoryGroups = () => async (dispatch, getState) => {
 
 export const getEventCategoryGroup = (groupId) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const params = {
         expand: 'tracks',
-        access_token : accessToken,
+        access_token: accessToken,
     };
 
     return getRequest(
@@ -341,12 +348,12 @@ export const getEventCategoryGroup = (groupId) => async (dispatch, getState) => 
 
 export const getEventCategoryGroupMeta = () => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken,
+        access_token: accessToken,
     };
 
     return getRequest(
@@ -365,14 +372,14 @@ export const resetEventCategoryGroupForm = () => (dispatch) => {
 };
 
 export const saveEventCategoryGroup = (entity) => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const normalizedEntity = normalizeGroupEntity(entity);
-    const params = { access_token : accessToken };
+    const params = {access_token: accessToken};
 
     if (entity.id) {
         putRequest(
@@ -415,12 +422,12 @@ export const saveEventCategoryGroup = (entity) => async (dispatch, getState) => 
 
 export const deleteEventCategoryGroup = (groupId) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     return deleteRequest(
@@ -437,14 +444,14 @@ export const deleteEventCategoryGroup = (groupId) => async (dispatch, getState) 
 
 export const addCategoryToGroup = (groupId, category) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     return putRequest(
@@ -461,14 +468,14 @@ export const addCategoryToGroup = (groupId, category) => async (dispatch, getSta
 
 export const removeCategoryFromGroup = (groupId, categoryId) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     return deleteRequest(
@@ -485,14 +492,14 @@ export const removeCategoryFromGroup = (groupId, categoryId) => async (dispatch,
 
 export const addAllowedGroupToGroup = (groupId, allowedGroup) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     return putRequest(
@@ -509,14 +516,14 @@ export const addAllowedGroupToGroup = (groupId, allowedGroup) => async (dispatch
 
 export const removeAllowedGroupFromGroup = (groupId, allowedGroupId) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const {currentSummit} = currentSummitState;
 
     dispatch(startLoading());
 
     const params = {
-        access_token : accessToken
+        access_token: accessToken
     };
 
     return deleteRequest(

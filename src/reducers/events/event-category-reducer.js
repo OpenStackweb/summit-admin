@@ -42,6 +42,7 @@ export const DEFAULT_ENTITY = {
     extra_questions             : [],
     icon_url                    : null,
     allowed_access_levels       : [],
+    proposed_schedule_transition_time: null
 };
 
 const DEFAULT_STATE = {
