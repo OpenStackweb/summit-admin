@@ -1017,6 +1017,7 @@
     "are_speakers_mandatory": "Are Speakers Mandatory?",
     "allow_custom_ordering": "Allow Custom Ordering",
     "allow_attendee_vote": "Allow Attendee Vote",
+    "show_always_on_schedule": "Show Always on Schedule",
     "min_speakers": "Min Speakers",
     "max_speakers": "Max Speakers",
     "use_moderator": "Should use Moderator?",

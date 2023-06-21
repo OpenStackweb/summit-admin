@@ -38,7 +38,7 @@ import
     SET_SLOT_SIZE,
     SET_SOURCE,
     CLEAR_PROPOSED_EVENTS,
-    PROPOSED_EVENTS_PUBLISHED
+    PROPOSED_EVENTS_PUBLISHED, RECEIVE_SHOW_ALWAYS_EVENTS
 } from '../../actions/summit-builder-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
@@ -177,6 +177,15 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
                 return ({...rest, id: summit_event.id, title: summit_event.title, description: summit_event.description, published: summit_event.published});
             });
             return {...state, proposedSchedEvents};
+        }
+        case RECEIVE_SHOW_ALWAYS_EVENTS: {
+            const { data } = payload.response;
+            const {proposedSchedEvents} = state;
+            const showAlwaysEvents = data.map(ev => ({
+                ...ev,
+                static: true
+            }));
+            return {...state, proposedSchedEvents: [...proposedSchedEvents, ...showAlwaysEvents] };
         }
         case PROPOSED_EVENTS_PUBLISHED: {
             return {...state, currentLocation: state.proposedSchedLocation, currentDay: state.proposedSchedDay}

@@ -217,8 +217,17 @@ class EventTypeForm extends React.Component {
                         </div>
                     </div>
                 </div>
-                { entity.class_name === 'PRESENTATION_TYPE' &&
                 <div className="row form-group checkboxes-div">
+                    <div className="col-md-4">
+                        <div className="form-check abc-checkbox">
+                            <input type="checkbox" id="show_always_on_schedule" checked={entity.show_always_on_schedule}
+                                   onChange={this.handleChange} className="form-check-input" />
+                            <label className="form-check-label" htmlFor="show_always_on_schedule">
+                                {T.translate("edit_event_type.show_always_on_schedule")}
+                            </label>
+                        </div>
+                    </div>
+                    { entity.class_name === 'PRESENTATION_TYPE' &&
                     <div className="col-md-4">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="allows_speaker_event_collision" checked={entity.allows_speaker_event_collision}
@@ -228,8 +237,8 @@ class EventTypeForm extends React.Component {
                             </label>
                         </div>
                     </div>
+                    }
                 </div>
-                }
                 {entity.class_name === 'PRESENTATION_TYPE' &&
                 <div>
                     <hr/>

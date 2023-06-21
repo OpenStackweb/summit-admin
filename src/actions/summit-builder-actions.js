@@ -33,6 +33,8 @@ export const REQUEST_SCHEDULE_EVENTS_PAGE                 = 'REQUEST_SCHEDULE_EV
 export const RECEIVE_SCHEDULE_EVENTS_PAGE                 = 'RECEIVE_SCHEDULE_EVENTS_PAGE';
 export const REQUEST_PROPOSED_SCHEDULE                 = 'REQUEST_PROPOSED_SCHEDULE';
 export const RECEIVE_PROPOSED_SCHEDULE                 = 'RECEIVE_PROPOSED_SCHEDULE';
+export const REQUEST_SHOW_ALWAYS_EVENTS                 = 'REQUEST_SHOW_ALWAYS_EVENTS';
+export const RECEIVE_SHOW_ALWAYS_EVENTS                 = 'RECEIVE_SHOW_ALWAYS_EVENTS';
 export const REQUEST_PUBLISH_EVENT                        = 'REQUEST_PUBLISH_EVENT';
 export const ERROR_PUBLISH_EVENT                          = 'ERROR_PUBLISH_EVENT';
 export const CHANGE_CURRENT_DAY                           = 'CHANGE_CURRENT_DAY';
@@ -212,7 +214,6 @@ export const changeSource = (selectedSource) => (dispatch) => {
 
 export const getPublishedEventsBySummitDayLocation = (currentSummit, currentDay, currentLocation) => async (dispatch, getState) => {
     const accessToken = await getAccessTokenSafely();
-    //currentDay            = moment(currentDay, 'YYYY-MM-DD').tz(currentSummit.time_zone.name);
     currentDay              = moment.tz(currentDay, currentSummit.time_zone.name);
     const startDate           = ( currentDay.clone().hours(0).minutes(0).seconds(0).valueOf()) / 1000;
     const endDate             = ( currentDay.clone().hours(23).minutes(59).seconds(59).valueOf()) /1000;
@@ -220,11 +221,10 @@ export const getPublishedEventsBySummitDayLocation = (currentSummit, currentDay,
     dispatch(startLoading());
     const page       = 1;
     const per_page   = 100;
-    const locationId = currentLocation.id === 0 ? 'tbd': currentLocation.id;
     return getRequest(
         createAction(REQUEST_SCHEDULE_EVENTS_PAGE),
         createAction(RECEIVE_SCHEDULE_EVENTS_PAGE),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/${locationId}/events/published?access_token=${accessToken}&filter[]=start_date>=${startDate}&filter[]=end_date<=${endDate}&page=${page}&per_page=${per_page}`,
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/${currentLocation.id}/events/published?access_token=${accessToken}&filter[]=start_date>=${startDate}&filter[]=end_date<=${endDate}&page=${page}&per_page=${per_page}`,
         authErrorHandler
     )({})(dispatch)
         .then(() =>
@@ -239,6 +239,35 @@ const refreshPublishedList = () => async (dispatch, getState) => {
     return getPublishedEventsBySummitDayLocation(currentSummit, currentDay, currentLocation)(dispatch, getState);
 }
 
+export const getShowAlwaysEvents = (summit, proposedSchedDay, proposedSchedLocation) => async (dispatch, getState) => {
+    const accessToken = await getAccessTokenSafely();
+    const proposedSchedDayMoment = moment.tz(proposedSchedDay, summit.time_zone.name);
+    const startDate = ( proposedSchedDayMoment.clone().hours(0).minutes(0).seconds(0).valueOf()) / 1000;
+    const endDate = ( proposedSchedDayMoment.clone().hours(23).minutes(59).seconds(59).valueOf()) /1000;
+    const params = {
+        page: 1,
+        per_page: 100,
+        access_token: accessToken,
+        'filter[]': [
+            `start_date>=${startDate}`,
+            `end_date<=${endDate}`,
+            `type_show_always_on_schedule==true`
+        ]
+    };
+    
+    dispatch(startLoading());
+    
+    return getRequest(
+      createAction(REQUEST_SHOW_ALWAYS_EVENTS),
+      createAction(RECEIVE_SHOW_ALWAYS_EVENTS),
+      `${window.API_BASE_URL}/api/v1/summits/${summit.id}/locations/${proposedSchedLocation.id}/events/published`,
+      authErrorHandler,
+    )(params)(dispatch)
+      .then(() =>
+        dispatch(stopLoading())
+      );
+}
+
 export const getProposedEvents = (summit, proposedSchedDay, proposedSchedLocation, proposedSchedTrack) => async (dispatch, getState) => {
     if (!summit || !proposedSchedDay || !proposedSchedLocation) {
         dispatch(createAction(CLEAR_PROPOSED_EVENTS)({proposedSchedDay, proposedSchedLocation, proposedSchedTrack}));
@@ -249,7 +278,6 @@ export const getProposedEvents = (summit, proposedSchedDay, proposedSchedLocatio
     const proposedSchedDayMoment = moment.tz(proposedSchedDay, summit.time_zone.name);
     const startDate = ( proposedSchedDayMoment.clone().hours(0).minutes(0).seconds(0).valueOf()) / 1000;
     const endDate = ( proposedSchedDayMoment.clone().hours(23).minutes(59).seconds(59).valueOf()) /1000;
-    const proposedSchedLocationId = proposedSchedLocation.id === 0 ? 'tbd': proposedSchedLocation.id;
     const filter = [];
     const params = {
         expand: 'summit_event',
@@ -260,7 +288,7 @@ export const getProposedEvents = (summit, proposedSchedDay, proposedSchedLocatio
     
     filter.push(`start_date>=${startDate}`);
     filter.push(`end_date<=${endDate}`);
-    filter.push(`location_id==${proposedSchedLocationId}`);
+    filter.push(`location_id==${proposedSchedLocation.id}`);
     
     if(proposedSchedTrack){
         filter.push(`track_id==${proposedSchedTrack.id}`);
@@ -281,7 +309,7 @@ export const getProposedEvents = (summit, proposedSchedDay, proposedSchedLocatio
       {proposedSchedDay, proposedSchedLocation, proposedSchedTrack}
     )(params)(dispatch)
       .then(() =>
-        dispatch(stopLoading())
+        dispatch(getShowAlwaysEvents(summit, proposedSchedDay, proposedSchedLocation))
       );
 }
 
