@@ -621,6 +621,7 @@ export const removeImage = (eventId) => async (dispatch, getState) => {
 };
 
 export const normalizeEvent = (entity, eventTypeConfig) => {
+
     const normalizedEntity = {...entity};
     if (!normalizedEntity.start_date) delete normalizedEntity['start_date'];
     if (!normalizedEntity.end_date) delete normalizedEntity['end_date'];
@@ -629,14 +630,19 @@ export const normalizeEvent = (entity, eventTypeConfig) => {
 
     if (normalizedEntity.hasOwnProperty("links")) delete normalizedEntity['links'];
 
-    normalizedEntity.tags = normalizedEntity.tags.map((t) => {
-        if (typeof t === 'string') return t;
-        else return t.tag;
-    });
-    normalizedEntity.sponsors = normalizedEntity.sponsors.map(s => s.id);
-    normalizedEntity.speakers = normalizedEntity.speakers.map(s => s.id);
+    if(normalizedEntity.hasOwnProperty("tags"))
+        normalizedEntity.tags = normalizedEntity.tags.map((t) => {
+            if (typeof t === 'string') return t;
+            else return t.tag;
+        });
 
-    if (normalizedEntity.moderator)
+    if(normalizedEntity.hasOwnProperty("sponsors"))
+        normalizedEntity.sponsors = normalizedEntity.sponsors.map(s => s.id);
+
+    if(normalizedEntity.hasOwnProperty("speakers"))
+        normalizedEntity.speakers = normalizedEntity.speakers.map(s => s.id);
+
+    if (normalizedEntity.hasOwnProperty("moderator") && normalizedEntity.moderator)
         normalizedEntity.moderator_speaker_id = normalizedEntity.moderator.id;
     else
         delete (normalizedEntity.moderator);
@@ -652,6 +658,17 @@ export const normalizeEvent = (entity, eventTypeConfig) => {
     }
 
     if (eventTypeConfig) {
+
+        if(!eventTypeConfig.use_speakers){
+            delete (normalizedEntity.speakers);
+        }
+        if(!eventTypeConfig.use_sponsors){
+            delete (normalizedEntity.sponsors);
+        }
+        if(!eventTypeConfig.use_moderator){
+            delete (normalizedEntity.moderator);
+            delete (normalizedEntity.moderator_speaker_id);
+        }
         // if allows custom ordering in event type is false then remove custom_order
         if (!eventTypeConfig.allow_custom_ordering) {
             delete (normalizedEntity.custom_order)
