@@ -2135,8 +2135,10 @@
     "flow_name": "eFlow Name",
     "event_type": "Activity Type",
     "saved": "Email template Flow saved successfully.",
+    "recipient": "To",
     "placeholders": {
-      "select_template": "Select template"
+      "select_template": "Select template",
+      "recipient": "Optional Recipient"
     }
   },
   "admin_access": {

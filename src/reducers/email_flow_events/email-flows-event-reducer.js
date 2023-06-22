@@ -26,6 +26,7 @@ export const DEFAULT_ENTITY = {
     flow_name : '',
     event_type_name : '',
     summit_id : 0,
+    recipient: '',
 };
 
 const DEFAULT_STATE = {

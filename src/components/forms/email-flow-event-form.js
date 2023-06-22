@@ -15,6 +15,7 @@ import T from 'i18n-react/dist/i18n-react';
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css';
 import EmailTemplateInput from "../inputs/email-template-input";
 import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
+import {Input} from "openstack-uicore-foundation/lib/components";
 
 
 class EmailFlowEventForm extends React.Component {
@@ -93,6 +94,17 @@ class EmailFlowEventForm extends React.Component {
                             onChange={this.handleChange}
                             plainValue
                         />
+                    </div>
+                </div>
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <label>{T.translate("edit_email_flow_event.recipient")}</label>
+                       <Input
+                           id="recipient"
+                           value={entity.recipient}
+                           onChange={this.handleChange}
+                           className="form-control"
+                       />
                     </div>
                 </div>
 
