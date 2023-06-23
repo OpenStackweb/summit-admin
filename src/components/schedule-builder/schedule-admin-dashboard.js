@@ -920,13 +920,12 @@ class ScheduleAdminDashBoard extends React.Component {
   
               <div className="row">
                 <div className="col-md-12">
-                  {unScheduleEvents.length > 0 &&
                     <BulkActionsSelector
                       bulkOptions={bulkOptionsUnPublished}
                       onSelectAll={this.onSelectAllUnPublished}
                       onSelectedBulkAction={this.onSelectedBulkActionUnPublished}
+                      show={unScheduleEvents.length > 0}
                     />
-                  }
                 </div>
               </div>
   
