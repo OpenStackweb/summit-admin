@@ -1072,6 +1072,7 @@
     "delete_warning": "Are you sure you want to delete extra question ",
     "proposed_schedule_settings": {
       "title": "Proposed Schedule Settings",
+      "transition_time": "Transition Time (in minutes)",
       "placeholders": {
         "transition_time": "Transition Time (in minutes)"
       }

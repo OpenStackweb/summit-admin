@@ -277,8 +277,9 @@ class EventCategoryForm extends React.Component {
 
                 <Panel show={showSection === 'proposed_schedule_settings'} title={T.translate("edit_event_category.proposed_schedule_settings.title")}
                     handleClick={this.toggleSection.bind(this, 'proposed_schedule_settings')}>
-                    <div className={'row'}>
-                        <div className={'col-md-4'}>
+                    <div className="row form-group">
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_event_category.proposed_schedule_settings.transition_time")}</label>
                             <Input
                                 type="number"
                                 id="proposed_schedule_transition_time"
