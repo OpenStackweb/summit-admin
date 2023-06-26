@@ -131,12 +131,18 @@ export const printTickets = (term, filters, order, orderDir, doAttendeeCheckinOn
         access_token: accessToken,
     };
 
+    const hasSelectedIds = filters.hasOwnProperty('selectedIds') && filters.selectedIds.length > 0
+    if(hasSelectedIds){
+        // user selected particular ids to print out, so we dont need any filter
+        term = null;
+        filters = { selectedIds : filters.selectedIds}
+    }
+
     const filter = parseFilters(filters);
 
     if(term) {
         const escapedTerm = escapeFilterValue(term);
         let searchString = `number=@${escapedTerm},owner_email=@${escapedTerm},owner_name=@${escapedTerm},owner_company=@${escapedTerm}`;
-        
         filter.push(searchString);
     }
 
