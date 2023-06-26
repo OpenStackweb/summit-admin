@@ -90,6 +90,13 @@ class EventTypeForm extends React.Component {
         const { getMediaUploads } = this.props;
         const event_types_ddl = [{label: 'Presentation', value: 'PRESENTATION_TYPE'}, {label: 'Event', value: 'EVENT_TYPE'}];
 
+        const blackout_times_ddl = [
+            {label: T.translate("edit_event_type.blackout_time_final"), value: 'Final'}, 
+            {label: T.translate("edit_event_type.blackout_time_proposed"), value: 'Proposed'}, 
+            {label: T.translate("edit_event_type.blackout_time_all"), value: 'All'}, 
+            {label: T.translate("edit_event_type.blackout_time_none"), value: 'None'}
+        ];
+
         const allowedGroupsColumns = [
             { columnKey: 'name', value: T.translate("general.name") },
             { columnKey: 'type_name', value: T.translate("general.type") },
@@ -158,17 +165,18 @@ class EventTypeForm extends React.Component {
                             error={hasErrors('color', errors)}
                         />
                     </div>
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_event_type.black_out_times")}</label>
+                        <Dropdown
+                            id="black_out_times"
+                            value={entity.black_out_times}
+                            placeholder={T.translate("edit_event_type.black_out_times")}
+                            options={blackout_times_ddl}
+                            onChange={this.handleChange}
+                        />
+                    </div>
                 </div>
                 <div className="row form-group checkboxes-div">
-                    <div className="col-md-4">
-                        <div className="form-check abc-checkbox">
-                            <input type="checkbox" id="black_out_times" checked={entity.black_out_times}
-                                   onChange={this.handleChange} className="form-check-input" />
-                            <label className="form-check-label" htmlFor="black_out_times">
-                                {T.translate("edit_event_type.black_out_times")}
-                            </label>
-                        </div>
-                    </div>
                     <div className="col-md-4">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="use_sponsors" checked={entity.use_sponsors}

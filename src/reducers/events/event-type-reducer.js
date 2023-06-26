@@ -30,7 +30,7 @@ export const DEFAULT_ENTITY = {
     name                                : '',
     class_name                          : '',
     color                               : '',
-    black_out_times                     : false,
+    black_out_times                     : 'None',
     use_sponsors                        : false,
     are_sponsors_mandatory              : false,
     allows_location                     : false,

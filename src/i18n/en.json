@@ -1028,6 +1028,10 @@
     "media_upload_types": "Media Upload Types",
     "event_type_saved": "Activity Type saved successfully.",
     "event_type_created": "Activity Type created successfully.",
+    "blackout_time_final": "Final",
+    "blackout_time_proposed": "Proposed",
+    "blackout_time_all": "All",
+    "blackout_time_none": "None",
     "placeholders": {
       "select_class": "Select Class"
     }
