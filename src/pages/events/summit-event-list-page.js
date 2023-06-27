@@ -31,7 +31,7 @@ import {
 import { SegmentedControl } from 'segmented-control'
 import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/utils/methods'
 import { getSummitById }  from '../../actions/summit-actions';
-import { getEvents, deleteEvent, exportEvents, importEventsCSV, importMP4AssetsFromMUX } from "../../actions/event-actions";
+import { getEvents, deleteEvent, exportEvents, importEventsCSV, importMP4AssetsFromMUX, changeEventListSearchTerm } from "../../actions/event-actions";
 import {hasErrors, uuidv4} from "../../utils/methods";
 import '../../styles/summit-event-list-page.less';
 
@@ -86,6 +86,7 @@ class SummitEventListPage extends React.Component {
         this.handleFiltersChange = this.handleFiltersChange.bind(this);
         this.handleColumnsChange = this.handleColumnsChange.bind(this);
         this.handleDDLSortByLabel = this.handleDDLSortByLabel.bind(this);
+        this.handleTermChange = this.handleTermChange.bind(this);
 
         this.state = {
             showImportModal: false,
@@ -125,7 +126,7 @@ class SummitEventListPage extends React.Component {
                 all_companies: [],
                 submission_status_filter: []
             },
-            selectedColumns: []
+            selectedColumns: [],
         };
 
         this.extraFilters = {
@@ -193,20 +194,20 @@ class SummitEventListPage extends React.Component {
     }
 
     handleExport(ev) {
-        const {term, order, orderDir} = this.props;
+        const {order, orderDir, term} = this.props;
         const {eventFilters, selectedColumns} = this.state;
         ev.preventDefault();
         this.props.exportEvents(term, order, orderDir, eventFilters, selectedColumns);
     }
 
     handlePageChange(page) {
-        const {term, order, orderDir, perPage} = this.props;
+        const {order, orderDir, perPage, term} = this.props;
         const {eventFilters, selectedColumns} = this.state;
         this.props.getEvents(term, page, perPage, order, orderDir, eventFilters, selectedColumns);
     }
 
     handleSort(index, key, dir, func) {
-        const {term, page, perPage} = this.props;
+        const {page, perPage, term} = this.props;
         const {eventFilters, selectedColumns} = this.state;
         key = (key === 'name') ? 'last_name' : key;
         key = (key === 'submitter_company') ? 'created_by_company' : key;
@@ -242,8 +243,12 @@ class SummitEventListPage extends React.Component {
         });
     }
 
+    handleTermChange(term) {
+        this.props.changeEventListSearchTerm(term);
+    }
+
     handleApplyEventFilters() {
-        const {term, order, orderDir, page, perPage} = this.props;
+        const {order, orderDir, page, perPage, term} = this.props;
         const {eventFilters, selectedColumns} = this.state;
         this.props.getEvents(term, page, perPage, order, orderDir, eventFilters, selectedColumns);
     }
@@ -401,7 +406,7 @@ class SummitEventListPage extends React.Component {
 
 
     render(){
-        const {currentSummit, events, lastPage, currentPage, term, order, orderDir, totalEvents, extraColumns, filters} = this.props;
+        const {currentSummit, events, lastPage, currentPage, order, orderDir, totalEvents, term, extraColumns, filters} = this.props;
         const {enabledFilters, eventFilters} = this.state;
 
         let columns = [
@@ -531,6 +536,7 @@ class SummitEventListPage extends React.Component {
                             placeholder={T.translate("event_list.placeholders.search_events")}
                             title={T.translate("event_list.placeholders.search_events")}
                             onSearch={this.handleSearch}
+                            onChange={this.handleTermChange}
                         />
                     </div>
                     <div className="col-md-6 text-right">
@@ -1075,5 +1081,6 @@ export default connect (
         exportEvents,
         importEventsCSV,
         importMP4AssetsFromMUX,
+        changeEventListSearchTerm,
     }
 )(SummitEventListPage);

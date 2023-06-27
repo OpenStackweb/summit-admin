@@ -63,6 +63,7 @@ export const RECEIVE_EXTRA_QUESTIONS = 'RECEIVE_EXTRA_QUESTIONS';
 export const FLAG_CHANGED = 'FLAG_CHANGED';
 export const REQUEST_EVENT_COMMENTS = 'REQUEST_EVENT_COMMENTS';
 export const RECEIVE_EVENT_COMMENTS = 'RECEIVE_EVENT_COMMENTS';
+export const CHANGE_SEARCH_TERM = 'CHANGE_SEARCH_TERM';
 
 
 export const getEvents = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1, filters = {}, extraColumns = []) => async (dispatch, getState) => {
@@ -1230,3 +1231,7 @@ export const queryEvents = _.debounce(async (summitId, input, callback) => {
         })
         .catch(fetchErrorHandler);
 }, 500);
+
+export const changeEventListSearchTerm = (term) => (dispatch, getState) => {
+    dispatch(createAction(CHANGE_SEARCH_TERM)({term}));
+}

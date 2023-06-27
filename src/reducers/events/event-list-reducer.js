@@ -20,7 +20,8 @@ import
 {
     RECEIVE_EVENTS,
     REQUEST_EVENTS,
-    EVENT_DELETED
+    EVENT_DELETED,
+    CHANGE_SEARCH_TERM
 } from '../../actions/event-actions';
 
 import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
@@ -106,6 +107,10 @@ const eventListReducer = (state = DEFAULT_STATE, action) => {
         case EVENT_DELETED: {
             let {eventId} = payload;
             return {...state, events: state.events.filter(e => e.id !== eventId)};
+        }
+        case CHANGE_SEARCH_TERM: {
+            let {term} = payload;
+            return {...state, term};
         }
         default:
             return state;
