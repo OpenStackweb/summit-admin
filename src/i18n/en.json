@@ -405,6 +405,8 @@
     "import_allowed_members": "Import Allowed Members",
     "import_allowed_members_success": "Emails will be ingested as a background task. Will need to refresh the page to review.",
     "cfp_settings": "Call For Presentation Settings",
+    "cfp_track_question_label": "cfp_track_question_label",
+    "cfp_track_question_label_info": "Track Question Label",
     "cfp_speakers_singular_label": "cfp_speakers_singular_label",
     "cfp_speakers_singular_label_info": "cfp_speakers_singular_label_info",
     "cfp_speakers_plural_label": "cfp_speakers_plural_label",

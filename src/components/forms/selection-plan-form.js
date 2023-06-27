@@ -812,6 +812,21 @@ class SelectionPlanForm extends React.Component {
                         </div>
                         <div className="row form-group">
                             <div className="col-md-6">
+                                <label> {T.translate("edit_selection_plan.cfp_track_question_label")}&nbsp;
+                                    <i className="fa fa-info-circle" aria-hidden="true"
+                                       title={T.translate("edit_selection_plan.cfp_track_question_label_info")}/>
+                                </label>
+                                <Input
+                                    id="cfp_track_question_label"
+                                    className="form-control"
+                                    error={this.hasErrors('cfp_track_question_label')}
+                                    onChange={this.handleChange}
+                                    value={entity.marketing_settings.cfp_track_question_label?.value || ''}
+                                />
+                            </div>                            
+                        </div>
+                        <div className="row form-group">
+                            <div className="col-md-6">
                                 <label> {T.translate("edit_selection_plan.cfp_speakers_singular_label")}&nbsp;
                                     <i className="fa fa-info-circle" aria-hidden="true"
                                        title={T.translate("edit_selection_plan.cfp_speakers_singular_label_info")}/>
