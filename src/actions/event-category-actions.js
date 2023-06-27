@@ -542,5 +542,10 @@ const normalizeGroupEntity = (entity) => {
     const normalizedEntity = {...entity};
     normalizedEntity['color'] = normalizedEntity['color'].substr(1);
 
+    if (!normalizedEntity['begin_attendee_voting_period_date']) normalizedEntity['begin_attendee_voting_period_date'] = null;
+    if (!normalizedEntity['end_attendee_voting_period_date']) normalizedEntity['end_attendee_voting_period_date'] = null;
+    if (!normalizedEntity['submission_begin_date']) normalizedEntity['submission_begin_date'] = null;
+    if (!normalizedEntity['submission_end_date']) normalizedEntity['submission_end_date'] = null;
+ 
     return normalizedEntity;
 };
