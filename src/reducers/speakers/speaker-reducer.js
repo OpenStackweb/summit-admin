@@ -84,7 +84,7 @@ const speakerReducer = (state = DEFAULT_STATE, action) => {
             }
 
             if (entity.hasOwnProperty('presentations')) {
-                entity.all_presentations = entity.presentations;
+                entity.all_presentations = [...entity.all_presentations, ...entity.presentations];
             }
 
             if (entity.hasOwnProperty('moderated_presentations')) {

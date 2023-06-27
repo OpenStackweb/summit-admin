@@ -702,7 +702,7 @@ class PromocodeForm extends React.Component {
                             id="description"
                             value={entity.description}
                             onChange={this.handleChange}
-                            maxlength="255"
+                            maxLength="255"
                             className="form-control"
                             error={this.hasErrors('description')}
                         />
