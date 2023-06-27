@@ -38,7 +38,8 @@ import {
   changeSummitBuilderFilters,
   changeSlotSize,
   changeSource,
-  publishAllProposed
+  publishAllProposed,
+  unlockProposedSchedule
 } from '../../actions/summit-builder-actions';
 
 import {
@@ -67,6 +68,7 @@ import ScheduleAdminEmptySpotsModal from './schedule-admin-empty-spots-modal';
 import ScheduleAdminEmptySpotsList from './schedule-admin-empty-spots-list';
 import {Dropdown, OperatorInput, BulkActionsSelector, ScheduleBuilderView} from 'openstack-uicore-foundation/lib/components';
 import {SummitEvent} from "openstack-uicore-foundation/lib/models";
+import UnlockScheduleButton from "../UnlockScheduleButton";
 
 class ScheduleAdminDashBoard extends React.Component {
 
@@ -707,6 +709,7 @@ class ScheduleAdminDashBoard extends React.Component {
       currentSummit,
       currentDay,
       currentLocation,
+      proposedSchedLock,
       proposedSchedDay,
       proposedSchedLocation,
       proposedSchedTrack,
@@ -728,6 +731,8 @@ class ScheduleAdminDashBoard extends React.Component {
       slotSize,
       selectedSource
     } = this.props;
+    const canUnlock = proposedSchedTrack && proposedSchedDay && proposedSchedLocation;
+    
 
     const {durationFilter, proposedSchedSelectedEvents} = this.state;
 
@@ -822,7 +827,7 @@ class ScheduleAdminDashBoard extends React.Component {
           />
           <div className="col-md-6 source-container">
             <div className="row" style={{marginBottom: 10}}>
-              <div className="col-md-12">
+              <div className="col-md-8">
                 <Dropdown
                   id="selected_source"
                   placeholder={T.translate("schedule.placeholders.selected_source")}
@@ -830,6 +835,17 @@ class ScheduleAdminDashBoard extends React.Component {
                   onChange={this.onSourceChange}
                   options={source_ddl}
                 />
+              </div>
+              <div className="col-md-4">
+                {selectedSource === 'proposed' && proposedSchedTrack &&
+                  <UnlockScheduleButton
+                    track={proposedSchedTrack}
+                    className="pull-right"
+                    onSubmit={this.props.unlockProposedSchedule}
+                    disabled={!canUnlock}
+                    lock={proposedSchedLock}
+                  />
+                }
               </div>
             </div>
             {selectedSource === 'unscheduled' &&
@@ -1068,5 +1084,6 @@ export default connect(mapStateToProps, {
   changeSummitBuilderFilters,
   changeSlotSize,
   changeSource,
-  publishAllProposed
+  publishAllProposed,
+  unlockProposedSchedule,
 })(ScheduleAdminDashBoard);

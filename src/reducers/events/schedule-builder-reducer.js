@@ -38,7 +38,10 @@ import
     SET_SLOT_SIZE,
     SET_SOURCE,
     CLEAR_PROPOSED_EVENTS,
-    PROPOSED_EVENTS_PUBLISHED, RECEIVE_SHOW_ALWAYS_EVENTS
+    PROPOSED_EVENTS_PUBLISHED,
+    RECEIVE_SHOW_ALWAYS_EVENTS,
+    RECEIVE_PROPOSED_SCHED_LOCKS,
+    UNLOCK_PROPOSED_SCHED
 } from '../../actions/summit-builder-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
@@ -73,6 +76,7 @@ const DEFAULT_STATE = {
     proposedSchedDay : null,
     proposedSchedLocation : null,
     proposedSchedTrack : null,
+    proposedSchedLock : null,
 };
 
 const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
@@ -189,6 +193,15 @@ const scheduleBuilderReducer = (state = DEFAULT_STATE, action) => {
         }
         case PROPOSED_EVENTS_PUBLISHED: {
             return {...state, currentLocation: state.proposedSchedLocation, currentDay: state.proposedSchedDay}
+        }
+        case RECEIVE_PROPOSED_SCHED_LOCKS: {
+            const locks = payload.response.data;
+            const proposedSchedLock = locks.find(lock => lock.track_id === state.proposedSchedTrack?.id);
+            
+            return {...state, proposedSchedLock};
+        }
+        case UNLOCK_PROPOSED_SCHED: {
+            return {...state, proposedSchedLock: null}
         }
         case UNPUBLISHED_EVENT:
         {

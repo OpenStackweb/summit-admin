@@ -26,6 +26,7 @@ import {
 } from "openstack-uicore-foundation/lib/utils/actions";
 import {SummitEvent} from "openstack-uicore-foundation/lib/models";
 import {getAccessTokenSafely} from '../utils/methods';
+import {VIEW_TYPE_DELETED} from "./badge-actions";
 
 export const REQUEST_UNSCHEDULE_EVENTS_PAGE               = 'REQUEST_UNSCHEDULE_EVENTS_PAGE';
 export const RECEIVE_UNSCHEDULE_EVENTS_PAGE               = 'RECEIVE_UNSCHEDULE_EVENTS_PAGE';
@@ -57,6 +58,8 @@ export const CHANGE_SUMMIT_BUILDER_FILTERS                = 'CHANGE_SUMMIT_BUILD
 export const SET_SLOT_SIZE                                = 'SET_SLOT_SIZE';
 export const SET_SOURCE                                = 'SET_SOURCE';
 export const PROPOSED_EVENTS_PUBLISHED                 = 'PROPOSED_EVENTS_PUBLISHED';
+export const RECEIVE_PROPOSED_SCHED_LOCKS              = 'RECEIVE_PROPOSED_SCHED_LOCKS';
+export const UNLOCK_PROPOSED_SCHED                 = 'UNLOCK_PROPOSED_SCHED';
 
 export const getUnScheduleEventsPage =
     (
@@ -308,9 +311,10 @@ export const getProposedEvents = (summit, proposedSchedDay, proposedSchedLocatio
       authErrorHandler,
       {proposedSchedDay, proposedSchedLocation, proposedSchedTrack}
     )(params)(dispatch)
-      .then(() =>
-        dispatch(getShowAlwaysEvents(summit, proposedSchedDay, proposedSchedLocation))
-      );
+      .then(() => {
+          dispatch(getShowAlwaysEvents(summit, proposedSchedDay, proposedSchedLocation));
+          dispatch(getProposedScheduleLocks());
+      });
 }
 
 export const publishAllProposed = (eventIds) => async (dispatch, getState) => {
@@ -330,6 +334,59 @@ export const publishAllProposed = (eventIds) => async (dispatch, getState) => {
       .then(() => {
           dispatch(refreshPublishedList());
       });
+}
+
+export const getProposedScheduleLocks = () => async (dispatch, getState) => {
+    const { currentSummitState, currentScheduleBuilderState } = getState();
+    const { currentSummit } = currentSummitState;
+    const { proposedSchedTrack } = currentScheduleBuilderState;
+    const accessToken = await getAccessTokenSafely();
+    
+    const params = {
+        expand: 'created_by,created_by.member',
+        page: 1,
+        per_page: 100,
+        access_token: accessToken,
+        'filter[]': [`track_id==${proposedSchedTrack?.id}`]
+    };
+    
+    if (proposedSchedTrack) {
+        dispatch(startLoading());
+        
+        return getRequest(
+          null,
+          createAction(RECEIVE_PROPOSED_SCHED_LOCKS),
+          `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/proposed-schedules/track-chairs/locks`,
+          authErrorHandler,
+        )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        });
+    }
+}
+
+export const unlockProposedSchedule = (message) => async (dispatch, getState) => {
+    const { currentSummitState, currentScheduleBuilderState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
+    const { proposedSchedTrack }   = currentScheduleBuilderState;
+    
+    dispatch(startLoading());
+    
+    const params = {
+        access_token: accessToken
+    };
+    
+    return deleteRequest(
+      null,
+      createAction(UNLOCK_PROPOSED_SCHED),
+      `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/proposed-schedules/track-chairs/tracks/${proposedSchedTrack.id}/lock`,
+      {message},
+      authErrorHandler
+    )(params)(dispatch).then(() => {
+          dispatch(stopLoading());
+      }
+    );
+    
 }
 
 export const changeCurrentEventType = (currentEventType) => (dispatch, getState) => {
