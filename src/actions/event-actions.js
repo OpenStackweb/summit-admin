@@ -81,7 +81,7 @@ export const getEvents = (term = null, page = 1, perPage = 10, order = 'id', ord
         const escapedTerm = escapeFilterValue(term);
         let searchString = `title=@${escapedTerm},` +
             `abstract=@${escapedTerm},` +
-            `speaker_title=@${escapedTerm},`;
+            `speaker_title=@${escapedTerm}`;
 
         if (parseInt(term)) {
             searchString += `,id==${parseInt(term)}`;
@@ -900,7 +900,8 @@ const parseFilters = (filters) => {
 
     if (filters.start_date_filter && filters.start_date_filter.some(e => e !== null)) {
         if(filters.start_date_filter.every(e => e !== null )) {
-            filter.push(`start_date>=${filters.start_date_filter[0]},start_date<=${filters.start_date_filter[1]}`);
+            filter.push(`start_date>=${filters.start_date_filter[0]}`);
+            filter.push(`start_date<=${filters.start_date_filter[1]}`);
         } else {
             filter.push(`
             ${filters.start_date_filter[0] !== null ? 
@@ -912,7 +913,8 @@ const parseFilters = (filters) => {
 
     if (filters.end_date_filter && filters.end_date_filter.some(e => e !== null)) {
         if(filters.end_date_filter.every(e => e !== null )) {
-            filter.push(`end_date>=${filters.end_date_filter[0]},end_date<=${filters.end_date_filter[1]}`);
+            filter.push(`end_date>=${filters.end_date_filter[0]}`);
+            filter.push(`end_date<=${filters.end_date_filter[1]}`);
         } else {
             filter.push(`
             ${filters.end_date_filter[0] !== null ? 
