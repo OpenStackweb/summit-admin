@@ -15,7 +15,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import Swal from "sweetalert2";
-import {Modal, Pagination } from 'react-bootstrap';
+import { Modal, Pagination } from 'react-bootstrap';
 import { 
     FreeTextSearch, 
     Table, 
@@ -28,6 +28,7 @@ import {
     OperatorInput,
     MemberInput,
     CompanyInput } from 'openstack-uicore-foundation/lib/components';
+import MediaUploadTypeInput from '../../components/inputs/media-upload-type-input';
 import { SegmentedControl } from 'segmented-control'
 import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/utils/methods'
 import { getSummitById }  from '../../actions/summit-actions';
@@ -58,6 +59,25 @@ const fieldNames = [
     { columnKey: 'etherpad_link', value: 'etherpad_link', sortable: true, title: true },
     { columnKey: 'streaming_type', value: 'streaming_type', sortable: true },
     { columnKey: 'status', value: 'submission_status', sortable: false, title: true },
+    { columnKey: 'media_uploads', value: 'media_uploads', sortable: false, render :(e, field) => {
+            if(!field?.length) return 'N/A';
+            return (<>{(e.media_uploads.map( m =>
+                (
+                    <React.Fragment key={m.id}>
+                    <a target="_blank" href="#"
+                       onClick={(ev) => {
+                        ev.preventDefault();
+                        window.location.href= `/app/summits/${e.summit_id}/events/${e.id}/materials/${m.id}`;
+                        return false;
+                       }}>{m.media_upload_type.name} - {m.created}</a>
+                    <br></br>
+                    </React.Fragment>
+                )
+            ))
+            }
+            </>)
+        }
+    },
 ]
 
 class SummitEventListPage extends React.Component {
@@ -124,7 +144,9 @@ class SummitEventListPage extends React.Component {
                 streaming_type: '',
                 sponsor: [],
                 all_companies: [],
-                submission_status_filter: []
+                submission_status_filter: [],
+                has_media_upload_with_type: [],
+                has_not_media_upload_with_type: [],
             },
             selectedColumns: [],
         };
@@ -302,7 +324,9 @@ class SummitEventListPage extends React.Component {
                     streaming_type: '',
                     sponsor: [],
                     all_companies: [],
-                    submission_status_filter: []
+                    submission_status_filter: [],
+                    has_media_upload_with_type: [],
+                    has_not_media_upload_with_type: [],
                 };
                 this.setState({...this.state, enabledFilters: value, eventFilters: resetFilters});
             } else {
@@ -364,7 +388,9 @@ class SummitEventListPage extends React.Component {
                     streaming_type: '',
                     sponsor: [],
                     all_companies: [],
-                    submission_status_filter: []
+                    submission_status_filter: [],
+                    has_media_upload_with_type: [],
+                    has_not_media_upload_with_type: [],
                 };
                 this.setState({...this.state, enabledFilters: value, eventFilters: resetFilters});
             } else {
@@ -473,7 +499,9 @@ class SummitEventListPage extends React.Component {
             {label: 'Streaming Type', value: 'streaming_type'},
             {label: 'Sponsors', value: 'sponsor'},
             {label: 'All Companies', value: 'all_companies'},
-            {label: T.translate("event_list.submission_status"), value: 'submission_status_filter' },          
+            {label: T.translate("event_list.submission_status"), value: 'submission_status_filter' },
+            {label: T.translate("event_list.has_media_upload_with_type"), value: 'has_media_upload_with_type' },          
+            {label: T.translate("event_list.has_not_media_upload_with_type"), value: 'has_not_media_upload_with_type' },          
         ]
 
         const ddl_columns = [
@@ -499,6 +527,7 @@ class SummitEventListPage extends React.Component {
             { value: 'submitter_company', label: T.translate("event_list.submitter_company")},
             { value: 'track', label: T.translate("event_list.track") },
             { value: 'status', label: T.translate("event_list.submission_status") },
+            { value: 'media_uploads', label: T.translate("event_list.media_uploads") },
         ];
 
         const ddl_filterByEventTypeCapacity = [
@@ -515,12 +544,21 @@ class SummitEventListPage extends React.Component {
 
         let showColumns = fieldNames
         .filter(f => this.state.selectedColumns.includes(f.columnKey) )
-        .map( f2 => (
-            {   columnKey: f2.columnKey,
+        .map( f2 => {
+            let c = {
+                columnKey: f2.columnKey,
                 value: T.translate(`event_list.${f2.value}`),
                 sortable: f2.sortable,
-                title: f2.title
-            }));
+            }
+            // optional fields
+            if(f2.hasOwnProperty('title'))
+                c = {...c, title: f2.title}
+
+            if(f2.hasOwnProperty('render'))
+                c = {...c, render: f2.render}
+
+            return c;
+        });
 
         columns = [...columns, ...showColumns];
 
@@ -902,7 +940,7 @@ class SummitEventListPage extends React.Component {
                                 onChange={this.handleExtraFilterChange}/>
                         </div>
                     }
-                     {enabledFilters.includes('submission_status_filter') &&
+                    {enabledFilters.includes('submission_status_filter') &&
                         <div className={'col-md-6'}> 
                             <Dropdown
                                 id="submission_status_filter"
@@ -914,6 +952,28 @@ class SummitEventListPage extends React.Component {
                                 isMulti={true}
                             />
                         </div>                
+                    }
+                    {enabledFilters.includes('has_media_upload_with_type') &&
+                         <div className={'col-md-9'}> 
+                            <MediaUploadTypeInput 
+                                id="has_media_upload_with_type"
+                                value={eventFilters.has_media_upload_with_type}
+                                placeholder={T.translate("event_list.placeholders.media_upload_type_id_to_include")}
+                                summitId={currentSummit.id}
+                                onChange={this.handleExtraFilterChange}
+                            />
+                        </div>
+                    }
+                    {enabledFilters.includes('has_not_media_upload_with_type') &&
+                        <div className={'col-md-9'}> 
+                            <MediaUploadTypeInput 
+                                id="has_not_media_upload_with_type"
+                                value={eventFilters.has_not_media_upload_with_type}
+                                placeholder={T.translate("event_list.placeholders.media_upload_type_id_to_exclude")}
+                                summitId={currentSummit.id}
+                                onChange={this.handleExtraFilterChange}
+                            />
+                        </div>
                     }
                 </div>
 

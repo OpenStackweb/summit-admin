@@ -961,6 +961,10 @@
     "submission_status_accepted": "Accepted",
     "submission_status_received": "Received",
     "submission_status_not_submitted": "Not Submitted",
+    "media_upload_type": "Media Upload Type",
+    "media_uploads": "Media Uploads",
+    "has_media_upload_with_type": "Has Media Upload Types",
+    "has_not_media_upload_with_type": "Has Not Media Upload Types",
     "placeholders": {
       "search_events": "Search by Id, Title, Abstract, Speaker Title",
       "event_type_capacity": "Filter by Activity Type Capacity",
@@ -988,7 +992,10 @@
       "streaming_type": "Filter by Streaming Type",
       "sponsor": "Filter by Sponsor",
       "all_companies": "Filter by All Companies",
-      "submission_status": "Filter by Submission Status"
+      "submission_status": "Filter by Submission Status",
+      "media_upload_type": "Filter by Media Upload Type",
+      "media_upload_type_id_to_include": "Select the Media Upload Type Ids to include",
+      "media_upload_type_id_to_exclude": "Select the Media Upload Type Ids to exclude"
     }
   },
   "event_type_list": {

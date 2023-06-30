@@ -91,7 +91,7 @@ export const getEvents = (term = null, page = 1, perPage = 10, order = 'id', ord
     }
 
     const params = {
-        expand: 'speakers,type,created_by,track,sponsors,selection_plan,location,tags',
+        expand: 'speakers,type,created_by,track,sponsors,selection_plan,location,tags,media_uploads,media_uploads.media_upload_type',
         page: page,
         per_page: perPage,
         access_token: accessToken,
@@ -1023,6 +1023,22 @@ const parseFilters = (filters) => {
         && filters.submission_status_filter.length > 0) {
         filter.push('submission_status==' + filters.submission_status_filter.reduce(
             (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + tt,
+            ''
+        ));
+    }
+
+    if (filters.hasOwnProperty('has_media_upload_with_type') && Array.isArray(filters.has_media_upload_with_type)
+        && filters.has_media_upload_with_type.length > 0) {
+        filter.push('has_media_upload_with_type==' + filters.has_media_upload_with_type.reduce(
+            (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + tt.id,
+            ''
+        ));
+    }
+
+    if (filters.hasOwnProperty('has_not_media_upload_with_type') && Array.isArray(filters.has_not_media_upload_with_type)
+        && filters.has_not_media_upload_with_type.length > 0) {
+        filter.push('has_not_media_upload_with_type==' + filters.has_not_media_upload_with_type.reduce(
+            (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + tt.id,
             ''
         ));
     }

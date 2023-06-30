@@ -27,6 +27,7 @@ import
 import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
 
+
 const DEFAULT_STATE = {
     events          : {},
     term            : null,
@@ -45,6 +46,8 @@ const formatDuration = (duration) => {
     let d = moment.duration(duration, 'seconds');
     return d.format('mm:ss') !== '00' ? d.format('mm:ss') : 'TBD';
 }
+
+
 
 const eventListReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
@@ -75,6 +78,7 @@ const eventListReducer = (state = DEFAULT_STATE, action) => {
                 return {
                     id: e.id,
                     event_type: e.type.name,
+                    summit_id : e.summit_id,
                     title: e.title,
                     status: e.status ?? 'Not Submitted',
                     selection_status: e.selection_status === 'unaccepted' && e.is_published === true ? 'accepted' : e.selection_status,
@@ -99,6 +103,7 @@ const eventListReducer = (state = DEFAULT_STATE, action) => {
                     start_date: e.start_date ? moment(e.start_date * 1000).tz(state.summitTZ).format('MMMM Do YYYY, h:mm a') : 'TBD',
                     end_date: e.end_date ? moment(e.end_date * 1000).tz(state.summitTZ).format('MMMM Do YYYY, h:mm a') : 'TBD',
                     sponsor: (e.sponsors) ? e.sponsors.map(s => s.name).join(', ') : 'N/A',
+                    media_uploads: e.media_uploads.map( m => ({...m, created:moment(m.created * 1000).tz(state.summitTZ).format('MMMM Do YYYY, h:mm a') })),
                 };
             });
 
