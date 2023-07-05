@@ -331,15 +331,10 @@ export const saveEvent = (entity, publish) => async (dispatch, getState) => {
     const {currentSummit} = currentSummitState;
     const {type_id} = entity;
     const type = currentSummit.event_types.find((e) => e.id == type_id);
-    const eventTypeConfig = {
-        allow_custom_ordering: type.allow_custom_ordering,
-        allows_location: type.allows_location,
-        allows_publishing_dates: type.allows_publishing_dates,
-    }
 
     dispatch(startLoading());
 
-    const normalizedEntity = normalizeEvent(entity, eventTypeConfig);
+    const normalizedEntity = normalizeEvent(entity, type);
 
     const params = {
         access_token: accessToken,
@@ -622,7 +617,6 @@ export const removeImage = (eventId) => async (dispatch, getState) => {
 };
 
 export const normalizeEvent = (entity, eventTypeConfig) => {
-
     const normalizedEntity = {...entity};
     if (!normalizedEntity.start_date) delete normalizedEntity['start_date'];
     if (!normalizedEntity.end_date) delete normalizedEntity['end_date'];
