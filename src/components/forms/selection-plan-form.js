@@ -647,16 +647,28 @@ class SelectionPlanForm extends React.Component {
                         </div>
                     </Panel>
                     <Panel
-                        show={showSection === 'rating_types'}
-                        title={T.translate("edit_rating_type.title")}
+                        show={showSection === 'track_chair_settings'}
+                        title={T.translate("track_chair_settings.title")}
                         handleClick={() => {
-                            this.toggleSection('rating_types')
+                            this.toggleSection('track_chair_settings')
                         }}>
 
                         <div className={'row'}>
+                            <div className="col-md-4 checkboxes-div">
+                                <div className="form-check abc-checkbox">
+                                    <input type="checkbox" id="allow_track_change_requests" checked={entity.allow_track_change_requests}
+                                        onChange={this.handleChange} className="form-check-input"/>
+                                    <label className="form-check-label" htmlFor="allow_track_change_requests">
+                                        {T.translate("track_chair_settings.allow_change_requests")}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div className={'row'}>
                             <div className="col-md-6 text-right col-md-offset-6">
                                 <button className="btn btn-primary right-space" onClick={this.handleAddRatingType}>
-                                    {T.translate("edit_rating_type.add_rating_type")}
+                                    {T.translate("track_chair_settings.add_rating_type")}
                                 </button>
                             </div>
                         </div>

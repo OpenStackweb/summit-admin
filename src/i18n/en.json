@@ -2482,6 +2482,11 @@
     "name": "Name",
     "weight": "Weight"
   },
+  "track_chair_settings": {
+    "title": "Track Chairs Settings",
+    "allow_change_requests": "Allow Track Change Requests?",
+    "add_rating_type": "Add New Rating Type"
+  },
   "edit_rating_type": {
     "title": "Track Chairs Ratings",
     "rating_type": "Rating Type",
