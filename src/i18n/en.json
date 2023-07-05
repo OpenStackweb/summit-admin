@@ -723,8 +723,9 @@
     "attendee_list": "Attendee List",
     "attendees": "Attendees",
     "add_attendee": "Add Attendee",
+    "id": "Id",
     "member_id": "Member Id",
-    "tickets": "Tickets Qty.",
+    "tickets_qty": "Tickets Qty.",
     "bought_date": "Bought Date",
     "summit_hall_checked_in": "Checked In",
     "schedule": "Schedule",
@@ -736,8 +737,14 @@
     "resend_done": "Emails sent successfully.",
     "select_template": "Select a Email Template to perform the action.",
     "select_items": "Select at least one attendee to perform the action.",
+    "summit_hall_checked_in_date": "Check In Date",
     "placeholders": {
-      "search_attendees": "Search Attendees by Name, Email, Company, Ticket Type or Badge Type"
+      "search_attendees": "Search Attendees by Name, Email, Company, Ticket Type or Badge Type",
+      "ticket_type": "Filter by Ticket Type",
+      "badge_type": "Filter by Badge Type",
+      "badge_feature": "Filter by Badge Feature",
+      "checkin_date_from": "Filter Check In Date from",
+      "checkin_date_to": "Filter Check In Date to"
     }
   },
   "edit_attendee": {

@@ -31,3 +31,6 @@ export const SpeakersSources = {
     submitters: 'submitters',
     submitters_no_speakers: 'submitters_no_speakers'
 };
+
+export const HAS_TICKETS = 'HAS_TICKETS';
+export const HAS_NO_TICKETS = 'HAS_NO_TICKETS';

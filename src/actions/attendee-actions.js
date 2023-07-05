@@ -49,6 +49,7 @@ export const SET_ATTENDEES_CURRENT_FLOW_EVENT = 'SET_ATTENDEES_CURRENT_FLOW_EVEN
 export const SET_SELECTED_ALL_ATTENDEES = 'SET_SELECTED_ALL_ATTENDEES';
 export const SEND_ATTENDEES_EMAILS = 'SEND_ATTENDEES_EMAILS';
 export const RECEIVE_ALLOWED_EXTRA_QUESTIONS = 'RECEIVE_ALLOWED_EXTRA_QUESTIONS';
+export const CHANGE_ATTENDEE_SEARCH_TERM = 'CHANGE_ATTENDEE_SEARCH_TERM';
 
 export const selectAttendee = (attendeeId) => (dispatch) => {
     dispatch(createAction(SELECT_ATTENDEE)(attendeeId));
@@ -70,13 +71,8 @@ export const setSelectedAll = (value) => (dispatch) => {
     dispatch(createAction(SET_SELECTED_ALL_ATTENDEES)(value));
 };
 
-const parseFilters = (filters) => {
+const parseFilters = (filters, term) => {
     const filter = [];
-
-    if (filters.hasOwnProperty('term') && filters.term) {
-        const escapedTerm = escapeFilterValue(filters.term);
-        filter.push(`first_name=@${escapedTerm},last_name=@${escapedTerm},email=@${escapedTerm},company=@${escapedTerm},ticket_type=@${escapedTerm},badge_type=@${escapedTerm},full_name=@${escapedTerm}`);
-    }
 
     if(filters.hasOwnProperty('statusFilter') && filters.statusFilter){
         filter.push(`status==${filters.statusFilter}`)
@@ -133,20 +129,54 @@ const parseFilters = (filters) => {
           ''
         ));
     }
+
+    if (filters.checkinDateFilter && filters.checkinDateFilter.some(e => e !== null)) {
+        if(filters.checkinDateFilter.every(e => e !== null )) {
+            // added between operator (>=<)
+            filter.push(`summit_hall_checked_in_date[]${filters.checkinDateFilter[0]}&&${filters.checkinDateFilter[1]}`);
+        } else {
+            filter.push(`
+            ${filters.checkinDateFilter[0] !== null ? 
+                `summit_hall_checked_in_date>=${filters.checkinDateFilter[0]}` : ``}
+            ${filters.checkinDateFilter[1] !== null ? 
+                `summit_hall_checked_in_date<=${filters.checkinDateFilter[1]}` : ``}`);
+        }
+    }
+
+    if (term) {
+        const escapedTerm = escapeFilterValue(term);
+        let searchString = `first_name=@${escapedTerm},` +
+            `last_name=@${escapedTerm},` +
+            `email=@${escapedTerm},` +
+            `company=@${escapedTerm},` +
+            `ticket_type=@${escapedTerm},` +
+            `badge_type=@${escapedTerm},` +
+            `full_name=@${escapedTerm},`;
+
+        if (parseInt(term)) {
+            searchString += `,id==${parseInt(term)}`;
+        }
+
+        filter.push(searchString);
+    }
+
     return filter;
 };
 
-export const getAttendees = ( page = 1,
+export const getAttendees = ( term = null,
+                              page = 1,
                               perPage = 10,
                               order = 'id',
                               orderDir = 1,
-                              filters = {}
+                              filters = {},
+                              extraColumns = []
 
 ) => async (dispatch, getState) => {
 
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
+    const summitTZ = currentSummit.time_zone.name;
     dispatch(startLoading());
 
     const params = {
@@ -156,7 +186,7 @@ export const getAttendees = ( page = 1,
         access_token : accessToken,
     };
 
-    const filter = parseFilters(filters);
+    const filter = parseFilters(filters, term);
 
     if (filter.length > 0) {
         params['filter[]'] = filter;
@@ -172,15 +202,15 @@ export const getAttendees = ( page = 1,
         createAction(REQUEST_ATTENDEES),
         createAction(RECEIVE_ATTENDEES),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/attendees`,
-        authErrorHandler,
-        {page, perPage, order, orderDir, ...filters}
+        authErrorHandler,        
+        {page, perPage, term, order, orderDir, filters, extraColumns, summitTZ}
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
     );
 };
 
-export const exportAttendees = (order = 'id', orderDir = 1, filters = {}) => async (dispatch, getState) => {
+export const exportAttendees = (term = null, order = 'id', orderDir = 1, filters = {}) => async (dispatch, getState) => {
     const {currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
@@ -191,7 +221,7 @@ export const exportAttendees = (order = 'id', orderDir = 1, filters = {}) => asy
         access_token : accessToken,
     };
 
-    const filter = parseFilters(filters);
+    const filter = parseFilters(filters, term);    
 
     if (filter.length > 0) {
         params['filter[]'] = filter;
@@ -449,7 +479,8 @@ export const deleteRsvp = (memberId, rsvpId) => async (dispatch) => {
     );
 };
 
-export const sendEmails = (currentFlowEvent,
+export const sendEmails = (term = null,
+                           currentFlowEvent,
                            selectedAll = false ,
                            selectedIds = [],
                            filters = {}
@@ -462,7 +493,7 @@ export const sendEmails = (currentFlowEvent,
         access_token : accessToken,
     };
 
-    const filter = parseFilters(filters);
+    const filter = parseFilters(filters, term);
 
     if (filter.length > 0) {
         params['filter[]'] = filter;
@@ -519,3 +550,7 @@ const normalizeEntity = (entity) => {
 
     return normalizedEntity;
 };
+
+export const changeAttendeeListSearchTerm = (term) => (dispatch, getState) => {
+    dispatch(createAction(CHANGE_ATTENDEE_SEARCH_TERM)({term}));
+}

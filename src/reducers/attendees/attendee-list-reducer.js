@@ -22,10 +22,13 @@ import
     SET_ATTENDEES_CURRENT_FLOW_EVENT,
     SET_SELECTED_ALL_ATTENDEES,
     SEND_ATTENDEES_EMAILS,
+    CHANGE_ATTENDEE_SEARCH_TERM,
 } from '../../actions/attendee-actions';
 
 import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
+
+import moment from 'moment-timezone';
 
 const DEFAULT_STATE = {
     attendees       : {},
@@ -39,14 +42,9 @@ const DEFAULT_STATE = {
     selectedIds: [],
     currentFlowEvent: '',
     selectedAll: false,
-    statusFilter: null,
-    memberFilter: null,
-    ticketsFilter: 'HAS_TICKETS',
-    virtualCheckInFilter: null,
-    checkedInFilter: null,
-    ticketTypeFilter: [],
-    featuresFilter: [],
-    badgeTypeFilter: [],
+    filters         : {},
+    extraColumns    : [],
+    summitTz        : '',
 };
 
 const attendeeListReducer = (state = DEFAULT_STATE, action) => {
@@ -57,8 +55,8 @@ const attendeeListReducer = (state = DEFAULT_STATE, action) => {
             return DEFAULT_STATE;
         }
         case REQUEST_ATTENDEES: {
-            let {order, orderDir, page, perPage, ...rest} = payload;
-            return {...state, order, orderDir, currentPage: page, perPage, ...rest}
+            let {order, orderDir, page, perPage, term, filters, extraColumns, summitTz, ...rest} = payload;
+            return {...state, order, orderDir, currentPage: page, perPage, term, filters, extraColumns, summitTz, ...rest}
         }
         case RECEIVE_ATTENDEES: {
             let {current_page, total, last_page} = payload.response;
@@ -82,6 +80,7 @@ const attendeeListReducer = (state = DEFAULT_STATE, action) => {
                     company: a.company ? a.company : 'TBD',
                     status: a.status,
                     tickets_qty: a.tickets.length ? a.tickets.length : 'N/A',
+                    summit_hall_checked_in_date: a.summit_hall_checked_in_date ? moment(a.summit_hall_checked_in_date * 1000).tz(state.summitTZ).format("MMMM Do YYYY, h:mm a") : 'TBD',
                 };
             })
 
@@ -115,6 +114,10 @@ const attendeeListReducer = (state = DEFAULT_STATE, action) => {
                 selectedAll: false
             }
         }
+        case CHANGE_ATTENDEE_SEARCH_TERM: {
+            let {term} = payload;
+            return {...state, term};
+        }        
         default:
             return state;
     }
