@@ -800,6 +800,7 @@
     "add_promocode": "Add Promocode",
     "code": "Code",
     "type": "Type",
+    "description": "Description",
     "owner": "Owner",
     "owner_email": "Owner Email",
     "emailed": "Emailed",

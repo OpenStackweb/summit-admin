@@ -1000,7 +1000,7 @@ class SummitEventListPage extends React.Component {
 
                 {events.length > 0 &&
                 <div>
-                    <div className='summit-event-list-table-wrapper'>                        
+                    <div className='summit-event-list-table-wrapper'>
                         <Table
                             options={table_options}
                             data={events}
