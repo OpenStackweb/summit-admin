@@ -373,6 +373,35 @@ class EventTypeForm extends React.Component {
                             </div>
                         </div>
                     </div>
+                    <hr/>
+                    <div className="row form-group">
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_event_type.min_duration")}&nbsp;
+                                <i className="fa fa-info-circle" aria-hidden="true" title={T.translate("edit_event_type.time_restrictions_info")} />
+                            </label>
+                            <Input
+                                id="min_duration"
+                                type="number"
+                                value={entity.min_duration}
+                                onChange={this.handleChange}
+                                className="form-control"
+                                error={hasErrors('min_duration', errors)}
+                            />
+                        </div>
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_event_type.max_duration")}&nbsp;
+                                <i className="fa fa-info-circle" aria-hidden="true" title={T.translate("edit_event_type.time_restrictions_info")} />
+                            </label>
+                            <Input
+                                id="max_duration"
+                                type="number"
+                                value={entity.max_duration}
+                                onChange={this.handleChange}
+                                className="form-control"
+                                error={hasErrors('max_duration', errors)}
+                            />
+                        </div>
+                    </div>
                     {entity.id !== 0 &&
                     <>
                         <hr/>

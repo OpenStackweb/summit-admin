@@ -51,6 +51,8 @@ export const DEFAULT_ENTITY = {
     allowed_media_upload_types          : [],
     allows_location_timeframe_collision : false,
     allows_speaker_event_collision      : false,
+    min_duration                        : 0,
+    max_duration                        : 0,
 }
 
 const DEFAULT_STATE = {

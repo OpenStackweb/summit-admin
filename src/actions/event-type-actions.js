@@ -204,6 +204,8 @@ const normalizeEntity = (entity) => {
         delete(normalizedEntity['min_moderators']);
         delete(normalizedEntity['max_moderators']);
         delete(normalizedEntity['moderator_label']);
+        delete(normalizedEntity['min_duration']);
+        delete(normalizedEntity['max_duration']);
     }
 
     return normalizedEntity;
