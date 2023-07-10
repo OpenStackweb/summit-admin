@@ -13,74 +13,21 @@
 
 import React, {useMemo} from 'react'
 import {Pie} from "react-chartjs-2";
-import {Chart} from 'chart.js';
+import Chart from 'chart.js/auto';
 import {isMobile} from 'react-device-detect';
+import {getRandomColors, createDonnutCanvas} from "../utils";
 import styles from './index.module.less'
 
 
-const starters = [[220,120,20],[120,220,20],[80,20,240],[220,20,120],[20,120,220],[20,210,90]];
-
-const getRandomColors = (amount, starter) => {
-
-  const starterColors = starters[starter];
-
-  let incBase = starterColors[0] < 100 ? (255 - starterColors[0]) : starterColors[0];
-  const incRed = Math.ceil(incBase / amount);
-
-  incBase = starterColors[1] < 100 ? (255 - starterColors[1]) : starterColors[1];
-  const incGreen = Math.ceil(incBase / amount);
-
-  incBase = starterColors[2] < 100 ? (255 - starterColors[2]) : starterColors[2];
-  const incBlue = Math.ceil(incBase / amount);
-
-
-  return Array.apply(null, {length: amount}).map((v,i) => {
-    let multiplier = starterColors[0] < 100 ? -1 : 1;
-    const r = Math.ceil(starterColors[0] - (i * incRed * multiplier));
-    multiplier = starterColors[1] < 100 ? -1 : 1;
-    const g = Math.ceil(starterColors[1] - (i * incGreen * multiplier));
-    multiplier = starterColors[2] < 100 ? -1 : 1;
-    const b = Math.ceil(starterColors[2] - (i * incBlue * multiplier));
-
-    return `rgb(${r}, ${g}, ${b})`;
-  });
-};
-
-function createDonnutCanvas(arc, percent) {
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-
-  canvas.width = 100;
-  canvas.height = 60;
-
-  ctx.font = "10px Arial";
-  ctx.textAlign = "center";
-  ctx.fillText(`${percent}%`, 32, 28);
-
-  ctx.beginPath()
-  ctx.fillStyle = arc?.options?.backgroundColor;
-  ctx.arc(32, 25, 20, 0, (2 * Math.PI * percent / 100), false); // outer (filled)
-  ctx.arc(32, 25, 14, (2 * Math.PI * percent / 100), 0, true); // inner (unfills it)
-  ctx.fill();
-
-  ctx.beginPath()
-  ctx.arc(32, 25, 20, 0, Math.PI * 2, true);
-  ctx.stroke();
-  ctx.beginPath()
-  ctx.arc(32, 25, 14, 0, Math.PI * 2, true);
-  ctx.stroke();
-
-  return canvas;
-};
-
-const Graph = ({title, subtitle = null, legendTitle= null, data, labels, colors = null, colorPalette = null}) => {
+const PieGraph = ({title, subtitle = null, legendTitle= null, data, labels, colors = null, colorPalette = null}) => {
   const fillColors = useMemo(() => colors || getRandomColors(data.length, colorPalette), [colors, data.length]);
-  const graphSize = isMobile ? { width: 400, height: (400 + (labels.length * 60)) } : { width: 600, height: 600 };
+  const height = Math.max(600, labels.length * 68);
+  const graphSize = isMobile ? { width: 400, height: height } : { width: 600, height: height };
   const legendPos = isMobile ? 'bottom' : 'right';
   const legendAlign = isMobile ? 'start' : 'center';
-  const layoutPadding = isMobile ? { top: 10, left: 10, right: 10, bottom: 30 } : { top: 80, left: 80, right: 80, bottom: 80 };
+  const layoutPadding = isMobile ? { top: 10, left: 10, right: 10, bottom: 30 } : { top: 80, left: 30, right: 30, bottom: 80 };
   const titlePadding = isMobile ? { top: 10, left: 0, right: 0, bottom: 0 } : 0;
-
+  
   const chartData = {
     labels: labels,
     datasets: [
@@ -127,6 +74,9 @@ const Graph = ({title, subtitle = null, legendTitle= null, data, labels, colors 
               const color = dataset.backgroundColor[i];
               const arc = chart.getDatasetMeta(0).data[i];
               let percent = 0;
+              // we need this so that legend title is not cut off when labels are shorter that legend title
+              const labelText = dataItem.label || label;
+              const labelTextExt = legendTitle ? labelText.padEnd(legendTitle.length + 5) : labelText;
 
               if (dataItem.total) {
                 percent = dataItem.total > 0 ? Math.round((dataItem.value / dataItem.total) * 100) : 100;
@@ -135,7 +85,7 @@ const Graph = ({title, subtitle = null, legendTitle= null, data, labels, colors 
               }
 
               return {
-                text: dataItem.label || label,
+                text: labelTextExt,
                 fillStyle: color,
                 fontColor: color,
                 strokeStyle: color,
@@ -146,7 +96,7 @@ const Graph = ({title, subtitle = null, legendTitle= null, data, labels, colors 
             }, this);
           }
         }
-      }
+      },
     }
   };
 
@@ -159,10 +109,10 @@ const Graph = ({title, subtitle = null, legendTitle= null, data, labels, colors 
       </div>
       }
       <div>
-        <Pie data={chartData} {...graphSize} options={chartOptions}/>
+        <Pie data={chartData} {...graphSize} options={chartOptions} />
       </div>
     </div>
   );
 };
 
-export default Graph;
+export default PieGraph;

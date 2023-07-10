@@ -28,13 +28,18 @@ const DateIntervalFilter = ({ onFilter, timezone = 'UTC'}) => {
     setToDate(null);
     onFilter(null, null);
   }
+  
+  const onChangeFromDate = (newDate) => {
+    if (!toDate) setToDate(newDate);
+    setFromDate(newDate);
+  }
 
   return (
     <div className="inline">
       From: &nbsp;&nbsp;
       <DateTimePicker
         id="fromDate"
-        onChange={ev => setFromDate(ev.target.value)}
+        onChange={ev => onChangeFromDate(ev.target.value)}
         format={{date: "YYYY-MM-DD", time: "HH:mm"}}
         value={fromDate}
         timezone={timezone}
@@ -43,7 +48,7 @@ const DateIntervalFilter = ({ onFilter, timezone = 'UTC'}) => {
       <DateTimePicker
         id="toDate"
         onChange={ev => setToDate(ev.target.value)}
-        validation={{ before: fromDate?.unix(), after: '>=' }}
+        validation={{ before: (fromDate?.unix() -1), after: '>=' }}
         format={{date: "YYYY-MM-DD", time: "HH:mm"}}
         value={toDate}
         timezone={timezone}

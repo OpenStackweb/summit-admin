@@ -22,21 +22,21 @@ import {getAccessTokenSafely} from '../utils/methods';
 
 export const REQUEST_REGISTRATION_STATS      = 'REQUEST_REGISTRATION_STATS';
 export const RECEIVE_REGISTRATION_STATS      = 'RECEIVE_REGISTRATION_STATS';
+export const REQUEST_ATTENDEE_CHECK_INS      = 'REQUEST_ATTENDEE_CHECK_INS';
+export const RECEIVE_ATTENDEE_CHECK_INS      = 'RECEIVE_ATTENDEE_CHECK_INS';
+export const REGISTRATION_DATA_REQUESTED      = 'REGISTRATION_DATA_REQUESTED';
+export const REGISTRATION_DATA_LOADED      = 'REGISTRATION_DATA_LOADED';
 
 /**
  * @param fromDate
  * @param toDate
- * @param shouldDispatchLoad
  * @returns {function(*=, *): *}
  */
-export const getRegistrationStats = (fromDate = null , toDate = null, shouldDispatchLoad = true) => async (dispatch, getState) => {
+export const getRegistrationStats = (fromDate = null , toDate = null) => async (dispatch, getState) => {
     const { currentSummitState } = getState();
     const { currentSummit }   = currentSummitState;
     const filter = [];
     const accessToken = await getAccessTokenSafely();
-
-    if(shouldDispatchLoad)
-        dispatch(startLoading());
 
     if (fromDate) {
         filter.push(`start_date>=${fromDate}`);
@@ -58,10 +58,69 @@ export const getRegistrationStats = (fromDate = null , toDate = null, shouldDisp
       createAction(REQUEST_REGISTRATION_STATS),
       createAction(RECEIVE_REGISTRATION_STATS),
       `${window.API_BASE_URL}/api/v1/summits/all/${currentSummit.id}/registration-stats`,
-      authErrorHandler, {}, true // use ETAGS
-    )(params)(dispatch).then(() => {
-          if(shouldDispatchLoad)
-            dispatch(stopLoading());
-      }
-    );
+      authErrorHandler,
+      {},
+      true // use ETAGS
+    )(params)(dispatch);
+}
+
+export const getAttendeeData = (fromDate = null , toDate = null, page = 1, groupBy = null) => async (dispatch, getState) => {
+    const {currentSummitState, summitStatsState} = getState();
+    const {currentSummit} = currentSummitState;
+    const {timeUnit} = summitStatsState;
+    const filter = [];
+    const accessToken = await getAccessTokenSafely();
+    
+    if (fromDate) {
+        filter.push(`start_date>=${fromDate}`);
+    }
+    
+    if (toDate) {
+        filter.push(`end_date<=${toDate}`);
+    }
+    
+    const params = {
+        access_token: accessToken,
+        per_page: 100,
+        page,
+        group_by: groupBy || timeUnit
+    };
+    
+    if (filter.length > 0) {
+        params['filter[]'] = filter;
+    }
+    
+    return getRequest(
+      createAction(REQUEST_ATTENDEE_CHECK_INS),
+      createAction(RECEIVE_ATTENDEE_CHECK_INS),
+      `${window.API_BASE_URL}/api/v1/summits/all/${currentSummit.id}/registration-stats/check-ins`,
+      authErrorHandler,
+      {timeUnit: groupBy || timeUnit},
+      true // use ETAGS
+    )(params)(dispatch).then(({response}) => {
+        if (page < response.last_page) {
+            return getAttendeeData(fromDate, toDate, page + 1)(dispatch, getState);
+        }
+        
+        return Promise.resolve();
+    });
+};
+
+export const getRegistrationData = (fromDate = null , toDate = null, shouldDispatchLoad = true) => async (dispatch, getState) => {
+    
+    if (shouldDispatchLoad) dispatch(startLoading());
+    
+    dispatch(createAction(REGISTRATION_DATA_REQUESTED)({}));
+    
+    const regStatsPromise = getRegistrationStats(fromDate, toDate)(dispatch, getState);
+    const attendeeDataPromise = getAttendeeData(fromDate, toDate)(dispatch, getState);
+    
+    Promise.all([regStatsPromise, attendeeDataPromise]).finally(() => {
+        if (shouldDispatchLoad) dispatch(stopLoading());
+        dispatch(createAction(REGISTRATION_DATA_LOADED)({}));
+    })
+}
+
+export const changeTimeUnit = (unit, fromDate, toDate) => (dispatch, getState) => {
+    getAttendeeData(fromDate, toDate, 1, unit)(dispatch, getState);
 }
