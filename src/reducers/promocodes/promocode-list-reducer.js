@@ -106,7 +106,7 @@ const promocodeListReducer = (state = DEFAULT_STATE, action) => {
                 return {
                     id: p.id,
                     class_name: p.class_name,
-                    description: p.description,
+                    description: p.description ? p.description : 'N/A',
                     code: p.code,
                     type: p.type,
                     owner: owner,

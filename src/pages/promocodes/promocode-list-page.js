@@ -132,7 +132,7 @@ class PromocodeListPage extends React.Component {
             { columnKey: 'code', value: T.translate("promocode_list.code"), sortable: true },
             { columnKey: 'class_name', value: T.translate("promocode_list.type") },
             { columnKey: 'description', value: T.translate("promocode_list.description"), title: true, render:(row) => {
-                return row.description.length > 50 ? 
+                return row.description?.length > 50 ? 
                 <span title={row.description}>
                     {`${row.description.slice(0,50)}...`}
                 </span>
