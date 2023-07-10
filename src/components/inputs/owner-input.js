@@ -85,7 +85,12 @@ export default class OwnerInput extends React.Component {
         return (
             <div className="row">
                 <div className="col-md-4">
-                    <label> {T.translate("edit_purchase_order.owner_email")}</label>
+                    <label> 
+                        {T.translate("edit_purchase_order.owner_email")} &nbsp;
+                        <i className='copy-button fa fa-clipboard'
+                            onClick={() => { navigator.clipboard.writeText(owner.hasOwnProperty("email") ? owner.email : '')}}
+                        title="Copy to clipboard" />
+                    </label>
                     <AsyncCreatableSelect
                         value={theValue}
                         onChange={this.handleMemberChange}
