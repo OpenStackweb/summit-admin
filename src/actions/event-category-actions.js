@@ -279,6 +279,10 @@ const normalizeEntity = (entity) => {
     //remove # from color hexa
     if (normalizedEntity.color)
         normalizedEntity.color = normalizedEntity.color.substr(1);
+    
+    //remove # from text color hexa
+    if (normalizedEntity.text_color)
+        normalizedEntity.text_color = normalizedEntity.text_color.substr(1);
 
     normalizedEntity.session_count = parseInt(entity.session_count);
     normalizedEntity.alternate_count = parseInt(entity.alternate_count);

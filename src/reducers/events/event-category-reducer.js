@@ -30,6 +30,7 @@ export const DEFAULT_ENTITY = {
     name                        : '',
     code                        : '',
     color                       : '#DADADA',
+    text_color                  : '#000000',
     description                 : '',
     session_count               : 0,
     alternate_count             : 0,
@@ -62,16 +63,13 @@ const eventCategoryReducer = (state = DEFAULT_STATE, action) => {
                 return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
             }
         }
-        break;
         case SET_CURRENT_SUMMIT:
         case RESET_EVENT_CATEGORY_FORM: {
             return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
         }
-        break;
         case UPDATE_EVENT_CATEGORY: {
             return {...state,  entity: {...payload}, errors: {} };
         }
-        break;
         case EVENT_CATEGORY_ADDED:
         case RECEIVE_EVENT_CATEGORY: {
             let entity = {...payload.response};
@@ -84,20 +82,16 @@ const eventCategoryReducer = (state = DEFAULT_STATE, action) => {
 
             return {...state, errors: {}, entity: {...DEFAULT_ENTITY, ...entity} };
         }
-        break;
         case EVENT_CATEGORY_IMAGE_ATTACHED: {
             let image = {...payload.response};
             return {...state, entity: {...state.entity, icon_url: image.url} };
         }
-        break;
         case EVENT_CATEGORY_IMAGE_DELETED: {
             return {...state, entity: {...state.entity, icon_url: null} };
         }
-        break;
         case VALIDATE: {
             return {...state,  errors: payload.errors };
         }
-        break;
         default:
             return state;
     }

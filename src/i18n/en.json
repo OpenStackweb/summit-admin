@@ -1072,6 +1072,7 @@
     "name": "Name",
     "code": "Code",
     "color": "Color",
+    "text_color": "Text Color",
     "description": "Description",
     "pic": "Image",
     "number_sessions": "# of Sessions",
