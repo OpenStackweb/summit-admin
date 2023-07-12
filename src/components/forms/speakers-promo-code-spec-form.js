@@ -85,7 +85,9 @@ class SpeakerPromoCodeSpecForm extends React.Component {
                                 placeholder={promoCodeStrategy === 1 ? 
                                     T.translate("promo_code_specification.placeholders.speakers_promo_code") : 
                                     T.translate("promo_code_specification.placeholders.speakers_discount_code")}
-                                customQueryAction={queryMultiSpeakersPromocodes}
+                                customQueryAction={
+                                    (summitId, input, callback) => queryMultiSpeakersPromocodes(summitId, input, promoCodeStrategy, callback)
+                                }
                                 isClearable={true}
                                 error={hasErrors('existingPromoCode', errors)}
                             />
