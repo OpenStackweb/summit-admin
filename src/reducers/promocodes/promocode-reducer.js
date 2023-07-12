@@ -138,6 +138,7 @@ const promocodeReducer = (state = DEFAULT_STATE, action) => {
                 first_name: entity.first_name,
                 last_name: entity.last_name,
             };
+            entity.speakers = state.entity.speakers
 
             const discount_classes = ['SPEAKER_DISCOUNT_CODE', 'SPONSOR_DISCOUNT_CODE', 'MEMBER_DISCOUNT_CODE', 'SUMMIT_DISCOUNT_CODE', 'SPEAKERS_DISCOUNT_CODE'];
             
