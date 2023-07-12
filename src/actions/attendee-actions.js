@@ -282,7 +282,14 @@ export const getAttendeeOrders = ( attendee ) => async (dispatch) => {
     );
 };
 
-export const getAllowedExtraQuestions = ( attendeeId ) => async (dispatch, getState) => {
+/**
+ *
+ * @param attendeeId
+ * @param tickets_exclude_inactives
+ * @returns {function(*, *): Promise<*>}
+ */
+export const getAllowedExtraQuestions = ( attendeeId, tickets_exclude_inactives = true ) => async (dispatch, getState) => {
+
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
@@ -291,7 +298,8 @@ export const getAllowedExtraQuestions = ( attendeeId ) => async (dispatch, getSt
         expand       : '*sub_question_rules,*sub_question,*values',
         page         : 1,
         per_page     : 100,
-        access_token : accessToken
+        access_token : accessToken,
+        'filter[]'   : 'tickets_exclude_inactives=='+(tickets_exclude_inactives? 'true' : 'false'),
     };
 
     return getRequest(
@@ -299,8 +307,9 @@ export const getAllowedExtraQuestions = ( attendeeId ) => async (dispatch, getSt
         createAction(RECEIVE_ALLOWED_EXTRA_QUESTIONS),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/attendees/${attendeeId}/allowed-extra-questions`,
         authErrorHandler
-    )(params)(dispatch).then(() => {
+    )(params)(dispatch).then((payload) => {
             dispatch(stopLoading());
+            return payload;
         }
     );
 };

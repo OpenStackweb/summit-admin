@@ -302,6 +302,7 @@ class AttendeeForm extends React.Component {
                        title={T.translate("edit_attendee.extra_questions")}
                        handleClick={this.toggleSection.bind(this, 'extra_questions')}>
                     <ExtraQuestionsForm
+                        readOnly={this.props.ExtraQuestionsFormReadOnly}
                         extraQuestions={entity.allowed_extra_questions}
                         userAnswers={entity.extra_questions}
                         onAnswerChanges={this.handleSubmit}

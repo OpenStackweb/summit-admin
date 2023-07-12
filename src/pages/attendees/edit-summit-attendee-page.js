@@ -25,6 +25,9 @@ class EditSummitAttendeePage extends React.Component {
     constructor(props) {
         super(props);
         this.handleOnSubmit = this.handleOnSubmit.bind(this);
+        this.state = {
+            ExtraQuestionsFormReadOnly : false,
+        }
     }
 
     componentDidMount() {
@@ -34,8 +37,18 @@ class EditSummitAttendeePage extends React.Component {
         if(!new_attendee_id) {
             this.props.resetAttendeeForm();
         } else {
+            this.setState({...this.state, ExtraQuestionsFormReadOnly:false});
             this.props.getAttendee(new_attendee_id).then(() => {
-                this.props.getAllowedExtraQuestions(new_attendee_id);
+                this.props.getAllowedExtraQuestions(new_attendee_id).then((payload) => {
+                    if(!payload.response.total){
+                        // we dont have any available extra questions, check if we have some related to
+                        // deactivated tickets
+                        this.props.getAllowedExtraQuestions(new_attendee_id, false);
+                        // and mark extra question form as read only
+                        this.setState({...this.state, ExtraQuestionsFormReadOnly:true});
+                    }
+
+                });
             });
         }
     }
@@ -48,8 +61,17 @@ class EditSummitAttendeePage extends React.Component {
             if (!newId) {
                 this.props.resetAttendeeForm();
             } else {
+                this.setState({...this.state, ExtraQuestionsFormReadOnly:false});
                 this.props.getAttendee(newId).then(() => {
-                    this.props.getAllowedExtraQuestions(newId);
+                    this.props.getAllowedExtraQuestions(newId).then((payload) =>{
+                        if(!payload.response.total){
+                            // we dont have any available extra questions, check if we have some related to
+                            // deactivated tickets
+                            this.props.getAllowedExtraQuestions(newId, false);
+                            // and mark extra question form as read only
+                            this.setState({...this.state, ExtraQuestionsFormReadOnly:true});
+                        }
+                    });
                 });
             }
         }
@@ -57,7 +79,16 @@ class EditSummitAttendeePage extends React.Component {
 
     handleOnSubmit(entity){
         let {saveAttendee, getAllowedExtraQuestions} = this.props;
-        saveAttendee(entity).then(() => getAllowedExtraQuestions(entity.id));
+        this.setState({...this.state, ExtraQuestionsFormReadOnly:false});
+        saveAttendee(entity).then(() => getAllowedExtraQuestions(entity.id).then((payload) => {
+            if(!payload.response.total){
+                // we dont have any available extra questions, check if we have some related to
+                // deactivated tickets
+                this.props.getAllowedExtraQuestions(entity.id, false);
+                // and mark extra question form as read only
+                this.setState({...this.state, ExtraQuestionsFormReadOnly:true});
+            }
+        }));
     }
 
     render(){
@@ -81,6 +112,7 @@ class EditSummitAttendeePage extends React.Component {
                     onSaveTicket={this.props.saveTicket}
                     onDeleteTicket={this.props.deleteTicket}
                     onDeleteRsvp={this.props.deleteRsvp}
+                    ExtraQuestionsFormReadOnly={this.state.ExtraQuestionsFormReadOnly}
                 />
                 }
             </div>
