@@ -52,6 +52,8 @@ export const CATEGORY_REMOVED_FROM_GROUP = 'CATEGORY_REMOVED_FROM_GROUP';
 export const GROUP_ADDED_TO_GROUP = 'GROUP_ADDED_TO_GROUP';
 export const GROUP_REMOVED_FROM_GROUP = 'GROUP_REMOVED_FROM_GROUP';
 export const EVENT_CATEGORY_ORDER_UPDATED = 'EVENT_CATEGORY_ORDER_UPDATED';
+export const SUBTRACK_UPDATED = 'SUBTRACK_UPDATED';
+export const UNLINK_SUBTRACK = 'UNLINK_SUBTRACK';
 
 export const getEventCategories = () => async (dispatch, getState) => {
 
@@ -67,6 +69,7 @@ export const getEventCategories = () => async (dispatch, getState) => {
         page: 1,
         per_page: 100,
         order: '+order',
+        'filter[]': ['has_parent==false']
     };
 
     return getRequest(
@@ -89,7 +92,7 @@ export const getEventCategory = (eventCategoryId) => async (dispatch, getState) 
     dispatch(startLoading());
 
     const params = {
-        expand: "track_groups,allowed_tags,extra_questions,allowed_access_levels",
+        expand: "track_groups,allowed_tags,extra_questions,allowed_access_levels,subtracks",
         access_token: accessToken,
     };
 
@@ -271,6 +274,75 @@ export const removeImage = (eventId) => async (dispatch, getState) => {
             dispatch(stopLoading());
         }
     );
+};
+
+export const linkSubCategory = (trackId, subTrackId) => async (dispatch, getState) => {
+    const {currentSummitState} = getState();
+    const accessToken = await getAccessTokenSafely();
+    const {currentSummit} = currentSummitState;
+    
+    dispatch(startLoading());
+    
+    const params = {
+        access_token: accessToken,
+        expand: "track_groups,allowed_tags,extra_questions,allowed_access_levels,subtracks"
+    };
+    
+    putRequest(
+      null,
+      createAction(SUBTRACK_UPDATED),
+      `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tracks/${trackId}/sub-tracks/${subTrackId}`,
+      {},
+      authErrorHandler
+    )(params)(dispatch)
+      .then(() => {
+          dispatch(stopLoading());
+      });
+};
+
+export const unlinkSubCategory = (trackId, subTrackId) => async (dispatch, getState) => {
+    const {currentSummitState} = getState();
+    const accessToken = await getAccessTokenSafely();
+    const {currentSummit} = currentSummitState;
+    
+    dispatch(startLoading());
+    
+    const params = {access_token: accessToken};
+    
+    return deleteRequest(
+      null,
+      createAction(UNLINK_SUBTRACK)({subTrackId}),
+      `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tracks/${trackId}/sub-tracks/${subTrackId}`,
+      null,
+      authErrorHandler
+    )(params)(dispatch).then(() => {
+          dispatch(stopLoading());
+      }
+    );
+}
+
+export const updateSubCategoryOrder = (trackId, subTrackId, order) => async (dispatch, getState) => {
+    const {currentSummitState} = getState();
+    const accessToken = await getAccessTokenSafely();
+    const {currentSummit} = currentSummitState;
+    
+    dispatch(startLoading());
+    
+    const params = {
+        access_token: accessToken,
+        expand: "track_groups,allowed_tags,extra_questions,allowed_access_levels,subtracks"
+    };
+    
+    putRequest(
+      null,
+      createAction(SUBTRACK_UPDATED),
+      `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tracks/${trackId}/sub-tracks/${subTrackId}`,
+      {order},
+      authErrorHandler
+    )(params)(dispatch)
+      .then(() => {
+          dispatch(stopLoading());
+      });
 };
 
 const normalizeEntity = (entity) => {

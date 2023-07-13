@@ -18,7 +18,9 @@ import
     EVENT_CATEGORY_ADDED,
     UPDATE_EVENT_CATEGORY,
     EVENT_CATEGORY_IMAGE_ATTACHED,
-    EVENT_CATEGORY_IMAGE_DELETED
+    EVENT_CATEGORY_IMAGE_DELETED,
+    SUBTRACK_UPDATED,
+    UNLINK_SUBTRACK,
 } from '../../actions/event-category-actions';
 
 import { VALIDATE } from 'openstack-uicore-foundation/lib/utils/actions';
@@ -43,7 +45,8 @@ export const DEFAULT_ENTITY = {
     extra_questions             : [],
     icon_url                    : null,
     allowed_access_levels       : [],
-    proposed_schedule_transition_time: null
+    proposed_schedule_transition_time: null,
+    subtracks                   : []
 };
 
 const DEFAULT_STATE = {
@@ -88,6 +91,14 @@ const eventCategoryReducer = (state = DEFAULT_STATE, action) => {
         }
         case EVENT_CATEGORY_IMAGE_DELETED: {
             return {...state, entity: {...state.entity, icon_url: null} };
+        }
+        case SUBTRACK_UPDATED: {
+            const {response} = payload
+            return {...state, entity: response};
+        }
+        case UNLINK_SUBTRACK: {
+            const {subTrackId} = payload;
+            return {...state, entity: {...state.entity, subtracks: state.entity.subtracks.filter(st => st.id !== subTrackId)} };
         }
         case VALIDATE: {
             return {...state,  errors: payload.errors };

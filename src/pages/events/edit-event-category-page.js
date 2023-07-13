@@ -16,9 +16,17 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import EventCategoryForm from '../../components/forms/event-category-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getEventCategory, resetEventCategoryForm, saveEventCategory,
- uploadImage, removeImage } from "../../actions/event-category-actions";
-//import '../../styles/edit-summit-attendee-page.less';
+import {
+  getEventCategory,
+  resetEventCategoryForm,
+  saveEventCategory,
+  uploadImage,
+  removeImage,
+  linkSubCategory,
+  unlinkSubCategory,
+  updateSubCategoryOrder
+} from "../../actions/event-category-actions";
+import '../../styles/edit-event-category-page.less';
 
 class EditEventCategoryPage extends React.Component {
 
@@ -43,6 +51,9 @@ class EditEventCategoryPage extends React.Component {
                     onSubmit={this.props.saveEventCategory}
                     onUploadImage={this.props.uploadImage}
                     onRemoveImage={this.props.removeImage}
+                    onLinkSubCategory={this.props.linkSubCategory}
+                    onUnlinkSubCategory={this.props.unlinkSubCategory}
+                    onUpdateSubCategoryOrder={this.props.updateSubCategoryOrder}
                 />
                 }
             </div>
@@ -58,11 +69,14 @@ const mapStateToProps = ({ currentSummitState, currentEventCategoryState }) => (
 export default connect (
     mapStateToProps,
     {
-        getSummitById,
-        getEventCategory,
-        resetEventCategoryForm,
-        saveEventCategory,
-        uploadImage,
-        removeImage
+      getSummitById,
+      getEventCategory,
+      resetEventCategoryForm,
+      saveEventCategory,
+      uploadImage,
+      removeImage,
+      linkSubCategory,
+      unlinkSubCategory,
+      updateSubCategoryOrder
     }
 )(EditEventCategoryPage);

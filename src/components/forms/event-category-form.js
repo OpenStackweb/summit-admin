@@ -20,10 +20,11 @@ import {
     TextEditor,
     TagInput,
     UploadInput,
-    AccessLevelsInput
+    AccessLevelsInput, SortableTable
 } from 'openstack-uicore-foundation/lib/components'
 
 import {isEmpty, scrollToError, shallowEqual, hasErrors} from "../../utils/methods";
+import TrackDropdown from "../inputs/track-dropdown";
 
 class EventCategoryForm extends React.Component {
     constructor(props) {
@@ -32,15 +33,18 @@ class EventCategoryForm extends React.Component {
         this.state = {
             entity: {...props.entity},
             errors: props.errors,
-            showSection: 'main'
+            showSection: 'main',
+            subtrack: null
         };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleTagLink = this.handleTagLink.bind(this);
-        this.handleTagUnLink = this.handleTagUnLink.bind(this);
         this.handleUploadPic = this.handleUploadPic.bind(this);
         this.handleRemovePic = this.handleRemovePic.bind(this);
+        this.handleEditSubCategory = this.handleEditSubCategory.bind(this);
+        this.handleLinkSubCategory = this.handleLinkSubCategory.bind(this);
+        this.handleUnlinkSubCategory = this.handleUnlinkSubCategory.bind(this);
+        this.handleUpdateSubCategoryOrder = this.handleUpdateSubCategoryOrder.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -80,20 +84,6 @@ class EventCategoryForm extends React.Component {
         this.props.onSubmit(this.state.entity);
     }
 
-    handleTagLink(value) {
-        const tags = [...this.state.entity.tags];
-        tags.push(value);
-
-        let entity = {...this.state.entity, tags: tags};
-        this.setState({entity: entity});
-    }
-
-    handleTagUnLink(value) {
-        const tags = this.state.entity.tags.filter(t => t.id !== value);
-        const entity = {...this.state.entity, tags: tags};
-        this.setState({entity: entity});
-    }
-
     handleRemovePic() {
         this.props.onRemoveImage(this.state.entity.id);
     }
@@ -111,10 +101,49 @@ class EventCategoryForm extends React.Component {
 
         this.setState({ showSection: newShowSection });
     }
+    
+    handleEditSubCategory(id) {
+        const {history, currentSummit} = this.props;
+        history.push(`/app/summits/${currentSummit.id}/event-categories/${id}`);
+    }
+    
+    handleLinkSubCategory() {
+        const {entity, subtrack} = this.state;
+        this.setState({subtrack: null});
+        this.props.onLinkSubCategory(entity.id, subtrack);
+    }
+    
+    handleUnlinkSubCategory(subtrackId) {
+        const {entity} = this.state;
+        this.props.onUnlinkSubCategory(entity.id, subtrackId);
+    }
+    
+    handleUpdateSubCategoryOrder(subtracks, subtrackId, newOrder) {
+        const {entity} = this.state;
+        this.props.onUpdateSubCategoryOrder(entity.id, subtrackId, newOrder);
+    }
 
     render() {
         const {entity, errors, showSection} = this.state;
         const { currentSummit } = this.props;
+        
+        const availableSubTracks = currentSummit.tracks.filter(t => {
+            return !t.parent_id && !entity.subtracks.map(t => t.id).includes(t.id) && t.id !== entity.id
+        })
+    
+        const table_options = {
+            actions: {
+                edit: {onClick: this.handleEditSubCategory},
+                delete: { onClick: this.handleUnlinkSubCategory }
+            }
+        };
+    
+        const columns = [
+            { columnKey: 'id', value: T.translate("general.id") },
+            { columnKey: 'name', value: T.translate("event_category_list.name") },
+            { columnKey: 'code', value: T.translate("event_category_list.code") },
+            { columnKey: 'color', value: T.translate("event_category_list.color") }
+        ];
 
         return (
             <form className="event-type-form">
@@ -302,6 +331,43 @@ class EventCategoryForm extends React.Component {
                         </div>
                     </div>
                 </Panel>
+    
+                {!!entity.id && !entity.parent_id &&
+                  <div>
+                      <hr/>
+                      <div className="row">
+                          <div className="col-md pull-right btn-group subtrackddlgrp">
+                              <TrackDropdown
+                                onChange={ev => this.setState({subtrack: ev.target.value})}
+                                tracks={availableSubTracks}
+                                value={this.state.subtrack}
+                                id="subtracks"
+                                className="subtrackddl btn-group text-left"
+                              />
+                              <button
+                                type="button"
+                                className="btn btn-default add-button"
+                                onClick={this.handleLinkSubCategory}
+                                disabled={!this.state.subtrack}
+                              >
+                                  {T.translate("general.add")}
+                              </button>
+                          </div>
+                      </div>
+                      <div className="row form-group">
+                          <div className="col-md-12">
+                              <SortableTable
+                                options={table_options}
+                                data={entity.subtracks}
+                                columns={columns}
+                                dropCallback={this.handleUpdateSubCategoryOrder}
+                                orderField="order"
+                              />
+                          </div>
+                      </div>
+                  </div>
+        
+                }
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">

@@ -15,7 +15,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import Swal from "sweetalert2";
-import { Table, SummitDropdown } from 'openstack-uicore-foundation/lib/components';
+import { SummitDropdown } from 'openstack-uicore-foundation/lib/components';
 import { SortableTable } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
 import {
