@@ -48,7 +48,8 @@ import {
     AUTO_GENERATED_SPEAKERS_DISCOUNT_CODE
 } from '../../actions/promocode-actions';
 
-import { SpeakersSources as sources } from "../../utils/constants";
+import { ALL_FILTER, SpeakersSources as sources } from "../../utils/constants";
+import OrAndFilter from '../../components/filters/or-and-filter';
 
 class SummitSpeakersListPage extends React.Component {
     constructor(props) {
@@ -73,13 +74,17 @@ class SummitSpeakersListPage extends React.Component {
         this.showEmailSendModal = this.showEmailSendModal.bind(this);
         this.handleSendEmails = this.handleSendEmails.bind(this);
         this.handleChangePromoCodeStrategy = this.handleChangePromoCodeStrategy.bind(this);
+        this.handleOrAndFilter = this.handleOrAndFilter.bind(this);
 
         this.state = {
             testRecipient: '',
             showSendEmailModal: false,
             excerptRecipient: '',
             source: sources.speakers,
-            promoCodeStrategy: 0
+            promoCodeStrategy: 0,
+            speakerFilters: {
+                orAndFilter: ALL_FILTER
+            }
         };
     }
 
@@ -89,8 +94,9 @@ class SummitSpeakersListPage extends React.Component {
         initSpeakersList();
         if (currentSummit) {
             const { term, page, order, orderDir, perPage, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter } = this.getSubjectProps();
+            const { speakerFilters: { orAndFilter }} = this.state;
             this.getBySummit(term, page, perPage, order, orderDir, {
-                selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter
+                selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter
             });
         }
     }
@@ -119,12 +125,13 @@ class SummitSpeakersListPage extends React.Component {
     handleSpeakerSubmitterSourceChange(ev) {
         const { value } = ev.target;
         const { term, order, orderDir, perPage, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter } = this.getSubjectProps();
+        const { speakerFilters: { orAndFilter }} = this.state;
         const { initSubmittersList, initSpeakersList } = this.props;
         this.setState({...this.state, source: value}, function() {
             initSubmittersList();
             initSpeakersList();
             this.getBySummit(term, 1, perPage, order, orderDir, {
-                selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter
+                selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter
             });
         });
     }
@@ -138,50 +145,56 @@ class SummitSpeakersListPage extends React.Component {
 
     handlePageChange(page) {
         const { term, order, orderDir, perPage, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter } = this.getSubjectProps();
+        const { speakerFilters: { orAndFilter }} = this.state;
         this.getBySummit(term, page, perPage, order, orderDir, {
-            selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter
+            selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter
         });
     }
 
     handleSort(index, key, dir, func) {
         const { term, page, perPage, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter } = this.getSubjectProps();
+        const { speakerFilters: { orAndFilter }} = this.state;
         this.getBySummit(term, page, perPage, key, dir, {
-            selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter
+            selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter
         });
     }
 
     handleSearch(term) {
         const { order, orderDir, page, perPage, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter } = this.getSubjectProps();
+        const { speakerFilters: { orAndFilter }} = this.state;
         this.getBySummit(term, page, perPage, order, orderDir,
         {
-            selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter
+            selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter
         });
     }
 
     handleChangeSelectionPlanFilter(ev) {
         const { value: newSelectionPlanFilter } = ev.target;
         const { term, order, page, orderDir, perPage, trackFilter, activityTypeFilter, selectionStatusFilter } = this.getSubjectProps();
+        const { speakerFilters: { orAndFilter }} = this.state;
         this.getBySummit(term, page, perPage, order, orderDir,
             {
-                selectionPlanFilter: newSelectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter
+                selectionPlanFilter: newSelectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter
             });
     }
 
     handleChangeTrackFilter(ev) {
         const { value: newTrackFilter } = ev.target;
         const { term, order, page, orderDir, perPage, selectionPlanFilter, activityTypeFilter, selectionStatusFilter } = this.getSubjectProps();
+        const { speakerFilters: { orAndFilter }} = this.state;
         this.getBySummit(term, page, perPage, order, orderDir,
             {
-                selectionPlanFilter, trackFilter: newTrackFilter, activityTypeFilter, selectionStatusFilter
+                selectionPlanFilter, trackFilter: newTrackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter
             });
     }
 
     handleChangeActivityTypeFilter(ev) {
         const { value: newActivityTypeFilter } = ev.target;
         const { term, order, page, orderDir, perPage, selectionPlanFilter, trackFilter, selectionStatusFilter } = this.getSubjectProps();
+        const { speakerFilters: { orAndFilter }} = this.state;
         this.getBySummit(term, page, perPage, order, orderDir,
             {
-                selectionPlanFilter, trackFilter, activityTypeFilter: newActivityTypeFilter, selectionStatusFilter
+                selectionPlanFilter, trackFilter, activityTypeFilter: newActivityTypeFilter, selectionStatusFilter, orAndFilter
             });
     }
 
@@ -208,9 +221,10 @@ class SummitSpeakersListPage extends React.Component {
         }
 
         const { term, order, page, orderDir, perPage, selectionPlanFilter, trackFilter, activityTypeFilter } = this.getSubjectProps();
+        const { speakerFilters: { orAndFilter }} = this.state;
         this.getBySummit(term, page, perPage, order, orderDir,
             {
-                selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter: newSelectionStatusFilter
+                selectionPlanFilter, trackFilter, activityTypeFilter, orAndFilter, selectionStatusFilter: newSelectionStatusFilter
             });
     }
 
@@ -278,8 +292,9 @@ class SummitSpeakersListPage extends React.Component {
 
     handleExport(ev) {
         const { term, order, orderDir, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter } = this.getSubjectProps();
+        const { speakerFilters: { orAndFilter }} = this.state;
         ev.preventDefault();
-        this.export(term, order, orderDir,{ selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter });
+        this.export(term, order, orderDir,{ selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter });
     }
 
     handleSelected(item_id, isSelected) {
@@ -301,10 +316,19 @@ class SummitSpeakersListPage extends React.Component {
         }
     }
 
+    handleOrAndFilter(ev) {        
+        const { term, order, page, orderDir, perPage, trackFilter, selectionPlanFilter, activityTypeFilter, selectionStatusFilter } = this.getSubjectProps();        
+        this.setState({...this.state, speakerFilters: {...this.state.speakerFilters, orAndFilter: ev}});
+        this.getBySummit(term, page, perPage, order, orderDir,
+            {
+                selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter: ev
+            });
+    }
+
     render() {
         const { currentSummit, currentPromocodeSpecification } = this.props;
 
-        const { testRecipient, source, promoCodeStrategy } = this.state;
+        const { testRecipient, source, promoCodeStrategy, speakerFilters } = this.state;
 
         const { items, lastPage, currentPage, term, order, orderDir, totalItems, selectedItems,
             selectedAll, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, currentFlowEvent } = this.getSubjectProps();

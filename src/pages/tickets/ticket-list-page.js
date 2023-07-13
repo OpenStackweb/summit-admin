@@ -44,6 +44,8 @@ import QrReaderInput from "../../components/inputs/qr-reader-input";
 import {getTicketFromQR} from "../../utils/methods";
 
 import '../../styles/ticket-list-page.less';
+import OrAndFilter from '../../components/filters/or-and-filter';
+import { ALL_FILTER } from '../../utils/constants';
 
 const BatchSize = 25;
 
@@ -81,6 +83,7 @@ class TicketListPage extends React.Component {
         this.handleScanQR = this.handleScanQR.bind(this);
         this.handleColumnsChange = this.handleColumnsChange.bind(this);
         this.handleFiltersChange = this.handleFiltersChange.bind(this);
+        this.handleDDLSortByLabel = this.handleDDLSortByLabel.bind(this);
 
         this.state = {
             showIngestModal: false,
@@ -103,6 +106,7 @@ class TicketListPage extends React.Component {
                 showOnlyPrintable: false,
                 promocodesFilter: [],
                 promocodeTags:[],
+                orAndFilter: ALL_FILTER,
             }
         }
     }
@@ -282,6 +286,10 @@ class TicketListPage extends React.Component {
         }
     }
 
+    handleDDLSortByLabel(ddlArray) {
+        return ddlArray.sort((a, b) => a.label.localeCompare(b.label));
+    }
+
     render(){
         const {
             currentSummit,
@@ -430,6 +438,7 @@ class TicketListPage extends React.Component {
                         </div>
                     </div>
                     <hr/>
+                    <OrAndFilter value={ticketFilters.orAndFilter} entity={'tickets'} onChange={(filter) => this.handleFilterChange('orAndFilter', filter)}/>
                     <div className="row">
                         <div className="col-md-6">
                             <Dropdown
@@ -437,7 +446,7 @@ class TicketListPage extends React.Component {
                                 placeholder={'Enabled Filters'}
                                 value={enabledFilters}
                                 onChange={this.handleFiltersChange}
-                                options={filters_ddl}
+                                options={this.handleDDLSortByLabel(filters_ddl)}
                                 isClearable={true}
                                 isMulti={true}
                             />
@@ -614,7 +623,7 @@ class TicketListPage extends React.Component {
                                 placeholder={T.translate("ticket_list.placeholders.select_fields")}
                                 value={this.state.selectedColumns}
                                 onChange={this.handleColumnsChange}
-                                options={ddl_columns}
+                                options={this.handleDDLSortByLabel(ddl_columns)}
                                 isClearable={true}
                                 isMulti={true}
                             />

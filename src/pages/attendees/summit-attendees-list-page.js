@@ -34,7 +34,8 @@ import {
 } from "../../actions/attendee-actions";
 
 import {getBadgeFeatures, getBadgeTypes} from "../../actions/badge-actions";
-import {HAS_NO_TICKETS, HAS_TICKETS} from '../../utils/constants';
+import {ALL_FILTER, HAS_NO_TICKETS, HAS_TICKETS} from '../../utils/constants';
+import OrAndFilter from '../../components/filters/or-and-filter';
 
 const fieldNames = [    
     { columnKey: 'member_id', value: 'member_id', sortable: true},
@@ -53,6 +54,7 @@ const FILTERS_DEFAULT_STATE = {
     badgeTypeFilter: [],
     featuresFilter: [],
     checkinDateFilter: Array(2).fill(null),
+    orAndFilter: ALL_FILTER,
 };
 
 class SummitAttendeeListPage extends React.Component {
@@ -86,6 +88,7 @@ class SummitAttendeeListPage extends React.Component {
         this.handleExtraFilterChange = this.handleExtraFilterChange.bind(this);
         this.handleApplyEventFilters = this.handleApplyEventFilters.bind(this);
         this.handleTermChange = this.handleTermChange.bind(this);
+        this.handleOrAndFilter = this.handleOrAndFilter.bind(this);
         this.state = {
             showModal: false,
             modalTitle: '',
@@ -314,6 +317,10 @@ class SummitAttendeeListPage extends React.Component {
         this.setState({...this.state, attendeeFilters: {...this.state.attendeeFilters, [id]: value}});
     }
 
+    handleOrAndFilter(ev) {
+        this.setState({...this.state, attendeeFilters: {...this.state.attendeeFilters, orAndFilter: ev}});
+    }
+
     handleTermChange(term) {
         this.props.changeAttendeeListSearchTerm(term);
     }
@@ -438,7 +445,8 @@ class SummitAttendeeListPage extends React.Component {
                         </button>
                     </div>
                 </div>
-                <div className='row' style={{marginBottom: 15, marginTop: 15}}>
+                <OrAndFilter style={{marginTop: 15}} value={attendeeFilters.orAndFilter} entity={'attendees'} onChange={(filter) => this.handleOrAndFilter(filter)}/>
+                <div className='row' style={{marginBottom: 15}}>
                     <div className={'col-md-6'}>
                         <Dropdown
                             id="enabled_filters"

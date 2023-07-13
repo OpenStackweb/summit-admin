@@ -2618,5 +2618,11 @@
       "search_speakers": "Search assigned speakers by name or email",
       "speaker_to_assign": "Select a speaker to assign"
     }
+  },
+  "and_or_filter": {
+    "search": "Search {entity} by ",
+    "all": "all",
+    "any": "any",
+    "following": " of the following: "
   }
 }

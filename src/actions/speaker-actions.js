@@ -34,7 +34,7 @@ import {
     AUTO_GENERATED_SPEAKERS_PROMO_CODE,
     AUTO_GENERATED_SPEAKERS_DISCOUNT_CODE
 } from './promocode-actions';
-import {getAccessTokenSafely} from '../utils/methods';
+import {checkOrFilter, getAccessTokenSafely, isNumericString} from '../utils/methods';
 
 export const INIT_SPEAKERS_LIST_PARAMS  = 'INIT_SPEAKERS_LIST_PARAMS';
 
@@ -732,7 +732,7 @@ export const getSpeakersBySummit = (term = null, page = 1, perPage = 10, order =
             `presentations_submitter_email=@${escapedTerm}`
         ];
 
-        if(parseInt(escapedTerm)){
+        if(isNumericString(escapedTerm)){
             const filterTermId = parseInt(escapedTerm);
             filterTerm = [...filterTerm, ...[`id==${filterTermId}`,
                 `member_id==${filterTermId}`,
@@ -1023,6 +1023,7 @@ const parseFilters = (filters) => {
        }
     }
 
+    //return checkOrFilter(filters, filter);
     return filter;
 }
 
@@ -1041,7 +1042,7 @@ const buildTermFilter = (term, usePresentationFilters = true) => {
         termFilter.push(`presentations_abstract=@${escapedTerm}`);
     }
 
-    if (parseInt(escapedTerm)) {
+    if (isNumericString(escapedTerm)) {
         const filterTermId = parseInt(escapedTerm)
         termFilter = [...termFilter, ...[`id==${filterTermId}`,
             `member_id==${filterTermId}`,

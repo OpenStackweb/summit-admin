@@ -35,6 +35,8 @@ import { getSummitById }  from '../../actions/summit-actions';
 import { getEvents, deleteEvent, exportEvents, importEventsCSV, importMP4AssetsFromMUX, changeEventListSearchTerm } from "../../actions/event-actions";
 import {hasErrors, uuidv4} from "../../utils/methods";
 import '../../styles/summit-event-list-page.less';
+import OrAndFilter from '../../components/filters/or-and-filter';
+import { ALL_FILTER } from '../../utils/constants';
 
 const fieldNames = [
     { columnKey: 'speakers', value: 'speakers' },
@@ -107,6 +109,7 @@ class SummitEventListPage extends React.Component {
         this.handleColumnsChange = this.handleColumnsChange.bind(this);
         this.handleDDLSortByLabel = this.handleDDLSortByLabel.bind(this);
         this.handleTermChange = this.handleTermChange.bind(this);
+        this.handleOrAndFilter = this.handleOrAndFilter.bind(this);
 
         this.state = {
             showImportModal: false,
@@ -147,6 +150,7 @@ class SummitEventListPage extends React.Component {
                 submission_status_filter: [],
                 has_media_upload_with_type: [],
                 has_not_media_upload_with_type: [],
+                orAndFilter: ALL_FILTER,
             },
             selectedColumns: [],
         };
@@ -284,6 +288,10 @@ class SummitEventListPage extends React.Component {
             }
         }
         this.setState({...this.state, eventFilters: {...this.state.eventFilters, [id]: value}});
+    }
+
+    handleOrAndFilter(ev) {
+        this.setState({...this.state, eventFilters: {...this.state.eventFilters, orAndFilter: ev}});
     }
 
     handleTagOrSpeakerFilterChange(ev) {
@@ -593,8 +601,9 @@ class SummitEventListPage extends React.Component {
                     </div>
                 </div>
                 <hr/>
+                <OrAndFilter value={eventFilters.orAndFilter} entity={'events'} onChange={(filter) => this.handleOrAndFilter(filter)}/>
                 <div className={'row'}>
-                    <div className={'col-md-6'}>
+                    <div className={'col-md-6'}>                        
                         <Dropdown
                             id="enabled_filters"
                             placeholder={'Enabled Filters'}

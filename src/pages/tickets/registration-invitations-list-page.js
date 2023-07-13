@@ -31,10 +31,11 @@ import {
 }
 from "../../actions/registration-invitation-actions";
 import AcceptanceCriteriaDropdown from "../../components/inputs/acceptance-criteria-dropdown";
-import { MaxTextLengthForTicketTypesOnTable, MaxTextLengthForTagsOnTable } from '../../utils/constants';
+import { MaxTextLengthForTicketTypesOnTable, MaxTextLengthForTagsOnTable, ALL_FILTER } from '../../utils/constants';
 
 import "../../styles/registration-invitation-list-page.less";
 import {SegmentedControl} from "segmented-control";
+import OrAndFilter from '../../components/filters/or-and-filter';
 
 class RegistrationInvitationsListPage extends React.Component {
 
@@ -58,11 +59,15 @@ class RegistrationInvitationsListPage extends React.Component {
         this.handleDeleteAll = this.handleDeleteAll.bind(this);
         this.handleChangeNoSent = this.handleChangeNoSent.bind(this);
         this.handleTagFilterChange = this.handleTagFilterChange.bind(this);
+        this.handleOrAndFilter = this.handleOrAndFilter.bind(this);
 
         this.state = {
             showImportModal: false,
             importFile: null,
-            acceptanceCriteria: null
+            acceptanceCriteria: null,
+            invitationFilter: {
+                orAndFilter: ALL_FILTER
+            }
         }
     }
 
@@ -70,13 +75,15 @@ class RegistrationInvitationsListPage extends React.Component {
         const {currentSummit} = this.props;
         if(currentSummit) {
             const {term, order, orderDir, currentPage, perPage, allowedTicketTypesIds, tagFilter, isAccepted, isSent} = this.props;
-            this.props.getInvitations(term, currentPage, perPage, order, orderDir,{ isAccepted, isSent, allowedTicketTypesIds, tagFilter});
+            const { invitationFilter: { orAndFilter }} = this.state;
+            this.props.getInvitations(term, currentPage, perPage, order, orderDir,{ isAccepted, isSent, allowedTicketTypesIds, tagFilter, orAndFilter});
         }
     }
 
     handleSearch(term) {
         const {order, orderDir, page, perPage, allowedTicketTypesIds, tagFilter, isAccepted, isSent} = this.props;
-        this.props.getInvitations(term, page, perPage, order, orderDir, { isAccepted, isSent, allowedTicketTypesIds, tagFilter});
+        const { invitationFilter: { orAndFilter }} = this.state;
+        this.props.getInvitations(term, page, perPage, order, orderDir, { isAccepted, isSent, allowedTicketTypesIds, tagFilter, orAndFilter});
     }
 
     handleEdit(invitation_id) {
@@ -147,6 +154,8 @@ class RegistrationInvitationsListPage extends React.Component {
             tagFilter
         } = this.props;
 
+        const { invitationFilter: { orAndFilter }} = this.state;
+
         if(!currentFlowEvent){
             Swal.fire("Validation error", T.translate("registration_invitation_list.select_template") , "warning");
             return false;
@@ -175,10 +184,13 @@ class RegistrationInvitationsListPage extends React.Component {
                     selectedAll ,
                     selectedInvitationsIds,
                     term,
-                    isAccepted,
-                    isSent,
-                    allowedTicketTypesIds,
-                    tagFilter
+                    {
+                        isAccepted,
+                        isSent,
+                        allowedTicketTypesIds,
+                        tagFilter,
+                        orAndFilter
+                    }
                 );
             }
         });        
@@ -205,17 +217,20 @@ class RegistrationInvitationsListPage extends React.Component {
         const {term, page, order, orderDir, perPage, isAccepted, isSent, tagFilter} = this.props;
         let {value} = ev.target;
         const ticketTypeFilter = [...value];
-        this.props.getInvitations(term, page, perPage, order, orderDir, {isAccepted, isSent, allowedTicketTypesIds: ticketTypeFilter, tagFilter});
+        const { invitationFilter: { orAndFilter }} = this.state;
+        this.props.getInvitations(term, page, perPage, order, orderDir, {isAccepted, isSent, allowedTicketTypesIds: ticketTypeFilter, tagFilter, orAndFilter});
     }
 
     handleSort(index, key, dir, func) {
         const {term, page, perPage, allowedTicketTypesIds, tagFilter, isAccepted, isSent} = this.props;
-        this.props.getInvitations(term, page, perPage, key, dir, { isAccepted, isSent, allowedTicketTypesIds, tagFilter});
+        const { invitationFilter: { orAndFilter }} = this.state;
+        this.props.getInvitations(term, page, perPage, key, dir, { isAccepted, isSent, allowedTicketTypesIds, tagFilter, orAndFilter});
     }
 
     handlePageChange(page) {
         const {term, order, orderDir, perPage, allowedTicketTypesIds, tagFilter, isAccepted, isSent} = this.props;
-        this.props.getInvitations(term, page, perPage, order, orderDir,  {isAccepted, isSent, allowedTicketTypesIds, tagFilter});
+        const { invitationFilter: { orAndFilter }} = this.state;
+        this.props.getInvitations(term, page, perPage, order, orderDir,  {isAccepted, isSent, allowedTicketTypesIds, tagFilter, orAndFilter});
     }
 
     handleImportInvitations() {
@@ -228,22 +243,32 @@ class RegistrationInvitationsListPage extends React.Component {
 
     handleExportInvitations() {        
         const {term, order, orderDir, allowedTicketTypesIds, tagFilter, isAccepted, isSent} = this.props;
-        this.props.exportInvitationsCSV(term, order, orderDir, { isAccepted, isSent, allowedTicketTypesIds, tagFilter});
+        const { invitationFilter: { orAndFilter }} = this.state;
+        this.props.exportInvitationsCSV(term, order, orderDir, { isAccepted, isSent, allowedTicketTypesIds, tagFilter, orAndFilter});
     }
 
     handleTagFilterChange(ev) {
         const {term, order, page, orderDir, perPage, allowedTicketTypesIds, isAccepted, isSent} = this.props;
-        this.props.getInvitations(term, page, perPage, order, orderDir, { isAccepted, isSent, allowedTicketTypesIds, tagFilter: ev.target.value});
+        const { invitationFilter: { orAndFilter }} = this.state;
+        this.props.getInvitations(term, page, perPage, order, orderDir, { isAccepted, isSent, allowedTicketTypesIds, tagFilter: ev.target.value, orAndFilter});
     }
 
     handleChangeNonAccepted(newValue) {
         const {term, order, page, orderDir, perPage, allowedTicketTypesIds, tagFilter, isSent} = this.props;
-        this.props.getInvitations(term, page, perPage, order, orderDir, {isAccepted: newValue, isSent, allowedTicketTypesIds, tagFilter});
+        const { invitationFilter: { orAndFilter }} = this.state;
+        this.props.getInvitations(term, page, perPage, order, orderDir, {isAccepted: newValue, isSent, allowedTicketTypesIds, tagFilter, orAndFilter});
     }
 
     handleChangeNoSent(newValue) {
         const {term, order, page, orderDir, perPage, allowedTicketTypesIds, tagFilter,isAccepted} = this.props;
-        this.props.getInvitations(term, page, perPage, order, orderDir, { isAccepted, isSent: newValue, allowedTicketTypesIds, tagFilter});
+        const { invitationFilter: { orAndFilter }} = this.state;
+        this.props.getInvitations(term, page, perPage, order, orderDir, { isAccepted, isSent: newValue, allowedTicketTypesIds, tagFilter, orAndFilter});
+    }
+
+    handleOrAndFilter(ev) {
+        this.setState({...this.state, invitationFilter: {...this.state.invitationFilter, orAndFilter: ev}});
+        const {term, order, orderDir, currentPage, perPage, allowedTicketTypesIds, tagFilter, isAccepted, isSent} = this.props;
+        this.props.getInvitations(term, currentPage, perPage, order, orderDir,{ isAccepted, isSent, allowedTicketTypesIds, tagFilter, orAndFilter: ev});
     }
 
     render(){
@@ -258,7 +283,7 @@ class RegistrationInvitationsListPage extends React.Component {
             selectedAll, allowedTicketTypesIds, tagFilter
         } = this.props;
 
-        const {showImportModal, importFile, acceptanceCriteria} = this.state;
+        const {showImportModal, importFile, acceptanceCriteria, invitationFilter} = this.state;
         
         const columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
@@ -338,6 +363,7 @@ class RegistrationInvitationsListPage extends React.Component {
                                 </button>
                             </div>
                         </div>
+                        <OrAndFilter style={{marginTop: 15}} value={invitationFilter.orAndFilter} entity={'invitations'} onChange={(filter) => this.handleOrAndFilter(filter)}/>
                         <div className="row">
                             <div className="col-md-6">
                                 <TagInput

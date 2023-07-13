@@ -23,7 +23,7 @@ import {
     authErrorHandler,
     escapeFilterValue
 } from 'openstack-uicore-foundation/lib/utils/actions';
-import {getAccessTokenSafely} from '../utils/methods';
+import {checkOrFilter, getAccessTokenSafely} from '../utils/methods';
 import {SpeakersSources as sources} from "../utils/constants";
 
 export const INIT_SUBMITTERS_LIST_PARAMS       = 'INIT_SUBMITTERS_LIST_PARAMS';
@@ -316,6 +316,7 @@ const parseFilters = (filters) => {
        }
     }
 
+    //return checkOrFilter(filters, filter);
     return filter;
 }
 

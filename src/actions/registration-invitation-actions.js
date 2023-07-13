@@ -27,7 +27,7 @@ import {
     postFile,
 } from 'openstack-uicore-foundation/lib/utils/actions';
 import history from "../history";
-import {getAccessTokenSafely} from '../utils/methods';
+import {checkOrFilter, getAccessTokenSafely} from '../utils/methods';
 import {getSentEmailsByTemplatesAndEmail} from './email-actions';
 export const REQUEST_INVITATIONS = 'REQUEST_INVITATIONS';
 export const RECEIVE_INVITATIONS = 'RECEIVE_INVITATIONS';
@@ -54,7 +54,7 @@ export const getInvitations = ( term = null, page = 1, perPage = 10, order = 'id
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
-    const filter = [];
+    const {tagFilter, isAccepted, isSent, allowedTicketTypesIds} = filters;
 
     dispatch(startLoading());
 
@@ -65,31 +65,7 @@ export const getInvitations = ( term = null, page = 1, perPage = 10, order = 'id
         expand: 'allowed_ticket_types,tags',
     };
 
-    const {tagFilter, isAccepted, isSent, allowedTicketTypesIds} = filters;
-
-    if(tagFilter && tagFilter.length > 0) {
-        filter.push('tags_id=='+tagFilter.map(e => e.id).reduce(
-            (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt,
-            ''
-          ));
-    }
-
-    if(term){
-        const escapedTerm = escapeFilterValue(term);
-        filter.push(`email=@${escapedTerm},first_name@@${escapedTerm},last_name=@${escapedTerm},full_name@@${escapedTerm}`);
-    }
-
-    if(isAccepted){
-        filter.push(`is_accepted==${isAccepted}`);
-    }
-
-    if(isSent){
-        filter.push(`is_sent==${isSent}`);
-    }
-
-    if(allowedTicketTypesIds && allowedTicketTypesIds.length > 0){
-        filter.push('ticket_types_id==' + allowedTicketTypesIds.join('||'));
-    }
+    const filter = parseFilters(filters, term);    
 
     if(filter.length > 0){
        params['filter[]'] = filter;
@@ -141,36 +117,11 @@ export const exportInvitationsCSV = (term, order, orderDir, filters = {}) => asy
     const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
     const filename = currentSummit.name + '-invitations.csv';
-    const {tagFilter, isAccepted, isSent, allowedTicketTypesIds} = filters;
-    const filter = [];
+    const filter = parseFilters(filters, term);
 
     const params = {
         access_token : accessToken
     };
-
-    if(term){
-        const escapedTerm = escapeFilterValue(term);
-        filter.push(`email=@${escapedTerm},first_name@@${escapedTerm},last_name=@${escapedTerm},full_name@@${escapedTerm}`);
-    }
-
-    if(isAccepted){
-        filter.push(`is_accepted==${isAccepted}`);
-    }
-
-    if(isSent){
-        filter.push(`is_sent==${isSent}`);
-    }
-
-    if(allowedTicketTypesIds && allowedTicketTypesIds.length > 0){
-        filter.push('ticket_types_id==' + allowedTicketTypesIds.join('||'));
-    }
-
-    if(tagFilter && tagFilter.length > 0) {
-        filter.push('tags_id=='+tagFilter.map(e => e.id).reduce(
-            (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt,
-            ''
-          ));
-    }
 
     if(filter.length > 0){
         params['filter[]'] = filter;
@@ -354,41 +305,17 @@ const normalizeEntity = (entity) => {
 };
 
 export const sendEmails = (currentFlowEvent, selectedAll = false , selectedInvitationsIds = [],
-                          term = null,  isAccepted = null, isSent = null, allowedTicketTypesIds = [], tagFilter = []) => async (dispatch, getState) => {
+                          term = null, filters = {}) => async (dispatch, getState) => {
 
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
 
-    const filter = [];
+    const filter = parseFilters(filters, term);
 
     const params = {
         access_token : accessToken,
     };
-
-    if(term){
-        const escapedTerm = escapeFilterValue(term);
-        filter.push(`email=@${escapedTerm},first_name=@${escapedTerm},last_name=@${escapedTerm}`);
-    }
-
-    if(isAccepted != null){
-        filter.push(`is_accepted==${isAccepted}`);
-    }
-
-    if(isSent !=null ){
-        filter.push(`is_sent==${isSent}`);
-    }
-
-    if(allowedTicketTypesIds.length > 0){
-        filter.push('ticket_types_id==' + allowedTicketTypesIds.join('||'));
-    }
-
-    if(tagFilter.length > 0) {
-        filter.push('tags_id=='+tagFilter.map(e => e.id).reduce(
-            (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt,
-            ''
-          ));
-    }
 
     if(filter.length > 0){
         params['filter[]'] = filter;
@@ -424,4 +351,35 @@ export const sendEmails = (currentFlowEvent, selectedAll = false , selectedInvit
             dispatch(stopLoading());
             return payload;
         });
+}
+
+const parseFilters = (filters, term = null) => {
+
+    const filter = [];
+
+    if(filters.hasOwnProperty('isAccepted') && filters.isAccepted){
+        filter.push(`is_accepted==${filters.isAccepted}`);
+    }
+
+    if(filters.hasOwnProperty('isSent') && filters.isSent){
+        filter.push(`is_sent==${filters.isSent}`);
+    }
+
+    if(filters.allowedTicketTypesIds && filters.allowedTicketTypesIds.length > 0){
+        filter.push('ticket_types_id==' + filters.allowedTicketTypesIds.join('||'));
+    }
+
+    if(filters.tagFilter && filters.tagFilter.length > 0) {
+        filter.push('tags_id=='+filters.tagFilter.map(e => e.id).reduce(
+            (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt,
+            ''
+          ));
+    }
+
+    if(term){
+        const escapedTerm = escapeFilterValue(term);
+        filter.push(`email=@${escapedTerm},first_name@@${escapedTerm},last_name=@${escapedTerm},full_name@@${escapedTerm}`);
+    }
+
+    return checkOrFilter(filters, filter);
 }

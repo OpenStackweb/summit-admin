@@ -32,7 +32,7 @@ import {
     fetchErrorHandler
 } from "openstack-uicore-foundation/lib/utils/actions";
 import {epochToMomentTimeZone} from "openstack-uicore-foundation/lib/utils/methods";
-import {getAccessTokenSafely} from '../utils/methods';
+import {checkOrFilter, getAccessTokenSafely, isNumericString} from '../utils/methods';
 import {getQAUsersBySummitEvent} from "./user-chat-roles-actions";
 import {getSummitEventAuditLog} from "./audit-log-actions";
 
@@ -75,20 +75,7 @@ export const getEvents = (term = null, page = 1, perPage = 10, order = 'id', ord
 
     dispatch(startLoading());
 
-    const filter = parseFilters(filters);
-
-    if (term) {
-        const escapedTerm = escapeFilterValue(term);
-        let searchString = `title=@${escapedTerm},` +
-            `abstract=@${escapedTerm},` +
-            `speaker_title=@${escapedTerm}`;
-
-        if (parseInt(term)) {
-            searchString += `,id==${parseInt(term)}`;
-        }
-
-        filter.push(searchString);
-    }
+    const filter = parseFilters(filters, term);    
 
     const params = {
         expand: 'speakers,type,created_by,track,sponsors,selection_plan,location,tags,media_uploads,media_uploads.media_upload_type',
@@ -720,18 +707,7 @@ export const exportEvents = (term = null, order = 'id', orderDir = 1, extraFilte
         access_token: accessToken
     };
 
-    const filter = parseFilters(extraFilters);
-
-    if (term) {
-        const escapedTerm = escapeFilterValue(term);
-        let searchString = `title=@${escapedTerm},abstract=@${escapedTerm},speaker_title=@${escapedTerm}`;
-
-        if (parseInt(term)) {
-            searchString += `,id==${parseInt(term)}`;
-        }
-
-        filter.push(searchString);
-    }
+    const filter = parseFilters(extraFilters, term);    
 
     if (filter.length > 0) {
         params['filter[]'] = filter;
@@ -808,7 +784,7 @@ export const importEventsCSV = (file, send_speaker_email) => async (dispatch, ge
         });
 };
 
-const parseFilters = (filters) => {
+const parseFilters = (filters, term = null) => {
     const filter = [];
 
     if (filters.hasOwnProperty('event_type_capacity_filter') && Array.isArray(filters.event_type_capacity_filter)
@@ -894,8 +870,7 @@ const parseFilters = (filters) => {
 
     if (filters.start_date_filter && filters.start_date_filter.some(e => e !== null)) {
         if(filters.start_date_filter.every(e => e !== null )) {
-            filter.push(`start_date>=${filters.start_date_filter[0]}`);
-            filter.push(`start_date<=${filters.start_date_filter[1]}`);
+            filter.push(`start_date[]${filters.start_date_filter[0]}&&${filters.start_date_filter[1]}`);
         } else {
             filter.push(`
             ${filters.start_date_filter[0] !== null ? 
@@ -907,8 +882,8 @@ const parseFilters = (filters) => {
 
     if (filters.end_date_filter && filters.end_date_filter.some(e => e !== null)) {
         if(filters.end_date_filter.every(e => e !== null )) {
-            filter.push(`end_date>=${filters.end_date_filter[0]}`);
-            filter.push(`end_date<=${filters.end_date_filter[1]}`);
+            // between
+            filter.push(`end_date[]${filters.end_date_filter[0]}&&${filters.end_date_filter[1]}`);
         } else {
             filter.push(`
             ${filters.end_date_filter[0] !== null ? 
@@ -919,12 +894,10 @@ const parseFilters = (filters) => {
     }
 
     if (filters.duration_filter) {
-
         // multiply values to send the minutes in seconds
-
         if (Array.isArray(filters.duration_filter)) {
-            filter.push(`duration>=${filters.duration_filter[0] * 60}`);
-            filter.push(`duration<=${filters.duration_filter[1] * 60}`);
+            // between
+            filter.push(`duration[]${filters.duration_filter[0] * 60}&&${filters.duration_filter[1] * 60}`);
         } else {
             filter.push(`duration${filters.duration_filter.replace(/\d/g, '')}${filters.duration_filter.replace(/\D/g, '') * 60}`);
         }
@@ -932,12 +905,11 @@ const parseFilters = (filters) => {
 
     if (filters.speakers_count_filter) {
         if (Array.isArray(filters.speakers_count_filter)) {
-            filter.push(`speakers_count>=${filters.speakers_count_filter[0]}`);
-            filter.push(`speakers_count<=${filters.speakers_count_filter[1]}`);
+            // between
+            filter.push(`speakers_count[]]${filters.speakers_count_filter[0]}&&${filters.speakers_count_filter[1]}`);
         } else {
             filter.push(`speakers_count${filters.speakers_count_filter}`)
         }
-
     }
 
     if (filters.hasOwnProperty('submitters') && Array.isArray(filters.submitters)
@@ -1039,7 +1011,20 @@ const parseFilters = (filters) => {
         ));
     }
 
-    return filter;
+    if (term) {
+        const escapedTerm = escapeFilterValue(term);
+        let searchString = `title=@${escapedTerm},` +
+            `abstract=@${escapedTerm},` +
+            `speaker_title=@${escapedTerm}`;
+
+        if (isNumericString(term)) {
+            searchString += `,id==${term}`;
+        }
+
+        filter.push(searchString);
+    }
+
+    return checkOrFilter(filters, filter);
 }
 
 
