@@ -13,10 +13,10 @@
 import React from 'react';
 import T from 'i18n-react/dist/i18n-react';
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css';
-import EmailTemplateInput from "../inputs/email-template-input";
-import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
+import EmailTemplateInput from "../../inputs/email-template-input";
+import {isEmpty, scrollToError, shallowEqual} from "../../../utils/methods";
 import {Input} from "openstack-uicore-foundation/lib/components";
-
+import TemplateSchemaTree from "./template-schema-tree";
 
 class EmailFlowEventForm extends React.Component {
     constructor(props) {
@@ -105,6 +105,13 @@ class EmailFlowEventForm extends React.Component {
                            onChange={this.handleChange}
                            className="form-control"
                        />
+                    </div>
+                </div>
+
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <label>{T.translate("edit_email_flow_event.variables")}</label>
+                        <TemplateSchemaTree template_schema = {entity.template_schema} />
                     </div>
                 </div>
 

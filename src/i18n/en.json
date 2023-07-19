@@ -2162,6 +2162,7 @@
     "event_type": "Activity Type",
     "saved": "Email template Flow saved successfully.",
     "recipient": "To",
+    "variables": "Available Variables",
     "placeholders": {
       "select_template": "Select template",
       "recipient": "Optional Recipient"

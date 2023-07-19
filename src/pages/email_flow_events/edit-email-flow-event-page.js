@@ -18,6 +18,7 @@ import T from "i18n-react/dist/i18n-react";
 import EmailFlowEventForm from '../../components/forms/email-flow-event-form';
 import { getSummitById }  from '../../actions/summit-actions';
 import {getEmailFlowEvent, resetEmailFlowEventForm, saveEmailFlowEvent} from '../../actions/email-flows-events-actions';
+import '../../styles/edit-email-flow-event-page.less';
 
 class EditEmailFlowEventPage extends React.Component {
 

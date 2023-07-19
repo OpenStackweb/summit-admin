@@ -82,7 +82,7 @@ class EmailFlowEventListPage extends React.Component {
                 <div className={'row'}>
                     <div className={'col-md-6'}>
                         <FreeTextSearch
-                            value={term}
+                            value={term ?? ''}
                             placeholder={T.translate("email_flow_event_list.placeholders.search")}
                             onSearch={this.handleSearch}
                         />

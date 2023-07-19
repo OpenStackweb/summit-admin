@@ -27,6 +27,7 @@ export const DEFAULT_ENTITY = {
     event_type_name : '',
     summit_id : 0,
     recipient: '',
+    template_schema: null
 };
 
 const DEFAULT_STATE = {
