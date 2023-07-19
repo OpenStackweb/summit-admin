@@ -14,7 +14,7 @@ import React from 'react';
 import T from 'i18n-react/dist/i18n-react';
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css';
 import EmailTemplateInput from "../../inputs/email-template-input";
-import {isEmpty, scrollToError, shallowEqual} from "../../../utils/methods";
+import {hasErrors, isEmpty, scrollToError, shallowEqual, validateEmail} from "../../../utils/methods";
 import {Input} from "openstack-uicore-foundation/lib/components";
 import TemplateSchemaTree from "./template-schema-tree";
 
@@ -59,17 +59,30 @@ class EmailFlowEventForm extends React.Component {
         }
 
         errors[id] = '';
+
+        // this is an array
+        if(id === 'recipients'){
+            value = value.split(',').map(email => email.trim());
+            // then validate emails
+            value.forEach((email) =>{
+                if(!validateEmail(email)){
+                    errors[id] = `email ${email} is not valid`;
+                }
+            });
+        }
         entity[id] = value;
         this.setState({entity: entity, errors: errors});
     }
 
     handleSubmit(ev) {
+        const {errors} = this.state;
         ev.preventDefault();
+        if(hasErrors('recipients', errors) !== '') return;
         this.props.onSubmit(this.state.entity);
     }
 
     render() {
-        const {entity} = this.state;
+        const {entity, errors} = this.state;
 
         return (
             <form className="email-flow-event-form">
@@ -100,10 +113,11 @@ class EmailFlowEventForm extends React.Component {
                     <div className="col-md-12">
                         <label>{T.translate("edit_email_flow_event.recipient")}</label>
                        <Input
-                           id="recipient"
-                           value={entity.recipient}
+                           id="recipients"
+                           value={entity.recipients.join(",")}
                            onChange={this.handleChange}
                            className="form-control"
+                           error={hasErrors('recipients', errors)}
                        />
                     </div>
                 </div>
