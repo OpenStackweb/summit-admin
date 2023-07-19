@@ -21,6 +21,21 @@ import { getSummitById }  from '../../actions/summit-actions';
 import { getPromocodes, getPromocodeMeta, deletePromocode, exportPromocodes, importPromoCodesCSV } from "../../actions/promocode-actions";
 import { trim } from '../../utils/methods'
 
+const fieldNames = [
+    { columnKey: 'class_name', value: "type" },
+    { columnKey: 'description', value: "description", title: true, render:(row) => {
+        return row.description?.length > 50 ? 
+        <span title={row.description}>
+            {`${row.description.slice(0,50)}...`}
+        </span>
+            : row.description 
+    }},
+    { columnKey: 'tags', value: "tags" },
+    { columnKey: 'owner_email', value: "owner_email" },
+    { columnKey: 'email_sent', value: "emailed" },
+    { columnKey: 'creator', value: "creator" }
+]
+
 class PromocodeListPage extends React.Component {
 
     constructor(props) {
@@ -38,17 +53,24 @@ class PromocodeListPage extends React.Component {
         this.handleNewPromocode = this.handleNewPromocode.bind(this);
         this.handleExport = this.handleExport.bind(this);
         this.handleImport = this.handleImport.bind(this);
+        this.handleColumnsChange = this.handleColumnsChange.bind(this);
+        this.handleDDLSortByLabel = this.handleDDLSortByLabel.bind(this);
 
         this.state = {
             showImportModal: false,
             importFile:null,
+            selectedColumns: [],            
         }
     }
 
     componentDidMount() {
-        const {currentSummit} = this.props;
+        const {currentSummit, term , currentPage , extraColumns, perPage , order , orderDir , type} = this.props;
+        this.setState({
+            ...this.state, 
+            selectedColumns: extraColumns,
+        });
         if(currentSummit) {
-            this.props.getPromocodes();
+            this.props.getPromocodes(term , currentPage , perPage , order , orderDir , type, extraColumns);
         }
     }
 
@@ -99,23 +121,27 @@ class PromocodeListPage extends React.Component {
 
     handlePageChange(page) {
         const {term, order, orderDir, perPage, type} = this.props;
-        this.props.getPromocodes(term, page, perPage, order, orderDir, type);
+        const {selectedColumns} = this.state;
+        this.props.getPromocodes(term, page, perPage, order, orderDir, type, selectedColumns);
     }
 
     handleTypeChange(type) {
         const {term, order, orderDir, perPage, page} = this.props;
-        this.props.getPromocodes(term, page, perPage, order, orderDir, type.target.value);
+        const {selectedColumns} = this.state;
+        this.props.getPromocodes(term, page, perPage, order, orderDir, type.target.value, selectedColumns);
     }
 
     handleSort(index, key, dir, func) {
         const {term, page, perPage, type} = this.props;
         key = (key === 'name') ? 'last_name' : key;
-        this.props.getPromocodes(term, page, perPage, key, dir, type);
+        const {selectedColumns} = this.state;
+        this.props.getPromocodes(term, page, perPage, key, dir, type, selectedColumns);
     }
 
     handleSearch(term) {
         const {order, orderDir, page, perPage, type} = this.props;
-        this.props.getPromocodes(term, page, perPage, order, orderDir, type);
+        const {selectedColumns} = this.state;
+        this.props.getPromocodes(term, page, perPage, order, orderDir, type, selectedColumns);
     }
 
     handleNewPromocode(ev) {
@@ -123,26 +149,32 @@ class PromocodeListPage extends React.Component {
         history.push(`/app/summits/${currentSummit.id}/promocodes/new`);
     }
 
+    handleColumnsChange(ev) {
+        const {value} = ev.target;                
+        this.setState({...this.state, selectedColumns: value})
+    }
+
+    handleDDLSortByLabel(ddlArray) {
+        return ddlArray.sort((a, b) => a.label.localeCompare(b.label));
+    }
+
     render(){
         const {currentSummit, promocodes, lastPage, currentPage, term, order, orderDir, totalPromocodes, allTypes, allClasses, type} = this.props;
         const {showImportModal} = this.state;
 
-        const columns = [
+        let columns = [
             { columnKey: 'id', value: T.translate("promocode_list.id"), sortable: true },
             { columnKey: 'code', value: T.translate("promocode_list.code"), sortable: true },
-            { columnKey: 'class_name', value: T.translate("promocode_list.type") },
-            { columnKey: 'description', value: T.translate("promocode_list.description"), title: true, render:(row) => {
-                return row.description?.length > 50 ? 
-                <span title={row.description}>
-                    {`${row.description.slice(0,50)}...`}
-                </span>
-                 : row.description 
-            }},
-            /*{ columnKey: 'owner', value: T.translate("promocode_list.owner") },*/
-            { columnKey: 'owner_email', value: T.translate("promocode_list.owner_email") },
-            { columnKey: 'email_sent', value: T.translate("promocode_list.emailed") },
-            { columnKey: 'redeemed', value: T.translate("promocode_list.redeemed") },
-            { columnKey: 'creator', value: T.translate("promocode_list.creator") },
+            { columnKey: 'redeemed', value: T.translate("promocode_list.redeemed") }
+        ];
+
+        const ddl_columns = [            
+            { value: 'class_name', label: T.translate("promocode_list.type") },
+            { value: 'description', label: T.translate("promocode_list.description") },
+            { value: 'owner_email', label: T.translate("promocode_list.owner_email") },
+            { value: 'tags', label: T.translate("promocode_list.tags") },
+            { value: 'email_sent', label: T.translate("promocode_list.emailed") },
+            { value: 'creator', label: T.translate("promocode_list.creator") }
         ];
 
         const table_options = {
@@ -153,6 +185,26 @@ class PromocodeListPage extends React.Component {
                 delete: { onClick: this.handleDelete, display: this.isNotRedeemed }
             }
         }
+
+        let showColumns = fieldNames
+        .filter(f => this.state.selectedColumns.includes(f.columnKey) )
+        .map( f2 => {
+            let c = {
+                columnKey: f2.columnKey,
+                value: T.translate(`promocode_list.${f2.value}`),
+                sortable: f2.sortable,
+            }
+            // optional fields
+            if(f2.hasOwnProperty('title'))
+                c = {...c, title: f2.title}
+
+            if(f2.hasOwnProperty('render'))
+                c = {...c, render: f2.render}
+
+            return c;
+        });
+
+        columns = [...columns, ...showColumns];
 
         if(!currentSummit.id) return(<div />);
 
@@ -194,6 +246,23 @@ class PromocodeListPage extends React.Component {
                         <button className="btn btn-default" onClick={() => this.setState({showImportModal:true})}>
                             {T.translate("promocode_list.import")}
                         </button>
+                    </div>
+                </div>
+
+                <hr/>
+
+                <div className={'row'} style={{marginBottom: 15}}>
+                    <div className={'col-md-12'}>
+                        <label>{T.translate("event_list.select_fields")}</label>
+                        <Dropdown
+                            id="select_fields"
+                            placeholder={T.translate("event_list.placeholders.select_fields")}
+                            value={this.state.selectedColumns}
+                            onChange={this.handleColumnsChange}
+                            options={this.handleDDLSortByLabel(ddl_columns)}
+                            isClearable={true}
+                            isMulti={true}
+                        />
                     </div>
                 </div>
 

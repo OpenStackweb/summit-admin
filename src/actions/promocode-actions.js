@@ -79,7 +79,7 @@ export const getPromocodeMeta = () => async (dispatch, getState) => {
     );
 };
 
-export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'code', orderDir = 1, type = 'ALL' ) => async (dispatch, getState) => {
+export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'code', orderDir = 1, type = 'ALL', extraColumns = [] ) => async (dispatch, getState) => {
 
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
@@ -120,7 +120,7 @@ export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'cod
         createAction(RECEIVE_PROMOCODES),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes`,
         authErrorHandler,
-        {page, perPage, order, orderDir, type, term}
+        {page, perPage, order, orderDir, type, term, extraColumns}
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }

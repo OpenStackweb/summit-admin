@@ -33,7 +33,8 @@ const DEFAULT_STATE = {
     perPage         : 10,
     totalPromocodes : 0,
     allTypes        : ['ALL'],
-    allClasses      : ['ALL']
+    allClasses      : ['ALL'],
+    extraColumns    : []
 };
 
 const promocodeListReducer = (state = DEFAULT_STATE, action) => {
@@ -44,9 +45,9 @@ const promocodeListReducer = (state = DEFAULT_STATE, action) => {
             return DEFAULT_STATE;
         }
         case REQUEST_PROMOCODES: {
-            let {order, orderDir, type, term} = payload;
+            let {order, orderDir, type, term, extraColumns} = payload;
 
-            return {...state, order, orderDir, type, term }
+            return {...state, order, orderDir, type, term, extraColumns }
         }
         case RECEIVE_PROMOCODE_META: {
             let types = [...DEFAULT_STATE.allTypes];
@@ -109,6 +110,7 @@ const promocodeListReducer = (state = DEFAULT_STATE, action) => {
                     description: p.description ? p.description : 'N/A',
                     code: p.code,
                     type: p.type,
+                    tags: p.tags && p.tags.length > 0 ? p.tags.reduce((accumulator, t) => accumulator + (accumulator !== '' ? ', ' : '') + t.tag, '') : 'N/A',
                     owner: owner,
                     owner_email: owner_email,
                     email_sent: (p.email_sent ? 'Yes' : 'No'),
