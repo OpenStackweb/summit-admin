@@ -363,11 +363,10 @@ const normalizeEntity = (entity) => {
     normalizedEntity.allowed_tags = entity.allowed_tags.map(t => t.tag);
     normalizedEntity.allowed_access_levels = entity.allowed_access_levels.map(al => al.id);
 
-    if (normalizedEntity.proposed_schedule_transition_time)
-        normalizedEntity.proposed_schedule_transition_time = parseInt(entity.proposed_schedule_transition_time);
+    normalizedEntity.proposed_schedule_transition_time = normalizedEntity.proposed_schedule_transition_time
+        ? parseInt(entity.proposed_schedule_transition_time) : null;
 
     return normalizedEntity;
-
 };
 
 /***********************************  CATEGORY GROUPS ***************************************************/

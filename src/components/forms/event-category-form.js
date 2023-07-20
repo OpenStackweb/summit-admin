@@ -313,7 +313,6 @@ class EventCategoryForm extends React.Component {
                     </div>
                 </div>
                 }
-
                 <Panel show={showSection === 'proposed_schedule_settings'} title={T.translate("edit_event_category.proposed_schedule_settings.title")}
                     handleClick={this.toggleSection.bind(this, 'proposed_schedule_settings')}>
                     <div className="row form-group">
@@ -326,6 +325,8 @@ class EventCategoryForm extends React.Component {
                                 onChange={this.handleChange}
                                 placeholder={T.translate("edit_event_category.proposed_schedule_settings.placeholders.transition_time")}
                                 className="form-control"
+                                min="1"
+                                max="240"
                                 error={hasErrors('proposed_schedule_transition_time', errors)}
                             />
                         </div>
