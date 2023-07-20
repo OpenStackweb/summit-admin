@@ -169,8 +169,11 @@ export const adjustEventDuration = (evt, entity) => {
     let adjustedEntity = {...entity};
     let {value, id, type} = evt.target;
 
-    if (type === 'datetime') {        
-        value = value.valueOf() / 1000;
+    if (type === 'datetime') {
+        const empty = moment(0);
+        if(value.valueOf() === empty.valueOf()) value = null;
+        if(value !== null)
+             value = value.valueOf() / 1000;
         // if we have both dates, update duration
         if (id === 'start_date' && adjustedEntity.end_date) {
             adjustedEntity.duration = adjustedEntity.end_date > value ? adjustedEntity.end_date - value : 0;
