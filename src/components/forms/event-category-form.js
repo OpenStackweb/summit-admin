@@ -337,6 +337,10 @@ class EventCategoryForm extends React.Component {
                   <div>
                       <hr/>
                       <div className="row">
+                          <div className="col-md-6">
+                              <label> {T.translate("edit_event_category.subtracks")}</label>
+                              &nbsp;(<i>Nested tracks on schedule filter widget</i>)
+                          </div>
                           <div className="col-md pull-right btn-group subtrackddlgrp">
                               <TrackDropdown
                                 onChange={ev => this.setState({subtrack: ev.target.value})}
