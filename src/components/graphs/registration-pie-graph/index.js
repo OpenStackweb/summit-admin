@@ -109,7 +109,11 @@ const PieGraph = ({title, subtitle = null, legendTitle= null, data, labels, colo
       </div>
       }
       <div>
-        <Pie data={chartData} {...graphSize} options={chartOptions} />
+        {data.length === 0 && labels.length === 0 ?
+          <div className={styles.noData}>NO DATA</div>
+          :
+          <Pie data={chartData} {...graphSize} options={chartOptions} />
+        }
       </div>
     </div>
   );
