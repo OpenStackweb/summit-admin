@@ -1,6 +1,6 @@
 import{ VALIDATE } from 'openstack-uicore-foundation/lib/utils/actions';
 import{ LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
-import { SET_CURRENT_SUMMIT, REQUEST_SUMMIT,RECEIVE_SUMMIT, UPDATE_SUMMIT, SUMMIT_ADDED, RESET_SUMMIT_FORM, SUMMIT_LOGO_ATTACHED, SUMMIT_LOGO_DELETED, CLEAR_SUMMIT } from '../../actions/summit-actions';
+import { SET_CURRENT_SUMMIT, REQUEST_SUMMIT,RECEIVE_SUMMIT, UPDATE_SUMMIT, SUMMIT_ADDED, RESET_SUMMIT_FORM, SUMMIT_LOGO_ATTACHED, SUMMIT_LOGO_DELETED, CLEAR_SUMMIT, REGISTRATION_KEY_GENERATED } from '../../actions/summit-actions';
 import { EVENT_CATEGORY_UPDATED, EVENT_CATEGORY_ADDED, EVENT_CATEGORY_DELETED, EVENT_CATEGORIES_SEEDED, UNLINK_SUBTRACK } from '../../actions/event-category-actions';
 import { EVENT_TYPE_UPDATED, EVENT_TYPE_ADDED, EVENT_TYPE_DELETED, EVENT_TYPES_SEEDED } from '../../actions/event-type-actions';
 import {
@@ -122,6 +122,7 @@ export const DEFAULT_ENTITY = {
     registration_send_ticket_as_pdf_attachment_on_ticket_email : false,
     registration_allow_automatic_reminder_emails : true,
     registration_send_order_email_automatically: true,
+    qr_codes_enc_key: 'N/A',
     speaker_confirmation_default_page_url: '',
     marketing_site_oauth2_client_id:null,
     marketing_site_oauth2_client_scopes: null,
@@ -206,6 +207,10 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
         case SUMMIT_LOGO_DELETED: {
             let {summitId} = payload;
             return {...state, currentSummit: {...state.currentSummit, logo: null} };
+        }
+        case REGISTRATION_KEY_GENERATED: {
+            const {qr_codes_enc_key} = payload.response;
+            return {...state, currentSummit: {...state.currentSummit, qr_codes_enc_key} };
         }
         case EVENT_TYPE_UPDATED: {
             let { response } = payload;

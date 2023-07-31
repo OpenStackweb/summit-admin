@@ -45,6 +45,7 @@ export const SUMMIT_DELETED           = 'SUMMIT_DELETED';
 export const SUMMIT_LOGO_ATTACHED     = 'SUMMIT_LOGO_ATTACHED';
 export const SUMMIT_LOGO_DELETED      = 'SUMMIT_LOGO_DELETED';
 export const CLEAR_SUMMIT             = 'CLEAR_SUMMIT';
+export const REGISTRATION_KEY_GENERATED= 'REGISTRATION_KEY_GENERATED';
 
 export const getSummitById = (summitId) => async (dispatch, getState) => {
 
@@ -365,6 +366,33 @@ export const savePrintAppMarketingSettings = (printAppMarketingSettings) => asyn
 
 }
 
+/**
+ * @returns {function(*, *): Promise<unknown[]>}
+ */
+export const generateEncryptionKey = () => async (dispatch, getState) => {
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token : accessToken
+    };
+
+    putRequest(
+      null,
+      createAction(REGISTRATION_KEY_GENERATED),
+      `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/qr-codes/all/enc-key`,
+      null,
+      authErrorHandler
+    )(params)(dispatch)
+      .then(() => {
+          dispatch(stopLoading());
+      });
+
+}
+
 
 const normalizeEntity = (entity) => {
     const normalizedEntity = {...entity};
@@ -396,6 +424,7 @@ const normalizeEntity = (entity) => {
     delete(normalizedEntity['timestamp']);
     delete(normalizedEntity['tracks']);
     delete(normalizedEntity['wifi_connections']);
+    delete(normalizedEntity['qr_codes_enc_key']);
 
     if (!normalizedEntity['registration_allowed_refund_request_till_date']) normalizedEntity['registration_allowed_refund_request_till_date'] = null;
     if (!normalizedEntity['registration_begin_date']) normalizedEntity['registration_begin_date'] = null;

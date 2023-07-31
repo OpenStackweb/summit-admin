@@ -17,7 +17,7 @@ import T from "i18n-react/dist/i18n-react";
 import Swal from "sweetalert2";
 import Restrict from '../../routes/restrict'
 import SummitForm from '../../components/forms/summit-form';
-import { getSummitById, resetSummitForm, saveSummit, attachLogo, deleteLogo, saveRegistrationLiteMarketingSettings, savePrintAppMarketingSettings }  from '../../actions/summit-actions';
+import { getSummitById, resetSummitForm, saveSummit, attachLogo, deleteLogo, saveRegistrationLiteMarketingSettings, savePrintAppMarketingSettings, generateEncryptionKey }  from '../../actions/summit-actions';
 import { deleteSelectionPlan, resetSelectionPlanForm } from '../../actions/selection-plan-actions';
 import { deleteRoomBookingAttributeType } from "../../actions/room-booking-actions";
 import {addHelpMember, removeHelpMember} from "../../actions/user-chat-roles-actions"
@@ -95,6 +95,7 @@ class EditSummitPage extends React.Component {
                     onDeleteHelpMember={this.props.removeHelpMember}
                     saveRegistrationLiteMarketingSettings={this.props.saveRegistrationLiteMarketingSettings}
                     savePrintAppMarketingSettings={this.props.savePrintAppMarketingSettings}
+                    generateEncryptionKey={this.props.generateEncryptionKey}
                 />
             </div>
         )
@@ -123,6 +124,7 @@ export default Restrict(connect (
         removeHelpMember,
         resetSelectionPlanForm,
         saveRegistrationLiteMarketingSettings,
-        savePrintAppMarketingSettings
+        savePrintAppMarketingSettings,
+        generateEncryptionKey
     }
 )(EditSummitPage), 'summit-edit');

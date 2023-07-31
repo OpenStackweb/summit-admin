@@ -269,6 +269,11 @@ class SummitForm extends React.Component {
         this.setState({...this.state, printAppMarketingSettings: printAppMarketingSettings, errors: errors});
     }
 
+    handleGenerateEncryptionKey = ev => {
+        ev.preventDefault();
+        this.props.generateEncryptionKey();
+    }
+
     render() {
         const {entity, showSection, regLiteMarketingSettings, printAppMarketingSettings} = this.state;
         const {timezones, onSPlanDelete, onAttributeTypeDelete} = this.props;
@@ -718,6 +723,15 @@ class SummitForm extends React.Component {
                                 value={entity.speaker_confirmation_default_page_url}
                                 onChange={this.handleChange}
                             />
+                        </div>
+                    </div>
+                    <div className="row form-group">
+                        <div className="col-md-6">
+                            <label> {T.translate("edit_summit.registration_encryption_key")}</label><br/>
+                            <div className="pull-left">{entity.qr_codes_enc_key}</div>
+                            <button className="btn btn-primary btn-xs pull-left left-space" onClick={this.handleGenerateEncryptionKey}>
+                                {T.translate("edit_summit.generate_encryption_key")}
+                            </button>
                         </div>
                     </div>
                     <div className="row form-group">

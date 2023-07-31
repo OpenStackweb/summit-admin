@@ -332,6 +332,8 @@
     "registration_send_order_email_automatically": "Send Order Confirmation Email Automatically?",
     "allow_update_attendee_extra_questions": "Allow Attendee to update extra questions?",
     "registration_allowed_refund_request_till_date": "Allow Refund Request Until",
+    "registration_encryption_key": "Encryption Key",
+    "generate_encryption_key": "Generate Key",
     "reg_lite_company_input_placeholder": "Company Text Input Placeholder",
     "reg_lite_company_input_placeholder_info": "This placeholder will be used for the company text input field on the registration lite.",
     "reg_lite_allow_promo_codes": "Allow Promo Codes on Registration Lite ?",
