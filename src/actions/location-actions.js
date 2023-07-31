@@ -32,9 +32,11 @@ import {
     authErrorHandler
 } from 'openstack-uicore-foundation/lib/utils/actions';
 import {getAccessTokenSafely} from '../utils/methods';
+import {EVENT_CATEGORIES_SEEDED} from "./event-category-actions";
 
 export const REQUEST_LOCATIONS          = 'REQUEST_LOCATIONS';
 export const RECEIVE_LOCATIONS          = 'RECEIVE_LOCATIONS';
+export const LOCATIONS_SEEDED          = 'LOCATIONS_SEEDED';
 export const RECEIVE_LOCATION           = 'RECEIVE_LOCATION';
 export const RECEIVE_LOCATION_META      = 'RECEIVE_LOCATION_META';
 export const RESET_LOCATION_FORM        = 'RESET_LOCATION_FORM';
@@ -129,6 +131,27 @@ export const getLocations = ( ) => async (dispatch, getState) => {
             dispatch(stopLoading());
         }
     );
+};
+
+export const copyLocations = (fromSummitId) => async (dispatch, getState) => {
+    const {currentSummitState} = getState();
+    const accessToken = await getAccessTokenSafely();
+    const {currentSummit} = currentSummitState;
+
+    dispatch(startLoading());
+
+    const params = {access_token: accessToken};
+
+    postRequest(
+        null,
+        createAction(LOCATIONS_SEEDED),
+        `${window.API_BASE_URL}/api/v1/summits/${fromSummitId}/locations/copy/${currentSummit.id}`,
+        null,
+        authErrorHandler
+    )(params)(dispatch)
+        .then(() => {
+            dispatch(stopLoading());
+        });
 };
 
 export const getLocation = (locationId) => async (dispatch, getState) => {

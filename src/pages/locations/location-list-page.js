@@ -11,48 +11,31 @@
  * limitations under the License.
  **/
 
-import React from 'react'
+import React, {useEffect} from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import Swal from "sweetalert2";
-import { SortableTable } from 'openstack-uicore-foundation/lib/components';
+import {SortableTable, SummitDropdown} from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getLocations, deleteLocation, exportLocations, updateLocationOrder } from "../../actions/location-actions";
+import { getLocations, deleteLocation, exportLocations, updateLocationOrder, copyLocations } from "../../actions/location-actions";
 
-class LocationListPage extends React.Component {
+const LocationListPage = ({currentSummit, history, locations, totalLocations, allSummits, ...props}) => {
+    const summits = allSummits.filter(s => s.id !== currentSummit.id);
 
-    constructor(props) {
-        super(props);
-
-        this.handleEdit = this.handleEdit.bind(this);
-        this.handleDelete = this.handleDelete.bind(this);
-        this.handleNewLocation = this.handleNewLocation.bind(this);
-        this.handleExport = this.handleExport.bind(this);
-
-        this.state = {}
-
-    }
-
-    componentDidMount() {
-        const {currentSummit} = this.props;
+    useEffect(() => {
         if(currentSummit) {
-            this.props.getLocations();
+            props.getLocations();
         }
-    }
+    }, [currentSummit?.id]);
 
-    handleEdit(locationId) {
-        const {currentSummit, history} = this.props;
+    if(!currentSummit.id) return(<div />);
+
+    const handleEdit = (locationId) => {
         history.push(`/app/summits/${currentSummit.id}/locations/${locationId}`);
     }
 
-    handleExport(ev) {
-        ev.preventDefault();
-        this.props.exportLocations();
-    }
-
-    handleDelete(locationId) {
-        const {deleteLocation, locations} = this.props;
-        let location = locations.find(p => p.id === locationId);
+    const handleDelete = (locationId) => {
+        const location = locations.find(p => p.id === locationId);
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
@@ -63,75 +46,72 @@ class LocationListPage extends React.Component {
             confirmButtonText: T.translate("general.yes_delete")
         }).then(function(result){
             if (result.value) {
-                deleteLocation(locationId);
+                props.deleteLocation(locationId);
             }
         });
     }
 
-    handleNewLocation(ev) {
-        const {currentSummit, history} = this.props;
+    const handleNewLocation = (ev) => {
         history.push(`/app/summits/${currentSummit.id}/locations/new`);
     }
 
-    render(){
-        const {currentSummit, locations, totalLocations} = this.props;
+    const handleCopyLocations = (fromSummitId) => {
+        props.copyLocations(fromSummitId);
+    };
 
-        const columns = [
-            { columnKey: 'name', value: T.translate("location_list.name") },
-            { columnKey: 'class_name', value: T.translate("location_list.class_name") }
-        ];
+    const columns = [
+        { columnKey: 'name', value: T.translate("location_list.name") },
+        { columnKey: 'class_name', value: T.translate("location_list.class_name") }
+    ];
 
-        const table_options = {
-            actions: {
-                edit: { onClick: this.handleEdit },
-                delete: { onClick: this.handleDelete }
-            }
+    const table_options = {
+        actions: {
+            edit: { onClick: handleEdit },
+            delete: { onClick: handleDelete }
         }
+    }
 
-        if(!currentSummit.id) return(<div />);
+    const sortedLocations = locations.sort((a, b) => a.order - b.order);
 
-        let sortedLocations = [...locations];
-        sortedLocations.sort(
-            (a, b) => (a.order > b.order ? 1 : (a.order < b.order ? -1 : 0))
-        );
-
-        return(
-            <div className="container">
-                <h3> {T.translate("location_list.location_list")} ({totalLocations})</h3>
-                <div className={'row'}>
-                    <div className="col-md-6 col-md-offset-6 text-right">
-                        <button className="btn btn-primary right-space" onClick={this.handleNewLocation}>
-                            {T.translate("location_list.add_location")}
-                        </button>
-                        {/*<button className="btn btn-default" onClick={this.handleExport}>
-                            {T.translate("general.export")}
-                        </button>*/}
-                    </div>
+    return(
+        <div className="container">
+            <h3> {T.translate("location_list.location_list")} ({totalLocations})</h3>
+            <div className={'row'}>
+                <div className="col-md-6 col-md-offset-6 text-right">
+                    <button className="btn btn-primary right-space" onClick={handleNewLocation}>
+                        {T.translate("location_list.add_location")}
+                    </button>
+                    <SummitDropdown
+                        summits={summits}
+                        onClick={handleCopyLocations}
+                        actionLabel={T.translate("event_category_list.copy_categories")}
+                    />
                 </div>
+            </div>
 
-                {locations.length === 0 &&
+            {locations.length === 0 &&
                 <div className="no-items">{T.translate("location_list.no_items")}</div>
-                }
+            }
 
-                {locations.length > 0 &&
+            {locations.length > 0 &&
                 <div>
                     <SortableTable
                         options={table_options}
                         data={sortedLocations}
                         columns={columns}
-                        dropCallback={this.props.updateLocationOrder}
+                        dropCallback={props.updateLocationOrder}
                         orderField="order"
                     />
                 </div>
-                }
+            }
 
-            </div>
-        )
-    }
+        </div>
+    )
 }
 
-const mapStateToProps = ({ currentSummitState, currentLocationListState }) => ({
+const mapStateToProps = ({ currentSummitState, currentLocationListState, directoryState }) => ({
     currentSummit   : currentSummitState.currentSummit,
+    allSummits      : directoryState.allSummits,
     ...currentLocationListState
 })
 
@@ -142,6 +122,7 @@ export default connect (
         getLocations,
         updateLocationOrder,
         deleteLocation,
-        exportLocations
+        exportLocations,
+        copyLocations
     }
 )(LocationListPage);

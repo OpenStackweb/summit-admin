@@ -16,7 +16,8 @@ import
     RECEIVE_LOCATIONS,
     LOCATION_ORDER_UPDATED,
     REQUEST_LOCATIONS,
-    LOCATION_DELETED
+    LOCATION_DELETED,
+    LOCATIONS_SEEDED
 } from '../../actions/location-actions';
 
 import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
@@ -51,6 +52,18 @@ const locationListReducer = (state = DEFAULT_STATE, action) => {
             })
 
             return {...state, locations: locations, totalLocations: total };
+        }
+        case LOCATIONS_SEEDED: {
+            const newLocations = payload.response.data?.map(l => {
+                return {
+                    id: l.id,
+                    name: l.name,
+                    class_name: l.class_name,
+                    order: l.order
+                };
+            }) || [];
+
+            return {...state, locations: [...state.locations, ... newLocations] };
         }
         case LOCATION_ORDER_UPDATED: {
             let locations = payload.map(l => {
