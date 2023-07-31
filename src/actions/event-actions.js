@@ -65,6 +65,12 @@ export const REQUEST_EVENT_COMMENTS = 'REQUEST_EVENT_COMMENTS';
 export const RECEIVE_EVENT_COMMENTS = 'RECEIVE_EVENT_COMMENTS';
 export const CHANGE_SEARCH_TERM = 'CHANGE_SEARCH_TERM';
 
+export const ATTENDEES_EXPECTED_LEARNT = 'attendees_expected_learnt';
+export const ATTENDING_MEDIA = 'attending_media';
+export const LEVEL = 'level';
+export const SOCIAL_DESCRIPTION = 'social_description';
+
+const fieldsBoundToQuestions = [ATTENDEES_EXPECTED_LEARNT, ATTENDING_MEDIA, LEVEL, SOCIAL_DESCRIPTION];
 
 export const getEvents = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1, filters = {}, extraColumns = []) => async (dispatch, getState) => {
 
@@ -321,7 +327,7 @@ export const saveEvent = (entity, publish) => async (dispatch, getState) => {
 
     dispatch(startLoading());
 
-    const normalizedEntity = normalizeEvent(entity, type);
+    const normalizedEntity = normalizeEvent(entity, type, currentSummit);
 
     const params = {
         access_token: accessToken,
@@ -603,7 +609,19 @@ export const removeImage = (eventId) => async (dispatch, getState) => {
     );
 };
 
-export const normalizeEvent = (entity, eventTypeConfig) => {
+const normalizePresentationAllowedQuestionFields = (entity, summit) => {
+    if (!entity.selection_plan_id) return;
+ 
+    const selectionPlan = summit.selection_plans.find(sp => sp.id === entity.selection_plan_id);
+
+    fieldsBoundToQuestions.forEach(item => {
+        if (!selectionPlan.allowed_presentation_questions.includes(item)) {
+            delete entity[item];
+        }
+    });
+}
+
+export const normalizeEvent = (entity, eventTypeConfig, summit) => {
     const normalizedEntity = {...entity};
     if (!normalizedEntity.start_date) delete normalizedEntity['start_date'];
     if (!normalizedEntity.end_date) delete normalizedEntity['end_date'];
@@ -667,9 +685,10 @@ export const normalizeEvent = (entity, eventTypeConfig) => {
         }
     }
 
-    if(normalizedEntity.hasOwnProperty('extra_questions')){
+    if (summit) normalizePresentationAllowedQuestionFields(normalizedEntity, summit);
 
-        normalizedEntity.extra_questions =  normalizedEntity.extra_questions.map((q) => ({ question_id : q.question_id, answer : q.value}))
+    if(normalizedEntity.hasOwnProperty('extra_questions')){
+        normalizedEntity.extra_questions = normalizedEntity.extra_questions.map((q) => ({ question_id : q.question_id, answer : q.value}))
     }
 
     return normalizedEntity;

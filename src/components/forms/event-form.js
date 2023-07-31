@@ -38,6 +38,7 @@ import { isEmpty, scrollToError, shallowEqual, hasErrors, adjustEventDuration } 
 import { Pagination } from "react-bootstrap";
 import ExtraQuestionsForm from 'openstack-uicore-foundation/lib/components/extra-questions';
 import ProgressFlags from '../inputs/ProgressFlags';
+import { ATTENDEES_EXPECTED_LEARNT, ATTENDING_MEDIA, LEVEL, SOCIAL_DESCRIPTION } from "../../actions/event-actions";
 
 
 class EventForm extends React.Component {
@@ -781,7 +782,7 @@ render() {
                     />
                 </div>
             </div>
-            {this.isQuestionAllowed('social_description') &&
+            {this.isQuestionAllowed(SOCIAL_DESCRIPTION) &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_event.social_summary")} </label>
@@ -790,7 +791,7 @@ render() {
                     </div>
                 </div>
             }
-            {this.isEventType('PresentationType') && this.isQuestionAllowed('attendees_expected_learnt') &&
+            {this.isEventType('PresentationType') && this.isQuestionAllowed(ATTENDEES_EXPECTED_LEARNT) &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_event.expect_to_learn")} </label>
@@ -869,7 +870,7 @@ render() {
                         />
                     </div>
                 }
-                {this.isQuestionAllowed('level') &&
+                {this.isQuestionAllowed(LEVEL) &&
                     <div className="col-md-4">
                         <label> {T.translate("edit_event.level")} </label>
                         <Dropdown
@@ -941,7 +942,7 @@ render() {
                         </div>
                     </div>
                 }
-                {this.isEventType('PresentationType') && this.isQuestionAllowed('attending_media') &&
+                {this.isEventType('PresentationType') && this.isQuestionAllowed(ATTENDING_MEDIA) &&
                     <div className="col-md-3">
                         <div className="form-check abc-checkbox">
                             <input id="attending_media" onChange={this.handleChange} checked={entity.attending_media}
