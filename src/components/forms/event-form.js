@@ -622,7 +622,7 @@ render() {
         },
     }
 
-    const tracks_ddl = trackOpts.map(t => ({ label: t.name, value: t.id }));
+    const tracks_ddl = trackOpts.filter(track => track.subtracks.length === 0).map(t => ({ label: t.name, value: t.id }));
 
     const venues = locationOpts.filter(v => (v.class_name === 'SummitVenue')).map(l => {
         let options = [];
