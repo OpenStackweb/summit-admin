@@ -105,7 +105,7 @@ class TicketListPage extends React.Component {
                 hasBadgeFilter : null,
                 showOnlyPrintable: false,
                 promocodesFilter: [],
-                promocodeTags:[],
+                promocodeTagsFilter:[],
                 orAndFilter: ALL_FILTER,
             }
         }
@@ -269,6 +269,7 @@ class TicketListPage extends React.Component {
                     hasBadgeFilter : null,
                     showOnlyPrintable: false,
                     promocodesFilter: [],
+                    promocodeTagsFilter: [],
                 };
                 this.setState({...this.state, enabledFilters: value, ticketFilters: resetFilters}, () => {
                     this.props.getTickets(term, 1, perPage, order, orderDir, this.state.ticketFilters, this.state.selectedColumns);
@@ -371,7 +372,7 @@ class TicketListPage extends React.Component {
             {label: 'View Type', value: 'viewTypesFilter'},
             {label: 'Ticket Type', value: 'ticketTypesFilter'},
             {label: 'Promo Code', value: 'promocodesFilter'},
-            {label: 'Promo Code Tags', value: 'promocodeTags'},
+            {label: 'Promo Code Tags', value: 'promocodeTagsFilter'},
             {label: 'Refund Requested', value: 'show_refund_request_pending'},  
             {label: 'Printable', value: 'show_printable'},
         ]
@@ -565,12 +566,12 @@ class TicketListPage extends React.Component {
                             />
                         </div>
                         }
-                        {enabledFilters.includes('promocodeTags') && 
+                        {enabledFilters.includes('promocodeTagsFilter') && 
                         <div className="col-md-6">
                             <TagInput
-                              id="promocodeTags"
-                              value={ticketFilters.promocodeTags}
-                              onChange={ev => this.handleFilterChange('promocodeTags', ev.target.value)}
+                              id="promocodeTagsFilter"
+                              value={ticketFilters.promocodeTagsFilter}
+                              onChange={ev => this.handleFilterChange('promocodeTagsFilter', ev.target.value)}
                               className="promocodes-filter"
                               placeholder={T.translate('ticket_list.placeholders.promocodes_tags')}
                               isClearable
