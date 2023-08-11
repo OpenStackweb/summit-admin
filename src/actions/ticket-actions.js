@@ -242,8 +242,8 @@ const parseFilters = (filters, term = null) => {
         ))
     }
 
-    if(filters.promocodeTags?.length > 0){
-        filter.push(filters.promocodeTags.reduce(
+    if(filters.promocodeTagsFilter?.length > 0){
+        filter.push(filters.promocodeTagsFilter.reduce(
             (accumulator, t) => accumulator +(accumulator !== '' ? ',':'') +`promo_code_tag==${t.tag}`,
             ''
         ));
