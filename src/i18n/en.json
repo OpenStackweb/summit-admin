@@ -1920,7 +1920,9 @@
     "order_cancel_refund": "Cancelled refund request successfully",
     "promo_code": "Promo Code",
     "refunded_amount": "Refunded Amount",
-    "paid_amount_adjusted": "Amount Paid Adjusted"
+    "paid_amount_adjusted": "Amount Paid Adjusted",
+    "credit_card_type": "Credit Card Type",
+    "credit_card_4number": "Credit Card last 4 numbers"
   },
   "sponsor_list": {
     "sponsors": "Sponsors",

@@ -45,6 +45,8 @@ export const DEFAULT_ENTITY = {
     extra_question_answers: [],
     tickets: [],
     promo_code: '',
+    credit_card_type: '',
+    credit_card_4number: '',
 }
 
 const DEFAULT_STATE = {
