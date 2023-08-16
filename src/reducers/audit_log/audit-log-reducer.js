@@ -21,6 +21,7 @@ import
 
 import { SET_CURRENT_SUMMIT } from "../../actions/summit-actions";
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
+import { parseSpeakerAuditLog } from '../../utils/methods';
 
 const DEFAULT_STATE = {
     logEntries              : [],
@@ -54,6 +55,7 @@ const auditLogReducer = (state = DEFAULT_STATE, action) => {
                     event: e.event_id,
                     user: `${e.user.first_name} ${e.user.last_name} (${e.user.id})`,
                     created: moment(e.created * 1000).format('MMMM Do YYYY, h:mm a'),
+                    action: e.action.startsWith('Speaker') ? parseSpeakerAuditLog(e.action) : e.action
                 };
             });
 

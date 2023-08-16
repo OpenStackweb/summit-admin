@@ -254,3 +254,27 @@ export const validateEmail = (email) => {
             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         );
 };
+
+export const parseSpeakerAuditLog = (logString) => {
+    const logEntries = logString.split('|');
+    const userChanges = {};
+    for (const entry of logEntries) {
+        const emailMatch = entry.match(/\b[\w.-]+@[\w.-]+\.\w{2,}\b/);
+        if (!emailMatch) continue;
+        const email = emailMatch[0];
+        if (entry.includes('added')) {
+          userChanges[email] = (userChanges[email] || 0) + 1;
+        } else if (entry.includes('removed')) {
+          userChanges[email] = (userChanges[email] || 0) - 1;
+        }
+    }
+
+    const relevantChanges = [];
+    for (const [email, changeCount] of Object.entries(userChanges)) {
+        if (changeCount !== 0) {
+            relevantChanges.push(`Speaker ${email} ${changeCount > 0 ? 'was added to the collection' : 'was removed from the collection'}`);
+    }
+  }
+
+  return relevantChanges.join('|');
+}
