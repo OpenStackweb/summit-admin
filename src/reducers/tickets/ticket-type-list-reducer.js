@@ -30,7 +30,7 @@ const DEFAULT_STATE = {
   audienceFilter: [],
   currentPage: 1,
   lastPage: 1,
-  perPage: 25,
+  perPage: 10,
 };
 
 const ticketTypeListReducer = (state = DEFAULT_STATE, action) => {
@@ -45,7 +45,7 @@ const ticketTypeListReducer = (state = DEFAULT_STATE, action) => {
       return {...state, order, orderDir, currentPage, perPage, audienceFilter}
     }
     case RECEIVE_TICKET_TYPES: {
-      let {total} = payload.response;
+      let {total, last_page} = payload.response;
       let ticketTypes = payload.response.data.map(t => {
 
         return {
@@ -58,10 +58,10 @@ const ticketTypeListReducer = (state = DEFAULT_STATE, action) => {
         };
       })
 
-      return {...state, ticketTypes: ticketTypes, totalTicketTypes: total};
+      return {...state, ticketTypes: ticketTypes, totalTicketTypes: total, lastPage: last_page};
     }
     case TICKET_TYPES_SEEDED: {
-      let {total} = payload.response;
+      let {total, last_page} = payload.response;
       let ticketTypes = payload.response.data.map(t => {
 
         return {
@@ -73,7 +73,7 @@ const ticketTypeListReducer = (state = DEFAULT_STATE, action) => {
         };
       })
 
-      return {...state, ticketTypes: [...state.ticketTypes, ticketTypes], totalTicketTypes: total};
+      return {...state, ticketTypes: [...state.ticketTypes, ticketTypes], totalTicketTypes: total, lastPage: last_page};
     }
     case TICKET_TYPE_DELETED: {
       let {ticketTypeId} = payload;
