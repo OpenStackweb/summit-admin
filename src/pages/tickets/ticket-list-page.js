@@ -270,6 +270,7 @@ class TicketListPage extends React.Component {
                     showOnlyPrintable: false,
                     promocodesFilter: [],
                     promocodeTagsFilter: [],
+                    orAndFilter: this.state.ticketFilters.orAndFilter
                 };
                 this.setState({...this.state, enabledFilters: value, ticketFilters: resetFilters}, () => {
                     this.props.getTickets(term, 1, perPage, order, orderDir, this.state.ticketFilters, this.state.selectedColumns);
