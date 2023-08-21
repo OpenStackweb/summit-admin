@@ -258,8 +258,9 @@ export const validateEmail = (email) => {
 export const parseSpeakerAuditLog = (logString) => {
     const logEntries = logString.split('|');
     const userChanges = {};
+    const emailRegExp = /(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/;
     for (const entry of logEntries) {
-        const emailMatch = entry.match(/\b[\w.-]+@[\w.-]+\.\w{2,}\b/);
+        const emailMatch = entry.match(emailRegExp);
         if (!emailMatch) continue;
         const email = emailMatch[0];
         if (entry.includes('added')) {
