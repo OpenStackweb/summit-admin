@@ -71,7 +71,7 @@ const assembleTicketsState = (tickets) => {
 
             if (t.owner.first_name && t.owner.last_name) {
                 owner_full_name = `${t.owner.first_name} ${t.owner.last_name}`;
-            } else if (t.owner.member) {
+            } else if (t.owner.member?.first_name && t.owner.member?.last_name) {
                 owner_full_name = `${t.owner.member.first_name} ${t.owner.member.last_name}`;
             }
 
