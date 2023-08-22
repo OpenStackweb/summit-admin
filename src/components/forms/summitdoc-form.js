@@ -198,6 +198,19 @@ class SummitDocForm extends React.Component {
                         />
                     </div>
                 </div>
+                <div className="row form-group">
+                    <div className="col-md-12">
+                        <label> {T.translate("summitdoc.web_link")} *</label>
+                        <Input
+                            id="web_link"
+                            value={entity.web_link}
+                            onChange={this.handleChange}
+                            placeholder={T.translate("summitdoc.placeholders.web_link")}
+                            className="form-control"
+                            error={this.hasErrors('web_link')}
+                        />
+                    </div>
+                </div>
 
                 <div className="row">
                     <div className="col-md-12 submit-buttons">

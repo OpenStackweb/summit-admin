@@ -32,6 +32,7 @@ export const DEFAULT_ENTITY = {
     file_preview        : '',
     selection_plan_id   : null,
     show_always         : false,
+    web_link            : null
 }
 
 const DEFAULT_STATE = {

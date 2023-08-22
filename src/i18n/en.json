@@ -2144,10 +2144,12 @@
     "saved": "Doc saved successfully.",
     "created": "Doc created successfully.",
     "selection_plan": "Selection Plan",
+    "web_link": "Web Link",
     "placeholders": {
       "search": "Search docs by name",
       "select_type": "Select Activity Type",
-      "selection_plan": "Select a Selection Plan ..."
+      "selection_plan": "Select a Selection Plan ...",
+      "web_link": "URL to files stored in external storage services (Eg: Digital Ocean)"
     }
   },
   "email_flow_event_list": {
