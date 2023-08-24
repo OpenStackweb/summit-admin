@@ -40,9 +40,9 @@ class PurchaseOrderListPage extends React.Component {
     }
 
     componentDidMount() {
-        const {currentSummit} = this.props;
+        const {currentSummit, term, currentPage, perPage, order, orderDir} = this.props;
         if(currentSummit) {
-            this.props.getPurchaseOrders();
+            this.props.getPurchaseOrders(term, currentPage, perPage, order, orderDir);
         }
     }
 
