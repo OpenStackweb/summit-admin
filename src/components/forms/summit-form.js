@@ -752,19 +752,6 @@ class SummitForm extends React.Component {
                         </div>
                         <div className="col-md-4">
                             <label>
-                                {T.translate("edit_summit.reg_lite_company_input_placeholder")} &nbsp;
-                                <i className="fa fa-info-circle" aria-hidden="true"
-                                   title={T.translate("edit_summit.reg_lite_company_input_placeholder_info")} />
-                            </label>
-                            <Input
-                                className="form-control"
-                                id="REG_LITE_COMPANY_INPUT_PLACEHOLDER"
-                                value={regLiteMarketingSettings?.REG_LITE_COMPANY_INPUT_PLACEHOLDER?.value}
-                                onChange={this.handleChange}
-                            />
-                        </div>
-                        <div className="col-md-4">
-                            <label>
                                 {T.translate("edit_summit.reg_lite_company_ddl_placeholder")} &nbsp;
                                 <i className="fa fa-info-circle" aria-hidden="true"
                                    title={T.translate("edit_summit.reg_lite_company_ddl_placeholder_info")} />

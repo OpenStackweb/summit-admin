@@ -131,7 +131,6 @@ export const DEFAULT_ENTITY = {
 const DEFAULT_REG_LITE_MARKETING_SETTINGS = {
     REG_LITE_ALLOW_PROMO_CODES: {id: 0 , value: true},
     REG_LITE_SHOW_COMPANY_INPUT: {id: 0 , value: true},
-    REG_LITE_COMPANY_INPUT_PLACEHOLDER: {id: 0 , value: 'Enter your company'},
     REG_LITE_COMPANY_DDL_PLACEHOLDER: {id: 0 , value: 'Select a company'},
     REG_LITE_INITIAL_ORDER_COMPLETE_STEP_1ST_PARAGRAPH: {id: 0, value: 'A ticket has been assigned to you. To complete your additional ticket details, please click the "{button}" button.'},
     REG_LITE_INITIAL_ORDER_COMPLETE_STEP_2ND_PARAGRAPH: {id: 0, value: 'If you wish to transfer your assigned ticket, close this window and visit the "My Orders/Tickets" tab in the top navigation bar. '},
