@@ -18,6 +18,8 @@ import { initLogOut} from 'openstack-uicore-foundation/lib/security/methods';
 import Swal from "sweetalert2";
 import { OR_FILTER } from "./constants";
 
+import emailTemplateDefaultValues from '../data/email_template_variables_sample.json'
+
 export const trim = (string, length) => {
     return string.length > length ?
         string.substring(0, length - 3) + "..." :
@@ -253,6 +255,19 @@ export const validateEmail = (email) => {
         .match(
             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         );
+}
+
+const nestedLookup = (json, key) => {
+    const keys = key.split(".");
+    let nestedValue = json;
+    for (const nestedKey of keys) {
+      if (nestedValue.hasOwnProperty(nestedKey)) {
+        nestedValue = nestedValue[nestedKey];
+      } else {
+        return undefined;
+      }
+    }
+    return nestedValue;
 };
 
 export const parseSpeakerAuditLog = (logString) => {
@@ -278,4 +293,25 @@ export const parseSpeakerAuditLog = (logString) => {
   }
 
   return relevantChanges.join('|');
+}
+export const formatInitialJson = (template) => {
+    const regex = /{{(.*?)}}/g;
+    const matches = template.match(regex) || [];
+    const json_keys = matches.map(match => match.slice(2, -2).trim());    
+    let default_json = {};
+    json_keys.forEach((key) => {
+        // Search on the first level of the JSON file
+        if (emailTemplateDefaultValues.hasOwnProperty(key)) {
+          default_json[key] = emailTemplateDefaultValues[key];
+        }
+        // Search on each level if there's a match
+        else if (nestedLookup(emailTemplateDefaultValues, key) !== undefined) {
+          default_json[key] = nestedLookup(emailTemplateDefaultValues, key);
+        }
+        // Use a default value if there's no matchs
+        else {
+          default_json[key] = "test value";
+        }
+    });
+    return default_json;
 }

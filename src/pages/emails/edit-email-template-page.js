@@ -16,31 +16,27 @@ import { connect } from 'react-redux';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import EmailTemplateForm from '../../components/forms/email-template-form';
-import { getSummitById }  from '../../actions/summit-actions';
-import { RawHTML } from 'openstack-uicore-foundation/lib/components';
-import { getEmailTemplate, resetTemplateForm, saveEmailTemplate, getAllClients, previewEmailTemplate } from "../../actions/email-actions";
-import {Modal} from "react-bootstrap";
+import { getSummitById } from '../../actions/summit-actions';
+import { getEmailTemplate, resetTemplateForm, saveEmailTemplate, getAllClients, previewEmailTemplate, updateTemplateJsonData } from "../../actions/email-actions";
+import { Modal } from "react-bootstrap";
 
 import '../../styles/edit-email-template-page.less';
 import CodeMirror from '@uiw/react-codemirror';
-import 'codemirror/keymap/sublime';
-import 'codemirror/theme/monokai.css';
-import 'codemirror/addon/display/autorefresh';
-import 'codemirror/addon/comment/comment';
-import 'codemirror/addon/edit/closebrackets';
-
+import { sublimeInit } from '@uiw/codemirror-theme-sublime';
+import { json } from '@codemirror/lang-json';
 
 class EditEmailTemplatePage extends React.Component {
 
     constructor(props) {
-        const {clients, match} = props;
+        const { clients, match, json_data } = props;
         const templateId = match.params.template_id;
 
         super(props);
 
         this.state = {
             showModal: false,
-            json_preview: ''
+            json_data: json_data,
+            json_preview: json_data
         };
 
         if (!templateId) {
@@ -53,9 +49,9 @@ class EditEmailTemplatePage extends React.Component {
             props.getAllClients();
         }
 
-        this.handleRender = this.handleRender.bind(this);
         this.handlePreview = this.handlePreview.bind(this);
         this.handleJsonChange = this.handleJsonChange.bind(this);
+        this.handlePopupClose = this.handlePopupClose.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -71,81 +67,80 @@ class EditEmailTemplatePage extends React.Component {
         }
     }
 
-    handleJsonChange(instance, changes) {
-        this.setState({json_preview: instance.getValue()});
+    handleJsonChange(value, changes) {
+        this.setState({ json_preview: value });
     }
 
-    handleRender() {
-        const {entity} = this.props;
-        const {json_preview} = this.state;
-        this.props.previewEmailTemplate(entity.id, json_preview).then(() => this.setState({showModal: true}));
+    handlePopupClose() {
+        const { json_preview } = this.state;
+        const parsedJSON = JSON.parse(json_preview);
+        this.props.updateTemplateJsonData(parsedJSON).then(() => this.setState({ showModal: false, json_data: parsedJSON, json_preview }));
     }
 
-    handlePreview() {
-        this.setState({showModal: true});
+    handlePreview() {        
+        const { json_data } = this.state;
+        this.setState({ ...this.state, showModal: true, json_preview: JSON.stringify(json_data, null, 2) });
     }
 
-    render(){
-        const {currentSummit, entity, errors, match, clients, preview, render_errors} = this.props;
-        const {showModal, json_preview} = this.state;
+    render() {
+        const { currentSummit, entity, templateLoading, errors, match, clients, preview, render_errors } = this.props;
+        const { showModal, json_preview, json_data } = this.state;
         const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         const breadcrumb = (entity.id) ? entity.identifier : T.translate("general.new");
 
-        return(
-            <div className="container edit-template-page">
+        return (
+            <div className="edit-template-page" style={{backgroundColor: 'white', padding: '2vh 2vw', margin: '2vh 2vw'}}>
                 <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("emails.email_template")}</h3>
-                <hr/>
+                <hr />
                 <EmailTemplateForm
+                    match={match}
                     currentSummit={currentSummit}
                     entity={entity}
                     clients={clients}
                     errors={errors}
                     onSubmit={this.props.saveEmailTemplate}
                     onRender={this.handlePreview}
+                    preview={preview}
+                    renderErrors={render_errors}
+                    templateLoading={templateLoading}
+                    templateJsonData={json_data}
+                    previewEmailTemplate={this.props.previewEmailTemplate}
                 />
-                <Modal className="preview-email-template-modal" show={showModal} onHide={() => {this.setState({showModal: false})}} >
+                <Modal className="preview-email-template-modal" show={showModal} onHide={() => { this.setState({ ...this.state, showModal: false }) }} >
                     <Modal.Header closeButton>
-                        <Modal.Title>{T.translate("emails.preview")}</Modal.Title>
+                        <Modal.Title>{T.translate("emails.sample_data")}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        {render_errors.length > 0 &&
-                        <div className="row">
-                            <div className="col-md-12 error">
-                                {render_errors}
+                        {render_errors?.length > 0 &&
+                            <div className="row">
+                                <div className="col-md-12 error">
+                                    {render_errors}
+                                </div>
                             </div>
-                        </div>
                         }
                         <div className="row">
                             <div className="col-md-12">
                                 <label> JSON <a href="https://jsonformatter.curiousconcept.com/" target="_blank">format</a></label>
                                 <CodeMirror
+                                    id="json_preview"
                                     value={json_preview}
-                                    onChanges={this.handleJsonChange}
-                                    options={{
-                                        theme: 'monokai',
-                                        keyMap: 'sublime',
-                                        mode: 'jsonld',
-                                        tabSize: 2,
-                                        lineNumbers: true,
-                                        autoCloseBrackets: true
-                                    }}
+                                    onChange={(value, viewUpdate) => this.handleJsonChange(value, viewUpdate)}
+                                    theme={sublimeInit({
+                                        settings: {
+                                            caret: '#c6c6c6',
+                                            fontFamily: 'monospace',
+                                        },
+                                    })}
+                                    extensions={[json()]}
                                 />
-                            </div>
-                            <br />
-                            <br />
-                            <div className="col-md-12">
-                                <label> {T.translate("emails.preview")} </label>
-                                <div className="email-preview">
-                                    {preview && <RawHTML>{preview}</RawHTML>}
-                                </div>
-                            </div>
+                            </div>                            
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <button className="btn btn-primary" onClick={this.handleRender}>
-                            {T.translate("emails.render")}
-                        </button>
+                        <button className="btn btn-primary" onClick={this.handlePopupClose}>
+                            {T.translate("emails.update")}
+                        </button>                        
                     </Modal.Footer>
                 </Modal>
             </div>
@@ -155,11 +150,11 @@ class EditEmailTemplatePage extends React.Component {
 }
 
 const mapStateToProps = ({ currentSummitState, emailTemplateState }) => ({
-    currentSummit : currentSummitState.currentSummit,
+    currentSummit: currentSummitState.currentSummit,
     ...emailTemplateState
 });
 
-export default connect (
+export default connect(
     mapStateToProps,
     {
         getSummitById,
@@ -167,6 +162,7 @@ export default connect (
         resetTemplateForm,
         saveEmailTemplate,
         getAllClients,
-        previewEmailTemplate
+        previewEmailTemplate,
+        updateTemplateJsonData
     }
 )(EditEmailTemplatePage);
