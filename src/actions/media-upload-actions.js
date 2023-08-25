@@ -28,6 +28,7 @@ import {
     fetchErrorHandler
 } from 'openstack-uicore-foundation/lib/utils/actions';
 import {getAccessTokenSafely} from '../utils/methods';
+import URI from "urijs";
 
 export const REQUEST_MEDIA_UPLOADS      = 'REQUEST_MEDIA_UPLOADS';
 export const RECEIVE_MEDIA_UPLOADS      = 'RECEIVE_MEDIA_UPLOADS';
@@ -108,14 +109,23 @@ export const getMediaUpload = (mediaUploadId) => async (dispatch, getState) => {
 export const queryMediaUploads = _.debounce(async (summitId, input, callback) => {
 
     const accessToken = await getAccessTokenSafely();
-    input = escapeFilterValue(input);
-    const filter = encodeURIComponent(`name=@${input}`);
 
-    fetch(`${window.API_BASE_URL}/api/v1/summits/${summitId}/media-upload-types?filter=${filter}&order=name&access_token=${accessToken}&expand=type`)
+    let apiUrl = URI(`${window.API_BASE_URL}/api/v1/summits/${summitId}/media-upload-types`);
+    apiUrl.addQuery('access_token', accessToken);
+    apiUrl.addQuery('order','name');
+    apiUrl.addQuery('expand','type');
+    apiUrl.addQuery('per_page', 10);
+
+    if(input) {
+        input = escapeFilterValue(input);
+        apiUrl.addQuery('filter[]', `name=@${input}`);
+    }
+
+    fetch(apiUrl.toString())
         .then(fetchResponseHandler)
         .then((json) => {
+            debugger
             const options = [...json.data];
-
             callback(options);
         })
         .catch(fetchErrorHandler);

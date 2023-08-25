@@ -31,10 +31,7 @@ const MediaUploadTypeInput = ({ summitId, id, value, onChange, ...rest }) => {
     }
 
     const getTemplates = (input, callback) => {
-        if (!input) {
-            return Promise.resolve({ options: [] });
-        }
-
+        debugger;
         // we need to map into value/label because of a bug in react-select 2
         // https://github.com/JedWatson/react-select/issues/2998
 
@@ -54,6 +51,8 @@ const MediaUploadTypeInput = ({ summitId, id, value, onChange, ...rest }) => {
             getOptionValue={m => getOptionValue(m)}
             getOptionLabel={m => getOptionLabel(m)}    
             isMulti={true}
+            cacheOptions
+            defaultOptions
             {...rest}
         />
     );

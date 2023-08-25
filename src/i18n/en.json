@@ -1003,8 +1003,8 @@
       "all_companies": "Filter by All Companies",
       "submission_status": "Filter by Submission Status",
       "media_upload_type": "Filter by Media Upload Type",
-      "media_upload_type_id_to_include": "Select the Media Upload Type Ids to include",
-      "media_upload_type_id_to_exclude": "Select the Media Upload Type Ids to exclude"
+      "media_upload_type_id_to_include": "Select the Media Upload Types to include",
+      "media_upload_type_id_to_exclude": "Select the Media Upload Types to exclude"
     }
   },
   "event_type_list": {
