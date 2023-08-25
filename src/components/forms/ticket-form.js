@@ -14,7 +14,7 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { Input, Dropdown } from 'openstack-uicore-foundation/lib/components'
+import { Input, TicketTypesInput } from 'openstack-uicore-foundation/lib/components'
 import OwnerInput from "../inputs/owner-input";
 import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 
@@ -75,8 +75,8 @@ class TicketForm extends React.Component {
             value = ev.target.checked;
         }
         let shouldShowSave = this.state.shouldShowSave;
-        if(id === 'ticket_type_id'){
-            shouldShowSave = true;
+        if(id === 'ticket_type'){
+            shouldShowSave = value == null ? false : true;
         }
 
         entity[id] = value;
@@ -139,8 +139,8 @@ class TicketForm extends React.Component {
 
     render() {
         const {entity, canReassign, shouldShowSave} = this.state;
-        const {order, ticketTypes} = this.props;
-        const ticketTypes_ddl = ticketTypes.map(t => ({label: `${t.name} ($${t.cost})`, value: t.id}))
+        const {order, currentSummit} = this.props;
+        if(!currentSummit) return null;
 
         return (
             <form className="ticket-form" onSubmit={(ev)=> ev.preventDefault()}>
@@ -197,18 +197,22 @@ class TicketForm extends React.Component {
                 </div>
                 }
                 <div className="row form-group">
-                    <div className="col-md-3">
+                    <div className="col-md-6">
                         <label> {T.translate("edit_ticket.type")}:&nbsp;</label>
-                        <Dropdown
-                            id="ticket_type_id"
-                            value={entity.ticket_type_id}
+                        <TicketTypesInput
+                            id="ticket_type"
+                            value={entity.ticket_type}
+                            summitId={currentSummit.id}
                             onChange={this.handleChange}
+                            version='v2'
                             placeholder={T.translate("edit_ticket.placeholders.select_ticket_type")}
-                            options={ticketTypes_ddl}
+                            isClearable={true}
+                            optionsLimit={10}
                         />
                     </div>
-                    <div className="col-md-9">
+                    <div className="col-md-6">
                         <label> {T.translate("edit_ticket.number")}:&nbsp;</label>
+                        <br/>
                         {entity.number}
                     </div>
                 </div>

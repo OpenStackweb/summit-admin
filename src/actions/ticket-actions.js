@@ -459,7 +459,7 @@ export const saveTicket = (orderId, ticket) => async (dispatch, getState) => {
 
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const { currentSummit } = currentSummitState;
 
     dispatch(startLoading());
 
@@ -652,9 +652,13 @@ const normalizeTicket = (entity) => {
         normalizedEntity.attendee_email = normalizedEntity.attendee.email;
     }
 
+    if(normalizedEntity.hasOwnProperty("ticket_type")){
+        normalizedEntity.ticket_type_id = normalizedEntity.ticket_type?.id
+        delete (normalizedEntity.ticket_type);
+    }
+
     delete (normalizedEntity.id);
     delete (normalizedEntity.badge);
-    delete (normalizedEntity.ticket_type);
     delete (normalizedEntity.attendee);
     delete (normalizedEntity.owner);
     delete (normalizedEntity.owner_id);

@@ -31,7 +31,6 @@ import Swal from "sweetalert2";
 import {Table} from "openstack-uicore-foundation/lib/components";
 import moment from "moment-timezone";
 
-
 class EditTicketPage extends React.Component {
 
     constructor(props) {
@@ -271,7 +270,6 @@ class EditTicketPage extends React.Component {
                     errors={errors}
                     onReassing={this.props.reassignTicket}
                     onSaveTicket={this.props.saveTicket}
-                    ticketTypes={this.props.ticketTypes}
                 />
 
                { entity?.refund_requests?.length > 0 &&
@@ -376,12 +374,11 @@ class EditTicketPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ baseState, currentSummitState, currentPurchaseOrderState, currentTicketState, currentTicketTypeListState }) => ({
+const mapStateToProps = ({ baseState, currentSummitState, currentPurchaseOrderState, currentTicketState }) => ({
     currentSummit : currentSummitState.currentSummit,
     currentOrder: currentPurchaseOrderState.entity,
     loading : baseState.loading,
     ...currentTicketState,
-    ticketTypes : currentTicketTypeListState.ticketTypes,
 });
 
 export default connect (

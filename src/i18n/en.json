@@ -1532,7 +1532,8 @@
     "deactivate_yes": "Yes, deactivate",
     "placeholders": {
       "refund_notes": "Provide Optional Notes",
-      "refund_reject_notes": "Provide Optional Notes"
+      "refund_reject_notes": "Provide Optional Notes",
+      "select_ticket_type": "Select a Ticket Type"
     }
   },
   "ticket_type_list": {
