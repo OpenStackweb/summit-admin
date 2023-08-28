@@ -208,6 +208,7 @@ class TicketForm extends React.Component {
                             placeholder={T.translate("edit_ticket.placeholders.select_ticket_type")}
                             isClearable={true}
                             optionsLimit={25}
+                            cacheOptions
                             defaultOptions
                         />
                     </div>
