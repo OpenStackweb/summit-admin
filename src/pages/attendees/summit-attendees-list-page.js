@@ -536,7 +536,7 @@ class SummitAttendeeListPage extends React.Component {
                         </div>
                     }
                     {enabledFilters.includes('ticketTypeFilter') && 
-                        <div className="col-md-6" style={{ height: "61px", paddingTop: "8px" }}>
+                        <div className="col-md-6" style={{ minHeight: "61px", paddingTop: "8px" }}>
                             <Dropdown
                                 id="ticketTypeFilter"
                                 value={attendeeFilters.ticketTypeFilter}
@@ -549,7 +549,7 @@ class SummitAttendeeListPage extends React.Component {
                         </div>
                     }
                     {enabledFilters.includes('badgeTypeFilter') && 
-                        <div className="col-md-6" style={{ height: "61px", paddingTop: "8px" }}>
+                        <div className="col-md-6" style={{ minHeight: "61px", paddingTop: "8px" }}>
                             <Dropdown
                                 id="badgeTypeFilter"
                                 value={attendeeFilters.badgeTypeFilter}
@@ -562,7 +562,7 @@ class SummitAttendeeListPage extends React.Component {
                         </div>
                     }
                     {enabledFilters.includes('featuresFilter') && 
-                        <div className="col-md-6" style={{ height: "61px", paddingTop: "8px" }}>
+                        <div className="col-md-6" style={{ minHeight: "61px", paddingTop: "8px" }}>
                             <Dropdown
                                 id="featuresFilter"
                                 value={attendeeFilters.featuresFilter}
@@ -576,7 +576,7 @@ class SummitAttendeeListPage extends React.Component {
                     }
                     {enabledFilters.includes('checkinDateFilter') &&
                         <>
-                            <div className={'col-md-3'} style={{ height: "61px", paddingTop: "8px" }}>
+                            <div className={'col-md-3'} style={{ minHeight: "61px", paddingTop: "8px" }}>
                                 <DateTimePicker
                                     id="checkin_date_from_filter"
                                     format={{date:"YYYY-MM-DD", time: "HH:mm"}}                                    
@@ -587,7 +587,7 @@ class SummitAttendeeListPage extends React.Component {
                                     className={'event-list-date-picker'}
                                 />
                             </div>                    
-                            <div className={'col-md-3'} style={{ height: "61px", paddingTop: "8px" }}>
+                            <div className={'col-md-3'} style={{ minHeight: "61px", paddingTop: "8px" }}>
                                 <DateTimePicker
                                     id="checkin_date_to_filter"
                                     format={{date:"YYYY-MM-DD", time: "HH:mm"}}
