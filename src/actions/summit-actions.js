@@ -54,7 +54,7 @@ export const getSummitById = (summitId) => async (dispatch, getState) => {
 
     const params = {
         access_token : accessToken,
-        expand: 'event_types,tracks,track_groups,values,locations,locations.rooms'
+        expand: 'event_types,tracks,track_groups,values,locations,locations.rooms,meeting_booking_room_allowed_attributes,meeting_booking_room_allowed_attributes.values'
     };
 
     // set id
