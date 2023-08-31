@@ -4,6 +4,7 @@ openstack:
   - sponsored-projects
 
 fntech:
+  - room-bookings
   - room-booking
 
 
