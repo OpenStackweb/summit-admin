@@ -1162,6 +1162,28 @@ class SummitForm extends React.Component {
                             />
                         </div>
                     </div>
+                    <div className="row form-group">
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_summit.mux_token_id")}</label>
+                            <Input
+                                className="form-control"
+                                error={this.hasErrors('mux_token_id')}
+                                id="mux_token_id"
+                                value={entity.mux_token_id}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_summit.mux_token_secret")}</label>
+                            <Input
+                                className="form-control"
+                                error={this.hasErrors('mux_token_secret')}
+                                id="mux_token_secret"
+                                value={entity.mux_token_secret}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                    </div>
                 </Panel>
 
                 <div className="row">

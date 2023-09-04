@@ -117,6 +117,8 @@ export const DEFAULT_ENTITY = {
     external_registration_feed_api_key: null,
     virtual_site_url: null,
     marketing_site_url: null,
+    mux_token_id: null,
+    mux_token_secret: null,
     help_users : [],
     registration_send_qr_as_image_attachment_on_ticket_email : false,
     registration_send_ticket_as_pdf_attachment_on_ticket_email : false,

@@ -314,6 +314,8 @@
     "external_registration_feed_type": "Registration Feed Type",
     "external_registration_feed_api_key": "Registration Feed API key",
     "external_registration_id": "Registration External Id",
+    "mux_token_id": "MUX Token ID",
+    "mux_token_secret": "MUX Token Secret",
     "third_party": "Third Party Settings",
     "virtual_event": "Virtual Event Settings",
     "virtual_site_url": "Virtual Event Site URL",
