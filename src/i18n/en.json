@@ -526,6 +526,7 @@
     "assign_speaker": "Add speaker",
     "unassign_speaker": "Are you sure you want to unassign speaker ",
     "no_speakers": "There are no speakers associated with this activity so far",
+    "stream_is_secure": "Is Secure?",
     "placeholders": {
       "select_venue": "Select an Activity Venue ...",
       "start_date": "Start Date",

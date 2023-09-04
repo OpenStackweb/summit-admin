@@ -1163,7 +1163,7 @@ render() {
                                 onChange={this.handleChange} />
                         </div>
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-3">
                         <div>
                             <label> {T.translate("edit_event.streaming_type")}</label>
                             <Dropdown
@@ -1173,6 +1173,14 @@ render() {
                                 options={streaming_type_ddl}
                                 error={hasErrors('streaming_type', errors)}
                             />
+                        </div>
+                    </div>
+                    <div className="col-md-3 checkboxes-div">
+                        <div className="form-check abc-checkbox">
+                            <input type="checkbox" id="stream_is_secure" checked={entity.stream_is_secure}
+                                onChange={this.handleChange} className="form-check-input" />
+                            <label className="form-check-label"
+                                htmlFor="stream_is_secure"> {T.translate("edit_event.stream_is_secure")} </label>
                         </div>
                     </div>
                 </div>
