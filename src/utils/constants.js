@@ -35,5 +35,7 @@ export const SpeakersSources = {
 
 export const HAS_TICKETS = 'HAS_TICKETS';
 export const HAS_NO_TICKETS = 'HAS_NO_TICKETS';
-export const ALL_FILTER = "ALL";
-export const OR_FILTER = "ANY";
+
+// we need it lowercase for reports
+export const ALL_FILTER = "all";
+export const OR_FILTER = "any";

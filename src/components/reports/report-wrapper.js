@@ -135,7 +135,6 @@ const wrapReport = (ReportComponent, specs) => {
             this.fragmentParser.setParam(filter, theValue);
             window.location.hash   = this.fragmentParser.serialize();
             this.handleReload()
-
         }
 
         renderFilters() {

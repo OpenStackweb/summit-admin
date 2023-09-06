@@ -20,6 +20,7 @@ import T from "i18n-react";
 import TicketTypeFilter from "../filters/ticket-type-filter";
 import BadgeFeatureFilter from "../filters/badge-feature-filter";
 import OrderQuestionFilter from "../filters/order-question-filter"
+import {ALL_FILTER} from "../../utils/constants";
 
 class AttendeeReport extends React.Component {
     constructor(props) {
@@ -73,19 +74,24 @@ class AttendeeReport extends React.Component {
         }
     
         if (questions) {
-            const parsedQuestions = questions.split(',').reduce((results, qs) => {
+            const questionsRawArray = questions.split(',');
+            const allOrAny = questionsRawArray.pop();
+
+            const parsedQuestions = questionsRawArray.reduce((results, qs) => {
                 const [questionId, answerId] = qs.split(':');
                 if (!results[questionId]) results[questionId] = [];
                 results[questionId].push(answerId);
                 return results;
             }, {});
-    
+
             const filter = Object.entries(parsedQuestions).map(([questionId, answers]) => {
                 return `${questionId}:${answers.join(',')}`;
             });
+            filter.push(allOrAny);
+
             newFilters['question'] = filter.join('|');
         }
-        
+
         return newFilters;
     }
     
