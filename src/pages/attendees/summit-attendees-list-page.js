@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import Swal from "sweetalert2";
 import { Pagination } from 'react-bootstrap';
-import {Dropdown, FreeTextSearch, SelectableTable, DateTimePicker} from 'openstack-uicore-foundation/lib/components';
+import {Dropdown, Input, FreeTextSearch, SelectableTable, DateTimePicker} from 'openstack-uicore-foundation/lib/components';
 import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/utils/methods'
 import ScheduleModal from "../../components/schedule-modal/index";
 import { SegmentedControl } from 'segmented-control'
@@ -36,6 +36,7 @@ import {
 import {getBadgeFeatures, getBadgeTypes} from "../../actions/badge-actions";
 import {ALL_FILTER, HAS_NO_TICKETS, HAS_TICKETS} from '../../utils/constants';
 import OrAndFilter from '../../components/filters/or-and-filter';
+import { validateEmail } from '../../utils/methods';
 
 const fieldNames = [    
     { columnKey: 'member_id', value: 'member_id', sortable: true},
@@ -96,6 +97,7 @@ class SummitAttendeeListPage extends React.Component {
             enabledFilters: [],
             attendeeFilters: {...FILTERS_DEFAULT_STATE},
             selectedColumns: [],
+            testRecipient: '',
         }
     }
 
@@ -139,11 +141,12 @@ class SummitAttendeeListPage extends React.Component {
             selectedAll,
             term,
             selectedIds,
+            totalRealAttendees,
             currentFlowEvent,
             sendEmails,            
         } = this.props;
 
-        const {attendeeFilters, selectedColumns} = this.state;
+        const {attendeeFilters, testRecipient} = this.state;
 
         if(!currentFlowEvent){
             Swal.fire("Validation error", T.translate("attendee_list.select_template") , "warning");
@@ -155,7 +158,28 @@ class SummitAttendeeListPage extends React.Component {
             return false;
         }
 
-        sendEmails(term, currentFlowEvent, selectedAll , selectedIds, attendeeFilters, selectedColumns);
+        if(testRecipient !== '' && !validateEmail(testRecipient)) {
+            Swal.fire("Validation error", T.translate("attendee_list.invalid_recipient_email"), "warning");
+            return false
+        }
+
+        Swal.fire({
+            title: T.translate("general.are_you_sure"),
+            text: `${T.translate("attendee_list.send_email_warning", 
+                {template: currentFlowEvent, qty: selectedAll ? totalRealAttendees : selectedIds.length})}
+                ${testRecipient ? T.translate("attendee_list.email_test_recipient", {email: testRecipient}) : ''}
+                ${T.translate("attendee_list.please_confirm")}`,
+            type: "warning",
+            showCancelButton: true,
+            cancelButtonColor: '#d33',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: T.translate("attendee_list.send_emails"),
+        }).then(function(result){
+            if (result.value) {
+                const recipientEmail = testRecipient || null;                
+                sendEmails(term, currentFlowEvent, selectedAll , selectedIds, attendeeFilters, recipientEmail);
+            }
+        })        
     }
 
     handleSelected(attendee_id, isSelected){
@@ -338,7 +362,7 @@ class SummitAttendeeListPage extends React.Component {
             badgeTypes,
         } = this.props;
 
-        const {showModal, modalSchedule, modalTitle, enabledFilters, attendeeFilters} = this.state;
+        const {showModal, modalSchedule, modalTitle, enabledFilters, attendeeFilters, testRecipient} = this.state;
 
         const filters_ddl = [
             {label: 'Member', value: 'memberFilter'},
@@ -614,8 +638,17 @@ class SummitAttendeeListPage extends React.Component {
                             options={flowEventsDDL}
                         />
                     </div>
+                    <div className={'col-md-5'}>
+                        <Input
+                            id="testRecipient"
+                            value={testRecipient}
+                            onChange={(ev) => this.setState({...this.state, testRecipient: ev.target.value})}
+                            placeholder={T.translate("attendee_list.placeholders.test_recipient")}
+                            className="form-control"
+                        />
+                    </div>
                     <div className={'col-md-1'}>
-                        <button className="btn btn-primary right-space" onClick={this.handleSendEmails}>
+                        <button className="btn btn-default right-space" onClick={this.handleSendEmails}>
                             {T.translate("attendee_list.send_emails")}
                         </button>
                     </div>
@@ -638,6 +671,12 @@ class SummitAttendeeListPage extends React.Component {
 
                 {attendees.length > 0 &&
                 <div>
+                    {selectedIds.length > 0 &&
+                        <span><b>{T.translate("attendee_list.items_qty", {qty:selectedIds.length})}</b></span>
+                    }
+                    {selectedAll &&
+                        <span><b>{T.translate("attendee_list.items_qty", {qty:totalRealAttendees})}</b></span>
+                    }
                     <SelectableTable
                         options={table_options}
                         data={attendees}

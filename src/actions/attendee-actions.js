@@ -492,7 +492,8 @@ export const sendEmails = (term = null,
                            currentFlowEvent,
                            selectedAll = false ,
                            selectedIds = [],
-                           filters = {}
+                           filters = {},
+                           recipientEmail = null,
 ) => async (dispatch, getState) => {
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
@@ -514,6 +515,10 @@ export const sendEmails = (term = null,
 
     if(!selectedAll && selectedIds.length > 0){
         payload['attendees_ids'] = selectedIds;
+    }
+
+    if(recipientEmail) {
+        payload['test_email_recipient'] = recipientEmail;
     }
 
     dispatch(startLoading());

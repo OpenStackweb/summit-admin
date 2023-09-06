@@ -741,7 +741,13 @@
     "select_template": "Select a Email Template to perform the action.",
     "select_items": "Select at least one attendee to perform the action.",
     "summit_hall_checked_in_date": "Check In Date",
+    "items_qty": "Selected {qty} Attendees",
+    "send_email_warning": "You are about to send the {template} email template to {qty} attendees.",
+    "email_test_recipient": "BLAST IS ON TEST MODE (All emails would be sent to {email})",
+    "invalid_recipient_email": "Please use a valid email",
+    "please_confirm": "Please confirm.",
     "placeholders": {
+      "test_recipient": "Optional Test Recipient",
       "search_attendees": "Search Attendees by Name, Email, Company, Ticket Type or Badge Type",
       "ticket_type": "Filter by Ticket Type",
       "badge_type": "Filter by Badge Type",
@@ -2245,6 +2251,7 @@
     "please_confirm": ". Please confirm.",
     "placeholders": {
       "search": "Search invitations by term",
+      "please_confirm": ". Please confirm.",
       "allowed_ticket_types_filter": "Filter by one or more ticket types",
       "tags": "Filter by Tags",
       "test_recipient": "Optional Test Recipient"
