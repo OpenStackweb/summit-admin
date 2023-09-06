@@ -50,6 +50,7 @@ import {
 
 import { ALL_FILTER, SpeakersSources as sources } from "../../utils/constants";
 import OrAndFilter from '../../components/filters/or-and-filter';
+import { validateEmail } from '../../utils/methods';
 
 class SummitSpeakersListPage extends React.Component {
     constructor(props) {
@@ -268,7 +269,7 @@ class SummitSpeakersListPage extends React.Component {
         ev.stopPropagation();
         ev.preventDefault();
 
-        const { source } = this.state;
+        const { source, testRecipient } = this.state;
         const {
             selectedAll, selectedItems, currentFlowEvent
         } = this.getSubjectProps();
@@ -283,6 +284,11 @@ class SummitSpeakersListPage extends React.Component {
                 T.translate("summit_speakers_list.select_items") : T.translate("summit_submitters_list.select_items");
             Swal.fire("Validation error", content, "warning");
             return false;
+        }
+
+        if(testRecipient !== '' && !validateEmail(testRecipient)) {
+            Swal.fire("Validation error", T.translate("summit_speakers_list.invalid_recipient_email"), "warning");
+            return false
         }
 
         this.setState({...this.state,
@@ -518,6 +524,12 @@ class SummitSpeakersListPage extends React.Component {
 
                 {items.length > 0 &&
                     <div>
+                        {selectedItems.length > 0 &&
+                            <span><b>{T.translate("summit_speakers_list.items_qty", {qty:selectedItems.length})}</b></span>
+                        }
+                        {selectedAll &&
+                            <span><b>{T.translate("summit_speakers_list.items_qty", {qty:totalItems})}</b></span>
+                        }
                         <SelectableTable
                             options={table_options}
                             data={items}
@@ -549,11 +561,15 @@ class SummitSpeakersListPage extends React.Component {
                             <Modal.Body>
                                 <div className="row">
                                     <div className="col-md-12">
-                                        This will trigger a background EMAIL BATCH to selected speakers
+                                        {T.translate("summit_speakers_list.send_email_warning", {
+                                            template: currentFlowEvent, qty: selectedAll ? totalItems : selectedItems.length 
+                                        })}
                                     </div>
                                     { this.state.testRecipient !== '' &&
                                     <div className="col-md-12">
-                                        BLAST IS ON TEST MODE ( all emails would be sent to {this.state.testRecipient} )
+                                        {T.translate("summit_speakers_list.email_test_recipient", {
+                                            email: this.state.testRecipient
+                                        })}
                                     </div>
                                     }
                                     <div className="col-md-12" style={{ paddingTop: "15px" }}>
@@ -600,8 +616,11 @@ class SummitSpeakersListPage extends React.Component {
                                 </div>
                             </Modal.Body>
                             <Modal.Footer>
-                                <button className="btn btn-primary" onClick={this.handleSendEmails}>
+                                <button className="btn btn-primary right-space" onClick={this.handleSendEmails}>
                                     {T.translate("summit_speakers_list.send_emails")}
+                                </button>
+                                <button className="btn btn-default" onClick={() => this.setState({...this.state, showSendEmailModal:false})}>
+                                    {T.translate("general.cancel")}
                                 </button>
                             </Modal.Footer>
                         </Modal>

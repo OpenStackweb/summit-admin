@@ -877,10 +877,14 @@
     "excerpt_email": "Excerpt Recipient",
     "select_template": "Select a Email Template to perform the action.",
     "select_items": "Select at least one speaker to perform the action.",
-    "send_email_warning": "Are you sure you want to send emails to the selected speakers",
+    "send_email_warning": "You are about to send the {template} email template to {qty} speakers.",
+    "email_test_recipient": "BLAST IS ON TEST MODE (All emails would be sent to {email})",
+    "invalid_recipient_email": "Please use a valid email",
+    "please_confirm": "Please confirm.",
     "resend_done": "Emails sent successfully.",
     "send_emails_title": "You are about to send an EMAIL BLAST to selected speakers !",
     "should_send_copy_2_submitter": "Also send to submitter?",
+    "items_qty": "Selected {qty} Speakers",    
     "placeholders": {
       "search_speakers": "Search by Full Name, Email, Speaker Id, Member Id, Title Or Abstract",
       "test_recipient": "Optional Test Recipient"
