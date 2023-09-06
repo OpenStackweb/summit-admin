@@ -2239,11 +2239,15 @@
     "select_items": "Select at least one invitation to perform the action.",
     "tags": "Tags",
     "items_qty": "Selected {qty} Invitations",
-    "send_email_warning": "You're about to send the {template} email template to {qty} people. Please confirm. ",
+    "send_email_warning": "You are about to send the {template} email template to {qty} people.",
+    "invalid_recipient_email": "Please use a valid email",
+    "email_test_recipient": "BLAST IS ON TEST MODE (All emails would be sent to {email})",
+    "please_confirm": ". Please confirm.",
     "placeholders": {
       "search": "Search invitations by term",
       "allowed_ticket_types_filter": "Filter by one or more ticket types",
-      "tags": "Filter by Tags"
+      "tags": "Filter by Tags",
+      "test_recipient": "Optional Test Recipient"
     }
   },
   "submission_invitation_list": {

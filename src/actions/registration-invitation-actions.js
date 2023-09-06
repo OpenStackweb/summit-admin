@@ -305,7 +305,7 @@ const normalizeEntity = (entity) => {
 };
 
 export const sendEmails = (currentFlowEvent, selectedAll = false , selectedInvitationsIds = [],
-                          term = null, filters = {}) => async (dispatch, getState) => {
+                          term = null, filters = {}, testRecipient = null) => async (dispatch, getState) => {
 
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
@@ -327,6 +327,10 @@ export const sendEmails = (currentFlowEvent, selectedAll = false , selectedInvit
 
     if(!selectedAll && selectedInvitationsIds.length > 0){
         payload['invitations_ids'] = selectedInvitationsIds;
+    }
+
+    if(testRecipient) {
+        payload['test_email_recipient'] = testRecipient;
     }
 
     dispatch(startLoading());

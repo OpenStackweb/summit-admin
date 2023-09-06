@@ -21,7 +21,8 @@ import {
     SelectableTable,
     UploadInput,
     Dropdown,
-    TagInput
+    TagInput,
+    Input
 } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
 import {
@@ -36,6 +37,7 @@ import { MaxTextLengthForTicketTypesOnTable, MaxTextLengthForTagsOnTable, ALL_FI
 import "../../styles/registration-invitation-list-page.less";
 import {SegmentedControl} from "segmented-control";
 import OrAndFilter from '../../components/filters/or-and-filter';
+import { validateEmail } from '../../utils/methods';
 
 class RegistrationInvitationsListPage extends React.Component {
 
@@ -67,7 +69,8 @@ class RegistrationInvitationsListPage extends React.Component {
             acceptanceCriteria: null,
             invitationFilter: {
                 orAndFilter: ALL_FILTER
-            }
+            },
+            testRecipient: ''
         }
     }
 
@@ -154,7 +157,7 @@ class RegistrationInvitationsListPage extends React.Component {
             tagFilter
         } = this.props;
 
-        const { invitationFilter: { orAndFilter }} = this.state;
+        const { invitationFilter: { orAndFilter }, testRecipient} = this.state;
 
         if(!currentFlowEvent){
             Swal.fire("Validation error", T.translate("registration_invitation_list.select_template") , "warning");
@@ -166,15 +169,22 @@ class RegistrationInvitationsListPage extends React.Component {
             return false;
         }
 
+        if(testRecipient !== '' && !validateEmail(testRecipient)) {
+            Swal.fire("Validation error", T.translate("registration_invitation_list.invalid_recipient_email"), "warning");
+            return false
+        }
+
         Swal.fire({
             title: T.translate("general.are_you_sure"),
-            text: T.translate("registration_invitation_list.send_email_warning", 
-                {template: currentFlowEvent, qty: selectedAll ? totalInvitations : selectedInvitationsIds.length}),
+            text: `${T.translate("registration_invitation_list.send_email_warning", 
+                {template: currentFlowEvent, qty: selectedAll ? totalInvitations : selectedInvitationsIds.length})}
+                ${testRecipient ? T.translate("registration_invitation_list.email_test_recipient", {email: testRecipient}) : ''}
+                ${T.translate("registration_invitation_list.please_confirm")}`,
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: T.translate("general.yes")
+            confirmButtonText: T.translate("registration_invitation_list.send_emails")
         }).then(function(result){
             if (result.value) {
 
@@ -190,7 +200,8 @@ class RegistrationInvitationsListPage extends React.Component {
                         allowedTicketTypesIds,
                         tagFilter,
                         orAndFilter
-                    }
+                    },
+                    testRecipient
                 );
             }
         });        
@@ -283,7 +294,7 @@ class RegistrationInvitationsListPage extends React.Component {
             selectedAll, allowedTicketTypesIds, tagFilter
         } = this.props;
 
-        const {showImportModal, importFile, acceptanceCriteria, invitationFilter} = this.state;
+        const {showImportModal, importFile, acceptanceCriteria, invitationFilter, testRecipient} = this.state;
         
         const columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
@@ -415,22 +426,29 @@ class RegistrationInvitationsListPage extends React.Component {
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div className='row'>
                             <div className="col-md-6 text-right">
-                                <div className={'row'}>
-                                    <div className={'col-md-10'}>
-                                        <Dropdown
-                                            id="flow_event"
-                                            value={currentFlowEvent}
-                                            onChange={this.handleChangeFlowEvent}
-                                            options={flowEventsDDL}
-                                        />
-                                    </div>
-                                    <div className={'col-md-2'}>
-                                        <button className="btn btn-primary right-space" onClick={this.handleSendEmails}>
-                                            {T.translate("registration_invitation_list.send_emails")}
-                                        </button>
-                                    </div>
-                                </div>
+                                <Dropdown
+                                    id="flow_event"
+                                    value={currentFlowEvent}
+                                    onChange={this.handleChangeFlowEvent}
+                                    options={flowEventsDDL}
+                                />
+                            </div>
+                            <div className={'col-md-4'}>
+                                <Input
+                                    id="testRecipient"
+                                    value={testRecipient}
+                                    onChange={(ev) => this.setState({...this.state, testRecipient: ev.target.value})}
+                                    placeholder={T.translate("registration_invitation_list.placeholders.test_recipient")}
+                                    className="form-control"
+                                />
+                            </div>
+                            <div className={'col-md-2'}>
+                                <button className="btn btn-default right-space" onClick={this.handleSendEmails}>
+                                    {T.translate("registration_invitation_list.send_emails")}
+                                </button>
                             </div>
                         </div>
                     </div>
