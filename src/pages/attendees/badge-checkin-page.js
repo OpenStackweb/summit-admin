@@ -20,7 +20,6 @@ import QrReader from 'modern-react-qr-reader'
 import {isMobile} from 'react-device-detect';
 import Swal from "sweetalert2";
 import styles from '../../styles/badge-checkin-page.module.less';
-import {validateBadgeQR} from "../../utils/methods";
 
 const BadgeCheckinPage = ({match, currentSummit, checkInBadge}) => {
     const [scanning, setScanning] = useState(false);
@@ -29,19 +28,13 @@ const BadgeCheckinPage = ({match, currentSummit, checkInBadge}) => {
     const handleCheckIn = (data) => {
         if (data && !scanning) {
             setScanning(true);
-            const qrValid = validateBadgeQR(data, currentSummit);
-            if (qrValid) {
-                checkInBadge(data)
-                    .then(() => {
-                        Swal.fire(T.translate("badge_checkin.checked_in"), `${qrValid[3]} (${qrValid[2]}) checked in!`, "success");
-                    })
-                    .finally(() => {
-                        setScanning(false);
-                    })
-            } else {
-                Swal.fire(T.translate("badge_checkin.wrong_qr_title"), T.translate("badge_checkin.wrong_qr_text"), "warning");
+            checkInBadge(data)
+            .then(() => {
+                Swal.fire(T.translate("badge_checkin.checked_in"), `${qrValid[3]} (${qrValid[2]}) checked in!`, "success");
+            })
+            .finally(() => {
                 setScanning(false);
-            }
+            })
         }
     }
 

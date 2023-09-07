@@ -95,30 +95,6 @@ export const boolToStr = boolean => {
     return boolean ? 'Yes' : 'No';
 }
 
-export const getTicketFromQR = (code, summit) => {
-    const qrCodeArray = code.split(summit.qr_registry_field_delimiter);
-    const qrPrefix = qrCodeArray[0];
-
-    // is badge: QR_PREFIX_BADGE|TICKET_NUMBER|OWNER_EMAIL|FULLNAME
-    const isBadgeQR = qrCodeArray.length === 4 && qrPrefix === summit.badge_qr_prefix;
-    // is ticket: QR_PREFIX_TICKET|TICKET_NUMBER
-    const isTicketQR = qrCodeArray.length === 2 && qrPrefix === summit.ticket_qr_prefix;
-
-    const ticketNumber = (isBadgeQR || isTicketQR) ? qrCodeArray[1] : null;
-
-    return {ticketNumber, qrPrefix};
-}
-
-export const validateBadgeQR = (code, summit) => {
-    const qrCodeArray = code.split(summit.qr_registry_field_delimiter);
-
-    if (qrCodeArray.length > 2 && qrCodeArray[0] === summit.badge_qr_prefix) {
-        return qrCodeArray;
-    }
-
-    return false;
-}
-
 export const parseAndFormat = (dateString, inputFormat, outputFormat = 'MM/DD/YYYY h:mma', inputTZ = 'UTC', outputTZ = 'UTC') => {
     const parsedDate = moment.tz(dateString, inputFormat, inputTZ).tz(outputTZ);
     return parsedDate.format(outputFormat);

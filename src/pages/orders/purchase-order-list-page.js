@@ -10,7 +10,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-
 import React from 'react'
 import { connect } from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
@@ -19,9 +18,6 @@ import { FreeTextSearch, Table } from 'openstack-uicore-foundation/lib/component
 import { getPurchaseOrders } from "../../actions/order-actions";
 import QrReaderInput from '../../components/inputs/qr-reader-input';
 import { getTicket } from '../../actions/ticket-actions'
-import Swal from "sweetalert2";
-import {getTicketFromQR} from "../../utils/methods";
-
 
 class PurchaseOrderListPage extends React.Component {
 
@@ -48,17 +44,11 @@ class PurchaseOrderListPage extends React.Component {
 
     handleQRScan(qrCode) {
         const {currentSummit, history} = this.props;
-        const {ticketNumber, qrPrefix} = getTicketFromQR(qrCode, currentSummit);
-
-        if (ticketNumber) {
-            this.props.getTicket(ticketNumber).then(
-                (data) => {
-                    history.push(`/app/summits/${currentSummit.id}/purchase-orders/${data.order_id}/tickets/${data.id}`);
-                }
-            );
-        } else {
-            Swal.fire(T.translate("purchase_order_list.wrong_qr_title"), `Ticket prefix ${qrPrefix} does not match this show.`, "warning");
-        }
+        this.props.getTicket(btoa(qrCode)).then(
+            (data) => {
+                history.push(`/app/summits/${currentSummit.id}/purchase-orders/${data.order_id}/tickets/${data.id}`);
+            }
+        );
     }
 
     handleEdit(purchaseOrderId) {

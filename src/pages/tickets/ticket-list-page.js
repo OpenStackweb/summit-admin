@@ -33,7 +33,7 @@ import {
     clearAllSelectedTicket,
     setSelectedAll,
     printTickets,
-    getTicket
+    getTicket,
 } from "../../actions/ticket-actions";
 import {Modal, Pagination} from "react-bootstrap";
 import {Breadcrumb} from "react-breadcrumbs";
@@ -41,8 +41,6 @@ import {SegmentedControl} from "segmented-control";
 import Select from "react-select";
 import Swal from "sweetalert2";
 import QrReaderInput from "../../components/inputs/qr-reader-input";
-import {getTicketFromQR} from "../../utils/methods";
-
 import '../../styles/ticket-list-page.less';
 import OrAndFilter from '../../components/filters/or-and-filter';
 import { ALL_FILTER } from '../../utils/constants';
@@ -235,17 +233,11 @@ class TicketListPage extends React.Component {
 
     handleScanQR(qrCode){
         const {currentSummit, history} = this.props;
-        const {ticketNumber, qrPrefix} = getTicketFromQR(qrCode, currentSummit);
-
-        if (ticketNumber) {
-            this.props.getTicket(ticketNumber).then(
-              (data) => {
-                  history.push(`/app/summits/${currentSummit.id}/purchase-orders/${data.order_id}/tickets/${data.id}`);
-              }
-            );
-        } else {
-            Swal.fire(T.translate("purchase_order_list.wrong_qr_title"), `Ticket prefix ${qrPrefix} does not match this show.`, "warning");
-        }
+        this.props.getTicket(btoa(qrCode)).then(
+            (data) => {
+                history.push(`/app/summits/${currentSummit.id}/purchase-orders/${data.order_id}/tickets/${data.id}`);
+            }
+        );
     }
 
     handleColumnsChange(ev) {
@@ -795,6 +787,6 @@ export default connect (
         clearAllSelectedTicket,
         setSelectedAll,
         printTickets,
-        getTicket
+        getTicket,
     }
 )(TicketListPage);

@@ -440,7 +440,7 @@ export const getTicket = (ticketId) => async (dispatch, getState) => {
 
     const params = {
         access_token: accessToken,
-        expand: 'badge, badge.features, promo_code, ticket_type, owner, owner.member, refund_requests, refund_requests.requested_by, refund_requests.action_by'
+        expand: 'badge,badge.features,promo_code,ticket_type,owner,owner.member,refund_requests,refund_requests.requested_by,refund_requests.action_by'
     };
 
     return getRequest(
