@@ -30,9 +30,8 @@ import Switch from "react-switch";
 
 import TextAreaInputWithCounter from '../inputs/text-area-input-with-counter'
 import TextInputWithCounter from '../inputs/text-input-with-counter'
-import {Exclusive} from 'openstack-uicore-foundation/lib/components'
+import {Exclusive, FreeMultiTextInput} from 'openstack-uicore-foundation/lib/components'
 import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
-import {saveRegistrationLiteMarketingSettings, savePrintAppMarketingSettings} from "../../actions/summit-actions";
 
 class SummitForm extends React.Component {
     constructor(props) {
@@ -1180,6 +1179,17 @@ class SummitForm extends React.Component {
                                 error={this.hasErrors('mux_token_secret')}
                                 id="mux_token_secret"
                                 value={entity.mux_token_secret}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_summit.mux_allowed_domains")}</label>
+                            <FreeMultiTextInput
+                                isClearable
+                                isMulti
+                                id="mux_allowed_domains"
+                                value={entity.mux_allowed_domains}
+                                placeholder={T.translate("edit_summit.placeholders.mux_allowed_domains")}
                                 onChange={this.handleChange}
                             />
                         </div>

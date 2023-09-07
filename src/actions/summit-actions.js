@@ -446,6 +446,9 @@ const normalizeEntity = (entity) => {
     if (normalizedEntity['external_registration_feed_type'] === 'none')
         normalizedEntity['external_registration_feed_type'] = '';
 
+    if(normalizedEntity['mux_allowed_domains']){
+        normalizedEntity['mux_allowed_domains'] = normalizedEntity['mux_allowed_domains'].map((e)=> e.value);
+    }
     return normalizedEntity;
 
 }

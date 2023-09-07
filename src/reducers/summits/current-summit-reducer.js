@@ -119,6 +119,7 @@ export const DEFAULT_ENTITY = {
     marketing_site_url: null,
     mux_token_id: null,
     mux_token_secret: null,
+    mux_allowed_domains: [],
     help_users : [],
     registration_send_qr_as_image_attachment_on_ticket_email : false,
     registration_send_ticket_as_pdf_attachment_on_ticket_email : false,
@@ -195,6 +196,9 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
 
             if (!entity.api_feed_type)
                 entity.api_feed_type = 'none';
+            if(entity.hasOwnProperty('mux_allowed_domains')){
+                entity.mux_allowed_domains = entity.mux_allowed_domains.map((e)=> ({'label':e, 'value':e}));
+            }
 
             return {...state, currentSummit: {...state.currentSummit, ...entity}, errors: {}, loading: false};
         }

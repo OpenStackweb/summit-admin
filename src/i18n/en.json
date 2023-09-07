@@ -358,9 +358,11 @@
     "print_app_hide_find_ticket_by_email": "Hide Find By Email Criteria",
     "reg_lite_settings": "Registration Lite Settings",
     "check_in_settings": "Print/Check In App Settings",
+    "mux_allowed_domains": "Allowed Domains",
     "placeholders": {
       "api_feed_type": "Select API feed type...",
-      "external_registration_feed_type": "Select Ext. Reg. feed type..."
+      "external_registration_feed_type": "Select Ext. Reg. feed type...",
+      "mux_allowed_domains": "Type any Allowed Domain.."
     }
   },
   "edit_selection_plan": {
