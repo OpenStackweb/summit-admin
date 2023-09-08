@@ -26,6 +26,9 @@ export const RECEIVE_REPORT         = 'RECEIVE_REPORT';
 export const REQUEST_EXPORT_REPORT  = 'REQUEST_EXPORT_REPORT';
 export const RECEIVE_EXPORT_REPORT  = 'RECEIVE_EXPORT_REPORT';
 export const RESET_EXPORT_REPORT    = 'RESET_EXPORT_REPORT';
+export const LOADING_EXPORT_REPORT    = 'LOADING_EXPORT_REPORT';
+
+
 const TIMEOUT = 300 ;//secs
 
 export const getReport = (query, reportName, page) => async (dispatch) => {
@@ -76,94 +79,88 @@ const jsonToCsv = (items) => {
     return csv;
 }
 
-export const exportReport = ( query, reportName, grouped, preProcessData=null ) => async (dispatch) => {
-
+export const exportReport = ( buildQuery, reportName, grouped, preProcessData=null ) => async (dispatch, getState) => {
+    const {currentReportState} = getState();
+    const {totalCount} = currentReportState;
+    const perPage = 100;
     const accessToken = await getAccessTokenSafely();
-
-    dispatch(startLoading());
+    const totalPages = Math.ceil(totalCount / perPage);
+    let reportData = [];
+    let rawData = [];
+    let extraData = null;
 
     const params = {
         access_token : accessToken,
-        query: query
+        query: null
     };
 
-    return getRequest(
-        createAction(REQUEST_EXPORT_REPORT),
-        createAction('DUMMY_ACTION'),
-        `${window.REPORT_API_BASE_URL}/reports`,
-        authErrorHandler,
-        {},
-        TIMEOUT,
-        TIMEOUT
-    )(params)(dispatch).then((payload) => {
-        dispatch(stopLoading());
+    for (var i = 1; i <= totalPages; i++) {
+        params.query = buildQuery(i, perPage);
 
-        const responseData = {...payload.response.data};
-        const data = (responseData.hasOwnProperty("reportData")) ? responseData.reportData : [];
-        const extraData = (responseData.hasOwnProperty("extraData")) ? responseData.extraData : null;
-        let reportData = [];
+        dispatch(createAction(LOADING_EXPORT_REPORT)({exportProgress: i * perPage}));
 
-        if (preProcessData) {
-            const procData = preProcessData(data.results || data, extraData, true);
-            const labels = procData.tableColumns.map(col => col.value);
-            const keys = procData.tableColumns.map(col => col.columnKey);
+        const result = await getRequest(
+          createAction(REQUEST_EXPORT_REPORT),
+          createAction('DUMMY_ACTION'),
+          `${window.REPORT_API_BASE_URL}/reports`,
+          authErrorHandler,
+          {},
+          TIMEOUT,
+          TIMEOUT
+        )(params)(dispatch).then(({response}) => {
+            const data = response.data?.reportData || [];
+            extraData = response.data?.extraData || null;
+            rawData = [...rawData, ...(data.results || data)];
+        });
+    }
 
-            // replace labels
-            if (grouped) {
-                for (var groupName in procData.reportData) {
-                    const newSheet = {name: groupName, data: []};
-                    const groupData = procData.reportData[groupName];
-                    for (let item in groupData) {
-                        const newData = {};
+    if (preProcessData) {
+        const procData = preProcessData(rawData, extraData, true);
+        const labels = procData.tableColumns.map(col => col.value);
+        const keys = procData.tableColumns.map(col => col.columnKey);
 
-                        for (var a in labels) {
-                            newData[labels[a]] = groupData[item][keys[a]];
-                        }
-
-                        newSheet.data.push(newData);
-                    }
-
-                    reportData.push(newSheet);
-                }
-
-            } else {
-                for (var item in procData.reportData) {
-                    var newData = {};
+        // replace labels
+        if (grouped) {
+            for (var groupName in procData.reportData) {
+                const newSheet = {name: groupName, data: []};
+                const groupData = procData.reportData[groupName];
+                for (let item in groupData) {
+                    const newData = {};
 
                     for (var a in labels) {
-                        newData[labels[a]] = procData.reportData[item][keys[a]];
+                        newData[labels[a]] = groupData[item][keys[a]];
                     }
-
-                    reportData.push(newData);
+                    newSheet.data.push(newData);
                 }
-
-                reportData = [{name: 'Data', data: reportData}];
+                reportData.push(newSheet);
             }
 
-
         } else {
-            reportData = [{name: 'Data', data: flattenData(data.results)}];
+            for (var item in procData.reportData) {
+                var newData = {};
+
+                for (var a in labels) {
+                    newData[labels[a]] = procData.reportData[item][keys[a]];
+                }
+                reportData.push(newData);
+            }
+            reportData = [{name: 'Data', data: reportData}];
         }
 
-        return reportData;
 
-        /*let csv = jsonToCsv(reportData);
+    } else {
+        reportData = [{name: 'Data', data: flattenData(rawData)}];
+    }
 
-        let link = document.createElement('a');
-        link.textContent = 'download';
-        link.download = reportName+ '.csv';
-        link.href = 'data:text/csv;charset=utf-8,'+ encodeURIComponent(csv);
-        document.body.appendChild(link); // Required for FF
-        link.click();
-        document.body.removeChild(link);*/
+    // dispatch(stopLoading());
+    dispatch(createAction(RECEIVE_EXPORT_REPORT)({reportData}));
 
-    }).then((reportData)=>{
-        dispatch(createAction(RECEIVE_EXPORT_REPORT)({reportData}));
-    }).then((reportData)=>{
-        dispatch(createAction(RESET_EXPORT_REPORT)({}));
-    });
+    // cleanup, file already created
+    dispatch(createAction(RESET_EXPORT_REPORT)({}));
 
 };
+
+
 
 
 const normalizeEntity = (entity) => {

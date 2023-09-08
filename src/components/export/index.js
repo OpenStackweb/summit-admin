@@ -30,7 +30,7 @@ export default class ExportData extends React.Component {
     renderData() {
         let {data} = this.props;
 
-        let sheets = data.map((group, groupIdx) => {
+        let sheets = data.filter(it => it.data.length > 0).map((group, groupIdx) => {
 
             let columns = Object.keys(group.data[0]).map((col, colIdx) => {
                return (
@@ -49,11 +49,14 @@ export default class ExportData extends React.Component {
     }
 
     render() {
-        let {reportName} = this.props;
+        const {reportName} = this.props;
+        const sheets = this.renderData();
+
+        if (sheets.length === 0) return null;
 
         return (
             <ExcelFile filename={reportName} hideElement={true}>
-                {this.renderData()}
+                {sheets}
             </ExcelFile>
         );
     }

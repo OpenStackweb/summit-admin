@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import { compose } from 'redux';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { Pagination } from 'react-bootstrap';
-import { FreeTextSearch } from 'openstack-uicore-foundation/lib/components'
+import {AjaxLoader, FreeTextSearch} from 'openstack-uicore-foundation/lib/components'
 import {exportReport, getReport, getMetricRaw} from "../../actions/report-actions";
 import T from "i18n-react/dist/i18n-react";
 import FragmentParser from "../../utils/fragmen-parser";
@@ -65,13 +65,14 @@ const wrapReport = (ReportComponent, specs) => {
             return otherFilters;
         }
 
-        buildQuery(page, forExport=false) {
+        buildQuery(page, perPageOverride = null) {
             let {perPage, currentSummit} = this.props;
             let {sort, sortdir, search, ...filters} = this.fragmentParser.getParams();
             let queryFilters = {};
             let listFilters = {};
+            perPage = perPageOverride || perPage;
 
-            if (!forExport && specs.pagination) {
+            if (specs.pagination) {
                 queryFilters = {limit: perPage};
                 if (page !== 1) {
                     queryFilters.offset = (page - 1) * perPage;
@@ -118,9 +119,8 @@ const wrapReport = (ReportComponent, specs) => {
         handleExportReport(ev) {
             ev.preventDefault();
             let grouped = specs.hasOwnProperty('grouped');
-            let query = this.buildQuery(1, true);
             let name = this.refs.childCmp.getName();
-            this.props.exportReport(query, name, grouped, this.refs.childCmp.preProcessData.bind(this.refs.childCmp));
+            this.props.exportReport(this.buildQuery, name, grouped, this.refs.childCmp.preProcessData.bind(this.refs.childCmp));
         }
 
         handleGetReport(page) {
@@ -218,7 +218,7 @@ const wrapReport = (ReportComponent, specs) => {
         }
 
         render() {
-            const { match, currentPage, totalCount, perPage, currentSummit, exportData} = this.props;
+            const { match, currentPage, totalCount, perPage, exportData, exportingReport, exportProgress} = this.props;
             let {sort, sortdir, search, ...filters} = this.fragmentParser.getParams();
             let pageCount = Math.ceil(totalCount / perPage);
             let reportName = this.refs.childCmp ? this.refs.childCmp.getName() : 'report';
@@ -231,6 +231,11 @@ const wrapReport = (ReportComponent, specs) => {
             return (
                 <div className="container large">
                     <Breadcrumb data={{ title:reportName, pathname: match.url }} />
+                    <AjaxLoader show={ exportingReport } size={ 120 }>
+                        <span style={{color: 'black', fontSize: 20}}>
+                            Fetching: {exportProgress} of {totalCount}
+                        </span>
+                    </AjaxLoader>
                     <div className="row">
                         <div className="col-md-8">
                             <h3>{reportName}</h3>

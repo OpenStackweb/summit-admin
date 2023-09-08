@@ -17,6 +17,7 @@ import
     REQUEST_REPORT,
     RECEIVE_EXPORT_REPORT,
     RESET_EXPORT_REPORT,
+    LOADING_EXPORT_REPORT,
 } from '../../actions/report-actions';
 
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
@@ -30,6 +31,8 @@ const DEFAULT_STATE = {
     totalCount      : 0,
     extraStat       : null,
     exportData      : null,
+    exportingReport : false,
+    exportProgress  : 1,
 };
 
 
@@ -59,8 +62,15 @@ const reportReducer = (state = DEFAULT_STATE, action) => {
         case RECEIVE_EXPORT_REPORT: {
             return {...state, exportData: payload.reportData };
         }
+        case LOADING_EXPORT_REPORT: {
+            const {exportProgress} = payload;
+            const {totalCount} = state;
+
+            const newExportProgress = exportProgress < totalCount ? exportProgress : totalCount;
+            return {...state, exportProgress: newExportProgress, exportingReport: true };
+        }
         case RESET_EXPORT_REPORT: {
-            return {...state, exportData: null };
+            return {...state, exportData: null, exportingReport: false, exportQueryNumber: 1, totalExportQueries: 10};
         }
         default:
             return state;
