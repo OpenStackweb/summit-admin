@@ -22,7 +22,8 @@ import {  sublimeInit } from '@uiw/codemirror-theme-sublime';
 import { html } from '@codemirror/lang-html';
 import mjml2html from 'mjml-browser';
 import { scrollToError, shallowEqual, hasErrors } from "../../utils/methods";
-import './email-template.less'
+import './email-template.less';
+import Swal from "sweetalert2";
 
 const default_mjml_content = `
 ### Sample MJML Code
@@ -51,6 +52,7 @@ const EmailTemplateForm = ({ entity, match, errors, clients, preview, templateLo
     const [singleTab, setSingleTab] = useState(false);
     const [templateLoaded, setTemplateLoaded] = useState(false);
     const [previewLoaded, setPreviewLoaded] = useState(false);
+    const [mjmlWarning, setMjmlWarning] = useState(false);
 
     const previewRef = useRef(null);
 
@@ -77,7 +79,7 @@ const EmailTemplateForm = ({ entity, match, errors, clients, preview, templateLo
     useEffect(() => {
         // if entity is correctly loaded, set state for entity use
         if(templateLoaded) {
-            if (!entity.mjml_content) {
+            if (entity.id === 0) {
                 setStateEntity({...entity, mjml_content: default_mjml_content})
             } else {                
                 setStateEntity({ ...entity })
@@ -127,6 +129,21 @@ const EmailTemplateForm = ({ entity, match, errors, clients, preview, templateLo
             }
         }
     }, [stateEntity.mjml_content])
+
+    useEffect(() => {
+        if(entity.mjml_content.length === 0 && entity.html_content.length > 0 && mjmlEditor && !mjmlWarning) {
+            console.log('warning mjml')
+            Swal.fire({
+                title: T.translate("general.are_you_sure"),
+                text: T.translate("emails.mjml_warning"),
+                type: "warning",
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: T.translate("emails.understand")
+            }).then(() => {
+                setMjmlWarning(true);
+            });
+        }
+    }, [mjmlEditor]);
 
     const handleCodeMirrorHTMLChange = (value, change) => {
         setStateErrors({ ...stateErrors, ['html_content']: '' });

@@ -110,6 +110,7 @@ class EditEmailTemplatePage extends React.Component {
                 <Modal className="preview-email-template-modal" show={showModal} onHide={() => { this.setState({ ...this.state, showModal: false }) }} >
                     <Modal.Header closeButton>
                         <Modal.Title>{T.translate("emails.sample_data")}</Modal.Title>
+                        <span>{T.translate("emails.sample_data_legend")}</span>
                     </Modal.Header>
                     <Modal.Body>
                         {render_errors?.length > 0 &&
