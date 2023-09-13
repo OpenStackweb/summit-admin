@@ -62,8 +62,8 @@ class EmailFlowEventListPage extends React.Component {
 
         const columns = [
             { columnKey: 'flow_name', value: T.translate("email_flow_event_list.flow_name"), sortable: true },
-            { columnKey: 'event_type_name', value: T.translate("email_flow_event_list.event_type_name") },
-            { columnKey: 'email_template_identifier', value: T.translate("email_flow_event_list.email_template_identifier") }
+            { columnKey: 'event_type_name', value: T.translate("email_flow_event_list.event_type_name"), title: true },
+            { columnKey: 'email_template_identifier', value: T.translate("email_flow_event_list.email_template_identifier"), title: true }
         ];
 
         const table_options = {
@@ -94,7 +94,7 @@ class EmailFlowEventListPage extends React.Component {
                 }
 
                 {emailFlowEvents.length > 0 &&
-                <div>
+                <div className='email-flow-table-wrapper'>
                     <Table
                         options={table_options}
                         data={emailFlowEvents}
