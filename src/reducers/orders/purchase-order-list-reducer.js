@@ -24,7 +24,7 @@ import {epochToMoment} from "openstack-uicore-foundation/lib/utils/methods";
 const DEFAULT_STATE = {
     purchaseOrders          : {},
     term                    : null,
-    order                   : 'name',
+    order                   : 'owner_name',
     orderDir                : 1,
     currentPage             : 1,
     lastPage                : 1,
