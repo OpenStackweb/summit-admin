@@ -1722,7 +1722,8 @@
     "name": "Name",
     "label": "Label",
     "seed_tag_groups": "Seed Tag Groups",
-    "remove_tag_group_warning": "Are you sure you want to delete tag group"
+    "remove_tag_group_warning": "Are you sure you want to delete tag group",
+    "no_tag_groups": "No Tag Groups found."
   },
   "edit_tag_group": {
     "tag_group": "Tag Group",
