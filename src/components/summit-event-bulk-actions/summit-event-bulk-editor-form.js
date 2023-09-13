@@ -323,162 +323,164 @@ class SummitEventBulkEditorForm extends React.Component
 
         return (
             <form className="bulk-edit-form">
-                <div className="bulk-edit-row">
-                    <div className="bulk-edit-col-empty">
-                        &nbsp;
-                    </div>
-                    <div className="bulk-edit-col">
-                        <Select
-                            placeholder={T.translate("schedule.placeholders.select_presentation_selection_plan")}
-                            className="selection_plan_selector_bulk"
-                            name="form-field-name"
-                            value={currentBulkSelectionPlan}
-                            onChange={this.onBulkSelectionPlanChange}
-                            options={selectionPlanOptions}
-                        />
-                    </div>
-                    <div className="bulk-edit-col">
-                        <SummitVenuesSelect
-                            currentValue={currentBulkLocation}
-                            onVenueChanged={this.onBulkLocationChange}
-                            venues={venuesOptions}
-                            placeholder={T.translate("schedule.placeholders.select_venue")}
-                        />
-                    </div>
-                    <div className="bulk-edit-col">
-                        <DateTimePicker
-                            id="start_date"
-                            format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                            inputProps={{placeholder: T.translate("bulk_actions_page.placeholders.start_date")}}
-                            timezone={currentSummit.time_zone.name}
-                            value={epochToMomentTimeZone(currentBulkStartDate, currentSummit.time_zone_id)}
-                            timeConstraints={{ hours: { min: 7, max: 22}}}
-                            validation={{before: currentBulkEndDate ? currentBulkEndDate : currentSummitEndDate.valueOf()/1000, after: currentSummitStartDate.valueOf()/1000}}
-                            onChange={this.handleChangeBulkStartDate}
-                            className="bulk-edit-date-picker"
-                         />
-                    </div>
-                    <div className="bulk-edit-col">
-                        <DateTimePicker
-                            id="end_date"
-                            format={{date:"YYYY-MM-DD", time: "HH:mm"}}
-                            timeConstraints={{ hours: { min: 7, max: 22}}}
-                            inputProps={{placeholder: T.translate("bulk_actions_page.placeholders.end_date")}}
-                            timezone={currentSummit.time_zone.name}
-                            value={epochToMomentTimeZone(currentBulkEndDate, currentSummit.time_zone_id)}
-                            validation={{before: currentSummitEndDate.valueOf()/1000, after: currentBulkStartDate ? currentBulkStartDate : currentSummitStartDate.valueOf()/1000}}
-                            onChange={this.handleChangeBulkEndDate}
-                            className="bulk-edit-date-picker"
-                        />
-                    </div>
-                    <div className="bulk-edit-col">
-                        <Dropdown
-                            id="type_id"
-                            placeholder={T.translate("bulk_actions_page.placeholders.event_type")}
-                            value={currentBulkActivityType}
-                            onChange={this.onBulkActivityType}
-                            options={event_type_ddl}
-                        />
-                    </div>
-                    <div className="bulk-edit-col"> 
-                        <Dropdown
-                            id="track_id"
-                            placeholder={T.translate("bulk_actions_page.placeholders.track")}
-                            value={currentBulkActivityCategory}
-                            onChange={this.onBulkActivityCategory}
-                            options={track_ddl}
-                        />
-                    </div>
-                    <div className="bulk-edit-col"> 
-                        <Input
-                            id="duration"
-                            type='number'
-                            min="0"
-                            step="1"
-                            pattern="\d+"
-                            value={currentBulkDuration}
-                            placeholder={T.translate("bulk_actions_page.placeholders.duration")}
-                            onChange={this.onBulkDuration}
-                        />
-                    </div>  
-                    <div className="bulk-edit-col"> 
-                        <Input
-                            id="streaming_url"
-                            value={currentBulkStreamingURL}
-                            placeholder={T.translate("bulk_actions_page.placeholders.streaming_url")}
-                            onChange={this.onBulkStreamingURL}
-                        />
-                    </div>               
-                    <div className="bulk-edit-col"> 
-                        <Dropdown
-                            id="streaming_type"
-                            value={currentBulkStreamingType}
-                            onChange={this.onBulkStreamingType}
-                            placeholder={T.translate("bulk_actions_page.placeholders.streaming_type")}
-                            options={streaming_type_ddl}
-                        />
-                    </div>
-                    <div className="bulk-edit-col"> 
-                        <Input
-                            id="meeting_url"
-                            value={currentBulkMeetingURL}
-                            placeholder={T.translate("bulk_actions_page.placeholders.meeting_url")}
-                            onChange={this.onBulkMeetingURL}
-                        />
-                    </div>               
+                <div className='bulk-edit-table'>
+                    <div className="bulk-edit-row">
+                        <div className="bulk-edit-col-empty">
+                            &nbsp;
+                        </div>
+                        <div className="bulk-edit-col">
+                            <Select
+                                placeholder={T.translate("schedule.placeholders.select_presentation_selection_plan")}
+                                className="selection_plan_selector_bulk"
+                                name="form-field-name"
+                                value={currentBulkSelectionPlan}
+                                onChange={this.onBulkSelectionPlanChange}
+                                options={selectionPlanOptions}
+                            />
+                        </div>
+                        <div className="bulk-edit-col">
+                            <SummitVenuesSelect
+                                currentValue={currentBulkLocation}
+                                onVenueChanged={this.onBulkLocationChange}
+                                venues={venuesOptions}
+                                placeholder={T.translate("schedule.placeholders.select_venue")}
+                            />
+                        </div>
+                        <div className="bulk-edit-col">
+                            <DateTimePicker
+                                id="start_date"
+                                format={{date:"YYYY-MM-DD", time: "HH:mm"}}
+                                inputProps={{placeholder: T.translate("bulk_actions_page.placeholders.start_date")}}
+                                timezone={currentSummit.time_zone.name}
+                                value={epochToMomentTimeZone(currentBulkStartDate, currentSummit.time_zone_id)}
+                                timeConstraints={{ hours: { min: 7, max: 22}}}
+                                validation={{before: currentBulkEndDate ? currentBulkEndDate : currentSummitEndDate.valueOf()/1000, after: currentSummitStartDate.valueOf()/1000}}
+                                onChange={this.handleChangeBulkStartDate}
+                                className="bulk-edit-date-picker"
+                            />
+                        </div>
+                        <div className="bulk-edit-col">
+                            <DateTimePicker
+                                id="end_date"
+                                format={{date:"YYYY-MM-DD", time: "HH:mm"}}
+                                timeConstraints={{ hours: { min: 7, max: 22}}}
+                                inputProps={{placeholder: T.translate("bulk_actions_page.placeholders.end_date")}}
+                                timezone={currentSummit.time_zone.name}
+                                value={epochToMomentTimeZone(currentBulkEndDate, currentSummit.time_zone_id)}
+                                validation={{before: currentSummitEndDate.valueOf()/1000, after: currentBulkStartDate ? currentBulkStartDate : currentSummitStartDate.valueOf()/1000}}
+                                onChange={this.handleChangeBulkEndDate}
+                                className="bulk-edit-date-picker"
+                            />
+                        </div>
+                        <div className="bulk-edit-col">
+                            <Dropdown
+                                id="type_id"
+                                placeholder={T.translate("bulk_actions_page.placeholders.event_type")}
+                                value={currentBulkActivityType}
+                                onChange={this.onBulkActivityType}
+                                options={event_type_ddl}
+                            />
+                        </div>
                         <div className="bulk-edit-col"> 
-                        <Input
-                            id="etherpad_link"
-                            value={currentBulkEtherpadURL}
-                            placeholder={T.translate("bulk_actions_page.placeholders.etherpad_link")}
-                            onChange={this.onBulkEtherpadURL}
-                        />
-                    </div>               
+                            <Dropdown
+                                id="track_id"
+                                placeholder={T.translate("bulk_actions_page.placeholders.track")}
+                                value={currentBulkActivityCategory}
+                                onChange={this.onBulkActivityCategory}
+                                options={track_ddl}
+                            />
+                        </div>
+                        <div className="bulk-edit-col"> 
+                            <Input
+                                id="duration"
+                                type='number'
+                                min="0"
+                                step="1"
+                                pattern="\d+"
+                                value={currentBulkDuration}
+                                placeholder={T.translate("bulk_actions_page.placeholders.duration")}
+                                onChange={this.onBulkDuration}
+                            />
+                        </div>  
+                        <div className="bulk-edit-col"> 
+                            <Input
+                                id="streaming_url"
+                                value={currentBulkStreamingURL}
+                                placeholder={T.translate("bulk_actions_page.placeholders.streaming_url")}
+                                onChange={this.onBulkStreamingURL}
+                            />
+                        </div>               
+                        <div className="bulk-edit-col"> 
+                            <Dropdown
+                                id="streaming_type"
+                                value={currentBulkStreamingType}
+                                onChange={this.onBulkStreamingType}
+                                placeholder={T.translate("bulk_actions_page.placeholders.streaming_type")}
+                                options={streaming_type_ddl}
+                            />
+                        </div>
+                        <div className="bulk-edit-col"> 
+                            <Input
+                                id="meeting_url"
+                                value={currentBulkMeetingURL}
+                                placeholder={T.translate("bulk_actions_page.placeholders.meeting_url")}
+                                onChange={this.onBulkMeetingURL}
+                            />
+                        </div>               
+                            <div className="bulk-edit-col"> 
+                            <Input
+                                id="etherpad_link"
+                                value={currentBulkEtherpadURL}
+                                placeholder={T.translate("bulk_actions_page.placeholders.etherpad_link")}
+                                onChange={this.onBulkEtherpadURL}
+                            />
+                        </div>               
+                    </div>
+                    <div className="bulk-edit-row">
+                        <div className="bulk-edit-col-id bulk-edit-col-title">{T.translate("bulk_actions_page.event_id_label")}</div>
+                        <div className="bulk-edit-col bulk-edit-col-title">{T.translate("bulk_actions_page.event_name_label")}</div>
+                        <div className="bulk-edit-col bulk-edit-col-title">{T.translate("bulk_actions_page.event_selection_plan_label")}</div>
+                        <div className="bulk-edit-col bulk-edit-col-title">{T.translate("bulk_actions_page.event_location_label")}</div>
+                        <div className="bulk-edit-col bulk-edit-col-title">{T.translate("bulk_actions_page.event_start_date_label")}</div>
+                        <div className="bulk-edit-col bulk-edit-col-title">{T.translate("bulk_actions_page.event_end_date_label")}</div>
+                        <div className="bulk-edit-col bulk-edit-col-title">{T.translate("bulk_actions_page.event_activity_type_label")}</div>
+                        <div className="bulk-edit-col bulk-edit-col-title">{T.translate("bulk_actions_page.event_activity_category_label")}</div>
+                        <div className="bulk-edit-col bulk-edit-col-title">{T.translate("bulk_actions_page.event_duration_label")} (minutes)</div>
+                        <div className="bulk-edit-col bulk-edit-col-title">{T.translate("bulk_actions_page.event_streaming_url_label")}</div>
+                        <div className="bulk-edit-col bulk-edit-col-title">{T.translate("bulk_actions_page.event_streaming_type_label")}</div>
+                        <div className="bulk-edit-col bulk-edit-col-title">{T.translate("bulk_actions_page.event_meeting_url_label")}</div>
+                        <div className="bulk-edit-col bulk-edit-col-title">{T.translate("bulk_actions_page.event_etherpad_link_label")}</div>
+                    </div>
+                    {
+                        events.map((event, idx) => (
+                            <SummitEventBulkEditorItem
+                                key={idx}
+                                index={idx}
+                                venuesOptions={venuesOptions}
+                                activityTypeOptions={event_type_ddl}
+                                activtyCategoryOptions={track_ddl}
+                                streamingTypeOptions={streaming_type_ddl}
+                                selectionPlanOptions={selectionPlanOptions}
+                                event={event}
+                                currentSummit={currentSummit}
+                                onLocationChanged={this.onLocationChanged}
+                                onTitleChanged={this.onTitleChanged}
+                                onStartDateChanged={this.onStartDateChanged}
+                                onEndDateChanged={this.onEndDateChanged}
+                                onSelectedEvent={this.onSelectedEvent}
+                                onSelectionPlanChanged={this.onSelectionPlanChanged}
+                                onActivityTypeLocalChanged={this.onActivityTypeLocalChanged}
+                                onActivityCategoryLocalChanged={this.onActivityCategoryLocalChanged}
+                                onDurationLocalChanged={this.onDurationLocalChanged}
+                                onStreamingURLLocalChanged={this.onStreamingURLLocalChanged}
+                                onStreamingTypeLocalChanged={this.onStreamingTypeLocalChanged}
+                                onMeetingURLLocalChanged={this.onMeetingURLLocalChanged}
+                                onEtherpadURLLocalChanged={this.onEtherpadURLLocalChanged}
+                                
+                            />
+                        ))
+                    }                    
                 </div>
-                <div className="bulk-edit-row">
-                    <div className="bulk-edit-col-id bulk-edit-col-title">{T.translate("bulk_actions_page.event_id_label")}</div>
-                    <div className="bulk-edit-col bulk-edit-col-title">{T.translate("bulk_actions_page.event_name_label")}</div>
-                    <div className="bulk-edit-col bulk-edit-col-title">{T.translate("bulk_actions_page.event_selection_plan_label")}</div>
-                    <div className="bulk-edit-col bulk-edit-col-title">{T.translate("bulk_actions_page.event_location_label")}</div>
-                    <div className="bulk-edit-col bulk-edit-col-title">{T.translate("bulk_actions_page.event_start_date_label")}</div>
-                    <div className="bulk-edit-col bulk-edit-col-title">{T.translate("bulk_actions_page.event_end_date_label")}</div>
-                    <div className="bulk-edit-col bulk-edit-col-title">{T.translate("bulk_actions_page.event_activity_type_label")}</div>
-                    <div className="bulk-edit-col bulk-edit-col-title">{T.translate("bulk_actions_page.event_activity_category_label")}</div>
-                    <div className="bulk-edit-col bulk-edit-col-title">{T.translate("bulk_actions_page.event_duration_label")} (minutes)</div>
-                    <div className="bulk-edit-col bulk-edit-col-title">{T.translate("bulk_actions_page.event_streaming_url_label")}</div>
-                    <div className="bulk-edit-col bulk-edit-col-title">{T.translate("bulk_actions_page.event_streaming_type_label")}</div>
-                    <div className="bulk-edit-col bulk-edit-col-title">{T.translate("bulk_actions_page.event_meeting_url_label")}</div>
-                    <div className="bulk-edit-col bulk-edit-col-title">{T.translate("bulk_actions_page.event_etherpad_link_label")}</div>
-                </div>
-                {
-                    events.map((event, idx) => (
-                        <SummitEventBulkEditorItem
-                            key={idx}
-                            index={idx}
-                            venuesOptions={venuesOptions}
-                            activityTypeOptions={event_type_ddl}
-                            activtyCategoryOptions={track_ddl}
-                            streamingTypeOptions={streaming_type_ddl}
-                            selectionPlanOptions={selectionPlanOptions}
-                            event={event}
-                            currentSummit={currentSummit}
-                            onLocationChanged={this.onLocationChanged}
-                            onTitleChanged={this.onTitleChanged}
-                            onStartDateChanged={this.onStartDateChanged}
-                            onEndDateChanged={this.onEndDateChanged}
-                            onSelectedEvent={this.onSelectedEvent}
-                            onSelectionPlanChanged={this.onSelectionPlanChanged}
-                            onActivityTypeLocalChanged={this.onActivityTypeLocalChanged}
-                            onActivityCategoryLocalChanged={this.onActivityCategoryLocalChanged}
-                            onDurationLocalChanged={this.onDurationLocalChanged}
-                            onStreamingURLLocalChanged={this.onStreamingURLLocalChanged}
-                            onStreamingTypeLocalChanged={this.onStreamingTypeLocalChanged}
-                            onMeetingURLLocalChanged={this.onMeetingURLLocalChanged}
-                            onEtherpadURLLocalChanged={this.onEtherpadURLLocalChanged}
-                            
-                        />
-                    ))
-                }
                 <div className="row bulk-edit-buttons">
                     <div className="col-md-12 col-form-buttons">
                         <button className="btn btn-primary pull-left" onClick={this.onApplyChanges}>{T.translate("bulk_actions_page.btn_apply_changes")}</button>
