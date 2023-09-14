@@ -37,9 +37,9 @@ class EmailFlowEventListPage extends React.Component {
     }
 
     componentDidMount() {
-        const {currentSummit} = this.props;
+        const {currentSummit, term, order, orderDir, page, perPage} = this.props;
         if(currentSummit) {
-            this.props.getEmailFlowEvents();
+            this.props.getEmailFlowEvents(term, page, perPage, order, orderDir);
         }
     }
 
