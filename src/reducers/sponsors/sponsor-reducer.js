@@ -246,11 +246,11 @@ const sponsorReducer = (state = DEFAULT_STATE, action) => {
             return {...state, entity: {...state.entity, materials_collection: {...state.entity.materials_collection, materials } }}
         }
         case RECEIVE_SPONSOR_SOCIAL_NETWORKS: {
-            let { current_page, total, last_page } = payload.response;
+            let { current_page, per_page, total, last_page } = payload.response;
             const social_networks = payload.response.data.map(social_network => {
                 return ({...social_network, is_enabled: social_network.is_enabled ? 'True' : 'False'})
             });
-            return {...state, entity: {...state.entity, social_networks_collection: { social_networks, currentPage: current_page, lastPage: last_page, total } }}
+            return {...state, entity: {...state.entity, social_networks_collection: { social_networks, currentPage: current_page, lastPage: last_page, total, perPage: per_page } }}
         }
         break;
         case SPONSOR_SOCIAL_NETWORK_ADDED: {
