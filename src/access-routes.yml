@@ -10,7 +10,12 @@ admin-access:
 sponsors:
   - super-admins
   - administrators
+  - summit-front-end-administrators
 
+admin-sponsors:
+  - super-admins
+  - administrators
+  -
 general:
   - super-admins
   - administrators
