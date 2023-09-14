@@ -26,6 +26,7 @@ import {
     TextEditor,
     MemberInput
 } from 'openstack-uicore-foundation/lib/components'
+import { Pagination } from 'react-bootstrap';
 import Switch from "react-switch";
 
 import TextAreaInputWithCounter from '../inputs/text-area-input-with-counter'
@@ -41,6 +42,7 @@ class SummitForm extends React.Component {
             entity: {...props.entity},
             regLiteMarketingSettings: {...props.regLiteMarketingSettings},
             printAppMarketingSettings: {...props.printAppMarketingSettings},
+            regFeedMetadataListSettings: {...props.regFeedMetadataListSettings},
             showSection: 'main',
             errors: props.errors
         };
@@ -49,6 +51,8 @@ class SummitForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleSPlanEdit = this.handleSPlanEdit.bind(this);
         this.handleSPlanAdd = this.handleSPlanAdd.bind(this);
+        this.handleRegFeedMetadataEdit = this.handleRegFeedMetadataEdit.bind(this);
+        this.handleRegFeedMetadataAdd = this.handleRegFeedMetadataAdd.bind(this);
         this.handleAttributeTypeEdit = this.handleAttributeTypeEdit.bind(this);
         this.handleNewAttributeType = this.handleNewAttributeType.bind(this);
         this.handleUploadFile = this.handleUploadFile.bind(this);
@@ -70,6 +74,10 @@ class SummitForm extends React.Component {
 
         if(!shallowEqual(prevProps.printAppMarketingSettings, this.props.printAppMarketingSettings)) {
             state.printAppMarketingSettings = {...this.props.printAppMarketingSettings};
+        }
+
+        if(!shallowEqual(prevProps.regFeedMetadataListSettings, this.props.regFeedMetadataListSettings)) {
+            state.regFeedMetadataListSettings = {...this.props.regFeedMetadataListSettings};
         }
 
         if (!shallowEqual(prevProps.errors, this.props.errors)) {
@@ -243,6 +251,17 @@ class SummitForm extends React.Component {
         history.push(`/app/summits/${entity.id}/selection-plans/new`);
     }
 
+    handleRegFeedMetadataEdit(regFeedMetadataId) {
+        const {entity, history} = this.props;
+        history.push(`/app/summits/${entity.id}/reg-feed-metadata/${regFeedMetadataId}`);
+    }
+
+    handleRegFeedMetadataAdd(ev) {
+        const {entity, history} = this.props;
+        ev.preventDefault();
+        history.push(`/app/summits/${entity.id}/reg-feed-metadata/new`);
+    }
+
     handleAttributeTypeEdit(attributeId) {
         const {entity, history} = this.props;
         history.push(`/app/summits/${entity.id}/room-booking-attributes/${attributeId}`);
@@ -274,8 +293,8 @@ class SummitForm extends React.Component {
     }
 
     render() {
-        const {entity, showSection, regLiteMarketingSettings, printAppMarketingSettings} = this.state;
-        const {timezones, onSPlanDelete, onAttributeTypeDelete} = this.props;
+        const {entity, showSection, regLiteMarketingSettings, printAppMarketingSettings, regFeedMetadataListSettings} = this.state;
+        const {timezones, onSPlanDelete, onAttributeTypeDelete, onRegFeedMetadataDelete} = this.props;
         const time_zones_ddl = timezones.map(tz => ({label: tz, value: tz}));
         const dates_enabled = (entity.hasOwnProperty('time_zone_id') && entity.time_zone_id !== '');
 
@@ -288,6 +307,18 @@ class SummitForm extends React.Component {
             actions: {
                 edit: { onClick: this.handleSPlanEdit },
                 delete: { onClick: onSPlanDelete }
+            }
+        };
+
+        const registration_feed_metadata_table_columns = [
+            { columnKey: 'key', value: T.translate("edit_reg_feed_metadata.key") },
+            { columnKey: 'value', value: T.translate("edit_reg_feed_metadata.value") }
+        ];
+
+        const registration_feed_metadata_table_options = {
+            actions: {
+                edit: { onClick: this.handleRegFeedMetadataEdit },
+                delete: { onClick: onRegFeedMetadataDelete }
             }
         };
 
@@ -1161,6 +1192,38 @@ class SummitForm extends React.Component {
                             />
                         </div>
                     </div>
+                    {entity.id &&
+                    <div className="form-group">
+                        <label> {T.translate("edit_summit.registration_feed_metadata")}</label>
+                        <input type="button" onClick={this.handleRegFeedMetadataAdd}
+                            className="btn btn-primary pull-right" value={T.translate("edit_summit.add_registration_feed_metadata")}/>
+
+                        {regFeedMetadataListSettings?.regFeedMetadata?.length > 0 ? 
+                            <>
+                                <Table
+                                    options={registration_feed_metadata_table_options}
+                                    data={regFeedMetadataListSettings.regFeedMetadata}
+                                    columns={registration_feed_metadata_table_columns}
+                                /> 
+                                <Pagination
+                                    bsSize="medium"
+                                    prev
+                                    next
+                                    first
+                                    last
+                                    ellipsis
+                                    boundaryLinks
+                                    maxButtons={10}
+                                    items={regFeedMetadataListSettings.lastPage}
+                                    activePage={regFeedMetadataListSettings.currentPage}
+                                    onSelect={this.handleFeedbackPageChange}
+                                />                        
+                            </>
+                            :
+                            <div className="no-items">{T.translate("edit_summit.no_reg_feed_metadata")}</div>
+                        }
+                    </div>
+                    }
                     <div className="row form-group">
                         <div className="col-md-4">
                             <label> {T.translate("edit_summit.mux_token_id")}</label>

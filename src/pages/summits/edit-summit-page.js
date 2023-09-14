@@ -23,6 +23,7 @@ import { deleteRoomBookingAttributeType } from "../../actions/room-booking-actio
 import {addHelpMember, removeHelpMember} from "../../actions/user-chat-roles-actions"
 import '../../styles/edit-summit-page.less';
 import '../../components/form-validation/validate.less';
+import { deleteRegFeedMetadata } from '../../actions/reg-feed-metadata-actions';
 
 class EditSummitPage extends React.Component {
 
@@ -31,8 +32,28 @@ class EditSummitPage extends React.Component {
 
         this.handleSPlanDelete = this.handleSPlanDelete.bind(this);
         this.handleAttributeTypeDelete = this.handleAttributeTypeDelete.bind(this);
+        this.handleRegFeedMetadataDelete = this.handleRegFeedMetadataDelete.bind(this);
         // reset selection plan
         this.props.resetSelectionPlanForm();
+    }
+
+    handleRegFeedMetadataDelete(regFeedMetadataId) {
+        const {currentRegFeedMetadataListSettings: {regFeedMetadata}, deleteRegFeedMetadata} = this.props;
+        let feedMetadata = regFeedMetadata.find(sp => sp.id === regFeedMetadataId);
+
+        Swal.fire({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("edit_summit.remove_reg_feed_metadata_warning") + ' ' + feedMetadata.key,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: T.translate("general.yes_delete")
+        }).then(function(result){
+            if (result.value) {
+                console.log('key delete', regFeedMetadataId);
+                deleteRegFeedMetadata(regFeedMetadataId);
+            }
+        });
     }
 
     handleSPlanDelete(selectionPlanId) {
@@ -73,7 +94,10 @@ class EditSummitPage extends React.Component {
 
 
     render(){
-        const {currentSummit, attachLogo, deleteLogo, errors, history, timezones, currentSummitRegLiteMarketingSettings, currentSummitPrintAppMarketingSettings} = this.props;
+        const {
+            currentSummit, attachLogo, deleteLogo, errors, history, timezones, currentSummitRegLiteMarketingSettings, 
+            currentSummitPrintAppMarketingSettings, currentRegFeedMetadataListSettings
+        } = this.props;
 
         return(
             <div className="container">
@@ -84,10 +108,12 @@ class EditSummitPage extends React.Component {
                     entity={currentSummit}
                     regLiteMarketingSettings={currentSummitRegLiteMarketingSettings}
                     printAppMarketingSettings={currentSummitPrintAppMarketingSettings}
+                    regFeedMetadataListSettings={currentRegFeedMetadataListSettings}
                     timezones={timezones}
                     errors={errors}
                     onSubmit={this.props.saveSummit}
                     onSPlanDelete={this.handleSPlanDelete}
+                    onRegFeedMetadataDelete={this.handleRegFeedMetadataDelete}
                     onAttributeTypeDelete={this.handleAttributeTypeDelete}
                     onLogoAttach={attachLogo}
                     onLogoDelete={deleteLogo}
@@ -102,12 +128,13 @@ class EditSummitPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, baseState }) => ({
+const mapStateToProps = ({ currentSummitState, baseState, currentRegFeedMetadataListState }) => ({
     currentSummit: currentSummitState.currentSummit,
     currentSummitRegLiteMarketingSettings: currentSummitState.reg_lite_marketing_settings,
     currentSummitPrintAppMarketingSettings: currentSummitState.print_app_marketing_settings,
+    currentRegFeedMetadataListSettings: currentRegFeedMetadataListState,
     errors: currentSummitState.errors,
-    timezones: baseState.timezones
+    timezones: baseState.timezones,
 });
 
 export default Restrict(connect (
@@ -118,6 +145,7 @@ export default Restrict(connect (
         resetSummitForm,
         deleteSelectionPlan,
         deleteRoomBookingAttributeType,
+        deleteRegFeedMetadata,
         attachLogo,
         deleteLogo,
         addHelpMember,

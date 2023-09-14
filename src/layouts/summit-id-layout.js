@@ -68,7 +68,9 @@ import ViewTypeLayout from './view-type-layout'
 import RegistrationStatsPage from '../pages/registration/registration-stats-page'
 import AuditLogPage from '../pages/audit-log/audit-log-page'
 import SubmissionInvitationLayout from "./submission-invitation-layout";
+import RegFeedMetadataLayout from './reg-feed-metadata-layout';
 import { getMarketingSettingsForRegLite, getMarketingSettingsForPrintApp } from '../actions/marketing-actions';
+import { getRegFeedMetadataBySummit } from '../actions/reg-feed-metadata-actions';
 
 class SummitIdLayout extends React.Component {
 
@@ -81,7 +83,8 @@ class SummitIdLayout extends React.Component {
             this.props.getSummitById(summitId).then(() => {
                 this.props.getMarketingSettingsForRegLite();
                 this.props.getMarketingSettingsForPrintApp();
-                this.props.getUserRolesBySummit()
+                this.props.getUserRolesBySummit();
+                this.props.getRegFeedMetadataBySummit();
             });
             // this is needed for summit dropdown, runs on background
             this.props.getAllSummits();
@@ -140,6 +143,7 @@ class SummitIdLayout extends React.Component {
                     <Route path={`${match.url}/tag-groups`} component={TagGroupLayout}/>
                     <Route path={`${match.url}/reports`} component={ReportsLayout}/>
                     <Route path={`${match.url}/selection-plans`} component={SelectionPlanLayout}/>
+                    <Route path={`${match.url}/reg-feed-metadata`} component={RegFeedMetadataLayout}/>
                     <Route path={`${match.url}/badge-features`} component={BadgeFeatureLayout}/>
                     <Route path={`${match.url}/badge-types`} component={BadgeTypeLayout}/>
                     <Route path={`${match.url}/access-levels`} component={AccessLevelLayout}/>
@@ -182,7 +186,8 @@ export default connect (
         getAllSummits,
         getUserRolesBySummit,
         getMarketingSettingsForRegLite,
-        getMarketingSettingsForPrintApp
+        getMarketingSettingsForPrintApp,
+        getRegFeedMetadataBySummit
     }
 )(SummitIdLayout);
 

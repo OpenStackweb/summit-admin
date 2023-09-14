@@ -136,6 +136,8 @@ import trackTimeframeReducer from "./reducers/track_chairs/track-timeframe-reduc
 import thunk from 'redux-thunk';
 import { persistStore, persistCombineReducers } from 'redux-persist'
 import storage from 'redux-persist/es/storage'
+import currentRegFeedMetadataListReducer from './reducers/summits/reg-feed-metadata-list-reducer';
+import currentRegFeedMetadataReducer from './reducers/summits/reg-feed-metadata-reducer';
 
  // default: localStorage if web, AsyncStorage if react-native
 
@@ -265,7 +267,9 @@ const reducers = persistCombineReducers(config, {
     auditLogState: auditLogReducer,
     signageState: signageReducer,
     trackTimeframesListState: trackTimeframesListReducer,
-    trackTimeframeState: trackTimeframeReducer
+    trackTimeframeState: trackTimeframeReducer,
+    currentRegFeedMetadataListState: currentRegFeedMetadataListReducer,
+    currentRegFeedMetadataState: currentRegFeedMetadataReducer
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

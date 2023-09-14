@@ -305,6 +305,7 @@
     "enabled": "Enabled",
     "add_splan": "Add Selection Plan",
     "remove_sp_warning": "Are you sure you want to delete selection plan ",
+    "remove_reg_feed_metadata_warning": "Are you sure you want to delete registration feed metadata ",
     "api_feed_type": "Schedule API Feed Type",
     "api_feed_url": "Schedule API Feed URL",
     "api_feed_key": "Schedule Feed API key",
@@ -359,6 +360,9 @@
     "reg_lite_settings": "Registration Lite Settings",
     "check_in_settings": "Print/Check In App Settings",
     "mux_allowed_domains": "Allowed Domains",
+    "registration_feed_metadata": "Registration Feed Metadata",
+    "add_registration_feed_metadata": "Add Feed Metadata",
+    "no_reg_feed_metadata": "No registration feed metadata found.",
     "placeholders": {
       "api_feed_type": "Select API feed type...",
       "external_registration_feed_type": "Select Ext. Reg. feed type...",
@@ -2667,5 +2671,12 @@
     "all": "all",
     "any": "any",
     "following": " of the following: "
+  },
+  "edit_reg_feed_metadata": {
+    "reg_feed_metadata": "Registration Feed Metadata",
+    "key": "Key",
+    "value": "Value",
+    "reg_feed_metadata_saved": "Registration Feed Metadata saved successfully.",
+    "reg_feed_metadata_created": "Registration Feed Metadata created successfully."
   }
 }
