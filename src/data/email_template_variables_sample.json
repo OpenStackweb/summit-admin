@@ -1,7 +1,8 @@
 {
     "owner_first_name": "John",
-    "owner_last_name": "Doe",    
+    "owner_last_name": "Doe",
     "owner_full_name": "John Doe",
+    "owner_fullname": "John Doe",
     "owner_company": "Doe Inc.",
     "owner_email": "test@test.com",
     "first_name": "John",
@@ -18,7 +19,7 @@
     "order_number": "ORDER_NUMBER_EXAMPLE_123456789",
     "order_qr_value": "ORDER_QR_EXAMPLE_123456789",
     "ticket_number": "TICKET_NUMBER_EXAMPLE_123456789",
-    "summit_name": "YOCO",
+    "summit_name": "YOCO Summit",
     "summit_logo": "https://example-url.com",
     "summit_virtual_site_url": "https://example-url.com",
     "summit_marketing_site_url": "https://example-url.com",
@@ -52,5 +53,274 @@
     "set_password_link_to_registration": "https://example-url.com",
     "need_details": false,
     "order_credit_card_type": "VISA",
-    "order_credit_card_4number": "4242"
+    "order_credit_card_4number": "4242",
+    "room_complete_name": "Test Room #1",
+    "reservation_start_datetime": "2023-09-01 00:00:00",
+    "reservation_end_datetime": "2023-09-01 01:00:00",
+    "reservation_created_datetime": "2023-09-01 00:00:00",
+    "reservation_amount": "500",
+    "reservation_currency": "USD",
+    "reservation_id": 123,
+    "room_capacity": 1,
+    "reservation_refunded_amount": "200.00",
+    "accepted_moderated_presentations": [{
+        "id": 1,
+        "title": "Test Presentation #1",
+        "track": {
+            "id": 1,
+            "name": "Test Track #1"
+        },
+        "selection_plan": {
+            "id": 1,
+            "name": "Test Selection Plan #1"
+        },
+        "moderator": {
+            "id": 1,
+            "full_name": "John Doe M",
+            "email": "moderator@email.com"
+        },
+        "speakers": [{
+            "id": 2,
+            "full_name": "John Doe S",
+            "email": "speaker@email.com"
+        }]
+    }],
+    "accepted_presentations": [{
+        "id": 2,
+        "title": "Test Presentation #2",
+        "track": {
+            "id": 1,
+            "name": "Test Track #2"
+        },
+        "selection_plan": {
+            "id": 1,
+            "name": "Test Selection Plan #2"
+        },
+        "moderator": {
+            "id": 1,
+            "full_name": "John Doe M",
+            "email": "moderator@email.com"
+        },
+        "speakers": [{
+            "id": 2,
+            "full_name": "John Doe S",
+            "email": "speaker@email.com"
+        }]
+    }],
+    "admin_ticket_edit_url": "https://example-url.com",
+    "alternate_moderated_presentations": [{
+        "id": 3,
+        "title": "Test Presentation #3",
+        "track": {
+            "id": 3,
+            "name": "Test Track #3"
+        },
+        "selection_plan": {
+            "id": 1,
+            "name": "Test Selection Plan #3"
+        },
+        "moderator": {
+            "id": 1,
+            "full_name": "John Doe M",
+            "email": "moderator@email.com"
+        },
+        "speakers": [{
+            "id": 2,
+            "full_name": "John Doe S",
+            "email": "speaker@email.com"
+        }]
+    }],
+    "alternate_presentations": [{
+        "id": 4,
+        "title": "Test Presentation #4",
+        "track": {
+            "id": 4,
+            "name": "Test Track #3"
+        },
+        "selection_plan": {
+            "id": 1,
+            "name": "Test Selection Plan #4"
+        },
+        "moderator": {
+            "id": 1,
+            "full_name": "John Doe M",
+            "email": "moderator@email.com"
+        },
+        "speakers": [{
+            "id": 2,
+            "full_name": "John Doe S",
+            "email": "speaker@email.com"
+        }]
+    }],
+    "approval_date": "approval_date",
+    "aprover_email": "test@tets.com",
+    "aprover_fullname": "John Doe A",
+    "attachments": [{
+        "name": "Test File",
+        "content": "content",
+        "type": "type",
+        "disposition": "inline"
+    }],
+    "bio_edit_link": "https://example-url.com",
+    "candidate_email": "test@test.com",
+    "candidate_full_name": "John Doe C",
+    "candidate_has_accepted_nomination": true,
+    "candidate_nominations_count": 5,
+    "cc_email": "test@test.com",
+    "code": "code",
+    "content": "content",
+    "confirmation_number": "confirmation_number",
+    "creator_email": "test@test.com",
+    "creator_full_name": "John Doe C",
+    "currency": "USD",
+    "currency_symbol": "$",
+    "description": "description",
+    "discount_amount": "500.00",
+    "discount_rate": "50%",
+    "disposition": "disposition",
+    "election_app_deadline": "election_app_deadline",
+    "election_title": "election_title",
+    "error_message": "error_message",
+    "event_date": "event_date",
+    "event_description": "event_description",
+    "event_title": "Test Title",
+    "event_uri": "https://example-url.com",
+    "event_url": "https://example-url.com",
+    "external_id": 456,
+    "email": "test@test.com",
+    "email_to": "test@test.com",
+    "feed_type": "feed_type",
+    "from_email": "test@test.com",
+    "full_name": "full_name",
+    "has_owner": true,
+    "hash": "hash",
+    "id": "id",
+    "invitation_token": "invitation_token",
+    "is_discount": "is_discount",
+    "link": "https://example-url.com",
+    "magic_link": "https://example-url.com",
+    "member_id": 4949,
+    "message": "message",
+    "moderator": "moderator",
+    "name": "name",
+    "net_selling_price": "net_selling_price",
+    "new_category": "new_category",
+    "number": "number",
+    "old_category": "old_category",
+    "order_id": 765,
+    "order_owner_company": "order_owner_company",
+    "order_owner_email": "order_owner_email",
+    "presentation_edit_link": "https://example-url.com",
+    "presentation_end_date": "presentation_end_date",
+    "presentation_id": 5,
+    "presentation_name": "presentation_name",
+    "presentation_location": "presentation_location",
+    "presentation_start_date": "presentation_start_date",
+    "presentation_title": "presentation_title",
+    "price": "price",
+    "promo_code": "promo_code",
+    "promo_code_discount_amount": "promo_code_discount_amount",
+    "promo_code_discount_rate": "promo_code_discount_rate",
+    "promo_code_until_date": "promo_code_until_date",
+    "reason": "reason",
+    "registration_link": "https://example-url.com",
+    "rejected_moderated_presentations": [{
+        "id": 1,
+        "title": "Rejected Presentation title",
+        "track": {
+            "id": 1,
+            "name": "Track name"
+        },
+        "selection_plan": {
+            "id": 1,
+            "name": "Selection Plan name"
+        },
+        "moderator": {
+            "id": 1,
+            "full_name": "Moderator Name",
+            "email": "moderator@email.com"
+        },
+        "speakers": [{
+            "id": 2,
+            "full_name": "Speaker Name",
+            "email": "speaker@email.com"
+        }]
+    }],
+    "rejected_presentations": [{
+        "id": 1,
+        "title": "Rejected Presentation title",
+        "track": {
+            "id": 1,
+            "name": "Track name"
+        },
+        "selection_plan": {
+            "id": 1,
+            "name": "Selection Plan name"
+        },
+        "moderator": {
+            "id": 1,
+            "full_name": "Moderator Name",
+            "email": "moderator@email.com"
+        },
+        "speakers": [{
+            "id": 2,
+            "full_name": "Speaker Name",
+            "email": "speaker@email.com"
+        }]
+    }],
+    "report": "report",
+    "requested_by_email": "requested_by_email",
+    "requested_by_full_name": "requested_by_full_name",
+    "requester_email": "test@test.com",
+    "requester_fullname": "requester_fullname",
+    "reset_password_link": "https://example-url.com",
+    "review_link": "review_link",
+    "selection_plan": "selection_plan",
+    "selection_plan_id": 7,
+    "selection_plan_name": "selection_plan_name",
+    "selection_plan_submission_end_date": "selection_plan_submission_end_date",
+    "selection_plan_submission_start_date": "selection_plan_submission_start_date",
+    "selection_process_link": "https://example-url.com",
+    "speaker": "speaker",
+    "speakers": "speakers",
+    "speaker_confirmation_link": "https://example-url.com",
+    "speaker_email": "speaker@test.com",
+    "speaker_full_name": "Speaker Full Name",
+    "speaker_management_link": "https://example-url.com",
+    "status": "status",
+    "submitter_email": "test@test.com",
+    "submitter_full_name": "submitter_full_name",
+    "submitter_fullname": "submitter_fullname",
+    "summit_date": "summit_date",
+    "summit_dates_label": "summit_dates_label",
+    "summit_id": 50,
+    "summit_marketing_site_oauth2_client_id": "CLIENT_ID",
+    "summit_marketing_site_oauth2_scopes": "summit_marketing_site_oauth2_scopes",
+    "summit_schedule_url": "https://example-url.com",
+    "summit_site_url": "https://example-url.com",
+    "summit_schedule_default_event_detail_url": "CLIENT_ID",
+    "summit_virtual_site_oauth2_client_id": "CLIENT_ID",
+    "tenant_name": "tenant_name",
+    "ticket_amount": "1000.00",
+    "ticket_currency": "USD",
+    "ticket_currency_symbol": "$",
+    "ticket_discount": "ticket_discount",
+    "ticket_id": 123456,
+    "ticket_owner": "ticket_owner",
+    "ticket_promo_code": "CODE_123",
+    "ticket_raw_amount": "100.00",
+    "ticket_refund_amount": "ticket_refund_amount",
+    "ticket_refund_status": "ticket_refund_status",
+    "ticket_taxes": "ticket_taxes",
+    "ticket_type": "ticket_type",
+    "ticket_type_name": "ticket_type_name",
+    "ticket_types": [],
+    "title": "title",
+    "to_email": "test@test.com",
+    "token": "token",
+    "track": "Test Track",
+    "track_id": 123,
+    "type": "type",
+    "until_date": "until_date",
+    "virtual_event_site_link": "https://example-url.com"
 }
