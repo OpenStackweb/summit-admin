@@ -1,11 +1,19 @@
 .preview-email-template-modal {
   .col-md-12 {
     margin-bottom: 30px;
-  }
+  }  
 }
 
 .email-preview {
   border: 1px solid lightgrey;
   min-height: 200px;
   padding: 10px;
+}
+
+@media only screen and (min-width: 768px) {
+  .preview-email-template-modal {    
+    >div {
+      width: 70%;
+    }
+  }
 }

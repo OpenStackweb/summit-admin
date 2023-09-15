@@ -112,7 +112,7 @@ class EditEmailTemplatePage extends React.Component {
                         <Modal.Title>{T.translate("emails.sample_data")}</Modal.Title>
                         <span>{T.translate("emails.sample_data_legend")}</span>
                     </Modal.Header>
-                    <Modal.Body>
+                    <Modal.Body style={{overflow: 'auto', maxHeight: '75vh'}}>
                         {render_errors?.length > 0 &&
                             <div className="row">
                                 <div className="col-md-12 error">
