@@ -348,7 +348,7 @@ class SummitForm extends React.Component {
         };
 
         const attributes = entity.meeting_booking_room_allowed_attributes.map(at => {
-            return {id: at.id, type: at.type, values: at.values.map(v => v.value).join(' ,')}
+            return {id: at.id, type: at.type, values: at.values.map(v => v.value).join(', ')}
         });
 
         const room_booking_start = entity.meeting_room_booking_start_time ? epochToMomentTimeZone(entity.meeting_room_booking_start_time, 'UTC') : moment.utc(0);
