@@ -114,7 +114,7 @@ class RoomBookingListPage extends React.Component {
         const {roomBookings} = this.props;
         let roomBooking = roomBookings.find(rb => rb.id === bookingId);
 
-        return roomBooking.status === 'Paid';
+        return roomBooking.status === 'Paid' && roomBooking.amount > 0;
     }
 
     onCloseModal() {
