@@ -29,6 +29,8 @@ import {
 
 import {
     RECEIVE_BADGE_TYPES,
+    BADGE_TYPE_ADDED,
+    BADGE_TYPE_DELETED,
     RECEIVE_ACCESS_LEVELS,
     RECEIVE_BADGE_FEATURES,
     RECEIVE_VIEW_TYPES
@@ -361,6 +363,14 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
             let badgeTypes = payload.response.data;
 
             return {...state, currentSummit: {...state.currentSummit, badge_types: badgeTypes} };
+        }
+        case BADGE_TYPE_ADDED: {
+            const newBadgeType = payload.response;
+            return {...state, currentSummit: {...state.currentSummit, badge_types: [...state.currentSummit.badge_types, newBadgeType]}};
+        }
+        case BADGE_TYPE_DELETED: {
+            let {badgeTypeId} = payload;
+            return {...state, currentSummit: {...state.currentSummit, badge_types: [...state.currentSummit.badge_types.filter(bt => bt.id !== badgeTypeId)]}}
         }
         case RECEIVE_REFUND_POLICIES: {
             let refundPolicies = payload.response.data;
