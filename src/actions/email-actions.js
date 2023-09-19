@@ -151,7 +151,7 @@ export const saveEmailTemplate = (entity, noAlert = false) => async (dispatch, g
             createAction(TEMPLATE_ADDED),
             `${window.EMAIL_API_BASE_URL}/api/v1/mail-templates`,
             normalizedEntity,
-            authErrorHandler,
+            customErrorHandler,
             entity
         )(params)(dispatch)
             .then((payload) => {
@@ -349,7 +349,6 @@ export const getAllClients = () => async (dispatch, getState) => {
     );
 };
 
-
 export const customErrorHandler = (err, res) => (dispatch, state) => {
     const code = err.status;
     let msg = '';
@@ -363,7 +362,7 @@ export const customErrorHandler = (err, res) => (dispatch, state) => {
                     msg += er + '<br>';
                 });
             } else {
-                for (var [key, value] of Object.entries(err.response.body.non_field_errors)) {
+                for (var [key, value] of Object.entries(err.response.body)) {
                     if (isNaN(key)) {
                         msg += key + ': ';
                     }

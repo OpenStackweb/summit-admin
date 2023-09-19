@@ -28,10 +28,9 @@ import { json } from '@codemirror/lang-json';
 class EditEmailTemplatePage extends React.Component {
 
     constructor(props) {
-        const { clients, match, json_data } = props;
-        const templateId = match.params.template_id;
-
         super(props);
+
+        const { json_data } = props;        
 
         this.state = {
             showModal: false,
@@ -39,19 +38,22 @@ class EditEmailTemplatePage extends React.Component {
             json_preview: json_data
         };
 
-        if (!templateId) {
-            props.resetTemplateForm();
-        } else {
-            props.getEmailTemplate(templateId);
-        }
-
-        if (!clients) {
-            props.getAllClients();
-        }
-
         this.handlePreview = this.handlePreview.bind(this);
         this.handleJsonChange = this.handleJsonChange.bind(this);
         this.handlePopupClose = this.handlePopupClose.bind(this);
+    }
+
+    componentDidMount() {
+        const { match } = this.props;
+        const templateId = match.params.template_id;
+
+        if (!templateId) {
+            this.props.resetTemplateForm();
+        } else {
+            this.props.getEmailTemplate(templateId);
+        }
+
+        this.props.getAllClients();
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
