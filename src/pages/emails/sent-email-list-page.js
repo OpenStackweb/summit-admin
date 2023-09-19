@@ -57,7 +57,7 @@ class SentEmailListPage extends React.Component {
 
         const columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
-            { columnKey: 'template', value: T.translate("emails.template"), sortable: true },
+            { columnKey: 'template', value: T.translate("emails.email_templates"), sortable: true },
             { columnKey: 'subject', value: T.translate("emails.subject") },
             { columnKey: 'from_email', value: T.translate("emails.from_email") },
             { columnKey: 'to_email', value: T.translate("emails.to_email") },
