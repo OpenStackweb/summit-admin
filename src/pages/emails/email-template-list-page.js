@@ -37,7 +37,8 @@ class EmailTemplateListPage extends React.Component {
     }
 
     componentDidMount() {
-        this.props.getEmailTemplates();
+        const {term, currentPage, perPage, order, orderDir} = this.props;
+        this.props.getEmailTemplates(term, currentPage, perPage, order, orderDir);
     }
 
     handleEdit(template_id) {
