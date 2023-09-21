@@ -313,7 +313,7 @@ const SpeakersBasePCForm = (props) => {
 
         Swal.fire({
             title: T.translate("general.are_you_sure"),
-            text: T.translate("edit_promo_code.unassign_speaker_warning") + ' ' + speakerToDelete.name,
+            text: `${T.translate("edit_promo_code.unassign_speaker_warning")} ${speakerToDelete.first_name} ${speakerToDelete.last_name} `,
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
