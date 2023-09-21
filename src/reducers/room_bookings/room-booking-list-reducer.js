@@ -15,7 +15,6 @@ import
 {
     RECEIVE_ROOM_BOOKINGS,
     REQUEST_ROOM_BOOKINGS,
-    ROOM_BOOKING_DELETED,
     ROOM_BOOKING_REFUNDED
 } from '../../actions/room-booking-actions';
 
@@ -63,10 +62,6 @@ const roomBookingListReducer = (state = DEFAULT_STATE, action) => {
             })
 
             return {...state, roomBookings: room_bookings, currentPage: current_page, totalRoomBookings: total, lastPage: last_page };
-        }
-        case ROOM_BOOKING_DELETED: {
-            let {roomBookingId} = payload;
-            return {...state, roomBookings: state.roomBookings.filter(rb => rb.id !== roomBookingId)};
         }
         case ROOM_BOOKING_REFUNDED: {
             let roomBooking = payload.response;

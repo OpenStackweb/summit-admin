@@ -20,7 +20,7 @@ import { Pagination } from 'react-bootstrap';
 import { Table, FreeTextSearch } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
 import {epochToMomentTimeZone} from 'openstack-uicore-foundation/lib/utils/methods'
-import { getRoomBookings, exportRoomBookings, deleteRoomBooking, refundRoomBooking } from "../../actions/room-booking-actions";
+import { getRoomBookings, exportRoomBookings, refundRoomBooking, cancelRoomBooking } from "../../actions/room-booking-actions";
 
 class RoomBookingListPage extends React.Component {
 
@@ -28,7 +28,7 @@ class RoomBookingListPage extends React.Component {
         super(props);
 
         this.handleEdit = this.handleEdit.bind(this);
-        this.handleDeleteBooking = this.handleDeleteBooking.bind(this);
+        this.handleCancelBooking = this.handleCancelBooking.bind(this);
         this.handleSort = this.handleSort.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
         this.handleSort = this.handleSort.bind(this);
@@ -60,8 +60,8 @@ class RoomBookingListPage extends React.Component {
         history.push(`/app/summits/${currentSummit.id}/room-bookings/${room_booking_id}`);
     }
 
-    handleDeleteBooking(bookingId) {
-        const {deleteRoomBooking, roomBookings} = this.props;
+    handleCancelBooking(bookingId) {
+        const {cancelRoomBooking, roomBookings, getRoomBookings, term, order, orderDir, perPage} = this.props;
         let roomBooking = roomBookings.find(rb => rb.id === bookingId);
 
         Swal.fire({
@@ -73,7 +73,7 @@ class RoomBookingListPage extends React.Component {
             confirmButtonText: T.translate("general.yes_delete")
         }).then(function(result){
             if (result.value) {
-                deleteRoomBooking(bookingId);
+                cancelRoomBooking(roomBooking.room_id, bookingId).then(() => getRoomBookings(term, 1, perPage, order, orderDir))
             }
         });
     }
@@ -161,6 +161,7 @@ class RoomBookingListPage extends React.Component {
             sortCol: order,
             sortDir: orderDir,
             actions: {
+                delete: { onClick: this.handleCancelBooking },
                 custom: [
                     {
                         name: 'refund',
@@ -271,6 +272,6 @@ export default connect (
         getRoomBookings,
         exportRoomBookings,
         refundRoomBooking,
-        deleteRoomBooking
+        cancelRoomBooking
     }
 )(RoomBookingListPage);

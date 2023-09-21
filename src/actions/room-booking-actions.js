@@ -49,6 +49,7 @@ export const ROOM_BOOKING_ATTRIBUTE_ADDED       = 'ROOM_BOOKING_ATTRIBUTE_ADDED'
 export const ROOM_BOOKING_ATTRIBUTE_DELETED     = 'ROOM_BOOKING_ATTRIBUTE_DELETED';
 export const ROOM_BOOKING_REFUNDED     = 'ROOM_BOOKING_REFUNDED';
 
+export const ROOM_BOOKING_CANCELED = 'ROOM_BOOKING_CANCELED';
 
 export const getRoomBookings = ( term = null, page = 1, perPage = 10, order = 'start_datetime', orderDir = 1 ) => async (dispatch, getState) => {
 
@@ -65,6 +66,8 @@ export const getRoomBookings = ( term = null, page = 1, perPage = 10, order = 's
         access_token : accessToken,
         expand       : 'owner, room'
     };
+
+    filter.push('status==Paid||Reserved||RequestedRefund||Refunded');
 
     if(term){
         const escapedTerm = escapeFilterValue(term);
@@ -202,28 +205,6 @@ export const saveRoomBooking = (entity) => async (dispatch, getState) => {
     }
 }
 
-export const deleteRoomBooking = (roomBookingId) => async (dispatch, getState) => {
-
-    const { currentSummitState } = getState();
-    const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
-
-    const params = {
-        access_token : accessToken
-    };
-
-    return deleteRequest(
-        null,
-        createAction(ROOM_BOOKING_DELETED)({roomBookingId}),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/room-bookings/${roomBookingId}`,
-        null,
-        authErrorHandler
-    )(params)(dispatch).then(() => {
-            dispatch(stopLoading());
-        }
-    );
-};
-
 export const refundRoomBooking = (roomId, roomBookingId, amount) => async (dispatch, getState) => {
 
     const { currentSummitState } = getState();
@@ -246,13 +227,38 @@ export const refundRoomBooking = (roomId, roomBookingId, amount) => async (dispa
     );
 };
 
+/**
+ * @param roomId
+ * @param roomBookingId
+ * @returns {function(*, *): Promise<*>}
+ */
+export const cancelRoomBooking = (roomId, roomBookingId) => async (dispatch, getState) => {
+
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
+
+    const params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+        null,
+        createAction(ROOM_BOOKING_DELETED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/bookable-rooms/${roomId}/reservations/${roomBookingId}/cancel`,
+        {},
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            return dispatch(stopLoading());
+        }
+    );
+};
+
 
 const normalizeEntity = (entity) => {
     const normalizedEntity = {...entity};
     return normalizedEntity;
 }
-
-
 
 
 /**********************  ATTRIBUTE TYPE  *****************************************************************/
