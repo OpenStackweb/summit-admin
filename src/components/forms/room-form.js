@@ -81,6 +81,7 @@ class RoomForm extends React.Component {
     }
 
     handleClearHours() {
+        debugger;
         let entity = {...this.state.entity};
         const { locationHours } = this.props;
         entity['opening_hour'] = locationHours.opening_hour || null;
@@ -234,6 +235,7 @@ class RoomForm extends React.Component {
                         </div>
                     </div>
                 </div>
+                { entity.class_name !== 'SummitBookableVenueRoom' &&
                 <div className="row form-group">
                     <div className="col-md-8">
                         <label> {T.translate("edit_location.open_hours")}</label>
@@ -248,6 +250,7 @@ class RoomForm extends React.Component {
                         />
                     </div>
                 </div>
+                }
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_room.description")} </label>

@@ -41,6 +41,8 @@ export const DEFAULT_ENTITY = {
     floor               : null,
     floor_id            : null,
     image               : null,
+    opening_hour        : null,
+    closing_hour        : null,
 }
 
 const DEFAULT_STATE = {

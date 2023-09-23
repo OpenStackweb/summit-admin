@@ -333,13 +333,8 @@ const normalizeEntity = (entity, allClasses) => {
         normalizedEntity[field] = entity[field];
     }
 
-    if(normalizedEntity.opening_hour) {
-        normalizedEntity.opening_hour = parseInt(normalizedEntity.opening_hour)
-    }
-
-    if(normalizedEntity.closing_hour) {
-        normalizedEntity.closing_hour = parseInt(normalizedEntity.closing_hour)
-    }
+    normalizedEntity.opening_hour = (normalizedEntity.opening_hour)  ? parseInt(normalizedEntity.opening_hour) : null;
+    normalizedEntity.closing_hour = (normalizedEntity.closing_hour) ? parseInt(normalizedEntity.closing_hour) : null;
 
     return normalizedEntity;
 
@@ -733,13 +728,8 @@ const normalizeRoomEntity = (entity) => {
         delete(normalizedEntity.floor);
     }
 
-    if(normalizedEntity.opening_hour) {
-        normalizedEntity.opening_hour = parseInt(normalizedEntity.opening_hour)
-    }
-
-    if(normalizedEntity.closing_hour) {
-        normalizedEntity.closing_hour = parseInt(normalizedEntity.closing_hour)
-    }
+    normalizedEntity.opening_hour = (normalizedEntity.opening_hour)  ? parseInt(normalizedEntity.opening_hour) : null;
+    normalizedEntity.closing_hour = (normalizedEntity.closing_hour) ? parseInt(normalizedEntity.closing_hour) : null;
 
     return normalizedEntity;
 }
