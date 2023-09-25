@@ -21,6 +21,7 @@ import {Pagination} from "react-bootstrap";
 import { DiscountTicketTable } from '../tables/dicount-ticket-table';
 import OwnerInput from "../inputs/owner-input";
 import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
+import { DEFAULT_ENTITY } from '../../reducers/promocodes/promocode-reducer';
 
 // FORM DEFS
 const EmailRedeemForm = (props) => (
@@ -554,14 +555,11 @@ class PromocodeForm extends React.Component {
     }
 
     handleClassChange(ev) {
-        let entity = {...this.state.entity};
-        let {allClasses} = this.props;
+        let entity = {...this.state.entity};        
         let {value, id} = ev.target;
 
+        entity = {...DEFAULT_ENTITY}
         entity.class_name = value;
-        entity.type = null;
-        entity.allowed_ticket_types = [];
-        entity.ticket_types_rules = [];
 
         this.setState({entity: entity});
     }
