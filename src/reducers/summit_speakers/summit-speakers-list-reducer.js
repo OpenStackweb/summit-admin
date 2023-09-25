@@ -35,7 +35,9 @@ const DEFAULT_STATE = {
     lastPage: 1,
     perPage: 10,
     totalItems: 0,
+    selectedCount: 0,
     selectedItems: [],
+    excludedItems: [],
     selectedAll: false,
     selectionPlanFilter: [],
     trackFilter: [],
@@ -56,39 +58,79 @@ const summitSpeakersListReducer = (state = DEFAULT_STATE, action) => {
             return DEFAULT_STATE;
         }
         case REQUEST_SPEAKERS_BY_SUMMIT: {
-            let { order, orderDir, term, page, perPage, ...rest } = payload;
-            return { ...state, order, orderDir, term, currentPage: page, perPage, ...rest }
+            let { order, orderDir, page, ...rest} = payload;
+
+            if (order !== state.order || orderDir !== state.orderDir || page !== state.currentPage) {
+                // if the change was in page or order, keep selection
+                return {
+                    ...state,
+                    order,
+                    orderDir,
+                    currentPage: page,
+                    ...rest
+                }
+            }
+
+            return {
+                ...state,
+                order,
+                orderDir,
+                currentPage: page,
+                items: [],
+                selectedItems: [],
+                excludedItems: [],
+                selectedCount: 0,
+                selectedAll: false,
+                ...rest
+            }
         }
         case RECEIVE_SPEAKERS_BY_SUMMIT: {
             let { current_page, total, last_page } = payload.response;
 
+            const items = buildSpeakersSubmittersList(state, payload.response.data);
+
+
             return {
                 ...state,
-                items: buildSpeakersSubmittersList(state, payload.response.data),
+                items: markCheckedItems(items, state),
                 currentPage: current_page,
                 totalItems: total,
                 lastPage: last_page,
             };
         }
         case SELECT_SUMMIT_SPEAKER: {
-            return { ...state, selectedItems: [...state.selectedItems, payload], selectedAll: false }
+            let newState = {};
+
+            if (state.selectedAll) {
+                newState = { ...state, excludedItems: state.excludedItems.filter(it => it !== payload), selectedItems: [] }
+            } else {
+                newState = { ...state, selectedItems: [...state.selectedItems, payload], excludedItems: [] }
+            }
+
+            return {...newState, items: markCheckedItems(state.items, newState), selectedCount: state.selectedCount + 1}
         }
         case UNSELECT_SUMMIT_SPEAKER: {
-            return { ...state, selectedItems: state.selectedItems.filter(e => e !== payload), selectedAll: false }
+            let newState = {};
+
+            if (state.selectedAll) {
+                newState = { ...state, excludedItems: [...state.excludedItems, payload], selectedItems: [] }
+            } else {
+                newState = { ...state, selectedItems: state.selectedItems.filter(it => it !== payload), excludedItems: [] }
+            }
+
+            return {...newState, items: markCheckedItems(state.items, newState), selectedCount: state.selectedCount - 1}
         }
         case SELECT_ALL_SUMMIT_SPEAKERS: {
-            return { ...state, selectedAll: true, selectedItems:[] }
+            const newState = {...state, selectedAll: true, selectedItems: [], excludedItems: [] }
+            return { ...newState, items: markCheckedItems(state.items, newState), selectedCount: state.totalItems }
         }
         case UNSELECT_ALL_SUMMIT_SPEAKERS: {
-            return { ...state, selectedAll: false, selectedItems:[]  }
+            const newState = {...state, selectedAll: false, selectedItems: [], excludedItems: [] }
+            return { ...newState, items: markCheckedItems(state.items, newState), selectedCount: 0 }
         }
         case SEND_SPEAKERS_EMAILS: {
-            return {
-                ...state,
-                selectedItems: [],
-                currentFlowEvent: '',
-                selectedAll: false
-            }
+            const newState = {...state, selectedAll: false, selectedItems: [], excludedItems: [] }
+            return { ...newState, items: markCheckedItems(state.items, newState), selectedCount: 0 }
         }
         case SET_SPEAKERS_CURRENT_FLOW_EVENT: {
             return { ...state, currentFlowEvent: payload };
@@ -97,5 +139,17 @@ const summitSpeakersListReducer = (state = DEFAULT_STATE, action) => {
             return state;
     }
 };
+
+const markCheckedItems = (data, state) => {
+    return data.map(it => {
+        if (state.selectedAll) {
+            it.checked = !state.excludedItems.includes(it.id);
+        } else {
+            it.checked = state.selectedItems.includes(it.id);
+        }
+
+        return it;
+    });
+}
 
 export default summitSpeakersListReducer;

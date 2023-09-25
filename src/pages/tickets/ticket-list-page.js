@@ -225,10 +225,8 @@ class TicketListPage extends React.Component {
     handleDoPrinting(ev){
         ev.stopPropagation();
         ev.preventDefault();
-        const {selectedIds, selectedAll, term, order, orderDir } = this.props;
-        const {ticketFilters} = this.state;
-        this.props.printTickets(term, { selectedIds,
-            selectedAll, ...ticketFilters}, order, orderDir, this.state.doCheckIn, this.state.selectedViewType);
+        const {ticketFilters, doCheckIn, selectedViewType} = this.state;
+        this.props.printTickets(ticketFilters, doCheckIn, selectedViewType);
     }
 
     handleScanQR(qrCode){
@@ -295,7 +293,7 @@ class TicketListPage extends React.Component {
             lastPage,
             currentPage,
             match,
-            selectedIds,
+            selectedCount,
             selectedAll,
         } = this.props;                
 
@@ -318,7 +316,6 @@ class TicketListPage extends React.Component {
                     onSelectedAll: this.handleSelectedAll,
                 },
             },
-            selectedIds: selectedIds,
             selectedAll: selectedAll,
         }
 
@@ -339,10 +336,6 @@ class TicketListPage extends React.Component {
 
         const viewTypesOptions = [
             ...currentSummit.badge_view_types.map(vt => ({label: vt.name, value: vt.id}))
-        ];
-
-        const promocodesOptions = [
-            //...currentSummit.badge_view_types.map(vt => ({label: vt.name, value: vt.id}))
         ];
 
         const ddl_columns = [
@@ -632,11 +625,8 @@ class TicketListPage extends React.Component {
 
                     {tickets.length > 0 &&
                         <div>
-                            { selectedIds.length > 0 &&
-                                <span><b>{T.translate("ticket_list.items_qty", {qty:selectedIds.length})}</b></span>
-                            }
-                            { selectedAll &&
-                                <span><b>{T.translate("ticket_list.items_qty", {qty:totalTickets})}</b></span>
+                            { selectedCount > 0 &&
+                                <span><b>{T.translate("ticket_list.items_qty", {qty:selectedCount})}</b></span>
                             }
                             <SelectableTable
                                 options={table_options}

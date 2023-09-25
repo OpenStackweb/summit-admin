@@ -145,12 +145,9 @@ class RegistrationInvitationsListPage extends React.Component {
         ev.preventDefault();
 
         const {
-            selectedAll,
-            totalInvitations,
-            term,
+          selectedCount,
             isAccepted,
             isSent,
-            selectedInvitationsIds,
             currentFlowEvent,
             sendEmails,
             allowedTicketTypesIds,
@@ -164,7 +161,7 @@ class RegistrationInvitationsListPage extends React.Component {
             return false;
         }
 
-        if(!selectedAll && selectedInvitationsIds.length === 0){
+        if(selectedCount === 0){
             Swal.fire("Validation error", T.translate("registration_invitation_list.select_items"), "warning");
             return false;
         }
@@ -177,7 +174,7 @@ class RegistrationInvitationsListPage extends React.Component {
         Swal.fire({
             title: T.translate("general.are_you_sure"),
             text: `${T.translate("registration_invitation_list.send_email_warning", 
-                {template: currentFlowEvent, qty: selectedAll ? totalInvitations : selectedInvitationsIds.length})}
+                {template: currentFlowEvent, qty: selectedCount})}
                 ${testRecipient ? T.translate("registration_invitation_list.email_test_recipient", {email: testRecipient}) : ''}
                 ${T.translate("registration_invitation_list.please_confirm")}`,
             type: "warning",
@@ -190,10 +187,6 @@ class RegistrationInvitationsListPage extends React.Component {
 
                 sendEmails
                 (
-                    currentFlowEvent,
-                    selectedAll ,
-                    selectedInvitationsIds,
-                    term,
                     {
                         isAccepted,
                         isSent,
@@ -287,7 +280,7 @@ class RegistrationInvitationsListPage extends React.Component {
         const { currentSummit, invitations, term, order,
             orderDir, totalInvitations,
             lastPage, currentPage,
-            selectedInvitationsIds,
+            selectedCount,
             isAccepted,
             isSent,
             currentFlowEvent,
@@ -321,7 +314,6 @@ class RegistrationInvitationsListPage extends React.Component {
         ];
 
         const table_options = {
-            selectedIds: selectedInvitationsIds,
             sortCol: order,
             sortDir: orderDir,
             selectedAll: selectedAll,
@@ -459,11 +451,8 @@ class RegistrationInvitationsListPage extends React.Component {
 
                     { invitations.length > 0 &&
                     <div>
-                        { selectedInvitationsIds.length > 0 &&
-                                <span><b>{T.translate("registration_invitation_list.items_qty", {qty:selectedInvitationsIds.length})}</b></span>
-                        }
-                        { selectedAll &&
-                            <span><b>{T.translate("registration_invitation_list.items_qty", {qty:totalInvitations})}</b></span>
+                        { selectedCount > 0 &&
+                                <span><b>{T.translate("registration_invitation_list.items_qty", {qty:selectedCount})}</b></span>
                         }
                         <SelectableTable
                             options={table_options}

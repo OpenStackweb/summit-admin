@@ -139,14 +139,9 @@ class SubmissionInvitationsListPage extends React.Component {
         ev.preventDefault();
 
         const {
-            selectedAll,
-            term,
-            showNotSent,
-            selectedInvitationsIds,
+            selectedCount,
             currentFlowEvent,
             sendEmails,
-            tagFilter,
-            currentSelectionPlanId
         } = this.props;
 
         if(!currentFlowEvent){
@@ -154,21 +149,12 @@ class SubmissionInvitationsListPage extends React.Component {
             return false;
         }
 
-        if(!selectedAll && selectedInvitationsIds.length === 0){
+        if(selectedCount === 0){
             Swal.fire("Validation error", T.translate("submission_invitation_list.select_items"), "warning");
             return false;
         }
 
-        sendEmails
-        (
-            currentFlowEvent,
-            currentSelectionPlanId,
-            selectedAll ,
-            selectedInvitationsIds,
-            term,
-            showNotSent,
-            tagFilter
-        );
+        sendEmails();
     }
 
     handleSelected(invitation_id, isSelected){
@@ -227,7 +213,7 @@ class SubmissionInvitationsListPage extends React.Component {
         const { currentSummit, invitations, term, order,
             orderDir, totalInvitations,
             lastPage, currentPage,
-            selectedInvitationsIds, showNotSent,
+            selectedCount, showNotSent,
             currentFlowEvent, selectedAll,
             tagFilter,
             currentSelectionPlanId,
@@ -252,7 +238,6 @@ class SubmissionInvitationsListPage extends React.Component {
         ];
 
         const table_options = {
-            selectedIds: selectedInvitationsIds,
             sortCol: order,
             sortDir: orderDir,
             selectedAll: selectedAll,
@@ -368,6 +353,9 @@ class SubmissionInvitationsListPage extends React.Component {
 
                     { invitations.length > 0 &&
                     <div>
+                        { selectedCount > 0 &&
+                          <span><b>{T.translate("registration_invitation_list.items_qty", {qty:selectedCount})}</b></span>
+                        }
                         <SelectableTable
                             options={table_options}
                             data={invitations}

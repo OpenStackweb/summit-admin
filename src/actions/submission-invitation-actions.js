@@ -321,41 +321,44 @@ const normalizeEntity = (entity) => {
     return normalizedEntity;
 };
 
-export const sendEmails = (currentFlowEvent,
-                           currentSelectionPlanId,
-                           selectedAll = false ,
-                           selectedInvitationsIds = [],
-                           term = null,
-                           showNotSent = false,
-                           tagFilter = []) => async (dispatch, getState) => {
+export const sendEmails = () => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const { currentSummitState, SubmmissionInvitationListState } = getState();
     const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
-
-    const filter = [];
+    const {currentFlowEvent, currentSelectionPlanId, selectedAll , selectedInvitationsIds, excludedInvitationsIds, term, showNotSent, tagFilter} = SubmmissionInvitationListState;
+    let filter = [];
 
     const params = {
         access_token : accessToken,
     };
 
-    if(term){
-        const escapedTerm = escapeFilterValue(term);
-        filter.push(`email=@${escapedTerm},first_name=@${escapedTerm},last_name=@${escapedTerm}`);
+    if (!selectedAll && selectedInvitationsIds.length > 0) {
+        // we don't need the filter criteria, we have the ids
+        filter.push(`id==${selectedInvitationsIds.join('||')}`);
+    } else {
+        if (term) {
+            const escapedTerm = escapeFilterValue(term);
+            filter.push(`email=@${escapedTerm},first_name=@${escapedTerm},last_name=@${escapedTerm}`);
+        }
+
+        if (showNotSent) {
+            filter.push('is_sent==false');
+        }
+
+        if (tagFilter.length > 0) {
+            filter.push('tags_id=='+tagFilter.map(e => e.id).reduce(
+              (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt,
+              ''
+            ));
+        }
+
+        if (selectedAll && excludedInvitationsIds.length > 0){
+            filter.push(`not_id==${excludedInvitationsIds.join('||')}`);
+        }
     }
 
-    if(showNotSent){
-        filter.push('is_sent==false');
-    }
-
-    if(tagFilter.length > 0) {
-        filter.push('tags_id=='+tagFilter.map(e => e.id).reduce(
-            (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt,
-            ''
-        ));
-    }
-
-    if(filter.length > 0){
+    if (filter.length > 0) {
         params['filter[]'] = filter;
     }
 
@@ -365,10 +368,6 @@ export const sendEmails = (currentFlowEvent,
 
     if(currentSelectionPlanId && parseInt(currentSelectionPlanId) > 0){
         payload['selection_plan_id'] = currentSelectionPlanId;
-    }
-
-    if(!selectedAll && selectedInvitationsIds.length > 0){
-        payload['invitations_ids'] = selectedInvitationsIds;
     }
 
     dispatch(startLoading());

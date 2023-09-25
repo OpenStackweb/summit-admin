@@ -132,53 +132,59 @@ export const exportSummitSubmitters = (term = null, order = 'id', orderDir = 1, 
 }
 
 /**
- * @param currentFlowEvent
- * @param selectedAll
- * @param selectedIds
  * @param testRecipient
  * @param excerptRecipient
  * @param shouldSendCopy2Submitter
- * @param term
- * @param filters
  * @param source
+ * @param promoCodeStrategy
+ * @param promocodeSpecification
  * @returns {function(*=, *): *}
  */
-export const sendSubmitterEmails = (currentFlowEvent,
-                           selectedAll = false ,
-                           selectedIds = [],
+export const sendSubmitterEmails = (
                            testRecipient = '',
                            excerptRecipient= '',
                            // not used only left to keep the signature
                            shouldSendCopy2Submitter = false,
-                           term = '',
-                           filters = {},
-                           source = null
+                           source = null,
+                           promoCodeStrategy = null,
+                           promocodeSpecification = null,
                            ) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const { currentSummitState, currentSummitSpeakersListState } = getState();
+    const {selectedAll, selectedItems, excludedItems, term, currentFlowEvent, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter} = currentSummitSpeakersListState;
     const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
+    let filter = [];
 
     const params = {
         access_token : accessToken,
     };
 
-    const filter = parseFilters(filters);
+    if (!selectedAll && selectedItems.length > 0) {
+        // we don't need the filter criteria, we have the ids
+        filter.push(`id==${selectedItems.join('||')}`);
+    } else {
+        filter = parseFilters({ selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter });
 
-    if (source && source === sources.submitters_no_speakers) {
-        filter.push('is_speaker==false');
-    }
+        if (source && source === sources.submitters_no_speakers) {
+            filter.push('is_speaker==false');
+        }
 
-    if(term) {
-        const escapedTerm = escapeFilterValue(term);
-        filter.push(
-            [
-                `full_name@@${escapedTerm}`,
-                `email=@${escapedTerm}`,
-                `presentations_title=@${escapedTerm}`,
-                `presentations_abstract=@${escapedTerm}`
-            ].join(',')
-        );
+        if (term) {
+            const escapedTerm = escapeFilterValue(term);
+            filter.push(
+              [
+                  `full_name@@${escapedTerm}`,
+                  `email=@${escapedTerm}`,
+                  `presentations_title=@${escapedTerm}`,
+                  `presentations_abstract=@${escapedTerm}`
+              ].join(',')
+            );
+        }
+
+        if (selectedAll && excludedItems.length > 0){
+            filter.push(`not_id==${excludedItems.join('||')}`);
+        }
     }
 
     if (filter.length > 0) {
@@ -189,16 +195,12 @@ export const sendSubmitterEmails = (currentFlowEvent,
         email_flow_event : currentFlowEvent,
     };
 
-    if(!selectedAll && selectedIds.length > 0){
-        payload['submitter_ids'] = selectedIds;
-    }
-
     if(testRecipient) {
-        payload['test_email_recipient'] = testRecipient;
+        payload.test_email_recipient = testRecipient;
     }
 
     if(excerptRecipient){
-        payload['outcome_email_recipient'] = excerptRecipient
+        payload.outcome_email_recipient = excerptRecipient
     }
 
     dispatch(startLoading());

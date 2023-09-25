@@ -809,52 +809,56 @@ export const exportSummitSpeakers = (term = null, order = 'id', orderDir = 1, fi
 }
 
 /**
- * @param currentFlowEvent
- * @param selectedAll
- * @param selectedIds
  * @param testRecipient
  * @param excerptRecipient
  * @param shouldSendCopy2Submitter
- * @param term
- * @param filters
  * @param source
+ * @param promoCodeStrategy
+ * @param promocodeSpecification
  * @returns {function(*=, *): *}
  */
-export const sendSpeakerEmails = (currentFlowEvent,
-                           selectedAll = false ,
-                           selectedIds = [],
+export const sendSpeakerEmails = (
                            testRecipient = '',
                            excerptRecipient= '',
                            shouldSendCopy2Submitter = false,
-                           term = '',
-                           filters = {},
                            source = null,
                            promoCodeStrategy = null,
                            promocodeSpecification = null,
                            ) => async (dispatch, getState) => {
 
-    const { currentSummitState } = getState();
+    const { currentSummitState, currentSummitSpeakersListState } = getState();
+    const {selectedAll, selectedItems, excludedItems, term, currentFlowEvent, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter} = currentSummitSpeakersListState;
     const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
+    let filter = [];
 
     const params = {
         access_token : accessToken,
     };
 
-    const filter = parseFilters(filters);
+    if (!selectedAll && selectedItems.length > 0) {
+        // we don't need the filter criteria, we have the ids
+        filter.push(`id==${selectedItems.join('||')}`);
+    } else {
+        filter = parseFilters({ selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter });
 
-    if(term) {
-        const escapedTerm = escapeFilterValue(term);
-        filter.push(
-            [
-                `full_name@@${escapedTerm}`,
-                `email=@${escapedTerm}`,
-                `presentations_title=@${escapedTerm}`,
-                `presentations_abstract=@${escapedTerm}`,
-                `presentations_submitter_full_name@@${escapedTerm}`,
-                `presentations_submitter_email=@${escapedTerm}`
-            ].join(',')
-        );
+        if (term) {
+            const escapedTerm = escapeFilterValue(term);
+            filter.push(
+              [
+                  `full_name@@${escapedTerm}`,
+                  `email=@${escapedTerm}`,
+                  `presentations_title=@${escapedTerm}`,
+                  `presentations_abstract=@${escapedTerm}`,
+                  `presentations_submitter_full_name@@${escapedTerm}`,
+                  `presentations_submitter_email=@${escapedTerm}`
+              ].join(',')
+            );
+        }
+
+        if (selectedAll && excludedItems.length > 0) {
+            filter.push(`not_id==${excludedItems.join('||')}`);
+        }
     }
 
     if (filter.length > 0) {
@@ -866,7 +870,7 @@ export const sendSpeakerEmails = (currentFlowEvent,
         should_send_copy_2_submitter : shouldSendCopy2Submitter,
     };
 
-    if([EXISTING_SPEAKERS_PROMO_CODE, EXISTING_SPEAKERS_DISCOUNT_CODE].includes(promoCodeStrategy)) {
+    if ([EXISTING_SPEAKERS_PROMO_CODE, EXISTING_SPEAKERS_DISCOUNT_CODE].includes(promoCodeStrategy)) {
         payload['promo_code'] = promocodeSpecification.existingPromoCode.code;
     } else if([AUTO_GENERATED_SPEAKERS_PROMO_CODE, AUTO_GENERATED_SPEAKERS_DISCOUNT_CODE].includes(promoCodeStrategy)) {
         const className = promoCodeStrategy === 3 ? SPEAKERS_PROMO_CODE_CLASS_NAME : SPEAKERS_DISCOUNT_CODE_CLASS_NAME;
@@ -896,15 +900,11 @@ export const sendSpeakerEmails = (currentFlowEvent,
         }
     }
 
-    if(!selectedAll && selectedIds.length > 0){
-        payload['speaker_ids'] = selectedIds;
-    }
-
-    if(testRecipient) {
+    if (testRecipient) {
         payload['test_email_recipient'] = testRecipient;
     }
 
-    if(excerptRecipient){
+    if (excerptRecipient){
         payload['outcome_email_recipient'] = excerptRecipient
     }
 

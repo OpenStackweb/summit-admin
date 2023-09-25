@@ -248,14 +248,9 @@ class SummitSpeakersListPage extends React.Component {
             this.setState({showSendEmailModal: false, excerptRecipient: '', testRecipient: '', promoCodeStrategy: 0});
             // send emails
     
-            const {
-                selectedAll, term, selectedItems, currentFlowEvent, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter,
-            } = this.getSubjectProps();
-    
             const callable = isSpeakerMode ? this.props.sendSpeakerEmails : this.props.sendSubmitterEmails;
     
-            callable(currentFlowEvent, selectedAll, selectedItems, testRecipient, excerptRecipient, shouldSendCopy2Submitter, term,
-                { selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter }, source, promoCodeStrategy, currentPromocodeSpecification.entity);
+            callable(testRecipient, excerptRecipient, shouldSendCopy2Submitter, source, promoCodeStrategy, currentPromocodeSpecification.entity);
         });
     }
 
@@ -270,16 +265,14 @@ class SummitSpeakersListPage extends React.Component {
         ev.preventDefault();
 
         const { source, testRecipient } = this.state;
-        const {
-            selectedAll, selectedItems, currentFlowEvent
-        } = this.getSubjectProps();
+        const { currentFlowEvent, selectedCount} = this.getSubjectProps();
 
         if (!currentFlowEvent) {
             Swal.fire("Validation error", T.translate("summit_speakers_list.select_template"), "warning");
             return false;
         }
 
-        if (!selectedAll && selectedItems.length === 0) {
+        if (selectedCount === 0) {
             const content = source === sources.speakers ? 
                 T.translate("summit_speakers_list.select_items") : T.translate("summit_submitters_list.select_items");
             Swal.fire("Validation error", content, "warning");
@@ -334,9 +327,9 @@ class SummitSpeakersListPage extends React.Component {
     render() {
         const { currentSummit, currentPromocodeSpecification } = this.props;
 
-        const { testRecipient, source, promoCodeStrategy, speakerFilters } = this.state;
+        const { testRecipient, source, promoCodeStrategy } = this.state;
 
-        const { items, lastPage, currentPage, term, order, orderDir, totalItems, selectedItems,
+        const { items, lastPage, currentPage, term, order, orderDir, totalItems, selectedCount,
             selectedAll, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, currentFlowEvent } = this.getSubjectProps();
 
         const columns = [
@@ -405,7 +398,6 @@ class SummitSpeakersListPage extends React.Component {
                     onSelectedAll: this.handleSelectedAll
                 }
             },
-            selectedIds: selectedItems,
             selectedAll: selectedAll,
         }
 
@@ -524,12 +516,7 @@ class SummitSpeakersListPage extends React.Component {
 
                 {items.length > 0 &&
                     <div>
-                        {selectedItems.length > 0 &&
-                            <span><b>{T.translate("summit_speakers_list.items_qty", {qty:selectedItems.length})}</b></span>
-                        }
-                        {selectedAll &&
-                            <span><b>{T.translate("summit_speakers_list.items_qty", {qty:totalItems})}</b></span>
-                        }
+                        <span><b>{T.translate("summit_speakers_list.items_qty", {qty: selectedCount})}</b></span>
                         <SelectableTable
                             options={table_options}
                             data={items}
@@ -561,9 +548,7 @@ class SummitSpeakersListPage extends React.Component {
                             <Modal.Body>
                                 <div className="row">
                                     <div className="col-md-12">
-                                        {T.translate("summit_speakers_list.send_email_warning", {
-                                            template: currentFlowEvent, qty: selectedAll ? totalItems : selectedItems.length 
-                                        })}
+                                        {T.translate("summit_speakers_list.send_email_warning", {template: currentFlowEvent, qty: selectedCount})}
                                     </div>
                                     { this.state.testRecipient !== '' &&
                                     <div className="col-md-12">

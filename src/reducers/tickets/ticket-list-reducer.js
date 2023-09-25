@@ -33,7 +33,9 @@ const DEFAULT_STATE = {
     lastPage: 1,
     perPage: 10,
     totalTickets: 0,
+    selectedCount: 0,
     selectedIds: [],
+    excludedIds: [],
     selectedAll: false,
     // filters
     filters: {},
@@ -48,16 +50,38 @@ const ticketListReducer = (state = DEFAULT_STATE, action) => {
             return DEFAULT_STATE;
         }
         case REQUEST_TICKETS: {
-            let {order, orderDir, page, perPage, filters, extraColumns, ...rest} = payload;
-            return {...state, order, orderDir, currentPage: page, perPage, filters, extraColumns, ...rest}
+            let { order, orderDir, page, ...rest} = payload;
+
+            if (order !== state.order || orderDir !== state.orderDir || page !== state.currentPage) {
+                // if the change was in page or order, keep selection
+                return {
+                    ...state,
+                    order,
+                    orderDir,
+                    currentPage: page,
+                    ...rest
+                }
+            }
+
+            return {
+                ...state,
+                order,
+                orderDir,
+                currentPage: page,
+                selectedIds: [],
+                excludedIds: [],
+                selectedCount: 0,
+                selectedAll: false,
+                ...rest
+            }
         }
         case RECEIVE_TICKETS: {
-            let {total, last_page, data} = payload.response;
-            let tickets = data.map(t => {
+            const {total, last_page, data} = payload.response;
+            const {selectedAll, selectedIds, excludedIds} = state;
 
-                let bought_date = t.bought_date ? epochToMoment(t.bought_date).format('MMMM Do YYYY, h:mm:ss a') : '';
-                let number = t.external_order_id || `...${t.number.slice(-15)}`;
-
+            const tickets = data.map(t => {
+                const bought_date = t.bought_date ? epochToMoment(t.bought_date).format('MMMM Do YYYY, h:mm:ss a') : '';
+                const number = t.external_order_id || `...${t.number.slice(-15)}`;
                 const final_amount_formatted = `$${t.final_amount.toFixed(2)}`;
                 const refunded_amount_formatted = `$${t.refunded_amount.toFixed(2)}`;
                 const final_amount_adjusted_formatted = `$${((t.final_amount - t.refunded_amount).toFixed(2))}`;
@@ -73,6 +97,7 @@ const ticketListReducer = (state = DEFAULT_STATE, action) => {
                     owner_email: t.owner ? t.owner.email : 'N/A',
                     promocode: t.promo_code ? t.promo_code.code : 'N/A',
                     status: t.status,
+                    checked: selectedAll ? !excludedIds.includes(t.id) : selectedIds.includes(t.id),
                     final_amount_formatted,
                     refunded_amount_formatted,
                     final_amount_adjusted_formatted,
@@ -80,20 +105,50 @@ const ticketListReducer = (state = DEFAULT_STATE, action) => {
                     promo_code_tags
                 };
             })
-            return {...state, tickets: tickets, lastPage: last_page, totalTickets: total};
+
+            return {...state, tickets, lastPage: last_page, totalTickets: total};
         }
-        case SELECT_TICKET:
-            return {...state, selectedIds: [...state.selectedIds, payload]};
-        case UNSELECT_TICKET:
-            return {
-                ...state,
-                selectedIds: state.selectedIds.filter(element => element !== payload),
-                selectedAll: false
-            };
-        case SET_SELECTED_ALL_TICKETS:
-            return {...state, selectedAll: payload, selectedIds: []};
+        case SELECT_TICKET: {
+            const {selectedAll, selectedIds, excludedIds, selectedCount, tickets} = state;
+            const ticketId = payload;
+            const ticket = tickets.find(a => a.id === ticketId);
+            ticket.checked = true;
+
+            let newState = {};
+
+            if (selectedAll) {
+                newState = { ...state, excludedIds: excludedIds.filter(it => it !== ticketId), selectedIds: [] }
+            } else {
+                newState = { ...state, selectedIds: [...selectedIds, ticketId], excludedIds: [] }
+            }
+
+            return {...newState, tickets, selectedCount: selectedCount + 1}
+        }
+        case UNSELECT_TICKET: {
+            const {selectedAll, selectedIds, excludedIds, selectedCount, tickets} = state;
+            const ticketId = payload;
+            const ticket = tickets.find(a => a.id === ticketId);
+            ticket.checked = false;
+
+            let newState = {};
+
+            if (selectedAll) {
+                newState = { ...state, excludedIds: [...excludedIds, ticketId], selectedIds: [] }
+            } else {
+                newState = { ...state, selectedIds: selectedIds.filter(it => it !== ticketId), excludedIds: [] }
+            }
+
+            return {...newState, tickets, selectedCount: selectedCount - 1}
+        }
+        case SET_SELECTED_ALL_TICKETS: {
+            const selectedAll = payload;
+            const tickets = state.tickets.map(a => ({...a, checked: selectedAll}));
+            const selectedCount = selectedAll ? state.totalTickets : 0
+
+            return {...state, selectedAll, selectedIds: [], excludedIds: [], tickets, selectedCount };
+        }
         case CLEAR_ALL_SELECTED_TICKETS:
-            return {...state, selectedIds: [], selectedAll: false};
+            return {...state, selectedIds: [], excludedIds: [], selectedCount: 0, selectedAll: false};
         default:
             return state;
     }

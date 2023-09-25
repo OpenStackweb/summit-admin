@@ -120,10 +120,12 @@ export const reSendTicketEmail = (orderId, ticketId) => async (dispatch, getStat
     );
 };
 
-export const printTickets = (term, filters, order, orderDir, doAttendeeCheckinOnPrint = true, selectedViewType = null) => async (dispatch, getState) => {
-    const { currentSummitState } = getState();
+export const printTickets = (filters, doAttendeeCheckinOnPrint = true, selectedViewType = null) => async (dispatch, getState) => {
+    const { currentSummitState, currentTicketListState } = getState();
     const accessToken = await getAccessTokenSafely();
-    const { currentSummit }   = currentSummitState;
+    const { currentSummit } = currentSummitState;
+    const {selectedIds, excludedIds, selectedAll, term, order, orderDir} = currentTicketListState;
+    let filter = [];
 
     dispatch(createAction(PRINT_TICKETS));
 
@@ -131,14 +133,16 @@ export const printTickets = (term, filters, order, orderDir, doAttendeeCheckinOn
         access_token: accessToken,
     };
 
-    const hasSelectedIds = filters.hasOwnProperty('selectedIds') && filters.selectedIds.length > 0
-    if(hasSelectedIds){
-        // user selected particular ids to print out, so we dont need any filter
-        term = null;
-        filters = { selectedIds : filters.selectedIds}
-    }
+    if (!selectedAll && selectedIds.length > 0) {
+        // we don't need the filter criteria, we have the ids
+        filter.push(`id==${selectedIds.join('||')}`);
+    } else {
+        filter = parseFilters(filters, term);
 
-    const filter = parseFilters(filters, term);
+        if (selectedAll && excludedIds.length > 0){
+            filter.push(`not_id==${excludedIds.join('||')}`);
+        }
+    }
 
     if (filter.length > 0) {
         params['filter[]'] = filter;
@@ -231,15 +235,6 @@ const parseFilters = (filters, term = null) => {
             (accumulator, aud) => accumulator +(accumulator !== '' ? ',':'') +`audience==${aud}`,
             ''
         ));
-    }
-
-    // tickets ids
-
-    if(filters.hasOwnProperty("selectedIds") && Array.isArray(filters.selectedIds) && filters.selectedIds.length > 0){
-        filter.push('id=='+filters.selectedIds.reduce(
-            (accumulator, id) => accumulator +(accumulator !== '' ? '||':'') +`${id}`,
-            ''
-        ))
     }
 
     if(filters.promocodeTagsFilter?.length > 0){
