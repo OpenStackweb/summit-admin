@@ -124,7 +124,7 @@ export const saveEmailTemplate = (entity, noAlert = false) => async (dispatch, g
     if (entity.id) {
 
         putRequest(
-            createAction(UPDATE_TEMPLATE),
+            null,
             createAction(TEMPLATE_UPDATED),
             `${window.EMAIL_API_BASE_URL}/api/v1/mail-templates/${entity.id}`,
             normalizedEntity,
@@ -147,7 +147,7 @@ export const saveEmailTemplate = (entity, noAlert = false) => async (dispatch, g
         };
 
         postRequest(
-            createAction(UPDATE_TEMPLATE),
+            null,
             createAction(TEMPLATE_ADDED),
             `${window.EMAIL_API_BASE_URL}/api/v1/mail-templates`,
             normalizedEntity,

@@ -18,7 +18,7 @@ import _ from 'lodash';
 import { AjaxLoader, Dropdown, Input } from 'openstack-uicore-foundation/lib/components'
 import EmailTemplateInput from '../inputs/email-template-input'
 import CodeMirror from '@uiw/react-codemirror';
-import {  sublimeInit } from '@uiw/codemirror-theme-sublime';
+import { sublimeInit } from '@uiw/codemirror-theme-sublime';
 import { html } from '@codemirror/lang-html';
 import mjml2html from 'mjml-browser';
 import { scrollToError, shallowEqual, hasErrors } from "../../utils/methods";
@@ -72,6 +72,10 @@ const EmailTemplateForm = ({ entity, match, errors, clients, preview, templateLo
 
         if (!shallowEqual(stateErrors, errors)) {
             setStateErrors({ ...errors })
+        }
+
+        if (!shallowEqual(stateEntity, entity)) {
+            setStateEntity({ ...entity })
         }
 
     }, [errors, entity]);
@@ -305,7 +309,7 @@ const EmailTemplateForm = ({ entity, match, errors, clients, preview, templateLo
                     <input type="button" onClick={handleJsonDataEdit} className="btn btn-primary pull-right" value={T.translate("emails.edit_json")} />
                 </div>
                 <div className="col-md-12">
-                    {templateLoaded ? 
+                    {templateLoaded ?
                         <div className='email-template-container'>
                             <div className='email-template-buttons'>
                                 {!previewOnly &&
@@ -400,7 +404,7 @@ const EmailTemplateForm = ({ entity, match, errors, clients, preview, templateLo
                                     }
                                 </div>
                                 {!codeOnly &&
-                                    <>                                        
+                                    <>
                                         <div className='email-template-preview' ref={previewRef}>
                                             <AjaxLoader show={templateLoading} size={120} relative={true} />
                                             {renderErrors.length > 0 ?
@@ -414,13 +418,13 @@ const EmailTemplateForm = ({ entity, match, errors, clients, preview, templateLo
                                                 </div>
                                                 :
                                                 previewLoaded &&
-                                                    <iframe
-                                                        style={{ ...style }}
-                                                        id={'preview'}
-                                                        name={'preview'}
-                                                        sandbox={'allow-same-origin'}
-                                                        srcDoc={preview}
-                                                    />
+                                                <iframe
+                                                    style={{ ...style }}
+                                                    id={'preview'}
+                                                    name={'preview'}
+                                                    sandbox={'allow-same-origin'}
+                                                    srcDoc={preview}
+                                                />
                                             }
                                         </div>
                                     </>

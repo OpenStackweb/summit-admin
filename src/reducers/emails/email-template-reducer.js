@@ -73,10 +73,6 @@ const emailTemplateReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
         }
         break;
-        case UPDATE_TEMPLATE: {
-            return {...state,  entity: {...payload}, errors: {} };
-        }
-        break;
         case TEMPLATE_ADDED:
         case RECEIVE_TEMPLATE: {
             let entity = {...payload.response};
