@@ -21,6 +21,7 @@ import { Table, FreeTextSearch } from 'openstack-uicore-foundation/lib/component
 import { getSummitById }  from '../../actions/summit-actions';
 import {epochToMomentTimeZone} from 'openstack-uicore-foundation/lib/utils/methods'
 import { getRoomBookings, exportRoomBookings, refundRoomBooking, cancelRoomBooking } from "../../actions/room-booking-actions";
+import {ReservationStatusPaid, ReservationStatusRequestedRefund} from "../../utils/constants";
 
 class RoomBookingListPage extends React.Component {
 
@@ -113,8 +114,7 @@ class RoomBookingListPage extends React.Component {
     hasPaid(bookingId) {
         const {roomBookings} = this.props;
         let roomBooking = roomBookings.find(rb => rb.id === bookingId);
-
-        return roomBooking.status === 'Paid' && roomBooking.amount > 0;
+        return ( roomBooking.status === ReservationStatusPaid || roomBooking.status === ReservationStatusRequestedRefund) && roomBooking.amount > 0;
     }
 
     onCloseModal() {

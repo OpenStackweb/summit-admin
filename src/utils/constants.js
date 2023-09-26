@@ -39,3 +39,7 @@ export const HAS_NO_TICKETS = 'HAS_NO_TICKETS';
 // we need it lowercase for reports
 export const ALL_FILTER = "all";
 export const OR_FILTER = "any";
+
+export const ReservationStatusPaid = 'Paid';
+
+export const ReservationStatusRequestedRefund = 'RequestedRefund';
