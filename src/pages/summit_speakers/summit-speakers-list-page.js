@@ -52,6 +52,8 @@ import { ALL_FILTER, SpeakersSources as sources } from "../../utils/constants";
 import OrAndFilter from '../../components/filters/or-and-filter';
 import { validateEmail } from '../../utils/methods';
 
+import '../../styles/speakers-list-page.less';
+
 class SummitSpeakersListPage extends React.Component {
     constructor(props) {
         super(props);
@@ -435,7 +437,7 @@ class SummitSpeakersListPage extends React.Component {
                     </div>
                 </div>
                 <div className='row'>
-                    <div className="col-md-3" style={{ height: "61px", paddingTop: "8px" }}>
+                    <div className="col-md-3 speaker-list-filter-col">
                         <Dropdown
                             id="selectionPlanFilter"
                             value={selectionPlanFilter}
@@ -446,7 +448,7 @@ class SummitSpeakersListPage extends React.Component {
                             isMulti
                         />
                     </div>
-                    <div className="col-md-3" style={{ height: "61px", paddingTop: "8px" }}>
+                    <div className="col-md-3 speaker-list-filter-col">
                         <Dropdown
                             id="trackFilter"
                             value={trackFilter}
@@ -457,7 +459,7 @@ class SummitSpeakersListPage extends React.Component {
                             isMulti
                         />
                     </div>
-                    <div className="col-md-3" style={{ height: "61px", paddingTop: "8px" }}>
+                    <div className="col-md-3 speaker-list-filter-col">
                         <Dropdown
                             id="activityTypeFilter"
                             value={activityTypeFilter}
@@ -468,7 +470,7 @@ class SummitSpeakersListPage extends React.Component {
                             isMulti
                         />
                     </div>
-                    <div className="col-md-3" style={{ height: "61px", paddingTop: "8px" }}>
+                    <div className="col-md-3 speaker-list-filter-col">
                         <Dropdown
                             id="selectionStatusFilter"
                             value={selectionStatusFilter}
@@ -482,7 +484,7 @@ class SummitSpeakersListPage extends React.Component {
                 </div>
 
                 <div className='row'>
-                    <div className="col-md-6" style={{ height: "61px", paddingTop: "8px" }}>
+                    <div className="col-md-6 speaker-list-email-col">
                         <Dropdown
                             id="activityTypeFilter"
                             value={currentFlowEvent}
@@ -491,7 +493,7 @@ class SummitSpeakersListPage extends React.Component {
                             isClearable={true}
                         />
                     </div>
-                    <div className={'col-md-4'} style={{ height: "61px", paddingTop: "8px" }}>
+                    <div className="col-md-4 speaker-list-email-col">
                         <Input
                             value={testRecipient}
                             onChange={(ev) => this.setState({ testRecipient: ev.target.value })}
@@ -499,7 +501,7 @@ class SummitSpeakersListPage extends React.Component {
 
                         />
                     </div>
-                    <div className={'col-md-2'} style={{ height: "61px", paddingTop: "8px" }}>
+                    <div className="col-md-2 speaker-list-email-col">
                         <button className="btn btn-default right-space" onClick={this.showEmailSendModal}>
                             {T.translate("summit_speakers_list.send_emails")}
                         </button>
