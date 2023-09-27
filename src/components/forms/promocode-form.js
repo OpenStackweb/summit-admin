@@ -287,10 +287,7 @@ const SpeakersBasePCForm = (props) => {
 
     useEffect(() => {
         const {entity} = props;
-        if (entity.id) props.getAssignedSpeakers(entity);
-        return () => {
-            props.resetPromocodeForm();
-        };
+        if (entity.id) props.getAssignedSpeakers(entity);        
     }, []);
 
     const handleSpeakerAssignment = (ev) => {
