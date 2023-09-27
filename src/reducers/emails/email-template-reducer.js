@@ -64,7 +64,7 @@ const emailTemplateReducer = (state = DEFAULT_STATE, action) => {
             if (payload.hasOwnProperty('persistStore')) {
                 return state;
             } else {
-                return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
+                return DEFAULT_STATE;
             }
         }
         break;
