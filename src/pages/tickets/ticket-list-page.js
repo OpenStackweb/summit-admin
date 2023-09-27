@@ -52,13 +52,13 @@ const fieldNames = [
         const hasRequested =  item.refund_requests.some((r) => r.status === 'Requested');
         return `${val}` + (hasRequested ? '&nbsp;<span class="label label-danger">Refund Requested</span>' :'')
     } },
-    { columnKey: 'promocode', value: 'promocode' },
-    { columnKey: 'bought_date', value: 'bought_date'},
-    { columnKey: 'owner_email', value: 'owner_email'},
-    { columnKey: 'status', value: 'status'},
-    { columnKey: 'refunded_amount_formatted', value: 'refunded_amount'},
-    { columnKey: 'final_amount_adjusted_formatted', value: 'paid_amount_adjusted'},
-    { columnKey: 'promo_code_tags', value: 'promo_code_tags'},    
+    { columnKey: 'promo_code', value: 'promo_code', sortable: true, title: true },
+    { columnKey: 'bought_date', value: 'bought_date', sortable: true},
+    { columnKey: 'owner_email', value: 'owner_email', sortable: true},
+    { columnKey: 'status', value: 'status', sortable: true},
+    { columnKey: 'refunded_amount', value: 'refunded_amount', sortable: true},
+    { columnKey: 'final_amount_adjusted', value: 'paid_amount_adjusted', sortable: true},
+    { columnKey: 'promo_code_tags', value: 'promo_code_tags'},
 ]
 
 class TicketListPage extends React.Component {
@@ -300,10 +300,10 @@ class TicketListPage extends React.Component {
         const {doCheckIn, showIngestModal, showImportModal, importFile, showPrintModal, selectedViewType, enabledFilters, ticketFilters} = this.state;
 
         let columns = [
-            { columnKey: 'id', value: T.translate("ticket_list.id") },
-            { columnKey: 'ticket_type', value: T.translate("ticket_list.ticket_type") },
+            { columnKey: 'id', value: T.translate("ticket_list.id"), sortable: true },
+            { columnKey: 'ticket_type', value: T.translate("ticket_list.ticket_type"), sortable: true },
             { columnKey: 'owner_name', value: T.translate("ticket_list.owner_name"), sortable: true },
-            { columnKey: 'final_amount_formatted', value: T.translate("ticket_list.paid_amount") },
+            { columnKey: 'final_amount', value: T.translate("ticket_list.paid_amount"), sortable: true },
         ];
 
         const table_options = {
@@ -340,12 +340,12 @@ class TicketListPage extends React.Component {
 
         const ddl_columns = [
             { value: 'number', label: T.translate("ticket_list.number") },
-            { value: 'promocode', label: T.translate("ticket_list.promo_code") },
+            { value: 'promo_code', label: T.translate("ticket_list.promo_code") },
             { value: 'bought_date', label: T.translate("ticket_list.bought_date") },
             { value: 'owner_email', label: T.translate("ticket_list.owner_email") },
             { value: 'status', label: T.translate("ticket_list.status") },
-            { value: 'refunded_amount_formatted', label: T.translate("ticket_list.refunded_amount") },
-            { value: 'final_amount_adjusted_formatted', label: T.translate("ticket_list.paid_amount_adjusted") },
+            { value: 'refunded_amount', label: T.translate("ticket_list.refunded_amount") },
+            { value: 'final_amount_adjusted', label: T.translate("ticket_list.paid_amount_adjusted") },
             { value: 'promo_code_tags', label: T.translate("ticket_list.promo_code_tags") },
         ];
 
@@ -450,7 +450,7 @@ class TicketListPage extends React.Component {
                                     { label: T.translate("ticket_list.has_no_owner"), value: "HAS_NO_OWNER",default: ticketFilters.hasOwnerFilter === "HAS_NO_OWNER" },
                                 ]}
                                 setValue={val => this.handleFilterChange('hasOwnerFilter', val)}
-                                style={{ width: "100%", height:40, color: '#337ab7' , fontSize: '10px' }}
+                                className="ticket-list-segment"
                             />
                         </div>
                         }
@@ -464,7 +464,7 @@ class TicketListPage extends React.Component {
                                   { label: T.translate("ticket_list.incomplete"), value: "Incomplete",default: ticketFilters.completedFilter === "Incomplete" },
                               ]}
                               setValue={val => this.handleFilterChange('completedFilter', val)}
-                              style={{ width: "100%", height:40, color: '#337ab7' , fontSize: '10px' }}
+                              className="ticket-list-segment"
                             />
                         </div>
                         }
@@ -478,7 +478,7 @@ class TicketListPage extends React.Component {
                                     { label: T.translate("ticket_list.has_no_badge"), value: "HAS_NO_BADGE",default: ticketFilters.hasBadgeFilter === "HAS_NO_BADGE" },
                                 ]}
                                 setValue={newValue => this.handleFilterChange('hasBadgeFilter', newValue)}
-                                style={{ width: "100%", height:40, color: '#337ab7' , fontSize: '10px' }}
+                                className="ticket-list-segment"
                             />
                         </div>
                         }
@@ -492,7 +492,7 @@ class TicketListPage extends React.Component {
                                   { label: T.translate("ticket_list.free"), value: "Free",default: ticketFilters.amountFilter === "Free" },
                               ]}
                               setValue={val => this.handleFilterChange('amountFilter', val)}
-                              style={{ width: "100%", height:40, color: '#337ab7' , fontSize: '10px' }}
+                              className="ticket-list-segment"
                             />
                         </div>
                         }
@@ -624,7 +624,7 @@ class TicketListPage extends React.Component {
                     }
 
                     {tickets.length > 0 &&
-                        <div>
+                        <div className='ticket-list-table'>
                             { selectedCount > 0 &&
                                 <span><b>{T.translate("ticket_list.items_qty", {qty:selectedCount})}</b></span>
                             }

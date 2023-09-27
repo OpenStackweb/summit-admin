@@ -95,12 +95,12 @@ const ticketListReducer = (state = DEFAULT_STATE, action) => {
                     bought_date: bought_date,
                     owner_name: t.owner ? t.owner.first_name + ' ' + t.owner.last_name : 'N/A',
                     owner_email: t.owner ? t.owner.email : 'N/A',
-                    promocode: t.promo_code ? t.promo_code.code : 'N/A',
+                    promo_code: t.promo_code ? t.promo_code.code : 'N/A',
                     status: t.status,
-                    checked: selectedAll ? !excludedIds.includes(t.id) : selectedIds.includes(t.id),
-                    final_amount_formatted,
-                    refunded_amount_formatted,
-                    final_amount_adjusted_formatted,
+                    checked: selectedAll ? !excludedIds.includes(t.id) : selectedIds.includes(t.id),                    
+                    final_amount: final_amount_formatted,
+                    refunded_amount: refunded_amount_formatted,
+                    final_amount_adjusted: final_amount_adjusted_formatted,
                     refund_requests: [...t.refund_requests],
                     promo_code_tags
                 };
