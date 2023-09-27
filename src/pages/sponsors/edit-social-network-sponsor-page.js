@@ -57,7 +57,6 @@ class EditSocialNetworkSponsorPage extends React.Component {
                 {currentSummit &&
                     <SponsorSocialNetworkForm
                         entity={entity}
-                        currentSummit={currentSummit}
                         errors={errors}
                         onSubmit={this.props.saveSponsorSocialNetwork}
                     />

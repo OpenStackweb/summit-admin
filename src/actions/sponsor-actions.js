@@ -626,7 +626,7 @@ const normalizeSocialNetwork = (entity) => {
 
     normalizeCollection(normalizedEntity);
 
-    normalizedEntity['icon_css_class'] = entity.icon_css_class?.value ? entity.icon_css_class.value : null;
+    normalizedEntity['icon_css_class'] = entity.icon_css_class?.value ? entity.icon_css_class.value : entity.icon_css_class;
 
     return normalizedEntity;
 }
