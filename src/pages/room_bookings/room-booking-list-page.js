@@ -40,6 +40,7 @@ class RoomBookingListPage extends React.Component {
         this.handleRefundChange = this.handleRefundChange.bind(this);
         this.hasPaid = this.hasPaid.bind(this);
         this.onCloseModal = this.onCloseModal.bind(this);
+        this.handleAddRoomBooking = this.handleAddRoomBooking.bind(this);
 
         this.state = {
             showModal: false,
@@ -59,6 +60,11 @@ class RoomBookingListPage extends React.Component {
     handleEdit(room_booking_id) {
         const {currentSummit, history} = this.props;
         history.push(`/app/summits/${currentSummit.id}/room-bookings/${room_booking_id}`);
+    }
+
+    handleAddRoomBooking() {
+        const {currentSummit, history} = this.props;
+        history.push(`/app/summits/${currentSummit.id}/room-bookings/new`);
     }
 
     handleCancelBooking(bookingId) {
@@ -189,6 +195,9 @@ class RoomBookingListPage extends React.Component {
                         />
                     </div>
                     <div className="col-md-6 text-right">
+                        <button className="btn btn-primary right-space" onClick={this.handleAddRoomBooking}>
+                            {T.translate("room_booking_list.add_room_booking")}
+                        </button>
                         <button className="btn btn-default right-space" onClick={this.handleExport}>
                             {T.translate("general.export")}
                         </button>

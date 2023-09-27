@@ -20,6 +20,7 @@ import Restrict from '../routes/restrict';
 import RoomBookingListPage from '../pages/room_bookings/room-booking-list-page'
 import EditRoomBookingPage from '../pages/room_bookings/edit-room-booking-page'
 import NoMatchPage from "../pages/no-match-page";
+import OfflineRoomBookingPage from '../pages/room_bookings/offline-room-booking-page';
 
 
 class RoomBookingsLayout extends React.Component {
@@ -33,6 +34,7 @@ class RoomBookingsLayout extends React.Component {
                 <Switch>
                     <Route strict exact path={match.url} component={RoomBookingListPage}/>
                     <Route strict exact path={`${match.url}/:room_booking_id(\\d+)`} component={EditRoomBookingPage}/>
+                    <Route strict exact path={`${match.url}/new`} component={OfflineRoomBookingPage}/>
                     <Route component={NoMatchPage}/>
                 </Switch>
             </div>

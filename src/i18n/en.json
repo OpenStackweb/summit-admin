@@ -1304,6 +1304,7 @@
     "paid": "Paid",
     "refunded": "Refunded",
     "delete_booking_warning": "Are you sure you want to delete booking for ",
+    "add_room_booking": "Add Offline Room Booking",
     "placeholders": {
       "search_bookings": "Search bookings."
     }
@@ -1321,6 +1322,28 @@
       "select_status": "Select Status",
       "select_currency": "Select Currency",
       "select_room": "Select Room"
+    }
+  },
+  "offline_room_booking": {
+    "room_booking": "Offline Room Booking",
+    "room": "Room",
+    "start": "Start",
+    "end": "End",
+    "owner": "Owner",
+    "status": "Status",
+    "currency": "Currency",
+    "amount": "Amount",
+    "date": "Date",
+    "available_slots": "Available Slots",
+    "cost": "Cost",
+    "capacity": "Capacity",
+    "floor": "Floor",    
+    "offline_room_booking_created": "Offline Room Booking created successfully",
+    "placeholders": {
+      "select_status": "Select Status",
+      "select_currency": "Select Currency",
+      "select_room": "Select Room",
+      "select_date": "Select Date"
     }
   },
   "question_form": {

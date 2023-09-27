@@ -291,3 +291,24 @@ export const formatInitialJson = (template) => {
     });
     return default_json;
 }
+
+export const getAvailableBookingDates = (summit) => {
+	let {
+		begin_allow_booking_date,
+		end_allow_booking_date,
+		time_zone_id
+	} = summit;
+	let bookStartDate = epochToMomentTimeZone(begin_allow_booking_date, time_zone_id);
+	let bookEndDate = epochToMomentTimeZone(end_allow_booking_date, time_zone_id);
+	let now = moment().tz(time_zone_id);
+	let dates = [];
+
+	while (bookStartDate <= bookEndDate) {
+		if (bookStartDate >= now) {
+			const tmp = bookStartDate.clone();
+			dates.push({str: tmp.format('Y-M-D'), epoch: tmp.unix()});
+		}
+		bookStartDate.add(1, 'days');
+	}
+	return dates
+};

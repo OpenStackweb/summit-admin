@@ -1,0 +1,56 @@
+.meeting-room {
+    display: flex;
+    border: 1px solid #ccc;
+
+    .meeting-room-image {
+        width: 30%;
+
+        img {
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    .meeting-room-body {
+        padding: 1em;
+        display: flex;
+        flex-direction: column;
+        flex: 2;
+
+        .meeting-room-header {
+            margin-bottom: .5em;
+
+            .meeting-room-title {
+                font-size: 1.25em;
+            }
+
+            .meeting-room-date {
+                font-size: 1em;
+            }
+        }
+
+        .meeting-room-info {
+            font-size: 1em;
+        }
+
+        .meeting-room-amenities {
+            flex: 1;
+            font-size: 1em;
+        }
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .meeting-room {
+        flex-direction: column;
+
+        .meeting-room-image {
+            width: 100%;
+
+            img {
+                max-height: 350px;
+                object-fit: scale-down;
+            }
+        }
+    }
+}
