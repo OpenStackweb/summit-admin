@@ -110,6 +110,8 @@ export const exportRoomBookings = (term = null, order = 'start_datetime', orderD
         access_token: accessToken
     };
 
+    filter.push('status==Paid||Reserved||RequestedRefund||Refunded');
+
     if (term) {
         const escapedTerm = escapeFilterValue(term);
         filter.push(`owner_name=@${escapedTerm},room_name=@${escapedTerm}`);
