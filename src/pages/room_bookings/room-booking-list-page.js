@@ -51,9 +51,9 @@ class RoomBookingListPage extends React.Component {
     }
 
     componentDidMount() {
-        const {currentSummit} = this.props;
+        const {currentSummit, term, order, orderDir, page, perPage} = this.props;
         if(currentSummit) {
-            this.props.getRoomBookings();
+            this.props.getRoomBookings(term, page, perPage, order, orderDir);
         }
     }
 
@@ -103,7 +103,6 @@ class RoomBookingListPage extends React.Component {
     handleExport(ev) {
         const {term, order, orderDir} = this.props;
         ev.preventDefault();
-
         this.props.exportRoomBookings(term, order, orderDir);
     }
 
