@@ -84,7 +84,8 @@ export const exportReport = ( buildQuery, reportName, grouped, preProcessData=nu
     const {totalCount} = currentReportState;
     const perPage = 100;
     const accessToken = await getAccessTokenSafely();
-    const totalPages = Math.ceil(totalCount / perPage);
+    // grouped reports don't use pagination, we pull all the records
+    const totalPages = grouped ? 1 : Math.ceil(totalCount / perPage);
     let reportData = [];
     let rawData = [];
     let extraData = null;
