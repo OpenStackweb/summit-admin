@@ -32,7 +32,7 @@ const trimString = (str, length = 75) => {
 const RegistrationStatsPage = ({currentSummit, match, loading, ...props}) => {
   const [fromDate, setFromDate] = useState(null);
   const [toDate, setToDate] = useState(null);
-  const timeOptions = ['Day', 'Hour', 'Minute'].map(op => ({value: op, label: op}));
+  const timeOptions = [ 'Minute','Hour','Day'].map(op => ({value: op, label: op}));
 
   useEffect(() => {
     // initial load
