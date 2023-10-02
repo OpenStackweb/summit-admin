@@ -312,3 +312,15 @@ export const getAvailableBookingDates = (summit) => {
 	}
 	return dates
 };
+
+const isEntityWithinDay = (dayValue, entity) => {
+    const startOfDay = dayValue;
+    const endOfDay = dayValue + 86400; // 86400 seconds per day
+  
+    return entity.start_datetime >= startOfDay && entity.end_datetime <= endOfDay;
+};
+  
+export const getDayFromReservation = (entity, available_dates) => {
+    const matchingDay = available_dates.find(date => isEntityWithinDay(date.epoch, entity));
+    return matchingDay?.epoch || null;
+}

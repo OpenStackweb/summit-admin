@@ -21,7 +21,7 @@ import { Table, FreeTextSearch } from 'openstack-uicore-foundation/lib/component
 import { getSummitById }  from '../../actions/summit-actions';
 import {epochToMomentTimeZone} from 'openstack-uicore-foundation/lib/utils/methods'
 import { getRoomBookings, exportRoomBookings, refundRoomBooking, cancelRoomBooking } from "../../actions/room-booking-actions";
-import {ReservationStatusPaid, ReservationStatusRequestedRefund} from "../../utils/constants";
+import {ReservationStatusFree, ReservationStatusPaid, ReservationStatusRequestedRefund} from "../../utils/constants";
 
 class RoomBookingListPage extends React.Component {
 
@@ -39,6 +39,7 @@ class RoomBookingListPage extends React.Component {
         this.handleRefund = this.handleRefund.bind(this);
         this.handleRefundChange = this.handleRefundChange.bind(this);
         this.hasPaid = this.hasPaid.bind(this);
+        this.isEditable = this.isEditable.bind(this);
         this.onCloseModal = this.onCloseModal.bind(this);
         this.handleAddRoomBooking = this.handleAddRoomBooking.bind(this);
 
@@ -122,6 +123,12 @@ class RoomBookingListPage extends React.Component {
         return ( roomBooking.status === ReservationStatusPaid || roomBooking.status === ReservationStatusRequestedRefund) && roomBooking.amount > 0;
     }
 
+    isEditable(bookingId) {
+        const {roomBookings} = this.props;
+        let roomBooking = roomBookings.find(rb => rb.id === bookingId);
+        return roomBooking.status === ReservationStatusPaid
+    }
+
     onCloseModal() {
         this.setState({showModal: false})
     }
@@ -175,6 +182,13 @@ class RoomBookingListPage extends React.Component {
                         icon: <i className="fa fa-money"/>,
                         onClick: this.handleRefundClick,
                         display: this.hasPaid
+                    },
+                    {
+                        name: 'edit',
+                        tooltip: 'edit',
+                        icon: <i className="fa fa-pencil"/>,
+                        onClick: this.handleEdit,
+                        display: this.isEditable
                     }
                 ]
             }

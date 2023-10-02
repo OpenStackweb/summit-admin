@@ -16,8 +16,8 @@ import { connect } from 'react-redux';
 import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
 import { getSummitById }  from '../../actions/summit-actions';
-import { getRoomBooking, resetRoomBookingForm, saveRoomBooking } from "../../actions/room-booking-actions";
-import RoomBookingForm from "../../components/forms/room-booking-form";
+import { getRoomBooking, resetRoomBookingForm, saveRoomBooking, getBookingRoomAvailability } from "../../actions/room-booking-actions";
+import RoomBookingForm from '../../components/forms/room-booking-form';
 
 class EditRoomBookingPage extends React.Component {
 
@@ -45,25 +45,26 @@ class EditRoomBookingPage extends React.Component {
         }
     }
 
-    render(){
-        const {currentSummit, entity, errors, match} = this.props;
+    render() {
+        const { currentSummit, entity, errors, available_slots, match } = this.props;
         const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         const breadcrumb = (entity.id) ? entity.name : T.translate("general.new");
 
-
-        return(
+        return (
             <div className="container">
                 <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
                 <h3>{title} {T.translate("edit_room_booking.room_booking")}</h3>
-                <hr/>
+                <hr />
                 {currentSummit &&
-                <RoomBookingForm
-                    history={this.props.history}
-                    entity={entity}
-                    currentSummit={currentSummit}
-                    errors={errors}
-                    onSubmit={this.props.saveRoomBooking}
-                />
+                    <RoomBookingForm
+                        history={this.props.history}
+                        entity={entity}
+                        currentSummit={currentSummit}
+                        errors={errors}
+                        availableSlots={available_slots}
+                        onSubmit={this.props.saveRoomBooking}
+                        getAvailableSlots={this.props.getBookingRoomAvailability}
+                    />
                 }
             </div>
         )
@@ -81,6 +82,7 @@ export default connect (
         getSummitById,
         getRoomBooking,
         resetRoomBookingForm,
-        saveRoomBooking
+        saveRoomBooking,
+        getBookingRoomAvailability
     }
 )(EditRoomBookingPage);

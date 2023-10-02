@@ -138,7 +138,6 @@ import { persistStore, persistCombineReducers } from 'redux-persist'
 import storage from 'redux-persist/es/storage'
 import currentRegFeedMetadataListReducer from './reducers/summits/reg-feed-metadata-list-reducer';
 import currentRegFeedMetadataReducer from './reducers/summits/reg-feed-metadata-reducer';
-import offlineRoomBookingReducer from './reducers/room_bookings/offline-room-booking-reducer';
 
  // default: localStorage if web, AsyncStorage if react-native
 
@@ -199,7 +198,6 @@ const reducers = persistCombineReducers(config, {
     currentRoomBookingState: roomBookingReducer,
     currentRoomBookingListState: roomBookingListReducer,
     currentRoomBookingAttributeTypeState: roomBookingAttributeTypeReducer,
-    currentOfflineRoomBookingReducer: offlineRoomBookingReducer,
     currentBadgeTypeListState: badgeTypeListReducer,
     currentBadgeTypeState: badgeTypeReducer,
     currentBadgeFeatureListState: badgeFeatureListReducer,

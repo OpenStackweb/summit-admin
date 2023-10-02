@@ -1318,35 +1318,21 @@
     "owner": "Owner",
     "status": "Status",
     "currency": "Currency",
-    "amount": "Amount",
-    "placeholders": {
-      "select_status": "Select Status",
-      "select_currency": "Select Currency",
-      "select_room": "Select Room"
-    }
-  },
-  "offline_room_booking": {
-    "room_booking": "Offline Room Booking",
-    "room": "Room",
-    "start": "Start",
-    "end": "End",
-    "owner": "Owner",
-    "status": "Status",
-    "currency": "Currency",
-    "amount": "Amount",
+    "amount": "Amount",    
     "date": "Date",
     "available_slots": "Available Slots",
     "cost": "Cost",
     "capacity": "Capacity",
     "floor": "Floor",    
-    "offline_room_booking_created": "Offline Room Booking created successfully",
+    "room_booking_created": "Room Booking created successfully",
+    "room_booking_saved": "Room Booking saved successfully",
     "placeholders": {
       "select_status": "Select Status",
       "select_currency": "Select Currency",
       "select_room": "Select Room",
       "select_date": "Select Date"
     }
-  },
+  },  
   "question_form": {
     "question_type": "Question Type",
     "question_id": "Question Identifier",
