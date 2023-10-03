@@ -8,6 +8,9 @@
         >div {
             width: 50%;
             &:first-of-type {
+                display: flex;
+                align-items: end;
+                justify-content: space-between;
                 margin-right: 30px;
             }
             &:last-of-type {
@@ -60,5 +63,43 @@
             }
         }
     }
+}
 
+.email-history-ddl {
+    a {
+        color: inherit;
+    }
+}
+
+@media only screen and (max-width: 992px) {
+    .email-template-container {
+        .email-template-buttons {    
+            >div {
+                width: 100%;
+                &:first-of-type {
+                    margin-left: 0;
+                    >div:last-of-type {
+                        width: 100%;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .email-template-container {
+        .email-template-buttons {    
+            >div {
+                &:first-of-type {
+                    margin-left: 0;
+                    flex-direction: column;
+                    align-items: start;
+                    >div:last-of-type {
+                        padding: 0;
+                    }
+                }
+            }
+        }
+    }
 }

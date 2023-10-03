@@ -95,7 +95,7 @@ export const getEmailTemplate = (templateId) => async (dispatch, getState) => {
 
     dispatch(startLoading());
 
-    const params = { access_token : accessToken, expand: 'parent' };
+    const params = { access_token : accessToken, expand: 'parent,versions' };
 
     return getRequest(
         null,
@@ -119,7 +119,7 @@ export const saveEmailTemplate = (entity, noAlert = false) => async (dispatch, g
     dispatch(startLoading());
 
     const normalizedEntity = normalizeEntity(entity);
-    const params = { access_token : accessToken };
+    const params = { access_token : accessToken, expand: 'parent,versions' };
 
     if (entity.id) {
 

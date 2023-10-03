@@ -41,4 +41,8 @@ export const ALL_FILTER = "all";
 export const OR_FILTER = "any";
 
 export const ReservationStatusPaid = 'Paid';
+
 export const ReservationStatusRequestedRefund = 'RequestedRefund';
+
+export const EMAIL_TEMPLATE_TYPE_HTML = "html";
+export const EMAIL_TEMPLATE_TYPE_MJML = "mjml";

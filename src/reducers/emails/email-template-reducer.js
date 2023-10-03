@@ -15,8 +15,8 @@ import
 {
     RECEIVE_TEMPLATE,
     RESET_TEMPLATE_FORM,
-    UPDATE_TEMPLATE,
     TEMPLATE_ADDED,
+    TEMPLATE_UPDATED,
     RECEIVE_EMAIL_CLIENTS,
     TEMPLATE_RENDER_RECEIVED,
     VALIDATE_RENDER,
@@ -34,7 +34,9 @@ export const DEFAULT_ENTITY = {
     id              : 0,
     identifier      : '',
     html_content    : '',
+    original_html_content: '',
     mjml_content    : '',
+    original_mjml_content: '',
     plain_content   : '',
     from_email      : '',
     subject         : '',
@@ -43,7 +45,7 @@ export const DEFAULT_ENTITY = {
     is_active       : true,
     allowed_clients : [],
     parent          : null,
-
+    versions        : [],
 };
 
 const DEFAULT_STATE = {
@@ -72,8 +74,7 @@ const emailTemplateReducer = (state = DEFAULT_STATE, action) => {
         case RESET_TEMPLATE_FORM: {
             return {...state,  entity: {...DEFAULT_ENTITY}, errors: {} };
         }
-        break;
-        case TEMPLATE_ADDED:
+        break;        
         case RECEIVE_TEMPLATE: {
             let entity = {...payload.response};
 
@@ -83,9 +84,25 @@ const emailTemplateReducer = (state = DEFAULT_STATE, action) => {
                 }
             }
 
-            return {...state, entity: {...DEFAULT_ENTITY, ...entity}, preview: null };
+            return {...state, entity: {...DEFAULT_ENTITY, ...entity,
+                    original_mjml_content: entity.mjml_content,
+                    original_html_content: entity.html_content}, preview: null };
         }
         break;
+        case TEMPLATE_ADDED:
+        case TEMPLATE_UPDATED:
+            let entity = {...payload.response};
+
+            for(var key in entity) {
+                if(entity.hasOwnProperty(key)) {
+                    entity[key] = (entity[key] == null) ? '' : entity[key] ;
+                }
+            }
+
+            return {...state, entity: {...DEFAULT_ENTITY, ...entity,
+                    original_mjml_content: entity.mjml_content,
+                    original_html_content: entity.html_content}};
+            break;
         case RECEIVE_EMAIL_CLIENTS: {
             return {...state, clients: payload.response.data };
         }

@@ -24,6 +24,7 @@ import mjml2html from 'mjml-browser';
 import { scrollToError, shallowEqual, hasErrors } from "../../utils/methods";
 import './email-template.less';
 import Swal from "sweetalert2";
+import { EMAIL_TEMPLATE_TYPE_HTML, EMAIL_TEMPLATE_TYPE_MJML } from '../../utils/constants';
 
 const default_mjml_content = `
 ### Sample MJML Code
@@ -44,6 +45,8 @@ const EmailTemplateForm = ({ entity, match, errors, clients, preview, templateLo
 
     const [stateEntity, setStateEntity] = useState({ ...entity });
     const [stateErrors, setStateErrors] = useState(errors);
+    const [historyVersion, setHistoryVersion] = useState(null);
+    const [currentVersionExternalLink, setCurrentVersionExternalLink] = useState(null);
     const [mjmlEditor, setMjmlEditor] = useState(null);
     const [codeOnly, setCodeOnly] = useState(false);
     const [previewOnly, setPreviewOnly] = useState(false);
@@ -113,7 +116,7 @@ const EmailTemplateForm = ({ entity, match, errors, clients, preview, templateLo
 
     useEffect(() => {
         debouncedRenderTemplate(stateEntity.html_content);
-    }, [stateEntity.html_content, debouncedRenderTemplate])
+    }, [stateEntity.html_content, entity, debouncedRenderTemplate])
 
     useEffect(() => {
         previewEmailTemplate(templateJsonData, stateEntity.html_content);
@@ -132,7 +135,7 @@ const EmailTemplateForm = ({ entity, match, errors, clients, preview, templateLo
                 console.log('error mjml to html', err)
             }
         }
-    }, [stateEntity.mjml_content])
+    }, [stateEntity.mjml_content, historyVersion])
 
     useEffect(() => {
         if(entity.mjml_content.length === 0 && entity.html_content.length > 0 && mjmlEditor && !mjmlWarning) {
@@ -176,13 +179,11 @@ const EmailTemplateForm = ({ entity, match, errors, clients, preview, templateLo
 
     const handleSubmit = (ev) => {
         ev.preventDefault();
-
         onSubmit(stateEntity);
     }
 
     const handleJsonDataEdit = (ev) => {
         ev.preventDefault();
-
         onRender()
     }
 
@@ -224,6 +225,32 @@ const EmailTemplateForm = ({ entity, match, errors, clients, preview, templateLo
         }
     }
 
+    const handleVersionChange = (ev) => {
+        const {value} = ev.target;
+        if(value === null){
+            // restore original version
+            setStateEntity({ ...stateEntity,
+                html_content: stateEntity.original_html_content,
+                mjml_content: stateEntity.original_mjml_content,
+            });
+            setHistoryVersion(null);
+            setCurrentVersionExternalLink(null);
+            return;
+        }
+
+        const selectedHistory = stateEntity.versions.find(h => h.sha === value);
+        setHistoryVersion(selectedHistory.sha);
+        setCurrentVersionExternalLink(selectedHistory.html_url);
+        if(selectedHistory.type === EMAIL_TEMPLATE_TYPE_HTML) {
+            setMjmlEditor(false);
+            setStateEntity({ ...stateEntity, html_content: selectedHistory.content });
+        }
+        if(selectedHistory.type === EMAIL_TEMPLATE_TYPE_MJML) {
+            setMjmlEditor(true);
+            setStateEntity({ ...stateEntity, mjml_content: selectedHistory.content });
+        }
+    }
+
     useEffect(() => {
         handleResizeWindow();
         window.addEventListener("resize", handleResizeWindow);
@@ -232,8 +259,9 @@ const EmailTemplateForm = ({ entity, match, errors, clients, preview, templateLo
         };
     });
 
-
     const email_clients_ddl = clients ? clients.map(cli => ({ label: cli.name, value: cli.id })) : [];
+    const versions_ddl = stateEntity.versions ? stateEntity.versions.map(v =>
+        ({ label: `${v.last_modified} - ${v.sha} - ${v.commit_message}`, value: v.sha })) : [];
 
     return (
         <form className="email-template-form">
@@ -307,13 +335,16 @@ const EmailTemplateForm = ({ entity, match, errors, clients, preview, templateLo
             <div className="row form-group">
                 <div className="col-md-12">
                     <input type="button" onClick={handleJsonDataEdit} className="btn btn-primary pull-right" value={T.translate("emails.edit_json")} />
-                </div>
+                </div>                
+            </div>
+            <div className="row form-group">
                 <div className="col-md-12">
                     {templateLoaded ?
                         <div className='email-template-container'>
-                            <div className='email-template-buttons'>
+                            <div className='email-template-buttons' style={{width: singleTab && mjmlEditor ? '' : ''}}>
                                 {!previewOnly &&
                                     <div>
+                                        <div>
                                         {mjmlEditor ?
                                             <>
                                                 <label>
@@ -342,6 +373,37 @@ const EmailTemplateForm = ({ entity, match, errors, clients, preview, templateLo
                                                     className={`btn btn-primary`} value={T.translate("emails.display_mjml")} />
                                             </>
                                         }
+                                        </div>
+                                        <div className='col-md-8'>
+                                            <div className="row">
+                                            {entity.id > 0 && stateEntity.versions.length > 0 &&
+                                                <div className='col-md-11'>
+                                                    <Dropdown
+                                                        id="history_version"
+                                                        value={historyVersion}
+                                                        isClearable={true}
+                                                        placeholder={T.translate("emails.placeholders.select_version")}
+                                                        options={versions_ddl}
+                                                        styles={{
+                                                            menu: (baseStyles, state) => ({
+                                                              ...baseStyles,
+                                                              color: state.isSelected ? 'white' : 'inherit',
+                                                            }),
+                                                        }}
+                                                        className="email-history-ddl"
+                                                        onChange={handleVersionChange}
+                                                    />
+                                                </div>
+                                            }
+                                            {currentVersionExternalLink &&
+                                                <div className='col-md-1'>
+                                                    <a href={currentVersionExternalLink}
+                                                       title={T.translate("emails.placeholders.see_version")}
+                                                       target="_blank"><i className="fa fa-github fa-lg"></i></a>
+                                                </div>
+                                            }
+                                            </div>
+                                        </div>
                                     </div>
                                 }
                                 {!codeOnly &&
