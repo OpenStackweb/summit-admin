@@ -1306,6 +1306,7 @@
     "refunded": "Refunded",
     "delete_booking_warning": "Are you sure you want to delete booking for ",
     "add_room_booking": "Add Offline Room Booking",
+    "apply_filters": "Apply Filters",
     "placeholders": {
       "search_bookings": "Search bookings."
     }
@@ -2690,5 +2691,14 @@
     "value": "Value",
     "reg_feed_metadata_saved": "Registration Feed Metadata saved successfully.",
     "reg_feed_metadata_created": "Registration Feed Metadata created successfully."
+  },
+  "email_filter": {
+    "operator_contains": "Contains",
+    "operator_not_contains": "Not Contains",
+    "operator_equal": "Equal",
+    "placeholders": {
+      "value": "Search by email address",
+      "operator": "Select Operator"
+    }
   }
 }

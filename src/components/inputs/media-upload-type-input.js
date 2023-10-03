@@ -31,7 +31,6 @@ const MediaUploadTypeInput = ({ summitId, id, value, onChange, ...rest }) => {
     }
 
     const getTemplates = (input, callback) => {
-        debugger;
         // we need to map into value/label because of a bug in react-select 2
         // https://github.com/JedWatson/react-select/issues/2998
 

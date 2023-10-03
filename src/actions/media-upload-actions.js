@@ -124,7 +124,6 @@ export const queryMediaUploads = _.debounce(async (summitId, input, callback) =>
     fetch(apiUrl.toString())
         .then(fetchResponseHandler)
         .then((json) => {
-            debugger
             const options = [...json.data];
             callback(options);
         })

@@ -24,13 +24,17 @@ import {epochToMoment} from "openstack-uicore-foundation/lib/utils/methods";
 
 const DEFAULT_STATE = {
     roomBookings        : [],
-    term                : null,
+    term                : '',
     order               : 'start_datetime',
     orderDir            : 1,
     currentPage         : 1,
     lastPage            : 1,
     perPage             : 10,
-    totalRoomBookings   : 0
+    totalRoomBookings   : 0,
+    filters             : {
+        // filters definition
+        email_filter: { operator: null, value: '' },
+    },
 };
 
 const roomBookingListReducer = (state = DEFAULT_STATE, action) => {
@@ -41,9 +45,8 @@ const roomBookingListReducer = (state = DEFAULT_STATE, action) => {
             return DEFAULT_STATE;
         }
         case REQUEST_ROOM_BOOKINGS: {
-            let {order, orderDir, term} = payload;
-
-            return {...state, order, orderDir, term }
+            let {order, orderDir, term, filters} = payload;
+            return {...state, order, orderDir, term, filters };
         }
         case RECEIVE_ROOM_BOOKINGS: {
             let { current_page, total, last_page } = payload.response;

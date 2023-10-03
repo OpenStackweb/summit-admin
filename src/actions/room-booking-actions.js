@@ -53,14 +53,30 @@ export const ROOM_BOOKING_CANCELED = 'ROOM_BOOKING_CANCELED';
 
 export const RECEIVE_ROOM_BOOKING_AVAILABILITY = 'RECEIVE_ROOM_BOOKING_AVAILABILITY';
 
-export const getRoomBookings = (term = null, page = 1, perPage = 10, order = 'start_datetime', orderDir = 1) => async (dispatch, getState) => {
+const parseFilters = (filters, term) => {
 
+    const filter = [];
+    if (term) {
+        const escapedTerm = escapeFilterValue(term);
+        filter.push(`owner_name=@${escapedTerm},room_name=@${escapedTerm}`);
+    }
+
+    if(filters.hasOwnProperty('email_filter')){
+        const email_filter = filters.email_filter;
+        if(email_filter.operator && email_filter.value)
+            filter.push(`${email_filter.operator}${escapeFilterValue(email_filter.value)}`);
+    }
+
+    return filter;
+}
+
+export const getRoomBookings = (term = null, page = 1, perPage = 10, order = 'start_datetime', orderDir = 1, filters = {}) => async (dispatch, getState) => {
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
     const { currentSummit } = currentSummitState;
-    const filter = [];
 
     dispatch(startLoading());
+    const filter = parseFilters(filters, term);
 
     const params = {
         page: page,
@@ -70,11 +86,6 @@ export const getRoomBookings = (term = null, page = 1, perPage = 10, order = 'st
     };
 
     filter.push('status==Paid||Reserved||RequestedRefund||Refunded');
-
-    if (term) {
-        const escapedTerm = escapeFilterValue(term);
-        filter.push(`owner_name=@${escapedTerm},room_name=@${escapedTerm}`);
-    }
 
     if (filter.length > 0) {
         params['filter[]'] = filter;
@@ -91,30 +102,26 @@ export const getRoomBookings = (term = null, page = 1, perPage = 10, order = 'st
         createAction(RECEIVE_ROOM_BOOKINGS),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/bookable-rooms/all/reservations`,
         authErrorHandler,
-        { order, orderDir, term }
+        { order, orderDir, term, filters }
     )(params)(dispatch).then(() => {
         dispatch(stopLoading());
     }
     );
 };
 
-export const exportRoomBookings = (term = null, order = 'start_datetime', orderDir = 1) => async (dispatch, getState) => {
+export const exportRoomBookings = (term = null, order = 'start_datetime', orderDir = 1, filters = {}) => async (dispatch, getState) => {
 
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
     const { currentSummit } = currentSummitState;
     const filename = currentSummit.name + '-Room-Bookings.csv';
-    const filter = [];
     const params = {
         access_token: accessToken
     };
 
-    filter.push('status==Paid||Reserved||RequestedRefund||Refunded');
+    const filter = parseFilters(filters, term);
 
-    if (term) {
-        const escapedTerm = escapeFilterValue(term);
-        filter.push(`owner_name=@${escapedTerm},room_name=@${escapedTerm}`);
-    }
+    filter.push('status==Paid||Reserved||RequestedRefund||Refunded');
 
     if (filter.length > 0) {
         params['filter[]'] = filter;
