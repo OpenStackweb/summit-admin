@@ -1327,7 +1327,7 @@
     "room_booking_created": "Room Booking created successfully",
     "room_booking_saved": "Room Booking saved successfully",
     "placeholders": {
-      "select_status": "Select Status",
+      "available_slots": "Select Time",
       "select_currency": "Select Currency",
       "select_room": "Select Room",
       "select_date": "Select Date"

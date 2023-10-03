@@ -207,7 +207,7 @@ const RoomBookingForm = ({ history, entity, currentSummit, errors, availableSlot
                                 <Dropdown
                                     id="available_slots"
                                     value={timeSlot}
-                                    placeholder={T.translate("edit_room_booking.placeholders.select_status")}
+                                    placeholder={T.translate("edit_room_booking.placeholders.available_slots")}
                                     options={available_slots_ddl}
                                     onChange={handleTimeSlotChange}
                                 />
