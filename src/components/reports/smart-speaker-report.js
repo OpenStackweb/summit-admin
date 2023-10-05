@@ -22,20 +22,20 @@ import {flattenData} from "../../actions/report-actions";
 
 const fieldNames = [
     {label: 'Emails', key: 'emails', simple: true, sortable: true},
-    {label: 'Title', key: 'title', simple: true},
-    {label: 'Company', key: 'currentCompany', simple: true},
-    {label: 'Job Title', key: 'currentJobTitle', simple: true},
-    {label: 'Bio', key: 'bio', simple: true},
-    {label: 'IRC', key: 'ircHandle', simple: true},
-    {label: 'Twitter', key: 'twitterName', simple: true},
-    {label: 'Member ID', key: 'member_id'},
-    {label: 'PromoCode', key: 'promoCodes_code'},
-    {label: 'Code Type', key: 'promoCodes_type'},
-    {label: 'Confirmed', key: 'attendances_confirmed'},
-    {label: 'Registered', key: 'attendances_registered'},
-    {label: 'Checked In', key: 'attendances_checkedIn'},
-    {label: 'Phone #', key: 'attendances_phoneNumber'},
-    {label: 'Presentations', key: 'presentationTitles'},
+    {label: 'Title', key: 'title', simple: true, sortable: true},
+    {label: 'Company', key: 'currentcompany', queryKey: 'currentCompany', simple: true, sortable: true},
+    {label: 'Job Title', key: 'currentjobtitle', queryKey: 'currentJobTitle', simple: true, sortable: true},
+    {label: 'Bio', key: 'bio', simple: true, sortable: true},
+    {label: 'IRC', key: 'irchandle', queryKey: 'ircHandle', simple: true, sortable: true},
+    {label: 'Twitter', key: 'twittername', queryKey: 'twitterName', simple: true, sortable: true},
+    {label: 'Member ID', key: 'member_id', sortable: true},
+    {label: 'PromoCode', key: 'promocodes_code', sortable: true},
+    {label: 'Code Type', key: 'promocodes_type', sortable: true},
+    {label: 'Confirmed', key: 'attendances_confirmed', sortable: true},
+    {label: 'Registered', key: 'attendances_registered', sortable: true},
+    {label: 'Checked In', key: 'attendances_checkedin', sortable: true},
+    {label: 'Phone #', key: 'attendances_phonenumber', sortable: true},
+    {label: 'Presentations', key: 'presentationtitles', sortable: true},
 ];
 
 class SmartSpeakerReport extends React.Component {
@@ -75,26 +75,28 @@ class SmartSpeakerReport extends React.Component {
             reportData.push({"member": member})
         }
 
-        let promoCodesFields = ['promoCodes_code', 'promoCodes_type'];
+        let promoCodesFields = ['promocodes_code', 'promocodes_type'];
         if (showFields.filter(f => promoCodesFields.includes(f)).length > 0) {
             let promoCodes = new Query("promoCodes", {summit_Id:currentSummit.id});
             promoCodes.find(["code", "type"]);
-            reportData.push({"promoCodes": promoCodes})
+            reportData.push({"promocodes": promoCodes})
         }
 
-        let attendancesFields = ['attendances_confirmed', 'attendances_registered', 'attendances_checkedIn', 'attendances_phoneNumber'];
+        let attendancesFields = ['attendances_confirmed', 'attendances_registered', 'attendances_checkedin', 'attendances_phonenumber'];
         if (showFields.filter(f => attendancesFields.includes(f)).length > 0) {
             let attendances = new Query("attendances", {summit_Id:currentSummit.id});
-            attendances.find(["confirmed", "registered", "checkedIn", "phoneNumber"]);
+            attendances.find(["confirmed", "registered", "checkedin: checkedIn", "phonenumber: phoneNumber"]);
             reportData.push({"attendances": attendances})
         }
 
-        if (showFields.includes("presentationTitles")) {
-            reportData.push(`presentationTitles (summitId:${currentSummit.id})`)
+        if (showFields.includes("presentationtitles")) {
+            reportData.push(`presentationtitles: presentationTitles (summitId:${currentSummit.id})`)
         }
 
-        let allSimpleFields = fieldNames.filter(f => f.simple).map(f => f.key);
-        let simpleFields = showFields.filter(f => allSimpleFields.includes(f));
+        let simpleFields = fieldNames
+          .filter(f => f.simple && showFields.includes(f.key))
+          .map(f => f.queryKey ? `${f.key}: ${f.queryKey}` : f.key);
+
         let results = new Query("results", filters);
         results.find([...reportData, ...simpleFields]);
 
@@ -111,14 +113,53 @@ class SmartSpeakerReport extends React.Component {
         let sortKey = key;
         
         switch (key.toLowerCase()) {
-            case 'fullname':
-                sortKey = 'first_name,last_name';
-                break;
             case 'emails':
                 sortKey = 'member__email';
                 break;
+            case 'title':
+                sortKey = 'title';
+                break;
+            case 'currentjobtitle': // this
+                sortKey = 'title';
+                break;
+            case 'member_id':
+                sortKey = 'member__id';
+                break;
+            case 'fullname':
+                sortKey = 'first_name,last_name';
+                break;
+            case 'irchandle':
+                sortKey = 'irc_handle';
+                break;
+            case 'twittername':
+                sortKey = 'twitter_name';
+                break;
+            case 'presentationtitles':
+                sortKey = 'presentations__title';
+                break;
+            case 'currentcompany': // this
+                sortKey = 'company';
+                break;
             case 'rolebysummit':
                 sortKey = 'role_by_summit';
+                break;
+            case 'promocodes_code':
+                sortKey = 'promo_codes__code';
+                break;
+            case 'promocodes_type':
+                sortKey = 'promo_codes__type';
+                break;
+            case 'attendances_confirmed':
+                sortKey = 'attendances__confirmed';
+                break;
+            case 'attendances_registered':
+                sortKey = 'attendances__registered';
+                break;
+            case 'attendances_checkedin':
+                sortKey = 'attendances__checked_in';
+                break;
+            case 'attendances_phonenumber':
+                sortKey = 'attendances__phone_number';
                 break;
         }
 
