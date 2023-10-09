@@ -42,10 +42,11 @@ export default class AttendanceFilter extends React.Component {
                 <label>Filter by Attendance (pressed = show)</label>
                 <SegmentedControl
                     name="memberFilter"
+                    value={filterValue}
                     options={[
-                        { label: "All", value: null, default: filterValue === null },
-                        { label: "Registered", value: "registered", default: filterValue === "registered" },
-                        { label: "Confirmed", value: "confirmed", default: filterValue === "confirmed" },
+                        { label: "All", value: null, default: true },
+                        { label: "Registered for Summit", value: "paidtickets" },
+                        { label: "Willing to speak", value: "confirmed" },
                     ]}
                     setValue={newValue => this.handleFilterChange(newValue)}
                     style={{ width: "100%", height: 40, color: '#337ab7', fontSize: '10px' }}

@@ -31,9 +31,9 @@ const fieldNames = [
     {label: 'Member ID', key: 'member_id', sortable: true},
     {label: 'PromoCode', key: 'promocodes_code', sortable: true},
     {label: 'Code Type', key: 'promocodes_type', sortable: true},
-    {label: 'Confirmed', key: 'attendances_confirmed', sortable: true},
-    {label: 'Registered', key: 'attendances_registered', sortable: true},
-    {label: 'Checked In', key: 'attendances_checkedin', sortable: true},
+    {label: 'Willing to speak', key: 'attendances_confirmed', sortable: true},
+    {label: 'Attendance Registered', key: 'attendances_registered', sortable: true},
+    {label: 'Attendance Checked In', key: 'attendances_checkedin', sortable: true},
     {label: 'Phone #', key: 'attendances_phonenumber', sortable: true},
     {label: 'Presentations', key: 'presentationtitles', sortable: true},
 ];
@@ -61,7 +61,12 @@ class SmartSpeakerReport extends React.Component {
         }
 
         let query = new Query("speakers", listFilters);
-        let reportData = ["id", "title", "fullname: fullName", `rolebysummit: roleBySummit (summitId:${currentSummit.id})`];
+        let reportData = [
+            "id",
+            "title",
+            "fullname: fullName",
+            `rolebysummit: roleBySummit (summitId:${currentSummit.id})`,
+            `paidtickets: paidTickets(summitId:${currentSummit.id})`];
 
         if (sortKey) {
             let querySortKey = this.translateSortKey(sortKey);
@@ -161,6 +166,9 @@ class SmartSpeakerReport extends React.Component {
             case 'attendances_phonenumber':
                 sortKey = 'attendances__phone_number';
                 break;
+            case 'paidtickets':
+                sortKey = 'paid_tickets';
+                break;
         }
 
         return sortKey;
@@ -178,9 +186,9 @@ class SmartSpeakerReport extends React.Component {
         let columns = [
             { columnKey: 'id', value: 'Id', sortable: true },
             { columnKey: 'fullname', value: 'Speaker', sortable: true },
-            { columnKey: 'rolebysummit', value: 'Role', sortable: true }
+            { columnKey: 'rolebysummit', value: 'Role', sortable: true },
+            { columnKey: 'paidtickets', value: 'Registered for Summit?', sortable: true },
         ];
-
 
         let showColumns = fieldNames
             .filter(f => showFields.includes(f.key) )
