@@ -77,7 +77,7 @@ const signageReducer = (state = DEFAULT_STATE, action) => {
                 return ({
                     id: ev.id,
                     title: ev.title,
-                    speakers_str: ev.speakers.map(sp => `${sp.first_name} ${sp.last_name}`).join(', '),
+                    speakers_str: ev.speakers ? ev.speakers.map(sp => `${sp.first_name} ${sp.last_name}`).join(', ') : 'N/A',
                     floor_loc: ev.location.floor ? `${ev.location.floor?.name} / ${ev.location.name}` : ev.location.name,
                     start_date_str,
                     end_date_str,
