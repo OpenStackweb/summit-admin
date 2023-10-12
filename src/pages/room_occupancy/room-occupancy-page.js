@@ -142,7 +142,7 @@ class RoomOccupancyPage extends React.Component {
 
 
         return(
-            <div>
+            <div className="occupancyWrapper">
                 <div className="container">
                     <h3> {T.translate("room_occupancy.room_occupancy")}</h3>
                     <div className="row filters">
@@ -154,8 +154,13 @@ class RoomOccupancyPage extends React.Component {
                             />
                         </div>
                         <div className="col-md-3">
-                            <Dropdown id="roomId" value={roomId} placeholder={T.translate("room_occupancy.placeholders.select_room")}
-                                      options={room_ddl} onChange={this.handleRoomFilter}
+                            <Dropdown
+                              id="roomId"
+                              value={roomId}
+                              placeholder={T.translate("room_occupancy.placeholders.select_room")}
+                              options={room_ddl}
+                              onChange={this.handleRoomFilter}
+                              clearable
                             />
                         </div>
                         <div className="col-md-3 checkboxes-div currentEvents hidden-xs">

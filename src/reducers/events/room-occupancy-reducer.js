@@ -64,7 +64,7 @@ const roomOccupancyReducer = (state = DEFAULT_STATE, action) => {
                     title: e.title,
                     start_date: moment(e.start_date * 1000).tz(state.summitTZ).format('ddd h:mm a'),
                     room: (e.location) ? e.location.name : '',
-                    occupancy: e.occupancy,
+                    occupancy: e.occupancy || 'EMPTY',
                     speakers: (e.speakers) ? e.speakers.map(s => s.first_name + ' ' + s.last_name).join(',') : ''
                 };
             });
@@ -88,7 +88,7 @@ const roomOccupancyReducer = (state = DEFAULT_STATE, action) => {
                     start_date: moment(payloadEvent.start_date * 1000).tz(state.summitTZ).format('ddd h:mm a'),
                     end_date: moment(payloadEvent.end_date * 1000).tz(state.summitTZ).format('ddd h:mm a'),
                     room: (payloadEvent.location) ? payloadEvent.location.name : '',
-                    occupancy: payloadEvent.occupancy,
+                    occupancy: payloadEvent.occupancy || 'EMPTY',
                     speakers: (payloadEvent.speakers) ? payloadEvent.speakers.map(s => s.first_name + ' ' + s.last_name).join(',') : ''
                 };
             }

@@ -103,12 +103,12 @@ class CurrentEventOccupancyPage extends React.Component {
                     <div>{currentEvent.end_date}</div>
 
                     <div className="form-inline occupancy">
-                        <button className="btn btn-default" onClick={this.changeOccupancy.bind(this, currentEvent, true)}>
-                            <i className="fa fa-plus"/>
-                        </button>
-                        <span>{currentEvent.occupancy}</span>
                         <button className="btn btn-default" onClick={this.changeOccupancy.bind(this, currentEvent, false)}>
                             <i className="fa fa-minus"/>
+                        </button>
+                        <span>{currentEvent.occupancy}</span>
+                        <button className="btn btn-default" onClick={this.changeOccupancy.bind(this, currentEvent, true)}>
+                            <i className="fa fa-plus"/>
                         </button>
                     </div>
 
