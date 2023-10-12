@@ -54,7 +54,8 @@ class EmailFlowEventListPage extends React.Component {
     }
 
     handleSort(index, key, dir, func) {
-        this.props.getEmailFlowEvents(key, dir);
+        const {term, page, perPage} = this.props;
+        this.props.getEmailFlowEvents(term, page, perPage, key, dir);
     }
 
     render(){
