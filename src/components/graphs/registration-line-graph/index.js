@@ -18,7 +18,7 @@ import {isMobile} from 'react-device-detect';
 import styles from './index.module.less'
 
 
-const LineGraph = ({title, data, labels, children}) => {
+const LineGraph = ({title, legend, data, labels, children}) => {
   const graphSize = isMobile ? { width: 400, height: (400 + (labels.length * 60)) } : { width: 600, height: 600 };
   const layoutPadding = isMobile ? { top: 10, left: 10, right: 10, bottom: 30 } : { top: 80, left: 80, right: 80, bottom: 80 };
   
@@ -26,7 +26,7 @@ const LineGraph = ({title, data, labels, children}) => {
     labels: labels,
     datasets: [
       {
-        label: 'Attendees checked-in',
+        label: legend,
         data: data,
         borderColor: 'rgb(255, 99, 132)',
         backgroundColor: 'rgba(255, 99, 132, 0.5)',

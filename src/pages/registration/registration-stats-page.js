@@ -82,8 +82,8 @@ const RegistrationStatsPage = ({currentSummit, match, loading, ...props}) => {
     props.getRegistrationData(from, to);
   };
   
-  const onUnitChange = (unit) => {
-    props.changeTimeUnit(unit, fromDate, toDate);
+  const onUnitChange = (unit, collection) => {
+    props.changeTimeUnit(unit, fromDate, toDate, collection);
   };
 
   return (
@@ -281,14 +281,35 @@ const RegistrationStatsPage = ({currentSummit, match, loading, ...props}) => {
             Loading Attendees
           </AjaxLoader>
           <LineGraph
-            title={`Attendees check-ins per ${props.timeUnit}`}
+            title={`Attendees check-ins per ${props.attendeeTimeUnit}`}
+            legend="Attendees checked-in"
             data={props.attendee_checkins.map(grp => grp.qty)}
             labels={props.attendee_checkins.map(grp => grp.label)}
             colorPalette={5}
           >
             <SteppedSelect
-              value={props.timeUnit}
-              onChange={onUnitChange}
+              value={props.attendeeTimeUnit}
+              onChange={val => onUnitChange(val, 'attendees')}
+              options={timeOptions}
+              style={{display: 'inline-block', marginLeft: 10}}
+            />
+          </LineGraph>
+        </div>
+
+        <div style={{position: 'relative', minHeight: 400}}>
+          <AjaxLoader show={props.loadingData} relative size={ 60 }>
+            Loading Tickets
+          </AjaxLoader>
+          <LineGraph
+            title={`Tickets purchased per ${props.ticketsTimeUnit}`}
+            legend="Tickets purchased"
+            data={props.tickets_sold.map(grp => grp.qty)}
+            labels={props.tickets_sold.map(grp => grp.label)}
+            colorPalette={5}
+          >
+            <SteppedSelect
+              value={props.ticketsTimeUnit}
+              onChange={val => onUnitChange(val, 'tickets')}
               options={timeOptions}
               style={{display: 'inline-block', marginLeft: 10}}
             />

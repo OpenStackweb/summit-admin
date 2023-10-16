@@ -7,6 +7,8 @@ import {
   REGISTRATION_DATA_LOADED,
   REGISTRATION_DATA_REQUESTED,
   REQUEST_ATTENDEE_CHECK_INS,
+  REQUEST_TICKETS_SOLD,
+  RECEIVE_TICKETS_SOLD
 } from '../../actions/summit-stats-actions'
 
 const DEFAULT_STATE = {
@@ -26,7 +28,9 @@ const DEFAULT_STATE = {
   total_virtual_non_checked_in_attendees: 0,
   total_tickets_per_badge_feature: [],
   attendee_checkins: [],
-  timeUnit: 'Day'
+  attendeeTimeUnit: 'Day',
+  tickets_sold: [],
+  ticketsTimeUnit: 'Day'
 };
 
 const summitStatsReducer = (state = DEFAULT_STATE, action) => {
@@ -50,13 +54,22 @@ const summitStatsReducer = (state = DEFAULT_STATE, action) => {
       return {...state, ...stats};
     }
     case REQUEST_ATTENDEE_CHECK_INS: {
-      return {...state, timeUnit: payload.timeUnit, loadingData: true}
+      return {...state, attendeeTimeUnit: payload.attendeeTimeUnit, loadingData: true}
     }
     case RECEIVE_ATTENDEE_CHECK_INS: {
       const {data, current_page, last_page} = payload.response;
       const attendee_checkins = current_page === 1 ? data : [...state.attendee_checkins, ...data];
       const loadingData = current_page < last_page;
       return {...state, attendee_checkins, loadingData};
+    }
+    case REQUEST_TICKETS_SOLD: {
+      return {...state, ticketsTimeUnit: payload.ticketsTimeUnit, loadingData: true}
+    }
+    case RECEIVE_TICKETS_SOLD: {
+      const {data, current_page, last_page} = payload.response;
+      const tickets_sold = current_page === 1 ? data : [...state.tickets_sold, ...data];
+      const loadingData = current_page < last_page;
+      return {...state, tickets_sold, loadingData};
     }
     case REGISTRATION_DATA_LOADED: {
       return {...state, loadingData: false}
