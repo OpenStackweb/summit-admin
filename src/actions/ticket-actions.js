@@ -167,6 +167,7 @@ export const printTickets = (filters, doAttendeeCheckinOnPrint = true, selectedV
 };
 
 const parseFilters = (filters, term = null) => {
+
     const filter = [];
 
     if (filters.hasOwnProperty('showOnlyPendingRefundRequests') && filters.showOnlyPendingRefundRequests) {
@@ -194,6 +195,13 @@ const parseFilters = (filters, term = null) => {
     if(filters.hasOwnProperty('ticketTypesFilter') && Array.isArray(filters.ticketTypesFilter) && filters.ticketTypesFilter.length > 0){
         filter.push(filters.ticketTypesFilter.reduce(
             (accumulator, tt) => accumulator +(accumulator !== '' ? ',':'') +`ticket_type_id==${tt.value}`,
+            ''
+        ));
+    }
+
+    if(filters.hasOwnProperty('badgeTypesFilter') && Array.isArray(filters.badgeTypesFilter) && filters.badgeTypesFilter.length > 0) {
+        filter.push(filters.badgeTypesFilter.reduce(
+            (accumulator, tt) => accumulator +(accumulator !== '' ? ',':'') +`badge_type_id==${tt.value}`,
             ''
         ));
     }
@@ -275,7 +283,7 @@ export const getTickets =
             page: page,
             per_page: perPage,
             access_token: accessToken,
-            expand: 'owner,order,ticket_type,badge,promo_code,promo_code.tags,refund_requests'
+            expand: 'owner,order,ticket_type,badge,badge.type,promo_code,promo_code.tags,refund_requests'
         };
 
         const filter = parseFilters(filters, term);
@@ -286,8 +294,10 @@ export const getTickets =
 
         // order
         if (order != null && orderDir != null) {
+            let auxOrder= order;
             const orderDirSign = (orderDir === 1) ? '+' : '-';
-            params['order'] = `${orderDirSign}${order}`;
+            if(auxOrder === 'badge_type_id') auxOrder = 'badge_type';
+            params['order'] = `${orderDirSign}${auxOrder}`;
         }
 
         return getRequest(

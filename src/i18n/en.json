@@ -1463,6 +1463,7 @@
     "select_fields": "Show Columns",
     "promocode": "Promo Code",
     "promo_code_tags": "Promo Code Tags",
+    "badge_type": "Badge Type",
     "import_tickets_format": "Format must be the following:",
     "import_tickets_id": "id",
     "import_tickets_id_text": ": the id of the ticket",
@@ -1482,7 +1483,11 @@
     "import_tickets_ticket_type_name_text": ": ticket type name (mandatory if id and number are not present)",
     "import_tickets_ticket_type_id": "ticket_type_id",
     "import_tickets_ticket_type_id_text": ": ticket type id (mandatory if id and number are not present and ticket_type_name is not provided it)",
+    "import_tickets_promo_code_id": "promo_code_id",
+    "import_tickets_promo_code": "promo_code",
     "import_tickets_ticket_promo_code": "ticket_promo_code",
+    "import_tickets_promo_code_id_text": ": promo code id to apply (optional)",
+    "import_tickets_promo_code_text": ": promo code to apply (optional)",
     "import_tickets_ticket_promo_code_text": ": promo code to apply (optional)",
     "import_tickets_badge_type_id": "badge_type_id",
     "import_tickets_badge_type_id_text": ": the id of the badge type",
@@ -1498,7 +1503,8 @@
       "view_type": "Select a View Type ...",
       "promocodes": "Select a Promo Code ...",
       "promocodes_tags": "Select a Promo Code Tag ...",
-      "select_fields": "Select data to display"
+      "select_fields": "Select data to display",
+      "badge_type": "Badge Type"
     }
   },
   "edit_ticket": {
