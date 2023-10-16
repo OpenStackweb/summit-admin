@@ -85,7 +85,7 @@ class RoomOccupancyPage extends React.Component {
     }
 
     changeOccupancy(eventId, add, ev) {
-        let values = ['EMPTY', '25%', '50%', '75%', 'FULL'];
+        let values = ['EMPTY', '25%', '50%', '75%', 'FULL', 'OVERFLOW'];
         const {events} = this.props;
         let event =  events.find(e => e.id === eventId);
 
@@ -94,7 +94,7 @@ class RoomOccupancyPage extends React.Component {
         ev.preventDefault();
 
         if (add) {
-            if (event.occupancy === 'FULL') return;
+            if (event.occupancy === 'OVERFLOW') return;
             event.occupancy = values[key + 1];
         } else {
             if (event.occupancy === 'EMPTY') return;

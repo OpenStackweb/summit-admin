@@ -55,7 +55,7 @@ class CurrentEventOccupancyPage extends React.Component {
     }
 
     changeOccupancy(event, add, ev) {
-        let values = ['EMPTY', '25%', '50%', '75%', 'FULL'];
+        let values = ['EMPTY', '25%', '50%', '75%', 'FULL','OVERFLOW'];
 
         let key = values.indexOf(event.occupancy);
 
