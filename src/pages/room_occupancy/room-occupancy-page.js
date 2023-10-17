@@ -163,7 +163,7 @@ class RoomOccupancyPage extends React.Component {
                               clearable
                             />
                         </div>
-                        <div className="col-md-3 checkboxes-div currentEvents hidden-xs">
+                        <div className="col-md-3 checkboxes-div currentEvents">
                             <div className="form-check abc-checkbox">
                                 <input type="checkbox" id="currentEvents" checked={currentEvents}
                                        onChange={this.handleChangeCurrentEvents} className="form-check-input" />
