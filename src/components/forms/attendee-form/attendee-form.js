@@ -29,6 +29,7 @@ class AttendeeForm extends React.Component {
 
         this.state = {
             entity: {...props.entity},
+            originalEntity:  {...props.entity},
             errors: props.errors,
             showSection: 'main',
         };
@@ -38,6 +39,7 @@ class AttendeeForm extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.triggerFormSubmit = this.triggerFormSubmit.bind(this);
+        this.removeUnchangedFields = this.removeUnchangedFields.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -46,6 +48,7 @@ class AttendeeForm extends React.Component {
 
         if(!shallowEqual(prevProps.entity, this.props.entity)) {
             state.entity = {...this.props.entity};
+            state.originalEntity = {...this.props.entity};
             state.errors = {};
         }
 
@@ -88,6 +91,28 @@ class AttendeeForm extends React.Component {
         this.setState({entity: entity, errors: errors});
     }
 
+    removeUnchangedFields(entity, originalEntity) {
+
+        const fields = [
+            'summit_hall_checked_in',
+            'disclaimer_accepted',
+            'has_virtual_check_in',
+            'first_name',
+            'last_name',
+            'company',
+            'shared_contact_info',
+            'admin_notes',
+            'email',
+        ];
+        fields.forEach(f => {
+            if(entity[f] === originalEntity[f]){
+                // field dint change , so remove it from submit
+                delete entity[f];
+            }
+        });
+        return entity;
+    }
+
     triggerFormSubmit() {
 
         // check current ( could not be rendered)
@@ -95,17 +120,22 @@ class AttendeeForm extends React.Component {
             this.formRef.current.doSubmit()
             return;
         }
+
         // do regular submit
-        const entity = { ... this.state.entity };
+
+        let { originalEntity, entity } = this.state;
+
         if (entity.extra_questions) {
             entity.extra_questions = entity.extra_questions.map(q => ({question_id: q.question_id, answer: q.value}))
         }
-        this.props.onSubmit(entity);
+
+
+        this.props.onSubmit(this.removeUnchangedFields(entity, originalEntity));
     }
 
     handleSubmit(formValues) {
-        const {entity} = this.state;
-        const qs = new QuestionsSet(entity.allowed_extra_questions);
+
+        const qs = new QuestionsSet(this.state.entity.allowed_extra_questions);
         const formattedAnswers = [];
 
         Object.keys(formValues).map(name => {
@@ -115,7 +145,8 @@ class AttendeeForm extends React.Component {
         });
 
         this.setState({...this.state, entity: {...this.state.entity, extra_questions: formattedAnswers}}, () => {
-            this.props.onSubmit(this.state.entity);
+            let { originalEntity, entity } = this.state;
+            this.props.onSubmit(this.removeUnchangedFields(entity, originalEntity));
         });
     }
 
