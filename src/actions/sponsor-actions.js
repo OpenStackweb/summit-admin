@@ -351,8 +351,8 @@ export const updateSponsorOrder = (sponsors, sponsorId, newOrder) => async (disp
 const normalizeSponsor = (entity) => {
     const normalizedEntity = {...entity};
 
-    normalizedEntity.company_id = (normalizedEntity.company) ? normalizedEntity.company.id : 0;
-    normalizedEntity.sponsorship_id = (normalizedEntity.sponsorship.id) ? normalizedEntity.sponsorship.id : 0;
+    normalizedEntity.company_id = normalizedEntity.company?.id || 0;
+    normalizedEntity.sponsorship_id = normalizedEntity.sponsorship?.id || 0;
     normalizedEntity.featured_event_id = (normalizedEntity.featured_event && normalizedEntity.featured_event.id) ? normalizedEntity.featured_event.id : 0;
     
     delete(normalizedEntity.featured_event);
