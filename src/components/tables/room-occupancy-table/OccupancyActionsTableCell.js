@@ -22,7 +22,7 @@ export default class OccupancyActionsTableCell extends React.Component {
     const moreDisable = value === 'OVERFLOW';
 
     return (
-      <td className="actions" key="actions" style={{width: "225px"}}>
+      <td className="actions" key="actions">
         <button className="btn btn-default" onClick={actions.onLess.bind(this, id)} disabled={lessDisable}>
           <i className="fa fa-minus"/>
         </button>

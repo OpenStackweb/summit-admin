@@ -120,7 +120,7 @@ class RoomOccupancyPage extends React.Component {
         const columns = [
             { columnKey: 'room', value: T.translate("room_occupancy.room") },
             { columnKey: 'start_date', value: T.translate("room_occupancy.start"), sortable: true, width: '100px' },
-            { columnKey: 'title', value: T.translate("room_occupancy.title"), sortable: true, className: 'hidden-xs' },
+            { columnKey: 'title', value: T.translate("room_occupancy.title"), sortable: true },
             { columnKey: 'speakers', value: T.translate("room_occupancy.speakers"), className: 'hidden-xs' },
         ];
 
@@ -186,7 +186,7 @@ class RoomOccupancyPage extends React.Component {
                     }
 
                     {events.length > 0 &&
-                    <div>
+                    <div style={{overflow: 'hidden'}}>
                         <OccupancyTable
                             options={table_options}
                             data={events}

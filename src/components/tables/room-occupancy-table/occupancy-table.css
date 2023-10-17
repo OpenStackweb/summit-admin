@@ -119,3 +119,21 @@ table.occupancyTable>tbody>tr.child ul li:last-child {
     border-bottom: none
 }
 
+table.occupancyTable > tbody > tr > td.actions {
+    width: 185px;
+}
+
+@media only screen and (max-width: 768px) {
+    .occupancyTableWrapper {
+        width: calc(100% - 200px);
+        overflow-x: scroll;
+        margin-left: 190px;
+        overflow-y: visible;
+        padding: 0;
+    }
+
+    table.occupancyTable > tbody > tr > td.actions {
+        position: absolute;
+        left: 0;
+    }
+}

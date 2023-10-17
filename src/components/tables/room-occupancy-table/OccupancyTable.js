@@ -48,7 +48,8 @@ const OccupancyTable = (props) => {
     let {options, columns} = props;
 
     return (
-        <table className={"table table-striped table-hover " + options.className}>
+      <div className="occupancyTableWrapper">
+        <table className={"table table-striped table-hover occupancyTable"}>
             <thead>
                 <tr>
 			    {columns.map((col,i) => {
@@ -98,6 +99,7 @@ const OccupancyTable = (props) => {
                 })}
             </tbody>
         </table>
+      </div>
     );
 };
 
