@@ -138,6 +138,7 @@ import { persistStore, persistCombineReducers } from 'redux-persist'
 import storage from 'redux-persist/es/storage'
 import currentRegFeedMetadataListReducer from './reducers/summits/reg-feed-metadata-list-reducer';
 import currentRegFeedMetadataReducer from './reducers/summits/reg-feed-metadata-reducer';
+import badgePrintReducer from './reducers/tickets/badge-print-reducer';
 
  // default: localStorage if web, AsyncStorage if react-native
 
@@ -202,6 +203,7 @@ const reducers = persistCombineReducers(config, {
     currentBadgeTypeState: badgeTypeReducer,
     currentBadgeFeatureListState: badgeFeatureListReducer,
     currentBadgeFeatureState: badgeFeatureReducer,
+    currentBadgePrintState: badgePrintReducer,
     currentAccessLevelListState: accessLevelListReducer,
     currentAccessLevelState: accessLevelReducer,
     currentViewTypeListState: viewTypeListReducer,

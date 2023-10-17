@@ -26,7 +26,7 @@ import TicketForm from "../../components/forms/ticket-form";
 import BadgeForm from "../../components/forms/badge-form";
 import {getBadgeFeatures, getBadgeTypes, deleteBadge,
     addFeatureToBadge, removeFeatureFromBadge, changeBadgeType,
-    printBadge} from "../../actions/badge-actions";
+    printBadge, getBadgePrints, exportBadgePrints} from "../../actions/badge-actions";
 import Swal from "sweetalert2";
 import {Table} from "openstack-uicore-foundation/lib/components";
 import moment from "moment-timezone";
@@ -56,6 +56,9 @@ class EditTicketPage extends React.Component {
         this.handleRefundTicket = this.handleRefundTicket.bind(this);
         this.handleRejectRefundRequest = this.handleRejectRefundRequest.bind(this);
         this.shouldDisplayRejectRefundRequest = this.shouldDisplayRejectRefundRequest.bind(this);
+        this.handleGetBadgePrints = this.handleGetBadgePrints.bind(this);
+        this.handleBadgePrintQuery = this.handleBadgePrintQuery.bind(this);
+        this.handleBadgePrintExport = this.handleBadgePrintExport.bind(this);
 
         this.state = {
             refundAmount: '',
@@ -101,6 +104,19 @@ class EditTicketPage extends React.Component {
         const {entity} = this.props;
         ev.preventDefault();
         this.props.printBadge(entity.id, this.state.printType);
+    }
+
+    handleGetBadgePrints() {        
+        this.props.getBadgePrints();
+    }
+
+    handleBadgePrintQuery(term, page, perPage, order, orderDir, filters) {
+        this.props.getBadgePrints(term, page, perPage, order, orderDir, filters);
+    }
+
+    handleBadgePrintExport() {
+        const {term, order, orderDir} = this.props.currentBadgePrints;
+        this.props.exportBadgePrints(term, order, orderDir);
     }
 
     handleResendEmail(ticket, ev){
@@ -202,7 +218,7 @@ class EditTicketPage extends React.Component {
     }
 
     render(){
-        const {currentSummit, currentOrder, loading,  entity, errors, match} = this.props;
+        const {currentSummit, currentOrder, loading, currentBadgePrints, entity, errors, match} = this.props;
 
         const breadcrumb = `...${entity.number.slice(-20)}`;
 
@@ -311,7 +327,11 @@ class EditTicketPage extends React.Component {
                             canPrint={entity.owner && entity.badge}
                             selectedPrintType={this.state.printType}
                             onSelectPrintType={this.handleSelectPrintType}
-                            onPrintBadge={this.handlePrintBadge}                            
+                            onPrintBadge={this.handlePrintBadge}
+                            onBadgePrintQuery={this.handleBadgePrintQuery}
+                            onShowBadgePrints={this.handleGetBadgePrints}
+                            onBadgePrintExport={this.handleBadgePrintExport}
+                            badgePrints={currentBadgePrints}
                             onTypeChange={this.props.changeBadgeType}
                             onFeatureLink={this.props.addFeatureToBadge}
                             onFeatureUnLink={this.props.removeFeatureFromBadge}
@@ -374,9 +394,10 @@ class EditTicketPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ baseState, currentSummitState, currentPurchaseOrderState, currentTicketState }) => ({
+const mapStateToProps = ({ baseState, currentSummitState, currentPurchaseOrderState, currentTicketState, currentBadgePrintState }) => ({
     currentSummit : currentSummitState.currentSummit,
     currentOrder: currentPurchaseOrderState.entity,
+    currentBadgePrints: currentBadgePrintState,
     loading : baseState.loading,
     ...currentTicketState,
 });
@@ -396,6 +417,8 @@ export default connect (
         changeBadgeType,
         addBadgeToTicket,
         printBadge,
+        getBadgePrints,
+        exportBadgePrints,
         reSendTicketEmail,
         activateTicket,
         refundTicket,

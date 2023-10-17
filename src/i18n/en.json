@@ -1529,6 +1529,8 @@
     "qr": "QR Code",
     "access_levels": "Access Levels",
     "print_excerpt": "Print Excerpt",
+    "print_excerpt_details": "Show Details",
+    "print_excerpt_less": "Show Less",
     "count": "Count",
     "print": "Print Badge",
     "badge_features": "Badge Features",
@@ -1566,10 +1568,24 @@
     "paid_amount_adjusted": "Amount Paid Adjusted",
     "activate_yes": "Yes, reactivate",
     "deactivate_yes": "Yes, deactivate",
+    "print_date": "Print Date",
+    "no_prints": "No badge prints found for current search criteria.",
     "placeholders": {
       "refund_notes": "Provide Optional Notes",
       "refund_reject_notes": "Provide Optional Notes",
-      "select_ticket_type": "Select a Ticket Type"
+      "select_ticket_type": "Select a Ticket Type",
+      "search_badge_prints": "Search Badge Print by Requestor",
+      "view_type_filter": "Filter by Type",
+      "print_date_from": "Filter Print Date From",
+      "print_date_to": "Filter Print Date To"
+    },
+    "print_table": {
+      "id": "Print Id",
+      "view_type_name": "Type",
+      "requestor_full_name": "Requestor Name",
+      "requestor_email": "Requestor Email",
+      "created": "Created",
+      "print_date": "Print Date"
     }
   },
   "ticket_type_list": {

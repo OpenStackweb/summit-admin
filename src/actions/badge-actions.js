@@ -26,7 +26,8 @@ import {
     escapeFilterValue,
     authErrorHandler,
     fetchResponseHandler,
-    fetchErrorHandler
+    fetchErrorHandler,
+    getCSV
 } from 'openstack-uicore-foundation/lib/utils/actions';
 import {getAccessTokenSafely} from '../utils/methods';
 
@@ -81,6 +82,8 @@ export const VIEW_TYPE_UPDATED          = 'VIEW_TYPE_UPDATED';
 export const VIEW_TYPE_ADDED            = 'VIEW_TYPE_ADDED';
 export const VIEW_TYPE_DELETED          = 'VIEW_TYPE_DELETED';
 
+export const REQUEST_BADGE_PRINTS       = 'REQUEST_BADGE_PRINTS';
+export const RECEIVE_BADGE_PRINTS       = 'RECEIVE_BADGE_PRINTS';
 
 /***********************  BADGE  ************************************************/
 
@@ -217,6 +220,106 @@ export const checkInBadge = (code) => async (dispatch, getState) => {
         }
     );
 };
+
+/***********************  BADGE PRINTS  ************************************************/
+
+export const getBadgePrints = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1, filters = {}) => async (dispatch, getState) => {   
+
+    const { currentSummitState, currentTicketState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit } = currentSummitState;
+    const { entity: {id: ticketId}} = currentTicketState;
+
+    dispatch(startLoading());
+
+    const params = {
+        page: page,
+        per_page: perPage,
+        access_token: accessToken,
+        expand: 'requestor',
+    };
+
+    const filter = parseFilters(filters, term);
+
+    if (filter.length > 0) {
+        params['filter[]'] = filter;
+    }
+
+    // order
+    if (order != null && orderDir != null) {
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
+        params['order'] = `${orderDirSign}${order}`;
+    }
+
+    return getRequest(
+        createAction(REQUEST_BADGE_PRINTS),
+        createAction(RECEIVE_BADGE_PRINTS),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets/${ticketId}/badge/current/prints`,
+        authErrorHandler,
+        {order, orderDir, term}
+    )(params)(dispatch).then(() => {
+        dispatch(stopLoading());
+    }
+    );
+}
+
+export const exportBadgePrints = (term = null, order = 'id', orderDir = 1, filters = {}) => async (dispatch, getState) => {
+    const {currentSummitState, currentTicketState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
+    const { entity: {id: ticketId}} = currentTicketState;
+    const filename = `${currentSummit.name}-Ticket_${ticketId}-BadgePrints.csv'`;
+
+    const params = {
+        expand       : '',
+        access_token : accessToken,
+    };
+
+    const filter = parseFilters(filters, term);
+
+    if (filter.length > 0) {
+        params['filter[]'] = filter;
+    }
+
+    // order
+    if (order != null && orderDir != null) {
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
+        params['order'] = `${orderDirSign}${order}`;
+    }
+
+    // GET /api/v1/summits/{id}/tickets/{ticket_id}/badge/current/prints/csv
+
+    dispatch(getCSV(`${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets/${ticketId}/badge/current/prints/csv`, params, filename));
+};
+
+const parseFilters = (filters, term) => {
+
+    const filter = [];
+    if (term) {
+        const escapedTerm = escapeFilterValue(term);
+        filter.push(`requestor_full_name@=${escapedTerm},requestor_email@=${escapedTerm}`);
+    }
+
+    if(filters.hasOwnProperty('viewTypeFilter') && Array.isArray(filters.viewTypeFilter)
+        && filters.viewTypeFilter.length > 0){
+        filter.push('view_type_id=='+filters.viewTypeFilter.join('||'));
+    }
+
+    if (filters.printDateFilter && filters.printDateFilter.some(e => e !== null)) {
+        if(filters.printDateFilter.every(e => e !== null )) {
+            filter.push(`print_date[]${filters.printDateFilter[0]}&&${filters.printDateFilter[1]}`);
+        } else {
+            filter.push(`
+            ${filters.printDateFilter[0] !== null ? 
+                `print_date>=${filters.printDateFilter[0]}` : ``}
+            ${filters.printDateFilter[1] !== null ? 
+                `print_date<=${filters.printDateFilter[1]}` : ``}`);
+        }
+    }
+
+    return filter;
+}
+
 
 /***********************  VIEW TYPES  ************************************************/
 
