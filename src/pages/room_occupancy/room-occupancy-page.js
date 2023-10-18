@@ -17,7 +17,11 @@ import T from 'i18n-react/dist/i18n-react';
 import { Pagination } from 'react-bootstrap';
 import { FreeTextSearch, Dropdown } from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getEventsForOccupancy, saveOccupancy } from "../../actions/event-actions";
+import {
+    getEventsForOccupancy,
+    getEventsForOccupancyCSV,
+    saveOccupancy
+} from "../../actions/event-actions";
 import OccupancyTable from "../../components/tables/room-occupancy-table/OccupancyTable";
 import FragmentParser from '../../utils/fragmen-parser';
 
@@ -35,7 +39,7 @@ class RoomOccupancyPage extends React.Component {
         this.handleChangeCurrentEvents  = this.handleChangeCurrentEvents.bind(this);
         this.handleEventViewClick       = this.handleEventViewClick.bind(this);
         this.fragmentParser             = new FragmentParser();
-
+        this.handleExport               = this.handleExport.bind(this);
     }
 
     componentDidMount() {
@@ -46,6 +50,11 @@ class RoomOccupancyPage extends React.Component {
         if(currentSummit) {
             this.props.getEventsForOccupancy(null, roomIdHash, currentHash);
         }
+    }
+
+    handleExport(ev) {
+        const {term, order, orderDir , roomId, currentEvents} = this.props;
+        this.props.getEventsForOccupancyCSV(term, roomId, currentEvents, order, orderDir);
     }
 
     handlePageChange(page) {
@@ -146,12 +155,13 @@ class RoomOccupancyPage extends React.Component {
                 <div className="container">
                     <h3> {T.translate("room_occupancy.room_occupancy")}</h3>
                     <div className="row filters">
-                        <div className="col-md-6">
+                        <div className="col-md-5">
                             <FreeTextSearch
                                 value={term}
                                 placeholder={T.translate("room_occupancy.placeholders.search_events")}
                                 onSearch={this.handleSearch}
                             />
+
                         </div>
                         <div className="col-md-3">
                             <Dropdown
@@ -172,6 +182,12 @@ class RoomOccupancyPage extends React.Component {
                                 </label>
                             </div>
                         </div>
+                        <div className="col-md-1">
+                            <button className="btn btn-default exportButton" onClick={this.handleExport}>
+                                {T.translate("general.export")}
+                            </button>
+                        </div>
+
                         {roomId &&
                         <div className="col-md-3 visible-xs-block">
                             <button onClick={this.handleEventViewClick} className="btn btn-primary currentEventButton">
@@ -225,6 +241,7 @@ export default connect (
     {
         getSummitById,
         getEventsForOccupancy,
-        saveOccupancy
+        saveOccupancy,
+        getEventsForOccupancyCSV,
     }
 )(RoomOccupancyPage);

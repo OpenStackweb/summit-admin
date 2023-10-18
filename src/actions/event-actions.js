@@ -174,6 +174,60 @@ export const getEventsForOccupancy = (term = null, roomId = null, currentEvents 
     );
 };
 
+export const getEventsForOccupancyCSV = (term = null, roomId = null, currentEvents = false, order = 'start_date', orderDir = 1) => async (dispatch, getState) => {
+
+    const {currentSummitState} = getState();
+    const accessToken = await getAccessTokenSafely();
+    const {currentSummit} = currentSummitState;
+    const filter = [];
+    const summitTZ = currentSummit.time_zone.name;
+
+    dispatch(startLoading());
+
+    filter.push(`published==1`);
+
+    // search
+    if (term) {
+        const escapedTerm = escapeFilterValue(term);
+        filter.push(`title=@${escapedTerm},speaker=@${escapedTerm}`);
+    }
+
+    // room filter
+    if (roomId != null) {
+        filter.push(`location_id==${roomId}`);
+    }
+
+    // only current events
+    if (currentEvents) {
+        const now = moment().tz(summitTZ).unix(); // now in summit timezone converted to epoch
+        const from_date = now - 900; // minus 15min
+        const to_date = now + 900; // plus 15min
+        filter.push(`start_date<=${to_date}`);
+        filter.push(`end_date>=${from_date}`);
+    }
+
+    const params = {
+        access_token: accessToken,
+    };
+
+    if (filter.length > 0) {
+        params['filter[]'] = filter;
+    }
+
+    // order
+    if (order != null && orderDir != null) {
+        const orderDirSign = (orderDir === 1) ? '+' : '-';
+        params['order'] = `${orderDirSign}${order}`;
+    }
+
+    params['fields'] = 'start_date,title,occupancy,location_name,speaker_fullnames'
+
+    const filename = `summit-${currentSummit.slug}-rooms-occupancy.csv`;
+
+    dispatch(getCSV(`${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/csv`, params, filename));
+};
+
+
 export const getCurrentEventForOccupancy = (roomId, eventId = null) => async (dispatch, getState) => {
 
     const {currentSummitState} = getState();
