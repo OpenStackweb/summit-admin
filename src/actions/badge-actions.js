@@ -297,7 +297,7 @@ const parseFilters = (filters, term) => {
     const filter = [];
     if (term) {
         const escapedTerm = escapeFilterValue(term);
-        filter.push(`requestor_full_name@=${escapedTerm},requestor_email@=${escapedTerm}`);
+        filter.push(`requestor_full_name@@${escapedTerm},requestor_email@@${escapedTerm}`);
     }
 
     if(filters.hasOwnProperty('viewTypeFilter') && Array.isArray(filters.viewTypeFilter)
