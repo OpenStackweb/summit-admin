@@ -93,6 +93,7 @@ class EventForm extends React.Component {
         this.handleSpeakerAssign = this.handleSpeakerAssign.bind(this);
         this.handleSpeakerEdit = this.handleSpeakerEdit.bind(this);
         this.handleSpeakersReordering = this.handleSpeakersReordering.bind(this);
+        this.handleCloneEvent = this.handleCloneEvent.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -254,6 +255,23 @@ class EventForm extends React.Component {
         }
 
         this.props.onSubmit(entity, publish);
+    }
+
+    handleCloneEvent(ev) {
+        ev.preventDefault();
+        const entity = { ... this.state.entity };
+        const {onClone} = this.props;
+        Swal.fire({
+            title: T.translate("general.are_you_sure"),
+            text: T.translate("edit_event.clone_event") + ' ' + `"${entity.title}"`,
+            type: "warning",
+            showCancelButton: true,            
+            confirmButtonText: T.translate("general.yes")
+        }).then(function (result) {
+            if (result.value) {
+                onClone(entity);
+            }
+        });
     }
 
     async handleChangeSelectionPlan(ev) {
@@ -1507,6 +1525,17 @@ render() {
                                 disabled={!currentSummit.virtual_site_url}
                                 className="btn btn-default pull-left"
                                 value={T.translate("edit_event.view_event")}
+                            />
+                        </div>
+                    }
+
+                    {entity.id &&
+                        <div>
+                            <input
+                                type="button"
+                                onClick={(ev) => this.handleCloneEvent(ev, true)}
+                                className="btn btn-default pull-right"
+                                value={T.translate("general.clone")}
                             />
                         </div>
                     }

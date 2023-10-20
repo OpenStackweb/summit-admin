@@ -28,6 +28,7 @@ import {
     getEventComments,
     fetchExtraQuestions,
     fetchExtraQuestionsAnswers,
+    cloneEvent
 } from '../../actions/event-actions';
 import {unPublishEvent} from '../../actions/summit-builder-actions';
 import {deleteEventMaterial} from '../../actions/event-material-actions';
@@ -189,6 +190,7 @@ const EditSummitEventPage = (props) => {
         deleteEventFeedback={props.deleteEventFeedback}
         getEventFeedbackCSV={props.getEventFeedbackCSV}
         onFlagChange={props.changeFlag}
+        onClone={props.cloneEvent}
       />
       }
     </div>
@@ -229,6 +231,7 @@ export default connect(
     clearAuditLogParams,
     getEventComments,
     deleteEventComment,
+    cloneEvent
   }
 
 )(EditSummitEventPage);

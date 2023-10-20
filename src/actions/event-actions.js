@@ -49,6 +49,7 @@ export const EVENT_UPDATED = 'EVENT_UPDATED';
 export const EVENT_ADDED = 'EVENT_ADDED';
 export const EVENT_PUBLISHED = 'EVENT_PUBLISHED';
 export const EVENT_DELETED = 'EVENT_DELETED';
+export const EVENT_CLONED = 'EVENT_CLONED';
 export const FILE_ATTACHED = 'FILE_ATTACHED';
 export const IMAGE_ATTACHED = 'IMAGE_ATTACHED';
 export const IMAGE_DELETED = 'IMAGE_DELETED';
@@ -435,6 +436,41 @@ export const saveEvent = (entity, publish) => async (dispatch, getState) => {
                         history.push(`/app/summits/${currentSummit.id}/events/${payload.response.id}`)
                     }
                 ));
+        });
+
+}
+
+export const cloneEvent = (entity, publish) => async (dispatch, getState) => {
+    const {currentSummitState} = getState();
+    const accessToken = await getAccessTokenSafely();
+    const {currentSummit} = currentSummitState;    
+
+    dispatch(startLoading());    
+
+    const params = {
+        access_token: accessToken,        
+    };
+
+    const success_message = {
+        title: T.translate("general.done"),
+        html: T.translate("edit_event.event_cloned"),
+        type: 'success'
+    };
+
+    return postRequest(
+        null,
+        createAction(EVENT_CLONED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/events/${entity.id}/clone`,
+        null,
+        authErrorHandler,
+    )(params)(dispatch)
+        .then((payload) => {            
+            dispatch(showMessage(
+                success_message,
+                () => {
+                    history.push(`/app/summits/${currentSummit.id}/events/${payload.response.id}`)
+                }
+            ));
         });
 
 }
