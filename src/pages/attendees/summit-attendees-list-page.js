@@ -46,7 +46,7 @@ import {validateEmail} from '../../utils/methods';
 
 const fieldNames = [
   {columnKey: 'member_id', value: 'member_id', sortable: true},
-  {columnKey: 'tickets_qty', value: 'tickets_qty'},
+  {columnKey: 'tickets_count', value: 'tickets_count', sortable: true},
   {columnKey: 'company', value: 'company', sortable: true},
   {columnKey: 'summit_hall_checked_in_date', value: 'summit_hall_checked_in_date', sortable: true},
 ]
@@ -385,7 +385,7 @@ class SummitAttendeeListPage extends React.Component {
 
     const ddl_columns = [
       {value: 'member_id', label: T.translate("attendee_list.member_id")},
-      {value: 'tickets_qty', label: T.translate("attendee_list.tickets_qty")},
+      {value: 'tickets_count', label: T.translate("attendee_list.tickets_count")},
       {value: 'company', label: T.translate("attendee_list.company")},
       {value: 'summit_hall_checked_in_date', label: T.translate("attendee_list.summit_hall_checked_in_date")},
     ];

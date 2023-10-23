@@ -737,7 +737,7 @@
     "add_attendee": "Add Attendee",
     "id": "Id",
     "member_id": "Member Id",
-    "tickets_qty": "Tickets Qty.",
+    "tickets_count": "Tickets Qty.",
     "bought_date": "Bought Date",
     "summit_hall_checked_in": "Checked In",
     "schedule": "Schedule",
