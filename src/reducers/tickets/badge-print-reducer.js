@@ -15,7 +15,7 @@ import {
     REQUEST_BADGE_PRINTS,
     RECEIVE_BADGE_PRINTS
 } from '../../actions/badge-actions'
-import {epochToMoment} from "openstack-uicore-foundation/lib/utils/methods";
+import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/utils/methods'
 
 const DEFAULT_STATE = {
     badgePrints: [],
@@ -26,22 +26,23 @@ const DEFAULT_STATE = {
     currentPage: 1,
     lastPage: 1,
     perPage: 10,
+    summitTz: ''
 };
 
 const badgePrintReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {        
         case REQUEST_BADGE_PRINTS: {
-            let {order, orderDir, term} = payload;
-            return {...state, order, term, orderDir };
+            let {order, orderDir, term, summitTz} = payload;
+            return {...state, order, term, orderDir, summitTz };
         }
         break;
         case RECEIVE_BADGE_PRINTS: {            
             const { data, current_page, last_page, total } = payload.response;
 
             const prints = data.map(p => {
-                const created = p.created ? epochToMoment(p.created).format('MMMM Do YYYY, h:mm:ss a') : '';
-                const print_date = p.print_date ? epochToMoment(p.print_date).format('MMMM Do YYYY, h:mm:ss a') : '';
+                const created = p.created ? epochToMomentTimeZone(p.created, state.summitTz).format('MMMM Do YYYY, h:mm:ss a') : 'N/A';
+                const print_date = p.print_date ? epochToMomentTimeZone(p.print_date, state.summitTz).format('MMMM Do YYYY, h:mm:ss a') : 'N/A';
                 const requestor_full_name = p.requestor ? `${p.requestor.first_name} ${p.requestor.last_name}` : 'N/A';                
                 const requestor_email = p.requestor ? p.requestor.email : 'N/A';
 

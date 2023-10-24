@@ -1574,6 +1574,7 @@
     "deactivate_yes": "Yes, deactivate",
     "print_date": "Print Date",
     "no_prints": "No badge prints found for current search criteria.",
+    "apply_filters": "Apply Filters",
     "placeholders": {
       "refund_notes": "Provide Optional Notes",
       "refund_reject_notes": "Provide Optional Notes",
