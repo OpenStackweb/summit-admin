@@ -16,6 +16,7 @@ import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import _ from 'lodash';
 import { AjaxLoader, Dropdown, Input } from 'openstack-uicore-foundation/lib/components'
+import {epochToMomentTimeZone} from "openstack-uicore-foundation/lib/utils/methods";
 import EmailTemplateInput from '../inputs/email-template-input'
 import CodeMirror from '@uiw/react-codemirror';
 import { sublimeInit } from '@uiw/codemirror-theme-sublime';
@@ -261,7 +262,7 @@ const EmailTemplateForm = ({ entity, match, errors, clients, preview, templateLo
 
     const email_clients_ddl = clients ? clients.map(cli => ({ label: cli.name, value: cli.id })) : [];
     const versions_ddl = stateEntity.versions ? stateEntity.versions.map(v =>
-        ({ label: `${v.last_modified} - ${v.sha} - ${v.commit_message}`, value: v.sha })) : [];
+        ({ label: `${epochToMomentTimeZone(v.commit_date, 'UTC').format('YYYY-MM-DD HH:mm z')} - ${v.sha} - ${v.commit_message}`, value: v.sha })) : [];
 
     return (
         <form className="email-template-form">
@@ -378,6 +379,10 @@ const EmailTemplateForm = ({ entity, match, errors, clients, preview, templateLo
                                             <div className="row">
                                             {entity.id > 0 && stateEntity.versions.length > 0 &&
                                                 <div className='col-md-11'>
+                                                    <label>
+                                                        {T.translate("emails.previous_template")}                                                    
+                                                    </label>
+                                                    <br/>
                                                     <Dropdown
                                                         id="history_version"
                                                         value={historyVersion}

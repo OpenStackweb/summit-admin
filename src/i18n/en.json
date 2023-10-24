@@ -2159,6 +2159,7 @@
     "add_template": "Add template",
     "no_templates": "No templates found for this search criteria.",
     "no_emails": "No emails found for this search criteria.",
+    "previous_template": "Previous Template version",
     "id": "Id",
     "name": "Name (alphanumeric)",
     "parent": "Parent",
