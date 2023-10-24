@@ -1430,6 +1430,7 @@
     "ticket_type": "Type",
     "owner_name": "Assignee",
     "owner_email": "Email",
+    "owner_company": "Owner Company",
     "company": "Company",
     "bought_date": "Purchase Date",
     "price": "Price",
