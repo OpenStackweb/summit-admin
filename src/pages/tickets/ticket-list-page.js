@@ -62,6 +62,7 @@ const fieldNames = [
     { columnKey: 'final_amount_adjusted', value: 'paid_amount_adjusted', sortable: true},
     { columnKey: 'promo_code_tags', value: 'promo_code_tags'},
     { columnKey: 'badge_type_id', value: 'badge_type', sortable: true},
+    { columnKey: 'badge_prints_count', value: 'badge_prints_count', sortable: true},
 ]
 
 class TicketListPage extends React.Component {
@@ -361,6 +362,7 @@ class TicketListPage extends React.Component {
             { value: 'final_amount_adjusted', label: T.translate("ticket_list.paid_amount_adjusted") },
             { value: 'promo_code_tags', label: T.translate("ticket_list.promo_code_tags") },
             { value: 'badge_type_id', label: T.translate("ticket_list.badge_type") },
+            { value: 'badge_prints_count', label: T.translate("ticket_list.badge_prints_count") },
         ];
 
         const filters_ddl = [
