@@ -56,12 +56,12 @@ table.discountTicketTable thead .sorting_asc:after,
 table.discountTicketTable thead .sorting_desc:after,
 table.discountTicketTable thead .sorting_asc_disabled:after,
 table.discountTicketTable thead .sorting_desc_disabled:after {
-    position: absolute;
-    bottom: 8px;
-    right: 8px;
-    display: block;
+    position: relative;
+    left: 8px;
+    top: 2px;
+    display: inline-block;
     font-family: 'Glyphicons Halflings';
-    opacity: 0.5
+    opacity: 0.5;
 }
 table.discountTicketTable thead .sorting:after {
     opacity: 0.2;
