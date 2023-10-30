@@ -13,7 +13,7 @@
 
 import {
     REQUEST_BADGE_PRINTS,
-    RECEIVE_BADGE_PRINTS
+    RECEIVE_BADGE_PRINTS, BADGE_PRINTS_CLEARED
 } from '../../actions/badge-actions'
 import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/utils/methods'
 
@@ -50,6 +50,9 @@ const badgePrintReducer = (state = DEFAULT_STATE, action) => {
             });
 
             return {...state, badgePrints: prints, currentPage: current_page, lastPage: last_page, totalBadgePrints: total};
+        }
+        case BADGE_PRINTS_CLEARED: {
+            return DEFAULT_STATE;
         }
         default:
             return state;

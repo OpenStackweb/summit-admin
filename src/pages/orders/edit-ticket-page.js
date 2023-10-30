@@ -26,10 +26,11 @@ import TicketForm from "../../components/forms/ticket-form";
 import BadgeForm from "../../components/forms/badge-form";
 import {getBadgeFeatures, getBadgeTypes, deleteBadge,
     addFeatureToBadge, removeFeatureFromBadge, changeBadgeType,
-    printBadge, getBadgePrints, exportBadgePrints} from "../../actions/badge-actions";
+    printBadge, getBadgePrints, exportBadgePrints, clearBadgePrints} from "../../actions/badge-actions";
 import Swal from "sweetalert2";
-import {Table} from "openstack-uicore-foundation/lib/components";
+import {Table, Panel} from "openstack-uicore-foundation/lib/components";
 import moment from "moment-timezone";
+import AuditLogs from "../../components/audit-logs";
 
 class EditTicketPage extends React.Component {
 
@@ -66,7 +67,8 @@ class EditTicketPage extends React.Component {
             showRefundModal: false,
             showRefundRejectModal:false,
             refundRejectNotes: '',
-            printType: null
+            printType: null,
+            showSection: 'main',
         };
     }
 
@@ -217,8 +219,17 @@ class EditTicketPage extends React.Component {
         }
     }
 
+    toggleSection(section, ev) {
+        const { showSection } = this.state;
+        const newShowSection = (showSection === section) ? 'main' : section;
+        ev.preventDefault();
+
+        this.setState({ showSection: newShowSection });
+    }
+
     render(){
         const {currentSummit, currentOrder, loading, currentBadgePrints, entity, errors, match} = this.props;
+        const {showSection} = this.state;
 
         const breadcrumb = `...${entity.number.slice(-20)}`;
 
@@ -331,6 +342,7 @@ class EditTicketPage extends React.Component {
                             onBadgePrintQuery={this.handleBadgePrintQuery}
                             onShowBadgePrints={this.handleGetBadgePrints}
                             onBadgePrintExport={this.handleBadgePrintExport}
+                            clearBadgePrints={this.props.clearBadgePrints}
                             badgePrints={currentBadgePrints}
                             onTypeChange={this.props.changeBadgeType}
                             onFeatureLink={this.props.addFeatureToBadge}
@@ -338,6 +350,14 @@ class EditTicketPage extends React.Component {
                         />
                     </div>
                 }
+               <br />
+               <Panel
+                 show={showSection === 'audit_log'}
+                 title={T.translate("audit_log.title")}
+                 handleClick={this.toggleSection.bind(this, 'audit_log')}
+               >
+                   <AuditLogs entityFilter={[`event_id==${entity.badge.id}`, `class_name==SummitAttendeeBadgeAuditLog`]} />
+               </Panel>
                 <Modal show={this.state.showRefundModal} onHide={() => this.setState({showRefundModal:false})} >
                     <Modal.Header closeButton>
                         <Modal.Title>{T.translate("edit_ticket.refund_modal_title")}</Modal.Title>
@@ -418,6 +438,7 @@ export default connect (
         addBadgeToTicket,
         printBadge,
         getBadgePrints,
+        clearBadgePrints,
         exportBadgePrints,
         reSendTicketEmail,
         activateTicket,

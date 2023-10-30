@@ -20,6 +20,7 @@ import {shallowEqual} from "../../utils/methods";
 import { Pagination } from 'react-bootstrap';
 
 import './badge-form.less'
+import Swal from "sweetalert2";
 
 
 class BadgeForm extends React.Component {
@@ -45,6 +46,7 @@ class BadgeForm extends React.Component {
         this.handleBadgePrintSort = this.handleBadgePrintSort.bind(this);
         this.handleBadgePrintPageChange = this.handleBadgePrintPageChange.bind(this);
         this.handleBadgePrintExport = this.handleBadgePrintExport.bind(this);
+        this.handleBadgePrintClear = this.handleBadgePrintClear.bind(this);
         this.handleBadgePrintFilterChange = this.handleBadgePrintFilterChange.bind(this);
         this.handleChangePrintDate = this.handleChangePrintDate.bind(this);
         this.handleApplyPrintFilters = this.handleApplyPrintFilters.bind(this);
@@ -130,6 +132,27 @@ class BadgeForm extends React.Component {
     handleBadgePrintExport(ev) {
         ev.preventDefault();
         this.props.onBadgePrintExport();
+    }
+
+    handleBadgePrintClear(ev) {
+        const {entity} = this.state;
+        const {clearBadgePrints} = this.props;
+
+        ev.preventDefault();
+
+        Swal.fire({
+            title: T.translate("general.are_you_sure"),
+            text: `${T.translate("edit_ticket.clear_badge_prints_warning")}`,
+            type: "warning",
+            showCancelButton: true,
+            cancelButtonColor: '#d33',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: T.translate("general.clear"),
+        }).then(function (result) {
+            if (result.value) {
+                clearBadgePrints(entity.ticket_id);
+            }
+        })
     }
 
     queryFeatures(input, callback) {
@@ -225,8 +248,11 @@ class BadgeForm extends React.Component {
                                             />
                                         </div>
                                         <div className='col-md-4'>
-                                            <button className="btn btn-default" onClick={this.handleBadgePrintExport}>
+                                            <button className="btn btn-default right-space" onClick={this.handleBadgePrintExport}>
                                                 {T.translate("general.export")}
+                                            </button>
+                                            <button className="btn btn-danger" onClick={this.handleBadgePrintClear}>
+                                                {T.translate("general.clear")}
                                             </button>
                                         </div>
                                     </div>

@@ -39,6 +39,7 @@ import { Pagination } from "react-bootstrap";
 import ExtraQuestionsForm from 'openstack-uicore-foundation/lib/components/extra-questions';
 import ProgressFlags from '../inputs/ProgressFlags';
 import { ATTENDEES_EXPECTED_LEARNT, ATTENDING_MEDIA, LEVEL, SOCIAL_DESCRIPTION } from "../../actions/event-actions";
+import AuditLogs from "../audit-logs";
 
 
 class EventForm extends React.Component {
@@ -73,9 +74,6 @@ class EventForm extends React.Component {
         this.handleFeedbackSort = this.handleFeedbackSort.bind(this);
         this.handleFeedbackSearch = this.handleFeedbackSearch.bind(this);
         this.handleDeleteEventFeedback = this.handleDeleteEventFeedback.bind(this);
-        this.handleAuditLogPageChange = this.handleAuditLogPageChange.bind(this);
-        this.handleAuditLogSearch = this.handleAuditLogSearch.bind(this);
-        this.handleAuditLogSort = this.handleAuditLogSort.bind(this);
         this.handleChangeSelectionPlan = this.handleChangeSelectionPlan.bind(this);
         this.handleChangeExtraQuestion = this.handleChangeExtraQuestion.bind(this);
         this.triggerFormSubmit = this.triggerFormSubmit.bind(this);
@@ -455,33 +453,13 @@ class EventForm extends React.Component {
         this.props.getEventFeedback(entity.id, feedbackState.term, feedbackState.page, feedbackState.perPage, key, dir);
     }
 
-    handleAuditLogPageChange(page) {
-        const { entity } = this.state;
-        const { auditLogState } = this.props;
-        this.props.getSummitEventAuditLog(entity.id, auditLogState.term, page, auditLogState.perPage, auditLogState.order, auditLogState.orderDir);
-    }
-
-    handleAuditLogSearch(newTerm) {
-        const { entity } = this.state;
-        const { auditLogState } = this.props;
-        this.props.getSummitEventAuditLog(entity.id, newTerm, auditLogState.page, auditLogState.perPage, auditLogState.order, auditLogState.orderDir);
-    }
-
-    handleAuditLogSort(index, key, dir, func) {
-        const { entity } = this.state;
-        const { auditLogState } = this.props;
-        this.props.getSummitEventAuditLog(entity.id, auditLogState.term, auditLogState.page, auditLogState.perPage, key, dir);
-    }
-
     componentDidMount() {
         const { entity } = this.state;
-        const { auditLogState, feedbackState, commentState } = this.props;
+        const { feedbackState, commentState } = this.props;
         if (entity.id > 0) {
             if (entity.allow_feedback) {
                 this.props.getEventFeedback(entity.id, feedbackState.term, feedbackState.page, feedbackState.perPage, feedbackState.order, feedbackState.orderDir);
             }
-            this.props.clearAuditLogParams();
-            this.props.getSummitEventAuditLog(entity.id, auditLogState.term, auditLogState.page, auditLogState.perPage, auditLogState.order, auditLogState.orderDir);
             this.props.getEventComments(entity.id, commentState.term, commentState.page, commentState.perPage, commentState.order, commentState.orderDir);
         }
     }
@@ -613,7 +591,7 @@ render() {
     const {
         currentSummit, levelOpts, typeOpts, trackOpts,
         locationOpts, rsvpTemplateOpts, selectionPlansOpts, history,
-        feedbackState, commentState, actionTypes, auditLogState, onAssignSpeaker,
+        feedbackState, commentState, actionTypes,
     } = this.props;
 
     const event_types_ddl = typeOpts.map(
@@ -694,18 +672,6 @@ render() {
             delete: { onClick: this.handleMaterialDelete },
         }
     };
-
-    const audit_log_columns = [
-        { columnKey: 'created', value: T.translate("audit_log.date"), sortable: true },
-        { columnKey: 'action', value: T.translate("audit_log.action"), sortable: false },
-        { columnKey: 'user', value: T.translate("audit_log.user"), sortable: false }
-    ];
-
-    const audit_log_table_options = {
-        sortCol: auditLogState.order,
-        sortDir: auditLogState.orderDir,
-        actions: {}
-    }
 
     const streaming_type_ddl = [{ label: 'LIVE', value: 'LIVE' }, { label: 'VOD', value: 'VOD' }];
 
@@ -1316,45 +1282,12 @@ render() {
                 </Panel>
             }
 
-            <Panel show={showSection === 'audit_log'} title={T.translate("audit_log.title")}
-                handleClick={this.toggleSection.bind(this, 'audit_log')}>
-                <div className={'row'}>
-                    <div className={'col-md-8'}>
-                        <FreeTextSearch
-                            value={auditLogState.term ?? ''}
-                            placeholder={T.translate("audit_log.placeholders.search_log")}
-                            onSearch={this.handleAuditLogSearch}
-                        />
-                    </div>
-                </div>
-
-                {auditLogState.logEntries.length === 0 &&
-                    <div>{T.translate("audit_log.no_log_entries")}</div>
-                }
-
-                {auditLogState.logEntries.length > 0 &&
-                    <>
-                        <Table
-                            options={audit_log_table_options}
-                            data={auditLogState.logEntries}
-                            columns={audit_log_columns}
-                            onSort={this.handleAuditLogSort}
-                        />
-                        <Pagination
-                            bsSize="medium"
-                            prev
-                            next
-                            first
-                            last
-                            ellipsis
-                            boundaryLinks
-                            maxButtons={10}
-                            items={auditLogState.lastPage}
-                            activePage={auditLogState.currentPage}
-                            onSelect={this.handleAuditLogPageChange}
-                        />
-                    </>
-                }
+            <Panel
+              show={showSection === 'audit_log'}
+              title={T.translate("audit_log.title")}
+              handleClick={this.toggleSection.bind(this, 'audit_log')}
+            >
+                <AuditLogs entityFilter={[`event_id==${entity.id}`, `class_name==SummitEventAuditLog`]} />
             </Panel>
             {entity.id !== 0 &&
                 <Panel show={showSection === 'track_chair_statistics'} title={T.translate("edit_event.track_chair_statistics")}

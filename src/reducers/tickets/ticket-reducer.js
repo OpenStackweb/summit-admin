@@ -19,7 +19,7 @@ import {
     BADGE_ADDED_TO_TICKET, TICKET_CANCEL_REFUND, TICKET_REFUNDED
 } from '../../actions/ticket-actions';
 import {
-    BADGE_DELETED,
+    BADGE_DELETED, BADGE_PRINTS_CLEARED,
     BADGE_TYPE_CHANGED,
     FEATURE_BADGE_ADDED,
     FEATURE_BADGE_REMOVED
@@ -69,11 +69,9 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
                 return {...state,  entity: {...DEFAULT_ENTITY} };
             }
         }
-        break;
         case UPDATE_TICKET: {
             return {...state,  entity: {...payload} };
         }
-        break;
         case RECEIVE_TICKET: {
             let entity = {...payload.response};
             let bought_date = entity.bought_date ? epochToMoment(entity.bought_date).format('MMMM Do YYYY, h:mm:ss a') : null;
@@ -125,7 +123,6 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
                     attendee_company,
                 } };
         }
-        break;
         case TICKET_REFUNDED:
         case TICKET_CANCEL_REFUND:
         {
@@ -151,38 +148,34 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
             let entity = {...payload.response};
             return {...state, entity:{...state.entity, is_active: entity.is_active, ticket_type_id: entity?.ticket_type?.id}};
         }
-        break;
         case TICKET_MEMBER_REASSIGNED: {
             return state;
         }
-        break;
         case BADGE_ADDED_TO_TICKET: {
             let entity = {...payload.response};
             return {...state, entity: {...state.entity, badge: {...entity} } };
         }
-        break;
         case BADGE_DELETED: {
             return {...state,  entity: {...state.entity, badge: null} };
         }
-        break;
         case BADGE_TYPE_CHANGED: {
             let {newBadgeType} = payload;
             return {...state, entity: {...state.entity, badge: {...state.entity.badge, type_id: newBadgeType.id} } };
         }
-        break;
         case FEATURE_BADGE_REMOVED: {
             let {featureId} = payload;
             let badgeFeatures = state.entity.badge.features.filter(f => f.id !== featureId);
             return {...state, entity: {...state.entity, badge: {...state.entity.badge, features: badgeFeatures} } };
         }
-        break;
         case FEATURE_BADGE_ADDED: {
             let newBadgeFeature = {...payload.feature};
             let badgeFeatures = [...state.entity.badge.features, newBadgeFeature];
 
             return {...state, entity: {...state.entity,  badge: {...state.entity.badge, features: badgeFeatures}} };
         }
-        break;
+        case BADGE_PRINTS_CLEARED: {
+            return {...state, entity: {...state.entity,  badge: {...state.entity.badge, print_excerpt: {}}} };
+        }
         default:
             return state;
     }

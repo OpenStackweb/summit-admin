@@ -25,56 +25,12 @@ export const CLEAR_LOG_PARAMS = 'CLEAR_LOG_PARAMS';
 export const REQUEST_LOG = 'REQUEST_LOG';
 export const RECEIVE_LOG = 'RECEIVE_LOG';
 
-export const getSummitAuditLog = (term = null, page = 1, perPage = 100, order = null, orderDir = 1) => async (dispatch, getState) => {
+export const getAuditLog = (entityFilter = [], term = null, page = 1, perPage = 100, order = null, orderDir = 1) => async (dispatch, getState) => {
 
     const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
     const {currentSummit} = currentSummitState;
-    const filter = [`class_name==SummitEventAuditLog`];
-    filter.push(`summit_id==${currentSummit.id}`);
-
-    dispatch(startLoading());
-
-    if (term) {
-        const escapedTerm = escapeFilterValue(term);
-        filter.push(`user_full_name=@${escapedTerm},action=@${escapedTerm}`);
-    }
-
-    const params = {
-        page: page,
-        per_page: perPage,
-        expand: 'user',
-        access_token: accessToken,
-    };
-
-    params['filter[]'] = filter;
-
-    // order
-    if (order != null && orderDir != null) {
-        const orderDirSign = (orderDir === 1) ? '+' : '-';
-        params['order'] = `${orderDirSign}${order}`;
-    }
-
-    return getRequest(
-        createAction(REQUEST_LOG),
-        createAction(RECEIVE_LOG),
-        `${window.API_BASE_URL}/api/v1/audit-logs`,
-        authErrorHandler,
-        {page, perPage, order, orderDir, term}
-    )(params)(dispatch).then(() => {
-            dispatch(stopLoading());
-        }
-    );
-};
-
-export const getSummitEventAuditLog = (eventId, term = null, page = 1, perPage = 100, order = null, orderDir = 1) => async (dispatch, getState) => {
-
-    const {currentSummitState} = getState();
-    const accessToken = await getAccessTokenSafely();
-    const {currentSummit} = currentSummitState;
-    const filter = [`class_name==SummitEventAuditLog`];
-    filter.push(`summit_id==${currentSummit.id}`);
-    filter.push(`event_id==${eventId}`);
+    const filter = [`summit_id==${currentSummit.id}`];
 
     dispatch(startLoading());
 
@@ -90,7 +46,7 @@ export const getSummitEventAuditLog = (eventId, term = null, page = 1, perPage =
         access_token: accessToken,
     };
 
-    params['filter[]'] = filter;
+    params['filter[]'] = [...filter, ...entityFilter];
 
     // order
     if (order != null && orderDir != null) {

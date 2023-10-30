@@ -36,6 +36,7 @@ export const FEATURE_BADGE_REMOVED      = 'FEATURE_BADGE_REMOVED';
 export const FEATURE_BADGE_ADDED        = 'FEATURE_BADGE_ADDED';
 export const BADGE_TYPE_CHANGED         = 'BADGE_TYPE_CHANGED';
 export const PRINT_BADGE                = 'PRINT_BADGE';
+export const BADGE_PRINTS_CLEARED       = 'BADGE_PRINTS_CLEARED';
 
 
 export const REQUEST_BADGE_FEATURES       = 'REQUEST_BADGE_FEATURES';
@@ -319,6 +320,30 @@ const parseFilters = (filters, term) => {
 
     return filter;
 }
+
+export const clearBadgePrints = (ticketId) => async (dispatch, getState) => {
+
+    const { currentSummitState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token : accessToken
+    };
+
+    return deleteRequest(
+      null,
+      createAction(BADGE_PRINTS_CLEARED),
+      `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets/${ticketId}/badge/current/prints`,
+      null,
+      authErrorHandler
+    )(params)(dispatch).then(() => {
+          dispatch(stopLoading());
+      }
+    );
+};
 
 
 /***********************  VIEW TYPES  ************************************************/

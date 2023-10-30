@@ -33,7 +33,6 @@ import {
 import {unPublishEvent} from '../../actions/summit-builder-actions';
 import {deleteEventMaterial} from '../../actions/event-material-actions';
 import {deleteEventComment} from '../../actions/event-comment-actions';
-import { getSummitEventAuditLog, clearAuditLogParams } from '../../actions/audit-log-actions';
 import {addQAMember, removeQAMember} from "../../actions/user-chat-roles-actions"
 
 import '../../styles/edit-summit-event-page.less';
@@ -177,9 +176,6 @@ const EditSummitEventPage = (props) => {
         onRemoveImage={props.removeImage}
         onAddQAMember={props.addQAMember}
         onDeleteQAMember={props.removeQAMember}
-        auditLogState={auditLogState}
-        getSummitEventAuditLog={props.getSummitEventAuditLog}
-        clearAuditLogParams={props.clearAuditLogParams}
         feedbackState={feedbackState}
         getEventFeedback={props.getEventFeedback}
         fetchExtraQuestions={fetchExtraQuestions}
@@ -227,8 +223,6 @@ export default connect(
     getEventFeedbackCSV,
     changeFlag,
     getActionTypes,
-    getSummitEventAuditLog,
-    clearAuditLogParams,
     getEventComments,
     deleteEventComment,
     cloneEvent

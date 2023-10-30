@@ -34,7 +34,7 @@ import {
 import {epochToMomentTimeZone} from "openstack-uicore-foundation/lib/utils/methods";
 import {checkOrFilter, getAccessTokenSafely, isNumericString} from '../utils/methods';
 import {getQAUsersBySummitEvent} from "./user-chat-roles-actions";
-import {getSummitEventAuditLog} from "./audit-log-actions";
+import {getAuditLog} from "./audit-log-actions";
 
 export const REQUEST_EVENTS = 'REQUEST_EVENTS';
 export const RECEIVE_EVENTS = 'RECEIVE_EVENTS';
@@ -404,7 +404,7 @@ export const saveEvent = (entity, publish) => async (dispatch, getState) => {
                 } else {
                     dispatch(showSuccessMessage(T.translate("edit_event.event_saved")));
                 }
-                dispatch(getSummitEventAuditLog(entity.id, null, 1, 10));
+                dispatch(getAuditLog("SummitEventAuditLog", entity.id, null, 1, 10));
             });
 
     }

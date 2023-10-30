@@ -1536,6 +1536,7 @@
     "print_excerpt": "Print Excerpt",
     "print_excerpt_details": "Show Details",
     "print_excerpt_less": "Show Less",
+    "clear_badge_prints_warning": "Are you sure you want to clear all badge prints for this ticket?",
     "count": "Count",
     "print": "Print Badge",
     "badge_features": "Badge Features",
