@@ -5,7 +5,7 @@ import {Pagination} from "react-bootstrap";
 import {connect} from "react-redux";
 import {clearAuditLogParams, getAuditLog} from "../../actions/audit-log-actions";
 
-const AuditLogs = ({entityFilter = [], term, logEntries, perPage, lastPage, currentPage, order, orderDir, getAuditLog, clearAuditLogParams}) => {
+const AuditLogs = ({entityFilter = [], term, logEntries, perPage, lastPage, currentPage, order, orderDir, columns, getAuditLog, clearAuditLogParams}) => {
   const audit_log_table_options = {
     sortCol: order,
     sortDir: orderDir,
@@ -18,6 +18,8 @@ const AuditLogs = ({entityFilter = [], term, logEntries, perPage, lastPage, curr
     { columnKey: 'event_id', value: T.translate("audit_log.event"), sortable: true },
     { columnKey: 'user', value: T.translate("audit_log.user"), sortable: false }
   ];
+
+  const show_columns = columns ? audit_log_columns.filter(c => columns.include(c.columnKey)) : audit_log_columns;
 
   const handleSort = (index, key, dir, func) => {
     getAuditLog(entityFilter, term, currentPage, perPage, key, dir);
@@ -61,7 +63,7 @@ const AuditLogs = ({entityFilter = [], term, logEntries, perPage, lastPage, curr
           <Table
             options={audit_log_table_options}
             data={logEntries}
-            columns={audit_log_columns}
+            columns={show_columns}
             onSort={handleSort}
           />
           <Pagination
