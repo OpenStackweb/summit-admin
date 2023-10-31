@@ -318,6 +318,13 @@ const parseFilters = (filters) => {
        }
     }
 
+    if (filters.hasOwnProperty('mediaUploadTypeFilter') && filters.mediaUploadTypeFilter.operator !== null &&
+        Array.isArray(filters.mediaUploadTypeFilter.value) && filters.mediaUploadTypeFilter.value.length > 0) {
+        filter.push(`${filters.mediaUploadTypeFilter.operator}` + filters.mediaUploadTypeFilter.value.map((v) => v.id).join(
+            filters.mediaUploadTypeFilter.operator === 'has_media_upload_with_type==' ? '||' : '&&')
+        );
+    }
+
     //return checkOrFilter(filters, filter);
     return filter;
 }

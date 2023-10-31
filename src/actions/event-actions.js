@@ -1067,14 +1067,10 @@ const parseFilters = (filters, term = null) => {
         filter.push(`submission_status==${filters.submission_status_filter.join('||')}`);
     }
 
-    if (filters.hasOwnProperty('has_media_upload_with_type') && Array.isArray(filters.has_media_upload_with_type)
-        && filters.has_media_upload_with_type.length > 0) {
-        filter.push(`has_media_upload_with_type==${filters.has_media_upload_with_type.map(media => media.id).join('||')}`);
-    }
-
-    if (filters.hasOwnProperty('has_not_media_upload_with_type') && Array.isArray(filters.has_not_media_upload_with_type)
-        && filters.has_not_media_upload_with_type.length > 0) {
-        filter.push(`has_not_media_upload_with_type==${filters.has_not_media_upload_with_type.map(media => media.id).join('&&')}`);
+    if (filters.hasOwnProperty('media_upload_with_type') && filters.media_upload_with_type.operator !== null &&
+        Array.isArray(filters.media_upload_with_type.value) && filters.media_upload_with_type.value.length > 0) {
+        const concatOperator = filters.media_upload_with_type.operator === 'has_media_upload_with_type==' ? '||' : '&&';
+        filter.push(`${filters.media_upload_with_type.operator}` + filters.media_upload_with_type.value.map((v) => v.id).join(concatOperator));
     }
 
     if (term) {

@@ -51,6 +51,7 @@ import {
 import { ALL_FILTER, SpeakersSources as sources } from "../../utils/constants";
 import OrAndFilter from '../../components/filters/or-and-filter';
 import { validateEmail } from '../../utils/methods';
+import MediaTypeFilter from '../../components/filters/media-type-filter';
 
 import '../../styles/speakers-list-page.less';
 
@@ -78,6 +79,7 @@ class SummitSpeakersListPage extends React.Component {
         this.handleSendEmails = this.handleSendEmails.bind(this);
         this.handleChangePromoCodeStrategy = this.handleChangePromoCodeStrategy.bind(this);
         this.handleOrAndFilter = this.handleOrAndFilter.bind(this);
+        this.handleChangeMediaUploadTypeFilter = this.handleChangeMediaUploadTypeFilter.bind(this);
 
         this.state = {
             testRecipient: '',
@@ -96,10 +98,10 @@ class SummitSpeakersListPage extends React.Component {
         initSubmittersList();
         initSpeakersList();
         if (currentSummit) {
-            const { term, page, order, orderDir, perPage, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter } = this.getSubjectProps();
+            const { term, page, order, orderDir, perPage, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, mediaUploadTypeFilter } = this.getSubjectProps();
             const { speakerFilters: { orAndFilter }} = this.state;
             this.getBySummit(term, page, perPage, order, orderDir, {
-                selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter
+                selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter, mediaUploadTypeFilter
             });
         }
     }
@@ -127,14 +129,14 @@ class SummitSpeakersListPage extends React.Component {
 
     handleSpeakerSubmitterSourceChange(ev) {
         const { value } = ev.target;
-        const { term, order, orderDir, perPage, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter } = this.getSubjectProps();
+        const { term, order, orderDir, perPage, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, mediaUploadTypeFilter } = this.getSubjectProps();
         const { speakerFilters: { orAndFilter }} = this.state;
         const { initSubmittersList, initSpeakersList } = this.props;
         this.setState({...this.state, source: value}, function() {
             initSubmittersList();
             initSpeakersList();
             this.getBySummit(term, 1, perPage, order, orderDir, {
-                selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter
+                selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter, mediaUploadTypeFilter
             });
         });
     }
@@ -147,58 +149,76 @@ class SummitSpeakersListPage extends React.Component {
     }
 
     handlePageChange(page) {
-        const { term, order, orderDir, perPage, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter } = this.getSubjectProps();
+        const { term, order, orderDir, perPage, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, mediaUploadTypeFilter } = this.getSubjectProps();
         const { speakerFilters: { orAndFilter }} = this.state;
         this.getBySummit(term, page, perPage, order, orderDir, {
-            selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter
+            selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter, mediaUploadTypeFilter
         });
     }
 
     handleSort(index, key, dir, func) {
-        const { term, page, perPage, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter } = this.getSubjectProps();
+        const { term, page, perPage, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, mediaUploadTypeFilter } = this.getSubjectProps();
         const { speakerFilters: { orAndFilter }} = this.state;
         this.getBySummit(term, page, perPage, key, dir, {
-            selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter
+            selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter, mediaUploadTypeFilter
         });
     }
 
     handleSearch(term) {
-        const { order, orderDir, page, perPage, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter } = this.getSubjectProps();
+        const { order, orderDir, page, perPage, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, mediaUploadTypeFilter } = this.getSubjectProps();
         const { speakerFilters: { orAndFilter }} = this.state;
         this.getBySummit(term, page, perPage, order, orderDir,
         {
-            selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter
+            selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter, mediaUploadTypeFilter
         });
     }
 
     handleChangeSelectionPlanFilter(ev) {
         const { value: newSelectionPlanFilter } = ev.target;
-        const { term, order, page, orderDir, perPage, trackFilter, activityTypeFilter, selectionStatusFilter } = this.getSubjectProps();
+        const { term, order, page, orderDir, perPage, trackFilter, activityTypeFilter, selectionStatusFilter, mediaUploadTypeFilter } = this.getSubjectProps();
         const { speakerFilters: { orAndFilter }} = this.state;
         this.getBySummit(term, page, perPage, order, orderDir,
             {
-                selectionPlanFilter: newSelectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter
+                selectionPlanFilter: newSelectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter, mediaUploadTypeFilter
             });
     }
 
     handleChangeTrackFilter(ev) {
         const { value: newTrackFilter } = ev.target;
-        const { term, order, page, orderDir, perPage, selectionPlanFilter, activityTypeFilter, selectionStatusFilter } = this.getSubjectProps();
+        const { term, order, page, orderDir, perPage, selectionPlanFilter, activityTypeFilter, selectionStatusFilter, mediaUploadTypeFilter } = this.getSubjectProps();
         const { speakerFilters: { orAndFilter }} = this.state;
         this.getBySummit(term, page, perPage, order, orderDir,
             {
-                selectionPlanFilter, trackFilter: newTrackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter
+                selectionPlanFilter, trackFilter: newTrackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter, mediaUploadTypeFilter
             });
     }
 
     handleChangeActivityTypeFilter(ev) {
         const { value: newActivityTypeFilter } = ev.target;
-        const { term, order, page, orderDir, perPage, selectionPlanFilter, trackFilter, selectionStatusFilter } = this.getSubjectProps();
+        const { term, order, page, orderDir, perPage, selectionPlanFilter, trackFilter, selectionStatusFilter, mediaUploadTypeFilter } = this.getSubjectProps();
         const { speakerFilters: { orAndFilter }} = this.state;
         this.getBySummit(term, page, perPage, order, orderDir,
             {
-                selectionPlanFilter, trackFilter, activityTypeFilter: newActivityTypeFilter, selectionStatusFilter, orAndFilter
+                selectionPlanFilter, trackFilter, activityTypeFilter: newActivityTypeFilter, selectionStatusFilter, orAndFilter, mediaUploadTypeFilter
             });
+    }
+
+    handleChangeMediaUploadTypeFilter(ev) {        
+        const { value, operator } = ev.target;
+        const { term, order, page, orderDir, perPage, activityTypeFilter, selectionPlanFilter, trackFilter, selectionStatusFilter, mediaUploadTypeFilter } = this.getSubjectProps();
+        const { speakerFilters: { orAndFilter }} = this.state;
+        if(operator && value.length > 0) {
+            this.getBySummit(term, page, perPage, order, orderDir,
+                {
+                    selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter, mediaUploadTypeFilter: { operator, value }
+                });
+        // get speakers if the media upload types filter is resetted
+        } else if (mediaUploadTypeFilter.value.length > 0 && value.length === 0) {
+            this.getBySummit(term, page, perPage, order, orderDir,
+                {
+                    selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter
+                });
+        }
     }
 
     handleChangeSelectionStatusFilter(ev) {
@@ -223,11 +243,11 @@ class SummitSpeakersListPage extends React.Component {
             newSelectionStatusFilter = ['alternate_rejected'];
         }
 
-        const { term, order, page, orderDir, perPage, selectionPlanFilter, trackFilter, activityTypeFilter } = this.getSubjectProps();
+        const { term, order, page, orderDir, perPage, selectionPlanFilter, trackFilter, activityTypeFilter, mediaUploadTypeFilter } = this.getSubjectProps();
         const { speakerFilters: { orAndFilter }} = this.state;
         this.getBySummit(term, page, perPage, order, orderDir,
             {
-                selectionPlanFilter, trackFilter, activityTypeFilter, orAndFilter, selectionStatusFilter: newSelectionStatusFilter
+                selectionPlanFilter, trackFilter, activityTypeFilter, orAndFilter, selectionStatusFilter: newSelectionStatusFilter, mediaUploadTypeFilter
             });
     }
 
@@ -292,10 +312,10 @@ class SummitSpeakersListPage extends React.Component {
     }
 
     handleExport(ev) {
-        const { term, order, orderDir, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter } = this.getSubjectProps();
+        const { term, order, orderDir, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, mediaUploadTypeFilter } = this.getSubjectProps();
         const { speakerFilters: { orAndFilter }} = this.state;
         ev.preventDefault();
-        this.export(term, order, orderDir,{ selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter });
+        this.export(term, order, orderDir,{ selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter, mediaUploadTypeFilter });
     }
 
     handleSelected(item_id, isSelected) {
@@ -318,11 +338,11 @@ class SummitSpeakersListPage extends React.Component {
     }
 
     handleOrAndFilter(ev) {        
-        const { term, order, page, orderDir, perPage, trackFilter, selectionPlanFilter, activityTypeFilter, selectionStatusFilter } = this.getSubjectProps();        
+        const { term, order, page, orderDir, perPage, trackFilter, selectionPlanFilter, activityTypeFilter, selectionStatusFilter, mediaUploadTypeFilter } = this.getSubjectProps();        
         this.setState({...this.state, speakerFilters: {...this.state.speakerFilters, orAndFilter: ev}});
         this.getBySummit(term, page, perPage, order, orderDir,
             {
-                selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, orAndFilter: ev
+                selectionPlanFilter, trackFilter, activityTypeFilter, mediaUploadTypeFilter, selectionStatusFilter, orAndFilter: ev
             });
     }
 
@@ -332,7 +352,7 @@ class SummitSpeakersListPage extends React.Component {
         const { testRecipient, source, promoCodeStrategy } = this.state;
 
         const { items, lastPage, currentPage, term, order, orderDir, totalItems, selectedCount,
-            selectedAll, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, currentFlowEvent } = this.getSubjectProps();
+            selectedAll, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter, mediaUploadTypeFilter, currentFlowEvent } = this.getSubjectProps();
 
         const columns = [
             { columnKey: 'full_name', value: T.translate("general.name"), sortable: true },
@@ -481,6 +501,18 @@ class SummitSpeakersListPage extends React.Component {
                             isMulti
                         />
                     </div>
+                </div>
+
+                <div className="row">
+                    <div className={'col-md-12 speaker-list-filter-col'}> 
+                        <MediaTypeFilter
+                            id={"media_upload_with_type"}
+                            operatorInitialValue={mediaUploadTypeFilter.operator}
+                            filterInitialValue={mediaUploadTypeFilter.value}
+                            summitId={currentSummit.id}
+                            onChange={this.handleChangeMediaUploadTypeFilter}
+                        />
+                    </div>                                        
                 </div>
 
                 <div className='row'>

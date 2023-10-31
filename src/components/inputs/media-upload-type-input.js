@@ -30,7 +30,7 @@ const MediaUploadTypeInput = ({ summitId, id, value, onChange, ...rest }) => {
         return `${mediaUploadType.name}`;
     }
 
-    const getTemplates = (input, callback) => {
+    const getTypes = (input, callback) => {
         // we need to map into value/label because of a bug in react-select 2
         // https://github.com/JedWatson/react-select/issues/2998
 
@@ -46,7 +46,7 @@ const MediaUploadTypeInput = ({ summitId, id, value, onChange, ...rest }) => {
         <AsyncSelect
             value={value}
             onChange={handleChange}
-            loadOptions={getTemplates}
+            loadOptions={getTypes}
             getOptionValue={m => getOptionValue(m)}
             getOptionLabel={m => getOptionLabel(m)}    
             isMulti={true}

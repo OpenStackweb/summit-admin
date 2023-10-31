@@ -958,26 +958,17 @@ const parseFilters = (filters) => {
 
     if(filters.hasOwnProperty('selectionPlanFilter') && Array.isArray(filters.selectionPlanFilter)
         && filters.selectionPlanFilter.length > 0){
-        filter.push('presentations_selection_plan_id=='+filters.selectionPlanFilter.reduce(
-            (accumulator, sp) => accumulator +(accumulator !== '' ? '||':'') +`${sp}`,
-            ''
-        ));
+        filter.push('presentations_selection_plan_id=='+filters.selectionPlanFilter.join('||'));
     }
 
     if(filters.hasOwnProperty('trackFilter') && Array.isArray(filters.trackFilter)
         && filters.trackFilter.length > 0){
-        filter.push('presentations_track_id=='+filters.trackFilter.reduce(
-            (accumulator, t) => accumulator +(accumulator !== '' ? '||':'') +`${t}`,
-            ''
-        ));
+        filter.push('presentations_track_id=='+filters.trackFilter.join('||'));
     }
 
     if(filters.hasOwnProperty('activityTypeFilter') && Array.isArray(filters.activityTypeFilter)
         && filters.activityTypeFilter.length > 0){
-        filter.push('presentations_type_id=='+filters.activityTypeFilter.reduce(
-            (accumulator, at) => accumulator +(accumulator !== '' ? '||':'') +`${at}`,
-            ''
-        ));
+        filter.push('presentations_type_id=='+filters.activityTypeFilter.join('||'));
     }
 
     if(filters.hasOwnProperty('selectionStatusFilter')
@@ -1021,6 +1012,13 @@ const parseFilters = (filters) => {
                ''
            ));
        }
+    }
+
+    if (filters.hasOwnProperty('mediaUploadTypeFilter') && filters.mediaUploadTypeFilter.operator !== null &&
+        Array.isArray(filters.mediaUploadTypeFilter.value) && filters.mediaUploadTypeFilter.value.length > 0) {
+        filter.push(`${filters.mediaUploadTypeFilter.operator}` + filters.mediaUploadTypeFilter.value.map((v) => v.id).join(
+            filters.mediaUploadTypeFilter.operator === 'has_media_upload_with_type==' ? '||' : '&&')
+        );
     }
 
     //return checkOrFilter(filters, filter);

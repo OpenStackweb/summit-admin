@@ -995,8 +995,7 @@
     "submission_status_not_submitted": "Not Submitted",
     "media_upload_type": "Media Upload Type",
     "media_uploads": "Media Uploads",
-    "has_media_upload_with_type": "Has Media Upload Types",
-    "has_not_media_upload_with_type": "Has Not Media Upload Types",
+    "media_upload_with_type": "Media Upload Types",
     "placeholders": {
       "search_events": "Search by Id, Title, Abstract, Speaker Title",
       "event_type_capacity": "Filter by Activity Type Capacity",
@@ -2716,6 +2715,17 @@
     "any": "any",
     "following": " of the following: "
   },
+  "media_upload_type_filter": {
+    "media_type": "Media Upload Types",
+    "has_media_upload": "Has",
+    "has_not_media_upload": "Has Not",
+    "placeholders": {
+      "has_media_upload_with_type==": "Select the Media Upload Types to include",
+      "has_not_media_upload_with_type==": "Select the Media Upload Types to exclude",
+      "operator": "Has or Not Has Media Upload Types"
+    }
+    
+  },
   "edit_reg_feed_metadata": {
     "reg_feed_metadata": "Registration Feed Metadata",
     "key": "Key",
@@ -2726,7 +2736,7 @@
   "email_filter": {
     "operator_contains": "Contains",
     "operator_not_contains": "Not Contains",
-    "operator_equal": "Equal",
+    "operator_equal": "Equal",    
     "placeholders": {
       "value": "Search by email address",
       "operator": "Select Operator"

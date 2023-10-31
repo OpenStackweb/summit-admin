@@ -28,7 +28,6 @@ import {
     OperatorInput,
     MemberInput,
     CompanyInput } from 'openstack-uicore-foundation/lib/components';
-import MediaUploadTypeInput from '../../components/inputs/media-upload-type-input';
 import { SegmentedControl } from 'segmented-control'
 import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/utils/methods'
 import { getSummitById }  from '../../actions/summit-actions';
@@ -36,6 +35,7 @@ import { getEvents, deleteEvent, exportEvents, importEventsCSV, importMP4AssetsF
 import {hasErrors, uuidv4} from "../../utils/methods";
 import '../../styles/summit-event-list-page.less';
 import OrAndFilter from '../../components/filters/or-and-filter';
+import MediaTypeFilter from '../../components/filters/media-type-filter';
 import { ALL_FILTER } from '../../utils/constants';
 
 const fieldNames = [
@@ -148,8 +148,7 @@ class SummitEventListPage extends React.Component {
                 sponsor: [],
                 all_companies: [],
                 submission_status_filter: [],
-                has_media_upload_with_type: [],
-                has_not_media_upload_with_type: [],
+                media_upload_with_type: { operator: null, value: [] },
                 orAndFilter: ALL_FILTER,
             },
             selectedColumns: [],
@@ -287,6 +286,12 @@ class SummitEventListPage extends React.Component {
                 value = Array.isArray(value) ? value : `${ev.target.operator}${ev.target.value}`;
             }
         }
+        if (type === 'mediatypeinput') {
+            value = {
+                operator: ev.target.operator,
+                value: ev.target.value
+            }            
+        }
         this.setState({...this.state, eventFilters: {...this.state.eventFilters, [id]: value}});
     }
 
@@ -333,8 +338,7 @@ class SummitEventListPage extends React.Component {
                     sponsor: [],
                     all_companies: [],
                     submission_status_filter: [],
-                    has_media_upload_with_type: [],
-                    has_not_media_upload_with_type: [],
+                    media_upload_with_type: { operator: null, value: [] },
                 };
                 this.setState({...this.state, enabledFilters: value, eventFilters: resetFilters});
             } else {
@@ -397,8 +401,7 @@ class SummitEventListPage extends React.Component {
                     sponsor: [],
                     all_companies: [],
                     submission_status_filter: [],
-                    has_media_upload_with_type: [],
-                    has_not_media_upload_with_type: [],
+                    media_upload_with_type: { operator: null, value: [] },
                 };
                 this.setState({...this.state, enabledFilters: value, eventFilters: resetFilters});
             } else {
@@ -508,8 +511,7 @@ class SummitEventListPage extends React.Component {
             {label: 'Sponsors', value: 'sponsor'},
             {label: 'All Companies', value: 'all_companies'},
             {label: T.translate("event_list.submission_status"), value: 'submission_status_filter' },
-            {label: T.translate("event_list.has_media_upload_with_type"), value: 'has_media_upload_with_type' },          
-            {label: T.translate("event_list.has_not_media_upload_with_type"), value: 'has_not_media_upload_with_type' },          
+            {label: T.translate("event_list.media_upload_with_type"), value: 'media_upload_with_type' },            
         ]
 
         const ddl_columns = [
@@ -962,23 +964,12 @@ class SummitEventListPage extends React.Component {
                             />
                         </div>                
                     }
-                    {enabledFilters.includes('has_media_upload_with_type') &&
-                         <div className={'col-md-9'}> 
-                            <MediaUploadTypeInput 
-                                id="has_media_upload_with_type"
-                                value={eventFilters.has_media_upload_with_type}
-                                placeholder={T.translate("event_list.placeholders.media_upload_type_id_to_include")}
-                                summitId={currentSummit.id}
-                                onChange={this.handleExtraFilterChange}
-                            />
-                        </div>
-                    }
-                    {enabledFilters.includes('has_not_media_upload_with_type') &&
-                        <div className={'col-md-9'}> 
-                            <MediaUploadTypeInput 
-                                id="has_not_media_upload_with_type"
-                                value={eventFilters.has_not_media_upload_with_type}
-                                placeholder={T.translate("event_list.placeholders.media_upload_type_id_to_exclude")}
+                    {enabledFilters.includes('media_upload_with_type') &&
+                         <div className={'col-md-12'}> 
+                            <MediaTypeFilter 
+                                id={"media_upload_with_type"}
+                                operatorInitialValue={eventFilters.media_upload_with_type.operator}
+                                filterInitialValue={eventFilters.media_upload_with_type.value}
                                 summitId={currentSummit.id}
                                 onChange={this.handleExtraFilterChange}
                             />
