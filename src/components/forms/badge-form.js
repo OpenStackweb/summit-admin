@@ -210,6 +210,19 @@ class BadgeForm extends React.Component {
             }
         };
 
+        const renderInput = ( props, openCalendar, closeCalendar ) => {
+            function clear(ev){
+                ev.preventDefault();
+                props.onChange({target: {value: ''}});
+            }
+            return (
+                <div className='badge-print-datepicker'>
+                    <input {...props} />
+                    <i onClick={clear} className='fa fa-times'></i>
+                </div>
+            );
+        }
+
         return (
             <form className="badge-form">
                 <input type="hidden" id="badge_id" value={entity.id} />
@@ -277,6 +290,7 @@ class BadgeForm extends React.Component {
                                                 onChange={(ev) => this.handleChangePrintDate(ev, false)}
                                                 value={epochToMomentTimeZone(printDateFilter[0], currentSummit.time_zone_id)}
                                                 className={'badge-print-date-picker'}
+                                                renderInput={renderInput}
                                             />
                                             <DateTimePicker
                                                 id="printDateToFilter"
@@ -286,6 +300,7 @@ class BadgeForm extends React.Component {
                                                 onChange={(ev) => this.handleChangePrintDate(ev, true)}
                                                 value={epochToMomentTimeZone(printDateFilter[1], currentSummit.time_zone_id)}
                                                 className={'badge-print-date-picker'}
+                                                renderInput={renderInput}
                                             />
                                             <button className='btn btn-default' onClick={this.handleApplyPrintFilters}>
                                                 {T.translate("edit_ticket.apply_filters")}
