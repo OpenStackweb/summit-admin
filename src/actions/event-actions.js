@@ -911,66 +911,42 @@ const parseFilters = (filters, term = null) => {
 
     if (filters.hasOwnProperty('selection_plan_id_filter') && Array.isArray(filters.selection_plan_id_filter)
         && filters.selection_plan_id_filter.length > 0) {
-        filter.push('selection_plan_id==' + filters.selection_plan_id_filter.reduce(
-            (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + tt,
-            ''
-        ));
+        filter.push(`selection_plan_id==${filters.selection_plan_id_filter.join('||')}`);
     }
 
     if (filters.hasOwnProperty('location_id_filter') && Array.isArray(filters.location_id_filter)
         && filters.location_id_filter.length > 0) {
-        filter.push('location_id==' + filters.location_id_filter.reduce(
-            (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + tt,
-            ''
-        ));
+        filter.push(`location_id==${filters.location_id_filter.join('||')}`);
     }
 
     if (filters.hasOwnProperty('selection_status_filter') && Array.isArray(filters.selection_status_filter)
         && filters.selection_status_filter.length > 0) {
-        filter.push('selection_status==' + filters.selection_status_filter.reduce(
-            (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + tt,
-            ''
-        ));
+        filter.push(`selection_status==${filters.selection_status_filter.join('||')}`);
     }
 
     if (filters.hasOwnProperty('track_id_filter') && Array.isArray(filters.track_id_filter)
         && filters.track_id_filter.length > 0) {
-        filter.push('track_id==' + filters.track_id_filter.reduce(
-            (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + tt,
-            ''
-        ));
+        filter.push(`track_id==${filters.track_id_filter.join('||')}`);
     }
 
     if (filters.hasOwnProperty('event_type_id_filter') && Array.isArray(filters.event_type_id_filter)
         && filters.event_type_id_filter.length > 0) {
-        filter.push('event_type_id==' + filters.event_type_id_filter.reduce(
-            (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + tt,
-            ''
-        ));
+        filter.push(`event_type_id==${filters.event_type_id_filter.join('||')}`);
     }
 
     if (filters.hasOwnProperty('speaker_id_filter') && Array.isArray(filters.speaker_id_filter)
         && filters.speaker_id_filter.length > 0) {
-        filter.push('speaker_id==' + filters.speaker_id_filter.reduce(
-            (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + tt.id,
-            ''
-        ));
+        filter.push(`speaker_id==${filters.speaker_id_filter.map(speaker => speaker.id).join('||')}`);
     }
 
     if (filters.hasOwnProperty('level_filter') && Array.isArray(filters.level_filter)
         && filters.level_filter.length > 0) {
-        filter.push('level==' + filters.level_filter.reduce(
-            (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + tt,
-            ''
-        ));
+        filter.push(`level==${filters.level_filter.join('||')}`);
     }
 
     if (filters.hasOwnProperty('tags_filter') && Array.isArray(filters.tags_filter)
         && filters.tags_filter.length > 0) {
-        filter.push('tags==' + filters.tags_filter.reduce(
-            (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + tt.tag,
-            ''
-        ));
+        filter.push(`tags==${filters.tags_filter.map(t => t.tag).join('||')}`);
     }
 
     if (filters.published_filter) {
@@ -1057,34 +1033,24 @@ const parseFilters = (filters, term = null) => {
         && filters.speaker_company.length > 0) {
         console.log('parse filter', filters.speaker_company)
         filter.push(
-            'speaker_company==' + filters.speaker_company.reduce(
-                (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + escapeFilterValue(tt.name),
-            '')
-        );
+            `speaker_company==${filters.speaker_company.map(company => escapeFilterValue(company.name)).join('||')}`);
     }
 
     if (filters.hasOwnProperty('submitter_company') && Array.isArray(filters.submitter_company)
         && filters.submitter_company.length > 0) {        
         filter.push(
-            'created_by_company==' + filters.submitter_company.reduce(
-                (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + escapeFilterValue(tt.name),
-            '')
-        );
+            `created_by_company==${filters.submitter_company.map(company => escapeFilterValue(company.name)).join('||')}`);  
     }
 
     if (filters.hasOwnProperty('sponsor') && Array.isArray(filters.sponsor)
         && filters.sponsor.length > 0) {        
         filter.push(
-            'sponsor==' + filters.sponsor.reduce(
-                (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + escapeFilterValue(tt.name),
-            '')
-        );
+            `sponsor==${filters.sponsor.map(sponsor => sponsor.name).join('||')}`);
     }
 
     if (filters.hasOwnProperty('all_companies') && Array.isArray(filters.all_companies)
         && filters.all_companies.length > 0) {
-        const companies = filters.all_companies.reduce(
-            (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + escapeFilterValue(tt.name), '')
+        const companies = filters.all_companies.map(company => escapeFilterValue(tt.name).join('||'));
         filter.push(`speaker_company==${companies},created_by_company==${companies},sponsor==${companies}`);
     }
 
@@ -1098,26 +1064,17 @@ const parseFilters = (filters, term = null) => {
 
     if (filters.hasOwnProperty('submission_status_filter') && Array.isArray(filters.submission_status_filter)
         && filters.submission_status_filter.length > 0) {
-        filter.push('submission_status==' + filters.submission_status_filter.reduce(
-            (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + tt,
-            ''
-        ));
+        filter.push(`submission_status==${filters.submission_status_filter.join('||')}`);
     }
 
     if (filters.hasOwnProperty('has_media_upload_with_type') && Array.isArray(filters.has_media_upload_with_type)
         && filters.has_media_upload_with_type.length > 0) {
-        filter.push('has_media_upload_with_type==' + filters.has_media_upload_with_type.reduce(
-            (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + tt.id,
-            ''
-        ));
+        filter.push(`has_media_upload_with_type==${filters.has_media_upload_with_type.map(media => media.id).join('||')}`);
     }
 
     if (filters.hasOwnProperty('has_not_media_upload_with_type') && Array.isArray(filters.has_not_media_upload_with_type)
         && filters.has_not_media_upload_with_type.length > 0) {
-        filter.push('has_not_media_upload_with_type==' + filters.has_not_media_upload_with_type.reduce(
-            (accumulator, tt) => accumulator + (accumulator !== '' ? '||' : '') + tt.id,
-            ''
-        ));
+        filter.push(`has_not_media_upload_with_type==${filters.has_not_media_upload_with_type.map(media => media.id).join('&&')}`);
     }
 
     if (term) {
