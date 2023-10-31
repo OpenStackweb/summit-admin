@@ -793,6 +793,16 @@ class SummitForm extends React.Component {
                                 onChange={this.handleChange}
                             />
                         </div>
+                        <div className="col-md-4 checkboxes-div">
+                            <div className="form-check abc-checkbox">
+                                <input type="checkbox" id="REG_LITE_SHOW_COMPANY_INPUT_DEFAULT_OPTIONS"
+                                       checked={regLiteMarketingSettings?.REG_LITE_SHOW_COMPANY_INPUT_DEFAULT_OPTIONS?.value} onChange={this.handleChange}
+                                       className="form-check-input"/>
+                                <label className="form-check-label" htmlFor="REG_LITE_SHOW_COMPANY_INPUT_DEFAULT_OPTIONS">
+                                    {T.translate("edit_summit.reg_lite_show_company_input_default_options")}
+                                </label>
+                            </div>
+                        </div>
                     </div>
                     <div className="row form-group">
                         <div className="col-md-12 checkboxes-div">

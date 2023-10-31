@@ -339,6 +339,7 @@
     "registration_encryption_key": "Encryption Key",
     "generate_encryption_key": "Generate Key",    
     "reg_lite_allow_promo_codes": "Allow Promo Codes on Registration Lite ?",
+    "reg_lite_show_company_input_default_options": "Show user Company Input Default Options?",
     "reg_lite_show_company_input": "Show user company input during registration?",
     "reg_lite_company_ddl_placeholder": "Company Dropdown Placeholder",
     "reg_lite_company_ddl_placeholder_info": "This placeholder will be used for the company dropdown field on the registration lite.",
