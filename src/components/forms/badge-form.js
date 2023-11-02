@@ -191,7 +191,6 @@ class BadgeForm extends React.Component {
 
         // adds 'All' option to the print type dropdown
         const badge_view_type_ddl = [
-            { label: 'All', value: 0 },
             ...currentSummit.badge_types.find(bt => bt.id === entity.type_id).allowed_view_types.map(vt => ({ label: vt.name, value: vt.id }))
         ];
 
