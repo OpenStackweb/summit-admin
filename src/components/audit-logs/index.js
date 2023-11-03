@@ -19,7 +19,7 @@ const AuditLogs = ({entityFilter = [], term, logEntries, perPage, lastPage, curr
     { columnKey: 'user', value: T.translate("audit_log.user"), sortable: false }
   ];
 
-  const show_columns = columns ? audit_log_columns.filter(c => columns.include(c.columnKey)) : audit_log_columns;
+  const show_columns = columns ? audit_log_columns.filter(c => columns.includes(c.columnKey)) : audit_log_columns;
 
   const handleSort = (index, key, dir, func) => {
     getAuditLog(entityFilter, term, currentPage, perPage, key, dir);
