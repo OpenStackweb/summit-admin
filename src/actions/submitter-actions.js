@@ -150,8 +150,8 @@ export const sendSubmitterEmails = (
                            promocodeSpecification = null,
                            ) => async (dispatch, getState) => {
 
-    const { currentSummitState, currentSummitSpeakersListState } = getState();
-    const {selectedAll, selectedItems, excludedItems, term, currentFlowEvent, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter} = currentSummitSpeakersListState;
+    const { currentSummitState, currentSummitSubmittersListState } = getState();
+    const {selectedAll, selectedItems, excludedItems, term, currentFlowEvent, selectionPlanFilter, trackFilter, activityTypeFilter, selectionStatusFilter} = currentSummitSubmittersListState;
     const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
     let filter = [];
