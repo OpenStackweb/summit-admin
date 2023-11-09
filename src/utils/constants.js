@@ -46,3 +46,9 @@ export const ReservationStatusRequestedRefund = 'RequestedRefund';
 
 export const EMAIL_TEMPLATE_TYPE_HTML = "html";
 export const EMAIL_TEMPLATE_TYPE_MJML = "mjml";
+
+export const REG_LITE_BOOLEAN_SETTINGS = [
+    'REG_LITE_ALLOW_PROMO_CODES',
+    'REG_LITE_SHOW_COMPANY_INPUT',
+    'REG_LITE_SHOW_COMPANY_INPUT_DEFAULT_OPTIONS'    
+];

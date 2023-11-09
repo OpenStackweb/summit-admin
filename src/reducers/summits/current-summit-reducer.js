@@ -43,6 +43,7 @@ import {
 import { RECEIVE_REFUND_POLICIES } from "../../actions/ticket-actions";
 import {RECEIVE_ORDER_EXTRA_QUESTIONS, RECEIVE_MAIN_ORDER_EXTRA_QUESTIONS, ORDER_EXTRA_QUESTION_ADDED} from "../../actions/order-actions";
 import {RECEIVE_PRINT_APP_SETTINGS, RECEIVE_REG_LITE_SETTINGS} from "../../actions/marketing-actions";
+import { REG_LITE_BOOLEAN_SETTINGS } from '../../utils/constants.js';
 
 export const DEFAULT_ENTITY = {
     id: 0,
@@ -423,7 +424,7 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
 
             data.forEach(setting => {
                 let value = setting.value;
-                if(setting.key === 'REG_LITE_ALLOW_PROMO_CODES' || setting.key === 'REG_LITE_SHOW_COMPANY_INPUT'){
+                if(REG_LITE_BOOLEAN_SETTINGS.includes(setting.key)){
                     value = value === '1';
                 }
                 reg_lite_marketing_settings[setting.key] = { id : setting.id, value : value};
