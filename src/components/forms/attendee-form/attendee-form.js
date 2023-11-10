@@ -22,6 +22,7 @@ import RsvpComponent from './rsvp-component'
 import { AffiliationsTable } from '../../tables/affiliationstable'
 import {isEmpty, scrollToError, shallowEqual} from "../../../utils/methods";
 import QuestionsSet  from 'openstack-uicore-foundation/lib/utils/questions-set'
+import Notes from "../../notes";
 
 class AttendeeForm extends React.Component {
     constructor(props) {
@@ -252,15 +253,6 @@ class AttendeeForm extends React.Component {
                             error={this.hasErrors('company')}
                         />
                     </div>
-                    <div className="col-md-8">
-                        <label> {T.translate("edit_attendee.admin_notes")}</label>
-                        <textarea
-                            id="admin_notes"
-                            value={entity.admin_notes}
-                            onChange={this.handleChange}
-                            className="form-control"
-                        />
-                    </div>
                 </div>
                 <div className="row form-group">
                     <div className="col-md-3 checkboxes-div">
@@ -341,6 +333,15 @@ class AttendeeForm extends React.Component {
                         className="extra-questions"
                     />
                 </Panel>
+            }
+            { entity.id !== 0 &&
+              <Panel
+                show={showSection === 'admin_notes'}
+                title={T.translate("edit_attendee.admin_notes")}
+                handleClick={this.toggleSection.bind(this, 'admin_notes')}
+              >
+                  <Notes attendeeId={entity.id} />
+              </Panel>
             }
             <div className="row">
                 <div className="col-md-12 submit-buttons">

@@ -31,6 +31,7 @@ import Swal from "sweetalert2";
 import {Table, Panel} from "openstack-uicore-foundation/lib/components";
 import moment from "moment-timezone";
 import AuditLogs from "../../components/audit-logs";
+import Notes from "../../components/notes";
 
 class EditTicketPage extends React.Component {
 
@@ -299,18 +300,30 @@ class EditTicketPage extends React.Component {
                     onSaveTicket={this.props.saveTicket}
                 />
 
+
                { entity?.refund_requests?.length > 0 &&
-                   <div>
-                       <h3>
-                           {T.translate("edit_ticket.refund_requests")}
-                       </h3>
-                       <hr/>
-                       <Table
-                           options={refundRequestOptions}
-                           data={entity?.refund_requests}
-                           columns={refundRequestColumns}
-                       />
-                   </div>
+
+                 <Panel
+                   show={showSection === 'refund_requests'}
+                   title={T.translate("edit_ticket.refund_requests")}
+                   handleClick={this.toggleSection.bind(this, 'refund_requests')}
+                 >
+                     <Table
+                       options={refundRequestOptions}
+                       data={entity?.refund_requests}
+                       columns={refundRequestColumns}
+                     />
+                 </Panel>
+               }
+
+               { entity.id !== 0 &&
+                 <Panel
+                   show={showSection === 'admin_notes'}
+                   title={T.translate("edit_ticket.admin_notes")}
+                   handleClick={this.toggleSection.bind(this, 'admin_notes')}
+                 >
+                     <Notes attendeeId={entity.owner.id} ticketId={entity.id} />
+                 </Panel>
                }
                 <br/>
                 <br/>

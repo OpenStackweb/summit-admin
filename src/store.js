@@ -139,6 +139,7 @@ import storage from 'redux-persist/es/storage'
 import currentRegFeedMetadataListReducer from './reducers/summits/reg-feed-metadata-list-reducer';
 import currentRegFeedMetadataReducer from './reducers/summits/reg-feed-metadata-reducer';
 import badgePrintReducer from './reducers/tickets/badge-print-reducer';
+import notesReducer from './reducers/notes/notes-reducer';
 
  // default: localStorage if web, AsyncStorage if react-native
 
@@ -267,6 +268,7 @@ const reducers = persistCombineReducers(config, {
     scoreTypeState: scoreTypeReducer,
     summitStatsState: summitStatsReducer,
     auditLogState: auditLogReducer,
+    notesState: notesReducer,
     signageState: signageReducer,
     trackTimeframesListState: trackTimeframesListReducer,
     trackTimeframeState: trackTimeframeReducer,

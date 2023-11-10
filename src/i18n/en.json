@@ -1577,6 +1577,7 @@
     "print_date": "Print Date",
     "no_prints": "No badge prints found for current search criteria.",
     "apply_filters": "Apply Filters",
+    "admin_notes": "Notes",
     "placeholders": {
       "refund_notes": "Provide Optional Notes",
       "refund_reject_notes": "Provide Optional Notes",
@@ -2740,6 +2741,20 @@
     "placeholders": {
       "value": "Search by email address",
       "operator": "Select Operator"
+    }
+  },
+  "notes": {
+    "id": "Id",
+    "created": "Created",
+    "author_fullname": "Author",
+    "author_email": "Email",
+    "ticket_id": "Ticket Id",
+    "content": "Note",
+    "no_entries": "No notes found.",
+    "note_created": "Note created successfully.",
+    "remove_warning": "Are you sure you want to delete note ",
+    "placeholders": {
+      "search": "Search by content or author"
     }
   }
 }
