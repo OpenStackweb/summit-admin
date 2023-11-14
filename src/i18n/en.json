@@ -1468,7 +1468,7 @@
     "promocode": "Promo Code",
     "promo_code_tags": "Promo Code Tags",
     "badge_type": "Badge Type",
-    "badge_prints_count": "Badge Prints Count",
+    "badge_prints_count": "Badge Print Count",
     "import_tickets_format": "Format must be the following:",
     "import_tickets_id": "id",
     "import_tickets_id_text": ": the id of the ticket",
