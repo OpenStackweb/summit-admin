@@ -151,6 +151,7 @@ export const copyLocations = (fromSummitId) => async (dispatch, getState) => {
     )(params)(dispatch)
         .then(() => {
             dispatch(stopLoading());
+            window.location.reload();
         });
 };
 

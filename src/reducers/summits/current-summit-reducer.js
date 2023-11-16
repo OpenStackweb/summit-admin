@@ -8,8 +8,7 @@ import {
     LOCATION_ADDED,
     LOCATION_DELETED,
     ROOM_ADDED,
-    ROOM_DELETED,
-    LOCATIONS_SEEDED
+    ROOM_DELETED
 } from '../../actions/location-actions';
 
 import {
@@ -271,10 +270,6 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
             const {subTrackId} = payload;
             const tracks = state.currentSummit.tracks.map(t => t.id === subTrackId ? {...t, parent_id: 0} : t);
             return {...state, currentSummit: {...state.currentSummit, tracks}};
-        }
-        case LOCATIONS_SEEDED: {
-            const newLocations = payload.response.data || [];
-            return {...state, currentSummit: {...state.currentSummit, locations: [...state.locations, ... newLocations] }};
         }
         case LOCATION_UPDATED: {
             let { response } = payload;

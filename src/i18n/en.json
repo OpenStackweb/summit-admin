@@ -1183,7 +1183,8 @@
     "add_location": "Add Location",
     "name": "Name",
     "class_name": "Class",
-    "remove_warning": "Are you sure you want to delete location "
+    "remove_warning": "Are you sure you want to delete location ",
+    "copy_locations": "Copy Locations"
   },
   "edit_location": {
     "location": "Location",

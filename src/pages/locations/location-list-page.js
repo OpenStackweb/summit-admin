@@ -57,7 +57,7 @@ const LocationListPage = ({currentSummit, history, locations, totalLocations, al
 
     const handleCopyLocations = (fromSummitId) => {
         props.copyLocations(fromSummitId);
-    };
+    }
 
     const columns = [
         { columnKey: 'name', value: T.translate("location_list.name") },
@@ -84,7 +84,7 @@ const LocationListPage = ({currentSummit, history, locations, totalLocations, al
                     <SummitDropdown
                         summits={summits}
                         onClick={handleCopyLocations}
-                        actionLabel={T.translate("event_category_list.copy_categories")}
+                        actionLabel={T.translate("location_list.copy_locations")}
                     />
                 </div>
             </div>
