@@ -11,6 +11,7 @@
  * limitations under the License.
  **/
 
+import moment from 'moment-timezone';
 import {
     REQUEST_BADGE_PRINTS,
     RECEIVE_BADGE_PRINTS, BADGE_PRINTS_CLEARED
@@ -40,9 +41,11 @@ const badgePrintReducer = (state = DEFAULT_STATE, action) => {
         case RECEIVE_BADGE_PRINTS: {            
             const { data, current_page, last_page, total } = payload.response;
 
+            const userTimeZone = moment.tz.guess();
+
             const prints = data.map(p => {
-                const created = p.created ? epochToMomentTimeZone(p.created, state.summitTz).format('MMMM Do YYYY, h:mm:ss a') : 'N/A';
-                const print_date = p.print_date ? epochToMomentTimeZone(p.print_date, state.summitTz).format('MMMM Do YYYY, h:mm:ss a') : 'N/A';
+                const created = p.created ? epochToMomentTimeZone(p.created, userTimeZone).format('MMMM Do YYYY, h:mm:ss a') : 'N/A';
+                const print_date = p.print_date ? epochToMomentTimeZone(p.print_date, userTimeZone).format('MMMM Do YYYY, h:mm:ss a') : 'N/A';
                 const requestor_full_name = p.requestor ? `${p.requestor.first_name} ${p.requestor.last_name}` : 'N/A';                
                 const requestor_email = p.requestor ? p.requestor.email : 'N/A';
 

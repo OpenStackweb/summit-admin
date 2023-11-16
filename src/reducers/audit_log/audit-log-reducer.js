@@ -18,19 +18,20 @@ import
     REQUEST_LOG,
     RECEIVE_LOG,
 } from '../../actions/audit-log-actions';
+import {epochToMomentTimeZone} from "openstack-uicore-foundation/lib/utils/methods";
 
 import { SET_CURRENT_SUMMIT } from "../../actions/summit-actions";
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
-import { parseSpeakerAuditLog } from '../../utils/methods';
+import { formatAuditLog, parseSpeakerAuditLog } from '../../utils/methods';
 
 const DEFAULT_STATE = {
-    logEntries              : [],
-    currentPage             : 1,
-    lastPage                : 1,
-    perPage                 : 10,
-    order                   : 'created',
-    orderDir                : 1,
-    totalLogEntries         : 0
+    logEntries      : [],
+    currentPage     : 1,
+    lastPage        : 1,
+    perPage         : 10,
+    order           : 'created',
+    orderDir        : 1,
+    totalLogEntries : 0
 };
 
 const auditLogReducer = (state = DEFAULT_STATE, action) => {
@@ -43,19 +44,20 @@ const auditLogReducer = (state = DEFAULT_STATE, action) => {
         }
         case REQUEST_LOG: {
             let {order, orderDir} = payload;
-
-            return {...state, order, orderDir }
+            return {...state, order, orderDir}
         }
         case RECEIVE_LOG: {
             let { current_page, total, last_page } = payload.response;
 
             let logEntries = payload.response.data.map(e => {
+                const action = e.action.startsWith('Speaker') ? parseSpeakerAuditLog(e.action) : e.action
+                const userTimeZone = moment.tz.guess();
                 return {
                     ...e,
                     event: e.event_id,
                     user: `${e.user.first_name} ${e.user.last_name} (${e.user.id})`,
-                    created: moment(e.created * 1000).format('MMMM Do YYYY, h:mm a'),
-                    action: e.action.startsWith('Speaker') ? parseSpeakerAuditLog(e.action) : e.action
+                    created: epochToMomentTimeZone(e.created, userTimeZone).format('MMMM Do YYYY, h:mm a'),
+                    action: formatAuditLog(action, userTimeZone)
                 };
             });
 

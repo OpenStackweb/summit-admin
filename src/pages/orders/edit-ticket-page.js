@@ -369,10 +369,12 @@ class EditTicketPage extends React.Component {
                  title={T.translate("audit_log.title")}
                  handleClick={this.toggleSection.bind(this, 'audit_log')}
                >
+                {entity.badge &&
                    <AuditLogs
                      entityFilter={[`event_id==${entity.badge.id}`, `class_name==SummitAttendeeBadgeAuditLog`]}
                      columns={['created', 'action', 'user']}
                    />
+                }
                </Panel>
                 <Modal show={this.state.showRefundModal} onHide={() => this.setState({showRefundModal:false})} >
                     <Modal.Header closeButton>

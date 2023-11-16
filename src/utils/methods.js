@@ -270,6 +270,17 @@ export const parseSpeakerAuditLog = (logString) => {
 
   return relevantChanges.join('|');
 }
+
+export const formatAuditLog = (logString) => {
+    const timeZone = moment.tz.guess();
+    const dateTimeRegExp = /\d{4}([.\-/ ])\d{2}\1\d{2} \d{1,2}:\d{2}:\d{2}/g;
+    const dateTimeMatch = logString.match(dateTimeRegExp);
+    if (!dateTimeMatch) return logString;
+    const dt = Math.floor(Date.parse(dateTimeMatch[0] + ' GMT') / 1000);
+    const localTimeDTString = epochToMomentTimeZone(dt, timeZone).format('YYYY-MM-DD HH:mm:ss');
+    return logString.replace(dateTimeRegExp, localTimeDTString);
+}
+
 export const formatInitialJson = (template) => {
     const regex = /{{(.*?)}}/g;
     const matches = template.match(regex) || [];
