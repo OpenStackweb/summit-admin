@@ -32,7 +32,7 @@ const fieldNames = [
     }},
     { columnKey: 'tags', value: "tags" },
     { columnKey: 'owner_email', value: "owner_email" },
-    { columnKey: 'email_sent', value: "emailed" },
+    { columnKey: 'email_sent', value: "emailed", sortable: true },
     { columnKey: 'creator', value: "creator" }
 ]
 
@@ -165,7 +165,7 @@ class PromocodeListPage extends React.Component {
         let columns = [
             { columnKey: 'id', value: T.translate("promocode_list.id"), sortable: true },
             { columnKey: 'code', value: T.translate("promocode_list.code"), sortable: true },
-            { columnKey: 'redeemed', value: T.translate("promocode_list.redeemed") }
+            { columnKey: 'redeemed', value: T.translate("promocode_list.redeemed"), sortable: true }
         ];
 
         const ddl_columns = [            
