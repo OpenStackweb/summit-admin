@@ -316,13 +316,13 @@ class EditTicketPage extends React.Component {
                  </Panel>
                }
 
-               { entity.id !== 0 &&
+               { entity?.id > 0 && entity?.owner?.id > 0 &&
                  <Panel
                    show={showSection === 'admin_notes'}
                    title={T.translate("edit_ticket.admin_notes")}
                    handleClick={this.toggleSection.bind(this, 'admin_notes')}
                  >
-                     <Notes attendeeId={entity.owner.id} ticketId={entity.id} />
+                     <Notes attendeeId={entity?.owner?.id} ticketId={entity.id} />
                  </Panel>
                }
                 <br/>
