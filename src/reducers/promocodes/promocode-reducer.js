@@ -236,7 +236,8 @@ const promocodeReducer = (state = DEFAULT_STATE, action) => {
                 speakers: {...state.entity.speakers, speakers_list: speakersList, filtered_speakers_list: pagedList, lastPage} } };
         }
         case REQUEST_ASSIGNED_SPEAKERS: {
-            return {...state, entity: {...payload.entity} };
+            const {entity, order, orderDir, page, term} = payload
+            return {...state, entity: {...entity, speakers: {...entity.speakers, order, orderDir, currentPage: page, term}} };
         }
         case RECEIVE_ASSIGNED_SPEAKERS: {
             let {current_page, data, last_page, per_page, total} = {...payload.response};
@@ -257,7 +258,7 @@ const promocodeReducer = (state = DEFAULT_STATE, action) => {
                 totalSpeakers : total
             }
 
-            return {...state, entity: {...state.entity, speaker: null, quantity_available: total, speakers: speakersInfo} };
+            return {...state, entity: {...state.entity, speaker: null, quantity_available: total, speakers: {...state.entity.speakers, ...speakersInfo}} };
         }
         default:
             return state;

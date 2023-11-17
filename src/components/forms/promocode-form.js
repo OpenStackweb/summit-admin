@@ -345,8 +345,8 @@ const SpeakersBasePCForm = (props) => {
         { columnKey: 'id', value: 'Id', sortable: true },
         { columnKey: 'full_name', value: T.translate("general.name"), sortable: true },
         { columnKey: 'email', value: T.translate("general.email"), sortable: true },
-        { columnKey: 'email_sent', value: T.translate("edit_promo_code.assigned_speakers_list.email_sent") },
-        { columnKey: 'redeemed', value: T.translate("edit_promo_code.assigned_speakers_list.redeemed") }
+        { columnKey: 'email_sent', value: T.translate("edit_promo_code.assigned_speakers_list.email_sent"), sortable: true },
+        { columnKey: 'redeemed', value: T.translate("edit_promo_code.assigned_speakers_list.redeemed"), sortable: true }
     ];
 
     const table_options = {
