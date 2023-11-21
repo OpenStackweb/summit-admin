@@ -112,11 +112,11 @@ class BadgeForm extends React.Component {
         this.props.onBadgePrintQuery(term, page, perPage, order, orderDir, newFilters);
     }
 
-    handleChangePrintDate(ev, lastDate) {
+    handleChangePrintDate(ev, endDate) {
         const {value} = ev.target;
         const {printDateFilter} = this.state.printFilters;
 
-        const newDateValue = lastDate ? [printDateFilter[0], value.unix()] : [value.unix(), printDateFilter[1]];
+        const newDateValue = endDate ? [printDateFilter[0], value.unix()] : [value.unix(), value.unix() > printDateFilter[1] ? 0 : printDateFilter[1]];
         const newFilters = {...this.state.printFilters, printDateFilter: newDateValue};
 
         this.setState({...this.state, printFilters: newFilters});                
@@ -280,10 +280,10 @@ class BadgeForm extends React.Component {
                                                 isMulti
                                             />
                                         </div>
-                                        <div className='col-md-7 col-md-offset-1 date-wrapper'>
+                                        <div className='col-md-7 col-md-offset-1 date-wrapper'>                                            
                                             <DateTimePicker
                                                 id="printDateFromFilter"
-                                                format={{date:"YYYY-MM-DD", time: "HH:mm"}}                                    
+                                                format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                                                 inputProps={{placeholder: T.translate("edit_ticket.placeholders.print_date_from")}}
                                                 timezone={currentSummit.time_zone_id}
                                                 onChange={(ev) => this.handleChangePrintDate(ev, false)}
@@ -298,6 +298,7 @@ class BadgeForm extends React.Component {
                                                 timezone={currentSummit.time_zone_id}
                                                 onChange={(ev) => this.handleChangePrintDate(ev, true)}
                                                 value={epochToMomentTimeZone(printDateFilter[1], currentSummit.time_zone_id)}
+                                                validation={{ before: printDateFilter[0], after: '>=' }}
                                                 className={'badge-print-date-picker'}
                                                 renderInput={renderInput}
                                             />
