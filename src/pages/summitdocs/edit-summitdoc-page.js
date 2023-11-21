@@ -17,7 +17,7 @@ import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import SummitDocForm from '../../components/forms/summitdoc-form';
 import { getSummitById }  from '../../actions/summit-actions';
-import { getSummitDoc, resetSummitDocForm, saveSummitDoc } from "../../actions/summitdoc-actions";
+import { addFileToDoc, getSummitDoc, removeFileFromDoc, resetSummitDocForm, saveSummitDoc } from "../../actions/summitdoc-actions";
 //import '../../styles/edit-summitdoc-page.less';
 
 class EditSummitDocPage extends React.Component {
@@ -62,6 +62,8 @@ class EditSummitDocPage extends React.Component {
                     entity={entity}
                     errors={errors}
                     onSubmit={this.props.saveSummitDoc}
+                    addFileToDoc={this.props.addFileToDoc}
+                    removeFileFromDoc={this.props.removeFileFromDoc}
                 />
                 }
             </div>
@@ -78,8 +80,10 @@ const mapStateToProps = ({ currentSummitState, summitDocState }) => ({
 export default connect (
     mapStateToProps,
     {
+        addFileToDoc,
         getSummitById,
         getSummitDoc,
+        removeFileFromDoc,
         resetSummitDocForm,
         saveSummitDoc,
     }

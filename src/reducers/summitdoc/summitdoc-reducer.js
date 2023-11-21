@@ -16,7 +16,9 @@ import
     RECEIVE_SUMMITDOC,
     RESET_SUMMITDOC_FORM,
     UPDATE_SUMMITDOC,
-    SUMMITDOC_ADDED
+    SUMMITDOC_ADDED,
+    SUMMITDOC_FILE_ADDED,
+    SUMMITDOC_FILE_DELETED
 } from '../../actions/summitdoc-actions';
 
 import { VALIDATE } from 'openstack-uicore-foundation/lib/utils/actions';
@@ -78,6 +80,14 @@ const summitDocReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  errors: payload.errors };
         }
         break;
+        case SUMMITDOC_FILE_ADDED: {
+            let entity = {...payload.response};
+
+            return {...state, entity: {...entity} };
+        }
+        case SUMMITDOC_FILE_DELETED: {
+            return {...state, entity: {...state.entity, file_preview: '', file: null} };
+        }
         default:
             return state;
     }

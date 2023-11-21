@@ -336,3 +336,9 @@ export const getDayFromReservation = (entity, available_dates) => {
     const matchingDay = available_dates.find(date => isEntityWithinDay(date.epoch, entity));
     return matchingDay?.epoch || null;
 }
+
+export const wrapFormFile = (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return formData;
+}
