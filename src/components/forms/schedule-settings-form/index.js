@@ -172,7 +172,7 @@ class ScheduleSettingsForm extends React.Component {
                             disabled={!entity.is_enabled}
                         />
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-2">
                         <label>{T.translate("edit_schedule_settings.is_my_schedule")}</label><br/>
                         <Switch
                             checked={entity.is_my_schedule}
@@ -183,7 +183,7 @@ class ScheduleSettingsForm extends React.Component {
                             disabled={!entity.is_enabled}
                         />
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <label> {T.translate("edit_schedule_settings.access_levels_only")}</label><br/>
                         <Switch
                             checked={entity.only_events_with_attendee_access}
@@ -192,6 +192,17 @@ class ScheduleSettingsForm extends React.Component {
                             checkedIcon={false}
                             className="react-switch"
                             disabled={!entity.is_enabled}
+                        />
+                    </div>
+                    <div className="col-md-3">
+                        <label> {T.translate("edit_schedule_settings.hide_past_permanent")}</label><br/>
+                        <Switch
+                          checked={entity.hide_past_events_with_show_always_on_schedule}
+                          onChange={val => {this.onSwitchChange('hide_past_events_with_show_always_on_schedule', val)}}
+                          uncheckedIcon={false}
+                          checkedIcon={false}
+                          className="react-switch"
+                          disabled={!entity.is_enabled}
                         />
                     </div>
                 </div>

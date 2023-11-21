@@ -57,6 +57,7 @@ export const DEFAULT_ENTITY = {
     is_enabled: true,
     is_my_schedule: false,
     only_events_with_attendee_access: false,
+    hide_past_events_with_show_always_on_schedule: false,
     color_source: 'TRACK',
     filters: DEFAULT_FILTERS,
     pre_filters: DEFAULT_PRE_FILTERS,

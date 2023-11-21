@@ -11,7 +11,7 @@
  * limitations under the License.
  **/
 
-import React from 'react'
+import React, {useEffect} from 'react'
 import { connect } from 'react-redux';
 import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
@@ -24,35 +24,20 @@ import {
 
 import '../../styles/edit-schedule-settings-page.less'
 
-class EditScheduleSettingsPage extends React.Component {
+const EditScheduleSettingsPage = ({currentSummit, match, scheduleSettings, entity, errors, ...props}) => {
+    const scheduleSettingsId = match.params.schedule_settings_id;
+    const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
+    const breadcrumb = (entity.id) ? entity.key : T.translate("general.new");
 
-    constructor(props) {
-        const { currentSummit, match } = props;
-        const scheduleSettingsId = match.params.schedule_settings_id;
-        super(props);
-
-        if (!scheduleSettingsId) {
-            props.resetScheduleSettingsForm();
+    useEffect(() => {
+        if (scheduleSettingsId) {
+          props.getScheduleSetting(scheduleSettingsId);
         } else {
-            props.getScheduleSetting(scheduleSettingsId);
+          props.resetScheduleSettingsForm();
         }
-    }
+    }, [scheduleSettingsId]);
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        const oldId = prevProps.match.params.schedule_settings_id;
-        const newId = this.props.match.params.schedule_settings_id;
-
-        if (oldId !== newId) {
-            if (!newId) {
-                this.props.resetScheduleSettingsForm();
-            } else {
-                this.props.getScheduleSetting(newId);
-            }
-        }
-    }
-
-    createKey = () => {
-        const {scheduleSettings} = this.props;
+   const createKey = () => {
         const keys = scheduleSettings.map(ss => ss.key);
         let keyNumber = scheduleSettings.length;
 
@@ -63,31 +48,25 @@ class EditScheduleSettingsPage extends React.Component {
         return `schedule_${keyNumber}`;
     }
 
-    render(){
-        const {currentSummit, entity, errors, match, totalScheduleSettings} = this.props;
-        const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-        const breadcrumb = (entity.id) ? entity.key : T.translate("general.new");
-
-        if (!entity.id) {
-            entity.key = this.createKey();
-        }
-
-        return(
-            <div className="container">
-                <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
-                <h3>{title} {T.translate("edit_schedule_settings.schedule_settings")}</h3>
-                <hr/>
-                {currentSummit &&
-                <ScheduleSettingsForm
-                    entity={entity}
-                    summit={currentSummit}
-                    errors={errors}
-                    onSubmit={this.props.saveScheduleSettings}
-                />
-                }
-            </div>
-        )
+    if (!entity.id) {
+        entity.key = createKey();
     }
+
+    return(
+      <div className="container">
+          <Breadcrumb data={{ title: breadcrumb, pathname: match.url }} />
+          <h3>{title} {T.translate("edit_schedule_settings.schedule_settings")}</h3>
+          <hr/>
+          {currentSummit &&
+            <ScheduleSettingsForm
+              entity={entity}
+              summit={currentSummit}
+              errors={errors}
+              onSubmit={props.saveScheduleSettings}
+            />
+          }
+      </div>
+    )
 }
 
 const mapStateToProps = ({ currentSummitState, scheduleSettingsState, baseState, scheduleSettingsListState }) => ({

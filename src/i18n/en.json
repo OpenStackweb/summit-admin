@@ -2543,6 +2543,7 @@
     "color_source": "Color Source",
     "is_my_schedule": "Is my schedule?",
     "access_levels_only": "Filter events by Access Levels",
+    "hide_past_permanent": "Hide past permanent events",
     "filter_title": "Filter",
     "filter_subtitle": "Activate filters to by displayed on side panel",
     "color_title": "Color By",
