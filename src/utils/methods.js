@@ -277,8 +277,9 @@ export const formatAuditLog = (logString) => {
     const dateTimeMatch = logString.match(dateTimeRegExp);
     if (!dateTimeMatch) return logString;
     const dt = Math.floor(Date.parse(dateTimeMatch[0] + ' GMT') / 1000);
-    const localTimeDTString = epochToMomentTimeZone(dt, timeZone).format('YYYY-MM-DD HH:mm:ss');
-    return logString.replace(dateTimeRegExp, localTimeDTString);
+    const userDt = epochToMomentTimeZone(dt, timeZone);
+    if (!moment.isMoment(userDt)) return logString;
+    return logString.replace(dateTimeRegExp, userDt.format('YYYY-MM-DD HH:mm:ss'));
 }
 
 export const formatInitialJson = (template) => {
