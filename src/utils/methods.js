@@ -276,10 +276,11 @@ export const formatAuditLog = (logString) => {
     const dateTimeRegExp = /\d{4}([.\-/ ])\d{2}\1\d{2} \d{1,2}:\d{2}:\d{2}/g;
     const dateTimeMatch = logString.match(dateTimeRegExp);
     if (!dateTimeMatch) return logString;
-    const dt = Math.floor(Date.parse(dateTimeMatch[0] + ' GMT') / 1000);
-    const userDt = epochToMomentTimeZone(dt, timeZone);
+    const dt = moment.utc(dateTimeMatch[0], 'YYYY-MM-DD HH:mm:ss');
+    if(!moment.isMoment(dt)) return logString;
+    const userDt = epochToMomentTimeZone(dt.unix(), timeZone);
     if (!moment.isMoment(userDt)) return logString;
-    return logString.replace(dateTimeRegExp, userDt.format('YYYY-MM-DD HH:mm:ss'));
+    return logString.replace(dateTimeMatch[0], userDt.format('YYYY-MM-DD HH:mm:ss'));
 }
 
 export const formatInitialJson = (template) => {

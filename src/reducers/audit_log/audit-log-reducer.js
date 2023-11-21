@@ -50,14 +50,14 @@ const auditLogReducer = (state = DEFAULT_STATE, action) => {
             let { current_page, total, last_page } = payload.response;
 
             let logEntries = payload.response.data.map(e => {
-                const action = e.action.startsWith('Speaker') ? parseSpeakerAuditLog(e.action) : e.action
+                const logEntryAction = e.action.startsWith('Speaker') ? parseSpeakerAuditLog(e.action) : e.action
                 const userTimeZone = moment.tz.guess();
                 return {
                     ...e,
                     event: e.event_id,
                     user: `${e.user.first_name} ${e.user.last_name} (${e.user.id})`,
                     created:  moment(epochToMomentTimeZone(e.created, userTimeZone)).format('MMMM Do YYYY, h:mm a'),
-                    action: formatAuditLog(action, userTimeZone)
+                    action: formatAuditLog(logEntryAction)
                 };
             });
 
