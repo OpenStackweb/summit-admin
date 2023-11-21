@@ -99,7 +99,10 @@ class EmailFlowEventForm extends React.Component {
                 </div>
                 <div className="row form-group">
                     <div className="col-md-12">
-                        <label> {T.translate("edit_email_flow_event.email_template_identifier")} *</label>
+                        <label>
+                            {T.translate("edit_email_flow_event.email_template_identifier")} *
+                            {entity.email_template_identifier && <>&nbsp;<a href={`/app/emails/templates/${entity.email_template_identifier}`}>see template</a></>}
+                        </label>
                         <EmailTemplateInput
                             id="email_template_identifier"
                             value={entity.email_template_identifier}

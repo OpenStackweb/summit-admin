@@ -70,7 +70,7 @@ const EmailTemplateForm = ({ entity, match, errors, clients, preview, templateLo
 
         // check if the current entity is sync with template_id param
         const templateId = match.params.template_id;
-        if (parseInt(templateId) === entity.id || (entity.id === 0 && !templateId)) {
+        if (templateId === `${entity.id}` || templateId === entity.identifier || (entity.id === 0 && !templateId)) {
             setTemplateLoaded(true);
         }        
 

@@ -85,6 +85,7 @@ export const getEmailFlowEvent = (eventId) => async (dispatch, getState) => {
 
     const params = {
         access_token : accessToken,
+        expand: 'email_template'
     };
 
     return getRequest(

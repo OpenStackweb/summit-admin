@@ -33,7 +33,7 @@ class EmailLayout extends React.Component {
                 <Switch>
                     <Route exact strict path={`${match.url}/templates`} component={EmailTemplateListPage}/>
                     <Route strict exact path={`${match.url}/templates/new`} component={EditEmailTemplatePage}/>
-                    <Route path={`${match.url}/templates/:template_id(\\d+)`} component={EditEmailTemplatePage}/>
+                    <Route path={`${match.url}/templates/:template_id`} component={EditEmailTemplatePage}/>
                     <Route exact strict path={`${match.url}/sent`} component={SentEmailListPage}/>
                     <Redirect to={`/app/emails/templates`} />
                 </Switch>
