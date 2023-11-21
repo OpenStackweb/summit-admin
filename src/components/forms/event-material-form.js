@@ -292,7 +292,7 @@ class EventMaterialForm extends React.Component {
                             onUploadComplete={this.onMediaUploadComplete}
                             value={mediaInputValue}
                             mediaType={media_type}
-                            onRemove={entity.id ? null :  this.handleRemoveFile}
+                            onRemove={this.handleRemoveFile}
                             postUrl={`${window.API_BASE_URL}/api/public/v1/files/upload`}
                             error={hasErrors(media_type.name, errors)}
                             djsConfig={{withCredentials:true}}
