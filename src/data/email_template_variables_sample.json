@@ -210,6 +210,7 @@
     "order_id": 765,
     "order_owner_company": "order_owner_company",
     "order_owner_email": "order_owner_email",
+    "order_purchase_date": "April 05, 2024",
     "presentation_edit_link": "https://example-url.com",
     "presentation_end_date": "presentation_end_date",
     "presentation_id": 5,
