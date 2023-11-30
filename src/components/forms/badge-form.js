@@ -13,6 +13,7 @@
 
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
+import moment from 'moment-timezone';
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import { Dropdown, SimpleLinkList, Table, FreeTextSearch, DateTimePicker } from 'openstack-uicore-foundation/lib/components';
 import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/utils/methods';
@@ -32,7 +33,7 @@ class BadgeForm extends React.Component {
             printExcerptDetails: false,
             printFilters: {
                 viewTypeFilter: [],
-                printDateFilter: Array(2).fill(null),
+                printDateFilter: Array(2).fill(0),
             }
         };
 
@@ -119,12 +120,16 @@ class BadgeForm extends React.Component {
         const newDateValue = endDate ? [printDateFilter[0], value.unix()] : [value.unix(), value.unix() > printDateFilter[1] ? 0 : printDateFilter[1]];
         const newFilters = {...this.state.printFilters, printDateFilter: newDateValue};
 
-        this.setState({...this.state, printFilters: newFilters});                
+        this.setState({...this.state, printFilters: newFilters});
     }
 
     handleApplyPrintFilters(ev) {
         ev.preventDefault();
-        const {printFilters} = this.state;
+        const {printFilters, printFilters: {printDateFilter}} = this.state;
+        if(printDateFilter.every(e => e !== 0) && printDateFilter[0] > printDateFilter[1]) {
+            Swal.fire("Validation error", T.translate('edit_ticket.print_table.badge_print_date_warning'), "warning");
+            return;
+        }
         const {term, order, orderDir, page, perPage} = this.props;
         this.props.onBadgePrintQuery(term, page, perPage, order, orderDir, printFilters);
     }
@@ -165,6 +170,8 @@ class BadgeForm extends React.Component {
         const {entity, printExcerptDetails, printFilters: {printDateFilter, viewTypeFilter}} = this.state;
         const { currentSummit, selectedPrintType, canPrint, 
             badgePrints: { badgePrints, order, orderDir, totalBadgePrints, term, currentPage, lastPage, perPage } } = this.props;
+        
+        const userTimeZone = moment.tz.guess();
 
         if (!currentSummit.badge_types || !currentSummit.badge_features) return (<div/>);
 
@@ -283,22 +290,23 @@ class BadgeForm extends React.Component {
                                         <div className='col-md-7 col-md-offset-1 date-wrapper'>                                            
                                             <DateTimePicker
                                                 id="printDateFromFilter"
+                                                key={`printDateFromFilter-${printDateFilter[0]}`}
                                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                                                 inputProps={{placeholder: T.translate("edit_ticket.placeholders.print_date_from")}}
-                                                timezone={currentSummit.time_zone_id}
+                                                timezone={userTimeZone}
                                                 onChange={(ev) => this.handleChangePrintDate(ev, false)}
-                                                value={epochToMomentTimeZone(printDateFilter[0], currentSummit.time_zone_id)}
+                                                value={epochToMomentTimeZone(printDateFilter[0], userTimeZone)}
                                                 className={'badge-print-date-picker'}
                                                 renderInput={renderInput}
                                             />
                                             <DateTimePicker
                                                 id="printDateToFilter"
+                                                key={`printDateToFilter-${printDateFilter[1]}`}
                                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                                                 inputProps={{placeholder: T.translate("edit_ticket.placeholders.print_date_to")}}
-                                                timezone={currentSummit.time_zone_id}
+                                                timezone={userTimeZone}
                                                 onChange={(ev) => this.handleChangePrintDate(ev, true)}
-                                                value={epochToMomentTimeZone(printDateFilter[1], currentSummit.time_zone_id)}
-                                                validation={{ before: printDateFilter[0], after: '>=' }}
+                                                value={epochToMomentTimeZone(printDateFilter[1], userTimeZone)}
                                                 className={'badge-print-date-picker'}
                                                 renderInput={renderInput}
                                             />

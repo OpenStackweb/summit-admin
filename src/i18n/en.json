@@ -1578,7 +1578,7 @@
     "print_date": "Print Date",
     "no_prints": "No badge prints found for current search criteria.",
     "apply_filters": "Apply Filters",
-    "admin_notes": "Notes",
+    "admin_notes": "Notes",    
     "placeholders": {
       "refund_notes": "Provide Optional Notes",
       "refund_reject_notes": "Provide Optional Notes",
@@ -1594,7 +1594,8 @@
       "requestor_full_name": "Requestor Name",
       "requestor_email": "Requestor Email",
       "created": "Created",
-      "print_date": "Print Date"
+      "print_date": "Print Date",
+      "badge_print_date_warning": "Invalid date selected"
     }
   },
   "ticket_type_list": {
