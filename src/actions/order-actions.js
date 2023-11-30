@@ -382,6 +382,7 @@ export const getPurchaseOrders = (term = null, page = 1, perPage = 10, order = '
     const accessToken = await getAccessTokenSafely();
     const {currentSummit} = currentSummitState;
     const filter = [];
+    const summitTZ = currentSummit.time_zone.name;
 
     dispatch(startLoading());
 
@@ -412,7 +413,7 @@ export const getPurchaseOrders = (term = null, page = 1, perPage = 10, order = '
         createAction(RECEIVE_PURCHASE_ORDERS),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/orders`,
         authErrorHandler,
-        {page, perPage, order, orderDir, term}
+        {page, perPage, order, orderDir, summitTZ, term}
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }

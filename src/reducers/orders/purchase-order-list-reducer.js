@@ -19,7 +19,7 @@ import
 
 import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
-import {epochToMoment} from "openstack-uicore-foundation/lib/utils/methods";
+import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/utils/methods'
 
 const DEFAULT_STATE = {
     purchaseOrders          : {},
@@ -29,7 +29,8 @@ const DEFAULT_STATE = {
     currentPage             : 1,
     lastPage                : 1,
     perPage                 : 10,
-    totalPurchaseOrders     : 0
+    totalPurchaseOrders     : 0,
+    summitTZ                : '',
 };
 
 const purchaseOrderListReducer = (state = DEFAULT_STATE, action) => {
@@ -40,14 +41,16 @@ const purchaseOrderListReducer = (state = DEFAULT_STATE, action) => {
             return DEFAULT_STATE;
         }
         case REQUEST_PURCHASE_ORDERS: {
-            let {order, orderDir, term} = payload;
+            let {order, orderDir, term, summitTZ} = payload;
 
-            return {...state, order, orderDir, term }
+            return {...state, order, orderDir, term, summitTZ }
         }
         case RECEIVE_PURCHASE_ORDERS: {
             let {current_page, total, last_page} = payload.response;
+
+
             let purchaseOrders = payload.response.data.map(a => {
-                let bought_date = epochToMoment(a.created).format('MMMM Do YYYY, h:mm:ss a');
+                let bought_date = epochToMomentTimeZone(a.created, state.summitTZ).format('MMMM Do YYYY, h:mm:ss a');
 
                 return {
                     id: a.id,
