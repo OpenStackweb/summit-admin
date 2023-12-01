@@ -33,6 +33,7 @@ const RegistrationStatsPage = ({currentSummit, match, loading, ...props}) => {
   const [fromDate, setFromDate] = useState(null);
   const [toDate, setToDate] = useState(null);
   const timeOptions = [ 'Minute','Hour','Day'].map(op => ({value: op, label: op}));
+  const currency = currentSummit.default_ticket_type_currency || 'USD';
 
   useEffect(() => {
     // initial load
@@ -75,7 +76,9 @@ const RegistrationStatsPage = ({currentSummit, match, loading, ...props}) => {
   const totalVirtualAttendees = props.total_virtual_attendees + props.total_virtual_non_checked_in_attendees;
 
   const totalAttendees = totalRealAttendees + totalVirtualAttendees;
-  
+
+  const toPrice = (val) => formatCurrency(val, { locale: 'en-US', currency});
+
   const onFilterDate = (from, to) => {
     setFromDate(from);
     setToDate(to);
@@ -96,15 +99,15 @@ const RegistrationStatsPage = ({currentSummit, match, loading, ...props}) => {
         <div className="row">
           <div className="col-md-4">
             <i className="fa fa-money"/>&nbsp;{T.translate("dashboard.payment_amount_collected")}&nbsp;
-            <strong>{formatCurrency(props.total_payment_amount_collected, { locale: 'en-US'})}</strong>
+            <strong>{toPrice(props.total_payment_amount_collected)}</strong>
           </div>
           <div className="col-md-4">
             {T.translate("dashboard.refund_amount_emitted")}&nbsp;
-            <strong>{formatCurrency(props.total_refund_amount_emitted, { locale: 'en-US'})}</strong>
+            <strong>{toPrice(props.total_refund_amount_emitted)}</strong>
           </div>
           <div className="col-md-4">
             <i className="fa fa-money"/>&nbsp;{T.translate("dashboard.payment_net_amount_collected")}&nbsp;
-            <strong>{formatCurrency(parseFloat(props.total_payment_amount_collected) - parseFloat(props.total_refund_amount_emitted), { locale: 'en-US'})}</strong>
+            <strong>{toPrice(parseFloat(props.total_payment_amount_collected) - parseFloat(props.total_refund_amount_emitted))}</strong>
           </div>
         </div>
 
