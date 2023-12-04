@@ -67,7 +67,7 @@ export const getEmailTemplates = (term = null, page = 1, perPage = 10, order = '
         access_token : accessToken
     };
 
-    if(term){
+    if (term) {
         params.identifier__contains= term;
     }
 
@@ -294,8 +294,8 @@ export const getSentEmails = (term = null, page = 1, perPage = 10, order = 'id',
         is_sent: 1,
     };
 
-    if(term){
-        params.term = term;
+    if (term) {
+        params.term = term.toLowerCase();
     }
 
     // order

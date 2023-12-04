@@ -22,7 +22,7 @@ import {epochToMoment} from "openstack-uicore-foundation/lib/utils/methods";
 
 const DEFAULT_STATE = {
     emails          : [],
-    term            : null,
+    term            : '',
     order           : 'id',
     orderDir        : 1,
     currentPage     : 1,
