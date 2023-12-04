@@ -11,161 +11,145 @@
  * limitations under the License.
  **/
 
-import React from 'react'
-import { connect } from 'react-redux';
+import React, {useEffect} from 'react'
+import {connect} from 'react-redux';
 import T from 'i18n-react/dist/i18n-react';
 import Swal from "sweetalert2";
-import { Pagination } from 'react-bootstrap';
+import {Pagination} from 'react-bootstrap';
 import {FreeTextSearch, Table} from 'openstack-uicore-foundation/lib/components';
-import { getSummitById }  from '../../actions/summit-actions';
-import { getEmailTemplates, deleteEmailTemplate } from "../../actions/email-actions";
+import {getSummitById} from '../../actions/summit-actions';
+import {getEmailTemplates, deleteEmailTemplate} from "../../actions/email-actions";
 
-class EmailTemplateListPage extends React.Component {
+const EmailTemplateListPage = ({
+                                 templates,
+                                 lastPage,
+                                 currentPage,
+                                 perPage,
+                                 term,
+                                 order,
+                                 orderDir,
+                                 totalTemplates,
+                                 history,
+                                 ...props
+                               }) => {
+  useEffect(() => {
+    props.getEmailTemplates(term, currentPage, perPage, order, orderDir);
+  }, [])
 
-    constructor(props) {
-        super(props);
+  const handleEdit = (template_id) => {
+    history.push(`/app/emails/templates/${template_id}`);
+  };
 
-        this.handleEdit = this.handleEdit.bind(this);
-        this.handlePageChange = this.handlePageChange.bind(this);
-        this.handleSort = this.handleSort.bind(this);
-        this.handleSearch = this.handleSearch.bind(this);
-        this.handleNewEmailTemplate = this.handleNewEmailTemplate.bind(this);
-        this.handleDeleteEmailTemplate = this.handleDeleteEmailTemplate.bind(this);
+  const handlePageChange = (newPage) => {
+    props.getEmailTemplates(term, newPage, perPage, order, orderDir);
+  };
 
-        this.state = {
-        }
+  const handleSort = (index, key, dir, func) => {
+    props.getEmailTemplates(term, currentPage, perPage, key, dir);
+  };
+
+  const handleSearch = (newTerm) => {
+    props.getEmailTemplates(newTerm, page, perPage, order, orderDir);
+  };
+
+  const handleNewEmailTemplate = (ev) => {
+    ev.preventDefault();
+    history.push(`/app/emails/templates/new`);
+  };
+
+  const handleDeleteEmailTemplate = (templateId) => {
+    const template = templates.find(t => t.id === templateId);
+
+    Swal.fire({
+      title: T.translate("general.are_you_sure"),
+      text: T.translate("emails.delete_template_warning") + ' ' + template.identifier,
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#DD6B55",
+      confirmButtonText: T.translate("general.yes_delete")
+    }).then(function (result) {
+      if (result.value) {
+        props.deleteEmailTemplate(templateId);
+      }
+    });
+  }
+
+  const columns = [
+    {columnKey: 'id', value: T.translate("general.id"), sortable: true},
+    {columnKey: 'identifier', value: T.translate("emails.name"), styles: {wordBreak: 'break-all'}, sortable: true},
+    {columnKey: 'subject', value: T.translate("emails.subject")},
+    {columnKey: 'from_email', value: T.translate("emails.from_email")},
+  ];
+
+  const table_options = {
+    sortCol: order,
+    sortDir: orderDir,
+    actions: {
+      edit: {onClick: handleEdit},
+      delete: {onClick: handleDeleteEmailTemplate}
     }
+  }
 
-    componentDidMount() {
-        const {term, currentPage, perPage, order, orderDir} = this.props;
-        this.props.getEmailTemplates(term, currentPage, perPage, order, orderDir);
-    }
+  return (
+    <div className="container">
+      <h3> {T.translate("emails.template_list")} ({totalTemplates})</h3>
+      <div className={'row'}>
+        <div className={'col-md-6'}>
+          <FreeTextSearch
+            value={term}
+            placeholder={T.translate("emails.placeholders.search_templates")}
+            onSearch={handleSearch}
+          />
+        </div>
+        <div className="col-md-6 text-right">
+          <button className="btn btn-primary right-space" onClick={handleNewEmailTemplate}>
+            {T.translate("emails.add_template")}
+          </button>
+        </div>
+      </div>
 
-    handleEdit(template_id) {
-        const {history} = this.props;
-        history.push(`/app/emails/templates/${template_id}`);
-    }
+      {templates.length === 0 &&
+        <div>{T.translate("emails.no_templates")}</div>
+      }
 
-    handlePageChange(page) {
-        const {term, order, orderDir, perPage} = this.props;
-        this.props.getEmailTemplates(term, page, perPage, order, orderDir);
-    }
+      {templates.length > 0 &&
+        <div>
+          <Table
+            options={table_options}
+            data={templates}
+            columns={columns}
+            onSort={handleSort}
+          />
+          <Pagination
+            bsSize="medium"
+            prev
+            next
+            first
+            last
+            ellipsis
+            boundaryLinks
+            maxButtons={10}
+            items={lastPage}
+            activePage={currentPage}
+            onSelect={handlePageChange}
+          />
+        </div>
+      }
 
-    handleSort(index, key, dir, func) {
-        const {term, page, perPage} = this.props;
-        this.props.getEmailTemplates(term, page, perPage, key, dir);
-    }
-
-    handleSearch(term) {
-        const {order, orderDir, page, perPage} = this.props;
-        this.props.getEmailTemplates(term, page, perPage, order, orderDir);
-    }
-
-    handleNewEmailTemplate(ev) {
-        const {history} = this.props;
-        ev.preventDefault();
-
-        history.push(`/app/emails/templates/new`);
-    }
-
-    handleDeleteEmailTemplate(templateId) {
-        const {deleteEmailTemplate, templates} = this.props;
-        let template = templates.find(t => t.id === templateId);
-
-        Swal.fire({
-            title: T.translate("general.are_you_sure"),
-            text: T.translate("emails.delete_template_warning") + ' ' + template.identifier,
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: T.translate("general.yes_delete")
-        }).then(function(result){
-            if (result.value) {
-                deleteEmailTemplate(templateId);
-            }
-        });
-    }
-
-    render(){
-        const {templates, lastPage, currentPage, term, order, orderDir, totalTemplates} = this.props;
-
-        const columns = [
-            { columnKey: 'id', value: T.translate("general.id"), sortable: true },
-            { columnKey: 'identifier', value: T.translate("emails.name"), sortable: true },
-            { columnKey: 'subject', value: T.translate("emails.subject") },
-            { columnKey: 'from_email', value: T.translate("emails.from_email")},
-        ];
-
-        const table_options = {
-            sortCol: order,
-            sortDir: orderDir,
-            actions: {
-                edit: {onClick: this.handleEdit},
-                delete: { onClick: this.handleDeleteEmailTemplate }
-            }
-        }
-
-        return(
-            <div className="container">
-                <h3> {T.translate("emails.template_list")} ({totalTemplates})</h3>
-                <div className={'row'}>
-                    <div className={'col-md-6'}>
-                        <FreeTextSearch
-                            value={term}
-                            placeholder={T.translate("emails.placeholders.search_templates")}
-                            onSearch={this.handleSearch}
-                        />
-                    </div>
-                    <div className="col-md-6 text-right">
-                        <button className="btn btn-primary right-space" onClick={this.handleNewEmailTemplate}>
-                            {T.translate("emails.add_template")}
-                        </button>
-                    </div>
-                </div>
-
-                {templates.length === 0 &&
-                <div>{T.translate("emails.no_templates")}</div>
-                }
-
-                {templates.length > 0 &&
-                <div>
-                    <Table
-                        options={table_options}
-                        data={templates}
-                        columns={columns}
-                        onSort={this.handleSort}
-                    />
-                    <Pagination
-                        bsSize="medium"
-                        prev
-                        next
-                        first
-                        last
-                        ellipsis
-                        boundaryLinks
-                        maxButtons={10}
-                        items={lastPage}
-                        activePage={currentPage}
-                        onSelect={this.handlePageChange}
-                    />
-                </div>
-                }
-
-            </div>
-        )
-    }
+    </div>
+  )
 }
 
-const mapStateToProps = ({ directoryState, emailTemplateListState }) => ({
-    summits         : directoryState.summits,
-    ...emailTemplateListState
+const mapStateToProps = ({directoryState, emailTemplateListState}) => ({
+  summits: directoryState.summits,
+  ...emailTemplateListState
 })
 
-export default connect (
-    mapStateToProps,
-    {
-        getSummitById,
-        getEmailTemplates,
-        deleteEmailTemplate
-    }
+export default connect(
+  mapStateToProps,
+  {
+    getSummitById,
+    getEmailTemplates,
+    deleteEmailTemplate
+  }
 )(EmailTemplateListPage);
