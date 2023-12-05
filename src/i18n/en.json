@@ -25,6 +25,7 @@
     "description": "Description",
     "file": "File",
     "logo": "Logo",
+    "secondary_logo": "Secondary Logo",
     "first_name": "First Name",
     "last_name": "Last Name",
     "member": "Member",

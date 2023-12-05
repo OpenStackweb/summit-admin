@@ -241,7 +241,7 @@ export const deleteSummit = (summitId) => async (dispatch, getState) => {
 };
 
 
-export const attachLogo = (entity, file) => async (dispatch, getState) => {
+export const attachLogo = (entity, file, secondary = false) => async (dispatch, getState) => {
 
     const accessToken = await getAccessTokenSafely();
 
@@ -254,7 +254,7 @@ export const attachLogo = (entity, file) => async (dispatch, getState) => {
     const normalizedEntity = normalizeEntity(entity);
 
     if (entity.id) {
-        dispatch(uploadFile(entity, file));
+        dispatch(uploadLogo(entity, file, secondary));
     } else {
         return postRequest(
             createAction(UPDATE_SUMMIT),
@@ -265,36 +265,44 @@ export const attachLogo = (entity, file) => async (dispatch, getState) => {
             entity
         )(params)(dispatch)
             .then((payload) => {
-                    dispatch(uploadFile(payload.response, file));
+                    dispatch(uploadLogo(payload.response, file, secondary));
                 }
             );
     }
 }
 
-const uploadFile = (entity, file) => async (dispatch, getState) => {
+const uploadLogo = (entity, file, secondary) => async (dispatch, getState) => {
     const accessToken = await getAccessTokenSafely();
-
+    const url = `${window.API_BASE_URL}/api/v1/summits/${entity.id}/logo${secondary ? '/secondary' : ''}`;
     const params = {
         access_token : accessToken
     };
 
     postRequest(
         null,
-        createAction(SUMMIT_LOGO_ATTACHED),
-        `${window.API_BASE_URL}/api/v1/summits/${entity.id}/logo`,
+        createAction('DUMMY_ACTION'),
+        url,
         file,
         authErrorHandler
     )(params)(dispatch)
-        .then(() => {
+        .then(({response}) => {
+            const payload = {};
+            if (secondary) payload.secondary_logo = response.url;
+            else payload.logo = response.url;
+
+            dispatch(createAction(SUMMIT_LOGO_ATTACHED)(payload));
             dispatch(stopLoading());
         });
 };
 
-export const deleteLogo = () => async (dispatch, getState) => {
-
+export const deleteLogo = (secondary) => async (dispatch, getState) => {
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
+    const url = `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/logo${secondary ? '/secondary' : ''}`;
+    const payload = {};
+    if (secondary) payload.secondary_logo = null;
+    else payload.logo = null;
 
     const params = {
         access_token : accessToken
@@ -302,8 +310,8 @@ export const deleteLogo = () => async (dispatch, getState) => {
 
     return deleteRequest(
         null,
-        createAction(SUMMIT_LOGO_DELETED),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/logo`,
+        createAction(SUMMIT_LOGO_DELETED)(payload),
+        url,
         null,
         authErrorHandler
     )(params)(dispatch).then(() => {

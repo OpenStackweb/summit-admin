@@ -59,6 +59,7 @@ export const DEFAULT_ENTITY = {
     link: '',
     locations: [],
     logo: null,
+    secondary_logo: null,
     page_url: '',
     presentation_voters_count: 0,
     presentation_votes_count: 0,
@@ -209,12 +210,10 @@ const currentSummitReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  currentSummit: {...payload}, errors: {} };
         }
         case SUMMIT_LOGO_ATTACHED: {
-            let logo = {...payload.response};
-            return {...state, currentSummit: {...state.currentSummit, logo: logo.url} };
+            return {...state, currentSummit: {...state.currentSummit, ...payload} };
         }
         case SUMMIT_LOGO_DELETED: {
-            let {summitId} = payload;
-            return {...state, currentSummit: {...state.currentSummit, logo: null} };
+            return {...state, currentSummit: {...state.currentSummit, ...payload} };
         }
         case REGISTRATION_KEY_GENERATED: {
             const {qr_codes_enc_key} = payload.response;

@@ -55,8 +55,6 @@ class SummitForm extends React.Component {
         this.handleRegFeedMetadataAdd = this.handleRegFeedMetadataAdd.bind(this);
         this.handleAttributeTypeEdit = this.handleAttributeTypeEdit.bind(this);
         this.handleNewAttributeType = this.handleNewAttributeType.bind(this);
-        this.handleUploadFile = this.handleUploadFile.bind(this);
-        this.handleRemoveFile = this.handleRemoveFile.bind(this);
         this.getHelpUsersOptionLabel = this.getHelpUsersOptionLabel.bind(this);
     }
 
@@ -187,27 +185,31 @@ class SummitForm extends React.Component {
             entity[id] = value;
         }
         this.setState({entity: entity, errors: errors, regLiteMarketingSettings : regLiteMarketingSettings, printAppMarketingSettings : printAppMarketingSettings });
-    }
+    };
 
-    handleUploadFile(file) {
+    handleUploadLogo = (file, secondary = false) => {
         let formData = new FormData();
         formData.append('file', file);
-        this.props.onLogoAttach(this.state.entity, formData)
+        this.props.onLogoAttach(this.state.entity, formData, secondary)
     }
 
-    handleRemoveFile(ev) {
+    handleRemoveLogo = (ev, secondary = false) => {
         let entity = {...this.state.entity};
 
-        entity.logo = '';
+        if (secondary) {
+            entity.secondary_logo = '';
+        } else {
+            entity.logo = '';
+        }
+
         this.setState({entity:entity});
-        this.props.onLogoDelete();
+        this.props.onLogoDelete(secondary);
     }
 
     validateForm = (entity) => {
         if (!entity.time_zone_label) {
             entity.time_zone_label = entity.time_zone_id;
         }
-
         return true;
     }
 
@@ -504,15 +506,26 @@ class SummitForm extends React.Component {
                     </div>
                 </div>
                 <div className="row form-group">
-                    <div className="col-md-12">
+                    <div className="col-md-6">
                         <label> {T.translate("general.logo")} </label>
                         <UploadInput
                             value={entity.logo}
-                            handleUpload={this.handleUploadFile}
-                            handleRemove={this.handleRemoveFile}
+                            handleUpload={file => this.handleUploadLogo(file)}
+                            handleRemove={ev => this.handleRemoveLogo(ev)}
                             className="dropzone col-md-6"
                             multiple={false}
                             accept="image/*"
+                        />
+                    </div>
+                    <div className="col-md-6">
+                        <label> {T.translate("general.secondary_logo")} </label>
+                        <UploadInput
+                          value={entity.secondary_logo}
+                          handleUpload={file => this.handleUploadLogo(file, true)}
+                          handleRemove={ev => this.handleRemoveLogo(ev, true)}
+                          className="dropzone col-md-6"
+                          multiple={false}
+                          accept="image/*"
                         />
                     </div>
                 </div>
