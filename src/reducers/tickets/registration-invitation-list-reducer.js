@@ -45,7 +45,7 @@ const DEFAULT_STATE = {
     selectedAll: false,
     allowedTicketTypesIds: [],
     tagFilter: [],
-    isAccepted: null,
+    status: [],
     isSent: null,
 };
 
@@ -91,7 +91,8 @@ const RegistrationInvitationListReducer = (state = DEFAULT_STATE, action) => {
                 const allowedTicketTypes = i.allowed_ticket_types?.length > 0 ? 
                     i.allowed_ticket_types.map(t => t.name).join(', ') : 'N/A';
 
-                return {...i, 
+                return {
+                    ...i,
                     is_accepted: i.is_accepted ? "Yes" : "No", 
                     is_sent: i.is_sent ? "Yes" : "No", 
                     allowed_ticket_types: allowedTicketTypes.slice(0, MaxTextLengthForTicketTypesOnTable),

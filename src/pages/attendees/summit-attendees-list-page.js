@@ -21,7 +21,7 @@ import {
   Input,
   FreeTextSearch,
   SelectableTable,
-  DateTimePicker
+  DateTimePicker, TagInput
 } from 'openstack-uicore-foundation/lib/components';
 import {epochToMomentTimeZone} from 'openstack-uicore-foundation/lib/utils/methods'
 import ScheduleModal from "../../components/schedule-modal/index";
@@ -48,6 +48,7 @@ const fieldNames = [
   {columnKey: 'member_id', value: 'member_id', sortable: true},
   {columnKey: 'tickets_count', value: 'tickets_count', sortable: true},
   {columnKey: 'company', value: 'company', sortable: true},
+  {columnKey: 'tags', value: 'tags'},
   {columnKey: 'summit_hall_checked_in_date', value: 'summit_hall_checked_in_date', sortable: true},
 ]
 
@@ -61,6 +62,7 @@ const FILTERS_DEFAULT_STATE = {
   badgeTypeFilter: [],
   featuresFilter: [],
   checkinDateFilter: Array(2).fill(null),
+  tags: [],
   orAndFilter: ALL_FILTER,
 };
 
@@ -330,6 +332,22 @@ class SummitAttendeeListPage extends React.Component {
     });
   }
 
+  handleTagsChange = (ev) => {
+    const {value} = ev.target;
+
+    this.setState({
+      ...this.state, attendeeFilters: {
+        ...this.state.attendeeFilters,
+        tags: value
+      }
+    });
+  }
+
+  handleNewTag = (newTag) => {
+    this.setState({...this.state, attendeeFilters: {...this.state.attendeeFilters, tags: [...this.state.attendeeFilters.tags, {tag: newTag}]}})
+
+  }
+
   handleExtraFilterChange(ev) {
     let {value, type, id} = ev.target;
     if (type === 'operatorinput') {
@@ -374,6 +392,7 @@ class SummitAttendeeListPage extends React.Component {
       {label: 'Badge Type', value: 'badgeTypeFilter'},
       {label: 'Badge Feature', value: 'featuresFilter'},
       {label: 'Check In Date', value: 'checkinDateFilter'},
+      {label: 'Tags', value: 'tags'},
     ]
 
     let columns = [
@@ -388,6 +407,7 @@ class SummitAttendeeListPage extends React.Component {
       {value: 'tickets_count', label: T.translate("attendee_list.tickets_count")},
       {value: 'company', label: T.translate("attendee_list.company")},
       {value: 'summit_hall_checked_in_date', label: T.translate("attendee_list.summit_hall_checked_in_date")},
+      {value: 'tags', label: T.translate("attendee_list.tags")},
     ];
 
     const table_options = {
@@ -668,6 +688,18 @@ class SummitAttendeeListPage extends React.Component {
                 />
               </div>
             </>
+          }
+          {enabledFilters.includes('tags') &&
+            <div className="col-md-6" style={{minHeight: "61px", paddingTop: "8px"}}>
+              <TagInput
+                id="tags"
+                clearable
+                isMulti
+                value={attendeeFilters.tags}
+                onChange={this.handleTagsChange}
+                placeholder={T.translate("attendee_list.placeholders.tags")}
+              />
+            </div>
           }
         </div>
         {attendees.length === 0 &&

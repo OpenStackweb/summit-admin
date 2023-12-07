@@ -14,7 +14,7 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { MemberInput, Input, Panel } from 'openstack-uicore-foundation/lib/components'
+import {MemberInput, Input, Panel, TagInput} from 'openstack-uicore-foundation/lib/components'
 import ExtraQuestionsForm from 'openstack-uicore-foundation/lib/components/extra-questions';
 import TicketComponent from './ticket-component'
 import OrderComponent from './order-component'
@@ -68,6 +68,10 @@ class AttendeeForm extends React.Component {
         ev.preventDefault();
 
         this.setState({showSection: newShowSection});
+    }
+
+    handleNewTag = (newTag) => {
+        this.setState({...this.state, entity: {...this.state.entity, tags: [...this.state.entity.tags, {tag: newTag}]}})
     }
 
     handleChange(ev) {
@@ -251,6 +255,17 @@ class AttendeeForm extends React.Component {
                             onChange={this.handleChange}
                             className="form-control"
                             error={this.hasErrors('company')}
+                        />
+                    </div>
+                    <div className="col-md-8">
+                        <label> {T.translate("edit_attendee.tags")}</label>
+                        <TagInput
+                          id="tags"
+                          clearable
+                          isMulti
+                          value={entity.tags}
+                          onChange={this.handleChange}
+                          placeholder={T.translate("edit_attendee.placeholders.tags")}
                         />
                     </div>
                 </div>

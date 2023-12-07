@@ -54,7 +54,7 @@ export const getInvitations = ( term = null, page = 1, perPage = 10, order = 'id
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
-    const {tagFilter, isAccepted, isSent, allowedTicketTypesIds} = filters;
+    const {tagFilter, status, isSent, allowedTicketTypesIds} = filters;
 
     dispatch(startLoading());
 
@@ -82,7 +82,7 @@ export const getInvitations = ( term = null, page = 1, perPage = 10, order = 'id
         createAction(RECEIVE_INVITATIONS),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/registration-invitations`,
         authErrorHandler,
-        {page, perPage, order, orderDir, term, isSent, isAccepted, allowedTicketTypesIds, tagFilter}
+        {page, perPage, order, orderDir, term, isSent, status, allowedTicketTypesIds, tagFilter}
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
@@ -367,23 +367,20 @@ const parseFilters = (filters, term = null) => {
 
     const filter = [];
 
-    if(filters.hasOwnProperty('isAccepted') && filters.isAccepted){
-        filter.push(`is_accepted==${filters.isAccepted}`);
+    if(filters.status?.length > 0){
+        filter.push(`status==${filters.status.join('||')}`);
     }
 
-    if(filters.hasOwnProperty('isSent') && filters.isSent){
+    if(filters.isSent){
         filter.push(`is_sent==${filters.isSent}`);
     }
 
-    if(filters.allowedTicketTypesIds && filters.allowedTicketTypesIds.length > 0){
+    if(filters.allowedTicketTypesIds?.length > 0){
         filter.push('ticket_types_id==' + filters.allowedTicketTypesIds.join('||'));
     }
 
-    if(filters.tagFilter && filters.tagFilter.length > 0) {
-        filter.push('tags_id=='+filters.tagFilter.map(e => e.id).reduce(
-            (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt,
-            ''
-          ));
+    if(filters.tagFilter?.length > 0) {
+        filter.push('tags_id=='+filters.tagFilter.map(e => e.id).join('||'));
     }
 
     if(term){

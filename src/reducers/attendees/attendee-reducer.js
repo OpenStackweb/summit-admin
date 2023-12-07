@@ -45,7 +45,8 @@ export const DEFAULT_ENTITY = {
     tickets: [],
     allowed_extra_questions: [],
     extra_question_answers: [],
-    orders: []
+    orders: [],
+    tags: []
 };
 
 const DEFAULT_STATE = {

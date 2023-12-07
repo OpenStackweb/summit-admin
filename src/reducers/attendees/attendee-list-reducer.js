@@ -106,6 +106,7 @@ const attendeeListReducer = (state = DEFAULT_STATE, action) => {
                     email: email,
                     company: a.company ? a.company : 'TBD',
                     status: a.status,
+                    tags: a.tags.map(t => t.tag).join(', '),
                     checked: selectedAll ? !excludedIds.includes(a.id) : selectedIds.includes(a.id),
                     tickets_count: a.tickets.length.toString(),
                     summit_hall_checked_in_date: a.summit_hall_checked_in_date ? moment(a.summit_hall_checked_in_date * 1000).tz(state.summitTZ).format("MMMM Do YYYY, h:mm a") : 'TBD',

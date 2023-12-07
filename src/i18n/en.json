@@ -66,7 +66,8 @@
     "remove_warning": "Are you sure you want to delete this?",
     "placeholders": {
       "search_speakers": "Search Speakers by Name, Email, Speaker Id or Member Id",
-      "select_acceptance_criteria": "Select acceptance criteria"
+      "select_acceptance_criteria": "Select acceptance criteria",
+      "select_invitation_status": "Select status"
     }
   },
   "landing": {
@@ -746,6 +747,7 @@
     "schedule_count": "Scheduled",
     "company": "Company",
     "status": "Status",
+    "tags": "Tags",
     "delete_attendee_warning": "Are you sure you want to delete attendee",
     "send_emails": "Send",
     "resend_done": "Emails sent successfully.",
@@ -764,7 +766,8 @@
       "badge_type": "Filter by Badge Type",
       "badge_feature": "Filter by Badge Feature",
       "checkin_date_from": "Filter Check In Date from",
-      "checkin_date_to": "Filter Check In Date to"
+      "checkin_date_to": "Filter Check In Date to",
+      "tags": "Filter by tag"
     }
   },
   "edit_attendee": {
@@ -776,6 +779,7 @@
     "email": "Email",
     "affiliation_title": "Title",
     "company": "Company",
+    "tags": "Tags",
     "affiliation_current": "Current",
     "shared_contact_info": "Share Contact Info?",
     "checked_in": "Checked In?",
@@ -807,6 +811,7 @@
     "disclaimer_accepted": "Disclaimer Accepted?",
     "inactive_ticket": "Inactive Ticket",
     "placeholders": {
+      "tags": "Type to search and select tags",
       "start_date": "Start Date",
       "end_date": "End Date",
       "select_ticket_type": "Select Ticket Type"
@@ -2281,6 +2286,7 @@
     "last_name": "Last Name",
     "completed": "Completed",
     "is_accepted": "Is Accepted?",
+    "status": "Status",
     "sent": "Is Sent?",
     "allowed_ticket_types": "Allowed Ticket Types",
     "invitation_list": "Invitations",
@@ -2420,6 +2426,7 @@
     "allowed_ticket_types_info": "Allowed Ticket Types that Attendee is allowed to buy",
     "tags": "Tags",
     "is_accepted": "Is Accepted?",
+    "status": "Status",
     "placeholders": {
       "tags": "Select tags"
     }

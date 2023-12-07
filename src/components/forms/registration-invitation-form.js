@@ -15,6 +15,7 @@ import T from 'i18n-react/dist/i18n-react'
 import {TicketTypesInput, Input, TagInput} from 'openstack-uicore-foundation/lib/components';
 import {hasErrors, isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 import AcceptanceCriteriaDropdown from "../inputs/acceptance-criteria-dropdown";
+import InvitationStatusDropdown from "../inputs/invitation-status-dropdown";
 
 class RegistrationInvitationForm extends React.Component {
     constructor(props) {
@@ -84,7 +85,7 @@ class RegistrationInvitationForm extends React.Component {
             <form className="registration-invitation-form">
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
-                    <div className="col-md-6">
+                    <div className="col-md-4">
                         <label> {T.translate("edit_registration_invitation.first_name")}</label>
                         &nbsp;<i className="fa fa-info-circle" aria-hidden="true" title={T.translate("edit_registration_invitation.first_name_info")}/>
                         <Input
@@ -95,7 +96,7 @@ class RegistrationInvitationForm extends React.Component {
                             error={hasErrors('first_name', errors)}
                         />
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-4">
                         <label> {T.translate("edit_registration_invitation.last_name")}</label>
                         &nbsp;<i className="fa fa-info-circle" aria-hidden="true" title={T.translate("edit_registration_invitation.last_name_info")}/>
                         <Input
@@ -106,26 +107,35 @@ class RegistrationInvitationForm extends React.Component {
                             value={entity.last_name}
                         />
                     </div>
-                </div>
-                <div className="row form-group">
-                    <div className="col-md-6">
+                    <div className="col-md-4">
                         <label> {T.translate("edit_registration_invitation.email")}</label>
                         &nbsp;<i className="fa fa-info-circle" aria-hidden="true" title={T.translate("edit_registration_invitation.email_info")}/>
                         <Input
-                            id="email"
-                            className="form-control"
-                            error={hasErrors('email', errors)}
-                            onChange={this.handleChange}
-                            value={entity.email}
+                          id="email"
+                          className="form-control"
+                          error={hasErrors('email', errors)}
+                          onChange={this.handleChange}
+                          value={entity.email}
                         />
                     </div>
-                    <div className="col-md-6">
+                </div>
+                <div className="row form-group">
+                    <div className="col-md-4">
                         <label> {T.translate("edit_registration_invitation.acceptance_criteria")}</label>
                         <AcceptanceCriteriaDropdown
                             id="acceptance_criteria"
                             value={entity.acceptance_criteria}
                             onChange={this.handleChange}
                             error={hasErrors('acceptance_criteria', errors)}
+                        />
+                    </div>
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_registration_invitation.status")}</label>
+                        <InvitationStatusDropdown
+                          id="status"
+                          value={entity.status}
+                          onChange={this.handleChange}
+                          error={hasErrors('status', errors)}
                         />
                     </div>
                 </div>
@@ -162,17 +172,6 @@ class RegistrationInvitationForm extends React.Component {
                         />
                     </div>
                 </div>
-                <div className="row form-group">
-                    <div className="col-md-6">
-                        <div className="form-check abc-checkbox">
-                            <input type="checkbox" id="is_accepted" checked={entity.is_accepted}
-                                className="form-check-input"
-                                onChange={this.handleChange}
-                            />
-                            <label className="form-check-label" htmlFor="is_accepted"> {T.translate("edit_registration_invitation.is_accepted")}</label>
-                        </div>
-                    </div>
-                </div>                
                 <hr />
                 <div className="row">
                     <div className="col-md-12 submit-buttons">

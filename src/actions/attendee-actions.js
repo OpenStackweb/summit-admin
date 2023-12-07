@@ -74,60 +74,52 @@ export const setSelectedAll = (value) => (dispatch) => {
 const parseFilters = (filters, term = null) => {
     const filter = [];
 
-    if(filters.hasOwnProperty('statusFilter') && filters.statusFilter){
+    if (filters.tags?.length > 0){
+        filter.push(`tags_id==${filters.tags.map(t => t.id).join('||')}`)
+    }
+
+    if(filters.statusFilter){
         filter.push(`status==${filters.statusFilter}`)
     }
 
-    if(filters.hasOwnProperty('memberFilter') && filters.memberFilter){
+    if(filters.memberFilter){
         if(filters.memberFilter === 'HAS_MEMBER')
             filter.push(`has_member==true`);
         if(filters.memberFilter === 'HAS_NO_MEMBER')
             filter.push(`has_member==false`)
     }
 
-    if(filters.hasOwnProperty('ticketsFilter') && filters.ticketsFilter){
+    if(filters.ticketsFilter){
         if(filters.ticketsFilter === 'HAS_TICKETS')
             filter.push(`has_tickets==true`);
         if(filters.ticketsFilter === 'HAS_NO_TICKETS')
             filter.push(`has_tickets==false`)
     }
 
-    if(filters.hasOwnProperty('virtualCheckInFilter') && filters.virtualCheckInFilter){
+    if(filters.virtualCheckInFilter){
         if(filters.virtualCheckInFilter === 'HAS_VIRTUAL_CHECKIN')
             filter.push(`has_virtual_checkin==true`);
         if(filters.virtualCheckInFilter === 'HAS_NO_VIRTUAL_CHECKIN')
             filter.push(`has_virtual_checkin==false`)
     }
 
-    if(filters.hasOwnProperty('checkedInFilter') && filters.checkedInFilter){
+    if(filters.checkedInFilter){
         if(filters.checkedInFilter === 'CHECKED_IN')
             filter.push(`has_checkin==true`);
         if(filters.checkedInFilter === 'NO_CHECKED_IN')
             filter.push(`has_checkin==false`)
     }
 
-    if(filters.hasOwnProperty('ticketTypeFilter') && Array.isArray(filters.ticketTypeFilter)
-      && filters.ticketTypeFilter.length > 0){
-        filter.push('ticket_type_id=='+filters.ticketTypeFilter.reduce(
-          (accumulator, tt) => accumulator +(accumulator !== '' ? '||':'') + tt,
-          ''
-        ));
+    if(Array.isArray(filters.ticketTypeFilter) && filters.ticketTypeFilter.length > 0){
+        filter.push('ticket_type_id=='+filters.ticketTypeFilter.join('||'));
     }
 
-    if(filters.hasOwnProperty('featuresFilter') && Array.isArray(filters.featuresFilter)
-      && filters.featuresFilter.length > 0){
-        filter.push('features_id=='+filters.featuresFilter.reduce(
-          (accumulator, f) => accumulator +(accumulator !== '' ? '||':'') +`${f}`,
-          ''
-        ));
+    if(Array.isArray(filters.featuresFilter) && filters.featuresFilter.length > 0){
+        filter.push('features_id=='+filters.featuresFilter.join('||'));
     }
 
-    if(filters.hasOwnProperty('badgeTypeFilter') && Array.isArray(filters.badgeTypeFilter)
-      && filters.badgeTypeFilter.length > 0){
-        filter.push('badge_type_id=='+filters.badgeTypeFilter.reduce(
-          (accumulator, bt) => accumulator +(accumulator !== '' ? '||':'') +`${bt}`,
-          ''
-        ));
+    if(Array.isArray(filters.badgeTypeFilter) && filters.badgeTypeFilter.length > 0){
+        filter.push('badge_type_id=='+filters.badgeTypeFilter.join('||'));
     }
 
     if (filters.checkinDateFilter && filters.checkinDateFilter.some(e => e !== null)) {
@@ -180,7 +172,7 @@ export const getAttendees = ( term = null,
     dispatch(startLoading());
 
     const params = {
-        expand       : '',
+        expand       : 'tags',
         page         : page,
         per_page     : perPage,
         access_token : accessToken,
@@ -245,7 +237,7 @@ export const getAttendee = (attendeeId) => async (dispatch, getState) => {
     dispatch(startLoading());
 
     const params = {
-        expand       : 'member, speaker, tickets, rsvp, schedule_summit_events, all_affiliations, extra_questions, tickets.badge, tickets.badge.type, tickets.promo_code',
+        expand       : 'member, speaker, tickets, rsvp, schedule_summit_events, all_affiliations, extra_questions, tickets.badge, tickets.badge.type, tickets.promo_code, tags',
         access_token : accessToken,
     };
 
@@ -360,7 +352,7 @@ export const saveAttendee = (entity) => async (dispatch, getState) => {
 
     const params = {
         access_token:accessToken,
-        expand: 'member, speaker, tickets, rsvp, schedule_summit_events, all_affiliations, extra_questions, tickets.badge, tickets.badge.type, tickets.promo_code',
+        expand: 'member, speaker, tickets, rsvp, schedule_summit_events, all_affiliations, extra_questions, tickets.badge, tickets.badge.type, tickets.promo_code, tags',
     };
 
     if (entity.id) {
@@ -559,9 +551,11 @@ const normalizeEntity = (entity) => {
     delete normalizedEntity['last_edited'];
     delete normalizedEntity['allowed_extra_questions'];
 
-    if(!normalizedEntity.company_id){
+    if (!normalizedEntity.company_id) {
         delete (normalizedEntity.company_id);
     }
+
+    normalizedEntity.tags = entity.tags.map(t => t.tag);
 
     return normalizedEntity;
 };
