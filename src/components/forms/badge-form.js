@@ -119,7 +119,6 @@ class BadgeForm extends React.Component {
 
         const newDateValue = endDate ? [printDateFilter[0], value.unix()] : [value.unix(), value.unix() > printDateFilter[1] ? 0 : printDateFilter[1]];
         const newFilters = {...this.state.printFilters, printDateFilter: newDateValue};
-
         this.setState({...this.state, printFilters: newFilters});
     }
 
@@ -290,7 +289,6 @@ class BadgeForm extends React.Component {
                                         <div className='col-md-7 col-md-offset-1 date-wrapper'>                                            
                                             <DateTimePicker
                                                 id="printDateFromFilter"
-                                                key={`printDateFromFilter-${printDateFilter[0]}`}
                                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                                                 inputProps={{placeholder: T.translate("edit_ticket.placeholders.print_date_from")}}
                                                 timezone={userTimeZone}
@@ -301,7 +299,6 @@ class BadgeForm extends React.Component {
                                             />
                                             <DateTimePicker
                                                 id="printDateToFilter"
-                                                key={`printDateToFilter-${printDateFilter[1]}`}
                                                 format={{date:"YYYY-MM-DD", time: "HH:mm"}}
                                                 inputProps={{placeholder: T.translate("edit_ticket.placeholders.print_date_to")}}
                                                 timezone={userTimeZone}
