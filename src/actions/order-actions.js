@@ -405,7 +405,10 @@ export const getPurchaseOrders = (term = null, page = 1, perPage = 10, order = '
     // order
     if (order != null && orderDir != null) {
         const orderDirSign = (orderDir === 1) ? '+' : '-';
-        params['order'] = `${orderDirSign}${order}`;
+        let tempOrder = order;
+        // order translation
+        if(tempOrder === 'bought_date') tempOrder = 'created';
+        params['order'] = `${orderDirSign}${tempOrder}`;
     }
 
     return getRequest(

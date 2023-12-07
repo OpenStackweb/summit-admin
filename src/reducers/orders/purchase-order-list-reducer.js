@@ -24,7 +24,7 @@ import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/utils/met
 const DEFAULT_STATE = {
     purchaseOrders          : {},
     term                    : null,
-    order                   : 'owner_name',
+    order                   : 'created',
     orderDir                : 1,
     currentPage             : 1,
     lastPage                : 1,

@@ -81,15 +81,15 @@ class PurchaseOrderListPage extends React.Component {
         const {currentSummit, purchaseOrders, lastPage, currentPage, term, order, orderDir, totalPurchaseOrders} = this.props;
 
         const columns = [
-            { columnKey: 'number', value: T.translate("purchase_order_list.number")},
-            { columnKey: 'owner_id', value: T.translate("purchase_order_list.owner_id")},
+            { columnKey: 'number', value: T.translate("purchase_order_list.number"), sortable: true},
+            { columnKey: 'owner_id', value: T.translate("purchase_order_list.owner_id") },
             { columnKey: 'owner_name', value: T.translate("general.name"), sortable: true },
-            { columnKey: 'owner_email', value: T.translate("general.email") },
-            { columnKey: 'company', value: T.translate("purchase_order_list.company") },
-            { columnKey: 'bought_date', value: T.translate("purchase_order_list.bought_date") },
+            { columnKey: 'owner_email', value: T.translate("general.email") , sortable: true},
+            { columnKey: 'company', value: T.translate("purchase_order_list.company")},
+            { columnKey: 'bought_date', value: T.translate("purchase_order_list.bought_date"), sortable: true },
             { columnKey: 'amount', value: T.translate("purchase_order_list.price") },
             { columnKey: 'payment_method', value: T.translate("purchase_order_list.payment_method") },
-            { columnKey: 'status', value: T.translate("purchase_order_list.status") },
+            { columnKey: 'status', value: T.translate("purchase_order_list.status")},
         ];
 
         const table_options = {
