@@ -49,7 +49,7 @@ const EmailTemplateListPage = ({
   };
 
   const handleSearch = (newTerm) => {
-    props.getEmailTemplates(newTerm, page, perPage, order, orderDir);
+    props.getEmailTemplates(newTerm, currentPage, perPage, order, orderDir);
   };
 
   const handleNewEmailTemplate = (ev) => {
