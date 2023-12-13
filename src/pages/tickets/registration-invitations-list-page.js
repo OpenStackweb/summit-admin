@@ -568,6 +568,7 @@ class RegistrationInvitationsListPage extends React.Component {
                 <b>first_name</b>: invitee First Name<br/>
                 <b>last_name</b>: invitee Last Name<br/>
                 <b>allowed_ticket_types (optional) </b>: Pipe Separated list of ticket types IDs<br/>
+                <b>tags (optional) </b>: Pipe Separated list of tags<br/>
               </div>
               <div className="col-md-12 acceptance-criteria-wrapper">
                 <AcceptanceCriteriaDropdown
