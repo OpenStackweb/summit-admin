@@ -135,7 +135,7 @@
     "email_templates": "Templates",
     "sent_email": "Sent Emails",
     "summitdocs": "Event Docs",
-    "email_flow_events": "Email Activities",
+    "email_flow_events": "Email Events",
     "admin_access": "Admin Access Groups",
     "registration_invitation_list": "Registration Invitations",
     "registration_companies_list": "Registration Companies",
@@ -2238,8 +2238,8 @@
     }
   },
   "email_flow_event_list": {
-    "email_flow_events": "Email Activities",
-    "email_flow_event_list": "Email Activities",
+    "email_flow_events": "Email Events",
+    "email_flow_event_list": "Email Events",
     "event_type_name": "Activity",
     "flow_name": "Flow",
     "email_template_identifier": "Email Template",
