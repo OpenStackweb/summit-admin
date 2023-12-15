@@ -479,8 +479,20 @@ class SummitForm extends React.Component {
                             onChange={this.handleChange}
                         />
                     </div>
-                    { entity.id > 0 &&
-                        <div className="col-md-6">
+                    <div className="col-md-6">
+                        <label> {T.translate("edit_summit.speakers_support_email")}</label>
+                        <Input
+                            className="form-control"
+                            error={this.hasErrors('speakers_support_email')}
+                            id="speakers_support_email"
+                            value={entity.speakers_support_email}
+                            onChange={this.handleChange}
+                        />
+                    </div>
+                </div>
+                { entity.id > 0 &&
+                <div className="row form-group">
+                    <div className="col-md-12">
                             <label> {T.translate("edit_summit.help_users")}  <i title={T.translate("edit_summit.help_users_info")} className="fa fa-info-circle"/></label>
                             <MemberInput
                                 id="help_users"
@@ -491,8 +503,8 @@ class SummitForm extends React.Component {
                                 multi={true}
                             />
                         </div>
-                    }
                 </div>
+                }
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("edit_summit.registration_disclaimer_content")} </label>
@@ -648,7 +660,7 @@ class SummitForm extends React.Component {
 
                 <Panel show={showSection === 'reg-email-settings'} title={T.translate("edit_summit.reg_email_settings")}
                        handleClick={this.toggleSection.bind(this, 'reg-email-settings')}>
-                    <div className="row form-group">                        
+                    <div className="row form-group">
                         <div className="col-md-6">
                             <label> {T.translate("edit_summit.reassign_ticket_till_date")} </label>
                             <DateTimePicker
@@ -716,7 +728,7 @@ class SummitForm extends React.Component {
                                     {T.translate("edit_summit.allow_update_attendee_extra_questions")}
                                 </label>
                             </div>
-                        </div>                                            
+                        </div>
                     </div>
                     <div className="row form-group">
                         <div className="col-md-6 checkboxes-div">
@@ -754,7 +766,7 @@ class SummitForm extends React.Component {
                             />
                         </div>
                         <div className="col-md-6">
-                            <label> 
+                            <label>
                                 {T.translate("edit_summit.speaker_confirmation_default_page_url")} &nbsp;
                                 <i className="fa fa-info-circle" aria-hidden="true"
                                     title={T.translate("edit_summit.speaker_confirmation_default_page_url_info")} />
@@ -894,7 +906,7 @@ class SummitForm extends React.Component {
                                 id="REG_LITE_ORDER_COMPLETE_STEP_1ST_PARAGRAPH"
                                 value={regLiteMarketingSettings?.REG_LITE_ORDER_COMPLETE_STEP_1ST_PARAGRAPH?.value}
                                 onChange={this.handleChange}
-                            />                            
+                            />
                         </div>
                         <div className="col-md-6">
                             <label>
@@ -927,7 +939,7 @@ class SummitForm extends React.Component {
                                 id="REG_LITE_ORDER_COMPLETE_BTN_LABEL"
                                 value={regLiteMarketingSettings?.REG_LITE_ORDER_COMPLETE_BTN_LABEL?.value}
                                 onChange={this.handleChange}
-                            />                            
+                            />
                         </div>
                     </div>
                     <div className="row form-group">
@@ -941,9 +953,9 @@ class SummitForm extends React.Component {
                                 id="REG_LITE_NO_ALLOWED_TICKETS_MESSAGE"
                                 value={regLiteMarketingSettings?.REG_LITE_NO_ALLOWED_TICKETS_MESSAGE?.value}
                                 onChange={this.handleChange}
-                            />                            
-                        </div>                        
-                    </div>                
+                            />
+                        </div>
+                    </div>
                     <div className="row form-group">
                         <div className="col-md-12">
                             <label>{T.translate("edit_summit.check_in_settings")}</label><hr/>
@@ -1221,13 +1233,13 @@ class SummitForm extends React.Component {
                         <input type="button" onClick={this.handleRegFeedMetadataAdd}
                             className="btn btn-primary pull-right" value={T.translate("edit_summit.add_registration_feed_metadata")}/>
 
-                        {regFeedMetadataListSettings?.regFeedMetadata?.length > 0 ? 
+                        {regFeedMetadataListSettings?.regFeedMetadata?.length > 0 ?
                             <>
                                 <Table
                                     options={registration_feed_metadata_table_options}
                                     data={regFeedMetadataListSettings.regFeedMetadata}
                                     columns={registration_feed_metadata_table_columns}
-                                /> 
+                                />
                                 <Pagination
                                     bsSize="medium"
                                     prev
@@ -1240,7 +1252,7 @@ class SummitForm extends React.Component {
                                     items={regFeedMetadataListSettings.lastPage}
                                     activePage={regFeedMetadataListSettings.currentPage}
                                     onSelect={this.handleFeedbackPageChange}
-                                />                        
+                                />
                             </>
                             :
                             <div className="no-items">{T.translate("edit_summit.no_reg_feed_metadata")}</div>
