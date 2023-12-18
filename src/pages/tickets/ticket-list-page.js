@@ -725,6 +725,7 @@ class TicketListPage extends React.Component {
                                 <b>{T.translate("ticket_list.import_tickets_attendee_first_name")}</b>{T.translate("ticket_list.import_tickets_attendee_first_name_text")}<br />
                                 <b>{T.translate("ticket_list.import_tickets_attendee_last_name")}</b>{T.translate("ticket_list.import_tickets_attendee_last_name_text")}<br />
                                 <b>{T.translate("ticket_list.import_tickets_attendee_company")}</b>{T.translate("ticket_list.import_tickets_attendee_company_text")}<br />
+                                <b>{T.translate("ticket_list.import_tickets_attendee_tags")}</b>{T.translate("ticket_list.import_tickets_attendee_tags_text")}<br />
                                 <b>{T.translate("ticket_list.import_tickets_attendee_company_id")}</b>{T.translate("ticket_list.import_tickets_attendee_company_id_text")}<br />
                                 <b>{T.translate("ticket_list.import_tickets_ticket_type_name")}</b>{T.translate("ticket_list.import_tickets_ticket_type_name_text")}<br />
                                 <b>{T.translate("ticket_list.import_tickets_ticket_type_id")}</b>{T.translate("ticket_list.import_tickets_ticket_type_id_text")}<br />
