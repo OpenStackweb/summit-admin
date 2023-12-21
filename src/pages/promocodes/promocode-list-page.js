@@ -301,10 +301,14 @@ class PromocodeListPage extends React.Component {
                         <div className="row">
                             <div className="col-md-12">
                                 Format must be the following:<br />
-                                (Minimal data required)<br />
-                                * code ( text )<br />
-                                * classname (text )<br />
-                                * quantity_available (int)<br />
+                                <ul>
+                                    <li><b>code:</b> text</li>
+                                    <li><b>classname:</b> text</li>
+                                    <li><b>quantity_available:</b> int</li>
+                                    <li><b>badge_features:</b> list of badge feature ids pipe delimited (optional)</li>
+                                    <li><b>allowed_tickets_types:</b> list of allowed ticket type ids pipe delimited (optional)</li>
+                                    <li><b>speaker_ids:</b> list of badge speaker ids pipe delimited (optional)</li>
+                                </ul>
                             </div>
                             <div className="col-md-12 ticket-import-upload-wrapper">
                                 <UploadInput
