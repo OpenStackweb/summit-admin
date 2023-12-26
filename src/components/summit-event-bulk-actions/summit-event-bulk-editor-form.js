@@ -76,7 +76,10 @@ class SummitEventBulkEditorForm extends React.Component
         if(invalidEvents.length > 0){
             Swal.fire({
                 title: T.translate("bulk_actions_page.messages.validation_title"),
-                text:  T.translate("bulk_actions_page.messages.validation_message"),
+                text:  T.translate("bulk_actions_page.messages.validation_message", {
+                    event: invalidEvents.length === 1 ? 'event' : 'events', 
+                    event_id: invalidEvents.map(e => e.id).join(', ')
+                }),
                 type: 'warning',
             });
             return;
@@ -92,7 +95,10 @@ class SummitEventBulkEditorForm extends React.Component
         if(invalidEvents.length > 0){
             Swal.fire({
                 title: T.translate("bulk_actions_page.messages.validation_title"),
-                text:  T.translate("bulk_actions_page.messages.validation_message"),
+                text:  T.translate("bulk_actions_page.messages.validation_message", {
+                    event: invalidEvents.length === 1 ? 'event' : 'events', 
+                    event_id: invalidEvents.map(e => e.id).join(', ')
+                }),
                 type: 'warning',
             });
             return;

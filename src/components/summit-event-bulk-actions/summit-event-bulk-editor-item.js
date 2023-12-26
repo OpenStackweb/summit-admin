@@ -112,7 +112,7 @@ class SummitEventBulkEditorItem extends React.Component {
         let eventModel = new SummitEvent(event, currentSummit);
 
         if(event.start_date) this.props.onStartDateChanged(this.props.index, event.start_date, eventModel.isValidEndDate(event.start_date));
-        if(event.end_date) this.props.onEndDateChanged(this.props.index, event.end_date, eventModel.isValidEndDate(event.end_date));
+        if(event.end_date) this.props.onEndDateChanged(this.props.index, event.end_date, eventModel.isValidStartDate(event.end_date));
         if(event.duration) {
             let isValid = typeof(event.duration) == 'number' ? true:false;
             this.props.onDurationLocalChanged(this.props.index, event.duration, isValid);
