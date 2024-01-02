@@ -303,7 +303,7 @@ class PromocodeListPage extends React.Component {
                                 Format must be the following:<br />
                                 <ul>
                                     <li><b>code:</b> text</li>
-                                    <li><b>classname:</b> text</li>
+                                    <li><b>class_name:</b> text</li>
                                     <li><b>quantity_available:</b> int</li>
                                     <li><b>badge_features:</b> list of badge feature ids pipe delimited (optional)</li>
                                     <li><b>allowed_tickets_types:</b> list of allowed ticket type ids pipe delimited (optional)</li>
