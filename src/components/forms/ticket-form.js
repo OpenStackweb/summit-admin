@@ -17,6 +17,7 @@ import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import { Input, TicketTypesInput } from 'openstack-uicore-foundation/lib/components'
 import OwnerInput from "../inputs/owner-input";
 import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
+import Swal from "sweetalert2";
 
 class TicketForm extends React.Component {
     constructor(props) {
@@ -36,6 +37,7 @@ class TicketForm extends React.Component {
         this.handleReassign = this.handleReassign.bind(this);
         this.handleAssign = this.handleAssign.bind(this);
         this.handleUpdateTicket = this.handleUpdateTicket.bind(this);
+        this.handleUnassign = this.handleUnassign.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -86,6 +88,26 @@ class TicketForm extends React.Component {
     handleReassign(ev) {
         ev.preventDefault();
         this.setState({canReassign: true});
+    }
+
+    handleUnassign(ev) {
+        ev.preventDefault();
+        const {entity} = this.state;
+        let {owner: prevOwner} = this.props.entity;
+        let {onUnAssign} = this.props;
+        Swal.fire({
+            title: T.translate("general.are_you_sure"),
+            text:  T.translate("edit_ticket.unassign_warning"),
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText:T.translate("edit_ticket.unassign_yes")
+        }).then(function(result){
+            if (result.value) {
+                onUnAssign(prevOwner.id, entity.id).then(()=> window.location.reload());
+            }
+        });
+
     }
 
     handleAssign(ev) {
@@ -163,6 +185,11 @@ class TicketForm extends React.Component {
                         { entity.is_active &&
                             <button onClick={this.handleReassign} className="btn btn-sm btn-default">
                                 {T.translate("edit_ticket.reassign")}
+                            </button>
+                        }
+                        { entity.is_active &&
+                            <button onClick={this.handleUnassign} className="btn btn-sm left-space btn-danger">
+                                {T.translate("edit_ticket.unassign")}
                             </button>
                         }
                     </div>

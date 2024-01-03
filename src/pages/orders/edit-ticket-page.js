@@ -32,6 +32,7 @@ import {Table, Panel} from "openstack-uicore-foundation/lib/components";
 import moment from "moment-timezone";
 import AuditLogs from "../../components/audit-logs";
 import Notes from "../../components/notes";
+import {deleteTicket} from "../../actions/attendee-actions";
 
 class EditTicketPage extends React.Component {
 
@@ -298,8 +299,8 @@ class EditTicketPage extends React.Component {
                     errors={errors}
                     onReassing={this.props.reassignTicket}
                     onSaveTicket={this.props.saveTicket}
+                    onUnAssign={this.props.deleteTicket}
                 />
-
 
                { entity?.refund_requests?.length > 0 &&
 
@@ -463,5 +464,6 @@ export default connect (
         refundTicket,
         cancelRefundTicket,
         getTicketTypes,
+        deleteTicket,
     }
 )(EditTicketPage);
