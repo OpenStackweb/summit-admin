@@ -6,7 +6,7 @@ import {epochToMomentTimeZone} from "openstack-uicore-foundation/lib/utils/metho
 const BasePCForm = (props) => {
 
   let badge_features_ddl = props.summit.badge_features.map(f => ({label:f.name, value:f.id}));
-  const qtyAvailableDisabled = ['SPEAKERS_PROMO_CODE', 'SPEAKERS_DISCOUNT_CODE'].includes(props.entity.class_name);
+  const qtyAvailableDisabled = ['SPEAKERS_PROMO_CODE', 'SPEAKERS_DISCOUNT_CODE', 'PRE_PAID_PROMO_CODE', 'PRE_PAID_DISCOUNT_CODE'].includes(props.entity.class_name);
 
   return (
     <>
