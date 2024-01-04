@@ -14,10 +14,9 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import { Input, Dropdown, Table, Panel } from 'openstack-uicore-foundation/lib/components'
+import { Input, Dropdown, Table, Panel, PromocodeInput } from 'openstack-uicore-foundation/lib/components'
 import OwnerInput from '../inputs/owner-input'
-import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
-
+import {hasErrors, isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 
 class PurchaseOrderForm extends React.Component {
 
@@ -30,7 +29,7 @@ class PurchaseOrderForm extends React.Component {
             showSection: 'billing',
             addTicketTypeId : 0,
             addTicketQty: 0,
-            addPromoCode: ''
+            addPromoCode: null
         };
     }
 
@@ -91,7 +90,7 @@ class PurchaseOrderForm extends React.Component {
             .then(() => this.setState({
                 addTicketTypeId : null,
                 addTicketQty: 0,
-                addPromoCode: ''
+                addPromoCode: null
             }));
     };
 
@@ -113,7 +112,7 @@ class PurchaseOrderForm extends React.Component {
     };
 
     render() {
-        const {entity, showSection} = this.state;
+        const {entity, errors, showSection} = this.state;
         const {currentSummit} = this.props;
 
         let ticket_columns = [
@@ -209,12 +208,13 @@ class PurchaseOrderForm extends React.Component {
                     </div>
                     <div className="col-md-3">
                         <label> {T.translate("edit_purchase_order.promo_code")}</label>
-                        <Input
+                        <PromocodeInput 
                             id="promo_code"
                             value={entity.promo_code}
+                            summitId={currentSummit.id}
                             onChange={this.handleChange}
-                            type="text"
-                            className="form-control"
+                            isClearable={true}
+                            error={hasErrors('promo_code', errors)}
                         />
                     </div>
                     <div className="col-md-3">
@@ -340,7 +340,7 @@ class PurchaseOrderForm extends React.Component {
                             columns={ticket_columns}
                         />
                         <div className="row form-group add-tickets-wrapper">
-                            <div className="col-md-5">
+                            <div className="col-md-4">
                                 <label> {T.translate("edit_purchase_order.ticket_type")}</label>
                                 <Dropdown
                                     clearable={true}
@@ -351,18 +351,20 @@ class PurchaseOrderForm extends React.Component {
                                     }}
                                 />
                             </div>
-                            <div className="col-md-2">
+                            <div className="col-md-4">
                                 <label> {T.translate("edit_purchase_order.promo_code")}</label>
-                                <Input
+                                <PromocodeInput
+                                    id="promo_code_edit"
+                                    value={this.state.addPromoCode}
+                                    summitId={currentSummit.id}
                                     onChange={(ev)=>{
                                         this.setState({...this.state, addPromoCode: ev.target.value})
                                     }}
-                                    value={this.state.addPromoCode}
-                                    type="text"
-                                    className="form-control"
+                                    isClearable={true}
+                                    error={hasErrors('promo_code_edit', errors)}
                                 />
                             </div>
-                            <div className="col-md-3">
+                            <div className="col-md-2">
                                 <label> {T.translate("edit_purchase_order.ticket_qty")}</label>
                                 <Input
                                     onChange={(ev)=>{

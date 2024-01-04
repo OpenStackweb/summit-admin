@@ -524,7 +524,7 @@ export const addTicketsToOrder = (orderId, typeId, qty, promoCode = null) => asy
     };
 
     if (promoCode) {
-        payload.promo_code = promoCode;
+        payload.promo_code = promoCode.code;
     }
 
     return postRequest(
@@ -620,6 +620,10 @@ const normalizePurchaseOrder = (entity) => {
         normalizedEntity.owner_first_name = normalizedEntity.owner.first_name;
         normalizedEntity.owner_last_name = normalizedEntity.owner.last_name;
         delete (normalizedEntity.owner);
+    }
+
+    if (normalizedEntity.promo_code != null) {
+        normalizedEntity.promo_code = normalizedEntity.promo_code.code;
     }
 
     if (!normalizedEntity.owner_company_id) {
