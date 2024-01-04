@@ -194,7 +194,7 @@
       "update_success": "Activities saved successfully.",
       "update_publish_success": "Activities saved and published successfully.",
       "validation_title": "Validation Errors",
-      "validation_message": "Please check data on {event} {event_id} before to continue"
+      "validation_message": "Please check data on {event} {event_id}"
     },
     "placeholders": {
       "event_title": "Enter Activity title",
