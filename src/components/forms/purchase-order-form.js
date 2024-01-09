@@ -167,7 +167,11 @@ class PurchaseOrderForm extends React.Component {
                         <label> {T.translate("edit_purchase_order.paid_amount")}:&nbsp;</label>
                         {entity.final_amount_formatted}
                         </div>
-                        <div className="col-md-9">
+                        <div className="col-md-3">
+                        <label> {T.translate("edit_purchase_order.payment_method")}:&nbsp;</label>
+                        {entity.payment_method}
+                        </div>
+                        <div className="col-md-6">
                             &nbsp;
                         </div>
                     </div>

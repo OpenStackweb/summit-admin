@@ -1961,6 +1961,7 @@
     "ticket_qty": "Number of Tickets",
     "status": "Status",
     "paid_amount": "Amount Paid",
+    "payment_method": "Payment Method",
     "paid_amount_per_tix": "Amount Paid Per Ticket",
     "ticket_type_name": "Ticket Type",
     "attendee": "Attendee",
