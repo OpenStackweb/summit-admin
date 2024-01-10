@@ -75,7 +75,7 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
         case RECEIVE_TICKET: {
             let entity = {...payload.response};
             let bought_date = entity.bought_date ? epochToMoment(entity.bought_date).format('MMMM Do YYYY, h:mm:ss a') : null;
-            let attendee_full_name = 'N/A';
+            let attendee_full_name = null;
             let promocode_name = 'N/A';
             let attendee_company = 'N/A';
             let attendee_email = null;
@@ -97,7 +97,7 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
                 attendee_email = entity.owner.email;
                 if (entity.owner.first_name && entity.owner.last_name) {
                     attendee_full_name = `${entity.owner.first_name} ${entity.owner.last_name}`;
-                } else if (entity.owner.member) {
+                } else if (entity.owner.member?.first_name && entity.owner.member?.last_name) {
                     attendee_full_name = `${entity.owner.member.first_name} ${entity.owner.member.last_name}`;
                 }
             }

@@ -171,7 +171,7 @@ class TicketForm extends React.Component {
                 <div className="row form-group">
                     <div className="col-md-3">
                         <label> {T.translate("edit_ticket.attendee")}:&nbsp;</label>
-                        <a href="" onClick={this.handleOwnerClick}>{entity.attendee_full_name}</a>
+                        <a href="" onClick={this.handleOwnerClick}>{entity.attendee_full_name || entity.attendee_email}</a>
                     </div>
                     <div className="col-md-2">
                         <label> {T.translate("edit_ticket.company")}:&nbsp;</label>
