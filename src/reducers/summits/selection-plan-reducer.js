@@ -89,6 +89,7 @@ export const DEFAULT_ENTITY = {
     allowed_presentation_questions: DEFAULT_ALLOWED_QUESTIONS.map(q => q.value),
     allowed_presentation_editable_questions: DEFAULT_ALLOWED_EDITABLE_QUESTIONS.map(q => q.value),
     marketing_settings: {
+        cfp_landing_page_title: {id : 0 , value: ''},
         cfp_track_question_label: {id : 0 , value: ''},
         cfp_speakers_singular_label: {id : 0 , value: ''},
         cfp_speakers_plural_label: {id : 0 , value: ''},

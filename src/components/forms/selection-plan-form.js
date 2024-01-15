@@ -824,6 +824,19 @@ class SelectionPlanForm extends React.Component {
                         </div>
                         <div className="row form-group">
                             <div className="col-md-6">
+                                <label> {T.translate("edit_selection_plan.cfp_landing_page_title")}&nbsp;
+                                    <i className="fa fa-info-circle" aria-hidden="true"
+                                       title={T.translate("edit_selection_plan.cfp_landing_page_title_info")}/>
+                                </label>
+                                <Input
+                                  id="cfp_landing_page_title"
+                                  className="form-control"
+                                  error={this.hasErrors('cfp_landing_page_title')}
+                                  onChange={this.handleChange}
+                                  value={entity.marketing_settings.cfp_landing_page_title?.value || ''}
+                                />
+                            </div>
+                            <div className="col-md-6">
                                 <label> {T.translate("edit_selection_plan.cfp_track_question_label")}&nbsp;
                                     <i className="fa fa-info-circle" aria-hidden="true"
                                        title={T.translate("edit_selection_plan.cfp_track_question_label_info")}/>
