@@ -1528,7 +1528,7 @@
     "ticket": "Ticket",
     "type": "Type",
     "number": "Number",
-    "bought_date": "Bought On",
+    "bought_date": "Purchase Date",
     "discount": "Discount",
     "currency": "Currency",
     "refunded_amount": "Refunded Amount",

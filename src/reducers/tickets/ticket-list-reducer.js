@@ -22,7 +22,7 @@ import {
 
 import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
-import {epochToMoment} from "openstack-uicore-foundation/lib/utils/methods";
+import {epochToMoment, epochToMomentTimeZone} from "openstack-uicore-foundation/lib/utils/methods";
 
 const DEFAULT_STATE = {
     tickets: [],
@@ -39,13 +39,17 @@ const DEFAULT_STATE = {
     selectedAll: false,
     // filters
     filters: {},
-    extraColumns: []
+    extraColumns: [],
+    summitTZ: ''
 };
 
 const ticketListReducer = (state = DEFAULT_STATE, action) => {
     const {type, payload} = action
     switch (type) {
-        case SET_CURRENT_SUMMIT:
+        case SET_CURRENT_SUMMIT: {
+            const summit = payload.response;
+            return {...DEFAULT_STATE, summitTZ: summit.time_zone_id}
+        }
         case LOGOUT_USER: {
             return DEFAULT_STATE;
         }
@@ -80,7 +84,7 @@ const ticketListReducer = (state = DEFAULT_STATE, action) => {
             const {selectedAll, selectedIds, excludedIds} = state;
 
             const tickets = data.map(t => {
-                const bought_date = t.bought_date ? epochToMoment(t.bought_date).format('MMMM Do YYYY, h:mm:ss a') : '';
+                const bought_date = t.bought_date ? epochToMomentTimeZone(t.bought_date, state.summitTZ).format('MMMM Do YYYY, h:mm:ss a') : '';
                 const number = t.external_order_id || `...${t.number.slice(-15)}`;
                 const final_amount_formatted = `$${t.final_amount.toFixed(2)}`;
                 const refunded_amount_formatted = `$${t.refunded_amount.toFixed(2)}`;

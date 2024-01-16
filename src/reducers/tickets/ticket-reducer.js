@@ -25,8 +25,9 @@ import {
     FEATURE_BADGE_REMOVED
 } from '../../actions/badge-actions'
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
-import {epochToMoment} from "openstack-uicore-foundation/lib/utils/methods";
+import {epochToMoment, epochToMomentTimeZone} from "openstack-uicore-foundation/lib/utils/methods";
 import moment from "moment-timezone";
+import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 
 export const DEFAULT_ENTITY = {
     id: 28,
@@ -54,13 +55,18 @@ export const DEFAULT_ENTITY = {
 }
 
 const DEFAULT_STATE = {
-    entity      : DEFAULT_ENTITY,
-    errors: {}
+    entity: DEFAULT_ENTITY,
+    errors: {},
+    summitTZ: '',
 };
 
 const ticketReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
     switch (type) {
+        case SET_CURRENT_SUMMIT: {
+            const summit = payload.response;
+            return {...state, summitTZ: summit.time_zone_id}
+        }
         case LOGOUT_USER: {
             // we need this in case the token expired while editing the form
             if (payload.hasOwnProperty('persistStore')) {
@@ -74,7 +80,7 @@ const ticketReducer = (state = DEFAULT_STATE, action) => {
         }
         case RECEIVE_TICKET: {
             let entity = {...payload.response};
-            let bought_date = entity.bought_date ? epochToMoment(entity.bought_date).format('MMMM Do YYYY, h:mm:ss a') : null;
+            let bought_date = entity.bought_date ? epochToMomentTimeZone(entity.bought_date, state.summitTZ).format('MMMM Do YYYY, h:mm:ss a') : null;
             let attendee_full_name = null;
             let promocode_name = 'N/A';
             let attendee_company = 'N/A';
