@@ -17,6 +17,7 @@ import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import {Dropdown, Input, TextEditor, UploadInput} from 'openstack-uicore-foundation/lib/components'
 import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 import history from "../../history";
+import HexColorInput from '../inputs/hex-color-input';
 
 class MarketingSettingForm extends React.Component {
 
@@ -128,6 +129,7 @@ class MarketingSettingForm extends React.Component {
             {label: 'Plain Text', value: 'TEXT'},
             {label: 'Html', value: 'TEXTAREA'},
             {label: 'File', value: 'FILE'},
+            {label: 'Hex Color', value: 'HEX_COLOR'},
         ];
 
         return (
@@ -199,6 +201,18 @@ class MarketingSettingForm extends React.Component {
                             handleRemove={this.handleRemoveFile}
                             className="dropzone col-md-6"
                             multiple={false}
+                        />
+                    </div>
+                    }
+                    {entity.type === 'HEX_COLOR' &&
+                    <div className="col-md-4">
+                        <label> {T.translate("marketing.hex_color")} *</label>
+                        <HexColorInput                            
+                            onChange={this.handleChange}
+                            id="value"
+                            value={entity.value}                            
+                            className="form-control"
+                            error={this.hasErrors('value')}
                         />
                     </div>
                     }

@@ -2159,6 +2159,7 @@
     "plain_text": "Plain Text",
     "html": "Html",
     "file": "File",
+    "hex_color": "Hex Color",
     "clone_settings": "Clone",
     "delete_setting_warning": "Are you sure you want to delete setting ",
     "setting_saved": "Setting saved successfully.",

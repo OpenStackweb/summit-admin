@@ -27,6 +27,8 @@ import {
 } from 'openstack-uicore-foundation/lib/utils/actions';
 import {getAccessTokenSafely} from '../utils/methods';
 
+import Swal from "sweetalert2";
+
 export const REQUEST_SETTINGS = 'REQUEST_SETTINGS';
 export const RECEIVE_SETTINGS = 'RECEIVE_SETTINGS';
 export const RECEIVE_SETTING = 'RECEIVE_SETTING';
@@ -204,7 +206,7 @@ export const saveMarketingSetting = (entity, file = null) => async (dispatch, ge
             `${window.MARKETING_API_BASE_URL}/api/v1/config-values/${entity.id}`,
             file,
             normalizedEntity,
-            authErrorHandler,
+            customErrorHandler,
             entity
         )(params)(dispatch)
             .then((payload) => {
@@ -219,7 +221,7 @@ export const saveMarketingSetting = (entity, file = null) => async (dispatch, ge
         `${window.MARKETING_API_BASE_URL}/api/v1/config-values`,
         file,
         normalizedEntity,
-        authErrorHandler,
+        customErrorHandler,
         entity
     )(params)(dispatch)
         .then((payload) => {
@@ -282,4 +284,43 @@ const normalizeEntity = (entity, summitId) => {
 
     return normalizedEntity;
 
+}
+
+export const customErrorHandler = (err, res) => (dispatch, state) => {
+    const code = err.status;
+    let msg = '';
+
+    console.log('asdkjahsdjkhaskdjaksjdhakjsdhajk')
+
+    dispatch(stopLoading());
+
+    switch (code) {
+        case 412:
+            if (Array.isArray(err.response.body)) {
+                err.response.body.forEach(er => {
+                    msg += er + '<br>';
+                });
+            } else {
+                for (var [key, value] of Object.entries(err.response.body)) {
+                    if (isNaN(key)) {
+                        msg += key + ': ';
+                    }
+
+                    msg += value + '<br>';
+                }
+            }
+
+            Swal.fire("Validation error", msg, "warning");
+
+            if (err.response.body.errors) {
+                dispatch({
+                    type: VALIDATE,
+                    payload: {errors: err.response.body}
+                });
+            }
+
+            break;
+        default:
+            dispatch(authErrorHandler(err, res));
+    }
 }
