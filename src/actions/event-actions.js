@@ -82,7 +82,7 @@ export const getEvents = (term = null, page = 1, perPage = 10, order = 'id', ord
 
     dispatch(startLoading());
 
-    const filter = parseFilters(filters, term);    
+    const filter = parseFilters(filters, term);
 
     const params = {
         expand: 'speakers,type,created_by,track,sponsors,selection_plan,location,tags,media_uploads,media_uploads.media_upload_type',
@@ -404,7 +404,7 @@ export const saveEvent = (entity, publish) => async (dispatch, getState) => {
                 } else {
                     dispatch(showSuccessMessage(T.translate("edit_event.event_saved")));
                 }
-                dispatch(getAuditLog("SummitEventAuditLog", entity.id, null, 1, 10));
+                dispatch(getAuditLog([`event_id==${entity.id}`, `class_name==SummitEventAuditLog`], null, 1, 10));
             });
 
     }
@@ -443,12 +443,12 @@ export const saveEvent = (entity, publish) => async (dispatch, getState) => {
 export const cloneEvent = (entity, publish) => async (dispatch, getState) => {
     const {currentSummitState} = getState();
     const accessToken = await getAccessTokenSafely();
-    const {currentSummit} = currentSummitState;    
+    const {currentSummit} = currentSummitState;
 
-    dispatch(startLoading());    
+    dispatch(startLoading());
 
     const params = {
-        access_token: accessToken,        
+        access_token: accessToken,
     };
 
     const success_message = {
@@ -464,7 +464,7 @@ export const cloneEvent = (entity, publish) => async (dispatch, getState) => {
         null,
         authErrorHandler,
     )(params)(dispatch)
-        .then((payload) => {            
+        .then((payload) => {
             dispatch(showMessage(
                 success_message,
                 () => {
@@ -701,7 +701,7 @@ export const removeImage = (eventId) => async (dispatch, getState) => {
 
 const normalizePresentationAllowedQuestionFields = (entity, summit) => {
     if (!entity.selection_plan_id) return;
- 
+
     const selectionPlan = summit.selection_plans.find(sp => sp.id === entity.selection_plan_id);
 
     fieldsBoundToQuestions.forEach(item => {
@@ -816,7 +816,7 @@ export const exportEvents = (term = null, order = 'id', orderDir = 1, extraFilte
         access_token: accessToken
     };
 
-    const filter = parseFilters(extraFilters, term);    
+    const filter = parseFilters(extraFilters, term);
 
     if (filter.length > 0) {
         params['filter[]'] = filter;
@@ -1037,13 +1037,13 @@ const parseFilters = (filters, term = null) => {
     }
 
     if (filters.hasOwnProperty('submitter_company') && Array.isArray(filters.submitter_company)
-        && filters.submitter_company.length > 0) {        
+        && filters.submitter_company.length > 0) {
         filter.push(
-            `created_by_company==${filters.submitter_company.map(company => escapeFilterValue(company.name)).join('||')}`);  
+            `created_by_company==${filters.submitter_company.map(company => escapeFilterValue(company.name)).join('||')}`);
     }
 
     if (filters.hasOwnProperty('sponsor') && Array.isArray(filters.sponsor)
-        && filters.sponsor.length > 0) {        
+        && filters.sponsor.length > 0) {
         filter.push(
             `sponsor==${filters.sponsor.map(sponsor => sponsor.name).join('||')}`);
     }
@@ -1224,8 +1224,8 @@ export const getEventComments = (
     orderDir = 1,
     filters = {}
     ) => async (dispatch, getState) => {
-    
-    const accessToken = await getAccessTokenSafely();    
+
+    const accessToken = await getAccessTokenSafely();
     const {currentSummitState} = getState();
     const {currentSummit} = currentSummitState;
     const summitTZ = currentSummit.time_zone_id;
@@ -1257,7 +1257,7 @@ export const getEventComments = (
     }
 
     // order
-    if (order != null && orderDir != null) {        
+    if (order != null && orderDir != null) {
         const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order'] = `${orderDirSign}${order === 'owner_full_name' ? 'creator_id' : order}`;
     }
@@ -1272,7 +1272,7 @@ export const getEventComments = (
             dispatch(stopLoading());
             return data.response;
         }
-    );    
+    );
 }
 
 export const queryEvents = _.debounce(async (summitId, input, callback) => {
