@@ -14,7 +14,7 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import {Dropdown, Input, TextEditor, UploadInput} from 'openstack-uicore-foundation/lib/components'
+import {Dropdown, Input, UploadInput, TextEditorV2} from 'openstack-uicore-foundation/lib/components'
 import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 import history from "../../history";
 import HexColorInput from '../inputs/hex-color-input';
@@ -184,7 +184,7 @@ class MarketingSettingForm extends React.Component {
                     {entity.type === 'TEXTAREA' &&
                     <div className="col-md-8">
                         <label> {T.translate("marketing.html")} *</label>
-                        <TextEditor
+                        <TextEditorV2
                             id="value"
                             value={entity.value}
                             onChange={this.handleChange}

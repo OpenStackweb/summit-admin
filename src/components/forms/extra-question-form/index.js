@@ -12,7 +12,7 @@
  **/
 
 import React from 'react'
-import history from "../../history";
+import history from "../../../history";
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 import {
@@ -21,10 +21,10 @@ import {
     TextEditor,
     SortableTable
 } from 'openstack-uicore-foundation/lib/components'
-import {isEmpty, scrollToError, shallowEqual, hasErrors} from "../../utils/methods";
-import {ExtraQuestionsTypeAllowSubQuestion} from '../../utils/constants';
+import {isEmpty, scrollToError, shallowEqual, hasErrors} from "../../../utils/methods";
+import {ExtraQuestionsTypeAllowSubQuestion} from '../../../utils/constants';
 import {Modal} from "react-bootstrap";
-import "./exxtra-questions-form.scss";
+import "./styles.less";
 
 class ExtraQuestionForm extends React.Component {
     constructor(props) {

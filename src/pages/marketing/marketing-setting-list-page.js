@@ -110,8 +110,6 @@ class MarketingSettingListPage extends React.Component {
         const {currentSummit, allSummits, settings, lastPage, currentPage, term, order, orderDir, totalSettings} = this.props;
         const summits = allSummits.filter(s => s.id !== currentSummit.id);
 
-        console.log(settings);
-
         const columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
             { columnKey: 'key', value: T.translate("marketing.key"), sortable: true },
