@@ -40,6 +40,7 @@ import {
     DEFAULT_ALLOWED_QUESTIONS,
     DEFAULT_CFP_PRESENTATION_EDITION_TABS,
 } from "../../reducers/summits/selection-plan-reducer";
+import history from '../../history'
 
 class SelectionPlanForm extends React.Component {
     constructor(props) {
@@ -172,10 +173,17 @@ class SelectionPlanForm extends React.Component {
     }
 
     handleSubmit(ev) {
-        let entity = {...this.state.entity};
         ev.preventDefault();
 
-        this.props.onSubmit(this.state.entity).then(() => this.props.saveSelectionPlanSettings(entity.marketing_settings, entity.id));
+        let entity = {...this.state.entity};
+        let {currentSummit} = this.props;
+
+        this.props.onSubmit(this.state.entity).then((e) => {
+            this.props.saveSelectionPlanSettings(entity.marketing_settings, e.id).then(() => {
+                if(!entity.id)
+                    history.push(`/app/summits/${currentSummit.id}/selection-plans/${e.id}`)
+            });
+        });
     }
 
     hasErrors(field) {

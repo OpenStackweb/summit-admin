@@ -91,7 +91,7 @@ export const saveSelectionPlan = (entity) => async (dispatch, getState) => {
 
   if (entity.id) {
 
-    putRequest(
+    return putRequest(
       createAction(UPDATE_SELECTION_PLAN),
       createAction(SELECTION_PLAN_UPDATED),
       `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans/${entity.id}?access_token=${accessToken}`,
@@ -102,16 +102,11 @@ export const saveSelectionPlan = (entity) => async (dispatch, getState) => {
       .then((payload) => {
         dispatch(stopLoading());
         dispatch(showSuccessMessage(T.translate("edit_selection_plan.selection_plan_saved")));
+        return payload.response;
       });
 
-  } else {
-    const success_message = {
-      title: T.translate("general.done"),
-      html: T.translate("edit_selection_plan.selection_plan_created"),
-      type: 'success'
-    };
-
-    postRequest(
+  }
+  return postRequest(
       createAction(UPDATE_SELECTION_PLAN),
       createAction(SELECTION_PLAN_ADDED),
       `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/selection-plans?access_token=${accessToken}`,
@@ -120,14 +115,10 @@ export const saveSelectionPlan = (entity) => async (dispatch, getState) => {
       entity
     )({})(dispatch)
       .then((payload) => {
-        dispatch(showMessage(
-          success_message,
-          () => {
-            history.push(`/app/summits/${currentSummit.id}/selection-plans/${payload.response.id}`)
-          }
-        ));
+        dispatch(stopLoading());
+        dispatch(showSuccessMessage(T.translate("edit_selection_plan.selection_plan_created")));
+        return payload.response;
       });
-  }
 }
 
 export const deleteSelectionPlan = (selectionPlanId) => async (dispatch, getState) => {
