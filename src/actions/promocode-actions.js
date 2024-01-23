@@ -28,7 +28,7 @@ import {
     escapeFilterValue,
     postFile
 } from 'openstack-uicore-foundation/lib/utils/actions';
-import {getAccessTokenSafely} from '../utils/methods';
+import {checkOrFilter, getAccessTokenSafely, isNumericString} from '../utils/methods';
 
 export const EXISTING_SPEAKERS_PROMO_CODE          = 1;
 export const EXISTING_SPEAKERS_DISCOUNT_CODE       = 2;
@@ -58,6 +58,49 @@ export const GET_ASSIGNED_SPEAKERS_LOCALLY = 'GET_ASSIGNED_SPEAKERS_LOCALLY';
 export const REQUEST_ASSIGNED_SPEAKERS     = 'REQUEST_ASSIGNED_SPEAKERS';
 export const RECEIVE_ASSIGNED_SPEAKERS     = 'RECEIVE_ASSIGNED_SPEAKERS';
 
+const SPEAKERS_PROMO_CODE    = 'SPEAKERS_PROMO_CODE';
+const SPEAKERS_DISCOUNT_CODE = 'SPEAKERS_DISCOUNT_CODE';
+
+const parseFilters = (filters, term = null) => {
+    const filter = [];
+
+    if (filters.hasOwnProperty('typeFilter') && filters.typeFilter && filters.typeFilter !== 'ALL') {
+        filter.push(`type==${filters.typeFilter}`)
+    }
+
+    if (filters.hasOwnProperty('creatorFilter') && filters.creatorFilter && filters.creatorFilter !== 'ALL') {
+        filter.push(`creator_email==${filters.creatorFilter.email}`);
+    }
+
+    if (filters.hasOwnProperty('assigneeFilter') && filters.assigneeFilter && filters.assigneeFilter !== 'ALL') {
+        filter.push(`owner_email==${filters.assigneeFilter.email}`);
+    }
+
+    if (filters.hasOwnProperty('classNamesFilter') && Array.isArray(filters.classNamesFilter) && filters.classNamesFilter.length > 0) {
+        filter.push(`class_name==${filters.classNamesFilter.join('||')}`);
+    }
+
+    if (filters.hasOwnProperty('tagsFilter') && Array.isArray(filters.tagsFilter) && filters.tagsFilter.length > 0) {
+        filter.push(`tag_id==${filters.tagsFilter.map(t => t.id).join('||')}`);
+    }
+
+    if (term) {
+        const escapedTerm = escapeFilterValue(term);
+        let searchString = `code=@${escapedTerm},` +
+            `creator=@${escapedTerm},` +
+            `creator_email=@${escapedTerm},` +
+            `owner=@${escapedTerm},` +
+            `owner_email=@${escapedTerm},` +
+            `speaker=@${escapedTerm},` +
+            `speaker_email=@${escapedTerm},` +
+            `sponsor=@${escapedTerm}`;
+
+        filter.push(searchString);
+    }
+
+    return checkOrFilter(filters, filter);
+};
+
 export const getPromocodeMeta = () => async (dispatch, getState) => {
 
     const { currentSummitState } = getState();
@@ -79,26 +122,27 @@ export const getPromocodeMeta = () => async (dispatch, getState) => {
     );
 };
 
-export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'code', orderDir = 1, type = 'ALL', extraColumns = [] ) => async (dispatch, getState) => {
+export const getPromocodes = ( 
+    term = null, page = 1, perPage = 10, order = 'code', orderDir = 1, filters = {}, extraColumns = [] ) => async (dispatch, getState) => {
 
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
-    const filter = [];
 
     dispatch(startLoading());
 
-    if(term){
-        const escapedTerm = escapeFilterValue(term);
-        filter.push(`code=@${escapedTerm},creator=@${escapedTerm},creator_email=@${escapedTerm},owner=@${escapedTerm},owner_email=@${escapedTerm},speaker=@${escapedTerm},speaker_email=@${escapedTerm},sponsor=@${escapedTerm}`);
-    }
+    const filter = parseFilters(filters, term);
 
-    if (type !== 'ALL') {
-        filter.push(`type==${type}`);
+    let expand = 'speaker,owner,sponsor,creator,tags';
+
+    if (filters.hasOwnProperty('classNamesFilter') && 
+        (filters.classNamesFilter.includes(SPEAKERS_PROMO_CODE) || filters.classNamesFilter.includes(SPEAKERS_DISCOUNT_CODE))) {
+        expand += ',owners';
+        if (extraColumns.includes('owner_email')) expand += ',owners.speaker';
     }
 
     const params = {
-        expand       : 'speaker,owner,sponsor,creator,tags,owners,owners.speaker',
+        expand       : expand,
         page         : page,
         per_page     : perPage,
         access_token : accessToken,
@@ -114,13 +158,12 @@ export const getPromocodes = ( term = null, page = 1, perPage = 10, order = 'cod
         params['order']= `${orderDirSign}${order}`;
     }
 
-
     return getRequest(
         createAction(REQUEST_PROMOCODES),
         createAction(RECEIVE_PROMOCODES),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/promo-codes`,
         authErrorHandler,
-        {page, perPage, order, orderDir, type, term, extraColumns}
+        {page, perPage, order, orderDir, term, filters, extraColumns}
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
@@ -251,12 +294,11 @@ export const sendEmail = (promocodeId) => async (dispatch, getState) => {
         });
 };
 
-export const exportPromocodes = ( term = null, order = 'code', orderDir = 1, type = 'ALL' ) => async (dispatch, getState) => {
+export const exportPromocodes = ( term = null, order = 'code', orderDir = 1, filters = {} ) => async (dispatch, getState) => {
 
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
-    const filter = [];
     const filename = currentSummit.name + '-Promocodes.csv';
 
     const params = {
@@ -265,14 +307,7 @@ export const exportPromocodes = ( term = null, order = 'code', orderDir = 1, typ
         columns: 'code,type,owner_name,owner_email,sponsor_name,redeemed,email_sent'
     };
 
-    if(term){
-        const escapedTerm = escapeFilterValue(term);
-        filter.push(`code=@${escapedTerm},creator=@${escapedTerm},creator_email=@${escapedTerm},owner=@${escapedTerm},owner_email=@${escapedTerm},speaker=@${escapedTerm},speaker_email=@${escapedTerm},sponsor=@${escapedTerm}`);
-    }
-
-    if (type !== 'ALL') {
-        filter.push(`type==${type}`);
-    }
+    const filter = parseFilters(filters, term);
 
     if(filter.length > 0){
         params['filter[]']= filter;

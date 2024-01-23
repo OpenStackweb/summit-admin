@@ -841,7 +841,12 @@
     "ingest": "Ingest File",
     "placeholders": {
       "search_promocodes": "Search by Code, Speaker, Member, Email, Company",
-      "select_type": "Select a Type"
+      "select_type": "Select a Type",
+      "filter_class_name": "Filter by Class Name",
+      "filter_tags": "Filter by Tags",
+      "filter_type": "Filter by Type",
+      "filter_creator": "Filter by Creator",
+      "filter_assignee": "Filter by Assignee"
     }
   },
   "edit_promocode": {

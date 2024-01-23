@@ -19,13 +19,29 @@ import
     PROMOCODE_DELETED
 } from '../../actions/promocode-actions';
 
+import {ALL_FILTER} from '../../utils/constants';
+
 import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
 
+const FILTERS_DEFAULT_STATE = {
+    assigneeFilter: null,
+    creatorFilter: null,
+    typeFilter: null,
+    classNamesFilter: [],
+    tagsFilter: [],
+    orAndFilter: ALL_FILTER,
+};
+
 const DEFAULT_STATE = {
     promocodes       : [],
+    tags            : [],
     term            : null,
+    filters         : {...FILTERS_DEFAULT_STATE},
+    classNames      : [],
     type            : 'ALL',
+    assignee        : null,
+    creator         : null,
     order           : 'code',
     orderDir        : 1,
     currentPage     : 1,
@@ -33,7 +49,7 @@ const DEFAULT_STATE = {
     perPage         : 10,
     totalPromocodes : 0,
     allTypes        : ['ALL'],
-    allClasses      : ['ALL'],
+    allClasses      : [],
     extraColumns    : []
 };
 
@@ -45,9 +61,9 @@ const promocodeListReducer = (state = DEFAULT_STATE, action) => {
             return DEFAULT_STATE;
         }
         case REQUEST_PROMOCODES: {
-            let {order, orderDir, type, term, extraColumns} = payload;
+            let {order, orderDir, term, filters, extraColumns} = payload;
 
-            return {...state, order, orderDir, type, term, extraColumns }
+            return {...state, order, orderDir, term, filters, extraColumns }
         }
         case RECEIVE_PROMOCODE_META: {
             let types = [...DEFAULT_STATE.allTypes];
@@ -86,9 +102,9 @@ const promocodeListReducer = (state = DEFAULT_STATE, action) => {
                         break;
                     case 'SPEAKERS_DISCOUNT_CODE':
                     case 'SPEAKERS_PROMO_CODE':
-                        if (p.owners?.length > 0) {
-                            owner_email = p.owners.map(o => o.speaker.email).join(', ');
-                        }
+                        // if (p.owners?.length > 0) {
+                        //     owner_email = p.owners.map(o => o.speaker.email).join(', ');
+                        // }
                         break;
                     case 'SPONSOR_DISCOUNT_CODE':
                     case 'SPONSOR_PROMO_CODE':
