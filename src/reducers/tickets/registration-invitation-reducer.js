@@ -36,7 +36,7 @@ export const DEFAULT_ENTITY = {
     email : '',
     allowed_ticket_types : [],
     tags: [],
-    status: null,
+    status: 'Pending',
     acceptance_criteria: null,
 }
 
