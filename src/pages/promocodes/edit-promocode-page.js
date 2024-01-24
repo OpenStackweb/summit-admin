@@ -68,6 +68,10 @@ class EditPromocodePage extends React.Component {
         const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         const breadcrumb = (entity.id) ? entity.code : T.translate("general.new");
 
+        if (entity.id && match.params.promocode_id != entity.id) {
+            return null;
+        }
+
         if (!allClasses.length || !currentSummit.badge_features || !currentSummit.badge_types) {
             return (<div/>);
         }

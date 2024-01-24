@@ -11,7 +11,7 @@ const SpeakersBasePCForm = (props) => {
   useEffect(() => {
     const {entity} = props;
     if (entity.id) props.getAssignedSpeakers(entity);
-  }, []);
+  }, [entity.id]);
 
   const handleSpeakerAssignment = (ev) => {
     const {assignSpeaker, entity} = props;
