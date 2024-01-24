@@ -25,7 +25,9 @@ import {
     showSuccessMessage,
     getCSV,
     authErrorHandler,
-    escapeFilterValue
+    escapeFilterValue,
+    getRawCSV,
+    downloadFileByContent
 } from 'openstack-uicore-foundation/lib/utils/actions';
 import {SPEAKERS_PROMO_CODE_CLASS_NAME, SPEAKERS_DISCOUNT_CODE_CLASS_NAME} from './promocode-specification-actions';
 import {
@@ -34,7 +36,7 @@ import {
     AUTO_GENERATED_SPEAKERS_PROMO_CODE,
     AUTO_GENERATED_SPEAKERS_DISCOUNT_CODE
 } from './promocode-actions';
-import {checkOrFilter, getAccessTokenSafely, isNumericString} from '../utils/methods';
+import {checkOrFilter, getAccessTokenSafely, isNumericString, joinCVSChunks} from '../utils/methods';
 
 export const INIT_SPEAKERS_LIST_PARAMS  = 'INIT_SPEAKERS_LIST_PARAMS';
 
@@ -775,19 +777,32 @@ export const getSpeakersBySummit = (term = null, page = 1, perPage = 10, order =
     );
 }
 
-export const exportSummitSpeakers = (term = null, order = 'id', orderDir = 1, filters = {}) => async (dispatch, getState) => {
-
-    const { currentSummitState } = getState();
-    const accessToken = await getAccessTokenSafely();
+export const exportSummitSpeakers = (
+  term = null,
+  order = 'id',
+  orderDir = 1,
+  filters = {}
+) => async (dispatch, getState) => {
+    const csvMIME = 'text/csv;charset=utf-8';
+    const pageSize = 500;
+    const { currentSummitState, currentSummitSpeakersListState } = getState();
     const { currentSummit }   = currentSummitState;
+    const { totalItems } = currentSummitSpeakersListState;
     const filename = currentSummit.name + '-Speakers.csv';
+    const totalPages = Math.ceil(totalItems / pageSize);
+    const cvsFiles = [];
+    const endpoint = `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/speakers/csv`;
+    const accessToken = await getAccessTokenSafely();
     const params = {
-        access_token : accessToken
+        access_token : accessToken,
+        per_page: pageSize
     };
+
+    dispatch(startLoading());
     
     const filter = parseFilters(filters);
 
-    if(term) {
+    if (term) {
         let filterTerm = buildTermFilter(term);
 
         filter.push(
@@ -795,17 +810,33 @@ export const exportSummitSpeakers = (term = null, order = 'id', orderDir = 1, fi
         );
     }
 
-    if(filter.length > 0){
+    if (filter.length > 0){
         params['filter[]']= filter;
     }
 
     // order
-    if(order != null && orderDir != null){
+    if (order != null && orderDir != null) {
         const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
 
-    dispatch(getCSV(`${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/speakers/csv`, params, filename));
+    for (let i = 1; i <= totalPages; i++) {
+        console.log('page ', i);
+        cvsFiles.push(getRawCSV(endpoint, {...params, page: i}));
+    }
+
+    Promise.all(cvsFiles)
+        .then(files => {
+            if (files.length > 0) {
+                const cvs = joinCVSChunks(files);
+                // then simulate the file download
+                downloadFileByContent(filename, cvs, csvMIME);
+            }
+            dispatch(stopLoading());
+        })
+        .catch(err => {
+            dispatch(stopLoading());
+        });
 }
 
 /**

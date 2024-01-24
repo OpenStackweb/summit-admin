@@ -29,7 +29,7 @@ import {
     stopLoading, VALIDATE,
 } from 'openstack-uicore-foundation/lib/utils/actions';
 
-import {getAccessTokenSafely, isNumericString, checkOrFilter} from '../utils/methods';
+import {getAccessTokenSafely, isNumericString, checkOrFilter, joinCVSChunks} from '../utils/methods';
 
 import URI from "urijs";
 import Swal from "sweetalert2";
@@ -367,10 +367,15 @@ export const importTicketsCSV = (file) => async (dispatch, getState) => {
         });
 };
 
-export const exportTicketsCSV = (term = '',
-                                 pageSize = 500,
-                                 order = 'id',
-                                 orderDir = 1, filters = {}, extraColumns = []) => async (dispatch, getState) => {
+export const exportTicketsCSV = (
+  term = '',
+  pageSize = 500,
+  order = 'id',
+  orderDir = 1,
+  filters = {},
+  extraColumns = []
+) => async (dispatch, getState) => {
+
     dispatch(startLoading());
     const csvMIME = 'text/csv;charset=utf-8';
     const accessToken = await getAccessTokenSafely();
@@ -380,8 +385,6 @@ export const exportTicketsCSV = (term = '',
 
     const filename = currentSummit.name + '-Tickets.csv';
     const totalPages = Math.ceil(totalTickets / pageSize);
-
-    console.log(`exportTicketsCSV: totalTickets ${totalTickets} pageSize ${pageSize} totalPages ${totalPages}`)
 
     const endpoint = `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/tickets/csv`;
 
@@ -412,21 +415,12 @@ export const exportTicketsCSV = (term = '',
     )
 
     // export CSV file by chunks ...
-    Promise.all(params.map((p) => getRawCSV(endpoint, p)))
+    Promise.all(params.map(p => getRawCSV(endpoint, p)))
         .then((files) => {
             if (files.length > 0) {
-                // if we get result try to get first the header
-                let header = files[0].split('\n')[0];
-                // and rebuild all the chunks using reduce
-                let csv = files.reduce((final, currentCvs) => {
-                    let lines = currentCvs.split('\n');
-                    // remove one line, starting at the first position
-                    lines.splice(0, 1);
-                    let rawContent = lines.join('\n');
-                    return final === '' ? rawContent : `${final}${rawContent}`;
-                }, '');
+                const cvs = joinCVSChunks(files);
                 // then simulate the file download
-                downloadFileByContent(filename, `${header}\n${csv}`, csvMIME);
+                downloadFileByContent(filename, cvs, csvMIME);
             }
             dispatch(stopLoading());
         })

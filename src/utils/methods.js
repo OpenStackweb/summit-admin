@@ -343,3 +343,18 @@ export const wrapFormFile = (file) => {
     formData.append('file', file);
     return formData;
 }
+
+export const joinCVSChunks = (chunks) => {
+    // if we get result try to get first the header
+    const header = chunks[0].split('\n')[0];
+    // and rebuild all the chunks using reduce
+    let csv = chunks.reduce((final, currentCvs) => {
+        let lines = currentCvs.split('\n');
+        // remove one line, starting at the first position
+        lines.splice(0, 1);
+        const rawContent = lines.join('\n');
+        return final === '' ? rawContent : `${final}${rawContent}`;
+    }, '');
+
+    return `${header}\n${csv}`;
+}
