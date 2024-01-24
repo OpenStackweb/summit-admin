@@ -178,6 +178,10 @@ class AttendeeForm extends React.Component {
         return '';
     }
 
+    handleNewTag(newTag) {
+        this.setState({...this.state, entity: {...this.state.entity, tags: [...this.state.entity.tags, {tag: newTag}]}})
+    }
+
     render() {
         const {entity, showSection} = this.state;
         const { currentSummit } = this.props;
@@ -262,9 +266,11 @@ class AttendeeForm extends React.Component {
                         <TagInput
                           id="tags"
                           clearable
+                          allowCreate
                           isMulti
                           value={entity.tags}
                           onChange={this.handleChange}
+                          onCreate={this.handleNewTag}
                           placeholder={T.translate("edit_attendee.placeholders.tags")}
                         />
                     </div>
