@@ -105,6 +105,8 @@ class SummitForm extends React.Component {
         let {value, id} = ev.target;
         let currentError = '';
 
+        if(errors.hasOwnProperty(id)) delete errors[id];
+
         // logic for summit help users ( chat roles )
         if (ev.target.type === 'memberinput') {
             let oldHelpUsers =  entity[id];
@@ -181,7 +183,9 @@ class SummitForm extends React.Component {
             regLiteMarketingSettings[id].value = value;
         }
         else {
-            errors[id] = currentError;
+            if (currentError !== "") {
+                errors[id] = currentError;
+            }
             entity[id] = value;
         }
         this.setState({entity: entity, errors: errors, regLiteMarketingSettings : regLiteMarketingSettings, printAppMarketingSettings : printAppMarketingSettings });
