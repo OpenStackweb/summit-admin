@@ -20,7 +20,7 @@ import {
     UNSELECT_TICKET,
 } from '../../actions/ticket-actions';
 
-import {SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
+import {RECEIVE_SUMMIT, SET_CURRENT_SUMMIT} from "../../actions/summit-actions";
 import { LOGOUT_USER } from 'openstack-uicore-foundation/lib/security/actions';
 import {epochToMoment, epochToMomentTimeZone} from "openstack-uicore-foundation/lib/utils/methods";
 
@@ -46,6 +46,7 @@ const DEFAULT_STATE = {
 const ticketListReducer = (state = DEFAULT_STATE, action) => {
     const {type, payload} = action
     switch (type) {
+        case RECEIVE_SUMMIT:
         case SET_CURRENT_SUMMIT: {
             const summit = payload.response;
             return {...DEFAULT_STATE, summitTZ: summit.time_zone_id}
