@@ -28,6 +28,7 @@ import {
 } from 'openstack-uicore-foundation/lib/components'
 import { Pagination } from 'react-bootstrap';
 import Switch from "react-switch";
+import history from '../../history';
 
 import TextAreaInputWithCounter from '../inputs/text-area-input-with-counter'
 import TextInputWithCounter from '../inputs/text-input-with-counter'
@@ -223,9 +224,14 @@ class SummitForm extends React.Component {
         ev.preventDefault();
 
         if (this.validateForm(entity)) {
-            this.props.onSubmit(entity).then(() => {
-                this.props.saveRegistrationLiteMarketingSettings(regLiteMarketingSettings);
-                this.props.savePrintAppMarketingSettings(printAppMarketingSettings);
+            this.props.onSubmit(entity).then((payload) => {
+                this.props.saveRegistrationLiteMarketingSettings(regLiteMarketingSettings).then(() => {
+                    this.props.savePrintAppMarketingSettings(printAppMarketingSettings).then(() => {
+                        if(payload.response.id) {
+                            history.push(`/app/summits/${payload.response.id}`);
+                        }
+                    })
+                });
             });
         }
     }

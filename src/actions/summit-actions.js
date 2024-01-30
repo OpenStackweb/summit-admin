@@ -184,7 +184,7 @@ export const saveSummit = (entity) => async (dispatch, getState) => {
 
     if (entity.id) {
 
-        putRequest(
+        return putRequest(
             createAction(UPDATE_SUMMIT),
             createAction(SUMMIT_UPDATED),
             `${window.API_BASE_URL}/api/v1/summits/${entity.id}`,
@@ -194,6 +194,7 @@ export const saveSummit = (entity) => async (dispatch, getState) => {
         )(params)(dispatch)
             .then((payload) => {
                 dispatch(showSuccessMessage(T.translate("edit_summit.summit_saved")));
+                return payload;
             });
 
     } else {
@@ -203,7 +204,7 @@ export const saveSummit = (entity) => async (dispatch, getState) => {
             type: 'success'
         };
 
-        postRequest(
+        return postRequest(
             createAction(UPDATE_SUMMIT),
             createAction(SUMMIT_ADDED),
             `${window.API_BASE_URL}/api/v1/summits`,
@@ -212,10 +213,8 @@ export const saveSummit = (entity) => async (dispatch, getState) => {
             entity
         )(params)(dispatch)
             .then((payload) => {
-                dispatch(showMessage(
-                    success_message,
-                    () => { history.push(`/app/summits/${payload.response.id}`) }
-                ));
+                dispatch(showSuccessMessage(T.translate("edit_summit.summit_created")));
+                return payload;
             });
     }
 }
