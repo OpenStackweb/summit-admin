@@ -221,7 +221,11 @@ class NavMenu extends React.Component {
             {name: 'tag_groups', iconClass: 'fa-tags', linkUrl:`summits/${summit_id}/tag-groups`, accessRoute: 'tag-groups' },
             {name: 'reports', iconClass: 'fa-list-ol', linkUrl:`summits/${summit_id}/reports`, accessRoute: 'reports' },
             {name: 'summitdocs', iconClass: 'fa-file-text', linkUrl:`summits/${summit_id}/summitdocs`, accessRoute: 'summitdocs' },
-            {name: 'email_flow_events', iconClass: 'fa-envelope-o   ', linkUrl:`summits/${summit_id}/email-flow-events`, accessRoute: 'email-flow-events' },
+            {name: 'email_flow_events', iconClass: 'fa-envelope-o', accessRoute: 'email-flow-events',
+                childs: [
+                    {name: 'email_flow_overrides', linkUrl:`summits/${summit_id}/email-flow-events`},
+                    {name: 'email_flow_settings', linkUrl:`summits/${summit_id}/email-flow-events-settings`},
+                ] },
             {   name: 'settings', iconClass: 'fa-cog', accessRoute: 'settings',
                 childs: [
                     {name:'marketing', linkUrl:`summits/${summit_id}/marketing`},

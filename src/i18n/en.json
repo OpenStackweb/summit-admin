@@ -136,6 +136,8 @@
     "sent_email": "Sent Emails",
     "summitdocs": "Event Docs",
     "email_flow_events": "Email Events",
+    "email_flow_overrides": "Overrides",
+    "email_flow_settings": "Settings",
     "admin_access": "Admin Access Groups",
     "registration_invitation_list": "Registration Invitations",
     "registration_companies_list": "Registration Companies",
@@ -2275,6 +2277,18 @@
       "select_template": "Select template",
       "recipient": "Optional Recipient"
     }
+  },
+  "email_flow_events_settings": {
+    "email_flow_settings": "Settings",
+    "email_settings": "Email Settings",
+    "email_template_generic_banner": "Generic Banner",
+    "email_template_ticket_top_graphic": "Top Graphic",
+    "email_template_ticket_bottom_graphic": "Bottom Graphic",
+    "email_template_generic_from": "Generic From",
+    "email_template_speakers_from": "Speakers From",
+    "email_template_primary_color": "Primary Color",
+    "email_template_secondary_color": "Secondary Color",
+    "email_template_settings_updated": "Email Settings Updated"
   },
   "admin_access": {
     "admin_accesses": "Admin Access Groups",

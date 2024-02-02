@@ -140,6 +140,7 @@ import currentRegFeedMetadataListReducer from './reducers/summits/reg-feed-metad
 import currentRegFeedMetadataReducer from './reducers/summits/reg-feed-metadata-reducer';
 import badgePrintReducer from './reducers/tickets/badge-print-reducer';
 import notesReducer from './reducers/notes/notes-reducer';
+import emailFlowEventSettingsReducer from './reducers/email_flow_events/email-flows-event-settings-reducer';
 
  // default: localStorage if web, AsyncStorage if react-native
 
@@ -238,6 +239,7 @@ const reducers = persistCombineReducers(config, {
     summitDocState: summitDocReducer,
     emailFlowEventsListState: emailFlowEventsListReducer,
     emailFLowEventState: emailFlowEventReducer,
+    emailFLowEventSettingsState: emailFlowEventSettingsReducer,
     RegistrationInvitationListState: RegistrationInvitationListReducer,
     SubmmissionInvitationListState: SubmmissionInvitationListReducer,
     currentSubmissionInvitationState: submissionInvitationReducer,

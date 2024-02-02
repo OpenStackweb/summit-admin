@@ -30,6 +30,7 @@ import {
     escapeFilterValue
 } from 'openstack-uicore-foundation/lib/utils/actions';
 import {getAccessTokenSafely} from '../utils/methods';
+import { saveMarketingSetting } from "./marketing-actions";
 
 
 export const REQUEST_TEMPLATES       = 'REQUEST_TEMPLATES';
@@ -53,6 +54,8 @@ export const REQUEST_TEMPLATE_RENDER    = 'REQUEST_TEMPLATE_RENDER';
 export const TEMPLATE_RENDER_RECEIVED   = 'TEMPLATE_RENDER_RECEIVED';
 export const UPDATE_JSON_DATA           = 'UPDATE_JSON_DATA';
 export const VALIDATE_RENDER            = 'VALIDATE_RENDER';
+
+export const RECEIVE_EMAIL_SETTINGS  = 'RECEIVE_EMAIL_SETTINGS';
 
 
 export const getEmailTemplates = (term = null, page = 1, perPage = 10, order = 'id', orderDir = 1 ) => async (dispatch, getState) => {
@@ -348,6 +351,58 @@ export const getAllClients = () => async (dispatch, getState) => {
         }
     );
 };
+
+/************************************************************************************************************/
+/*                          EMAIL_SETTINGS                                                                  */
+/************************************************************************************************************/
+
+export const getMarketingEmailSettings = (page = 1, perPage = 100) => (dispatch, getState) => {
+    const {currentSummitState} = getState();
+    const {currentSummit} = currentSummitState;
+
+    dispatch(startLoading());
+
+    const params = {
+        page: page,
+        per_page: perPage,
+        key__contains : 'EMAIL_TEMPLATE',
+    }
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_EMAIL_SETTINGS),
+        `${window.MARKETING_API_BASE_URL}/api/public/v1/config-values/all/shows/${currentSummit.id}`,
+        authErrorHandler,
+        {}
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+}
+
+export const saveMarketingEmailSettings = (emailMarketingSettings) => async (dispatch) => {
+
+
+    return Promise.all(Object.keys(emailMarketingSettings).map(m => {
+
+        let value = emailMarketingSettings[m].value ?? '';
+        let file = emailMarketingSettings[m].file ?? null;
+
+        if (typeof value == "boolean"){
+            value = value ? '1' : '0';
+        }
+
+        const email_setting = {
+            id: emailMarketingSettings[m].id,
+            type: emailMarketingSettings[m].type,
+            key: m.toUpperCase(),
+            value: value,
+        }
+
+        return dispatch(saveMarketingSetting(email_setting, file));
+    }));
+
+}
 
 export const customErrorHandler = (err, res) => (dispatch, state) => {
     const code = err.status;
