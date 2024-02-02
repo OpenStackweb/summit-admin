@@ -2282,13 +2282,13 @@
   "email_flow_events_settings": {
     "email_flow_settings": "Settings",
     "email_settings": "Email Settings",
-    "email_template_generic_banner": "Generic Banner",
-    "email_template_ticket_top_graphic": "Top Graphic",
-    "email_template_ticket_bottom_graphic": "Bottom Graphic",
-    "email_template_generic_from": "Generic From",
-    "email_template_speakers_from": "Speakers From",
-    "email_template_primary_color": "Primary Color",
-    "email_template_secondary_color": "Secondary Color",
+    "email_template_generic_banner": "EMAIL_TEMPLATE_GENERIC_BANNER",
+    "email_template_ticket_top_graphic": "EMAIL_TEMPLATE_TICKET_TOP_GRAPHIC",
+    "email_template_ticket_bottom_graphic": "EMAIL_TEMPLATE_TICKET_BOTTOM_GRAPHIC",
+    "email_template_generic_from": "EMAIL_TEMPLATE_GENERIC_FROM",
+    "email_template_speakers_from": "EMAIL_TEMPLATE_SPEAKERS_FROM",
+    "email_template_primary_color": "EMAIL_TEMPLATE_PRIMARY_COLOR",
+    "email_template_secondary_color": "EMAIL_TEMPLATE_SECONDARY_COLOR",
     "email_template_settings_updated": "Email Settings Updated"
   },
   "admin_access": {
