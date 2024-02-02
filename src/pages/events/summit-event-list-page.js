@@ -80,7 +80,36 @@ const fieldNames = [
             </>)
         }
     },
-]
+];
+
+const defaultFilters = {
+    event_type_capacity_filter: [],
+    selection_plan_id_filter: [],
+    location_id_filter: [],
+    selection_status_filter: [],
+    track_id_filter: [],
+    event_type_id_filter: [],
+    speaker_id_filter: [],
+    speaker_company: [],
+    level_filter: [],
+    tags_filter: [],
+    published_filter: null,
+    progress_flag: [],
+    start_date_filter: Array(2).fill(null),
+    end_date_filter: Array(2).fill(null),
+    duration_filter: '',
+    speakers_count_filter: '',
+    submitters: [],
+    submitter_company: [],
+    streaming_url: '',
+    meeting_url: '',
+    etherpad_link: '',
+    streaming_type: '',
+    sponsor: [],
+    all_companies: [],
+    submission_status_filter: [],
+    media_upload_with_type: { operator: null, value: [] },
+};
 
 class SummitEventListPage extends React.Component {
 
@@ -124,31 +153,7 @@ class SummitEventListPage extends React.Component {
             enabledFilters: [],
             errors:{},
             eventFilters: {
-                event_type_capacity_filter: [],
-                selection_plan_id_filter: [],
-                location_id_filter: [],
-                selection_status_filter: [],
-                track_id_filter: [],
-                event_type_id_filter: [],
-                speaker_id_filter: [],
-                speaker_company: [],
-                level_filter: [],
-                tags_filter: [],
-                published_filter: null,
-                start_date_filter: Array(2).fill(null),
-                end_date_filter: Array(2).fill(null),
-                duration_filter: '',
-                speakers_count_filter: '',
-                submitters: [],
-                submitter_company: [],
-                streaming_url: '',
-                meeting_url: '',
-                etherpad_link: '',
-                streaming_type: '',
-                sponsor: [],
-                all_companies: [],
-                submission_status_filter: [],
-                media_upload_with_type: { operator: null, value: [] },
+                ...defaultFilters,
                 orAndFilter: ALL_FILTER,
             },
             selectedColumns: [],
@@ -313,34 +318,7 @@ class SummitEventListPage extends React.Component {
         const {value} = ev.target;
         if(value.length < this.state.enabledFilters.length) {
             if(value.length === 0) {
-                const resetFilters = {
-                    event_type_capacity_filter: [],
-                    selection_plan_id_filter: [],
-                    location_id_filter: [],
-                    selection_status_filter: [],
-                    track_id_filter: [],
-                    event_type_id_filter: [],
-                    speaker_id_filter: [],
-                    speaker_company: [],
-                    level_filter: [],
-                    tags_filter: [],
-                    published_filter: null,
-                    start_date_filter: Array(2).fill(null),
-                    end_date_filter: Array(2).fill(null),
-                    duration_filter: '',
-                    speakers_count_filter: '',
-                    submitters: [],
-                    submitter_company: [],
-                    streaming_url: '',
-                    meeting_url: '',
-                    etherpad_link: '',
-                    streaming_type: '',
-                    sponsor: [],
-                    all_companies: [],
-                    submission_status_filter: [],
-                    media_upload_with_type: { operator: null, value: [] },
-                };
-                this.setState({...this.state, enabledFilters: value, eventFilters: resetFilters});
+                this.setState({...this.state, enabledFilters: value, eventFilters: defaultFilters});
             } else {
                 const removedFilter = this.state.enabledFilters.filter(e => !value.includes(e))[0];            
                 const defaultValue = removedFilter === 'published_filter' ? null : Array.isArray(this.state.eventFilters[removedFilter]) ? [] : '';
@@ -376,34 +354,7 @@ class SummitEventListPage extends React.Component {
         const {value} = ev.target;
         if(value.length < this.state.enabledFilters.length) {
             if(value.length === 0) {
-                const resetFilters = {
-                    event_type_capacity_filter: [],
-                    selection_plan_id_filter: [],
-                    location_id_filter: [],
-                    selection_status_filter: [],
-                    track_id_filter: [],
-                    event_type_id_filter: [],
-                    speaker_id_filter: [],
-                    speaker_company: [],
-                    level_filter: [],
-                    tags_filter: [],
-                    published_filter: null,
-                    start_date_filter: Array(2).fill(null),
-                    end_date_filter: Array(2).fill(null),
-                    duration_filter: '',
-                    speakers_count_filter: '',
-                    submitters: [],
-                    submitter_company: [],
-                    streaming_url: '',
-                    meeting_url: '',
-                    etherpad_link: '',
-                    streaming_type: '',
-                    sponsor: [],
-                    all_companies: [],
-                    submission_status_filter: [],
-                    media_upload_with_type: { operator: null, value: [] },
-                };
-                this.setState({...this.state, enabledFilters: value, eventFilters: resetFilters});
+                this.setState({...this.state, enabledFilters: value, eventFilters: defaultFilters});
             } else {
                 const removedFilter = this.state.enabledFilters.filter(e => !value.includes(e))[0];            
                 const defaultValue = removedFilter === 'published_filter' ? null : Array.isArray(this.state.eventFilters[removedFilter]) ? [] : '';
@@ -495,7 +446,8 @@ class SummitEventListPage extends React.Component {
             {label: 'Etherpad URL', value: 'etherpad_link'}, 
             {label: 'Location', value: 'location_id_filter'},
             {label: 'Meeting URL', value: 'meeting_url'},
-            {label: 'Published Status', value: 'published_filter'},    
+            {label: 'Progress Flag', value: 'progress_flag'},
+            {label: 'Published Status', value: 'published_filter'},
             {label: 'Speakers', value: 'speaker_id_filter'},
             {label: 'Speakers Companies', value: 'speaker_company'},
             {label: 'Tags', value: 'tags_filter'},
@@ -551,6 +503,8 @@ class SummitEventListPage extends React.Component {
             {label: T.translate("event_list.submission_status_received"), value: 'Received'},
             {label: T.translate("event_list.submission_status_not_submitted"), value: 'NonReceived'}
         ];
+
+        const progress_flag_ddl = currentSummit.presentation_action_types.map(pf => ({value: pf.id, label: pf.label}))
 
         let showColumns = fieldNames
         .filter(f => this.state.selectedColumns.includes(f.columnKey) )
@@ -688,6 +642,19 @@ class SummitEventListPage extends React.Component {
                                 style={{ width: "100%", height:40, color: '#337ab7', fontSize: '10px'  }}
                             />                        
                         </div>
+                    }
+                    {enabledFilters.includes('progress_flag') &&
+                      <div className={'col-md-6'}>
+                          <Dropdown
+                            id="progress_flag"
+                            placeholder={T.translate("event_list.placeholders.progress_flag")}
+                            value={eventFilters.progress_flag}
+                            onChange={this.handleExtraFilterChange}
+                            options={progress_flag_ddl}
+                            isClearable={true}
+                            isMulti={true}
+                          />
+                      </div>
                     }
                     {enabledFilters.includes('track_id_filter') &&
                         <div className={'col-md-6'}> 

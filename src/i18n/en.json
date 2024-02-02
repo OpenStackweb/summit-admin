@@ -1018,6 +1018,7 @@
       "selection_plan": "Filter by Selection Plan",
       "location": "Filter by Location",
       "selection_status": "Filter by Selection Status",
+      "progress_flag": "Filter by Progress Flag",
       "track": "Filter by Activity Category",
       "event_type": "Filter by Activity Type",
       "speaker": "Filter by Speaker",
