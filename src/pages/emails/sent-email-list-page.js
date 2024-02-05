@@ -44,7 +44,7 @@ const SentEmailListPage = ({
   };
 
   const handleSearch = (newTerm) => {
-    props.getSentEmails(newTerm, currentPage, perPage, order, orderDir);
+    props.getSentEmails(newTerm, 1, perPage, order, orderDir);
   };
 
   const columns = [
