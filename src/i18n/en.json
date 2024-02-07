@@ -1092,8 +1092,11 @@
     "min_duration": "Min Duration (in minutes)",
     "max_duration": "Max Duration (in minutes)",
     "time_restrictions_info": "this only applies to track chairs",
+    "schedule_settings": "Schedule settings",
+    "allowed_ticket_types": "Allowed ticket types",
     "placeholders": {
-      "select_class": "Select Class"
+      "select_class": "Select Class",
+      "allowed_ticket_types": "Select ticket types"
     }
   },
   "event_category_list": {

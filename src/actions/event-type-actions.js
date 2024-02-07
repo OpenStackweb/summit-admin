@@ -208,6 +208,10 @@ const normalizeEntity = (entity) => {
         delete(normalizedEntity['max_duration']);
     }
 
+    if (normalizedEntity.show_always_on_schedule) {
+        normalizedEntity.allowed_ticket_types = [];
+    }
+
     return normalizedEntity;
 
 }

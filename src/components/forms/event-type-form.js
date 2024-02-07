@@ -14,7 +14,7 @@
 import React from 'react'
 import T from 'i18n-react/dist/i18n-react'
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-import {Dropdown, Input, SimpleLinkList} from 'openstack-uicore-foundation/lib/components'
+import {Dropdown, Input, SimpleLinkList, Panel} from 'openstack-uicore-foundation/lib/components'
 import {isEmpty, scrollToError, shallowEqual, hasErrors} from "../../utils/methods";
 
 
@@ -24,10 +24,12 @@ class EventTypeForm extends React.Component {
 
         this.state = {
             entity: {...props.entity},
-            errors: props.errors
+            errors: props.errors,
+            showSection: 'main'
         };
 
         this.handleChange = this.handleChange.bind(this);
+        this.handleShowAlwaysChange = this.handleShowAlwaysChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleMediaUploadUnLink = this.handleMediaUploadUnLink.bind(this);
         this.handleMediaUploadLink = this.handleMediaUploadLink.bind(this);
@@ -69,6 +71,19 @@ class EventTypeForm extends React.Component {
         this.setState({entity: entity, errors: errors});
     }
 
+    handleShowAlwaysChange(ev) {
+        const entity = {...this.state.entity};
+        const value = ev.target.checked;
+
+        // if true then we clear allowed ticket types
+        if (value) {
+            entity.allowed_ticket_types = [];
+        }
+
+        entity.show_always_on_schedule = value;
+        this.setState({entity: entity});
+    }
+
     handleSubmit(ev) {
         ev.preventDefault();
 
@@ -85,10 +100,19 @@ class EventTypeForm extends React.Component {
         this.props.onMediaUploadUnLink(valueId, entity.id);
     }
 
+    toggleSection(section, ev) {
+        const { showSection } = this.state;
+        const newShowSection = (showSection === section) ? 'main' : section;
+        ev.preventDefault();
+
+        this.setState({ showSection: newShowSection });
+    }
+
     render() {
-        const {entity, errors} = this.state;
-        const { getMediaUploads } = this.props;
+        const {entity, errors, showSection} = this.state;
+        const { getMediaUploads, currentSummit } = this.props;
         const event_types_ddl = [{label: 'Presentation', value: 'PRESENTATION_TYPE'}, {label: 'Event', value: 'EVENT_TYPE'}];
+        const ticket_types_ddl = currentSummit.ticket_types.map(t => ({value: t.id, label: t.name}));
 
         const blackout_times_ddl = [
             {label: T.translate("edit_event_type.blackout_time_final"), value: 'Final'}, 
@@ -195,6 +219,17 @@ class EventTypeForm extends React.Component {
                             </label>
                         </div>
                     </div>
+                    { entity.class_name === 'PRESENTATION_TYPE' &&
+                      <div className="col-md-4">
+                          <div className="form-check abc-checkbox">
+                              <input type="checkbox" id="allows_speaker_event_collision" checked={entity.allows_speaker_event_collision}
+                                     onChange={this.handleChange} className="form-check-input" />
+                              <label className="form-check-label" htmlFor="allows_speaker_event_collision">
+                                  {T.translate("edit_event_type.allows_speaker_event_collision")}
+                              </label>
+                          </div>
+                      </div>
+                    }
                 </div>
                 <div className="row form-group checkboxes-div">
                     <div className="col-md-4">
@@ -224,28 +259,6 @@ class EventTypeForm extends React.Component {
                             </label>
                         </div>
                     </div>
-                </div>
-                <div className="row form-group checkboxes-div">
-                    <div className="col-md-4">
-                        <div className="form-check abc-checkbox">
-                            <input type="checkbox" id="show_always_on_schedule" checked={entity.show_always_on_schedule}
-                                   onChange={this.handleChange} className="form-check-input" />
-                            <label className="form-check-label" htmlFor="show_always_on_schedule">
-                                {T.translate("edit_event_type.show_always_on_schedule")}
-                            </label>
-                        </div>
-                    </div>
-                    { entity.class_name === 'PRESENTATION_TYPE' &&
-                    <div className="col-md-4">
-                        <div className="form-check abc-checkbox">
-                            <input type="checkbox" id="allows_speaker_event_collision" checked={entity.allows_speaker_event_collision}
-                                   onChange={this.handleChange} className="form-check-input" />
-                            <label className="form-check-label" htmlFor="allows_speaker_event_collision">
-                                {T.translate("edit_event_type.allows_speaker_event_collision")}
-                            </label>
-                        </div>
-                    </div>
-                    }
                 </div>
                 {entity.class_name === 'PRESENTATION_TYPE' &&
                 <div>
@@ -419,7 +432,35 @@ class EventTypeForm extends React.Component {
                     }
                 </div>
                 }
-
+                <Panel
+                  show={showSection === 'schedule_settings'}
+                  title={T.translate("edit_event_type.schedule_settings")}
+                  handleClick={this.toggleSection.bind(this, 'schedule_settings')}
+                >
+                    <div className="row form-group checkboxes-div">
+                        <div className="col-md-4">
+                            <div className="form-check abc-checkbox">
+                                <input type="checkbox" id="show_always_on_schedule" checked={entity.show_always_on_schedule}
+                                       onChange={this.handleShowAlwaysChange} className="form-check-input" />
+                                <label className="form-check-label" htmlFor="show_always_on_schedule">
+                                    {T.translate("edit_event_type.show_always_on_schedule")}
+                                </label>
+                            </div>
+                        </div>
+                        <div className="col-md-4">
+                            <label> {T.translate("edit_event_type.allowed_ticket_types")}</label>
+                            <Dropdown
+                              id="allowed_ticket_types"
+                              value={entity.allowed_ticket_types}
+                              placeholder={T.translate("edit_event_type.placeholders.allowed_ticket_types")}
+                              options={ticket_types_ddl}
+                              onChange={this.handleChange}
+                              disabled={!!entity.show_always_on_schedule}
+                              isMulti
+                            />
+                        </div>
+                    </div>
+                </Panel>
                 <div className="row">
                     <div className="col-md-12 submit-buttons">
                         <input type="button" onClick={this.handleSubmit}
