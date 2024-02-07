@@ -708,6 +708,8 @@ render() {
         }
     };
 
+    const ticket_types_ddl = currentSummit.ticket_types.map(t => ({value: t.id, label: t.name}));
+
     return (
         <div>
             <input type="hidden" id="id" value={entity.id} />
@@ -1419,6 +1421,26 @@ render() {
                     </div>
                 </Panel>
             }
+
+            <Panel
+              show={showSection === 'schedule_settings'}
+              title={T.translate("edit_event.schedule_settings")}
+              handleClick={this.toggleSection.bind(this, 'schedule_settings')}
+            >
+                <div className="row">
+                    <div className="col-md-4">
+                        <label> {T.translate("edit_event.allowed_ticket_types")}</label>
+                        <Dropdown
+                          id="allowed_ticket_types"
+                          value={entity.allowed_ticket_types}
+                          placeholder={T.translate("edit_event.placeholders.allowed_ticket_types")}
+                          options={ticket_types_ddl}
+                          onChange={this.handleChange}
+                          isMulti
+                        />
+                    </div>
+                </div>
+            </Panel>
 
             <div className="row">
                 <div className="col-md-12 submit-buttons">

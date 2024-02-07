@@ -544,6 +544,8 @@
     "unassign_speaker": "Are you sure you want to unassign speaker ",
     "no_speakers": "There are no speakers associated with this activity so far",
     "stream_is_secure": "Is Secure?",
+    "schedule_settings": "Schedule settings",
+    "allowed_ticket_types": "Allowed ticket types",
     "placeholders": {
       "select_venue": "Select an Activity Venue ...",
       "start_date": "Start Date",
@@ -555,7 +557,8 @@
       "select_selection_plan": "Select a Selection Plan ...",
       "select_submitter": "Select Submitter ...",
       "search_feedback": "Search by Author, Note",
-      "search_comment": "Search by Comment, Creator ID"
+      "search_comment": "Search by Comment, Creator ID",
+      "allowed_ticket_types": "Select ticket types"
     }
   },
   "edit_event_material": {
