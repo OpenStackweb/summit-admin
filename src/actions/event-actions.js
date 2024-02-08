@@ -720,22 +720,24 @@ export const normalizeEvent = (entity, eventTypeConfig, summit) => {
 
     if (normalizedEntity.hasOwnProperty("links")) delete normalizedEntity['links'];
 
-    if(normalizedEntity.hasOwnProperty("tags"))
+    if (normalizedEntity.hasOwnProperty("tags"))
         normalizedEntity.tags = normalizedEntity.tags.map((t) => {
             if (typeof t === 'string') return t;
             else return t.tag;
         });
 
-    if(normalizedEntity.hasOwnProperty("sponsors"))
+    if (normalizedEntity.hasOwnProperty("sponsors"))
         normalizedEntity.sponsors = normalizedEntity.sponsors.map(s => s.id);
 
-    if(normalizedEntity.hasOwnProperty("speakers"))
+    if (normalizedEntity.hasOwnProperty("speakers"))
         normalizedEntity.speakers = normalizedEntity.speakers.map(s => s.id);
 
     if (normalizedEntity.hasOwnProperty("moderator") && normalizedEntity.moderator)
         normalizedEntity.moderator_speaker_id = normalizedEntity.moderator.id;
-    else
+    else {
         delete (normalizedEntity.moderator);
+        normalizedEntity.moderator_speaker_id = 0;
+    }
 
     if (normalizedEntity.hasOwnProperty("created_by")) {
         normalizedEntity.created_by_id = normalizedEntity.created_by?.id;
