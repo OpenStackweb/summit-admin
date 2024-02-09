@@ -72,7 +72,8 @@ export const DEFAULT_ENTITY = {
     disclaimer_accepted_date: null,
     created_by: null,
     custom_order: 0,
-    actions: []
+    actions: [],
+    allowed_ticket_types: [],
 }
 
 const DEFAULT_STATE_FEEDBACK_STATE = {

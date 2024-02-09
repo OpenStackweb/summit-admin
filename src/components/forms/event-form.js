@@ -1432,7 +1432,7 @@ render() {
                         <label> {T.translate("edit_event.allowed_ticket_types")}</label>
                         <Dropdown
                           id="allowed_ticket_types"
-                          value={entity.allowed_ticket_types}
+                          value={entity?.allowed_ticket_types}
                           placeholder={T.translate("edit_event.placeholders.allowed_ticket_types")}
                           options={ticket_types_ddl}
                           onChange={this.handleChange}
