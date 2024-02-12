@@ -37,6 +37,7 @@ import {
 import { isEmpty, scrollToError, shallowEqual, hasErrors, adjustEventDuration } from "../../utils/methods";
 import { Pagination } from "react-bootstrap";
 import ExtraQuestionsForm from 'openstack-uicore-foundation/lib/components/extra-questions';
+import QuestionsSet  from 'openstack-uicore-foundation/lib/utils/questions-set'
 import ProgressFlags from '../inputs/ProgressFlags';
 import { ATTENDEES_EXPECTED_LEARNT, ATTENDING_MEDIA, LEVEL, SOCIAL_DESCRIPTION } from "../../actions/event-actions";
 import AuditLogs from "../audit-logs";
@@ -299,12 +300,12 @@ class EventForm extends React.Component {
     }
 
     handleChangeExtraQuestion(formValues) {
-        const {extra_questions: extraQuestions} = this.state.entity?.selection_plan || {};
+        const qs = new QuestionsSet(this.state.entity?.selection_plan?.extra_questions || {});
         const formattedAnswers = [];
 
-        Object.keys(formValues).map(a => {
-            let question = extraQuestions.find(q => q.name === a);
-            const newQuestion = { question_id: question.id, value: `${formValues[a]}` }
+        Object.keys(formValues).map(name => {
+            let question = qs.getQuestionByName(name);
+            const newQuestion = { question_id: question.id, value: `${formValues[name]}` }
             formattedAnswers.push(newQuestion);
         });
 
