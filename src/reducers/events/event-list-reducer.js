@@ -65,9 +65,9 @@ const eventListReducer = (state = DEFAULT_STATE, action) => {
             let {current_page, total, last_page} = payload.response;
             let events = payload.response.data.map(e => {
                 let published_date = (e.is_published ? moment(e.published_date * 1000).tz(state.summitTZ).format('MMMM Do YYYY, h:mm a') : 'No');
-                
-                let speakers_companies = e.speakers && e.speakers.length > 0 ? e.speakers.map(e => e.company) : [];                
-                speakers_companies = speakers_companies.length > 0 ? speakers_companies.filter((item,index) => item !== '' && speakers_companies.indexOf(item) === index) : []; 
+
+                let speakers_companies = e.speakers && e.speakers.length > 0 ? e.speakers.map(e => e.company) : [];
+                speakers_companies = speakers_companies.length > 0 ? speakers_companies.filter((item,index) => item !== '' && speakers_companies.indexOf(item) === index) : [];
 
                 const event_type_capacity = [];
 
@@ -104,6 +104,7 @@ const eventListReducer = (state = DEFAULT_STATE, action) => {
                     end_date: e.end_date ? moment(e.end_date * 1000).tz(state.summitTZ).format('MMMM Do YYYY, h:mm a') : 'TBD',
                     sponsor: (e.sponsors) ? e.sponsors.map(s => s.name).join(', ') : 'N/A',
                     media_uploads: e?.media_uploads?.map( m => ({...m, created:moment(m.created * 1000).tz(state.summitTZ).format('MMMM Do YYYY, h:mm a') })),
+                    progress_flags: e?.actions?.map(a => `${a.type.label} (${a.is_completed ? 'ON' : 'OFF'})`).join(', '),
                 };
             });
 

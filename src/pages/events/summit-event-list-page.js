@@ -61,6 +61,7 @@ const fieldNames = [
     { columnKey: 'etherpad_link', value: 'etherpad_link', sortable: true, title: true },
     { columnKey: 'streaming_type', value: 'streaming_type', sortable: true },
     { columnKey: 'status', value: 'submission_status', sortable: false, title: true },
+    { columnKey: 'progress_flags', value: 'progress_flags', sortable: false, title: true },
     { columnKey: 'media_uploads', value: 'media_uploads', sortable: false, render :(e, field) => {
             if(!field?.length) return 'N/A';
             return (<>{(e.media_uploads.map( m =>
@@ -489,6 +490,7 @@ class SummitEventListPage extends React.Component {
             { value: 'submitter_company', label: T.translate("event_list.submitter_company")},
             { value: 'track', label: T.translate("event_list.track") },
             { value: 'status', label: T.translate("event_list.submission_status") },
+            { value: 'progress_flags', label: T.translate("event_list.progress_flags") },
             { value: 'media_uploads', label: T.translate("event_list.media_uploads") },
         ];
 

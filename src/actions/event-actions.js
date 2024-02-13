@@ -85,7 +85,7 @@ export const getEvents = (term = null, page = 1, perPage = 10, order = 'id', ord
     const filter = parseFilters(filters, term);
 
     const params = {
-        expand: 'speakers,type,created_by,track,sponsors,selection_plan,location,tags,media_uploads,media_uploads.media_upload_type',
+        expand: 'speakers,type,created_by,track,sponsors,selection_plan,location,tags,media_uploads,media_uploads.media_upload_type,actions,actions.type',
         page: page,
         per_page: perPage,
         access_token: accessToken,

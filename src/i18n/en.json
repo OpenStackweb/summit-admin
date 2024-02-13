@@ -971,6 +971,7 @@
     "location": "Location",
     "level": "Level",
     "tags": "Tags",
+    "progress_flags": "Progress Flags",
     "streaming_url": "Streaming URL",
     "meeting_url": "Meeting URL",
     "etherpad_link": "Etherpad URL",
