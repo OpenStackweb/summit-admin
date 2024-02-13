@@ -133,7 +133,7 @@ export const getPromocodes = (
 
     const filter = parseFilters(filters, term);
 
-    let expand = 'speaker,owner,sponsor,creator,tags';
+    let expand = 'speaker,owner,sponsor,creator,tags,owners,owners.speaker';
 
     if (filters.hasOwnProperty('classNamesFilter') && 
         (filters.classNamesFilter.includes(SPEAKERS_PROMO_CODE) || filters.classNamesFilter.includes(SPEAKERS_DISCOUNT_CODE))) {
