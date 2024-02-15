@@ -19,6 +19,15 @@ import {isEmpty, scrollToError, shallowEqual} from "../../utils/methods";
 import history from "../../history";
 import HexColorInput from '../inputs/hex-color-input';
 
+import Swal from "sweetalert2";
+
+const setting_types_ddl = [
+    {label: 'Plain Text', value: 'TEXT'},
+    {label: 'Html', value: 'TEXTAREA'},
+    {label: 'File', value: 'FILE'},
+    {label: 'Hex Color', value: 'HEX_COLOR'},
+];
+
 class MarketingSettingForm extends React.Component {
 
     constructor(props) {
@@ -76,6 +85,11 @@ class MarketingSettingForm extends React.Component {
         const {entity, file} = this.state;
         const { currentSummit } = this.props;
 
+        if(!entity.value || (entity.type === 'FILE' && !file)) {
+            const msg = `${setting_types_ddl.find(e => e.value === entity.type)?.label}: This field may not be blank.`;
+            return Swal.fire("Validation error", msg, "warning");
+        }
+
         this.props.onSubmit(entity, file).then((payload) => {
             if(entity.id && entity.id > 0){
                 // UPDATE
@@ -125,12 +139,6 @@ class MarketingSettingForm extends React.Component {
     render() {
         const {entity} = this.state;
         const { currentSummit } = this.props;
-        let setting_types_ddl = [
-            {label: 'Plain Text', value: 'TEXT'},
-            {label: 'Html', value: 'TEXTAREA'},
-            {label: 'File', value: 'FILE'},
-            {label: 'Hex Color', value: 'HEX_COLOR'},
-        ];
 
         return (
             <form className="marketing-setting-form">

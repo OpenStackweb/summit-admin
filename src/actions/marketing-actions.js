@@ -320,8 +320,6 @@ export const customErrorHandler = (err, res) => (dispatch, state) => {
     const code = err.status;
     let msg = '';
 
-    console.log('asdkjahsdjkhaskdjaksjdhakjsdhajk')
-
     dispatch(stopLoading());
 
     switch (code) {
