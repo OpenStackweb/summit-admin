@@ -209,7 +209,7 @@ class PromocodeListPage extends React.Component {
         let columns = [
             { columnKey: 'id', value: T.translate("promocode_list.id"), sortable: true },
             { columnKey: 'code', value: T.translate("promocode_list.code"), sortable: true },
-            { columnKey: 'redeemed', value: T.translate("promocode_list.redeemed") }
+            { columnKey: 'redeemed', value: T.translate("promocode_list.redeemed"), sortable: true }
         ];
 
         const ddl_columns = [            
