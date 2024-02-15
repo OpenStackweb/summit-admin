@@ -89,7 +89,18 @@ class EmailFlowEventForm extends React.Component {
     handleSubmit(ev) {
         ev.preventDefault();
 
-        this.props.onSubmit(this.state.entity).then(() => {
+        // save only the settings with the following conditions
+        const settingsToSave = Object.fromEntries(
+            Object.entries(this.state.entity).filter(([key, values]) => {
+              return (
+                (values.type === 'TEXT' && (values.value !== '' || values.id)) ||
+                (values.type === 'HEX_COLOR' && values.value !== '') ||
+                (values.type === 'FILE' && values.file)
+              );
+            })
+        );
+        
+        this.props.onSubmit(settingsToSave).then(() => {
 
             const success_message = {
                 title: T.translate("general.done"),
