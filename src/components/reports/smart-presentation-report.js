@@ -18,7 +18,7 @@ import Select from 'react-select';
 const Query = require('graphql-query-builder');
 import wrapReport from './report-wrapper';
 import {flattenData} from "../../actions/report-actions";
-import {parseAndFormat} from "../../utils/methods";
+import {htmlToString, parseAndFormat} from "../../utils/methods";
 
 
 const fieldNames = [
@@ -139,6 +139,12 @@ class SmartPresentationReport extends React.Component {
             if (d.endDate) d.endDate = parseAndFormat(d.endDate, 'YYYY-MM-DDTHH:mm:ss+00:00', 'MM/DD/YYYY h:mma','UTC', currentSummit.time_zone_id);
             // bc legacy SilverStripe
             if (d.created) d.created = parseAndFormat(d.created, 'YYYY-MM-DDTHH:mm:ss+00:00',  'America/Chicago');
+
+            if (forExport) {
+               if (d.abstract) d.abstract = htmlToString(d.abstract);
+               if (d.socialSummary) d.socialSummary = htmlToString(d.socialSummary);
+               if (d.expectToLearn) d.expectToLearn = htmlToString(d.expectToLearn);
+            }
         });
 
         let columns = [

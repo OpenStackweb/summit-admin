@@ -358,3 +358,9 @@ export const joinCVSChunks = (chunks) => {
 
     return `${header}\n${csv}`;
 }
+
+export const htmlToString = (html) => {
+    return new DOMParser()
+      .parseFromString(html, "text/html")
+      .documentElement.textContent;
+}
