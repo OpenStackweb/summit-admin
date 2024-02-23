@@ -73,6 +73,34 @@ class Member {
         }
         return false;
     }
+
+    canAddSponsors(){
+        for (var i in this._member.groups) {
+            if (access['sponsors-add'].includes(this._member.groups[i].code)) return true;
+        }
+        return false;
+    }
+
+    canEditSponsors(){
+        for (var i in this._member.groups) {
+            if (access['sponsors-edit'].includes(this._member.groups[i].code)) return true;
+        }
+        return false;
+    }
+
+    canDeleteSponsors(){
+        for (var i in this._member.groups) {
+            if (access['sponsors-delete'].includes(this._member.groups[i].code)) return true;
+        }
+        return false;
+    }
+
+    canEditBadgeScans(){
+        for (var i in this._member.groups) {
+            if (access['badge-scans-edit'].includes(this._member.groups[i].code)) return true;
+        }
+        return false;
+    }
 }
 
 export default Member;

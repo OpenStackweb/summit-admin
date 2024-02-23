@@ -13,7 +13,6 @@
 
 import React from 'react'
 import { connect } from 'react-redux';
-import { Breadcrumb } from 'react-breadcrumbs';
 import T from "i18n-react/dist/i18n-react";
 import SponsorForm from '../../components/forms/sponsor-form';
 import {
@@ -33,6 +32,7 @@ import {
     updateSponsorAdsOrder,
     updateSponsorMaterialOrder
 } from "../../actions/sponsor-actions";
+import Member from "../../models/member";
 
 class EditSponsorPage extends React.Component {
 
@@ -61,9 +61,10 @@ class EditSponsorPage extends React.Component {
     }
 
     render() {
-        const { currentSummit, entity, errors, match, history, sponsorships } = this.props;
+        const { currentSummit, entity, errors, history, sponsorships, member } = this.props;
         const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
-
+        const memberObj = new Member(member);
+        const canEditSponsors = memberObj.canEditSponsors();
         return (
             <div className="container">
                 <h3>{title} {T.translate("edit_sponsor.sponsor")}</h3>
@@ -89,6 +90,7 @@ class EditSponsorPage extends React.Component {
                     getSponsorAdvertisements={this.props.getSponsorAdvertisements}
                     getSponsorMaterials={this.props.getSponsorMaterials}
                     getSponsorSocialNetworks={this.props.getSponsorSocialNetworks}
+                    canEditSponsors={canEditSponsors}
                 />
                 }
             </div>
@@ -96,9 +98,10 @@ class EditSponsorPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentSponsorState, currentSummitSponsorshipListState }) => ({
+const mapStateToProps = ({ loggedUserState, currentSummitState, currentSponsorState, currentSummitSponsorshipListState }) => ({
     currentSummit: currentSummitState.currentSummit,
     sponsorships: currentSummitSponsorshipListState.sponsorships,
+    member       : loggedUserState.member,
     ...currentSponsorState
 });
 

@@ -18,6 +18,7 @@ import Swal from "sweetalert2";
 import {SortableTable} from 'openstack-uicore-foundation/lib/components';
 import { getSummitById }  from '../../actions/summit-actions';
 import { getSponsors, deleteSponsor, updateSponsorOrder } from "../../actions/sponsor-actions";
+import Member from "../../models/member";
 
 class SponsorListPage extends React.Component {
 
@@ -68,7 +69,10 @@ class SponsorListPage extends React.Component {
     }
 
     render(){
-        const {currentSummit, sponsors, totalSponsors, allSponsorships} = this.props;
+        const {currentSummit, sponsors, totalSponsors, member} = this.props;
+        const memberObj = new Member(member);
+        const canAddSponsors =  memberObj.canAddSponsors();
+        const canDeleteSponsors = memberObj.canDeleteSponsors();
 
         const columns = [
             { columnKey: 'id', value: T.translate("sponsor_list.id") },
@@ -79,9 +83,12 @@ class SponsorListPage extends React.Component {
         const table_options = {
             actions: {
                 edit: { onClick: this.handleEdit },
-                delete: { onClick: this.handleDelete }
             }
         };
+
+        if(canDeleteSponsors){
+            table_options.actions = {...table_options.actions,  delete: { onClick: this.handleDelete }};
+        }
 
         if(!currentSummit.id) return (<div />);
 
@@ -93,14 +100,15 @@ class SponsorListPage extends React.Component {
         return(
             <div className="container">
                 <h3> {T.translate("sponsor_list.sponsor_list")} ({totalSponsors})</h3>
-                <div className={'row'}>
-                    <div className="col-md-6 text-right col-md-offset-6">
-                        <button className="btn btn-primary right-space" onClick={this.handleNewSponsor}>
-                            {T.translate("sponsor_list.add_sponsor")}
-                        </button>
+                {canAddSponsors &&
+                    <div className={'row'}>
+                        <div className="col-md-6 text-right col-md-offset-6">
+                            <button className="btn btn-primary right-space" onClick={this.handleNewSponsor}>
+                                {T.translate("sponsor_list.add_sponsor")}
+                            </button>
+                        </div>
                     </div>
-                </div>
-
+                }
                 {sponsors.length === 0 &&
                 <div>{T.translate("sponsor_list.no_sponsors")}</div>
                 }
@@ -122,9 +130,10 @@ class SponsorListPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ currentSummitState, currentSponsorListState, currentSummitSponsorshipListState }) => ({
+const mapStateToProps = ({ loggedUserState, currentSummitState, currentSponsorListState, currentSummitSponsorshipListState }) => ({
     currentSummit   : currentSummitState.currentSummit,
     allSponsorships : currentSummitSponsorshipListState.sponsorships,
+    member          : loggedUserState.member,
     ...currentSponsorListState
 })
 

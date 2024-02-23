@@ -170,8 +170,8 @@ class SponsorForm extends React.Component {
     }
 
     handleAdvertisementAdd(ev) {
-        const {entity, history} = this.props;        
-        ev.preventDefault();        
+        const {entity, history} = this.props;
+        ev.preventDefault();
         history.push(`/app/summits/${entity.summit_id}/sponsors/${entity.id}/ads/new`);
     }
 
@@ -234,7 +234,7 @@ class SponsorForm extends React.Component {
             confirmButtonText: T.translate("general.yes_delete")
         }).then(function(result){
             if (result.value) {
-                collection === 'ads' ? onAdvertisementDelete(element) 
+                collection === 'ads' ? onAdvertisementDelete(element)
                 : collection === 'materials' ?
                 onMaterialDelete(element)
                 :
@@ -246,7 +246,7 @@ class SponsorForm extends React.Component {
 
     render() {
         const {entity, showSection} = this.state;
-        const { currentSummit, sponsorships, onCreateCompany } = this.props;        
+        const { currentSummit, onCreateCompany, canEditSponsors } = this.props;
 
         const advertisement_columns = [
             { columnKey: 'link', value: T.translate("edit_sponsor.link") },
@@ -317,14 +317,14 @@ class SponsorForm extends React.Component {
                     <div className="col-md-6">
                         <label> {T.translate("edit_sponsor.sponsorship")}</label>
                         <SummitSponsorshipTypeInput
-                            id="sponsorship" 
+                            id="sponsorship"
                             value={entity.sponsorship}
                             key={JSON.stringify(entity.sponsorship)}
                             summitId={currentSummit.id}
                             onChange={this.handleChange} />
                     </div>
                 </div>
-                {entity.id !== 0 &&
+                {entity.id !== 0 && canEditSponsors &&
                 <div className="row form-group">
                     <div className="col-md-12">
                         <label> {T.translate("general.member")} </label>
@@ -345,13 +345,13 @@ class SponsorForm extends React.Component {
                 </div>
                 }
 
-                {entity.id !== 0 && 
+                {entity.id !== 0 && canEditSponsors &&
                     <>
                     <hr/>
 
                     <Panel show={showSection === 'sponsor-page'} title={T.translate("edit_sponsor.sponsor_page")}
                         handleClick={this.toggleSection.bind(this, 'sponsor-page')}>
-                    
+
                         <div className="row form-group">
                             <div className="col-md-12">
                                 <label> {T.translate("edit_sponsor.intro")} </label>
@@ -366,7 +366,7 @@ class SponsorForm extends React.Component {
                                     value={entity.marquee}
                                     onChange={this.handleChange}
                                     className="form-control"
-                                />                            
+                                />
                             </div>
                         </div>
                         <div className="row form-group">
@@ -381,9 +381,9 @@ class SponsorForm extends React.Component {
                             <div className="col-md-4">
                                 <label> {T.translate("edit_sponsor.chat_link")} </label>
                                 <Input className="form-control" id="chat_link" value={entity.chat_link} onChange={this.handleChange} />
-                            </div>                        
+                            </div>
                         </div>
-                            
+
                         <div className="row form-group">
                             <div className="col-md-6">
                                 <div className="row">
@@ -422,7 +422,7 @@ class SponsorForm extends React.Component {
                                 <Input className="form-control" id="header_image_mobile_alt_text" value={entity.header_image_mobile_alt_text} onChange={this.handleChange} />
                             </div>
                         </div>
-                        <div className="row form-group">                            
+                        <div className="row form-group">
                             <div className="col-md-6">
                                 <div className="row">
                                     <div className="col-md-12">
@@ -464,7 +464,7 @@ class SponsorForm extends React.Component {
                             <div className="col-md-4">
                                 <label> {T.translate("edit_sponsor.featured_event")} </label>
                                 <EventInput
-                                    id="featured_event" 
+                                    id="featured_event"
                                     value={entity.featured_event}
                                     key={JSON.stringify(entity.featured_event)}
                                     summitId={currentSummit.id}
@@ -473,7 +473,7 @@ class SponsorForm extends React.Component {
                         </div>
 
                         <hr/>
-                        <div className="row form-group">                        
+                        <div className="row form-group">
                             <div className="col-md-12">
                                 <label htmlFor="ads">
                                     {T.translate("edit_sponsor.advertisements")}
@@ -491,7 +491,7 @@ class SponsorForm extends React.Component {
                         </div>
 
                         <hr/>
-                        <div className="row form-group">                        
+                        <div className="row form-group">
                             <div className="col-md-12">
                                 <label htmlFor="materials">
                                     {T.translate("edit_sponsor.materials")}
@@ -509,7 +509,7 @@ class SponsorForm extends React.Component {
                         </div>
 
                         <hr/>
-                        <div className="row form-group">                        
+                        <div className="row form-group">
                             <div className="col-md-12">
                                 <label htmlFor="social_networks">
                                     {T.translate("edit_sponsor.social_networks")}
@@ -534,18 +534,19 @@ class SponsorForm extends React.Component {
                                     activePage={entity.social_networks_collection.currentPage}
                                     onSelect={(page) => this.handlePageChange(page, 'social_networks')}
                                 />
-                            </div>                    
+                            </div>
                         </div>
                     </Panel>
                     </>
                 }
-
-                <div className="row">
-                    <div className="col-md-12 submit-buttons">
-                        <input type="button" onClick={this.handleSubmit}
-                               className="btn btn-primary pull-right" value={T.translate("general.save")}/>
+                {canEditSponsors &&
+                    <div className="row">
+                        <div className="col-md-12 submit-buttons">
+                            <input type="button" onClick={this.handleSubmit}
+                                   className="btn btn-primary pull-right" value={T.translate("general.save")}/>
+                        </div>
                     </div>
-                </div>
+                }
             </form>
         );
     }
