@@ -654,7 +654,7 @@ class SummitForm extends React.Component {
                         </div>
                     </div>
 
-                    {entity.id &&
+                    {entity.id !== 0 &&
                     <div>
                         <input type="button" onClick={this.handleSPlanAdd}
                                className="btn btn-primary pull-right" value={T.translate("edit_summit.add_splan")}/>
@@ -1237,7 +1237,7 @@ class SummitForm extends React.Component {
                             />
                         </div>
                     </div>
-                    {entity.id &&
+                    {entity.id !== 0 &&
                     <div className="form-group">
                         <label> {T.translate("edit_summit.registration_feed_metadata")}</label>
                         <input type="button" onClick={this.handleRegFeedMetadataAdd}

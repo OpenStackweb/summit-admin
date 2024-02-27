@@ -1485,7 +1485,7 @@ render() {
                         </div>
                     }
 
-                    {entity.id &&
+                    {entity.id !== 0 &&
                         <div>
                             <input
                                 type="button"
