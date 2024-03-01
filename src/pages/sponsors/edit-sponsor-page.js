@@ -30,7 +30,9 @@ import {
     getSponsorMaterials,
     getSponsorSocialNetworks,
     updateSponsorAdsOrder,
-    updateSponsorMaterialOrder
+    updateSponsorMaterialOrder,
+    deleteExtraQuestion,
+    updateExtraQuestionOrder
 } from "../../actions/sponsor-actions";
 import Member from "../../models/member";
 
@@ -91,6 +93,8 @@ class EditSponsorPage extends React.Component {
                     getSponsorMaterials={this.props.getSponsorMaterials}
                     getSponsorSocialNetworks={this.props.getSponsorSocialNetworks}
                     canEditSponsors={canEditSponsors}
+                    deleteExtraQuestion={this.props.deleteExtraQuestion}
+                    updateExtraQuestionOrder={this.props.updateExtraQuestionOrder}
                 />
                 }
             </div>
@@ -123,5 +127,7 @@ export default connect(
         getSponsorSocialNetworks,
         updateSponsorAdsOrder,
         updateSponsorMaterialOrder,
+        deleteExtraQuestion,
+        updateExtraQuestionOrder
     }
 )(EditSponsorPage);

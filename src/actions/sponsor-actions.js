@@ -43,6 +43,9 @@ export const SPONSOR_ORDER_UPDATED = 'SPONSOR_ORDER_UPDATED';
 export const MEMBER_ADDED_TO_SPONSOR = 'MEMBER_ADDED_TO_SPONSOR';
 export const MEMBER_REMOVED_FROM_SPONSOR = 'MEMBER_REMOVED_FROM_SPONSOR';
 export const COMPANY_ADDED = 'COMPANY_ADDED';
+export const SPONSOR_EXTRA_QUESTION_ORDER_UPDATED = 'SPONSOR_EXTRA_QUESTION_ORDER_UPDATED';
+export const SPONSOR_EXTRA_QUESTION_DELETED = 'SPONSOR_EXTRA_QUESTION_DELETED';
+
 
 export const REQUEST_SUMMIT_SPONSORSHIPS = 'REQUEST_SUMMIT_SPONSORSHIPS';
 export const RECEIVE_SUMMIT_SPONSORSHIPS = 'RECEIVE_SUMMIT_SPONSORSHIPS';
@@ -182,7 +185,7 @@ export const getSponsor = (sponsorId) => async (dispatch, getState) => {
 
     const params = {
         access_token : accessToken,
-        expand       : 'company, members, sponsorship, sponsorship.type, featured_event',
+        expand       : 'company, members, sponsorship, sponsorship.type, featured_event, extra_questions',
         fields       : 'featured_event.id, featured_event.title'
     };
 
@@ -386,6 +389,57 @@ export const createCompany = (company, callback) => async (dispatch, getState) =
     });
 
 }
+
+
+/******************  EXTRA QUESTIONS  ****************************************/
+
+
+export const updateExtraQuestionOrder = (extraQuestions, sponsorId, questionId, newOrder) => async (dispatch, getState) => {
+
+    const {currentSummitState} = getState();
+    const accessToken = await getAccessTokenSafely();
+    const {currentSummit} = currentSummitState;
+
+    const params = {
+        access_token : accessToken,
+    };
+
+    putRequest(
+      null,
+      createAction(SPONSOR_EXTRA_QUESTION_ORDER_UPDATED)(extraQuestions),
+      `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsors/${sponsorId}/extra-questions/${questionId}`,
+      {order: newOrder},
+      authErrorHandler
+    )(params)(dispatch).then(() => {
+          dispatch(stopLoading());
+      }
+    );
+
+}
+
+
+export const deleteExtraQuestion = (sponsorId, questionId) => async (dispatch, getState) => {
+
+    const {currentSummitState} = getState();
+    const accessToken = await getAccessTokenSafely();
+    const {currentSummit} = currentSummitState;
+
+    const params = {
+        access_token: accessToken
+    };
+
+    return deleteRequest(
+      null,
+      createAction(SPONSOR_EXTRA_QUESTION_DELETED)({questionId}),
+      `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsors/${sponsorId}/extra-questions/${questionId}`,
+      null,
+      authErrorHandler
+    )(params)(dispatch).then(() => {
+          dispatch(stopLoading());
+      }
+    );
+};
+
 
 
 /******************  SPONSORSHIPS ****************************************/

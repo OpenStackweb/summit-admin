@@ -29,7 +29,7 @@ import
     HEADER_IMAGE_ATTACHED,
     HEADER_IMAGE_DELETED,
     SIDE_IMAGE_ATTACHED,
-    SIDE_IMAGE_DELETED,    
+    SIDE_IMAGE_DELETED,
     CAROUSEL_IMAGE_ATTACHED,
     CAROUSEL_IMAGE_DELETED,
     HEADER_MOBILE_IMAGE_ATTACHED,
@@ -41,7 +41,7 @@ import
     SPONSOR_MATERIAL_ADDED,
     SPONSOR_SOCIAL_NETWORK_ADDED,
     SPONSOR_ADS_ORDER_UPDATED,
-    SPONSOR_MATERIAL_ORDER_UPDATED
+    SPONSOR_MATERIAL_ORDER_UPDATED, SPONSOR_EXTRA_QUESTION_ORDER_UPDATED, SPONSOR_EXTRA_QUESTION_DELETED
 } from '../../actions/sponsor-actions';
 
 import { VALIDATE } from 'openstack-uicore-foundation/lib/utils/actions';
@@ -97,7 +97,8 @@ export const DEFAULT_ENTITY = {
     carousel_advertise_image_alt_text   : '',
     ads_collection                      : DEFAULT_ADS_STATE,
     materials_collection                : DEFAULT_MATERIALS_STATE,
-    social_networks_collection          : DEFAULT_SOCIAL_NETWORKS_STATE
+    social_networks_collection          : DEFAULT_SOCIAL_NETWORKS_STATE,
+    extra_questions                     : []
 }
 
 const DEFAULT_STATE = {
@@ -271,6 +272,15 @@ const sponsorReducer = (state = DEFAULT_STATE, action) => {
             const {socialNetWorkId} = payload
             const social_networks = state.entity.social_networks_collection.social_networks.filter(social_network => social_network.id !== socialNetWorkId)
             return {...state, entity: {...state.entity, social_networks_collection: {...state.entity.social_networks_collection, social_networks } }}            
+        }
+        case SPONSOR_EXTRA_QUESTION_ORDER_UPDATED: {
+            return {...state, entity: {...state.entity, extra_questions: payload}}
+        }
+            break;
+        case SPONSOR_EXTRA_QUESTION_DELETED: {
+            const {questionId} = payload
+            const extraQuestions = state.entity.extra_questions.filter(eq => eq.id !== questionId);
+            return {...state, entity: {...state.entity, extra_questions: extraQuestions }}
         }
         case VALIDATE: {
             return {...state,  errors: payload.errors };

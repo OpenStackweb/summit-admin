@@ -2040,6 +2040,7 @@
     "sponsorship": "Sponsorship",
     "sponsorship_type":"Sponsorship Type",
     "sponsor_page": "Sponsor Page",
+    "extra_questions": "Extra Questions",
     "intro": "Intro",
     "marquee": "Marquee",
     "external_link": "External Link",
@@ -2804,5 +2805,15 @@
     "placeholders": {
       "search": "Search by content or author"
     }
+  },
+  "generic_extra_question_list": {
+    "extra_questions": "Extra Questions",
+    "question_type": "Question Type",
+    "question_id": "Question Identifier",
+    "visible_question": "Visible Question (as appears on site)",
+    "questions": "Questions",
+    "add_question": "Add Question",
+    "no_extra_questions": "No extra questions found.",
+    "remove_warning": "Are you sure you want to remove question "
   }
 }

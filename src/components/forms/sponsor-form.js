@@ -20,6 +20,7 @@ import { SortableTable, CompanyInput, MemberInput, Panel, TextEditor, Input, Upl
 import {isEmpty, scrollToError, shallowEqual, hasErrors} from "../../utils/methods";
 import EventInput from '../inputs/event-input';
 import SummitSponsorshipTypeInput from '../inputs/summit-sponsorship-type-input';
+import ExtraQuestionsTable from "../tables/extra-questions-table";
 
 class SponsorForm extends React.Component {
     constructor(props) {
@@ -243,7 +244,6 @@ class SponsorForm extends React.Component {
         });
     }
 
-
     render() {
         const {entity, showSection} = this.state;
         const { currentSummit, onCreateCompany, canEditSponsors } = this.props;
@@ -348,10 +348,8 @@ class SponsorForm extends React.Component {
                 {entity.id !== 0 && canEditSponsors &&
                     <>
                     <hr/>
-
                     <Panel show={showSection === 'sponsor-page'} title={T.translate("edit_sponsor.sponsor_page")}
                         handleClick={this.toggleSection.bind(this, 'sponsor-page')}>
-
                         <div className="row form-group">
                             <div className="col-md-12">
                                 <label> {T.translate("edit_sponsor.intro")} </label>
@@ -537,6 +535,17 @@ class SponsorForm extends React.Component {
                             </div>
                         </div>
                     </Panel>
+
+                        <Panel show={showSection === 'extra-questions'} title={T.translate("edit_sponsor.extra_questions")}
+                               handleClick={this.toggleSection.bind(this, 'extra-questions')}>
+                            <ExtraQuestionsTable
+                              extraQuestions={entity.extra_questions}
+                              onNew={console.log}
+                              onEdit={console.log}
+                              onDelete={(questionId) => this.props.deleteExtraQuestion(entity.id, questionId)}
+                              onReorder={(extraQuestions, questionId, order) => this.props.updateExtraQuestionOrder(extraQuestions, entity.id, questionId, order)}
+                            />
+                        </Panel>
                     </>
                 }
                 {canEditSponsors &&
