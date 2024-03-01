@@ -1,25 +1,25 @@
 import React, { useState } from 'react'
 import styles from './index.module.less';
-import { ChromePicker } from 'react-color';
+import Sketch from '@uiw/react-color-sketch';
 
 const HexColorInput = ({ onChange, id, className, value }) => {
 
     const [displayColorPicker, setDisplayColorPicker] = useState(false);
+    const [hexColor, setHexColor] = useState(value);
 
-    const onColorChange = (color, ev) => {
+    const handlePopupClose = () => {
 
         const newEvent = {
             target: {
-                value: color.hex,
+                value: hexColor,
                 id: id,
                 type: 'hexcolorinput'
             }
         }
 
         onChange(newEvent);
+        setDisplayColorPicker(false);
     }
-
-
 
     return (
         <div className={`${styles.colorWrapper} ${className}`} onClick={() => !displayColorPicker && setDisplayColorPicker(true)}>
@@ -27,13 +27,17 @@ const HexColorInput = ({ onChange, id, className, value }) => {
             {value && <div className={styles.colorSquare} style={{ backgroundColor: value }} />}
             {displayColorPicker ?
                 <div className={styles.popover}>
-                    <div className={styles.cover} onClick={() => setDisplayColorPicker(false)} />
-                    <ChromePicker
+                    <div className={styles.cover} onClick={() => handlePopupClose()} />
+                    <Sketch
                         key={`color-picker-${value}`}
+                        style={{padding: 5}}
                         disableAlpha={true}
-                        onChange={onColorChange}
+                        presetColors={false}
+                        onChange={(color) => {
+                            setHexColor(color.hex);
+                        }}
                         id={id}
-                        color={value}
+                        color={hexColor}
                     />
                 </div>
                 :
