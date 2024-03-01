@@ -141,6 +141,7 @@ import currentRegFeedMetadataReducer from './reducers/summits/reg-feed-metadata-
 import badgePrintReducer from './reducers/tickets/badge-print-reducer';
 import notesReducer from './reducers/notes/notes-reducer';
 import emailFlowEventSettingsReducer from './reducers/email_flow_events/email-flows-event-settings-reducer';
+import badgeScanReducer from './reducers/sponsors/badge-scan-reducer';
 
  // default: localStorage if web, AsyncStorage if react-native
 
@@ -230,6 +231,7 @@ const reducers = persistCombineReducers(config, {
     currentTicketListState: ticketListReducer,
     currentTicketState: ticketReducer,
     badgeScansListState: badgeScansListReducer,
+    currentBadgeScanState: badgeScanReducer,
     marketingSettingListState: marketingSettingListReducer,
     marketingSettingState: marketingSettingReducer,
     emailTemplateState: emailTemplateReducer,

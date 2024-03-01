@@ -193,7 +193,7 @@
     "btn_apply_changes": "Apply Changes",
     "btn_apply_publish_changes": "Apply And Publish Changes",
     "messages": {
-      "update_success": "Activities saved successfully.",
+      "update_success": "Activities saved successfully.",      
       "update_publish_success": "Activities saved and published successfully.",
       "validation_title": "Validation Errors",
       "validation_message": "Please check data on {event} {event_id}"
@@ -2160,6 +2160,14 @@
     "placeholders": {
       "select_sponsor": "Select Sponsor"
     }
+  },
+  "edit_badge_scan": {
+    "badge_scan": "Badge Scan",
+    "attendee_name": "Attendee Full Name",
+    "attendee_company": "Attendee Company",
+    "notes": "Notes",
+    "extra_questions": "Extra Questions",
+    "badge_scan_saved": "Badge Scan saved successfully"
   },
   "marketing": {
     "settings": "Marketing Settings",

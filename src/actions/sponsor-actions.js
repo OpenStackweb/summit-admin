@@ -61,6 +61,9 @@ export const SUMMIT_SPONSORSHIP_ORDER_UPDATED = 'SUMMIT_SPONSORSHIP_ORDER_UPDATE
 
 export const REQUEST_BADGE_SCANS = 'REQUEST_BADGE_SCANS';
 export const RECEIVE_BADGE_SCANS = 'RECEIVE_BADGE_SCANS';
+export const RECEIVE_BADGE_SCAN  = 'RECEIVE_BADGE_SCAN';
+export const BADGE_SCAN_UPDATED  = 'BADGE_SCAN_UPDATED';
+export const RESET_BADGE_SCAN_FORM = 'RESET_BADGE_SCAN_FORM';
 
 export const HEADER_IMAGE_ATTACHED            = 'HEADER_IMAGE_ATTACHED';
 export const HEADER_MOBILE_IMAGE_ATTACHED     = 'HEADER_MOBILE_IMAGE_ATTACHED';
@@ -765,6 +768,69 @@ export const exportBadgeScans = (sponsor = null, order = 'attendee_last_name', o
     dispatch(getCSV(`${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-scans/csv`, params, filename));
 
 };
+
+export const getBadgeScan = (scanId) => async (dispatch, getState) => {
+    const {currentSummitState} = getState();
+    const accessToken = await getAccessTokenSafely();
+    const {currentSummit} = currentSummitState;
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token: accessToken,
+        expand: 'badge,badge.ticket,badge.ticket.owner,badge.ticket.owner.member,sponsor,sponsor.extra_questions,extra_questions'
+    };
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_BADGE_SCAN),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-scans/${scanId}`,
+        authErrorHandler        
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
+        }
+    );
+}
+
+export const saveBadgeScan = (entity) => async (dispatch, getState) => {
+    const {currentSummitState} = getState();
+    const accessToken = await getAccessTokenSafely();
+    const {currentSummit} = currentSummitState;
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token: accessToken,
+    };
+
+    const normalizedEntity = normalizeBadgeScan(entity);
+
+    return putRequest(
+        null,
+        createAction(BADGE_SCAN_UPDATED),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-scans/${entity.id}`,
+        normalizedEntity,
+        authErrorHandler,
+        entity
+    )(params)(dispatch)
+        .then((payload) => {
+            dispatch(showSuccessMessage(T.translate("edit_badge_scan.badge_scan_saved")));
+        });
+}
+
+export const resetBadgeScanForm = () => (dispatch, getState) => {
+    dispatch(createAction(RESET_BADGE_SCAN_FORM)({}));
+};
+
+const normalizeBadgeScan = (entity) => {
+    const normalizedEntity = {...entity};
+
+    delete normalizedEntity['sponsor_extra_questions']
+    delete normalizedEntity['attendee_company']
+    delete normalizedEntity['attendee_full_name']
+
+    return normalizedEntity;
+}
 
 /******************  SPONSOR PAGES  ****************************************/
 
