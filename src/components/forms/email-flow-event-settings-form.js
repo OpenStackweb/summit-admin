@@ -18,7 +18,7 @@ import { Input, UploadInput } from "openstack-uicore-foundation/lib/components";
 import HexColorInput from '../inputs/hex-color-input';
 import Swal from 'sweetalert2';
 
-class EmailFlowEventForm extends React.Component {
+class EmailFlowEventSettingsForm extends React.Component {
     constructor(props) {
         super(props);
 
@@ -78,11 +78,17 @@ class EmailFlowEventForm extends React.Component {
         this.setState({ entity: entity });
     }
 
-    handleRemoveFile(ev, props) {
-        const { id } = props;
+    handleRemoveFile(ev, data) {
+        const { id } = data;
         let entity = { ...this.state.entity };
 
         entity[id].file_preview = '';
+        
+        if(entity[id].id){            
+            entity[id].file = '';
+            this.props.onDeleteImage(entity[id].id);
+        }
+
         this.setState({ entity: entity });
     }
 
@@ -119,7 +125,7 @@ class EmailFlowEventForm extends React.Component {
             <form className="email-flow-event-form">
                 <input type="hidden" id="id" value={entity.id} />
                 <div className="row form-group">
-                    <div className='col-md-4'>
+                    <div className='col-md-6'>
                         <label>{T.translate("email_flow_events_settings.email_template_generic_banner")}</label><br />
                         <UploadInput
                             id="EMAIL_TEMPLATE_GENERIC_BANNER"
@@ -130,7 +136,20 @@ class EmailFlowEventForm extends React.Component {
                             multiple={false}
                         />
                     </div>
-                    <div className='col-md-4'>
+                    <div className='col-md-6'>
+                        <label>{T.translate("email_flow_events_settings.email_template_generic_speaker_banner")}</label><br />
+                        <UploadInput
+                            id="EMAIL_TEMPLATE_GENERIC_SPEAKER_BANNER"
+                            value={entity?.EMAIL_TEMPLATE_GENERIC_SPEAKER_BANNER?.file_preview || entity?.EMAIL_TEMPLATE_GENERIC_SPEAKER_BANNER?.file}
+                            handleUpload={this.handleUploadFile}
+                            handleRemove={this.handleRemoveFile}
+                            className="dropzone col-md-6"
+                            multiple={false}
+                        />
+                    </div>
+                </div>
+                <div className="row form-group">
+                <div className='col-md-6'>
                         <label>{T.translate("email_flow_events_settings.email_template_ticket_top_graphic")}</label><br />
                         <UploadInput
                             id="EMAIL_TEMPLATE_TICKET_TOP_GRAPHIC"
@@ -141,7 +160,7 @@ class EmailFlowEventForm extends React.Component {
                             multiple={false}
                         />
                     </div>
-                    <div className='col-md-4'>
+                    <div className='col-md-6'>
                         <label>{T.translate("email_flow_events_settings.email_template_ticket_bottom_graphic")}</label><br />
                         <UploadInput
                             id="EMAIL_TEMPLATE_TICKET_BOTTOM_GRAPHIC"
@@ -155,7 +174,7 @@ class EmailFlowEventForm extends React.Component {
                 </div>
 
                 <div className="row form-group">
-                    <div className='col-md-4'>
+                    <div className='col-md-6'>
                         <label>{T.translate("email_flow_events_settings.email_template_generic_from")}</label><br />
                         <Input
                             id="EMAIL_TEMPLATE_GENERIC_FROM"
@@ -165,7 +184,7 @@ class EmailFlowEventForm extends React.Component {
                             className="form-control"
                         />
                     </div>
-                    <div className='col-md-4'>
+                    <div className='col-md-6'>
                         <label>{T.translate("email_flow_events_settings.email_template_speakers_from")}</label><br />
                         <Input
                             id="EMAIL_TEMPLATE_SPEAKERS_FROM"
@@ -177,7 +196,7 @@ class EmailFlowEventForm extends React.Component {
                     </div>
                 </div>
                 <div className="row form-group">
-                    <div className='col-md-4'>
+                    <div className='col-md-6'>
                         <label>{T.translate("email_flow_events_settings.email_template_primary_color")}</label><br />
                         <HexColorInput
                             onChange={this.handleChange}
@@ -185,7 +204,7 @@ class EmailFlowEventForm extends React.Component {
                             value={entity?.EMAIL_TEMPLATE_PRIMARY_COLOR?.value}
                             className="form-control" />
                     </div>
-                    <div className='col-md-4'>
+                    <div className='col-md-6'>
                         <label>{T.translate("email_flow_events_settings.email_template_secondary_color")}</label><br />
                         <HexColorInput
                             onChange={this.handleChange}
@@ -208,4 +227,4 @@ class EmailFlowEventForm extends React.Component {
     }
 }
 
-export default EmailFlowEventForm;
+export default EmailFlowEventSettingsForm;

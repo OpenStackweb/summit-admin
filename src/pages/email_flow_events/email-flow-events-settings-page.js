@@ -17,6 +17,7 @@ import T from "i18n-react/dist/i18n-react";
 import EmailFlowEventSettingsForm from '../../components/forms/email-flow-event-settings-form';
 import { getSummitById }  from '../../actions/summit-actions';
 import {getMarketingEmailSettings, saveMarketingEmailSettings} from '../../actions/email-actions';
+import { deleteSetting } from '../../actions/marketing-actions';
 import '../../styles/edit-email-flow-event-page.less';
 
 class EmailFlowEventSettingsPage extends React.Component {
@@ -40,6 +41,7 @@ class EmailFlowEventSettingsPage extends React.Component {
                     currentSummit={currentSummit}
                     errors={errors}
                     onSubmit={this.props.saveMarketingEmailSettings}
+                    onDeleteImage={this.props.deleteSetting}
                 />
                 }
             </div>
@@ -58,6 +60,7 @@ export default connect (
     {
         getSummitById,
         getMarketingEmailSettings,
-        saveMarketingEmailSettings
+        saveMarketingEmailSettings,
+        deleteSetting
     }
 )(EmailFlowEventSettingsPage);

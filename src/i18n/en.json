@@ -2301,6 +2301,7 @@
     "email_template_generic_banner": "EMAIL_TEMPLATE_GENERIC_BANNER",
     "email_template_ticket_top_graphic": "EMAIL_TEMPLATE_TICKET_TOP_GRAPHIC",
     "email_template_ticket_bottom_graphic": "EMAIL_TEMPLATE_TICKET_BOTTOM_GRAPHIC",
+    "email_template_generic_speaker_banner": "EMAIL_TEMPLATE_GENERIC_SPEAKER_BANNER",
     "email_template_generic_from": "EMAIL_TEMPLATE_GENERIC_FROM",
     "email_template_speakers_from": "EMAIL_TEMPLATE_SPEAKERS_FROM",
     "email_template_primary_color": "EMAIL_TEMPLATE_PRIMARY_COLOR",

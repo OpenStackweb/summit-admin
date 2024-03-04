@@ -18,6 +18,7 @@ import { RECEIVE_EMAIL_SETTINGS } from '../../actions/email-actions';
 
 const DEFAULT_EMAIL_MARKETING_SETTINGS = {
     EMAIL_TEMPLATE_GENERIC_BANNER: { id: 0, value: '', type: 'FILE', file_preview: '', file: null },
+    EMAIL_TEMPLATE_GENERIC_SPEAKER_BANNER: { id: 0, value: '', type: 'FILE', file_preview: '', file: null },
     EMAIL_TEMPLATE_TICKET_TOP_GRAPHIC: { id: 0, value: '', type: 'FILE', file_preview: '', file: null },
     EMAIL_TEMPLATE_TICKET_BOTTOM_GRAPHIC: { id: 0, value: '', type: 'FILE', file_preview: '', file: null },
     EMAIL_TEMPLATE_GENERIC_FROM: { id: 0, value: '', type: 'TEXT' },
