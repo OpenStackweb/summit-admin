@@ -42,7 +42,7 @@ const default_mjml_content = `
 </mjml>
 `;
 
-const EmailTemplateForm = ({ entity, match, errors, clients, preview, templateLoading, renderErrors, onSubmit, onRender, templateJsonData, previewEmailTemplate }) => {
+const EmailTemplateForm = ({ entity, match, errors, clients, preview, templateLoading, renderErrors, onSubmit, onRender, templateJsonData, renderEmailTemplate }) => {
 
     const [stateEntity, setStateEntity] = useState({ ...entity });
     const [stateErrors, setStateErrors] = useState(errors);
@@ -107,8 +107,8 @@ const EmailTemplateForm = ({ entity, match, errors, clients, preview, templateLo
     }, [singleTab]);
 
     const debouncedRenderTemplate = useRef(
-        _.debounce(async (htmlContent) => {
-            previewEmailTemplate(templateJsonData, htmlContent).then(() => {
+        _.debounce(async (htmlContent, json_data) => {
+            renderEmailTemplate(json_data, htmlContent).then(() => {
                 // wait until first API email preview to display template on screen
                 if (!previewLoaded) setPreviewLoaded(true)
             });
@@ -116,12 +116,9 @@ const EmailTemplateForm = ({ entity, match, errors, clients, preview, templateLo
     ).current;
 
     useEffect(() => {
-        debouncedRenderTemplate(stateEntity.html_content);
-    }, [stateEntity.html_content, entity, debouncedRenderTemplate])
-
-    useEffect(() => {
-        previewEmailTemplate(templateJsonData, stateEntity.html_content);
-    }, [templateJsonData]);
+        // wait until the template is loaded from the API to re render
+        if (templateLoaded) debouncedRenderTemplate(stateEntity.html_content, templateJsonData);
+    }, [stateEntity.html_content, entity, templateJsonData]);
 
     useEffect(() => {
         if (mjmlEditor) {

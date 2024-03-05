@@ -187,7 +187,7 @@ export const deleteEmailTemplate = (templateId) => async (dispatch, getState) =>
 };
 
 
-export const previewEmailTemplate = (json, html) => async (dispatch, getState) => {
+export const renderEmailTemplate = (json, html) => async (dispatch, getState) => {
 
     const accessToken = await getAccessTokenSafely();
 

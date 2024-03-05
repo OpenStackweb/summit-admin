@@ -17,7 +17,7 @@ import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import EmailTemplateForm from '../../components/forms/email-template-form';
 import { getSummitById } from '../../actions/summit-actions';
-import { getEmailTemplate, resetTemplateForm, saveEmailTemplate, getAllClients, previewEmailTemplate, updateTemplateJsonData } from "../../actions/email-actions";
+import { getEmailTemplate, resetTemplateForm, saveEmailTemplate, getAllClients, renderEmailTemplate, updateTemplateJsonData } from "../../actions/email-actions";
 import { Modal } from "react-bootstrap";
 
 import '../../styles/edit-email-template-page.less';
@@ -107,7 +107,7 @@ class EditEmailTemplatePage extends React.Component {
                     renderErrors={render_errors}
                     templateLoading={templateLoading}
                     templateJsonData={json_data}
-                    previewEmailTemplate={this.props.previewEmailTemplate}
+                    renderEmailTemplate={this.props.renderEmailTemplate}
                 />
                 <Modal className="preview-email-template-modal" show={showModal} onHide={() => { this.setState({ ...this.state, showModal: false }) }} >
                     <Modal.Header closeButton>
@@ -165,7 +165,7 @@ export default connect(
         resetTemplateForm,
         saveEmailTemplate,
         getAllClients,
-        previewEmailTemplate,
+        renderEmailTemplate,
         updateTemplateJsonData
     }
 )(EditEmailTemplatePage);
