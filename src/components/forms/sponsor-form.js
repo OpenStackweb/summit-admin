@@ -45,9 +45,11 @@ class SponsorForm extends React.Component {
         this.handleAdvertisementAdd = this.handleAdvertisementAdd.bind(this);
         this.handleMaterialAdd = this.handleMaterialAdd.bind(this);
         this.handleSocialNetworkAdd = this.handleSocialNetworkAdd.bind(this);
+        this.handleExtraQuestionAdd = this.handleExtraQuestionAdd.bind(this);
         this.handleAdvertisementEdit = this.handleAdvertisementEdit.bind(this);
         this.handleMaterialEdit = this.handleMaterialEdit.bind(this);
         this.handleSocialNetworkEdit = this.handleSocialNetworkEdit.bind(this);
+        this.handleExtraQuestionEdit = this.handleExtraQuestionEdit.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -201,6 +203,17 @@ class SponsorForm extends React.Component {
     handleSocialNetworkEdit(socialNetworkId) {
         const {entity, history} = this.props;
         history.push(`/app/summits/${entity.summit_id}/sponsors/${entity.id}/social-networks/${socialNetworkId}`);
+    }
+
+    handleExtraQuestionAdd(ev) {
+        const {entity, history} = this.props;
+        ev.preventDefault();
+        history.push(`/app/summits/${entity.summit_id}/sponsors/${entity.id}/extra-questions/new`);
+    }
+
+    handleExtraQuestionEdit(extraQuestionId) {
+        const {entity, history} = this.props;
+        history.push(`/app/summits/${entity.summit_id}/sponsors/${entity.id}/extra-questions/${extraQuestionId}`);
     }
 
 
@@ -540,8 +553,8 @@ class SponsorForm extends React.Component {
                                handleClick={this.toggleSection.bind(this, 'extra-questions')}>
                             <ExtraQuestionsTable
                               extraQuestions={entity.extra_questions}
-                              onNew={console.log}
-                              onEdit={console.log}
+                              onNew={this.handleExtraQuestionAdd}
+                              onEdit={this.handleExtraQuestionEdit}
                               onDelete={(questionId) => this.props.deleteExtraQuestion(entity.id, questionId)}
                               onReorder={(extraQuestions, questionId, order) => this.props.updateExtraQuestionOrder(extraQuestions, entity.id, questionId, order)}
                             />

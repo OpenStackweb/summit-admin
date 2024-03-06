@@ -11,6 +11,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import EditAdSponsorPage from "../pages/sponsors/edit-advertisement-sponsor-page";
 import EditMaterialSponsorPage from "../pages/sponsors/edit-material-sponsor-page";
 import EditSocialNetworkSponsorPage from "../pages/sponsors/edit-social-network-sponsor-page";
+import EditSponsorExtraQuestion from "../pages/sponsors/edit-sponsor-extra-question-page";
 import NoMatchPage from "../pages/no-match-page";
 
 class SponsorIdLayout extends React.Component {
@@ -85,6 +86,18 @@ class SponsorIdLayout extends React.Component {
                                     <Route component={NoMatchPage} />
                                 </Switch>
                             </div>
+                        )}
+                    />
+                    <Route path={`${match.url}/extra-questions`} render={
+                        props => (
+                          <div>
+                              <Breadcrumb data={{ title: 'Extra Questions', pathname: match.url }} />
+                              <Switch>
+                                  <Route exact strict path={`${props.match.url}/new`} component={EditSponsorExtraQuestion} />
+                                  <Route path={`${props.match.url}/:extra_question_id(\\d+)`} component={EditSponsorExtraQuestion} />
+                                  <Route component={NoMatchPage} />
+                              </Switch>
+                          </div>
                         )}
                     />
                     <Route strict exact path={match.url} component={EditSponsorPage} />

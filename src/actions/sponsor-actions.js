@@ -30,6 +30,12 @@ import {
     fetchErrorHandler
 } from 'openstack-uicore-foundation/lib/utils/actions';
 import {getAccessTokenSafely} from '../utils/methods';
+import {
+    RECEIVE_SELECTION_PLAN_EXTRA_QUESTION_META, SELECTION_PLAN_EXTRA_QUESTION_VALUE_ADDED,
+    SELECTION_PLAN_EXTRA_QUESTION_VALUE_DELETED,
+    SELECTION_PLAN_EXTRA_QUESTION_VALUE_UPDATED,
+    UPDATE_SELECTION_PLAN_EXTRA_QUESTION_VALUE
+} from "./selection-plan-actions";
 
 export const REQUEST_SPONSORS = 'REQUEST_SPONSORS';
 export const RECEIVE_SPONSORS = 'RECEIVE_SPONSORS';
@@ -43,9 +49,17 @@ export const SPONSOR_ORDER_UPDATED = 'SPONSOR_ORDER_UPDATED';
 export const MEMBER_ADDED_TO_SPONSOR = 'MEMBER_ADDED_TO_SPONSOR';
 export const MEMBER_REMOVED_FROM_SPONSOR = 'MEMBER_REMOVED_FROM_SPONSOR';
 export const COMPANY_ADDED = 'COMPANY_ADDED';
+export const RECEIVE_SPONSOR_EXTRA_QUESTION_META = 'RECEIVE_SPONSOR_EXTRA_QUESTION_META';
 export const SPONSOR_EXTRA_QUESTION_ORDER_UPDATED = 'SPONSOR_EXTRA_QUESTION_ORDER_UPDATED';
 export const SPONSOR_EXTRA_QUESTION_DELETED = 'SPONSOR_EXTRA_QUESTION_DELETED';
-
+export const RECEIVE_SPONSOR_EXTRA_QUESTION      = 'RECEIVE_SPONSOR_EXTRA_QUESTION';
+export const UPDATE_SPONSOR_EXTRA_QUESTION       = 'UPDATE_SPONSOR_EXTRA_QUESTION';
+export const SPONSOR_EXTRA_QUESTION_UPDATED      = 'SPONSOR_EXTRA_QUESTION_UPDATED';
+export const SPONSOR_EXTRA_QUESTION_ADDED        = 'SPONSOR_EXTRA_QUESTION_ADDED';
+export const RESET_SPONSOR_EXTRA_QUESTION_FORM   = 'RESET_SPONSOR_EXTRA_QUESTION_FORM';
+export const SPONSOR_EXTRA_QUESTION_VALUE_DELETED   = 'SPONSOR_EXTRA_QUESTION_VALUE_DELETED';
+export const SPONSOR_EXTRA_QUESTION_VALUE_ADDED   = 'SPONSOR_EXTRA_QUESTION_VALUE_ADDED';
+export const SPONSOR_EXTRA_QUESTION_VALUE_UPDATED   = 'SPONSOR_EXTRA_QUESTION_VALUE_UPDATED';
 
 export const REQUEST_SUMMIT_SPONSORSHIPS = 'REQUEST_SUMMIT_SPONSORSHIPS';
 export const RECEIVE_SUMMIT_SPONSORSHIPS = 'RECEIVE_SUMMIT_SPONSORSHIPS';
@@ -396,6 +410,26 @@ export const createCompany = (company, callback) => async (dispatch, getState) =
 
 /******************  EXTRA QUESTIONS  ****************************************/
 
+export const getExtraQuestionMeta = () => async (dispatch, getState) => {
+
+    const {currentSummitState} = getState();
+    const accessToken = await getAccessTokenSafely();
+    const {currentSummit} = currentSummitState;
+
+    const params = {
+        access_token: accessToken,
+    };
+
+    return getRequest(
+      null,
+      createAction(RECEIVE_SPONSOR_EXTRA_QUESTION_META),
+      `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsors/all/extra-questions/metadata`,
+      authErrorHandler
+    )(params)(dispatch).then(() => {
+          dispatch(stopLoading());
+      }
+    );
+};
 
 export const updateExtraQuestionOrder = (extraQuestions, sponsorId, questionId, newOrder) => async (dispatch, getState) => {
 
@@ -444,6 +478,186 @@ export const deleteExtraQuestion = (sponsorId, questionId) => async (dispatch, g
 };
 
 
+export const saveSponsorExtraQuestion = (entity) => async (dispatch, getState) => {
+
+    const { currentSummitState, currentSponsorState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
+    const { entity: { id : sponsorId } } = currentSponsorState;
+
+    const params = {
+        access_token : accessToken,
+    };
+
+    dispatch(startLoading());
+
+    const normalizedEntity = normalizeSocialNetwork(entity);
+
+    if (entity.id) {
+
+        putRequest(
+          createAction(UPDATE_SPONSOR_EXTRA_QUESTION),
+          createAction(SPONSOR_EXTRA_QUESTION_UPDATED),
+          `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsors/${sponsorId}/extra-questions/${entity.id}`,
+          normalizedEntity,
+          authErrorHandler,
+          entity
+        )(params)(dispatch)
+          .then((payload) => {
+              dispatch(showSuccessMessage(T.translate("edit_sponsor.extra_question_saved")));
+          });
+
+    } else {
+        const success_message = {
+            title: T.translate("general.done"),
+            html: T.translate("edit_sponsor.extra_question_created"),
+            type: 'success'
+        };
+
+        postRequest(
+          createAction(UPDATE_SPONSOR_EXTRA_QUESTION),
+          createAction(SPONSOR_EXTRA_QUESTION_ADDED),
+          `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsors/${sponsorId}/extra-questions`,
+          normalizedEntity,
+          authErrorHandler,
+          entity
+        )(params)(dispatch)
+          .then((payload) => {
+              dispatch(showMessage(
+                success_message,
+                () => { history.push(`/app/summits/${currentSummit.id}/sponsors/${sponsorId}/extra-questions/${payload.response.id}`) }
+              ));
+          });
+    }
+}
+
+export const getSponsorExtraQuestion = (extraQuestionId) => async (dispatch, getState) => {
+    const { currentSummitState, currentSponsorState } = getState();
+    const accessToken = await getAccessTokenSafely();
+    const { currentSummit }   = currentSummitState;
+    const { entity: { id : sponsorId } } = currentSponsorState;
+
+    const params = {
+        access_token : accessToken,
+        expand: "values"
+    };
+
+    dispatch(startLoading());
+
+    return getRequest(
+      null,
+      createAction(RECEIVE_SPONSOR_EXTRA_QUESTION),
+      `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsors/${sponsorId}/extra-questions/${extraQuestionId}`,
+      authErrorHandler
+    )(params)(dispatch).then(() => {
+          dispatch(stopLoading());
+      }
+    );
+}
+
+export const resetSponsorExtraQuestionForm = () => (dispatch, getState) => {
+    dispatch(createAction(RESET_SPONSOR_EXTRA_QUESTION_FORM)({}));
+};
+
+
+export const saveSponsorExtraQuestionValue = (questionId, entity) => async (dispatch, getState) => {
+    const {currentSummitState, currentSponsorState} = getState();
+    const accessToken = await getAccessTokenSafely();
+    const {currentSummit} = currentSummitState;
+    const { entity: { id : sponsorId } } = currentSponsorState;
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token: accessToken,
+    };
+
+    if (entity.id) {
+
+        return putRequest(
+          null,
+          createAction(SPONSOR_EXTRA_QUESTION_VALUE_UPDATED),
+          `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsors/${sponsorId}/extra-questions/${questionId}/values/${entity.id}`,
+          entity,
+          authErrorHandler,
+          entity
+        )(params)(dispatch)
+          .then((payload) => {
+              dispatch(stopLoading());
+          });
+
+    }
+
+    return postRequest(
+      null,
+      createAction(SPONSOR_EXTRA_QUESTION_VALUE_ADDED),
+      `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsors/${sponsorId}/extra-questions/${questionId}/values`,
+      entity,
+      authErrorHandler,
+      entity
+    )(params)(dispatch)
+      .then((payload) => {
+          dispatch(stopLoading());
+      });
+
+}
+
+/**
+ * @param values
+ * @param valueId
+ * @param newOrder
+ * @returns {function(*=, *): *}
+ */
+export const updateSponsorExtraQuestionValueOrder = (values, valueId, newOrder) => async (dispatch, getState) => {
+
+    const {currentSponsorState, currentSummitState, currentSponsorExtraQuestionState} = getState();
+    const accessToken = await getAccessTokenSafely();
+    const {currentSummit} = currentSummitState;
+    const { entity: { id : sponsorId } } = currentSponsorState;
+    const { entity: { id: questionId } } = currentSponsorExtraQuestionState;
+
+    dispatch(startLoading());
+
+    const params = {
+        access_token: accessToken,
+    };
+
+    return putRequest(
+      null,
+      createAction(SPONSOR_EXTRA_QUESTION_VALUE_UPDATED),
+      `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsors/${sponsorId}/extra-questions/${questionId}/values/${valueId}`,
+      {order: newOrder},
+      authErrorHandler,
+      {order: newOrder, id: valueId},
+    )(params)(dispatch)
+      .then((payload) => {
+          dispatch(stopLoading());
+      });
+
+}
+
+export const deleteSponsorExtraQuestionValue = (questionId, valueId) => async (dispatch, getState) => {
+
+    const {currentSummitState, currentSponsorState} = getState();
+    const accessToken = await getAccessTokenSafely();
+    const {currentSummit} = currentSummitState;
+    const { entity: { id : sponsorId } } = currentSponsorState;
+
+    const params = {
+        access_token: accessToken
+    };
+
+    return deleteRequest(
+      null,
+      createAction(SPONSOR_EXTRA_QUESTION_VALUE_DELETED)({valueId}),
+      `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsors/${sponsorId}/extra-questions/${questionId}/values/${valueId}`,
+      null,
+      authErrorHandler
+    )(params)(dispatch).then(() => {
+          dispatch(stopLoading());
+      }
+    );
+};
 
 /******************  SPONSORSHIPS ****************************************/
 
