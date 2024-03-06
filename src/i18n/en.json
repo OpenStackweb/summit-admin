@@ -370,6 +370,7 @@
     "registration_feed_metadata": "Registration Feed Metadata",
     "add_registration_feed_metadata": "Add Feed Metadata",
     "no_reg_feed_metadata": "No registration feed metadata found.",
+    "url_registered_idp": "This url should be registered as allowed redirect uri at related OAUTH2 APP at IDP",
     "placeholders": {
       "api_feed_type": "Select API feed type...",
       "external_registration_feed_type": "Select Ext. Reg. feed type...",

@@ -1027,7 +1027,8 @@ class SummitForm extends React.Component {
                        handleClick={this.toggleSection.bind(this, 'virtual_event')}>
                     <div className="row form-group">
                         <div className="col-md-4">
-                            <label> {T.translate("edit_summit.marketing_site_url")}</label>
+                            <label> {T.translate("edit_summit.marketing_site_url")}</label>&nbsp;
+                            <i className="fa fa-info-circle" aria-hidden="true" title={T.translate("edit_summit.url_registered_idp")} />
                             <Input
                                 className="form-control"
                                 error={this.hasErrors('marketing_site_url')}
@@ -1058,7 +1059,8 @@ class SummitForm extends React.Component {
                     </div>
                     <div className="row form-group">
                         <div className="col-md-6">
-                            <label> {T.translate("edit_summit.virtual_site_url")}</label>
+                            <label> {T.translate("edit_summit.virtual_site_url")}</label>&nbsp;
+                            <i className="fa fa-info-circle" aria-hidden="true" title={T.translate("edit_summit.url_registered_idp")} />
                             <Input
                                 className="form-control"
                                 error={this.hasErrors('virtual_site_url')}
