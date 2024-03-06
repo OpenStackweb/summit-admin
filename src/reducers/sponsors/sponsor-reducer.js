@@ -41,7 +41,11 @@ import
     SPONSOR_MATERIAL_ADDED,
     SPONSOR_SOCIAL_NETWORK_ADDED,
     SPONSOR_ADS_ORDER_UPDATED,
-    SPONSOR_MATERIAL_ORDER_UPDATED, SPONSOR_EXTRA_QUESTION_ORDER_UPDATED, SPONSOR_EXTRA_QUESTION_DELETED
+    SPONSOR_MATERIAL_ORDER_UPDATED,
+    SPONSOR_EXTRA_QUESTION_ORDER_UPDATED,
+    SPONSOR_EXTRA_QUESTION_DELETED,
+    SPONSOR_EXTRA_QUESTION_ADDED,
+    SPONSOR_EXTRA_QUESTION_UPDATED,
 } from '../../actions/sponsor-actions';
 
 import { VALIDATE } from 'openstack-uicore-foundation/lib/utils/actions';
@@ -157,7 +161,7 @@ const sponsorReducer = (state = DEFAULT_STATE, action) => {
             return {...state, entity: {...state.entity, members: currentMembers } };
         }
         break;
-        case HEADER_IMAGE_ATTACHED: {            
+        case HEADER_IMAGE_ATTACHED: {
             const header_image = payload.response.url;
             return {...state, entity: {...state.entity, header_image }}
         }
@@ -166,7 +170,7 @@ const sponsorReducer = (state = DEFAULT_STATE, action) => {
             return {...state, entity: {...state.entity, header_image: ''}}
         }
         break;
-        case HEADER_MOBILE_IMAGE_ATTACHED: {            
+        case HEADER_MOBILE_IMAGE_ATTACHED: {
             const header_image_mobile = payload.response.url;
             return {...state, entity: {...state.entity, header_image_mobile }}
         }
@@ -184,7 +188,7 @@ const sponsorReducer = (state = DEFAULT_STATE, action) => {
             return {...state, entity: {...state.entity, side_image: ''}}
         }
         break;
-        case CAROUSEL_IMAGE_ATTACHED: {            
+        case CAROUSEL_IMAGE_ATTACHED: {
             const carousel_advertise_image = payload.response.url;
             return {...state, entity: {...state.entity, carousel_advertise_image }}
         }
@@ -220,9 +224,9 @@ const sponsorReducer = (state = DEFAULT_STATE, action) => {
             return {...state, entity: {...state.entity, ads_collection: {...state.entity.ads_collection, ads } }}
         }
         break;
-        case RECEIVE_SPONSOR_MATERIALS: {      
+        case RECEIVE_SPONSOR_MATERIALS: {
             let { total } = payload.response;
-            const materials = payload.response.data;            
+            const materials = payload.response.data;
             return {...state, entity: {...state.entity, materials_collection: { materials, total } }}
         }
         break;
@@ -242,7 +246,7 @@ const sponsorReducer = (state = DEFAULT_STATE, action) => {
         }
         break;
         case SPONSOR_MATERIAL_DELETED: {
-            const {materialId} = payload            
+            const {materialId} = payload
             const materials = state.entity.materials_collection.materials.filter(material => material.id !== materialId)
             return {...state, entity: {...state.entity, materials_collection: {...state.entity.materials_collection, materials } }}
         }
@@ -271,7 +275,7 @@ const sponsorReducer = (state = DEFAULT_STATE, action) => {
         case SPONSOR_SOCIAL_NETWORK_DELETED: {
             const {socialNetWorkId} = payload
             const social_networks = state.entity.social_networks_collection.social_networks.filter(social_network => social_network.id !== socialNetWorkId)
-            return {...state, entity: {...state.entity, social_networks_collection: {...state.entity.social_networks_collection, social_networks } }}            
+            return {...state, entity: {...state.entity, social_networks_collection: {...state.entity.social_networks_collection, social_networks } }}
         }
         case SPONSOR_EXTRA_QUESTION_ORDER_UPDATED: {
             return {...state, entity: {...state.entity, extra_questions: payload}}
@@ -286,6 +290,16 @@ const sponsorReducer = (state = DEFAULT_STATE, action) => {
             return {...state,  errors: payload.errors };
         }
         break;
+        case SPONSOR_EXTRA_QUESTION_ADDED:
+        {
+            let new_extra_question = {...payload.response};
+            return {...state, entity: {...state.entity, extra_questions: [...state.entity.extra_questions, new_extra_question]} };
+        }
+        case SPONSOR_EXTRA_QUESTION_UPDATED:{
+            let updated_extra_question = {...payload.response};
+            let extra_questions = state.entity.extra_questions.filter(q => q.id !== updated_extra_question.id);
+            return {...state, entity: {...state.entity, extra_questions: [...extra_questions, updated_extra_question]} };
+        }
         default:
             return state;
     }

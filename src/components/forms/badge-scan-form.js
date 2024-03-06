@@ -88,7 +88,7 @@ class BadgeScanForm extends React.Component {
             const newQuestion = { question_id: question.id, answer: `${formValues[name]}` }
             formattedAnswers.push(newQuestion);
         });
-        
+
         this.setState({
             ...this.state,
             entity: { ...this.state.entity, extra_questions: formattedAnswers },
@@ -126,19 +126,21 @@ class BadgeScanForm extends React.Component {
                             />
                         </div>
                     </div>
-                    <div className="row form-group">
-                        <div className="col-md-12">
-                            <label> {T.translate("edit_badge_scan.extra_questions")} </label>
-                            <ExtraQuestionsForm
-                                readOnly={false}
-                                extraQuestions={entity.sponsor_extra_questions.sort((a, b) => a.order - b.order)}
-                                userAnswers={entity.extra_questions}
-                                onAnswerChanges={this.handleChangeExtraQuestion}
-                                ref={this.formRef}
-                                className="extra-questions-wrapper"
-                            />
+                    {entity?.sponsor_extra_questions?.length > 0 &&
+                        <div className="row form-group">
+                            <div className="col-md-12">
+                                <label> {T.translate("edit_badge_scan.extra_questions")} </label>
+                                <ExtraQuestionsForm
+                                    readOnly={false}
+                                    extraQuestions={entity.sponsor_extra_questions.sort((a, b) => a.order - b.order)}
+                                    userAnswers={entity.extra_questions}
+                                    onAnswerChanges={this.handleChangeExtraQuestion}
+                                    ref={this.formRef}
+                                    className="extra-questions-wrapper"
+                                />
+                            </div>
                         </div>
-                    </div>
+                    }
                 </div>
 
                 <div className="row">

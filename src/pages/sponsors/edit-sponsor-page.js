@@ -67,6 +67,7 @@ class EditSponsorPage extends React.Component {
         const title = (entity.id) ? T.translate("general.edit") : T.translate("general.add");
         const memberObj = new Member(member);
         const canEditSponsors = memberObj.canEditSponsors();
+        const canEditSponsorExtraQuestions = memberObj.canEditSponsorExtraQuestions();
         return (
             <div className="container">
                 <h3>{title} {T.translate("edit_sponsor.sponsor")}</h3>
@@ -93,6 +94,7 @@ class EditSponsorPage extends React.Component {
                     getSponsorMaterials={this.props.getSponsorMaterials}
                     getSponsorSocialNetworks={this.props.getSponsorSocialNetworks}
                     canEditSponsors={canEditSponsors}
+                    canEditSponsorExtraQuestions={canEditSponsorExtraQuestions}
                     deleteExtraQuestion={this.props.deleteExtraQuestion}
                     updateExtraQuestionOrder={this.props.updateExtraQuestionOrder}
                 />

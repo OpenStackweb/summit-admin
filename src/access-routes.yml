@@ -23,6 +23,12 @@ sponsors-edit:
   - administrators
   - summit-front-end-administrators
 
+sponsors-extra-questions-edit:
+  - super-admins
+  - administrators
+  - summit-front-end-administrators
+  - sponsors
+
 sponsors-delete:
   - super-admins
   - administrators

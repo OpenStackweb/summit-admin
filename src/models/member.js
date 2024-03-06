@@ -101,6 +101,13 @@ class Member {
         }
         return false;
     }
+
+    canEditSponsorExtraQuestions(){
+        for (var i in this._member.groups) {
+            if (access['sponsors-extra-questions-edit'].includes(this._member.groups[i].code)) return true;
+        }
+        return false;
+    }
 }
 
 export default Member;

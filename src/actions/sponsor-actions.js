@@ -95,8 +95,8 @@ export const SPONSOR_ADVERTISEMENT_UPDATED      = 'SPONSOR_ADVERTISEMENT_UPDATED
 export const SPONSOR_ADVERTISEMENT_ADDED        = 'SPONSOR_ADVERTISEMENT_ADDED';
 export const RESET_SPONSOR_ADVERTISEMENT_FORM   = 'RESET_SPONSOR_ADVERTISEMENT_FORM';
 export const SPONSOR_ADVERTISEMENT_DELETED      = 'SPONSOR_ADVERTISEMENT_DELETED';
-export const SPONSOR_ADVERTISEMENT_IMAGE_ATTACHED = 'SPONSOR_ADVERTISEMENT_IMAGE_ATTACHED'; 
-export const SPONSOR_ADVERTISEMENT_IMAGE_DELETED = 'SPONSOR_ADVERTISEMENT_IMAGE_DELETED'; 
+export const SPONSOR_ADVERTISEMENT_IMAGE_ATTACHED = 'SPONSOR_ADVERTISEMENT_IMAGE_ATTACHED';
+export const SPONSOR_ADVERTISEMENT_IMAGE_DELETED = 'SPONSOR_ADVERTISEMENT_IMAGE_DELETED';
 export const SPONSOR_ADS_ORDER_UPDATED           = 'SPONSOR_ADS_ORDER_UPDATED';
 
 export const RECEIVE_SPONSOR_MATERIALS     = 'RECEIVE_SPONSOR_MATERIALS';
@@ -374,7 +374,7 @@ const normalizeSponsor = (entity) => {
     normalizedEntity.company_id = normalizedEntity.company?.id || 0;
     normalizedEntity.sponsorship_id = normalizedEntity.sponsorship?.id || 0;
     normalizedEntity.featured_event_id = (normalizedEntity.featured_event && normalizedEntity.featured_event.id) ? normalizedEntity.featured_event.id : 0;
-    
+
     delete(normalizedEntity.featured_event);
     delete(normalizedEntity.company);
     delete(normalizedEntity.sponsorship);
@@ -495,7 +495,7 @@ export const saveSponsorExtraQuestion = (entity) => async (dispatch, getState) =
 
     if (entity.id) {
 
-        putRequest(
+        return putRequest(
           createAction(UPDATE_SPONSOR_EXTRA_QUESTION),
           createAction(SPONSOR_EXTRA_QUESTION_UPDATED),
           `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsors/${sponsorId}/extra-questions/${entity.id}`,
@@ -514,7 +514,7 @@ export const saveSponsorExtraQuestion = (entity) => async (dispatch, getState) =
             type: 'success'
         };
 
-        postRequest(
+        return postRequest(
           createAction(UPDATE_SPONSOR_EXTRA_QUESTION),
           createAction(SPONSOR_EXTRA_QUESTION_ADDED),
           `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsors/${sponsorId}/extra-questions`,
@@ -885,7 +885,7 @@ const normalizeSponsorship = (entity) => {
 }
 
 const normalizeCollection = (entity) => {
-    const normalizedEntity = {...entity};    
+    const normalizedEntity = {...entity};
 
     delete normalizedEntity['order'];
 
@@ -999,7 +999,7 @@ export const getBadgeScan = (scanId) => async (dispatch, getState) => {
         null,
         createAction(RECEIVE_BADGE_SCAN),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-scans/${scanId}`,
-        authErrorHandler        
+        authErrorHandler
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
@@ -1061,8 +1061,8 @@ export const attachSponsorImage = (entity, file, picAttr) => async (dispatch, ge
 
     const normalizedEntity = normalizeEntity(entity);
 
-    const uploadFile = picAttr === 'header_image' ? uploadHeaderImage : 
-                       picAttr === 'side_image' ? uploadSideImage : 
+    const uploadFile = picAttr === 'header_image' ? uploadHeaderImage :
+                       picAttr === 'side_image' ? uploadSideImage :
                        picAttr === 'header_mobile_image' ? uploadHeaderMobileImage : uploadCarouselImage;
 
     if (entity.id) {
@@ -1079,7 +1079,7 @@ export const attachSponsorImage = (entity, file, picAttr) => async (dispatch, ge
             .then((payload) => {
                 dispatch(uploadFile(payload.response, file));
             }
-        );        
+        );
     }
 };
 
@@ -1142,7 +1142,7 @@ const uploadSideImage = (entity, file) => async (dispatch, getState) => {
     postRequest(
         null,
         createAction(SIDE_IMAGE_ATTACHED),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsors/${entity.id}/side-image`,    
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/sponsors/${entity.id}/side-image`,
         file,
         authErrorHandler,
         {pic: entity.pic}
@@ -1181,9 +1181,9 @@ export const removeSponsorImage = (entity, picAttr) => async (dispatch, getState
 
     const removeFile = picAttr === 'header_image' ? removeHeaderImage :
                        picAttr === 'side_image' ? removeSideImage :
-                       picAttr === 'header_mobile_image' ? removeHeaderMobileImage : removeCarouselImage;    
+                       picAttr === 'header_mobile_image' ? removeHeaderMobileImage : removeCarouselImage;
 
-    return dispatch(removeFile(entity));    
+    return dispatch(removeFile(entity));
 };
 
 export const removeHeaderImage = (entity) => async (dispatch, getState) => {
@@ -1272,7 +1272,7 @@ export const removeCarouselImage = (entity) => async (dispatch, getState) => {
 
 
 
-export const getSponsorAdvertisements = (sponsorId, order = 'order', orderDir = 1) => async (dispatch, getState) => {    
+export const getSponsorAdvertisements = (sponsorId, order = 'order', orderDir = 1) => async (dispatch, getState) => {
 
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
@@ -1351,7 +1351,7 @@ export const saveSponsorAdvertisement = (entity) => async (dispatch, getState) =
                     () => { history.push(`/app/summits/${currentSummit.id}/sponsors/${currentSponsorId}/ads/${payload.response.id}`) }
                 ));
             });
-    }    
+    }
 }
 
 export const getSponsorAdvertisement = (advertisementId) => async (dispatch, getState) => {
@@ -1375,7 +1375,7 @@ export const getSponsorAdvertisement = (advertisementId) => async (dispatch, get
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
-    );    
+    );
 }
 
 
@@ -1457,7 +1457,7 @@ export const submitSponsorAdvertisementImage = (entity, file) => async (dispatch
             .then((payload) => {
                 dispatch(uploadAdvertiseImage(payload.response, file));
             });
-    }   
+    }
 }
 
 const uploadAdvertiseImage = (entity, file) => async (dispatch, getState) => {
@@ -1503,12 +1503,12 @@ export const removeSponsorAdvertisementImage = (entity) => async (dispatch, getS
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
-    );    
+    );
 }
 
 // Materials
 
-export const getSponsorMaterials = (sponsorId, order = 'order', orderDir = 1) => async (dispatch, getState) => {    
+export const getSponsorMaterials = (sponsorId, order = 'order', orderDir = 1) => async (dispatch, getState) => {
 
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
@@ -1525,7 +1525,7 @@ export const getSponsorMaterials = (sponsorId, order = 'order', orderDir = 1) =>
         const orderDirSign = (orderDir === 1) ? '+' : '-';
         params['order']= `${orderDirSign}${order}`;
     }
-    
+
 
     return getRequest(
         null,
@@ -1535,7 +1535,7 @@ export const getSponsorMaterials = (sponsorId, order = 'order', orderDir = 1) =>
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
-    );    
+    );
 }
 
 export const saveSponsorMaterial = (entity) => async (dispatch, getState) => {
@@ -1588,7 +1588,7 @@ export const saveSponsorMaterial = (entity) => async (dispatch, getState) => {
                     () => { history.push(`/app/summits/${currentSummit.id}/sponsors/${currentSponsorId}/materials/${payload.response.id}`) }
                 ));
             });
-    }    
+    }
 }
 
 export const getSponsorMaterial = (materialId) => async (dispatch, getState) => {
@@ -1612,7 +1612,7 @@ export const getSponsorMaterial = (materialId) => async (dispatch, getState) => 
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
-    );        
+    );
 }
 
 export const updateSponsorMaterialOrder = (materials, materialId, newOrder) => async (dispatch, getState) => {
@@ -1662,13 +1662,13 @@ export const deleteSponsorMaterial = (materialId) => async (dispatch, getState) 
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
-    );    
+    );
 }
 
 
 // Social Networks
 
-export const getSponsorSocialNetworks = (sponsorId, page, perPage) => async (dispatch, getState) => {    
+export const getSponsorSocialNetworks = (sponsorId, page, perPage) => async (dispatch, getState) => {
 
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
@@ -1690,13 +1690,13 @@ export const getSponsorSocialNetworks = (sponsorId, page, perPage) => async (dis
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
-    );     
+    );
 }
 
 export const saveSponsorSocialNetwork = (entity) => async (dispatch, getState) => {
 
     const { currentSummitState, currentSponsorState } = getState();
-    const accessToken = await getAccessTokenSafely();    
+    const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
     const { entity: { id : currentSponsorId } } = currentSponsorState;
 
@@ -1766,7 +1766,7 @@ export const getSponsorSocialNetwork = (socialNetWorkId) => async (dispatch, get
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
-    );    
+    );
 }
 
 export const resetSponsorSocialNetworkForm = () => (dispatch, getState) => {
@@ -1792,7 +1792,7 @@ export const deleteSponsorSocialNetwork = (socialNetWorkId) => async (dispatch, 
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }
-    );    
+    );
 }
 
 

@@ -259,7 +259,7 @@ class SponsorForm extends React.Component {
 
     render() {
         const {entity, showSection} = this.state;
-        const { currentSummit, onCreateCompany, canEditSponsors } = this.props;
+        const { currentSummit, onCreateCompany, canEditSponsors, canEditSponsorExtraQuestions } = this.props;
 
         const advertisement_columns = [
             { columnKey: 'link', value: T.translate("edit_sponsor.link") },
@@ -314,12 +314,15 @@ class SponsorForm extends React.Component {
                             allowCreate
                             onCreate={onCreateCompany}
                             error={this.hasErrors('company_id')}
+                            isDisabled={!canEditSponsors}
                         />
                     </div>
                     <div className="col-md-4 checkboxes-div">
                         <div className="form-check abc-checkbox">
                             <input type="checkbox" id="is_published" checked={entity.is_published}
-                                   onChange={this.handleChange} className="form-check-input"/>
+                                   onChange={this.handleChange} className="form-check-input"
+                                   disabled={!canEditSponsors}
+                            />
                             <label className="form-check-label" htmlFor="is_published">
                                 {T.translate("edit_sponsor.is_published")}
                             </label>
@@ -334,7 +337,9 @@ class SponsorForm extends React.Component {
                             value={entity.sponsorship}
                             key={JSON.stringify(entity.sponsorship)}
                             summitId={currentSummit.id}
-                            onChange={this.handleChange} />
+                            onChange={this.handleChange}
+                            isDisabled={!canEditSponsors}
+                        />
                     </div>
                 </div>
                 {entity.id !== 0 && canEditSponsors &&
@@ -500,7 +505,6 @@ class SponsorForm extends React.Component {
                                 />
                             </div>
                         </div>
-
                         <hr/>
                         <div className="row form-group">
                             <div className="col-md-12">
@@ -518,7 +522,6 @@ class SponsorForm extends React.Component {
                                 />
                             </div>
                         </div>
-
                         <hr/>
                         <div className="row form-group">
                             <div className="col-md-12">
@@ -548,18 +551,20 @@ class SponsorForm extends React.Component {
                             </div>
                         </div>
                     </Panel>
-
-                        <Panel show={showSection === 'extra-questions'} title={T.translate("edit_sponsor.extra_questions")}
-                               handleClick={this.toggleSection.bind(this, 'extra-questions')}>
-                            <ExtraQuestionsTable
-                              extraQuestions={entity.extra_questions}
-                              onNew={this.handleExtraQuestionAdd}
-                              onEdit={this.handleExtraQuestionEdit}
-                              onDelete={(questionId) => this.props.deleteExtraQuestion(entity.id, questionId)}
-                              onReorder={(extraQuestions, questionId, order) => this.props.updateExtraQuestionOrder(extraQuestions, entity.id, questionId, order)}
-                            />
-                        </Panel>
                     </>
+                }
+                { canEditSponsorExtraQuestions &&
+                    <Panel show={showSection === 'extra-questions'}
+                           title={T.translate("edit_sponsor.extra_questions")}
+                           handleClick={this.toggleSection.bind(this, 'extra-questions')}>
+                        <ExtraQuestionsTable
+                            extraQuestions={entity.extra_questions}
+                            onNew={this.handleExtraQuestionAdd}
+                            onEdit={this.handleExtraQuestionEdit}
+                            onDelete={(questionId) => this.props.deleteExtraQuestion(entity.id, questionId)}
+                            onReorder={(extraQuestions, questionId, order) => this.props.updateExtraQuestionOrder(extraQuestions, entity.id, questionId, order)}
+                        />
+                    </Panel>
                 }
                 {canEditSponsors &&
                     <div className="row">
