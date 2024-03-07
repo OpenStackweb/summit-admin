@@ -992,7 +992,7 @@ export const getBadgeScan = (scanId) => async (dispatch, getState) => {
 
     const params = {
         access_token: accessToken,
-        expand: 'badge,badge.ticket,badge.ticket.owner,badge.ticket.owner.member,sponsor,sponsor.extra_questions,extra_questions'
+        expand: 'badge,badge.ticket,badge.ticket.owner,badge.ticket.owner.member,sponsor,sponsor.extra_questions,sponsor.extra_questions.values,extra_questions'
     };
 
     return getRequest(
