@@ -306,12 +306,15 @@ export const cloneMarketingSettings = (summitId) => async (dispatch, getState) =
 
 const normalizeEntity = (entity, summitId) => {
     const normalizedEntity = {...entity};
-
+    normalizedEntity['show_id'] = summitId;
     delete (normalizedEntity['id']);
     delete (normalizedEntity['created']);
     delete (normalizedEntity['modified']);
-    normalizedEntity.show_id = summitId;
+    if(entity.type !== 'FILE'){
+        delete(normalizedEntity['file'])
+    }
 
+    delete(normalizedEntity['file_preview'])
     return normalizedEntity;
 
 }

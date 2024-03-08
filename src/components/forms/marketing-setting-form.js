@@ -84,8 +84,7 @@ class MarketingSettingForm extends React.Component {
         ev.preventDefault();
         const {entity, file} = this.state;
         const { currentSummit } = this.props;
-
-        if(!entity.value || (entity.type === 'FILE' && !file)) {
+        if((entity.type !== 'FILE' && !entity.value) || (entity.type === 'FILE' && !file)) {
             const msg = `${setting_types_ddl.find(e => e.value === entity.type)?.label}: This field may not be blank.`;
             return Swal.fire("Validation error", msg, "warning");
         }
@@ -138,7 +137,6 @@ class MarketingSettingForm extends React.Component {
 
     render() {
         const {entity} = this.state;
-        const { currentSummit } = this.props;
 
         return (
             <form className="marketing-setting-form">
@@ -215,10 +213,10 @@ class MarketingSettingForm extends React.Component {
                     {entity.type === 'HEX_COLOR' &&
                     <div className="col-md-4">
                         <label> {T.translate("marketing.hex_color")} *</label>
-                        <HexColorInput                            
+                        <HexColorInput
                             onChange={this.handleChange}
                             id="value"
-                            value={entity.value}                            
+                            value={entity.value}
                             className="form-control"
                             error={this.hasErrors('value')}
                         />
