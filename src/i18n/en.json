@@ -870,6 +870,8 @@
     "or": "OR",
     "quantity_available": "Quantity Available",
     "quantity_used": "Quantity Used",
+    "notes": "Notes",
+    "contact_email": "Contact Email",
     "valid_from_date": "Valid From",
     "valid_until_date": "Valid Until",
     "badge_type_id": "Badge Type",

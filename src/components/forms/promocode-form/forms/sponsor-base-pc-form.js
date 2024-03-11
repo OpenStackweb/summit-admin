@@ -1,7 +1,8 @@
 import React from "react";
 import T from "i18n-react";
-import {SponsorInput} from "openstack-uicore-foundation/lib/components";
+import {Input, SponsorInput} from "openstack-uicore-foundation/lib/components";
 import MemberBasePCForm from "./member-base-pc-form";
+import {hasErrors} from "../../../../utils/methods";
 
 const SponsorBasePCForm = (props) => (
   <>
@@ -18,8 +19,17 @@ const SponsorBasePCForm = (props) => (
           error={props.hasErrors('sponsor_id')}
         />
       </div>
+      <div className="col-md-6">
+        <label> {T.translate("edit_promocode.contact_email")} </label>
+        <Input
+          id="contact_email"
+          className="form-control"
+          error={props.hasErrors('contact_email')}
+          onChange={props.handleChange}
+          value={props.entity.contact_email}
+        />
+      </div>
     </div>
-    <MemberBasePCForm {...props} />
   </>
 );
 

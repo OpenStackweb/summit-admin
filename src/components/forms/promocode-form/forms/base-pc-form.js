@@ -1,6 +1,6 @@
 import React from "react";
 import T from "i18n-react";
-import {DateTimePicker, Dropdown, Input} from "openstack-uicore-foundation/lib/components";
+import {DateTimePicker, Dropdown, Input, TextArea} from "openstack-uicore-foundation/lib/components";
 import {epochToMomentTimeZone} from "openstack-uicore-foundation/lib/utils/methods";
 
 const BasePCForm = (props) => {
@@ -75,6 +75,17 @@ const BasePCForm = (props) => {
             placeholder={T.translate("edit_promocode.placeholders.select_badge_features")}
             options={badge_features_ddl}
             isMulti
+          />
+        </div>
+      </div>
+      <div className="row form-group">
+        <div className="col-md-12">
+          <label> {T.translate("edit_promocode.notes")}</label>
+          <TextArea
+            id="notes"
+            value={props.entity.notes}
+            onChange={props.handleChange}
+            className="form-control"
           />
         </div>
       </div>

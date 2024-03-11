@@ -19,8 +19,9 @@ import {
     SpeakerPCForm, MemberPCForm, SponsorPCForm, MemberDiscountPCForm, SpeakerDiscountPCForm, SponsorDiscountPCForm,
     SummitPCForm, SummitDiscountPCForm, SpeakersPCForm, SpeakersDiscountPCForm
 } from './forms';
-import {isEmpty, scrollToError, shallowEqual} from "../../../utils/methods";
+import {isEmpty, scrollToError, shallowEqual, validateEmail} from "../../../utils/methods";
 import { DEFAULT_ENTITY } from '../../../reducers/promocodes/promocode-reducer';
+import FragmentParser from "../../../utils/fragmen-parser";
 
 
 class PromocodeForm extends React.Component {
@@ -32,6 +33,8 @@ class PromocodeForm extends React.Component {
             errors: props.errors
         };
 
+        this.fragmentParser = new FragmentParser();
+
         this.handleClassChange = this.handleClassChange.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSendEmail = this.handleSendEmail.bind(this);
@@ -41,6 +44,7 @@ class PromocodeForm extends React.Component {
         this.queryBadgeFeatures = this.queryBadgeFeatures.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleNewTag = this.handleNewTag.bind(this);
+        this.validate = this.validate.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -105,7 +109,9 @@ class PromocodeForm extends React.Component {
         let entity = {...this.state.entity};
         ev.preventDefault();
 
-        this.props.onSubmit(this.state.entity);
+        if (this.validate()) {
+            this.props.onSubmit(this.state.entity);
+        }
     }
 
     hasErrors(field) {
@@ -115,6 +121,19 @@ class PromocodeForm extends React.Component {
         }
 
         return '';
+    }
+
+    validate() {
+        const {entity, errors} = this.state;
+        const validEmail = validateEmail(entity.contact_email);
+
+        if (entity.contact_email && !validEmail) {
+            errors.contact_email = 'Please enter a valid email.'
+            this.setState({errors});
+            return false;
+        }
+
+        return true
     }
 
     handleBadgeFeatureLink(valueId) {
@@ -143,9 +162,14 @@ class PromocodeForm extends React.Component {
     render() {
         const {entity} = this.state;
         const { currentSummit, allClasses } = this.props;
+        const typeScope = this.fragmentParser.getParam('type');
 
         let promocode_class_ddl = allClasses.map(c => ({label: c.class_name, value: c.class_name}));
         let promocode_types_ddl = [];
+
+        if (typeScope === 'sponsor') {
+            promocode_class_ddl = promocode_class_ddl.filter(pc => pc.value.includes('SPONSOR'));
+        }
 
         if (entity.class_name) {
             let classTypes = allClasses.find(c => c.class_name === entity.class_name).type;
