@@ -826,7 +826,7 @@ render() {
                                 onChange={this.handleTimeChange}
                                 type="number"
                                 min="0"
-                                step="5"
+                                step="1"
                             />
                         </div>
                     </>
