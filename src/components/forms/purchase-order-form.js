@@ -133,6 +133,38 @@ class PurchaseOrderForm extends React.Component {
 
         let ticket_type_ddl = currentSummit.ticket_types.map(tt => ({label: tt.name, value: tt.id}));
 
+        const tax_columns = [...(entity.approved_refunds_taxes?.map(tax => {
+            return ({ 
+                columnKey: `tax_${tax.id}_refunded_amount`, 
+                value: T.translate("edit_purchase_order.refunded_tax", {tax_name: tax.name}), 
+                render: (row, val) => { return val ?  val : '$0.00'}
+            });
+        }) || [])];
+        
+        const adjusted_tax_columns = [...(entity.approved_refunds_taxes?.map(tax => {
+            return ({ 
+                columnKey: `tax_${tax.id}_adjusted_refunded_amount`,
+                value: T.translate("edit_purchase_order.adjusted_tax_price", {tax_name: tax.name}), 
+                render: (row, val) => { return val ?  val : '$0.00'}
+            });
+        }) || [])];
+
+        let refunds_columns = [
+            { columnKey: 'ticket_id', value: T.translate("edit_purchase_order.refunded_ticket")},
+            { columnKey: 'refunded_amount_formatted', value: T.translate("edit_purchase_order.refunded_amount")},
+            ...tax_columns,
+            { columnKey: 'total_refunded_amount_formatted', value: T.translate("edit_purchase_order.total_refunded")},
+            { columnKey: 'adjusted_net_price_formatted', value: T.translate("edit_purchase_order.adjusted_net_price")},
+            ...adjusted_tax_columns,
+            { columnKey: 'adjusted_order_price_formatted', value: T.translate("edit_purchase_order.adjusted_order_price")},
+        ];
+
+        let refunds_options = {
+            actions: {
+                edit:{ onClick: this.handleTicketEdit },
+            }
+        }
+
         return (
             <form className="purchase-order-form">
                 <input type="hidden" id="id" value={entity.id} />
@@ -163,11 +195,11 @@ class PurchaseOrderForm extends React.Component {
                         </div>
                     </div>
                     <div className="row form-group">
-                        <div className="col-md-3">
+                        <div className="col-md-4">
                         <label> {T.translate("edit_purchase_order.paid_amount")}:&nbsp;</label>
                         {entity.final_amount_formatted}
                         </div>
-                        <div className="col-md-3">
+                        <div className="col-md-8">
                         <label> {T.translate("edit_purchase_order.payment_method")}:&nbsp;</label>
                         {entity.payment_method}
                         </div>
@@ -178,20 +210,20 @@ class PurchaseOrderForm extends React.Component {
                         { entity.refunded_amount > 0.00 &&
                         <>
                             <div className="row form-group">
-                                <div className="col-md-3">
-                                    <label> {T.translate("edit_purchase_order.refunded_amount")}:&nbsp;</label>
+                                <div className="col-md-4">
+                                    <label> {T.translate("edit_purchase_order.total_refunded_amount")}:&nbsp;</label>
                                     {entity.refunded_amount_formatted}
                                 </div>
-                                <div className="col-md-9">
+                                <div className="col-md-8">
                                     &nbsp;
                                 </div>
                             </div>
                             <div className="row form-group">
-                                <div className="col-md-3">
-                                    <label> {T.translate("edit_purchase_order.paid_amount_adjusted")}:&nbsp;</label>
+                                <div className="col-md-4">
+                                    <label> {T.translate("edit_purchase_order.adjusted_total_order_purchase_price")}:&nbsp;</label>
                                     {entity.final_amount_adjusted_formatted}
                                 </div>
-                                <div className="col-md-9">
+                                <div className="col-md-8">
                                     &nbsp;
                                 </div>
                             </div>
@@ -256,7 +288,7 @@ class PurchaseOrderForm extends React.Component {
                     </div>
                 </div>
                 <Panel show={showSection === 'billing'} title={T.translate("edit_purchase_order.billing")}
-                       handleClick={() => this.toggleSection( 'billing')}>
+                       handleClick={this.toggleSection.bind(this, 'billing')}>                        
                 <div className="row form-group">
                     <div className="col-md-4">
                         <label> {T.translate("edit_purchase_order.billing_address_1")}</label>
@@ -337,56 +369,108 @@ class PurchaseOrderForm extends React.Component {
                 }*/}
 
                 {entity.id !== 0 &&
-                    <div>
-                        <Table
-                            options={ticket_options}
-                            data={entity.tickets}
-                            columns={ticket_columns}
-                        />
-                        <div className="row form-group add-tickets-wrapper">
-                            <div className="col-md-4">
-                                <label> {T.translate("edit_purchase_order.ticket_type")}</label>
-                                <Dropdown
-                                    clearable={true}
-                                    options={ticket_type_ddl}
-                                    value={this.state.addTicketTypeId}
-                                    onChange={(ev)=>{
-                                        this.setState({...this.state, addTicketTypeId: parseInt(ev.target.value)})
-                                    }}
-                                />
-                            </div>
-                            <div className="col-md-4">
-                                <label> {T.translate("edit_purchase_order.promo_code")}</label>
-                                <PromocodeInput
-                                    id="promo_code_edit"
-                                    value={this.state.addPromoCode}
-                                    summitId={currentSummit.id}
-                                    onChange={(ev)=>{
-                                        this.setState({...this.state, addPromoCode: ev.target.value})
-                                    }}
-                                    isClearable={true}
-                                    error={hasErrors('promo_code_edit', errors)}
-                                />
-                            </div>
-                            <div className="col-md-2">
-                                <label> {T.translate("edit_purchase_order.ticket_qty")}</label>
-                                <Input
-                                    onChange={(ev)=>{
-                                        this.setState({...this.state, addTicketQty: parseInt(ev.target.value)})
-                                    }}
-                                    value={this.state.addTicketQty}
-                                    type="number"
-                                    className="form-control"
-                                    min="1"
-                                    max="100"
-                                />
-                            </div>
-                            <div className="col-md-2">
-                                <input type="button" onClick={this.handleAddTickets}
-                                       className="btn btn-primary pull-right" value="Add Tickets" />
+                    <>
+                        <div>
+                            <Table
+                                options={ticket_options}
+                                data={entity.tickets}
+                                columns={ticket_columns}
+                            />
+                            <div className="row form-group add-tickets-wrapper">
+                                <div className="col-md-4">
+                                    <label> {T.translate("edit_purchase_order.ticket_type")}</label>
+                                    <Dropdown
+                                        clearable={true}
+                                        options={ticket_type_ddl}
+                                        value={this.state.addTicketTypeId}
+                                        onChange={(ev)=>{
+                                            this.setState({...this.state, addTicketTypeId: parseInt(ev.target.value)})
+                                        }}
+                                    />
+                                </div>
+                                <div className="col-md-4">
+                                    <label> {T.translate("edit_purchase_order.promo_code")}</label>
+                                    <PromocodeInput
+                                        id="promo_code_edit"
+                                        value={this.state.addPromoCode}
+                                        summitId={currentSummit.id}
+                                        onChange={(ev)=>{
+                                            this.setState({...this.state, addPromoCode: ev.target.value})
+                                        }}
+                                        isClearable={true}
+                                        error={hasErrors('promo_code_edit', errors)}
+                                    />
+                                </div>
+                                <div className="col-md-2">
+                                    <label> {T.translate("edit_purchase_order.ticket_qty")}</label>
+                                    <Input
+                                        onChange={(ev)=>{
+                                            this.setState({...this.state, addTicketQty: parseInt(ev.target.value)})
+                                        }}
+                                        value={this.state.addTicketQty}
+                                        type="number"
+                                        className="form-control"
+                                        min="1"
+                                        max="100"
+                                    />
+                                </div>
+                                <div className="col-md-2">
+                                    <input type="button" onClick={this.handleAddTickets}
+                                        className="btn btn-primary pull-right" value="Add Tickets" />
+                                </div>
                             </div>
                         </div>
-                    </div>
+                        <Panel show={showSection === 'purchase_history'} title={T.translate("edit_purchase_order.purchase_history")}
+                            handleClick={this.toggleSection.bind(this, 'purchase_history')}>                            
+
+                            <div className="row">
+                                <div className="col-md-6">
+                                    <label>{T.translate("edit_purchase_order.order_price")}</label> {`$${entity.raw_amount}`}
+                                </div>
+                                <div className="col-md-6">
+                                    <label>{T.translate("edit_purchase_order.net_price")}</label> {`$${(entity.raw_amount - entity.discount_amount)}`}
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-md-6">
+                                    <label>{T.translate("edit_purchase_order.discount")}</label> {`${entity.discount_rate}% ($${entity.discount_amount})`}
+                                </div>                        
+                            </div>
+                            {entity?.applied_taxes.map((tax, i) => {                                
+                                return (
+                                    <div className="row" key={i}>
+                                        <div className="col-md-6">
+                                            <label>{T.translate("edit_purchase_order.tax_name_rate", {tax_name: tax.name})}</label>{` ${tax.rate}%`}
+                                        </div>
+                                        <div className="col-md-6">
+                                            <label>{T.translate("edit_purchase_order.tax_name_price", {tax_name: tax.name})}</label>{` $${tax.amount}`}
+                                        </div>
+                                    </div>
+                                )                                
+                            })}
+                            <div className="row">
+                                <div className="col-md-6 col-md-offset-6">
+                                    <label>{T.translate("edit_purchase_order.purchase_order_price")}</label> {`$${entity.amount}`}
+                                </div>
+                            </div>
+
+                            <div className="row">
+                                <div className="col-md-12">
+                                    <label>{T.translate("edit_purchase_order.refunds")}</label>
+                                    <Table 
+                                        options={refunds_options}
+                                        columns={refunds_columns}
+                                        data={entity.approved_refunds}
+                                    />
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-md-12">
+                                    <label>{T.translate("edit_purchase_order.adjusted_total_order_purchase_price")}</label> {`$${entity.adjusted_total_order_purchase_price?.toFixed(2)}`}
+                                </div>
+                            </div>
+                        </Panel>
+                    </>
                 }
 
                 <div className="row">

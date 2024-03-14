@@ -19,6 +19,7 @@ import
     UPDATE_PURCHASE_ORDER,
     PURCHASE_ORDER_CANCEL_REFUND,
     PURCHASE_ORDER_UPDATED,
+    RECEIVE_PURCHASE_ORDER_REFUNDS
 } from '../../actions/order-actions';
 
 import { VALIDATE } from 'openstack-uicore-foundation/lib/utils/actions';
@@ -47,6 +48,9 @@ export const DEFAULT_ENTITY = {
     promo_code: '',
     credit_card_type: '',
     credit_card_4number: '',
+    applied_taxes: [],
+    approved_refunds: [],
+    approved_refunds_taxes: []
 }
 
 const DEFAULT_STATE = {
@@ -107,8 +111,8 @@ const purchaseOrderReducer = (state = DEFAULT_STATE, action) => {
             let entity = {...payload.response};
 
             const final_amount_formatted = `$${entity.amount.toFixed(2)}`;
-            const refunded_amount_formatted = `$${entity.refunded_amount.toFixed(2)}`;
-            const final_amount_adjusted_formatted = `$${((entity.amount - entity.refunded_amount).toFixed(2))}`;
+            const refunded_amount_formatted = `$${entity.total_refunded_amount.toFixed(2)}`;
+            const final_amount_adjusted_formatted = `$${((entity.amount - entity.total_refunded_amount).toFixed(2))}`;
 
             for(var key in entity) {
                 if(entity.hasOwnProperty(key)) {
@@ -149,6 +153,42 @@ const purchaseOrderReducer = (state = DEFAULT_STATE, action) => {
                 },
                 errors: {}
             }
+        }
+        case RECEIVE_PURCHASE_ORDER_REFUNDS: {
+            const approved_refunds = payload.response.data;
+            const approved_refunds_taxes = [];
+            const purchaseOrder = state.entity;
+            let adjusted_order_price = purchaseOrder.amount;
+            let adjusted_net_price = purchaseOrder.raw_amount;            
+            let adjusted_total_order_purchase_price = 0;
+            let adjusted_applied_taxes = purchaseOrder.applied_taxes;
+            approved_refunds.forEach(refund => {
+                refund.ticket_id = refund.ticket.id;
+                refund.refunded_amount_formatted = `$${refund.refunded_amount.toFixed(2)}`;
+                refund.total_refunded_amount_formatted = `$${refund.total_refunded_amount.toFixed(2)}`;
+                adjusted_total_order_purchase_price += refund.total_refunded_amount;                
+                adjusted_net_price -= refund.refunded_amount;                
+                refund.adjusted_net_price_formatted = `$${adjusted_net_price.toFixed(2)}`;
+                adjusted_order_price -= refund.total_refunded_amount;
+                refund.adjusted_order_price_formatted = `$${adjusted_order_price.toFixed(2)}`;
+                refund.refunded_taxes.forEach(rt => {
+                    // field for the tax column of that refund
+                    refund[`tax_${rt.tax.id}_refunded_amount`] = `$${rt.refunded_amount.toFixed(2)}`
+                    adjusted_applied_taxes.forEach(t => {                        
+                        if(t.id === rt.tax.id) {
+                            t.amount -= rt.refunded_amount;                            
+                            refund[`tax_${rt.tax.id}_adjusted_refunded_amount`] = `$${(t.amount).toFixed(2)}`
+                        }
+                    });                    
+                    // add tax type to array
+                    approved_refunds_taxes.push(rt.tax);
+                });
+            });
+            adjusted_total_order_purchase_price = (purchaseOrder.amount - adjusted_total_order_purchase_price);
+            const unique_approved_refunds_taxes = approved_refunds_taxes.filter((tax, idx, arr) => {
+                return idx === arr.findIndex(obj => obj.id === tax.id);
+            });            
+            return {...state, entity: {...state.entity, approved_refunds, adjusted_total_order_purchase_price, approved_refunds_taxes: unique_approved_refunds_taxes }};
         }
         case VALIDATE: {
             return {...state,  errors: payload.errors };

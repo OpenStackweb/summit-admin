@@ -21,7 +21,7 @@ import EditPurchaseOrderPage from '../pages/orders/edit-purchase-order-page'
 import NoMatchPage from "../pages/no-match-page";
 import EditTicketPage from "../pages/orders/edit-ticket-page";
 
-import {resetPurchaseOrderForm, getPurchaseOrder, getOrderExtraQuestions} from "../actions/order-actions";
+import {resetPurchaseOrderForm, getPurchaseOrder, getOrderExtraQuestions, getPurchaseOrderRefunds} from "../actions/order-actions";
 
 class PurchaseOrderIdLayout extends React.Component {
 
@@ -34,7 +34,7 @@ class PurchaseOrderIdLayout extends React.Component {
         if (!orderId) {
             props.resetPurchaseOrderForm();
         } else {
-            props.getPurchaseOrder(orderId);
+            props.getPurchaseOrder(orderId).then(() => props.getPurchaseOrderRefunds(orderId));
         }
 
         if (!currentSummit.order_only_extra_questions) {
@@ -93,7 +93,8 @@ export default Restrict(connect (
     {
         getPurchaseOrder,
         resetPurchaseOrderForm,
-        getOrderExtraQuestions
+        getOrderExtraQuestions,
+        getPurchaseOrderRefunds
     }
 )(PurchaseOrderIdLayout), 'orders');
 

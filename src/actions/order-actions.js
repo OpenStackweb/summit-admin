@@ -57,6 +57,7 @@ export const PURCHASE_ORDER_DELETED = 'PURCHASE_ORDER_DELETED';
 export const PURCHASE_ORDER_CANCEL_REFUND = 'PURCHASE_ORDER_CANCEL_REFUND';
 export const RESET_PURCHASE_ORDER_FORM = 'RESET_PURCHASE_ORDER_FORM';
 export const ORDER_EMAIL_SENT = 'ORDER_EMAIL_SENT';
+export const RECEIVE_PURCHASE_ORDER_REFUNDS = 'RECEIVE_PURCHASE_ORDER_REFUNDS';
 
 export const RESET_ORDER_EXTRA_QUESTION_SUB_QUESTION_FORM = 'RESET_ORDER_EXTRA_QUESTION_SUB_QUESTION_FORM';
 export const REQUEST_ORDER_EXTRA_QUESTION_SUB_QUESTION = 'REQUEST_ORDER_EXTRA_QUESTION_SUB_QUESTION';
@@ -592,6 +593,32 @@ export const reSendOrderEmail = (orderId) => async (dispatch) => {
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
             dispatch(showSuccessMessage(T.translate("edit_purchase_order.email_resent")));
+        }
+    );
+};
+
+export const getPurchaseOrderRefunds = (orderId) => async (dispatch, getState) => {
+
+    const {currentSummitState} = getState();
+    const accessToken = await getAccessTokenSafely();
+    const {currentSummit} = currentSummitState;
+
+    dispatch(startLoading());
+
+    const params = {
+        per_page: 100,
+        expand: 'refunded_taxes, refunded_taxes.tax, ticket, ticket.applied_taxes',
+        order: '+action_date',
+        access_token: accessToken,
+    };
+
+    return getRequest(
+        null,
+        createAction(RECEIVE_PURCHASE_ORDER_REFUNDS),
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/orders/${orderId}/tickets/all/refund-requests/approved`,
+        authErrorHandler
+    )(params)(dispatch).then(() => {
+            dispatch(stopLoading());
         }
     );
 };
