@@ -66,6 +66,7 @@ class EditTicketPage extends React.Component {
         this.state = {
             refundAmount: '',
             refundNotes: '',
+            refundAmountError: false,
             showRefundModal: false,
             showRefundRejectModal:false,
             refundRejectNotes: '',
@@ -198,11 +199,21 @@ class EditTicketPage extends React.Component {
         const { refundAmount, refundNotes} = this.state;
         const { refundTicket, entity} = this.props;
 
-        if(parseFloat(refundAmount) > 0 &&  parseFloat(refundAmount) <= parseFloat(entity.final_amount)) {
+        const maxAllowedAmount2Refund = entity.net_selling_cost - entity.refunded_amount;
+
+        if (refundAmount > maxAllowedAmount2Refund) {
+            this.setState({...this.state,
+                refundAmountError: true
+            });
+            return
+        }
+        
+        if( parseFloat(refundAmount) > 0) {
 
             this.setState({...this.state,
                 refundAmount: '',
                 refundNotes: '',
+                refundAmountError: false,
                 showRefundModal: false
             });
 
@@ -231,7 +242,7 @@ class EditTicketPage extends React.Component {
 
     render(){
         const {currentSummit, currentOrder, loading, currentBadgePrints, entity, errors, match} = this.props;
-        const {showSection} = this.state;
+        const {showSection, refundAmountError} = this.state;
 
         const breadcrumb = `...${entity.number.slice(-20)}`;
 
@@ -379,16 +390,19 @@ class EditTicketPage extends React.Component {
                </Panel>
                 <Modal show={this.state.showRefundModal} onHide={() => this.setState({showRefundModal:false})} >
                     <Modal.Header closeButton>
-                        <Modal.Title>{T.translate("edit_ticket.refund_modal_title")}</Modal.Title>
+                        <Modal.Title>{T.translate("edit_ticket.refund_modal_title")}</Modal.Title>                        
+                        {`${T.translate("edit_ticket.net_selling_price")} ${entity.currency_symbol} ${entity.net_selling_cost}`}
                     </Modal.Header>
                     <Modal.Body>
                         <div className="row form-group">
-                            <div className="col-md-12">
+                            <div className="col-md-12 refund-input-wrapper">                                
                                 <input className="form-control" type="number" min="0"
                                        step=".01"
                                        placeholder="0.00"
                                        value={this.state.refundAmount}
                                        onChange={this.handleRefundChange} />
+                                <i className="fa fa-info-circle" aria-hidden="true" title={T.translate("edit_ticket.refund_amount_info")} />
+                                {refundAmountError && <span className='error-label'>{T.translate("edit_ticket.refund_amount_error")}</span>}
                             </div>
                         </div>
                         <div className="row form-group">
