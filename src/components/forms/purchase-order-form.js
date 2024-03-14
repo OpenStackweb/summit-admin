@@ -111,6 +111,12 @@ class PurchaseOrderForm extends React.Component {
         this.setState({showSection: newShowSection});
     };
 
+    handleRefundTicketClick = (refundId) => {
+        const {currentSummit, entity, history} = this.props;
+        const ticketId = entity.approved_refunds.find(r => r.id === refundId).ticket_id;
+        history.push(`/app/summits/${currentSummit.id}/purchase-orders/${entity.id}/tickets/${ticketId}`);
+    };    
+
     render() {
         const {entity, errors, showSection} = this.state;
         const {currentSummit} = this.props;
@@ -161,7 +167,7 @@ class PurchaseOrderForm extends React.Component {
 
         let refunds_options = {
             actions: {
-                edit:{ onClick: this.handleTicketEdit },
+                edit:{ onClick: this.handleRefundTicketClick },
             }
         }
 
