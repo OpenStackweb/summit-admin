@@ -277,7 +277,7 @@ class TicketForm extends React.Component {
                     <>
                     <div className="row form-group">
                         <div className="col-md-3">
-                            <label> {T.translate("edit_ticket.refunded_amount")}:&nbsp;</label>
+                            <label> {T.translate("edit_ticket.refund_total_amount")}:&nbsp;</label>
                             {entity.refunded_amount_formatted}
                         </div>
                         <div className="col-md-9">
@@ -286,8 +286,8 @@ class TicketForm extends React.Component {
                     </div>
                     <div className="row form-group">
                         <div className="col-md-3">
-                            <label> {T.translate("edit_ticket.paid_amount_adjusted")}:&nbsp;</label>
-                            {entity.final_amount_adjusted_formatted}
+                            <label> {T.translate("edit_ticket.adjusted_total_ticket_purchase_price")}:&nbsp;</label>
+                            {entity.adjusted_total_ticket_purchase_price_formatted}
                         </div>
                         <div className="col-md-9">
                             &nbsp;
