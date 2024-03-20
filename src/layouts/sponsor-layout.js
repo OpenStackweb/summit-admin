@@ -12,13 +12,15 @@
  **/
 
 import React from 'react'
-import { Switch, Route, withRouter } from 'react-router-dom';
+import {Switch, Route, withRouter, Redirect} from 'react-router-dom';
 import T from "i18n-react/dist/i18n-react";
 import { Breadcrumb } from 'react-breadcrumbs';
 import Restrict from '../routes/restrict';
 import SponsorListPage from '../pages/sponsors/sponsor-list-page'
 import NoMatchPage from "../pages/no-match-page";
 import SponsorIdLayout from './sponsor-id-layout';
+import SponsorPromocodesListPage from "../pages/sponsors/sponsor-promocodes-list-page";
+import EditPromocodePage from "../pages/promocodes/edit-promocode-page";
 
 
 class SponsorLayout extends React.Component {
@@ -30,6 +32,20 @@ class SponsorLayout extends React.Component {
                 <Breadcrumb data={{ title: T.translate("sponsor_list.sponsors"), pathname: match.url }} />
                 <Switch>
                     <Route strict exact path={match.url} component={SponsorListPage} />
+                    <Route strict exact path={`${match.url}/promocodes`} component={SponsorPromocodesListPage}/>
+                    <Route
+                      path={`${match.url}/promocodes`}
+                      render={ props =>
+                        <div>
+                          <Breadcrumb data={{ title: T.translate("sponsor_promocodes_list.promocodes"), pathname: props.match.url }} />
+                          <Switch>
+                            <Route strict exact path={props.match.url} component={SponsorPromocodesListPage}/>
+                            <Route path={`${props.match.url}/new`} component={EditPromocodePage} />
+                            <Route path={`${props.match.url}/:promocode_id(\\d+)`} component={EditPromocodePage} />
+                          </Switch>
+                        </div>
+                      }
+                    />
                     <Route strict exact path={`${match.url}/new`} component={SponsorIdLayout} />
                     <Route path={`${match.url}/:sponsor_id(\\d+)`} component={SponsorIdLayout} />
                     <Route component={NoMatchPage} />

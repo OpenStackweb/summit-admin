@@ -93,7 +93,7 @@ const parseFilters = (filters, term = null) => {
             `owner_email=@${escapedTerm},` +
             `speaker=@${escapedTerm},` +
             `speaker_email=@${escapedTerm},` +
-            `sponsor=@${escapedTerm}`;
+            `sponsor_company_name=@${escapedTerm}`;
 
         filter.push(searchString);
     }
@@ -196,7 +196,7 @@ export const resetPromocodeForm = () => (dispatch, getState) => {
     dispatch(createAction(RESET_PROMOCODE_FORM)({}));
 };
 
-export const savePromocode = (entity) => async (dispatch, getState) => {
+export const savePromocode = (entity, isSponsor) => async (dispatch, getState) => {
     const { currentSummitState } = getState();
     const accessToken = await getAccessTokenSafely();
     const { currentSummit }   = currentSummitState;
@@ -241,7 +241,7 @@ export const savePromocode = (entity) => async (dispatch, getState) => {
             .then((payload) => {
                 dispatch(showMessage(
                     success_message,
-                    () => { history.push(`/app/summits/${currentSummit.id}/promocodes/${payload.response.id}`) }
+                    () => { history.push(`/app/summits/${currentSummit.id}${isSponsor ? '/sponsors' : ''}/promocodes/${payload.response.id}`) }
                 ));
             });
     }

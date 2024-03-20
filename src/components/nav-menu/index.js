@@ -178,6 +178,7 @@ class NavMenu extends React.Component {
                 childs: [
                     {name:'sponsor_list', linkUrl:`summits/${summit_id}/sponsors`, accessRoute: 'sponsors'},
                     {name:'sponsorship_list', linkUrl:`summits/${summit_id}/sponsorships`, accessRoute: 'admin-sponsors'},
+                    {name:'sponsors_promocodes', linkUrl:`summits/${summit_id}/sponsors/promocodes`, accessRoute: 'admin-sponsors'},
                     {name:'badge_scans', linkUrl:`summits/${summit_id}/badge-scans`, accessRoute: 'badge-scans'},
                 ]
             },

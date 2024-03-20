@@ -12,7 +12,7 @@ const BasePCForm = (props) => {
     <>
       <div className="row form-group">
         <div className="col-md-4">
-          <label> {T.translate("edit_promocode.quantity_available")} </label>
+          <label> {T.translate("edit_promocode.quantity_available")} <i className="fa fa-info-circle" aria-hidden="true" title={T.translate("edit_promocode.info.quantity_available")} /></label>
           <Input
             id="quantity_available"
             type="number"

@@ -128,6 +128,7 @@
     "sponsors": "Sponsors",
     "sponsor_list": "Sponsor List",
     "sponsorship_list": "Sponsorships",
+    "sponsors_promocodes": "Promocodes",
     "badge_scans": "Badge Scans",
     "marketing": "Marketing",
     "payment_profiles_list": "Payment Profiles",
@@ -193,7 +194,7 @@
     "btn_apply_changes": "Apply Changes",
     "btn_apply_publish_changes": "Apply And Publish Changes",
     "messages": {
-      "update_success": "Activities saved successfully.",      
+      "update_success": "Activities saved successfully.",
       "update_publish_success": "Activities saved and published successfully.",
       "validation_title": "Validation Errors",
       "validation_message": "Please check data on {event} {event_id}"
@@ -890,6 +891,9 @@
       "select_ticket_types": "Select Ticket Types",
       "select_class_name": "Select a Class",
       "select_tags": "Select Tags"
+    },
+    "info":{
+      "quantity_available": "If zero is set, then Promo Code has no limit to be used"
     }
   },
   "discount_ticket": {
@@ -1618,7 +1622,7 @@
     "admin_notes": "Notes",
     "unassign": "Unassign",
     "ticket_price": "Ticket Price",
-    "net_price": "Net Price",    
+    "net_price": "Net Price",
     "tax_name_rate": "{tax_name} Rate",
     "tax_name_price": "{tax_name} Price",
     "purchase_ticket_price": "Purchase Ticket Price",
@@ -2035,7 +2039,7 @@
     "net_price": "Net Price:",
     "discount": "Discount:",
     "tax_name_rate": "{tax_name} Rate:",
-    "tax_name_price": "{tax_name} Price:",    
+    "tax_name_price": "{tax_name} Price:",
     "refunded_ticket": "Refunded Ticket #",
     "purchase_order_price": "Purchase Order Price",
     "refunds": "Refunds",
@@ -2148,6 +2152,38 @@
     "sponsorship_created": "Sponsorship created successfully",
     "placeholders": {
       "select_size": "Select a Size"
+    }
+  },
+  "sponsor_promocodes_list": {
+    "no_sponsors": "No sponsors found for current search criteria.",
+    "promocodes_list": "Sponsor Promocode List",
+    "promocodes": "Promocodes",
+    "sponsor": "Sponsor",
+    "tier": "Tier",
+    "code": "Code",
+    "quantity_available": "# of Codes",
+    "quantity_used": "# of used Codes",
+    "email_sent": "Sent",
+    "feature_types": "Feature Types",
+    "ticket_types": "Ticket Types",
+    "contact_email": "Recipient",
+    "notes": "Notes",
+    "send_emails": "Send",
+    "resend_done": "Emails sent successfully.",
+    "select_template": "Select a Email Template to perform the action.",
+    "select_items": "Select at least one sponsor to perform the action.",
+    "items_qty": "Selected {qty} Sponsors",
+    "send_email_warning": "You are about to send the {template} email template to {qty} sponsors.",
+    "email_test_recipient": "BLAST IS ON TEST MODE (All emails would be sent to {email})",
+    "invalid_recipient_email": "Please use a valid email",
+    "please_confirm": "Please confirm.",
+    "select_fields": "Show columns",
+    "add_promocode": "Add Promocode",
+    "infinite" : "Infinite",
+    "placeholders": {
+      "test_recipient": "Optional Test Recipient",
+      "search_promocodes": "Search Sponsors by Name, Tier, Code",
+      "select_fields": "Select data to display"
     }
   },
   "summit_sponsorship_list": {

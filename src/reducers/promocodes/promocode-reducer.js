@@ -60,7 +60,7 @@ export const DEFAULT_ENTITY = {
     code                    : '',
     email_sent              : false,
     redeemed                : false,
-    quantity_available      : '',
+    quantity_available      : 0,
     quantity_used           : 0,
     valid_since_date        : '',
     valid_until_date        : '',
@@ -107,7 +107,7 @@ const promocodeReducer = (state = DEFAULT_STATE, action) => {
         break;
         case RECEIVE_PROMOCODE_META: {
             let types = [...DEFAULT_STATE.allTypes];
-            
+
             let allClasses = [...payload.response];
 
             allClasses.map(t => {
@@ -141,7 +141,7 @@ const promocodeReducer = (state = DEFAULT_STATE, action) => {
             entity.speakers = state.entity.speakers
 
             const discount_classes = ['SPEAKER_DISCOUNT_CODE', 'SPONSOR_DISCOUNT_CODE', 'MEMBER_DISCOUNT_CODE', 'SUMMIT_DISCOUNT_CODE', 'SPEAKERS_DISCOUNT_CODE'];
-            
+
             if (discount_classes.includes(entity.class_name)){
                 entity.apply_to_all_tix = entity.ticket_types_rules.length === 0;
             }
@@ -184,7 +184,7 @@ const promocodeReducer = (state = DEFAULT_STATE, action) => {
                 email_sent: false,
                 redeemed: false
             };
-            let speakersList = [...speakers.speakers_list.filter(s => s.id !== assignment.id), assignment]; 
+            let speakersList = [...speakers.speakers_list.filter(s => s.id !== assignment.id), assignment];
             const {pagedList, lastPage} = pageList(speakersList, currentPage, perPage);
 
             const qtyAvailable = state.entity.quantity_available ? parseInt(state.entity.quantity_available) + 1 : 1;
@@ -194,7 +194,7 @@ const promocodeReducer = (state = DEFAULT_STATE, action) => {
         }
         case GET_ASSIGNED_SPEAKERS_LOCALLY: {
             let {promoCodeClassName, term, page, perPage, order, orderDir} = payload;
-            
+
             let speakersList = state.entity.speakers.speakers_list;
 
             if (term) speakersList = speakersList.filter(s => s.full_name.toUpperCase().startsWith(term.toUpperCase()) || s.email.toUpperCase().startsWith(term.toUpperCase()));
@@ -232,7 +232,7 @@ const promocodeReducer = (state = DEFAULT_STATE, action) => {
 
             const qtyAvailable = state.entity.quantity_available ? parseInt(state.entity.quantity_available) - 1 : 0;
 
-            return {...state, entity: {...state.entity, speaker: null, quantity_available: qtyAvailable, 
+            return {...state, entity: {...state.entity, speaker: null, quantity_available: qtyAvailable,
                 speakers: {...state.entity.speakers, speakers_list: speakersList, filtered_speakers_list: pagedList, lastPage} } };
         }
         case REQUEST_ASSIGNED_SPEAKERS: {
@@ -243,8 +243,8 @@ const promocodeReducer = (state = DEFAULT_STATE, action) => {
             let {current_page, data, last_page, per_page, total} = {...payload.response};
 
             const speakersList =  data.map(assigment => {return {
-                ...assigment.speaker, 
-                email_sent: assigment.sent, 
+                ...assigment.speaker,
+                email_sent: assigment.sent,
                 redeemed: assigment.redeemed,
                 full_name: `${assigment.speaker.first_name} ${assigment.speaker.last_name}`}
             });

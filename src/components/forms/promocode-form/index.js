@@ -89,7 +89,7 @@ class PromocodeForm extends React.Component {
     }
 
     handleClassChange(ev) {
-        let entity = {...this.state.entity};        
+        let entity = {...this.state.entity};
         let {value, id} = ev.target;
 
         entity = {...DEFAULT_ENTITY}
@@ -106,11 +106,11 @@ class PromocodeForm extends React.Component {
     }
 
     handleSubmit(ev) {
-        let entity = {...this.state.entity};
         ev.preventDefault();
+        const typeScope = this.fragmentParser.getParam('type');
 
         if (this.validate()) {
-            this.props.onSubmit(this.state.entity);
+            this.props.onSubmit(this.state.entity, typeScope === 'sponsor');
         }
     }
 
@@ -234,7 +234,7 @@ class PromocodeForm extends React.Component {
                         />
                     </div>
                     <div className="col-md-3">
-                        <label> {T.translate("edit_promocode.tags")} *</label>
+                        <label> {T.translate("edit_promocode.tags")}</label>
                         <TagInput
                             id="tags"
                             clearable

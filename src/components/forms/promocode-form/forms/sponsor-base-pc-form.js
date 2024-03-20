@@ -8,7 +8,7 @@ const SponsorBasePCForm = (props) => (
   <>
     <div className="row form-group">
       <div className="col-md-6">
-        <label> {T.translate("edit_promocode.sponsor")} </label>
+        <label> {T.translate("edit_promocode.sponsor")} *</label>
         <SponsorInput
           id="sponsor"
           value={props.entity.sponsor}
@@ -20,7 +20,7 @@ const SponsorBasePCForm = (props) => (
         />
       </div>
       <div className="col-md-6">
-        <label> {T.translate("edit_promocode.contact_email")} </label>
+        <label> {T.translate("edit_promocode.contact_email")} *</label>
         <Input
           id="contact_email"
           className="form-control"
