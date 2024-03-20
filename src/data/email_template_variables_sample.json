@@ -323,5 +323,8 @@
     "track_id": 123,
     "type": "type",
     "until_date": "until_date",
-    "virtual_event_site_link": "https://example-url.com"
+    "virtual_event_site_link": "https://example-url.com",
+    "company_name": "FNTECH",
+    "contact_email": "contact@fntech.com",
+    "sponsor_tier_name": "Gold"
 }
