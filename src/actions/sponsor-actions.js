@@ -924,6 +924,7 @@ export const getBadgeScans = (sponsorId = null, page = 1, perPage = 10, order = 
     const accessToken = await getAccessTokenSafely();
     const {currentSummit} = currentSummitState;
     const filter = [];
+    const summitTZ = currentSummit.time_zone.name;
 
     dispatch(startLoading());
 
@@ -954,7 +955,7 @@ export const getBadgeScans = (sponsorId = null, page = 1, perPage = 10, order = 
         createAction(RECEIVE_BADGE_SCANS),
         `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/badge-scans`,
         authErrorHandler,
-        {page, perPage, order, orderDir, sponsorId}
+        { page, perPage, order, orderDir, sponsorId, summitTZ }
     )(params)(dispatch).then(() => {
             dispatch(stopLoading());
         }

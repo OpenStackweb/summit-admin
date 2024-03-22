@@ -11,7 +11,7 @@
  * limitations under the License.
  **/
 
-import {epochToMoment} from "openstack-uicore-foundation/lib/utils/methods";
+import { epochToMomentTimeZone } from 'openstack-uicore-foundation/lib/utils/methods'
 import
 {
     RECEIVE_BADGE_SCANS,
@@ -31,7 +31,8 @@ const DEFAULT_STATE = {
     lastPage        : 1,
     perPage         : 10,
     totalBadgeScans : 0,
-    allSponsors     : []
+    allSponsors     : [],
+    summitTZ        : '',
 };
 
 const badgeScansListReducer = (state = DEFAULT_STATE, action) => {
@@ -42,14 +43,14 @@ const badgeScansListReducer = (state = DEFAULT_STATE, action) => {
             return DEFAULT_STATE;
         }
         case REQUEST_BADGE_SCANS: {
-            let {order, orderDir, sponsorId} = payload;
-
-            return {...state, order, orderDir, sponsorId }
+            let {order, orderDir, sponsorId, summitTZ} = payload;
+            return {...state, order, orderDir, sponsorId, summitTZ };
         }
         case RECEIVE_BADGE_SCANS: {
             let {current_page, total, last_page} = payload.response;
             let badgeScans = payload.response.data.map(s => {
-                let scanDate = s.scan_date ? epochToMoment(s.scan_date).format('MMMM Do YYYY, h:mm:ss a') : epochToMoment(s.created).format('MMMM Do YYYY, h:mm:ss a') ;
+                let scanDate = s.scan_date ? epochToMomentTimeZone(s.scan_date, state.summitTZ).format('MMMM Do YYYY, h:mm:ss a') :
+                    epochToMomentTimeZone(s.created, state.summitTZ).format('MMMM Do YYYY, h:mm:ss a') ;
                 let firstName = '';
                 let lastName = '';
                 let company = '';
