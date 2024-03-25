@@ -11,7 +11,9 @@
  * limitations under the License.
  **/
 
-import { RECEIVE_SELECTED_EVENTS,
+import {
+    REQUEST_SELECTED_EVENTS,
+    RECEIVE_SELECTED_EVENTS,
     UPDATE_LOCAL_EVENT,
     UPDATED_REMOTE_EVENTS,
     UPDATE_EVENT_SELECTED_STATE,
@@ -37,108 +39,96 @@ import {SummitEvent} from "openstack-uicore-foundation/lib/models";
 import
 {
     CLEAR_PUBLISHED_EVENTS,
+    CLEAR_UNPUBLISHED_EVENTS,
     RECEIVE_UNSCHEDULE_EVENTS_PAGE,
+    REQUEST_UNSCHEDULE_EVENTS_PAGE,
+    REQUEST_SCHEDULE_EVENTS_PAGE,
     RECEIVE_SCHEDULE_EVENTS_PAGE
-
 } from '../../actions/summit-builder-actions';
 
 const DEFAULT_STATE = {
     eventOnBulkEdition: [],
-    selectedPublishedEvents:[],
-    selectedUnPublishedEvents:[],
+    selectedAllUnPublished: false,
+    selectedUnPublishedEvents: [],
+    excludedUnPublishedEvents: [],
+    unPublishedFilter: [],
+    totalUnPublished: 0
 }
 
 const summitEventBulkActionReducer = (state = DEFAULT_STATE, action) => {
     const { type, payload } = action
-    switch(type){
-        case CLEAR_PUBLISHED_EVENTS:
-        case RECEIVE_SCHEDULE_EVENTS_PAGE:
-        {
-            return { ... state, selectedPublishedEvents: [], eventOnBulkEdition: []}
+
+    switch (type) {
+        case CLEAR_PUBLISHED_EVENTS: {
+            return { ...state, eventOnBulkEdition: [] }
         }
-        break;
-        case RECEIVE_UNSCHEDULE_EVENTS_PAGE:
-        {
-            return { ... state, selectedUnPublishedEvents: [], eventOnBulkEdition: []}
+        case CLEAR_UNPUBLISHED_EVENTS: {
+            return {
+                ...state,
+                selectedUnPublishedEvents: [],
+                eventOnBulkEdition: [],
+                selectedAllUnPublished: false,
+                excludedUnPublishedEvents: []
+            }
         }
-        break;
-        case UPDATE_VALIDATION_STATE:{
-            const { currentSummit }      = payload;
+        case REQUEST_UNSCHEDULE_EVENTS_PAGE: {
+            const {unPublishedFilter} = payload;
+            return {...state, unPublishedFilter}
+        }
+        case RECEIVE_UNSCHEDULE_EVENTS_PAGE: {
+            let {total} = payload.response;
+            return {...state, totalUnPublished: total}
+        }
+        case UPDATE_VALIDATION_STATE: {
+            const { currentSummit } = payload;
             let { eventOnBulkEdition } = state;
+
             eventOnBulkEdition = eventOnBulkEdition.map(event => {
                 let model = new SummitEvent(event, currentSummit)
                 return {...event, is_valid : model.isValid()}
             });
+
             return { ... state, eventOnBulkEdition}
         }
-       break;
-        case RECEIVE_SELECTED_EVENTS:
-            const { data } = payload.response;
-            return {...state,
-                eventOnBulkEdition: data.map((event) => ({ ...event, is_valid: false}))
+        case REQUEST_SELECTED_EVENTS: {
+            return {...state, eventOnBulkEdition: []}
+        }
+        case RECEIVE_SELECTED_EVENTS: {
+            const {data} = payload.response;
+            return {
+                ...state,
+                eventOnBulkEdition: [
+                    ...state.eventOnBulkEdition,
+                    ...data.map((event) => ({...event, is_valid: false}))
+                ]
             };
-            break;
-        case UPDATE_LOCAL_EVENT:
-            const { eventId, mutator }   = payload;
-            let { eventOnBulkEdition } = state;
+        }
+        case UPDATE_LOCAL_EVENT: {
+            const {eventId, mutator} = payload;
+            let {eventOnBulkEdition} = state;
             eventOnBulkEdition = eventOnBulkEdition.map(event => {
                 return event.id === eventId ? mutator(event) : event
             });
-            return { ... state, eventOnBulkEdition}
-            break;
+            return {...state, eventOnBulkEdition};
+        }
         case UPDATE_EVENT_SELECTED_STATE:
         {
-            const { event } = payload;
-            let { selectedPublishedEvents, selectedUnPublishedEvents } = state;
-            // event is published
-            if(event.hasOwnProperty('is_published') && event.is_published){
-                if(selectedPublishedEvents.includes(event.id)){
-                    // unchecked action
-                    selectedPublishedEvents = selectedPublishedEvents.filter(function(item) {
-                        return item !== event.id
-                    })
-                }
-                else{
-                    selectedPublishedEvents.push(event.id)
-                }
-                // clear unpublished ( just in case)
-                selectedUnPublishedEvents = selectedUnPublishedEvents.filter(function(item) {
-                    return item !== event.id
-                })
+            const { event, selected } = payload;
+            const { selectedUnPublishedEvents, selectedAllUnPublished, excludedUnPublishedEvents } = state;
+            let newState = {};
 
-                return {...state, selectedPublishedEvents, selectedUnPublishedEvents};
+            if (selectedAllUnPublished) {
+                newState = {excludedUnPublishedEvents: selected ? excludedUnPublishedEvents.filter(evid => evid !== event.id) : [...excludedUnPublishedEvents, event.id]}
+            } else {
+                newState = {selectedUnPublishedEvents: selected ? [...selectedUnPublishedEvents, event.id] : selectedUnPublishedEvents.filter(evid => evid !== event.id)}
             }
 
-            // unpublished events
-
-            if(selectedUnPublishedEvents.includes(event.id)){
-                // unchecked action
-                selectedUnPublishedEvents = selectedUnPublishedEvents.filter(function(item) {
-                    return item !== event.id
-                })
-            }
-            else{
-                selectedUnPublishedEvents.push(event.id)
-            }
-            selectedPublishedEvents = selectedPublishedEvents.filter(function(item) {
-                return item !== event.id
-            })
-
-            return {...state, selectedPublishedEvents, selectedUnPublishedEvents};
+            return {...state, ...newState};
         }
-        break;
         case UPDATE_EVENT_SELECTED_STATE_BULK:{
-            let { events, selectedState, published } = payload;
-            if(published){
-                let { selectedPublishedEvents} = state;
-                selectedPublishedEvents = selectedState ? events.map((event) => event.id) : [];
-                return {...state, selectedPublishedEvents}
-            }
-            let { selectedUnPublishedEvents} = state;
-            selectedUnPublishedEvents = selectedState ? events.map((event) => event.id) : [];
-            return {...state, selectedUnPublishedEvents}
+            const { selectedState } = payload;
+            return {...state, selectedUnPublishedEvents: [], selectedAllUnPublished: selectedState}
         }
-        break;
         case UPDATE_LOCATION_BULK:{
             let { location }      = payload;
             let { eventOnBulkEdition } = state;
@@ -147,7 +137,6 @@ const summitEventBulkActionReducer = (state = DEFAULT_STATE, action) => {
             });
             return { ... state, eventOnBulkEdition}
         }
-        break;
         case UPDATE_SELECTION_PLAN_BULK:{
             let { selectionPlan }      = payload;
             let { eventOnBulkEdition } = state;
@@ -164,7 +153,6 @@ const summitEventBulkActionReducer = (state = DEFAULT_STATE, action) => {
             });
             return { ... state, eventOnBulkEdition}
         }
-        break;
         case UPDATE_START_DATE_BULK:{
             let { start_date }      = payload;
             let { eventOnBulkEdition } = state;
@@ -173,7 +161,6 @@ const summitEventBulkActionReducer = (state = DEFAULT_STATE, action) => {
             });
             return { ... state, eventOnBulkEdition}
         }
-            break;
         case UPDATE_END_DATE_BULK:{
             let { end_date }      = payload;
             let { eventOnBulkEdition } = state;
@@ -182,7 +169,6 @@ const summitEventBulkActionReducer = (state = DEFAULT_STATE, action) => {
             });
             return { ... state, eventOnBulkEdition}
         }
-            break;
         case UPDATE_ACTIVITY_TYPE_BULK: {
             let { activityType }      = payload;
             let { eventOnBulkEdition } = state;
@@ -191,7 +177,6 @@ const summitEventBulkActionReducer = (state = DEFAULT_STATE, action) => {
             });
             return { ... state, eventOnBulkEdition}
         }
-            break;
         case UPDATE_ACTIVITY_CATEGORY_BULK: {
             let { activityCategory }      = payload;
             let { eventOnBulkEdition } = state;
@@ -200,7 +185,6 @@ const summitEventBulkActionReducer = (state = DEFAULT_STATE, action) => {
             });
             return { ... state, eventOnBulkEdition}
         }
-            break;
         case UPDATE_DURATION_BULK: {
             let { duration }      = payload;
             let { eventOnBulkEdition } = state;
@@ -209,7 +193,6 @@ const summitEventBulkActionReducer = (state = DEFAULT_STATE, action) => {
             });
             return { ... state, eventOnBulkEdition}
         }
-            break;
         case UPDATE_STREAMING_URL_BULK: {
             let { streamingURL }      = payload;
             let { eventOnBulkEdition } = state;
@@ -218,7 +201,6 @@ const summitEventBulkActionReducer = (state = DEFAULT_STATE, action) => {
             });
             return { ... state, eventOnBulkEdition}
         }
-            break;
         case UPDATE_STREAMING_TYPE_BULK: {
             let { streamingType }      = payload;
             let { eventOnBulkEdition } = state;
@@ -227,7 +209,6 @@ const summitEventBulkActionReducer = (state = DEFAULT_STATE, action) => {
             });
             return { ... state, eventOnBulkEdition}
         }
-            break;
         case UPDATE_MEETING_URL_BULK: {
             let { meetingURL }      = payload;
             let { eventOnBulkEdition } = state;
@@ -236,7 +217,6 @@ const summitEventBulkActionReducer = (state = DEFAULT_STATE, action) => {
             });
             return { ... state, eventOnBulkEdition}
         }
-            break;
         case UPDATE_ETHERPAD_URL_BULK: {
             let { etherpadURL }      = payload;
             let { eventOnBulkEdition } = state;
@@ -245,15 +225,12 @@ const summitEventBulkActionReducer = (state = DEFAULT_STATE, action) => {
             });
             return { ... state, eventOnBulkEdition}
         }
-            break;
         case LOGOUT_USER:{
             return DEFAULT_STATE;
         }
-            break;
         case UPDATED_REMOTE_EVENTS:
         default:
             return state;
-            break;
     }
 }
 

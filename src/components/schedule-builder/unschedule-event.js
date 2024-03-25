@@ -18,13 +18,12 @@ import {RawHTML} from 'openstack-uicore-foundation/lib/components';
 import 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 
 
-const UnScheduleEvent = ({event, onEditEvent, onClickSelected, selectedUnPublishedEvents}) => {
+const UnScheduleEvent = ({event, onEditEvent, onClickSelected, isSelected}) => {
   const [collected, drag, dragPreview] = useDrag(() => ({
     type: DraggableItemTypes.UNSCHEDULEEVENT,
     item: {id: event.id, title: event.title, is_published: event.is_published, start_date: event.start_date, end_date: event.end_date, duration: event.duration},
     collect: (monitor, props) => ({isDragging: monitor.isDragging()})
   }), [event.id, event.duration, event.start_date, event.end_date]);
-  const isSelected = selectedUnPublishedEvents.includes(event.id);
   const title = event.title.slice(0, 75) + (event.title.length > 75 ? '...' : '');
   const rank = event.rank ?
     <span className={`rank-status ${event.selection_status}`}> #{event.rank} - {event.selection_status}</span> :
@@ -64,7 +63,7 @@ const UnScheduleEvent = ({event, onEditEvent, onClickSelected, selectedUnPublish
               id={`selected_event_${event.id}`}
               type="checkbox"
               checked={isSelected}
-              onChange={() => onClickSelected(event)}/>
+              onChange={() => onClickSelected(event, !isSelected)}/>
           </div>
           <div className="event-container">
             <div className="event-content">

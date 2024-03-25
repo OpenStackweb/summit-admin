@@ -53,6 +53,7 @@ export const RECEIVE_SCHEDULE_EVENTS_SEARCH_PAGE          = 'RECEIVE_SCHEDULE_EV
 export const RECEIVE_EMPTY_SPOTS                          = 'RECEIVE_EMPTY_SPOTS';
 export const CLEAR_EMPTY_SPOTS                            = 'CLEAR_EMPTY_SPOTS';
 export const CLEAR_PUBLISHED_EVENTS                       = 'CLEAR_PUBLISHED_EVENTS';
+export const CLEAR_UNPUBLISHED_EVENTS                       = 'CLEAR_UNPUBLISHED_EVENTS';
 export const CLEAR_PROPOSED_EVENTS                       = 'CLEAR_PROPOSED_EVENTS';
 export const CHANGE_SUMMIT_BUILDER_FILTERS                = 'CHANGE_SUMMIT_BUILDER_FILTERS';
 export const SET_SLOT_SIZE                                = 'SET_SLOT_SIZE';
@@ -72,7 +73,8 @@ export const getUnScheduleEventsPage =
         selection_plan   = null,
         term             = null,
         order            = null,
-        duration         = null
+        duration         = null,
+        resetSelected = true
     ) =>
     async (dispatch, getState) => {
         const accessToken = await getAccessTokenSafely();
@@ -128,16 +130,20 @@ export const getUnScheduleEventsPage =
         }
 
         // order
-
         if(order != null){
             params['order']= `+${order}`;
+        }
+
+        if (resetSelected) {
+            await dispatch(createAction(CLEAR_UNPUBLISHED_EVENTS)({}))
         }
 
         return getRequest(
             createAction(REQUEST_UNSCHEDULE_EVENTS_PAGE),
             createAction(RECEIVE_UNSCHEDULE_EVENTS_PAGE),
             `${window.API_BASE_URL}/api/v1/summits/${summitId}/events/unpublished`,
-            authErrorHandler
+            authErrorHandler,
+            {unPublishedFilter: filter}
         )(params)(dispatch).then(() => {
                 dispatch(stopLoading());
             }
@@ -217,19 +223,27 @@ export const changeSource = (selectedSource) => (dispatch) => {
 
 export const getPublishedEventsBySummitDayLocation = (currentSummit, currentDay, currentLocation) => async (dispatch, getState) => {
     const accessToken = await getAccessTokenSafely();
-    currentDay              = moment.tz(currentDay, currentSummit.time_zone.name);
-    const startDate           = ( currentDay.clone().hours(0).minutes(0).seconds(0).valueOf()) / 1000;
-    const endDate             = ( currentDay.clone().hours(23).minutes(59).seconds(59).valueOf()) /1000;
+    currentDay = moment.tz(currentDay, currentSummit.time_zone.name);
+    const startDate= ( currentDay.clone().hours(0).minutes(0).seconds(0).valueOf()) / 1000;
+    const endDate  = ( currentDay.clone().hours(23).minutes(59).seconds(59).valueOf()) /1000;
+    const filter = [`start_date>=${startDate}`,`end_date<=${endDate}`];
 
     dispatch(startLoading());
-    const page       = 1;
-    const per_page   = 100;
+
+    const params = {
+        page         : 1,
+        per_page     : 100,
+        access_token : accessToken,
+        'filter[]'   : filter
+    };
+
     return getRequest(
         createAction(REQUEST_SCHEDULE_EVENTS_PAGE),
         createAction(RECEIVE_SCHEDULE_EVENTS_PAGE),
-        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/${currentLocation.id}/events/published?access_token=${accessToken}&filter[]=start_date>=${startDate}&filter[]=end_date<=${endDate}&page=${page}&per_page=${per_page}`,
-        authErrorHandler
-    )({})(dispatch)
+        `${window.API_BASE_URL}/api/v1/summits/${currentSummit.id}/locations/${currentLocation.id}/events/published`,
+        authErrorHandler,
+        {publishedFilter: filter}
+    )(params)(dispatch)
         .then(() =>
             dispatch(stopLoading())
         );

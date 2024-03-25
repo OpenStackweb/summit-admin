@@ -15,10 +15,16 @@ import UnScheduleEvent from './unschedule-event';
 import { Pagination } from 'react-bootstrap';
 import T from "i18n-react/dist/i18n-react";
 
-class UnScheduleEventList extends React.Component
-{
+class UnScheduleEventList extends React.Component {
+
+    isSelected = (event) => {
+        const {selectedUnPublishedEvents, excludedUnPublishedEvents, selectedAllUnPublished} = this.props;
+        return (selectedAllUnPublished && !excludedUnPublishedEvents.includes(event.id)) || (!selectedAllUnPublished && selectedUnPublishedEvents.includes(event.id));
+    }
+
     render(){
-        let { events, currentPage, lastPage, onPageChange, onEditEvent, selectedUnPublishedEvents, onClickSelected } = this.props;
+        const { events, currentPage, lastPage, onPageChange, onEditEvent, onClickSelected } = this.props;
+
         return (
             <div>
                 { events.length === 0 &&
@@ -32,7 +38,7 @@ class UnScheduleEventList extends React.Component
                                     <UnScheduleEvent
                                         event={event}
                                         onEditEvent={onEditEvent}
-                                        selectedUnPublishedEvents={selectedUnPublishedEvents}
+                                        isSelected={this.isSelected(event)}
                                         onClickSelected={onClickSelected}
                                     />
                                 </li>
