@@ -37,6 +37,10 @@ import '../../styles/summit-event-list-page.less';
 import OrAndFilter from '../../components/filters/or-and-filter';
 import MediaTypeFilter from '../../components/filters/media-type-filter';
 import { ALL_FILTER } from '../../utils/constants';
+import SaveFilterCriteria from '../../components/filters/save-filter-criteria';
+import SelectFilterCriteria from '../../components/filters/select-filter-criteria';
+import { saveFilterCriteria, deleteFilterCriteria } from '../../actions/filter-criteria-actions';
+import { CONTEXT_ACTIVITIES } from '../../utils/filter-criteria-constants';
 
 const fieldNames = [
     { columnKey: 'speakers', value: 'speakers' },
@@ -140,6 +144,9 @@ class SummitEventListPage extends React.Component {
         this.handleDDLSortByLabel = this.handleDDLSortByLabel.bind(this);
         this.handleTermChange = this.handleTermChange.bind(this);
         this.handleOrAndFilter = this.handleOrAndFilter.bind(this);
+        this.handleFilterCriteriaSave = this.handleFilterCriteriaSave.bind(this);
+        this.handleFilterCriteriaChange = this.handleFilterCriteriaChange.bind(this);
+        this.handleFilterCriteriaDelete = this.handleFilterCriteriaDelete.bind(this);
 
         this.state = {
             showImportModal: false,
@@ -158,6 +165,7 @@ class SummitEventListPage extends React.Component {
                 orAndFilter: ALL_FILTER,
             },
             selectedColumns: [],
+            selectedFilterCriteria: null,
         };
 
         this.extraFilters = {
@@ -282,6 +290,7 @@ class SummitEventListPage extends React.Component {
         const {order, orderDir, page, perPage, term} = this.props;
         const {eventFilters, selectedColumns} = this.state;
         this.props.getEvents(term, page, perPage, order, orderDir, eventFilters, selectedColumns);
+        this.setState({...this.state, selectedFilterCriteria: null})
     }
 
     handleExtraFilterChange(ev) {
@@ -298,7 +307,7 @@ class SummitEventListPage extends React.Component {
                 value: ev.target.value
             }            
         }
-        this.setState({...this.state, eventFilters: {...this.state.eventFilters, [id]: value}});
+        this.setState({...this.state, eventFilters: {...this.state.eventFilters, [id]: value}, selectedFilterCriteria: null});
     }
 
     handleOrAndFilter(ev) {
@@ -319,15 +328,15 @@ class SummitEventListPage extends React.Component {
         const {value} = ev.target;
         if(value.length < this.state.enabledFilters.length) {
             if(value.length === 0) {
-                this.setState({...this.state, enabledFilters: value, eventFilters: defaultFilters});
+                this.setState({...this.state, enabledFilters: value, eventFilters: defaultFilters, selectedFilterCriteria: null});
             } else {
                 const removedFilter = this.state.enabledFilters.filter(e => !value.includes(e))[0];            
                 const defaultValue = removedFilter === 'published_filter' ? null : Array.isArray(this.state.eventFilters[removedFilter]) ? [] : '';
                 let newEventFilters = {...this.state.eventFilters, [removedFilter]: defaultValue};                
-                this.setState({...this.state, enabledFilters: value, eventFilters: newEventFilters});
+                this.setState({...this.state, enabledFilters: value, eventFilters: newEventFilters, selectedFilterCriteria: null});
             }
         } else {
-            this.setState({...this.state, enabledFilters: value})
+            this.setState({...this.state, enabledFilters: value, selectedFilterCriteria: null});
         }
     }
 
@@ -349,21 +358,6 @@ class SummitEventListPage extends React.Component {
             ...this.state.eventFilters, 
             end_date_filter: lastDate ? [end_date_filter[0], value.unix()] : [value.unix(), end_date_filter[1]]
         }});
-    }
-
-    handleFiltersChange(ev) {
-        const {value} = ev.target;
-        if(value.length < this.state.enabledFilters.length) {
-            if(value.length === 0) {
-                this.setState({...this.state, enabledFilters: value, eventFilters: defaultFilters});
-            } else {
-                const removedFilter = this.state.enabledFilters.filter(e => !value.includes(e))[0];            
-                const defaultValue = removedFilter === 'published_filter' ? null : Array.isArray(this.state.eventFilters[removedFilter]) ? [] : '';
-                this.setState({...this.state, enabledFilters: value, eventFilters: {...this.state.eventFilters, [removedFilter]: defaultValue}});
-            }
-        } else {
-            this.setState({...this.state, enabledFilters: value})
-        }
     }
 
     handleColumnsChange(ev) {
@@ -393,10 +387,52 @@ class SummitEventListPage extends React.Component {
         return ddlArray.sort((a, b) => a.label.localeCompare(b.label));
     }
 
+    handleFilterCriteriaSave(filterData) {
+        const {enabledFilters, eventFilters} = this.state;
+        const {currentSummit} = this.props;
+        const filterToSave = {
+            id: filterData.id,
+            show_id: currentSummit.id,
+            name: filterData.name,
+            enabled_filters: enabledFilters,
+            // only save criteria for enabled filters
+            criteria: Object.fromEntries(Object.entries(eventFilters).filter(([key]) => enabledFilters.includes(key))),
+            context: CONTEXT_ACTIVITIES,
+            visibility: filterData.visibility
+        }
+        this.props.saveFilterCriteria(filterToSave);
+    }
+
+    handleFilterCriteriaChange(filterCriteria) {
+        const {extraColumns, term, order, orderDir} = this.props;
+        let newEventFilters = {}
+        Object.entries(filterCriteria.criteria).map(([key, values]) => {
+            newEventFilters = {...newEventFilters, [key]: values};            
+        })
+        
+        this.setState({
+            ...this.state, 
+            eventFilters: {...defaultFilters, ...newEventFilters}, 
+            enabledFilters: filterCriteria.enabled_filters, 
+            selectedFilterCriteria: filterCriteria
+        }, () => this.props.getEvents(term, 1, 10, order, orderDir, this.state.eventFilters, extraColumns));
+    }
+
+    handleFilterCriteriaDelete(filterCriteriaId) {
+        const {extraColumns, term, order, orderDir} = this.props;
+        this.props.deleteFilterCriteria(filterCriteriaId).then(() => 
+            this.setState({...this.state, 
+                eventFilters: {...defaultFilters, orAndFilter: ALL_FILTER},
+                enabledFilters: [],
+                selectedFilterCriteria: null
+            }, () => this.props.getEvents(term, 1, 10, order, orderDir, this.state.eventFilters, extraColumns))
+        );
+    }
+
 
     render(){
         const {currentSummit, events, lastPage, currentPage, order, orderDir, totalEvents, term, extraColumns, filters} = this.props;
-        const {enabledFilters, eventFilters} = this.state;
+        const {enabledFilters, eventFilters, selectedFilterCriteria} = this.state;
 
         let columns = [
             { columnKey: 'id', value: T.translate("general.id"), sortable: true },
@@ -559,9 +595,21 @@ class SummitEventListPage extends React.Component {
                     </div>
                 </div>
                 <hr/>
-                <OrAndFilter value={eventFilters.orAndFilter} entity={'events'} onChange={(filter) => this.handleOrAndFilter(filter)}/>
+                <div className="row">
+                    <div className="col-md-6">
+                        <OrAndFilter value={eventFilters.orAndFilter} entity={'events'} onChange={(filter) => this.handleOrAndFilter(filter)}/>
+                    </div>
+                    <div className="col-md-6">
+                        <SelectFilterCriteria 
+                            summitId={currentSummit.id}
+                            context={CONTEXT_ACTIVITIES}
+                            onDelete={this.handleFilterCriteriaDelete}
+                            selectedFilterCriteria={selectedFilterCriteria}
+                            onChange={this.handleFilterCriteriaChange} />
+                    </div>
+                </div>
                 <div className={'row'}>
-                    <div className={'col-md-6'}>                        
+                    <div className={'col-md-6'}>
                         <Dropdown
                             id="enabled_filters"
                             placeholder={'Enabled Filters'}
@@ -577,7 +625,8 @@ class SummitEventListPage extends React.Component {
                             {T.translate("event_list.apply_filters")}
                         </button>
                     </div>
-                </div>                
+                </div>    
+                <SaveFilterCriteria onSave={this.handleFilterCriteriaSave} selectedFilterCriteria={selectedFilterCriteria}/>
                 <div className={'filters-row'}>
                     {enabledFilters.includes('event_type_capacity_filter') &&
                         <div className={'col-md-6'}>
@@ -943,8 +992,8 @@ class SummitEventListPage extends React.Component {
                                 onChange={this.handleExtraFilterChange}
                             />
                         </div>
-                    }
-                </div>
+                    }                    
+                </div>            
 
                 <hr/>
 
@@ -1111,5 +1160,7 @@ export default connect (
         importEventsCSV,
         importMP4AssetsFromMUX,
         changeEventListSearchTerm,
+        saveFilterCriteria,
+        deleteFilterCriteria
     }
 )(SummitEventListPage);

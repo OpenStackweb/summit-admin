@@ -65,6 +65,7 @@ window.CHAT_API_BASE_URL        = process.env['CHAT_API_BASE_URL'];
 window.PUB_API_BASE_URL         = process.env['PUB_API_BASE_URL'];
 window.APP_CLIENT_NAME          = process.env['APP_CLIENT_NAME'];
 window.OAUTH2_FLOW              = process.env['OAUTH2_FLOW'] || "token id_token";
+window.PERSIST_FILTER_CRITERIA_API = process.env['PERSIST_FILTER_CRITERIA_API'];
 
 if (exclusiveSections.hasOwnProperty(process.env['APP_CLIENT_NAME'])) {
     window.EXCLUSIVE_SECTIONS = exclusiveSections[process.env['APP_CLIENT_NAME']];

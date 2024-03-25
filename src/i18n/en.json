@@ -2902,5 +2902,19 @@
     "add_question": "Add Question",
     "no_extra_questions": "No extra questions found.",
     "remove_warning": "Are you sure you want to remove question "
+  },
+  "save_filter_criteria": {
+    "save_as": "Save As",
+    "visible_to": "Visible to",
+    "save": "Save",
+    "me": "Me",
+    "everyone": "Everyone",
+    "placeholders": {
+      "custom_name": "Custom Name"
+    }
+  },
+  "select_filter_criteria": {
+    "placeholder": "Select filter criteria",
+    "remove_filter_criteria_warning": "Are you sure you want to remove the filter criteria "
   }
 }
