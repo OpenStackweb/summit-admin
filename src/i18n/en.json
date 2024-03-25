@@ -1656,7 +1656,14 @@
     "badge_type_name": "Badge Type",
     "external_id": "External Id",
     "seed_tickets": "Seed Tickets from Eventbrite",
-    "remove_warning": "Are you sure you want to delete ticket type "
+    "apply": "Apply",
+    "remove_warning": "Are you sure you want to delete ticket type ",
+    "change_currency_warning": "Are you sure you want to change all ticket types currency to ",
+    "currency_updated": "Currency updated successfully",
+    "yes_change": "Yes, change.",
+    "placeholders": {
+      "select_currency": "Select currency"
+    }
   },
   "edit_ticket_type": {
     "ticket_type": "Ticket Type",
