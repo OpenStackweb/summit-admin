@@ -86,6 +86,8 @@ export const getEvents = (term = null, page = 1, perPage = 10, order = 'id', ord
 
     const params = {
         expand: 'speakers,type,created_by,track,sponsors,selection_plan,location,tags,media_uploads,media_uploads.media_upload_type,actions,actions.type',
+        relations: 'speakers.none,selection_plan.none,track.none,type.none,created_by.none,location.none,media_uploads.media_upload_type.none',
+        fields: 'location.id,location.name,speakers.id,speakers.first_name,speakers.last_name,speakers.company,track.name,track.id,created_by.first_name,created_by.last_name,created_by.email,created_by.company,selection_plan.name,media_uploads.id,media_uploads.created,media_uploads.media_upload_type.name,media_uploads.media_upload_type.id',
         page: page,
         per_page: perPage,
         access_token: accessToken,
