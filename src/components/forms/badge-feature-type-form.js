@@ -13,11 +13,8 @@
 
 import React from "react";
 import T from "i18n-react";
-import {
-  Input,
-  TextEditorV3,
-  UploadInput
-} from "openstack-uicore-foundation/lib/components";
+import { Input, UploadInput } from "openstack-uicore-foundation/lib/components";
+import { TextEditorV3 } from "openstack-uicore-foundation/lib/components/inputs/editor-input-v3";
 import {
   hasErrors,
   isEmpty,

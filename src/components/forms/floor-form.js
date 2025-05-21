@@ -16,11 +16,11 @@ import T from "i18n-react/dist/i18n-react";
 import "awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css";
 import {
   Input,
-  TextEditorV3,
   Panel,
   Table,
   UploadInput
 } from "openstack-uicore-foundation/lib/components";
+import { TextEditorV3 } from "openstack-uicore-foundation/lib/components/inputs/editor-input-v3";
 import { isEmpty, scrollToError, shallowEqual } from "../../utils/methods";
 
 class FloorForm extends React.Component {

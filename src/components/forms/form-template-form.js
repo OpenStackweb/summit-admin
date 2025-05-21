@@ -16,9 +16,9 @@ import T from "i18n-react/dist/i18n-react";
 import "awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css";
 import {
   Input,
-  UploadInputV2,
-  TextEditorV3
+  UploadInputV2
 } from "openstack-uicore-foundation/lib/components";
+import { TextEditorV3 } from "openstack-uicore-foundation/lib/components/inputs/editor-input-v3";
 import Swal from "sweetalert2";
 import FormRepeater from "../form-repeater";
 import FormTemplateMetaFieldForm from "./form-template-meta-field-form";

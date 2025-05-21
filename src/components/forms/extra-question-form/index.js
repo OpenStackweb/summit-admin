@@ -17,10 +17,10 @@ import "awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css";
 import {
   Dropdown,
   Input,
-  TextEditorV3,
   SortableTable,
   TicketTypesInput
 } from "openstack-uicore-foundation/lib/components";
+import { TextEditorV3 } from "openstack-uicore-foundation/lib/components/inputs/editor-input-v3";
 import { Modal } from "react-bootstrap";
 import history from "../../../history";
 import {

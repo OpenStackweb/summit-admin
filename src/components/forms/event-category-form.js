@@ -20,10 +20,9 @@ import {
   TagInput,
   UploadInput,
   AccessLevelsInput,
-  SortableTable,
-  TextEditorV3
+  SortableTable
 } from "openstack-uicore-foundation/lib/components";
-
+import { TextEditorV3 } from "openstack-uicore-foundation/lib/components/inputs/editor-input-v3";
 import {
   isEmpty,
   scrollToError,

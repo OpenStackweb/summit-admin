@@ -16,12 +16,12 @@ import T from "i18n-react/dist/i18n-react";
 import "awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css";
 import {
   SponsoredProjectInput,
-  TextEditorV3,
   Input,
   UploadInput,
   SortableTable,
   Table
 } from "openstack-uicore-foundation/lib/components";
+import { TextEditorV3 } from "openstack-uicore-foundation/lib/components/inputs/editor-input-v3";
 import {
   isEmpty,
   scrollToError,

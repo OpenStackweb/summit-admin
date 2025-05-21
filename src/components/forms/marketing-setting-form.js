@@ -17,9 +17,9 @@ import "awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css";
 import {
   Dropdown,
   Input,
-  UploadInput,
-  TextEditorV3
+  UploadInput
 } from "openstack-uicore-foundation/lib/components";
+import { TextEditorV3 } from "openstack-uicore-foundation/lib/components/inputs/editor-input-v3";
 import Swal from "sweetalert2";
 import { isEmpty, scrollToError, shallowEqual } from "../../utils/methods";
 import history from "../../history";

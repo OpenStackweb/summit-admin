@@ -18,10 +18,10 @@ import {
   Dropdown,
   CountryDropdown,
   Input,
-  TextEditorV3,
   Table,
   Panel
 } from "openstack-uicore-foundation/lib/components";
+import { TextEditorV3 } from "openstack-uicore-foundation/lib/components/inputs/editor-input-v3";
 import { GMap } from "openstack-uicore-foundation/lib/components/google-map";
 import { isEmpty, scrollToError, shallowEqual } from "../../utils/methods";
 import HourIntervalInput from "../inputs/date-interval-input";

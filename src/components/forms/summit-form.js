@@ -23,11 +23,11 @@ import {
   Dropdown,
   Table,
   UploadInput,
-  TextEditorV3,
   MemberInput,
   Exclusive,
   FreeMultiTextInput
 } from "openstack-uicore-foundation/lib/components";
+import { TextEditorV3 } from "openstack-uicore-foundation/lib/components/inputs/editor-input-v3";
 import { Pagination } from "react-bootstrap";
 import Switch from "react-switch";
 import history from "../../history";

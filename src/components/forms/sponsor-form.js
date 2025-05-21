@@ -22,11 +22,11 @@ import {
   CompanyInput,
   MemberInput,
   Panel,
-  TextEditorV3,
   Input,
   UploadInput,
   Table
 } from "openstack-uicore-foundation/lib/components";
+import { TextEditorV3 } from "openstack-uicore-foundation/lib/components/inputs/editor-input-v3";
 import { isEmpty, scrollToError, shallowEqual } from "../../utils/methods";
 import EventInput from "../inputs/event-input";
 import SummitSponsorshipTypeInput from "../inputs/summit-sponsorship-type-input";

@@ -25,11 +25,11 @@ import {
   DateTimePicker,
   SimpleLinkList,
   SortableTable,
-  TextEditorV3,
   Panel,
   Table,
   Dropdown
 } from "openstack-uicore-foundation/lib/components";
+import { TextEditorV3 } from "openstack-uicore-foundation/lib/components/inputs/editor-input-v3";
 import Switch from "react-switch";
 import { Pagination } from "react-bootstrap";
 import {

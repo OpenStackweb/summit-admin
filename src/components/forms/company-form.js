@@ -15,13 +15,13 @@ import React from "react";
 import T from "i18n-react/dist/i18n-react";
 import "awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css";
 import {
-  TextEditorV3,
   UploadInput,
   Input,
   CountryDropdown,
   Dropdown,
   Table
 } from "openstack-uicore-foundation/lib/components";
+import { TextEditorV3 } from "openstack-uicore-foundation/lib/components/inputs/editor-input-v3";
 import { isEmpty, scrollToError, shallowEqual } from "../../utils/methods";
 
 class CompanyForm extends React.Component {

@@ -21,11 +21,11 @@ import {
 } from "openstack-uicore-foundation/lib/utils/query-actions";
 import {
   Input,
-  TextEditorV3,
   SimpleLinkList,
   Dropdown,
   DateTimePicker
 } from "openstack-uicore-foundation/lib/components";
+import { TextEditorV3 } from "openstack-uicore-foundation/lib/components/inputs/editor-input-v3";
 import {
   isEmpty,
   scrollToError,

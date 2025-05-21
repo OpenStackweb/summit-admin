@@ -18,7 +18,6 @@ import Swal from "sweetalert2";
 import { Tooltip } from "react-tooltip";
 import { epochToMomentTimeZone } from "openstack-uicore-foundation/lib/utils/methods";
 import {
-  TextEditorV3,
   Dropdown,
   GroupedDropdown,
   DateTimePicker,
@@ -35,6 +34,7 @@ import {
   TicketTypesInput,
   SortableTable
 } from "openstack-uicore-foundation/lib/components";
+import { TextEditorV3 } from "openstack-uicore-foundation/lib/components/inputs/editor-input-v3";
 import { Pagination } from "react-bootstrap";
 import ExtraQuestionsForm from "openstack-uicore-foundation/lib/components/extra-questions";
 import QuestionsSet from "openstack-uicore-foundation/lib/utils/questions-set";
